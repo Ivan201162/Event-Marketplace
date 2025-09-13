@@ -1,78 +1,65 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'providers/user_role_provider.dart';
+import 'screens/home_screen.dart';
+import 'screens/search_screen.dart';
+import 'screens/my_events_screen.dart';
+import 'screens/chats_screen.dart';
+import 'screens/profile_screen.dart';
+import 'screens/my_bookings_screen.dart';
+import 'screens/booking_requests_screen.dart';
 
 void main() {
-  runApp(const EventMarketplaceApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
-class EventMarketplaceApp extends StatelessWidget {
-  const EventMarketplaceApp({super.key});
+class MyApp extends ConsumerStatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  ConsumerState<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends ConsumerState<MyApp> {
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
+    final userRole = ref.watch(userRoleProvider);
+
+    final List<Widget> pages = [
+      const HomeScreen(),
+      const SearchScreen(),
+      const MyEventsScreen(),
+      const ChatsScreen(),
+      // роль влияет на 5-ю вкладку
+      userRole == UserRole.customer
+          ? const MyBookingsScreen()
+          : const BookingRequestsScreen(),
+      const ProfileScreen(),
+    ];
+
     return MaterialApp(
       title: 'Event Marketplace',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Event Marketplace'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'Welcome to Event Marketplace!',
-              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.deepPurple),
+      home: Scaffold(
+        body: pages[_selectedIndex],
+        bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          currentIndex: _selectedIndex,
+          onTap: (index) => setState(() => _selectedIndex = index),
+          items: [
+            const BottomNavigationBarItem(icon: Icon(Icons.home), label: "Главная"),
+            const BottomNavigationBarItem(icon: Icon(Icons.search), label: "Поиск"),
+            const BottomNavigationBarItem(icon: Icon(Icons.event), label: "Мероприятия"),
+            const BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Чаты"),
+            BottomNavigationBarItem(
+              icon: Icon(userRole == UserRole.customer ? Icons.book_online : Icons.assignment),
+              label: userRole == UserRole.customer ? "Мои заявки" : "Заявки",
             ),
-            const SizedBox(height: 20),
-            const Text(
-              'Your app is ready to run.',
-              style: TextStyle(fontSize: 16),
-            ),
-            const SizedBox(height: 40),
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            const BottomNavigationBarItem(icon: Icon(Icons.person), label: "Профиль"),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
       ),
     );
   }

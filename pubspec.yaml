@@ -9,42 +9,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
-  # UI
-  cupertino_icons: ^1.0.8
-  google_fonts: ^6.2.1
-
-  # Firebase (temporarily disabled for Windows build)
-  # firebase_core: ^3.6.0
-  # firebase_auth: ^5.3.0
-  # cloud_firestore: ^5.4.4
-  # firebase_storage: ^12.3.2
-
-  # State management
-  provider: ^6.1.2
-
-  # Navigation
-  go_router: ^16.2.1
-
-  # Forms & validation
-  flutter_form_builder: ^10.2.0
-  form_builder_validators: ^11.2.0
-
-  # File & image handling
-  file_picker: ^10.3.3
-  image_picker: ^1.1.2
-  cached_network_image: ^3.4.1
-
-  # Social integration (на будущее для ВК)
-  url_launcher: ^6.3.1
-
-  # Date/time
-  intl: ^0.20.2
-  table_calendar: ^3.1.2
-
-  # For agreements and PDF generation
-  pdf: ^3.11.0
-  printing: ^5.13.2
+  shared_preferences: ^2.1.1
+  table_calendar: ^3.0.9
+  intl: ^0.19.0
+  cloud_firestore: ^4.15.8
+  firebase_core: ^2.24.2
+  flutter_riverpod: ^2.4.9
 
 dev_dependencies:
   flutter_test:
