@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Категории специалистов
 enum SpecialistCategory {
+  // Основные категории
   photographer,    // Фотограф
   videographer,    // Видеограф
   dj,             // DJ
@@ -11,6 +12,31 @@ enum SpecialistCategory {
   caterer,        // Кейтеринг
   security,       // Охрана
   technician,     // Техник
+  
+  // Расширенные категории
+  animator,       // Аниматор
+  florist,        // Флорист
+  lighting,       // Световое оформление
+  sound,          // Звуковое оборудование
+  costume,        // Платья/костюмы
+  fireShow,       // Фаер-шоу
+  fireworks,      // Салюты
+  lightShow,      // Световые шоу
+  coverBand,      // Кавер-группы
+  teamBuilding,   // Тимбилдинги
+  cleaning,       // Клининг
+  rental,         // Аренда оборудования
+  makeup,         // Визажист
+  hairstylist,    // Парикмахер
+  stylist,        // Стилист
+  choreographer,  // Хореограф
+  dance,          // Танцы
+  magic,          // Фокусы/иллюзионист
+  clown,          // Клоун
+  balloon,        // Аэродизайн
+  cake,           // Торты/кондитер
+  transport,      // Транспорт
+  venue,          // Площадки
   other,          // Другое
 }
 
@@ -20,6 +46,167 @@ enum ExperienceLevel {
   intermediate,   // Средний
   advanced,       // Продвинутый
   expert,         // Эксперт
+}
+
+/// Расширение для получения названий категорий
+extension SpecialistCategoryExtension on SpecialistCategory {
+  String get displayName {
+    switch (this) {
+      case SpecialistCategory.photographer:
+        return 'Фотограф';
+      case SpecialistCategory.videographer:
+        return 'Видеограф';
+      case SpecialistCategory.dj:
+        return 'DJ';
+      case SpecialistCategory.host:
+        return 'Ведущий';
+      case SpecialistCategory.decorator:
+        return 'Декоратор';
+      case SpecialistCategory.musician:
+        return 'Музыкант';
+      case SpecialistCategory.caterer:
+        return 'Кейтеринг';
+      case SpecialistCategory.security:
+        return 'Охрана';
+      case SpecialistCategory.technician:
+        return 'Техник';
+      case SpecialistCategory.animator:
+        return 'Аниматор';
+      case SpecialistCategory.florist:
+        return 'Флорист';
+      case SpecialistCategory.lighting:
+        return 'Световое оформление';
+      case SpecialistCategory.sound:
+        return 'Звуковое оборудование';
+      case SpecialistCategory.costume:
+        return 'Платья/костюмы';
+      case SpecialistCategory.fireShow:
+        return 'Фаер-шоу';
+      case SpecialistCategory.fireworks:
+        return 'Салюты';
+      case SpecialistCategory.lightShow:
+        return 'Световые шоу';
+      case SpecialistCategory.coverBand:
+        return 'Кавер-группы';
+      case SpecialistCategory.teamBuilding:
+        return 'Тимбилдинги';
+      case SpecialistCategory.cleaning:
+        return 'Клининг';
+      case SpecialistCategory.rental:
+        return 'Аренда оборудования';
+      case SpecialistCategory.makeup:
+        return 'Визажист';
+      case SpecialistCategory.hairstylist:
+        return 'Парикмахер';
+      case SpecialistCategory.stylist:
+        return 'Стилист';
+      case SpecialistCategory.choreographer:
+        return 'Хореограф';
+      case SpecialistCategory.dance:
+        return 'Танцы';
+      case SpecialistCategory.magic:
+        return 'Фокусы/иллюзионист';
+      case SpecialistCategory.clown:
+        return 'Клоун';
+      case SpecialistCategory.balloon:
+        return 'Аэродизайн';
+      case SpecialistCategory.cake:
+        return 'Торты/кондитер';
+      case SpecialistCategory.transport:
+        return 'Транспорт';
+      case SpecialistCategory.venue:
+        return 'Площадки';
+      case SpecialistCategory.other:
+        return 'Другое';
+    }
+  }
+
+  String get icon {
+    switch (this) {
+      case SpecialistCategory.photographer:
+        return '📸';
+      case SpecialistCategory.videographer:
+        return '🎥';
+      case SpecialistCategory.dj:
+        return '🎧';
+      case SpecialistCategory.host:
+        return '🎤';
+      case SpecialistCategory.decorator:
+        return '🎨';
+      case SpecialistCategory.musician:
+        return '🎵';
+      case SpecialistCategory.caterer:
+        return '🍽️';
+      case SpecialistCategory.security:
+        return '🛡️';
+      case SpecialistCategory.technician:
+        return '🔧';
+      case SpecialistCategory.animator:
+        return '🎭';
+      case SpecialistCategory.florist:
+        return '🌸';
+      case SpecialistCategory.lighting:
+        return '💡';
+      case SpecialistCategory.sound:
+        return '🔊';
+      case SpecialistCategory.costume:
+        return '👗';
+      case SpecialistCategory.fireShow:
+        return '🔥';
+      case SpecialistCategory.fireworks:
+        return '🎆';
+      case SpecialistCategory.lightShow:
+        return '✨';
+      case SpecialistCategory.coverBand:
+        return '🎸';
+      case SpecialistCategory.teamBuilding:
+        return '🤝';
+      case SpecialistCategory.cleaning:
+        return '🧹';
+      case SpecialistCategory.rental:
+        return '📦';
+      case SpecialistCategory.makeup:
+        return '💄';
+      case SpecialistCategory.hairstylist:
+        return '💇';
+      case SpecialistCategory.stylist:
+        return '👔';
+      case SpecialistCategory.choreographer:
+        return '💃';
+      case SpecialistCategory.dance:
+        return '🕺';
+      case SpecialistCategory.magic:
+        return '🎩';
+      case SpecialistCategory.clown:
+        return '🤡';
+      case SpecialistCategory.balloon:
+        return '🎈';
+      case SpecialistCategory.cake:
+        return '🎂';
+      case SpecialistCategory.transport:
+        return '🚗';
+      case SpecialistCategory.venue:
+        return '🏢';
+      case SpecialistCategory.other:
+        return '⭐';
+    }
+  }
+}
+
+/// Расширение для получения названий уровней опыта
+extension ExperienceLevelExtension on ExperienceLevel {
+  String get displayName {
+    switch (this) {
+      case ExperienceLevel.beginner:
+        return 'Начинающий';
+      case ExperienceLevel.intermediate:
+        return 'Средний';
+      case ExperienceLevel.advanced:
+        return 'Продвинутый';
+      case ExperienceLevel.expert:
+        return 'Эксперт';
+    }
+  }
 }
 
 /// Модель специалиста
