@@ -13,6 +13,7 @@ import 'inspiration_photos_screen.dart';
 import 'customer_notes_screen.dart';
 import 'specialist_faq_screen.dart';
 import 'specialist_portfolio_videos_screen.dart';
+import 'payments_extended_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -346,6 +347,19 @@ class ProfileScreen extends ConsumerWidget {
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => const BadgesScreen(),
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.payment),
+              title: const Text('Платежи'),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => PaymentsExtendedScreen(
+                    userId: user.uid,
+                    isCustomer: user.role == UserRole.customer,
+                  ),
                 ),
               ),
             ),
