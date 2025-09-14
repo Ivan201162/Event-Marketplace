@@ -1,11 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/review.dart';
 import 'notification_service.dart';
+import 'badge_service.dart';
 
 /// Сервис для работы с отзывами
 class ReviewService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final NotificationService _notificationService = NotificationService();
+  final BadgeService _badgeService = BadgeService();
 
   /// Создать отзыв
   Future<String> createReview(Review review) async {
@@ -39,6 +41,18 @@ class ReviewService {
     } catch (e) {
       // Логируем ошибку, но не прерываем создание отзыва
       print('Error sending review notification: $e');
+    }
+    
+    // Проверяем бейджи
+    try {
+      await _badgeService.checkReviewBadges(
+        review.customerId,
+        review.specialistId,
+        review.rating,
+      );
+    } catch (e) {
+      // Логируем ошибку, но не прерываем создание отзыва
+      print('Error checking review badges: $e');
     }
     
     return reviewRef.id;

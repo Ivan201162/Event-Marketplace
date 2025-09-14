@@ -1,0 +1,366 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+/// Типы бейджей
+enum BadgeType {
+  // Бейджи для специалистов
+  firstBooking,        // Первое бронирование
+  tenBookings,         // 10 успешных заказов
+  fiftyBookings,       // 50 успешных заказов
+  hundredBookings,     // 100 успешных заказов
+  fiveStarRating,      // Рейтинг 5.0
+  topRated,            // Топ-рейтинг
+  quickResponder,      // Быстрый ответ
+  popularSpecialist,   // Популярный специалист
+  qualityMaster,       // Мастер качества
+  customerFavorite,    // Любимец клиентов
+  
+  // Бейджи для заказчиков
+  firstEvent,          // Первое мероприятие
+  regularCustomer,     // Постоянный клиент
+  eventOrganizer,      // Организатор мероприятий
+  reviewWriter,        // Активный рецензент
+  earlyBird,           // Ранняя пташка (бронирование за месяц)
+  loyalCustomer,       // Лояльный клиент
+  socialButterfly,     // Социальная бабочка (много мероприятий)
+  trendsetter,         // Трендсеттер (популярные категории)
+  
+  // Общие бейджи
+  earlyAdopter,        // Ранний пользователь
+  communityHelper,     // Помощник сообщества
+  feedbackProvider,    // Поставщик обратной связи
+}
+
+/// Модель бейджа
+class Badge {
+  final String id;
+  final String userId;
+  final BadgeType type;
+  final String title;
+  final String description;
+  final String icon;
+  final String color;
+  final DateTime earnedAt;
+  final bool isVisible;
+  final Map<String, dynamic> metadata;
+
+  const Badge({
+    required this.id,
+    required this.userId,
+    required this.type,
+    required this.title,
+    required this.description,
+    required this.icon,
+    required this.color,
+    required this.earnedAt,
+    this.isVisible = true,
+    this.metadata = const {},
+  });
+
+  /// Создаёт бейдж из документа Firestore
+  factory Badge.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    
+    return Badge(
+      id: doc.id,
+      userId: data['userId'] as String,
+      type: BadgeType.values.firstWhere(
+        (e) => e.name == data['type'],
+        orElse: () => BadgeType.firstBooking,
+      ),
+      title: data['title'] as String,
+      description: data['description'] as String,
+      icon: data['icon'] as String,
+      color: data['color'] as String,
+      earnedAt: (data['earnedAt'] as Timestamp).toDate(),
+      isVisible: data['isVisible'] as bool? ?? true,
+      metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
+    );
+  }
+
+  /// Преобразует бейдж в Map для Firestore
+  Map<String, dynamic> toMap() {
+    return {
+      'userId': userId,
+      'type': type.name,
+      'title': title,
+      'description': description,
+      'icon': icon,
+      'color': color,
+      'earnedAt': Timestamp.fromDate(earnedAt),
+      'isVisible': isVisible,
+      'metadata': metadata,
+    };
+  }
+
+  /// Создаёт копию бейджа с обновлёнными полями
+  Badge copyWith({
+    String? id,
+    String? userId,
+    BadgeType? type,
+    String? title,
+    String? description,
+    String? icon,
+    String? color,
+    DateTime? earnedAt,
+    bool? isVisible,
+    Map<String, dynamic>? metadata,
+  }) {
+    return Badge(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      type: type ?? this.type,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      icon: icon ?? this.icon,
+      color: color ?? this.color,
+      earnedAt: earnedAt ?? this.earnedAt,
+      isVisible: isVisible ?? this.isVisible,
+      metadata: metadata ?? this.metadata,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Badge && other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  String toString() {
+    return 'Badge(id: $id, type: $type, title: $title)';
+  }
+}
+
+/// Расширение для BadgeType
+extension BadgeTypeExtension on BadgeType {
+  /// Получает информацию о бейдже
+  BadgeInfo get info {
+    switch (this) {
+      // Бейджи для специалистов
+      case BadgeType.firstBooking:
+        return BadgeInfo(
+          title: 'Первое бронирование',
+          description: 'Получили первое бронирование',
+          icon: '🎯',
+          color: '#4CAF50',
+          category: BadgeCategory.specialist,
+        );
+      case BadgeType.tenBookings:
+        return BadgeInfo(
+          title: '10 успешных заказов',
+          description: 'Выполнили 10 успешных заказов',
+          icon: '⭐',
+          color: '#FFD700',
+          category: BadgeCategory.specialist,
+        );
+      case BadgeType.fiftyBookings:
+        return BadgeInfo(
+          title: '50 успешных заказов',
+          description: 'Выполнили 50 успешных заказов',
+          icon: '🏆',
+          color: '#FF9800',
+          category: BadgeCategory.specialist,
+        );
+      case BadgeType.hundredBookings:
+        return BadgeInfo(
+          title: '100 успешных заказов',
+          description: 'Выполнили 100 успешных заказов',
+          icon: '👑',
+          color: '#9C27B0',
+          category: BadgeCategory.specialist,
+        );
+      case BadgeType.fiveStarRating:
+        return BadgeInfo(
+          title: 'Идеальный рейтинг',
+          description: 'Поддерживаете рейтинг 5.0',
+          icon: '✨',
+          color: '#E91E63',
+          category: BadgeCategory.specialist,
+        );
+      case BadgeType.topRated:
+        return BadgeInfo(
+          title: 'Топ-рейтинг',
+          description: 'Входите в топ-10 специалистов',
+          icon: '🥇',
+          color: '#FF5722',
+          category: BadgeCategory.specialist,
+        );
+      case BadgeType.quickResponder:
+        return BadgeInfo(
+          title: 'Быстрый ответ',
+          description: 'Отвечаете на сообщения в течение часа',
+          icon: '⚡',
+          color: '#00BCD4',
+          category: BadgeCategory.specialist,
+        );
+      case BadgeType.popularSpecialist:
+        return BadgeInfo(
+          title: 'Популярный специалист',
+          description: 'Популярны среди клиентов',
+          icon: '🔥',
+          color: '#F44336',
+          category: BadgeCategory.specialist,
+        );
+      case BadgeType.qualityMaster:
+        return BadgeInfo(
+          title: 'Мастер качества',
+          description: 'Всегда получаете отличные отзывы',
+          icon: '🎨',
+          color: '#3F51B5',
+          category: BadgeCategory.specialist,
+        );
+      case BadgeType.customerFavorite:
+        return BadgeInfo(
+          title: 'Любимец клиентов',
+          description: 'Клиенты часто возвращаются к вам',
+          icon: '💖',
+          color: '#E91E63',
+          category: BadgeCategory.specialist,
+        );
+      
+      // Бейджи для заказчиков
+      case BadgeType.firstEvent:
+        return BadgeInfo(
+          title: 'Первое мероприятие',
+          description: 'Организовали первое мероприятие',
+          icon: '🎉',
+          color: '#4CAF50',
+          category: BadgeCategory.customer,
+        );
+      case BadgeType.regularCustomer:
+        return BadgeInfo(
+          title: 'Постоянный клиент',
+          description: 'Регулярно пользуетесь услугами',
+          icon: '🔄',
+          color: '#2196F3',
+          category: BadgeCategory.customer,
+        );
+      case BadgeType.eventOrganizer:
+        return BadgeInfo(
+          title: 'Организатор мероприятий',
+          description: 'Организовали 5+ мероприятий',
+          icon: '📅',
+          color: '#FF9800',
+          category: BadgeCategory.customer,
+        );
+      case BadgeType.reviewWriter:
+        return BadgeInfo(
+          title: 'Активный рецензент',
+          description: 'Оставляете отзывы после каждого заказа',
+          icon: '✍️',
+          color: '#9C27B0',
+          category: BadgeCategory.customer,
+        );
+      case BadgeType.earlyBird:
+        return BadgeInfo(
+          title: 'Ранняя пташка',
+          description: 'Бронируете услуги заранее',
+          icon: '🐦',
+          color: '#00BCD4',
+          category: BadgeCategory.customer,
+        );
+      case BadgeType.loyalCustomer:
+        return BadgeInfo(
+          title: 'Лояльный клиент',
+          description: 'Пользуетесь услугами более года',
+          icon: '💎',
+          color: '#607D8B',
+          category: BadgeCategory.customer,
+        );
+      case BadgeType.socialButterfly:
+        return BadgeInfo(
+          title: 'Социальная бабочка',
+          description: 'Организуете много мероприятий',
+          icon: '🦋',
+          color: '#E91E63',
+          category: BadgeCategory.customer,
+        );
+      case BadgeType.trendsetter:
+        return BadgeInfo(
+          title: 'Трендсеттер',
+          description: 'Выбираете популярные категории',
+          icon: '📈',
+          color: '#4CAF50',
+          category: BadgeCategory.customer,
+        );
+      
+      // Общие бейджи
+      case BadgeType.earlyAdopter:
+        return BadgeInfo(
+          title: 'Ранний пользователь',
+          description: 'Одни из первых пользователей приложения',
+          icon: '🚀',
+          color: '#FF5722',
+          category: BadgeCategory.general,
+        );
+      case BadgeType.communityHelper:
+        return BadgeInfo(
+          title: 'Помощник сообщества',
+          description: 'Помогаете другим пользователям',
+          icon: '🤝',
+          color: '#4CAF50',
+          category: BadgeCategory.general,
+        );
+      case BadgeType.feedbackProvider:
+        return BadgeInfo(
+          title: 'Поставщик обратной связи',
+          description: 'Активно участвуете в улучшении приложения',
+          icon: '💡',
+          color: '#FF9800',
+          category: BadgeCategory.general,
+        );
+    }
+  }
+}
+
+/// Информация о бейдже
+class BadgeInfo {
+  final String title;
+  final String description;
+  final String icon;
+  final String color;
+  final BadgeCategory category;
+
+  const BadgeInfo({
+    required this.title,
+    required this.description,
+    required this.icon,
+    required this.color,
+    required this.category,
+  });
+}
+
+/// Категории бейджей
+enum BadgeCategory {
+  specialist,
+  customer,
+  general,
+}
+
+/// Расширение для работы с бейджами
+extension BadgeListExtension on List<Badge> {
+  /// Получает бейджи по категории
+  List<Badge> byCategory(BadgeCategory category) {
+    return where((badge) => badge.type.info.category == category).toList();
+  }
+
+  /// Получает последние бейджи
+  List<Badge> get recent => 
+      toList()..sort((a, b) => b.earnedAt.compareTo(a.earnedAt));
+
+  /// Получает видимые бейджи
+  List<Badge> get visible => where((badge) => badge.isVisible).toList();
+
+  /// Группирует бейджи по категориям
+  Map<BadgeCategory, List<Badge>> get groupedByCategory {
+    final Map<BadgeCategory, List<Badge>> grouped = {};
+    for (final badge in this) {
+      final category = badge.type.info.category;
+      grouped.putIfAbsent(category, () => []).add(badge);
+    }
+    return grouped;
+  }
+}

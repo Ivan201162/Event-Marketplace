@@ -8,6 +8,7 @@ import '../widgets/animated_page_transition.dart';
 import 'customer_profile_edit_screen.dart';
 import 'specialist_profile_edit_screen.dart';
 import 'notification_settings_screen.dart';
+import 'badges_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -331,6 +332,16 @@ class ProfileScreen extends ConsumerWidget {
               onTap: () => Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) => const NotificationSettingsScreen(),
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.emoji_events),
+              title: const Text('Бейджи и достижения'),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const BadgesScreen(),
                 ),
               ),
             ),

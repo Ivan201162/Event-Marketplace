@@ -3,11 +3,13 @@ import 'dart:convert';
 import '../models/booking.dart';
 import 'specialist_schedule_service.dart';
 import 'notification_service.dart';
+import 'badge_service.dart';
 
 class BookingService {
   static const String _bookingsKey = 'bookings';
   final SpecialistScheduleService _scheduleService = SpecialistScheduleService();
   final NotificationService _notificationService = NotificationService();
+  final BadgeService _badgeService = BadgeService();
 
   Future<void> addBooking(Booking booking) async {
     final bookings = await getBookings();
@@ -29,6 +31,14 @@ class BookingService {
     } catch (e) {
       // Логируем ошибку, но не прерываем создание бронирования
       print('Error scheduling payment reminder: $e');
+    }
+    
+    // Проверяем бейджи
+    try {
+      await _badgeService.checkBookingBadges(booking.customerId, booking.specialistId);
+    } catch (e) {
+      // Логируем ошибку, но не прерываем создание бронирования
+      print('Error checking booking badges: $e');
     }
   }
 
