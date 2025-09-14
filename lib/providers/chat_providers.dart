@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'dart:io';
 import '../services/chat_service.dart';
 import '../services/notification_service.dart';
 import '../models/chat.dart';
@@ -152,6 +153,7 @@ class ChatStateNotifier extends StateNotifier<ChatState> {
     required String content,
     MessageType type = MessageType.text,
     String? receiverId,
+    List<String>? attachments,
   }) async {
     state = state.copyWith(isLoading: true, errorMessage: null);
 
@@ -162,6 +164,7 @@ class ChatStateNotifier extends StateNotifier<ChatState> {
         content: content,
         type: type,
         receiverId: receiverId,
+        attachments: attachments,
       );
       state = state.copyWith(isLoading: false);
       return message;
