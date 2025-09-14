@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/user_role_provider.dart';
-import '../providers/firestore_providers.dart';
 import '../providers/auth_providers.dart';
+import '../providers/profile_providers.dart';
 import '../models/user.dart';
+import 'customer_profile_edit_screen.dart';
+import 'specialist_profile_edit_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -11,7 +12,7 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUser = ref.watch(currentUserProvider);
-    final role = ref.watch(userRoleProvider);
+    final userRole = ref.watch(currentUserRoleProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -41,13 +42,14 @@ class ProfileScreen extends ConsumerWidget {
                 
                 const SizedBox(height: 24),
                 
-                // Настройки
-                _buildSettingsCard(context, ref, user),
+                // Профиль пользователя
+                if (userRole != null)
+                  _buildUserProfileCard(context, ref, user, userRole),
                 
                 const SizedBox(height: 24),
                 
-                // Тестовые данные (только для разработки)
-                _buildTestDataCard(context, ref),
+                // Настройки
+                _buildSettingsCard(context, ref, user),
               ],
             ),
           );
@@ -64,6 +66,147 @@ class ProfileScreen extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+
+  /// Построение карточки профиля пользователя
+  Widget _buildUserProfileCard(BuildContext context, WidgetRef ref, AppUser user, UserRole role) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Профиль ${role == UserRole.customer ? 'заказчика' : 'специалиста'}',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    if (role == UserRole.customer) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const CustomerProfileEditScreen(),
+                        ),
+                      );
+                    } else if (role == UserRole.specialist) {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const SpecialistProfileEditScreen(),
+                        ),
+                      );
+                    }
+                  },
+                  icon: const Icon(Icons.edit),
+                  label: const Text('Редактировать'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            
+            // Отображение профиля в зависимости от роли
+            if (role == UserRole.customer)
+              _buildCustomerProfilePreview(context, ref, user)
+            else if (role == UserRole.specialist)
+              _buildSpecialistProfilePreview(context, ref, user),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Предварительный просмотр профиля заказчика
+  Widget _buildCustomerProfilePreview(BuildContext context, WidgetRef ref, AppUser user) {
+    final profileAsync = ref.watch(customerProfileProvider(user.id));
+    
+    return profileAsync.when(
+      data: (profile) {
+        if (profile == null) {
+          return const Text('Профиль не создан. Нажмите "Редактировать" для создания.');
+        }
+        
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (profile.bio != null) ...[
+              Text('О себе:', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
+              Text(profile.bio!),
+              const SizedBox(height: 8),
+            ],
+            if (profile.maritalStatus != null) ...[
+              Text('Семейное положение:', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
+              Text(profile.maritalStatusDisplayName),
+              const SizedBox(height: 8),
+            ],
+            if (profile.interests.isNotEmpty) ...[
+              Text('Интересы:', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
+              Wrap(
+                spacing: 4,
+                children: profile.interests.map((interest) => Chip(
+                  label: Text(interest),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                )).toList(),
+              ),
+            ],
+          ],
+        );
+      },
+      loading: () => const CircularProgressIndicator(),
+      error: (error, stack) => Text('Ошибка загрузки профиля: $error'),
+    );
+  }
+
+  /// Предварительный просмотр профиля специалиста
+  Widget _buildSpecialistProfilePreview(BuildContext context, WidgetRef ref, AppUser user) {
+    final profileAsync = ref.watch(specialistProfileProvider(user.id));
+    
+    return profileAsync.when(
+      data: (profile) {
+        if (profile == null) {
+          return const Text('Профиль не создан. Нажмите "Редактировать" для создания.');
+        }
+        
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (profile.bio != null) ...[
+              Text('О себе:', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
+              Text(profile.bio!),
+              const SizedBox(height: 8),
+            ],
+            if (profile.categories.isNotEmpty) ...[
+              Text('Категории:', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
+              Wrap(
+                spacing: 4,
+                children: profile.categoryDisplayNames.map((category) => Chip(
+                  label: Text(category),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                )).toList(),
+              ),
+              const SizedBox(height: 8),
+            ],
+            Row(
+              children: [
+                Text('Опыт: ', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
+                Text('${profile.experienceYears} лет'),
+                const SizedBox(width: 16),
+                Text('Рейтинг: ', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
+                Text('${profile.rating.toStringAsFixed(1)} ⭐'),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text('Почасовая ставка: ${profile.hourlyRate.toStringAsFixed(0)} ₽', 
+                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
+          ],
+        );
+      },
+      loading: () => const CircularProgressIndicator(),
+      error: (error, stack) => Text('Ошибка загрузки профиля: $error'),
     );
   }
 
