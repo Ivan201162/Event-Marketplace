@@ -3,87 +3,94 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// Модель отзыва
 class Review {
   final String id;
-  final String bookingId;
-  final String customerId;
   final String specialistId;
+  final String customerId;
+  final String customerName;
+  final String? customerAvatar;
+  final String bookingId;
   final int rating; // 1-5 звезд
   final String? title;
   final String? comment;
-  final List<String> tags; // Теги для категоризации
+  final List<String> images; // Фото с мероприятия
   final DateTime createdAt;
-  final DateTime? updatedAt;
-  final bool isVerified; // Проверен ли отзыв
+  final DateTime updatedAt;
+  final bool isVerified; // Подтвержден ли отзыв
   final bool isPublic; // Публичный ли отзыв
-  final Map<String, dynamic>? metadata;
+  final Map<String, dynamic>? metadata; // Дополнительные данные
 
-  const Review({
+  Review({
     required this.id,
-    required this.bookingId,
-    required this.customerId,
     required this.specialistId,
+    required this.customerId,
+    required this.customerName,
+    this.customerAvatar,
+    required this.bookingId,
     required this.rating,
     this.title,
     this.comment,
-    this.tags = const [],
-    required this.createdAt,
-    this.updatedAt,
+    required this.images,
+    DateTime? createdAt,
+    DateTime? updatedAt,
     this.isVerified = false,
     this.isPublic = true,
     this.metadata,
-  });
+  }) : createdAt = createdAt ?? DateTime.now(),
+       updatedAt = updatedAt ?? DateTime.now();
 
-  /// Создать из документа Firestore
-  factory Review.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    return Review(
-      id: doc.id,
-      bookingId: data['bookingId'] ?? '',
-      customerId: data['customerId'] ?? '',
-      specialistId: data['specialistId'] ?? '',
-      rating: data['rating'] ?? 5,
-      title: data['title'],
-      comment: data['comment'],
-      tags: List<String>.from(data['tags'] ?? []),
-      createdAt: data['createdAt'] != null 
-          ? (data['createdAt'] as Timestamp).toDate() 
-          : DateTime.now(),
-      updatedAt: data['updatedAt'] != null 
-          ? (data['updatedAt'] as Timestamp).toDate() 
-          : null,
-      isVerified: data['isVerified'] ?? false,
-      isPublic: data['isPublic'] ?? true,
-      metadata: data['metadata'],
-    );
-  }
-
-  /// Преобразовать в Map для Firestore
+  /// Преобразование в Map для Firestore
   Map<String, dynamic> toMap() {
     return {
-      'bookingId': bookingId,
-      'customerId': customerId,
       'specialistId': specialistId,
+      'customerId': customerId,
+      'customerName': customerName,
+      'customerAvatar': customerAvatar,
+      'bookingId': bookingId,
       'rating': rating,
       'title': title,
       'comment': comment,
-      'tags': tags,
+      'images': images,
       'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+      'updatedAt': Timestamp.fromDate(updatedAt),
       'isVerified': isVerified,
       'isPublic': isPublic,
       'metadata': metadata,
     };
   }
 
-  /// Копировать с изменениями
+  /// Создание из документа Firestore
+  factory Review.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return Review(
+      id: doc.id,
+      specialistId: data['specialistId'] ?? '',
+      customerId: data['customerId'] ?? '',
+      customerName: data['customerName'] ?? '',
+      customerAvatar: data['customerAvatar'],
+      bookingId: data['bookingId'] ?? '',
+      rating: data['rating'] ?? 5,
+      title: data['title'],
+      comment: data['comment'],
+      images: List<String>.from(data['images'] ?? []),
+      createdAt: data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
+      updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
+      isVerified: data['isVerified'] ?? false,
+      isPublic: data['isPublic'] ?? true,
+      metadata: data['metadata'],
+    );
+  }
+
+  /// Копирование с изменениями
   Review copyWith({
     String? id,
-    String? bookingId,
-    String? customerId,
     String? specialistId,
+    String? customerId,
+    String? customerName,
+    String? customerAvatar,
+    String? bookingId,
     int? rating,
     String? title,
     String? comment,
-    List<String>? tags,
+    List<String>? images,
     DateTime? createdAt,
     DateTime? updatedAt,
     bool? isVerified,
@@ -92,13 +99,15 @@ class Review {
   }) {
     return Review(
       id: id ?? this.id,
-      bookingId: bookingId ?? this.bookingId,
-      customerId: customerId ?? this.customerId,
       specialistId: specialistId ?? this.specialistId,
+      customerId: customerId ?? this.customerId,
+      customerName: customerName ?? this.customerName,
+      customerAvatar: customerAvatar ?? this.customerAvatar,
+      bookingId: bookingId ?? this.bookingId,
       rating: rating ?? this.rating,
       title: title ?? this.title,
       comment: comment ?? this.comment,
-      tags: tags ?? this.tags,
+      images: images ?? this.images,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       isVerified: isVerified ?? this.isVerified,
@@ -107,48 +116,10 @@ class Review {
     );
   }
 
-  /// Проверить, валиден ли рейтинг
-  bool get isValidRating => rating >= 1 && rating <= 5;
-
-  /// Получить текстовое описание рейтинга
-  String get ratingDescription {
-    switch (rating) {
-      case 1:
-        return 'Очень плохо';
-      case 2:
-        return 'Плохо';
-      case 3:
-        return 'Удовлетворительно';
-      case 4:
-        return 'Хорошо';
-      case 5:
-        return 'Отлично';
-      default:
-        return 'Не оценено';
-    }
+  @override
+  String toString() {
+    return 'Review(id: $id, specialistId: $specialistId, customerId: $customerId, rating: $rating)';
   }
-
-  /// Получить цвет рейтинга
-  String get ratingColor {
-    switch (rating) {
-      case 1:
-      case 2:
-        return 'red';
-      case 3:
-        return 'orange';
-      case 4:
-      case 5:
-        return 'green';
-      default:
-        return 'grey';
-    }
-  }
-
-  /// Проверить, есть ли комментарий
-  bool get hasComment => comment != null && comment!.isNotEmpty;
-
-  /// Проверить, есть ли заголовок
-  bool get hasTitle => title != null && title!.isNotEmpty;
 
   @override
   bool operator ==(Object other) {
@@ -158,209 +129,76 @@ class Review {
 
   @override
   int get hashCode => id.hashCode;
-
-  @override
-  String toString() {
-    return 'Review(id: $id, rating: $rating, specialistId: $specialistId)';
-  }
 }
 
 /// Статистика отзывов
-class ReviewStatistics {
+class ReviewStats {
   final double averageRating;
   final int totalReviews;
-  final Map<int, int> ratingDistribution; // Количество отзывов по рейтингам
-  final List<String> commonTags;
-  final double verifiedPercentage;
-  final DateTime? lastReviewDate;
+  final Map<int, int> ratingDistribution; // Количество отзывов по каждой оценке
+  final int verifiedReviews;
+  final int publicReviews;
 
-  const ReviewStatistics({
+  ReviewStats({
     required this.averageRating,
     required this.totalReviews,
     required this.ratingDistribution,
-    required this.commonTags,
-    required this.verifiedPercentage,
-    this.lastReviewDate,
+    required this.verifiedReviews,
+    required this.publicReviews,
   });
 
-  factory ReviewStatistics.empty() {
-    return const ReviewStatistics(
-      averageRating: 0.0,
-      totalReviews: 0,
-      ratingDistribution: {},
-      commonTags: [],
-      verifiedPercentage: 0.0,
+  /// Создание из списка отзывов
+  factory ReviewStats.fromReviews(List<Review> reviews) {
+    if (reviews.isEmpty) {
+      return ReviewStats(
+        averageRating: 0.0,
+        totalReviews: 0,
+        ratingDistribution: {},
+        verifiedReviews: 0,
+        publicReviews: 0,
+      );
+    }
+
+    final totalRating = reviews.fold<int>(0, (sum, review) => sum + review.rating);
+    final averageRating = totalRating / reviews.length;
+
+    final ratingDistribution = <int, int>{};
+    for (int i = 1; i <= 5; i++) {
+      ratingDistribution[i] = reviews.where((review) => review.rating == i).length;
+    }
+
+    final verifiedReviews = reviews.where((review) => review.isVerified).length;
+    final publicReviews = reviews.where((review) => review.isPublic).length;
+
+    return ReviewStats(
+      averageRating: averageRating,
+      totalReviews: reviews.length,
+      ratingDistribution: ratingDistribution,
+      verifiedReviews: verifiedReviews,
+      publicReviews: publicReviews,
     );
   }
 
-  /// Получить процент отзывов с определенным рейтингом
-  double getRatingPercentage(int rating) {
-    if (totalReviews == 0) return 0.0;
-    final count = ratingDistribution[rating] ?? 0;
-    return (count / totalReviews) * 100;
-  }
-
-  /// Проверить, есть ли отзывы
-  bool get hasReviews => totalReviews > 0;
-
-  /// Получить текстовое описание среднего рейтинга
-  String get averageRatingDescription {
-    if (averageRating >= 4.5) return 'Отлично';
-    if (averageRating >= 3.5) return 'Хорошо';
-    if (averageRating >= 2.5) return 'Удовлетворительно';
-    if (averageRating >= 1.5) return 'Плохо';
-    return 'Очень плохо';
-  }
-}
-
-/// Теги для отзывов
-class ReviewTags {
-  static const List<String> positiveTags = [
-    'Профессионализм',
-    'Пунктуальность',
-    'Качество работы',
-    'Внимательность',
-    'Коммуникабельность',
-    'Креативность',
-    'Ответственность',
-    'Дружелюбность',
-  ];
-
-  static const List<String> negativeTags = [
-    'Опоздание',
-    'Плохое качество',
-    'Невнимательность',
-    'Грубость',
-    'Неопытность',
-    'Неорганизованность',
-    'Нарушение договоренностей',
-    'Плохая коммуникация',
-  ];
-
-  static const List<String> neutralTags = [
-    'Средний уровень',
-    'Обычное качество',
-    'Стандартный подход',
-    'Без особенностей',
-  ];
-
-  /// Получить все доступные теги
-  static List<String> getAllTags() {
-    return [...positiveTags, ...negativeTags, ...neutralTags];
-  }
-
-  /// Получить теги по рейтингу
-  static List<String> getTagsByRating(int rating) {
-    if (rating >= 4) return positiveTags;
-    if (rating <= 2) return negativeTags;
-    return neutralTags;
-  }
-}
-
-/// Критерии оценки
-class RatingCriteria {
-  final String name;
-  final String description;
-  final int weight; // Вес критерия (1-5)
-
-  const RatingCriteria({
-    required this.name,
-    required this.description,
-    this.weight = 1,
-  });
-}
-
-/// Детальная оценка по критериям
-class DetailedRating {
-  final String reviewId;
-  final Map<String, int> criteriaRatings; // Критерий -> рейтинг (1-5)
-  final DateTime createdAt;
-
-  const DetailedRating({
-    required this.reviewId,
-    required this.criteriaRatings,
-    required this.createdAt,
-  });
-
-  /// Создать из документа Firestore
-  factory DetailedRating.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    return DetailedRating(
-      reviewId: data['reviewId'] ?? '',
-      criteriaRatings: Map<String, int>.from(data['criteriaRatings'] ?? {}),
-      createdAt: data['createdAt'] != null 
-          ? (data['createdAt'] as Timestamp).toDate() 
-          : DateTime.now(),
-    );
-  }
-
-  /// Преобразовать в Map для Firestore
+  /// Преобразование в Map для Firestore
   Map<String, dynamic> toMap() {
     return {
-      'reviewId': reviewId,
-      'criteriaRatings': criteriaRatings,
-      'createdAt': Timestamp.fromDate(createdAt),
+      'averageRating': averageRating,
+      'totalReviews': totalReviews,
+      'ratingDistribution': ratingDistribution,
+      'verifiedReviews': verifiedReviews,
+      'publicReviews': publicReviews,
     };
   }
 
-  /// Получить средний рейтинг по критериям
-  double get averageRating {
-    if (criteriaRatings.isEmpty) return 0.0;
-    final sum = criteriaRatings.values.reduce((a, b) => a + b);
-    return sum / criteriaRatings.length;
+  /// Создание из документа Firestore
+  factory ReviewStats.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return ReviewStats(
+      averageRating: (data['averageRating'] ?? 0.0).toDouble(),
+      totalReviews: data['totalReviews'] ?? 0,
+      ratingDistribution: Map<int, int>.from(data['ratingDistribution'] ?? {}),
+      verifiedReviews: data['verifiedReviews'] ?? 0,
+      publicReviews: data['publicReviews'] ?? 0,
+    );
   }
-}
-
-/// Стандартные критерии оценки
-class StandardRatingCriteria {
-  static const List<RatingCriteria> specialistCriteria = [
-    RatingCriteria(
-      name: 'Профессионализм',
-      description: 'Уровень профессиональных навыков и знаний',
-      weight: 3,
-    ),
-    RatingCriteria(
-      name: 'Пунктуальность',
-      description: 'Соблюдение временных рамок',
-      weight: 2,
-    ),
-    RatingCriteria(
-      name: 'Коммуникация',
-      description: 'Качество общения и понимания требований',
-      weight: 2,
-    ),
-    RatingCriteria(
-      name: 'Качество работы',
-      description: 'Результат выполненной работы',
-      weight: 3,
-    ),
-    RatingCriteria(
-      name: 'Отзывчивость',
-      description: 'Готовность помочь и ответить на вопросы',
-      weight: 1,
-    ),
-  ];
-
-  static const List<RatingCriteria> customerCriteria = [
-    RatingCriteria(
-      name: 'Четкость требований',
-      description: 'Ясность в постановке задач',
-      weight: 2,
-    ),
-    RatingCriteria(
-      name: 'Сотрудничество',
-      description: 'Готовность к взаимодействию',
-      weight: 2,
-    ),
-    RatingCriteria(
-      name: 'Оплата',
-      description: 'Своевременность оплаты',
-      weight: 3,
-    ),
-    RatingCriteria(
-      name: 'Взаимодействие',
-      description: 'Качество общения в процессе работы',
-      weight: 2,
-    ),
-  ];
 }

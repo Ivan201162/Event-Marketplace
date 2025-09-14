@@ -1,18 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../models/review.dart';
 import '../providers/review_providers.dart';
 import '../providers/auth_providers.dart';
-import '../widgets/review_widgets.dart';
-import '../models/review.dart';
 
 class ReviewsScreen extends ConsumerStatefulWidget {
-  const ReviewsScreen({super.key});
+  final String specialistId;
+  final String? specialistName;
+
+  const ReviewsScreen({
+    super.key,
+    required this.specialistId,
+    this.specialistName,
+  });
 
   @override
   ConsumerState<ReviewsScreen> createState() => _ReviewsScreenState();
 }
 
-class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTickerProviderStateMixin {
+class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -29,67 +36,32 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = ref.watch(currentUserProvider);
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Отзывы'),
+        title: Text('Отзывы ${widget.specialistName ?? ''}'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        elevation: 0,
         bottom: TabBar(
           controller: _tabController,
           tabs: const [
-            Tab(icon: Icon(Icons.star), text: 'Мои отзывы'),
-            Tab(icon: Icon(Icons.rate_review), text: 'Отзывы обо мне'),
-            Tab(icon: Icon(Icons.leaderboard), text: 'Топ специалистов'),
+            Tab(text: 'Все отзывы'),
+            Tab(text: 'Статистика'),
+            Tab(text: 'Оставить отзыв'),
           ],
         ),
       ),
-      body: currentUser.when(
-        data: (user) {
-          if (user == null) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.person_off, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
-                  Text(
-                    'Необходима авторизация',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return TabBarView(
-            controller: _tabController,
-            children: [
-              _buildMyReviewsTab(user.id),
-              _buildReviewsAboutMeTab(user.id, user.isSpecialist),
-              _buildTopSpecialistsTab(),
-            ],
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.error_outline, size: 64, color: Colors.red),
-              const SizedBox(height: 16),
-              Text('Ошибка загрузки: $error'),
-            ],
-          ),
-        ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          _buildAllReviewsTab(),
+          _buildStatsTab(),
+          _buildCreateReviewTab(),
+        ],
       ),
     );
   }
 
-  /// Вкладка моих отзывов
-  Widget _buildMyReviewsTab(String userId) {
-    final reviewsAsync = ref.watch(customerReviewsProvider(userId));
+  Widget _buildAllReviewsTab() {
+    final reviewsAsync = ref.watch(reviewsBySpecialistProvider(widget.specialistId));
 
     return reviewsAsync.when(
       data: (reviews) {
@@ -98,36 +70,28 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Icon(Icons.rate_review, size: 64, color: Colors.grey),
+                Icon(Icons.reviews, size: 64, color: Colors.grey),
                 SizedBox(height: 16),
-                Text(
-                  'Вы еще не оставляли отзывы',
-                  style: TextStyle(fontSize: 18, color: Colors.grey),
-                ),
+                Text('Пока нет отзывов'),
                 SizedBox(height: 8),
-                Text(
-                  'Отзывы можно оставить после завершения заявок',
-                  style: TextStyle(color: Colors.grey),
-                ),
+                Text('Станьте первым, кто оставит отзыв'),
               ],
             ),
           );
         }
 
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: reviews.length,
-          itemBuilder: (context, index) {
-            final review = reviews[index];
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 12),
-              child: ReviewCard(
-                review: review,
-                showActions: true,
-                onTap: () => _showEditReviewDialog(context, review),
-              ),
-            );
+        return RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(reviewsBySpecialistProvider(widget.specialistId));
           },
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: reviews.length,
+            itemBuilder: (context, index) {
+              final review = reviews[index];
+              return _buildReviewCard(review);
+            },
+          ),
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -135,347 +99,403 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen> with SingleTicker
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.error_outline, size: 64, color: Colors.red),
+            const Icon(Icons.error, size: 64, color: Colors.red),
             const SizedBox(height: 16),
             Text('Ошибка загрузки отзывов: $error'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                ref.invalidate(reviewsBySpecialistProvider(widget.specialistId));
+              },
+              child: const Text('Повторить'),
+            ),
           ],
         ),
       ),
     );
   }
 
-  /// Вкладка отзывов обо мне
-  Widget _buildReviewsAboutMeTab(String userId, bool isSpecialist) {
-    if (!isSpecialist) {
+  Widget _buildStatsTab() {
+    final statsAsync = ref.watch(reviewStatsProvider(widget.specialistId));
+
+    return statsAsync.when(
+      data: (stats) {
+        return SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Общая статистика
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Общая статистика',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildStatCard(
+                              'Средняя оценка',
+                              stats.averageRating.toStringAsFixed(1),
+                              Icons.star,
+                              Colors.amber,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _buildStatCard(
+                              'Всего отзывов',
+                              stats.totalReviews.toString(),
+                              Icons.reviews,
+                              Colors.blue,
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 12),
+                      
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildStatCard(
+                              'Подтвержденных',
+                              stats.verifiedReviews.toString(),
+                              Icons.verified,
+                              Colors.green,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _buildStatCard(
+                              'Публичных',
+                              stats.publicReviews.toString(),
+                              Icons.public,
+                              Colors.purple,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              
+              const SizedBox(height: 16),
+              
+              // Распределение оценок
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Распределение оценок',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      
+                      ...List.generate(5, (index) {
+                        final rating = 5 - index;
+                        final count = stats.ratingDistribution[rating] ?? 0;
+                        final percentage = stats.totalReviews > 0 
+                            ? (count / stats.totalReviews * 100).round()
+                            : 0;
+                        
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8),
+                          child: Row(
+                            children: [
+                              Text('$rating'),
+                              const SizedBox(width: 8),
+                              const Icon(Icons.star, size: 16, color: Colors.amber),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: LinearProgressIndicator(
+                                  value: stats.totalReviews > 0 ? count / stats.totalReviews : 0,
+                                  backgroundColor: Colors.grey[300],
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                    Colors.amber.withOpacity(0.7),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Text('$count ($percentage%)'),
+                            ],
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error, size: 64, color: Colors.red),
+            const SizedBox(height: 16),
+            Text('Ошибка загрузки статистики: $error'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCreateReviewTab() {
+    final currentUser = ref.watch(currentUserProvider).value;
+    
+    if (currentUser == null) {
       return const Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Icon(Icons.person_off, size: 64, color: Colors.grey),
             SizedBox(height: 16),
-            Text(
-              'Доступно только для специалистов',
-              style: TextStyle(fontSize: 18, color: Colors.grey),
-            ),
+            Text('Войдите в аккаунт, чтобы оставить отзыв'),
           ],
         ),
       );
     }
 
-    return Column(
-      children: [
-        // Статистика
-        Expanded(
-          flex: 1,
-          child: _buildStatisticsSection(userId),
-        ),
-        
-        // Список отзывов
-        Expanded(
-          flex: 2,
-          child: ReviewListWidget(specialistId: userId),
-        ),
-      ],
-    );
-  }
-
-  /// Вкладка топ специалистов
-  Widget _buildTopSpecialistsTab() {
-    final topSpecialistsAsync = ref.watch(topSpecialistsProvider(const TopSpecialistsParams()));
-
-    return topSpecialistsAsync.when(
-      data: (specialists) {
-        if (specialists.isEmpty) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.leaderboard, size: 64, color: Colors.grey),
-                SizedBox(height: 16),
-                Text(
-                  'Нет данных о специалистах',
-                  style: TextStyle(fontSize: 18, color: Colors.grey),
-                ),
-              ],
-            ),
-          );
-        }
-
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: specialists.length,
-          itemBuilder: (context, index) {
-            final specialist = specialists[index];
-            return _buildTopSpecialistCard(context, specialist, index + 1);
-          },
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
-            Text('Ошибка загрузки топ специалистов: $error'),
-          ],
-        ),
+    return const Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.rate_review, size: 64, color: Colors.grey),
+          SizedBox(height: 16),
+          Text('Форма отзыва будет реализована позже'),
+          SizedBox(height: 8),
+          Text('Вы сможете оставить отзыв после завершения мероприятия'),
+        ],
       ),
     );
   }
 
-  /// Секция статистики
-  Widget _buildStatisticsSection(String specialistId) {
-    final statisticsAsync = ref.watch(specialistReviewStatisticsProvider(specialistId));
-
-    return statisticsAsync.when(
-      data: (statistics) {
-        if (!statistics.hasReviews) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.analytics, size: 64, color: Colors.grey),
-                SizedBox(height: 16),
-                Text(
-                  'Нет отзывов для статистики',
-                  style: TextStyle(fontSize: 18, color: Colors.grey),
-                ),
-              ],
-            ),
-          );
-        }
-
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: ReviewStatisticsWidget(statistics: statistics),
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
-            Text('Ошибка загрузки статистики: $error'),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Карточка топ специалиста
-  Widget _buildTopSpecialistCard(BuildContext context, Map<String, dynamic> specialist, int position) {
-    final specialistId = specialist['specialistId'] as String;
-    final averageRating = specialist['averageRating'] as double;
-    final reviewCount = specialist['reviewCount'] as int;
-
+  Widget _buildReviewCard(Review review) {
     return Card(
-      elevation: position <= 3 ? 6 : 2,
+      margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
         padding: const EdgeInsets.all(16),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Позиция
-            Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: _getPositionColor(position),
-                shape: BoxShape.circle,
-              ),
-              child: Center(
-                child: Text(
-                  position.toString(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
+            // Заголовок отзыва
+            Row(
+              children: [
+                // Аватар заказчика
+                CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  backgroundImage: review.customerAvatar != null
+                      ? NetworkImage(review.customerAvatar!)
+                      : null,
+                  child: review.customerAvatar == null
+                      ? Text(
+                          review.customerName.isNotEmpty 
+                              ? review.customerName[0].toUpperCase() 
+                              : '?',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        )
+                      : null,
                 ),
-              ),
-            ),
-            const SizedBox(width: 16),
-            
-            // Информация о специалисте
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Специалист $specialistId',
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Row(
+                const SizedBox(width: 12),
+                
+                // Информация о заказчике и оценка
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildRatingStars(averageRating.round()),
-                      const SizedBox(width: 8),
-                      Text(
-                        averageRating.toStringAsFixed(1),
-                        style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              review.customerName,
+                              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          if (review.isVerified)
+                            const Icon(Icons.verified, color: Colors.blue, size: 16),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Row(
+                        children: [
+                          ...List.generate(5, (index) {
+                            return Icon(
+                              index < review.rating ? Icons.star : Icons.star_border,
+                              size: 16,
+                              color: Colors.amber,
+                            );
+                          }),
+                          const SizedBox(width: 8),
+                          Text(
+                            _formatDate(review.createdAt),
+                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    '$reviewCount отзывов',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            
-            // Кнопка просмотра
-            IconButton(
-              onPressed: () => _viewSpecialistReviews(context, specialistId),
-              icon: const Icon(Icons.visibility),
-              tooltip: 'Посмотреть отзывы',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Получить цвет позиции
-  Color _getPositionColor(int position) {
-    switch (position) {
-      case 1:
-        return Colors.amber; // Золото
-      case 2:
-        return Colors.grey; // Серебро
-      case 3:
-        return Colors.brown; // Бронза
-      default:
-        return Colors.blue;
-    }
-  }
-
-  /// Построить звезды рейтинга
-  Widget _buildRatingStars(int rating) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: List.generate(5, (index) {
-        return Icon(
-          index < rating ? Icons.star : Icons.star_border,
-          color: Colors.amber,
-          size: 16,
-        );
-      }),
-    );
-  }
-
-  /// Показать диалог редактирования отзыва
-  void _showEditReviewDialog(BuildContext context, Review review) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Редактировать отзыв'),
-        content: const Text('Функция редактирования отзывов будет добавлена в следующих версиях'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Закрыть'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Посмотреть отзывы специалиста
-  void _viewSpecialistReviews(BuildContext context, String specialistId) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => SpecialistReviewsScreen(specialistId: specialistId),
-      ),
-    );
-  }
-}
-
-/// Экран отзывов специалиста
-class SpecialistReviewsScreen extends ConsumerWidget {
-  final String specialistId;
-
-  const SpecialistReviewsScreen({
-    super.key,
-    required this.specialistId,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Отзывы специалиста $specialistId'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        elevation: 0,
-      ),
-      body: Column(
-        children: [
-          // Статистика
-          Expanded(
-            flex: 1,
-            child: _buildStatisticsSection(context, ref),
-          ),
-          
-          // Список отзывов
-          Expanded(
-            flex: 2,
-            child: ReviewListWidget(specialistId: specialistId),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Секция статистики
-  Widget _buildStatisticsSection(BuildContext context, WidgetRef ref) {
-    final statisticsAsync = ref.watch(specialistReviewStatisticsProvider(specialistId));
-
-    return statisticsAsync.when(
-      data: (statistics) {
-        if (!statistics.hasReviews) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.analytics, size: 64, color: Colors.grey),
-                SizedBox(height: 16),
-                Text(
-                  'Нет отзывов для статистики',
-                  style: TextStyle(fontSize: 18, color: Colors.grey),
                 ),
               ],
             ),
-          );
-        }
-
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: ReviewStatisticsWidget(statistics: statistics),
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
-            Text('Ошибка загрузки статистики: $error'),
+            
+            const SizedBox(height: 12),
+            
+            // Заголовок отзыва
+            if (review.title != null) ...[
+              Text(
+                review.title!,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 8),
+            ],
+            
+            // Комментарий
+            if (review.comment != null) ...[
+              Text(
+                review.comment!,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              const SizedBox(height: 12),
+            ],
+            
+            // Фотографии
+            if (review.images.isNotEmpty) ...[
+              SizedBox(
+                height: 100,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemCount: review.images.length,
+                  itemBuilder: (context, index) {
+                    return Container(
+                      width: 100,
+                      margin: const EdgeInsets.only(right: 8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
+                        color: Colors.grey[200],
+                      ),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          review.images[index],
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return const Icon(Icons.image, size: 32, color: Colors.grey);
+                          },
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
+              const SizedBox(height: 12),
+            ],
+            
+            // Дополнительная информация
+            Row(
+              children: [
+                if (review.isVerified) ...[
+                  const Icon(Icons.verified, size: 16, color: Colors.blue),
+                  const SizedBox(width: 4),
+                  Text(
+                    'Подтвержденный отзыв',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(width: 16),
+                ],
+                Text(
+                  'ID бронирования: ${review.bookingId.substring(0, 8)}...',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
+  }
+
+  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 24),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.bodySmall?.copyWith(
+              color: Colors.grey[600],
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDate(DateTime date) {
+    final now = DateTime.now();
+    final difference = now.difference(date);
+    
+    if (difference.inDays == 0) {
+      return 'Сегодня';
+    } else if (difference.inDays == 1) {
+      return 'Вчера';
+    } else if (difference.inDays < 7) {
+      return '${difference.inDays} дней назад';
+    } else if (difference.inDays < 30) {
+      return '${(difference.inDays / 7).round()} недель назад';
+    } else if (difference.inDays < 365) {
+      return '${(difference.inDays / 30).round()} месяцев назад';
+    } else {
+      return '${(difference.inDays / 365).round()} лет назад';
+    }
   }
 }
