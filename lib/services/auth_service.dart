@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:vk_login/vk_login.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import '../models/user.dart';
@@ -11,7 +10,6 @@ class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-  final VkLogin _vkLogin = VkLogin();
 
   /// Текущий пользователь Firebase
   User? get currentFirebaseUser => _auth.currentUser;
@@ -258,70 +256,15 @@ class AuthService {
     }
   }
 
-  /// Вход через ВКонтакте
+  /// Вход через ВКонтакте (временно отключен)
   Future<AppUser?> signInWithVK({required UserRole role}) async {
-    try {
-      // Запускаем процесс входа через ВКонтакте
-      final VkLoginResult result = await _vkLogin.logIn();
-      
-      if (result.status == VkLoginStatus.success && result.token != null) {
-        final token = result.token!;
-        
-        // Получаем информацию о пользователе из ВКонтакте
-        final userInfo = await _getVKUserInfo(token.accessToken);
-        if (userInfo == null) throw Exception('Не удалось получить информацию о пользователе');
-
-        // Создаем пользователя в Firebase (анонимно, так как ВК не интегрируется напрямую с Firebase)
-        final credential = await _auth.signInAnonymously();
-        final firebaseUser = credential.user;
-        if (firebaseUser == null) return null;
-
-        // Создаем пользователя в Firestore
-        final appUser = AppUser.fromFirebaseUser(
-          firebaseUser.uid,
-          userInfo['email'] ?? 'vk_${userInfo['id']}@vk.com',
-          displayName: '${userInfo['first_name']} ${userInfo['last_name']}',
-          photoURL: userInfo['photo_200'],
-          role: role,
-          socialProvider: 'vk',
-          socialId: userInfo['id'].toString(),
-        );
-
-        await _firestore.collection('users').doc(firebaseUser.uid).set(appUser.toMap());
-        return appUser;
-      } else {
-        throw Exception('Ошибка входа через ВКонтакте: ${result.errorMessage}');
-      }
-    } catch (e) {
-      throw Exception('Ошибка входа через ВКонтакте: $e');
-    }
-  }
-
-  /// Получить информацию о пользователе ВКонтакте
-  Future<Map<String, dynamic>?> _getVKUserInfo(String accessToken) async {
-    try {
-      final response = await http.get(
-        Uri.parse('https://api.vk.com/method/users.get?access_token=$accessToken&fields=photo_200&v=5.131'),
-      );
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-        if (data['response'] != null && data['response'].isNotEmpty) {
-          return data['response'][0];
-        }
-      }
-      return null;
-    } catch (e) {
-      print('Ошибка получения информации ВК: $e');
-      return null;
-    }
+    throw Exception('Вход через ВКонтакте временно недоступен');
   }
 
   /// Выход из всех социальных сетей
   Future<void> signOutFromAll() async {
     try {
       await _googleSignIn.signOut();
-      await _vkLogin.logOut();
       await _auth.signOut();
     } catch (e) {
       throw Exception('Ошибка выхода: $e');
