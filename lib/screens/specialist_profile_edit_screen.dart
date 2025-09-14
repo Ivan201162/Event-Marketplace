@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:table_calendar/table_calendar.dart';
+import 'dart:io';
 import '../models/specialist_profile.dart';
 import '../providers/profile_providers.dart';
 import '../providers/auth_providers.dart';
@@ -24,6 +28,15 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
   List<SpecialistCategory> _selectedCategories = [];
   int _experienceYears = 0;
   List<String> _services = [];
+  
+  // Портфолио
+  List<File> _portfolioImages = [];
+  List<File> _portfolioVideos = [];
+  List<File> _portfolioFiles = [];
+  
+  // Календарь занятости
+  List<DateTime> _unavailableDates = [];
+  bool _isCalendarExpanded = false;
 
   @override
   void initState() {
@@ -48,6 +61,70 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
     if (currentUser != null) {
       ref.read(specialistProfileEditProvider.notifier).loadProfile(currentUser.id);
     }
+  }
+
+  /// Загрузка изображений для портфолио
+  Future<void> _pickImages() async {
+    final ImagePicker picker = ImagePicker();
+    final List<XFile> images = await picker.pickMultiImage();
+    
+    if (images.isNotEmpty) {
+      setState(() {
+        _portfolioImages.addAll(images.map((image) => File(image.path)));
+      });
+    }
+  }
+
+  /// Загрузка видео для портфолио
+  Future<void> _pickVideos() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? video = await picker.pickVideo(source: ImageSource.gallery);
+    
+    if (video != null) {
+      setState(() {
+        _portfolioVideos.add(File(video.path));
+      });
+    }
+  }
+
+  /// Загрузка файлов для портфолио
+  Future<void> _pickFiles() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      allowMultiple: true,
+      type: FileType.custom,
+      allowedExtensions: ['pdf', 'doc', 'docx', 'txt'],
+    );
+
+    if (result != null) {
+      setState(() {
+        _portfolioFiles.addAll(result.files.map((file) => File(file.path!)));
+      });
+    }
+  }
+
+  /// Удаление файла из портфолио
+  void _removePortfolioItem(List<File> list, int index) {
+    setState(() {
+      list.removeAt(index);
+    });
+  }
+
+  /// Добавление даты недоступности
+  void _addUnavailableDate(DateTime date) {
+    setState(() {
+      if (!_unavailableDates.any((d) => 
+          d.year == date.year && d.month == date.month && d.day == date.day)) {
+        _unavailableDates.add(date);
+      }
+    });
+  }
+
+  /// Удаление даты недоступности
+  void _removeUnavailableDate(DateTime date) {
+    setState(() {
+      _unavailableDates.removeWhere((d) => 
+          d.year == date.year && d.month == date.month && d.day == date.day);
+    });
   }
 
   @override
@@ -124,6 +201,10 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
 
                     // Портфолио
                     _buildPortfolio(),
+                    const SizedBox(height: 24),
+
+                    // Календарь занятости
+                    _buildAvailabilityCalendar(),
                     const SizedBox(height: 24),
 
                     // Ошибка
@@ -480,9 +561,158 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
   }
 
   Widget _buildPortfolio() {
-    final editState = ref.watch(specialistProfileEditProvider);
-    final portfolio = editState.profile?.portfolio ?? [];
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Портфолио',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            
+            // Изображения
+            _buildPortfolioSection(
+              'Фотографии',
+              Icons.photo,
+              _portfolioImages,
+              _pickImages,
+            ),
+            const SizedBox(height: 16),
+            
+            // Видео
+            _buildPortfolioSection(
+              'Видео',
+              Icons.videocam,
+              _portfolioVideos,
+              _pickVideos,
+            ),
+            const SizedBox(height: 16),
+            
+            // Файлы
+            _buildPortfolioSection(
+              'Документы',
+              Icons.description,
+              _portfolioFiles,
+              _pickFiles,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
 
+  Widget _buildPortfolioSection(String title, IconData icon, List<File> files, VoidCallback onAdd) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              children: [
+                Icon(icon, size: 20),
+                const SizedBox(width: 8),
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            ),
+            TextButton.icon(
+              onPressed: onAdd,
+              icon: const Icon(Icons.add, size: 16),
+              label: const Text('Добавить'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        
+        if (files.isEmpty)
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey.withOpacity(0.3)),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              'Нет файлов',
+              style: TextStyle(
+                color: Colors.grey.withOpacity(0.7),
+              ),
+              textAlign: TextAlign.center,
+            ),
+          )
+        else
+          GridView.builder(
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: 8,
+              mainAxisSpacing: 8,
+              childAspectRatio: 1,
+            ),
+            itemCount: files.length,
+            itemBuilder: (context, index) {
+              final file = files[index];
+              return Stack(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      color: Colors.grey.withOpacity(0.1),
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(icon, size: 24, color: Colors.grey),
+                        const SizedBox(height: 4),
+                        Text(
+                          file.path.split('/').last,
+                          style: const TextStyle(fontSize: 10),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    top: 4,
+                    right: 4,
+                    child: GestureDetector(
+                      onTap: () => _removePortfolioItem(files, index),
+                      child: Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: const BoxDecoration(
+                          color: Colors.red,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const Icon(
+                          Icons.close,
+                          size: 12,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+      ],
+    );
+  }
+
+  Widget _buildAvailabilityCalendar() {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -493,69 +723,138 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Портфолио',
+                  'Календарь занятости',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.add),
+                  icon: Icon(_isCalendarExpanded ? Icons.expand_less : Icons.expand_more),
                   onPressed: () {
-                    _showAddPortfolioDialog();
+                    setState(() {
+                      _isCalendarExpanded = !_isCalendarExpanded;
+                    });
                   },
                 ),
               ],
             ),
-            const SizedBox(height: 16),
-            
-            if (portfolio.isEmpty)
-              const Text('Добавьте работы в портфолио')
-            else
-              GridView.builder(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 8,
-                  mainAxisSpacing: 8,
-                  childAspectRatio: 1,
-                ),
-                itemCount: portfolio.length,
-                itemBuilder: (context, index) {
-                  final item = portfolio[index];
-                  return Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.grey.withOpacity(0.1),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          item.type == 'photo' ? Icons.image :
-                          item.type == 'video' ? Icons.videocam : Icons.description,
-                          size: 40,
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          item.title ?? 'Без названия',
-                          style: const TextStyle(fontSize: 12),
-                          textAlign: TextAlign.center,
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete, size: 16),
-                          onPressed: () {
-                            ref.read(specialistProfileEditProvider.notifier)
-                                .removePortfolioItem(item.id);
-                          },
-                        ),
-                      ],
-                    ),
-                  );
-                },
+            const SizedBox(height: 8),
+            Text(
+              'Отметьте даты, когда вы недоступны для работы',
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Colors.grey[600],
               ),
+            ),
+            
+            if (_isCalendarExpanded) ...[
+              const SizedBox(height: 16),
+              _buildSimpleCalendar(),
+              const SizedBox(height: 16),
+              
+              // Список недоступных дат
+              if (_unavailableDates.isNotEmpty) ...[
+                Text(
+                  'Недоступные даты:',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  children: _unavailableDates.map((date) {
+                    return Chip(
+                      label: Text(
+                        '${date.day}.${date.month}.${date.year}',
+                        style: const TextStyle(fontSize: 12),
+                      ),
+                      deleteIcon: const Icon(Icons.close, size: 16),
+                      onDeleted: () => _removeUnavailableDate(date),
+                      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    );
+                  }).toList(),
+                ),
+              ],
+            ],
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildSimpleCalendar() {
+    return TableCalendar<dynamic>(
+      firstDay: DateTime.utc(2020, 1, 1),
+      lastDay: DateTime.utc(2030, 12, 31),
+      focusedDay: DateTime.now(),
+      calendarFormat: CalendarFormat.month,
+      startingDayOfWeek: StartingDayOfWeek.monday,
+      calendarStyle: CalendarStyle(
+        outsideDaysVisible: false,
+        selectedDecoration: BoxDecoration(
+          color: Colors.red,
+          shape: BoxShape.circle,
+        ),
+        todayDecoration: BoxDecoration(
+          color: Colors.blue,
+          shape: BoxShape.circle,
+        ),
+        defaultDecoration: BoxDecoration(
+          shape: BoxShape.circle,
+        ),
+        weekendDecoration: BoxDecoration(
+          color: Colors.grey.withOpacity(0.1),
+          shape: BoxShape.circle,
+        ),
+      ),
+      headerStyle: HeaderStyle(
+        formatButtonVisible: false,
+        titleCentered: true,
+      ),
+      onDaySelected: (selectedDay, focusedDay) {
+        if (_unavailableDates.any((d) => 
+            d.year == selectedDay.year && 
+            d.month == selectedDay.month && 
+            d.day == selectedDay.day)) {
+          _removeUnavailableDate(selectedDay);
+        } else {
+          _addUnavailableDate(selectedDay);
+        }
+      },
+      selectedDayPredicate: (day) {
+        return _unavailableDates.any((d) => 
+            d.year == day.year && 
+            d.month == day.month && 
+            d.day == day.day);
+      },
+      calendarBuilders: CalendarBuilders(
+        defaultBuilder: (context, day, focusedDay) {
+          final isUnavailable = _unavailableDates.any((d) => 
+              d.year == day.year && 
+              d.month == day.month && 
+              d.day == day.day);
+          
+          if (isUnavailable) {
+            return Container(
+              margin: const EdgeInsets.all(2),
+              decoration: BoxDecoration(
+                color: Colors.red.withOpacity(0.3),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Center(
+                child: Text(
+                  '${day.day}',
+                  style: const TextStyle(
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            );
+          }
+          return null;
+        },
       ),
     );
   }

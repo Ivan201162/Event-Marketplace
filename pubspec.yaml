@@ -21,6 +21,8 @@ dependencies:
   google_sign_in: ^6.2.1
   vk_login: ^1.0.0
   http: ^0.13.6
+  file_picker: ^8.0.0+1
+  image_picker: ^1.0.7
 
 dev_dependencies:
   flutter_test:
