@@ -1,0 +1,242 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/user.dart';
+
+/// Сервис для управления аутентификацией пользователей
+class AuthService {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  /// Текущий пользователь Firebase
+  User? get currentFirebaseUser => _auth.currentUser;
+
+  /// Поток изменений состояния аутентификации
+  Stream<User?> get authStateChanges => _auth.authStateChanges();
+
+  /// Получить текущего пользователя из Firestore
+  Future<AppUser?> getCurrentUser() async {
+    final firebaseUser = currentFirebaseUser;
+    if (firebaseUser == null) return null;
+
+    try {
+      final doc = await _firestore.collection('users').doc(firebaseUser.uid).get();
+      if (doc.exists) {
+        return AppUser.fromDocument(doc);
+      }
+      return null;
+    } catch (e) {
+      print('Ошибка получения пользователя: $e');
+      return null;
+    }
+  }
+
+  /// Поток текущего пользователя
+  Stream<AppUser?> get currentUserStream {
+    return authStateChanges.asyncMap((firebaseUser) async {
+      if (firebaseUser == null) return null;
+      
+      try {
+        final doc = await _firestore.collection('users').doc(firebaseUser.uid).get();
+        if (doc.exists) {
+          return AppUser.fromDocument(doc);
+        }
+        return null;
+      } catch (e) {
+        print('Ошибка получения пользователя: $e');
+        return null;
+      }
+    });
+  }
+
+  /// Регистрация с email и паролем
+  Future<AppUser?> signUpWithEmailAndPassword({
+    required String email,
+    required String password,
+    required String displayName,
+    required UserRole role,
+  }) async {
+    try {
+      // Создаем пользователя в Firebase Auth
+      final credential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final firebaseUser = credential.user;
+      if (firebaseUser == null) return null;
+
+      // Обновляем профиль Firebase
+      await firebaseUser.updateDisplayName(displayName);
+
+      // Создаем пользователя в Firestore
+      final appUser = AppUser.fromFirebaseUser(
+        firebaseUser.uid,
+        email,
+        displayName: displayName,
+        role: role,
+      );
+
+      await _firestore.collection('users').doc(firebaseUser.uid).set(appUser.toMap());
+
+      return appUser;
+    } on FirebaseAuthException catch (e) {
+      throw _handleAuthException(e);
+    } catch (e) {
+      throw Exception('Ошибка регистрации: $e');
+    }
+  }
+
+  /// Вход с email и паролем
+  Future<AppUser?> signInWithEmailAndPassword({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      final credential = await _auth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      final firebaseUser = credential.user;
+      if (firebaseUser == null) return null;
+
+      // Обновляем время последнего входа
+      await _updateLastLogin(firebaseUser.uid);
+
+      // Получаем пользователя из Firestore
+      return await getCurrentUser();
+    } on FirebaseAuthException catch (e) {
+      throw _handleAuthException(e);
+    } catch (e) {
+      throw Exception('Ошибка входа: $e');
+    }
+  }
+
+  /// Вход как гость
+  Future<AppUser?> signInAsGuest() async {
+    try {
+      // Создаем анонимного пользователя
+      final credential = await _auth.signInAnonymously();
+      final firebaseUser = credential.user;
+      
+      if (firebaseUser == null) return null;
+
+      // Создаем гостевого пользователя в Firestore
+      final guestUser = AppUser.fromFirebaseUser(
+        firebaseUser.uid,
+        'guest@example.com',
+        displayName: 'Гость',
+        role: UserRole.guest,
+      );
+
+      await _firestore.collection('users').doc(firebaseUser.uid).set(guestUser.toMap());
+
+      return guestUser;
+    } catch (e) {
+      throw Exception('Ошибка входа как гость: $e');
+    }
+  }
+
+  /// Выход из системы
+  Future<void> signOut() async {
+    try {
+      await _auth.signOut();
+    } catch (e) {
+      throw Exception('Ошибка выхода: $e');
+    }
+  }
+
+  /// Сброс пароля
+  Future<void> resetPassword(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      throw _handleAuthException(e);
+    } catch (e) {
+      throw Exception('Ошибка сброса пароля: $e');
+    }
+  }
+
+  /// Обновить профиль пользователя
+  Future<void> updateUserProfile({
+    String? displayName,
+    String? photoURL,
+    UserRole? role,
+  }) async {
+    final firebaseUser = currentFirebaseUser;
+    if (firebaseUser == null) throw Exception('Пользователь не авторизован');
+
+    try {
+      // Обновляем Firebase Auth профиль
+      if (displayName != null) {
+        await firebaseUser.updateDisplayName(displayName);
+      }
+      if (photoURL != null) {
+        await firebaseUser.updatePhotoURL(photoURL);
+      }
+
+      // Обновляем данные в Firestore
+      final updateData = <String, dynamic>{};
+      if (displayName != null) updateData['displayName'] = displayName;
+      if (photoURL != null) updateData['photoURL'] = photoURL;
+      if (role != null) updateData['role'] = role.name;
+
+      if (updateData.isNotEmpty) {
+        await _firestore.collection('users').doc(firebaseUser.uid).update(updateData);
+      }
+    } catch (e) {
+      throw Exception('Ошибка обновления профиля: $e');
+    }
+  }
+
+  /// Удалить аккаунт
+  Future<void> deleteAccount() async {
+    final firebaseUser = currentFirebaseUser;
+    if (firebaseUser == null) throw Exception('Пользователь не авторизован');
+
+    try {
+      // Удаляем данные из Firestore
+      await _firestore.collection('users').doc(firebaseUser.uid).delete();
+      
+      // Удаляем аккаунт Firebase Auth
+      await firebaseUser.delete();
+    } catch (e) {
+      throw Exception('Ошибка удаления аккаунта: $e');
+    }
+  }
+
+  /// Обновить время последнего входа
+  Future<void> _updateLastLogin(String uid) async {
+    try {
+      await _firestore.collection('users').doc(uid).update({
+        'lastLoginAt': Timestamp.fromDate(DateTime.now()),
+      });
+    } catch (e) {
+      print('Ошибка обновления времени входа: $e');
+    }
+  }
+
+  /// Обработка исключений Firebase Auth
+  String _handleAuthException(FirebaseAuthException e) {
+    switch (e.code) {
+      case 'user-not-found':
+        return 'Пользователь с таким email не найден';
+      case 'wrong-password':
+        return 'Неверный пароль';
+      case 'email-already-in-use':
+        return 'Email уже используется';
+      case 'weak-password':
+        return 'Пароль слишком слабый';
+      case 'invalid-email':
+        return 'Неверный формат email';
+      case 'user-disabled':
+        return 'Аккаунт заблокирован';
+      case 'too-many-requests':
+        return 'Слишком много попыток. Попробуйте позже';
+      case 'operation-not-allowed':
+        return 'Операция не разрешена';
+      default:
+        return 'Ошибка аутентификации: ${e.message}';
+    }
+  }
+}

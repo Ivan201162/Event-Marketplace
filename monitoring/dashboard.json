@@ -1,0 +1,428 @@
+{
+  "dashboard": {
+    "title": "Event Marketplace - Production Dashboard",
+    "description": "Мониторинг производительности и состояния приложения",
+    "version": "1.0.0",
+    "created": "2024-01-01T00:00:00Z",
+    "updated": "2024-01-01T00:00:00Z"
+  },
+  "widgets": [
+    {
+      "id": "overview",
+      "type": "overview",
+      "title": "Обзор системы",
+      "position": {"x": 0, "y": 0, "width": 12, "height": 4},
+      "metrics": [
+        {
+          "name": "active_users",
+          "label": "Активные пользователи",
+          "type": "gauge",
+          "thresholds": {
+            "warning": 1000,
+            "critical": 2000
+          }
+        },
+        {
+          "name": "response_time",
+          "label": "Время отклика (мс)",
+          "type": "line",
+          "thresholds": {
+            "warning": 500,
+            "critical": 1000
+          }
+        },
+        {
+          "name": "error_rate",
+          "label": "Частота ошибок (%)",
+          "type": "bar",
+          "thresholds": {
+            "warning": 1,
+            "critical": 5
+          }
+        },
+        {
+          "name": "throughput",
+          "label": "Пропускная способность (req/s)",
+          "type": "area",
+          "thresholds": {
+            "warning": 100,
+            "critical": 200
+          }
+        }
+      ]
+    },
+    {
+      "id": "firebase_metrics",
+      "type": "firebase",
+      "title": "Firebase метрики",
+      "position": {"x": 0, "y": 4, "width": 6, "height": 6},
+      "metrics": [
+        {
+          "name": "firestore_reads",
+          "label": "Firestore чтения",
+          "type": "counter"
+        },
+        {
+          "name": "firestore_writes",
+          "label": "Firestore записи",
+          "type": "counter"
+        },
+        {
+          "name": "firestore_deletes",
+          "label": "Firestore удаления",
+          "type": "counter"
+        },
+        {
+          "name": "auth_sign_ins",
+          "label": "Входы в систему",
+          "type": "counter"
+        },
+        {
+          "name": "auth_sign_ups",
+          "label": "Регистрации",
+          "type": "counter"
+        },
+        {
+          "name": "fcm_sent",
+          "label": "FCM отправлено",
+          "type": "counter"
+        },
+        {
+          "name": "fcm_delivered",
+          "label": "FCM доставлено",
+          "type": "counter"
+        },
+        {
+          "name": "storage_uploads",
+          "label": "Загрузки в Storage",
+          "type": "counter"
+        }
+      ]
+    },
+    {
+      "id": "business_metrics",
+      "type": "business",
+      "title": "Бизнес метрики",
+      "position": {"x": 6, "y": 4, "width": 6, "height": 6},
+      "metrics": [
+        {
+          "name": "bookings_created",
+          "label": "Создано бронирований",
+          "type": "counter"
+        },
+        {
+          "name": "bookings_confirmed",
+          "label": "Подтверждено бронирований",
+          "type": "counter"
+        },
+        {
+          "name": "bookings_cancelled",
+          "label": "Отменено бронирований",
+          "type": "counter"
+        },
+        {
+          "name": "payments_processed",
+          "label": "Обработано платежей",
+          "type": "counter"
+        },
+        {
+          "name": "payments_failed",
+          "label": "Неудачных платежей",
+          "type": "counter"
+        },
+        {
+          "name": "revenue",
+          "label": "Доход (₽)",
+          "type": "currency"
+        },
+        {
+          "name": "specialists_active",
+          "label": "Активных специалистов",
+          "type": "gauge"
+        },
+        {
+          "name": "customer_satisfaction",
+          "label": "Удовлетворенность клиентов",
+          "type": "rating"
+        }
+      ]
+    },
+    {
+      "id": "performance_metrics",
+      "type": "performance",
+      "title": "Метрики производительности",
+      "position": {"x": 0, "y": 10, "width": 8, "height": 6},
+      "metrics": [
+        {
+          "name": "app_startup_time",
+          "label": "Время запуска приложения (мс)",
+          "type": "histogram"
+        },
+        {
+          "name": "screen_load_time",
+          "label": "Время загрузки экранов (мс)",
+          "type": "histogram"
+        },
+        {
+          "name": "api_response_time",
+          "label": "Время ответа API (мс)",
+          "type": "histogram"
+        },
+        {
+          "name": "memory_usage",
+          "label": "Использование памяти (MB)",
+          "type": "line"
+        },
+        {
+          "name": "cpu_usage",
+          "label": "Использование CPU (%)",
+          "type": "line"
+        },
+        {
+          "name": "battery_usage",
+          "label": "Использование батареи (%)",
+          "type": "line"
+        },
+        {
+          "name": "network_requests",
+          "label": "Сетевые запросы",
+          "type": "counter"
+        },
+        {
+          "name": "cache_hit_rate",
+          "label": "Процент попаданий в кэш",
+          "type": "percentage"
+        }
+      ]
+    },
+    {
+      "id": "error_metrics",
+      "type": "errors",
+      "title": "Метрики ошибок",
+      "position": {"x": 8, "y": 10, "width": 4, "height": 6},
+      "metrics": [
+        {
+          "name": "crash_rate",
+          "label": "Частота крашей (%)",
+          "type": "gauge",
+          "thresholds": {
+            "warning": 0.1,
+            "critical": 1.0
+          }
+        },
+        {
+          "name": "anr_rate",
+          "label": "Частота ANR (%)",
+          "type": "gauge",
+          "thresholds": {
+            "warning": 0.05,
+            "critical": 0.5
+          }
+        },
+        {
+          "name": "network_errors",
+          "label": "Сетевые ошибки",
+          "type": "counter"
+        },
+        {
+          "name": "firebase_errors",
+          "label": "Firebase ошибки",
+          "type": "counter"
+        },
+        {
+          "name": "validation_errors",
+          "label": "Ошибки валидации",
+          "type": "counter"
+        },
+        {
+          "name": "payment_errors",
+          "label": "Ошибки платежей",
+          "type": "counter"
+        }
+      ]
+    },
+    {
+      "id": "user_behavior",
+      "type": "analytics",
+      "title": "Поведение пользователей",
+      "position": {"x": 0, "y": 16, "width": 12, "height": 4},
+      "metrics": [
+        {
+          "name": "session_duration",
+          "label": "Длительность сессии (мин)",
+          "type": "histogram"
+        },
+        {
+          "name": "screen_views",
+          "label": "Просмотры экранов",
+          "type": "counter"
+        },
+        {
+          "name": "user_retention",
+          "label": "Удержание пользователей (%)",
+          "type": "percentage"
+        },
+        {
+          "name": "feature_usage",
+          "label": "Использование функций",
+          "type": "pie"
+        },
+        {
+          "name": "search_queries",
+          "label": "Поисковые запросы",
+          "type": "counter"
+        },
+        {
+          "name": "booking_conversion",
+          "label": "Конверсия в бронирование (%)",
+          "type": "percentage"
+        }
+      ]
+    }
+  ],
+  "alerts": [
+    {
+      "id": "high_error_rate",
+      "name": "Высокая частота ошибок",
+      "condition": "error_rate > 5%",
+      "duration": "5m",
+      "severity": "critical",
+      "notifications": ["email", "slack", "pagerduty"],
+      "message": "Частота ошибок превысила 5% за последние 5 минут"
+    },
+    {
+      "id": "high_response_time",
+      "name": "Высокое время отклика",
+      "condition": "response_time > 1000ms",
+      "duration": "3m",
+      "severity": "warning",
+      "notifications": ["email", "slack"],
+      "message": "Время отклика превысило 1 секунду за последние 3 минуты"
+    },
+    {
+      "id": "low_throughput",
+      "name": "Низкая пропускная способность",
+      "condition": "throughput < 10 req/s",
+      "duration": "10m",
+      "severity": "warning",
+      "notifications": ["email"],
+      "message": "Пропускная способность упала ниже 10 запросов в секунду"
+    },
+    {
+      "id": "high_memory_usage",
+      "name": "Высокое использование памяти",
+      "condition": "memory_usage > 200MB",
+      "duration": "2m",
+      "severity": "warning",
+      "notifications": ["email", "slack"],
+      "message": "Использование памяти превысило 200MB"
+    },
+    {
+      "id": "payment_failures",
+      "name": "Сбои платежей",
+      "condition": "payments_failed > 10",
+      "duration": "1m",
+      "severity": "critical",
+      "notifications": ["email", "slack", "pagerduty"],
+      "message": "Количество неудачных платежей превысило 10 за минуту"
+    },
+    {
+      "id": "firebase_quota_exceeded",
+      "name": "Превышена квота Firebase",
+      "condition": "firestore_reads > 50000",
+      "duration": "1m",
+      "severity": "critical",
+      "notifications": ["email", "slack", "pagerduty"],
+      "message": "Превышена квота чтений Firestore"
+    }
+  ],
+  "reports": [
+    {
+      "id": "daily_summary",
+      "name": "Ежедневный отчет",
+      "schedule": "0 9 * * *",
+      "recipients": ["team@example.com"],
+      "metrics": [
+        "active_users",
+        "bookings_created",
+        "revenue",
+        "error_rate",
+        "response_time"
+      ]
+    },
+    {
+      "id": "weekly_analysis",
+      "name": "Еженедельный анализ",
+      "schedule": "0 10 * * 1",
+      "recipients": ["management@example.com"],
+      "metrics": [
+        "user_retention",
+        "customer_satisfaction",
+        "specialists_active",
+        "feature_usage"
+      ]
+    },
+    {
+      "id": "monthly_business",
+      "name": "Месячный бизнес отчет",
+      "schedule": "0 11 1 * *",
+      "recipients": ["executives@example.com"],
+      "metrics": [
+        "revenue",
+        "bookings_confirmed",
+        "payments_processed",
+        "user_growth"
+      ]
+    }
+  ],
+  "integrations": [
+    {
+      "name": "Firebase Analytics",
+      "enabled": true,
+      "config": {
+        "project_id": "event-marketplace-app",
+        "api_key": "${FIREBASE_API_KEY}"
+      }
+    },
+    {
+      "name": "Firebase Crashlytics",
+      "enabled": true,
+      "config": {
+        "project_id": "event-marketplace-app"
+      }
+    },
+    {
+      "name": "Firebase Performance",
+      "enabled": true,
+      "config": {
+        "project_id": "event-marketplace-app"
+      }
+    },
+    {
+      "name": "Google Analytics",
+      "enabled": true,
+      "config": {
+        "tracking_id": "GA-XXXXXXXXX"
+      }
+    },
+    {
+      "name": "Slack",
+      "enabled": true,
+      "config": {
+        "webhook_url": "${SLACK_WEBHOOK_URL}",
+        "channel": "#monitoring"
+      }
+    },
+    {
+      "name": "Email",
+      "enabled": true,
+      "config": {
+        "smtp_server": "smtp.gmail.com",
+        "smtp_port": 587,
+        "username": "${EMAIL_USERNAME}",
+        "password": "${EMAIL_PASSWORD}"
+      }
+    }
+  ]
+}
+

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'providers/user_role_provider.dart';
+import 'providers/auth_providers.dart';
+import 'providers/theme_provider.dart';
+import 'providers/performance_providers.dart';
 import 'screens/home_screen.dart';
 import 'screens/search_screen.dart';
 import 'screens/my_events_screen.dart';
@@ -8,24 +12,86 @@ import 'screens/chats_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/my_bookings_screen.dart';
 import 'screens/booking_requests_screen.dart';
+import 'screens/auth_screen.dart';
+import 'screens/debug_screen.dart';
+import 'services/fcm_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  
+  // Инициализация FCM
+  await FCMService().initialize();
+  
   runApp(const ProviderScope(child: MyApp()));
 }
 
-class MyApp extends ConsumerStatefulWidget {
+class MyApp extends ConsumerWidget {
   const MyApp({super.key});
 
   @override
-  ConsumerState<MyApp> createState() => _MyAppState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authStateProvider);
+    final themeMode = ref.watch(themeProvider);
+    final lightTheme = ref.watch(lightThemeProvider);
+    final darkTheme = ref.watch(darkThemeProvider);
+
+    return MaterialApp(
+      title: 'Event Marketplace',
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: themeMode,
+      home: _buildHome(authState),
+    );
+  }
+
+  Widget _buildHome(AuthState authState) {
+    switch (authState) {
+      case AuthState.loading:
+        return const Scaffold(
+          body: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16),
+                Text('Загрузка...'),
+              ],
+            ),
+          ),
+        );
+      case AuthState.authenticated:
+        return const MainApp();
+      case AuthState.unauthenticated:
+      case AuthState.error:
+        return const AuthScreen();
+    }
+  }
 }
 
-class _MyAppState extends ConsumerState<MyApp> {
+class MainApp extends ConsumerStatefulWidget {
+  const MainApp({super.key});
+
+  @override
+  ConsumerState<MainApp> createState() => _MainAppState();
+}
+
+class _MainAppState extends ConsumerState<MainApp> {
   int _selectedIndex = 0;
+  final PageController _pageController = PageController();
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final userRole = ref.watch(userRoleProvider);
+    final userRole = ref.watch(currentUserRoleProvider);
+    final isSpecialist = ref.watch(isSpecialistProvider);
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
 
     final List<Widget> pages = [
       const HomeScreen(),
@@ -33,34 +99,87 @@ class _MyAppState extends ConsumerState<MyApp> {
       const MyEventsScreen(),
       const ChatsScreen(),
       // роль влияет на 5-ю вкладку
-      userRole == UserRole.customer
-          ? const MyBookingsScreen()
-          : const BookingRequestsScreen(),
+      isSpecialist
+          ? const BookingRequestsScreen()
+          : const MyBookingsScreen(),
       const ProfileScreen(),
+      // Добавляем экран отладки только в debug режиме
+      if (kDebugMode) const DebugScreen(),
     ];
 
-    return MaterialApp(
-      title: 'Event Marketplace',
-      theme: ThemeData(useMaterial3: true, colorSchemeSeed: Colors.deepPurple),
-      home: Scaffold(
-        body: pages[_selectedIndex],
+    final bottomNavItems = [
+      const BottomNavigationBarItem(icon: Icon(Icons.home), label: "Главная"),
+      const BottomNavigationBarItem(icon: Icon(Icons.search), label: "Поиск"),
+      const BottomNavigationBarItem(icon: Icon(Icons.event), label: "Мероприятия"),
+      const BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Чаты"),
+      BottomNavigationBarItem(
+        icon: Icon(isSpecialist ? Icons.assignment : Icons.book_online),
+        label: isSpecialist ? "Заявки" : "Мои заявки",
+      ),
+      const BottomNavigationBarItem(icon: Icon(Icons.person), label: "Профиль"),
+      // Добавляем вкладку отладки только в debug режиме
+      if (kDebugMode) const BottomNavigationBarItem(icon: Icon(Icons.bug_report), label: "Отладка"),
+    ];
+
+    if (isMobile) {
+      // Мобильная навигация с BottomNavigationBar и PageView
+      return Scaffold(
+        body: PageView(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+          children: pages,
+        ),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           currentIndex: _selectedIndex,
-          onTap: (index) => setState(() => _selectedIndex = index),
-          items: [
-            const BottomNavigationBarItem(icon: Icon(Icons.home), label: "Главная"),
-            const BottomNavigationBarItem(icon: Icon(Icons.search), label: "Поиск"),
-            const BottomNavigationBarItem(icon: Icon(Icons.event), label: "Мероприятия"),
-            const BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Чаты"),
-            BottomNavigationBarItem(
-              icon: Icon(userRole == UserRole.customer ? Icons.book_online : Icons.assignment),
-              label: userRole == UserRole.customer ? "Мои заявки" : "Заявки",
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+            _pageController.animateToPage(
+              index,
+              duration: const Duration(milliseconds: 300),
+              curve: Curves.easeInOut,
+            );
+          },
+          items: bottomNavItems,
+          selectedItemColor: Theme.of(context).colorScheme.primary,
+          unselectedItemColor: Colors.grey,
+          showUnselectedLabels: true,
+        ),
+      );
+    } else {
+      // Десктопная навигация с NavigationRail
+      return Scaffold(
+        body: Row(
+          children: [
+            NavigationRail(
+              selectedIndex: _selectedIndex,
+              onDestinationSelected: (index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
+              labelType: NavigationRailLabelType.all,
+              destinations: bottomNavItems.map((item) => NavigationRailDestination(
+                icon: item.icon,
+                label: Text(item.label!),
+              )).toList(),
             ),
-            const BottomNavigationBarItem(icon: Icon(Icons.person), label: "Профиль"),
+            const VerticalDivider(thickness: 1, width: 1),
+            Expanded(
+              child: IndexedStack(
+                index: _selectedIndex,
+                children: pages,
+              ),
+            ),
           ],
         ),
-      ),
-    );
+      );
+    }
   }
 }
