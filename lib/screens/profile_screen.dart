@@ -11,6 +11,8 @@ import 'notification_settings_screen.dart';
 import 'badges_screen.dart';
 import 'inspiration_photos_screen.dart';
 import 'customer_notes_screen.dart';
+import 'specialist_faq_screen.dart';
+import 'specialist_portfolio_videos_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -365,6 +367,28 @@ class ProfileScreen extends ConsumerWidget {
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => CustomerNotesScreen(userId: user.id),
+                  ),
+                ),
+              ),
+            ],
+            if (user.role == UserRole.specialist) ...[
+              ListTile(
+                leading: const Icon(Icons.help_outline),
+                title: const Text('FAQ'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => SpecialistFAQScreen(specialistId: user.id),
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.video_library),
+                title: const Text('Портфолио видео'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => SpecialistPortfolioVideosScreen(specialistId: user.id),
                   ),
                 ),
               ),

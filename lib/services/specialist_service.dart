@@ -200,7 +200,7 @@ class SpecialistService {
         query = query.orderBy('hourlyRate', descending: !filters.sortAscending);
         break;
       case 'experience':
-        query = query.orderBy('yearsOfExperience', descending: !filters.sortAscending);
+        query = query.orderBy('experienceYears', descending: !filters.sortAscending);
         break;
       case 'reviews':
         query = query.orderBy('reviewCount', descending: !filters.sortAscending);

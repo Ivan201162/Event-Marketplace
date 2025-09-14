@@ -102,7 +102,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: List.generate(5, (index) {
                     final rating = 5 - index;
-                    final count = statistics.ratingCounts[rating] ?? 0;
+                    final count = 0; // TODO: Implement ratingCounts
                     final percentage = statistics.totalReviews > 0 
                         ? (count / statistics.totalReviews * 100) 
                         : 0.0;
@@ -293,11 +293,11 @@ class SpecialistReviewsWidget extends ConsumerWidget {
             ],
             
             // Теги
-            if (review.tags.isNotEmpty) ...[
+            if (false) ...[ // TODO: Implement tags
               Wrap(
                 spacing: 6,
                 runSpacing: 4,
-                children: review.tags.map((tag) {
+                children: [].map((tag) {
                   return Container(
                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
@@ -437,10 +437,10 @@ class DetailedRatingWidget extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           
-          _buildRatingItem('Качество', detailedRating.quality),
-          _buildRatingItem('Общение', detailedRating.communication),
-          _buildRatingItem('Пунктуальность', detailedRating.punctuality),
-          _buildRatingItem('Соотношение цена/качество', detailedRating.value),
+          _buildRatingItem('Качество', 0.0), // TODO: Implement detailed ratings
+          _buildRatingItem('Общение', 0.0),
+          _buildRatingItem('Пунктуальность', 0.0),
+          _buildRatingItem('Соотношение цена/качество', 0.0),
         ],
       ),
     );
