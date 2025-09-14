@@ -45,6 +45,10 @@ dependencies:
   permission_handler: ^11.0.1
   # Emoji picker
   emoji_picker_flutter: ^1.6.3
+  # Audio playback
+  audioplayers: ^5.2.1
+  # Waveform visualization
+  flutter_waveform: ^0.0.3
   # Localization
   flutter_localizations:
     sdk: flutter

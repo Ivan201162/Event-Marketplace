@@ -16,6 +16,8 @@ import 'screens/booking_requests_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/debug_screen.dart';
 import 'screens/recommendations_screen.dart';
+import 'screens/chat_extended_screen.dart';
+import 'screens/chats_demo_screen.dart';
 import 'services/fcm_service.dart';
 import 'services/notification_service.dart';
 import 'widgets/animated_page_transition.dart';
@@ -133,7 +135,7 @@ class _MainAppState extends ConsumerState<MainApp> {
       const SearchScreen(),
       const RecommendationsScreen(),
       const MyEventsScreen(),
-      const ChatsScreen(),
+      const ChatsDemoScreen(),
       // роль влияет на 6-ю вкладку
       isSpecialist
           ? const BookingRequestsScreen()

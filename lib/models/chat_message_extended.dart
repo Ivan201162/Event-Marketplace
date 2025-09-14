@@ -1,0 +1,314 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'chat_message.dart';
+
+/// Расширенная модель сообщения чата
+class ChatMessageExtended extends ChatMessage {
+  final MessageType type;
+  final String? audioUrl;
+  final int? audioDuration; // в секундах
+  final String? audioWaveform; // JSON строка с данными волны
+  final List<MessageReaction> reactions;
+  final bool isEdited;
+  final DateTime? editedAt;
+  final String? replyToMessageId;
+  final List<String> attachments; // URL вложений
+  final Map<String, dynamic> metadata;
+
+  const ChatMessageExtended({
+    required super.id,
+    required super.chatId,
+    required super.senderId,
+    required super.senderName,
+    super.senderAvatar,
+    required super.content,
+    required super.timestamp,
+    super.isRead,
+    super.readBy,
+    this.type = MessageType.text,
+    this.audioUrl,
+    this.audioDuration,
+    this.audioWaveform,
+    this.reactions = const [],
+    this.isEdited = false,
+    this.editedAt,
+    this.replyToMessageId,
+    this.attachments = const [],
+    this.metadata = const {},
+  });
+
+  factory ChatMessageExtended.fromChatMessage(ChatMessage message) {
+    return ChatMessageExtended(
+      id: message.id,
+      chatId: message.chatId,
+      senderId: message.senderId,
+      senderName: message.senderName,
+      senderAvatar: message.senderAvatar,
+      content: message.content,
+      timestamp: message.timestamp,
+      isRead: message.isRead,
+      readBy: message.readBy,
+    );
+  }
+
+  factory ChatMessageExtended.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    
+    return ChatMessageExtended(
+      id: doc.id,
+      chatId: data['chatId'] ?? '',
+      senderId: data['senderId'] ?? '',
+      senderName: data['senderName'] ?? '',
+      senderAvatar: data['senderAvatar'],
+      content: data['content'] ?? '',
+      timestamp: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      isRead: data['isRead'] ?? false,
+      readBy: List<String>.from(data['readBy'] ?? []),
+      type: MessageType.values.firstWhere(
+        (t) => t.name == data['type'],
+        orElse: () => MessageType.text,
+      ),
+      audioUrl: data['audioUrl'],
+      audioDuration: data['audioDuration'],
+      audioWaveform: data['audioWaveform'],
+      reactions: (data['reactions'] as List<dynamic>?)
+          ?.map((e) => MessageReaction.fromMap(e))
+          .toList() ?? [],
+      isEdited: data['isEdited'] ?? false,
+      editedAt: (data['editedAt'] as Timestamp?)?.toDate(),
+      replyToMessageId: data['replyToMessageId'],
+      attachments: List<String>.from(data['attachments'] ?? []),
+      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'chatId': chatId,
+      'senderId': senderId,
+      'senderName': senderName,
+      'senderAvatar': senderAvatar,
+      'content': content,
+      'timestamp': Timestamp.fromDate(timestamp),
+      'isRead': isRead,
+      'readBy': readBy,
+      'type': type.name,
+      'audioUrl': audioUrl,
+      'audioDuration': audioDuration,
+      'audioWaveform': audioWaveform,
+      'reactions': reactions.map((e) => e.toMap()).toList(),
+      'isEdited': isEdited,
+      'editedAt': editedAt != null ? Timestamp.fromDate(editedAt!) : null,
+      'replyToMessageId': replyToMessageId,
+      'attachments': attachments,
+      'metadata': metadata,
+    };
+  }
+
+  ChatMessageExtended copyWith({
+    String? id,
+    String? chatId,
+    String? senderId,
+    String? senderName,
+    String? senderAvatar,
+    String? content,
+    DateTime? timestamp,
+    bool? isRead,
+    List<String>? readBy,
+    MessageType? type,
+    String? audioUrl,
+    int? audioDuration,
+    String? audioWaveform,
+    List<MessageReaction>? reactions,
+    bool? isEdited,
+    DateTime? editedAt,
+    String? replyToMessageId,
+    List<String>? attachments,
+    Map<String, dynamic>? metadata,
+  }) {
+    return ChatMessageExtended(
+      id: id ?? this.id,
+      chatId: chatId ?? this.chatId,
+      senderId: senderId ?? this.senderId,
+      senderName: senderName ?? this.senderName,
+      senderAvatar: senderAvatar ?? this.senderAvatar,
+      content: content ?? this.content,
+      timestamp: timestamp ?? this.timestamp,
+      isRead: isRead ?? this.isRead,
+      readBy: readBy ?? this.readBy,
+      type: type ?? this.type,
+      audioUrl: audioUrl ?? this.audioUrl,
+      audioDuration: audioDuration ?? this.audioDuration,
+      audioWaveform: audioWaveform ?? this.audioWaveform,
+      reactions: reactions ?? this.reactions,
+      isEdited: isEdited ?? this.isEdited,
+      editedAt: editedAt ?? this.editedAt,
+      replyToMessageId: replyToMessageId ?? this.replyToMessageId,
+      attachments: attachments ?? this.attachments,
+      metadata: metadata ?? this.metadata,
+    );
+  }
+
+  /// Получить количество реакций по типу
+  int getReactionCount(String emoji) {
+    return reactions.where((reaction) => reaction.emoji == emoji).length;
+  }
+
+  /// Проверить, есть ли реакция от пользователя
+  bool hasReactionFromUser(String userId, String emoji) {
+    return reactions.any((reaction) => 
+        reaction.userId == userId && reaction.emoji == emoji);
+  }
+
+  /// Получить все уникальные эмодзи реакций
+  List<String> get uniqueReactionEmojis {
+    return reactions.map((reaction) => reaction.emoji).toSet().toList();
+  }
+
+  /// Проверить, является ли сообщение голосовым
+  bool get isVoiceMessage => type == MessageType.voice;
+
+  /// Проверить, является ли сообщение текстовым
+  bool get isTextMessage => type == MessageType.text;
+
+  /// Проверить, является ли сообщение с вложениями
+  bool get hasAttachments => attachments.isNotEmpty;
+
+  /// Проверить, является ли сообщение ответом
+  bool get isReply => replyToMessageId != null;
+}
+
+/// Тип сообщения
+enum MessageType {
+  text,
+  voice,
+  image,
+  file,
+  system,
+}
+
+/// Реакция на сообщение
+class MessageReaction {
+  final String id;
+  final String userId;
+  final String userName;
+  final String emoji;
+  final DateTime timestamp;
+
+  const MessageReaction({
+    required this.id,
+    required this.userId,
+    required this.userName,
+    required this.emoji,
+    required this.timestamp,
+  });
+
+  factory MessageReaction.fromMap(Map<String, dynamic> map) {
+    return MessageReaction(
+      id: map['id'] ?? '',
+      userId: map['userId'] ?? '',
+      userName: map['userName'] ?? '',
+      emoji: map['emoji'] ?? '',
+      timestamp: (map['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'userId': userId,
+      'userName': userName,
+      'emoji': emoji,
+      'timestamp': Timestamp.fromDate(timestamp),
+    };
+  }
+
+  MessageReaction copyWith({
+    String? id,
+    String? userId,
+    String? userName,
+    String? emoji,
+    DateTime? timestamp,
+  }) {
+    return MessageReaction(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
+      emoji: emoji ?? this.emoji,
+      timestamp: timestamp ?? this.timestamp,
+    );
+  }
+}
+
+/// Данные волны для аудио
+class AudioWaveform {
+  final List<double> samples;
+  final int duration; // в миллисекундах
+  final int sampleRate;
+
+  const AudioWaveform({
+    required this.samples,
+    required this.duration,
+    required this.sampleRate,
+  });
+
+  factory AudioWaveform.fromJson(String json) {
+    // TODO: Реализовать парсинг JSON
+    return const AudioWaveform(
+      samples: [],
+      duration: 0,
+      sampleRate: 44100,
+    );
+  }
+
+  String toJson() {
+    // TODO: Реализовать сериализацию в JSON
+    return '{}';
+  }
+
+  /// Получить нормализованные сэмплы для отображения
+  List<double> get normalizedSamples {
+    if (samples.isEmpty) return [];
+    
+    final maxSample = samples.reduce((a, b) => a.abs() > b.abs() ? a : b).abs();
+    if (maxSample == 0) return samples;
+    
+    return samples.map((sample) => sample / maxSample).toList();
+  }
+}
+
+/// Статистика сообщений
+class MessageStats {
+  final int totalMessages;
+  final int textMessages;
+  final int voiceMessages;
+  final int imageMessages;
+  final int fileMessages;
+  final int totalReactions;
+  final Map<String, int> reactionCounts;
+  final DateTime lastActivity;
+
+  const MessageStats({
+    required this.totalMessages,
+    required this.textMessages,
+    required this.voiceMessages,
+    required this.imageMessages,
+    required this.fileMessages,
+    required this.totalReactions,
+    required this.reactionCounts,
+    required this.lastActivity,
+  });
+
+  factory MessageStats.empty() {
+    return MessageStats(
+      totalMessages: 0,
+      textMessages: 0,
+      voiceMessages: 0,
+      imageMessages: 0,
+      fileMessages: 0,
+      totalReactions: 0,
+      reactionCounts: {},
+      lastActivity: DateTime.now(),
+    );
+  }
+}
