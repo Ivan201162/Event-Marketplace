@@ -19,6 +19,7 @@ import 'screens/recommendations_screen.dart';
 import 'screens/chat_extended_screen.dart';
 import 'screens/chats_demo_screen.dart';
 import 'screens/payments_extended_screen.dart';
+import 'screens/admin_panel_screen.dart';
 import 'services/fcm_service.dart';
 import 'services/notification_service.dart';
 import 'widgets/animated_page_transition.dart';
@@ -142,6 +143,8 @@ class _MainAppState extends ConsumerState<MainApp> {
           ? const BookingRequestsScreen()
           : const MyBookingsScreen(),
       const ProfileScreen(),
+      // Добавляем админ-панель только в debug режиме
+      if (kDebugMode) const AdminPanelScreen(),
       // Добавляем экран отладки только в debug режиме
       if (kDebugMode) const DebugScreen(),
     ];
@@ -157,6 +160,8 @@ class _MainAppState extends ConsumerState<MainApp> {
         label: isSpecialist ? "Заявки" : "Мои заявки",
       ),
       const BottomNavigationBarItem(icon: Icon(Icons.person), label: "Профиль"),
+      // Добавляем админ-панель только в debug режиме
+      if (kDebugMode) const BottomNavigationBarItem(icon: Icon(Icons.admin_panel_settings), label: "Админ"),
       // Добавляем вкладку отладки только в debug режиме
       if (kDebugMode) const BottomNavigationBarItem(icon: Icon(Icons.bug_report), label: "Отладка"),
     ];
