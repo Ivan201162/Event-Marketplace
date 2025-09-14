@@ -2,10 +2,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
 import '../models/booking.dart';
 import 'specialist_schedule_service.dart';
+import 'notification_service.dart';
 
 class BookingService {
   static const String _bookingsKey = 'bookings';
   final SpecialistScheduleService _scheduleService = SpecialistScheduleService();
+  final NotificationService _notificationService = NotificationService();
 
   Future<void> addBooking(Booking booking) async {
     final bookings = await getBookings();
@@ -14,6 +16,20 @@ class BookingService {
     
     // Добавляем дату в расписание специалиста как занятую
     await _scheduleService.addBusyDate(booking.specialistId, booking.eventDate);
+    
+    // Планируем напоминание об оплате
+    try {
+      await _notificationService.sendPaymentReminder(
+        customerId: booking.customerId,
+        bookingId: booking.id,
+        eventName: booking.eventName,
+        amount: booking.totalAmount,
+        dueDate: booking.paymentDueDate ?? booking.eventDate,
+      );
+    } catch (e) {
+      // Логируем ошибку, но не прерываем создание бронирования
+      print('Error scheduling payment reminder: $e');
+    }
   }
 
   Future<List<Booking>> getBookingsForSpecialist(String specialistId) async {

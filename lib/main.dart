@@ -16,6 +16,7 @@ import 'screens/booking_requests_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/debug_screen.dart';
 import 'services/fcm_service.dart';
+import 'services/notification_service.dart';
 import 'widgets/animated_page_transition.dart';
 
 void main() async {
@@ -26,6 +27,9 @@ void main() async {
   
   // Инициализация FCM
   await FCMService().initialize();
+  
+  // Инициализация сервиса уведомлений
+  await NotificationService().initialize();
   
   runApp(const ProviderScope(child: MyApp()));
 }

@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/review.dart';
+import 'notification_service.dart';
 
 /// Сервис для работы с отзывами
 class ReviewService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final NotificationService _notificationService = NotificationService();
 
   /// Создать отзыв
   Future<String> createReview(Review review) async {
@@ -21,6 +23,24 @@ class ReviewService {
     });
     
     await batch.commit();
+    
+    // Отправить уведомление специалисту
+    try {
+      // Получаем данные заказчика для уведомления
+      final customerDoc = await _db.collection('users').doc(review.customerId).get();
+      final customerName = customerDoc.data()?['name'] as String? ?? 'Клиент';
+      
+      await _notificationService.sendReviewNotification(
+        specialistId: review.specialistId,
+        customerName: customerName,
+        rating: review.rating,
+        reviewText: review.comment,
+      );
+    } catch (e) {
+      // Логируем ошибку, но не прерываем создание отзыва
+      print('Error sending review notification: $e');
+    }
+    
     return reviewRef.id;
   }
 

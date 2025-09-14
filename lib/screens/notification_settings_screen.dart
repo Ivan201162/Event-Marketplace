@@ -1,518 +1,359 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import '../services/fcm_service.dart';
+import '../providers/notification_providers.dart';
+import '../widgets/animated_page_transition.dart';
 
-class NotificationSettingsScreen extends ConsumerStatefulWidget {
+/// Экран настроек уведомлений
+class NotificationSettingsScreen extends ConsumerWidget {
   const NotificationSettingsScreen({super.key});
 
   @override
-  ConsumerState<NotificationSettingsScreen> createState() => _NotificationSettingsScreenState();
-}
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(notificationSettingsProvider);
+    final settingsNotifier = ref.read(notificationSettingsProvider.notifier);
 
-class _NotificationSettingsScreenState extends ConsumerState<NotificationSettingsScreen> {
-  final FCMService _fcmService = FCMService();
-  
-  bool _pushNotificationsEnabled = true;
-  bool _bookingNotificationsEnabled = true;
-  bool _paymentNotificationsEnabled = true;
-  bool _chatNotificationsEnabled = true;
-  bool _marketingNotificationsEnabled = false;
-  bool _reminderNotificationsEnabled = true;
-  int _reminderTime = 30; // минуты до события
-
-  @override
-  void initState() {
-    super.initState();
-    _loadSettings();
-  }
-
-  /// Загрузить настройки
-  Future<void> _loadSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _pushNotificationsEnabled = prefs.getBool('push_notifications_enabled') ?? true;
-      _bookingNotificationsEnabled = prefs.getBool('booking_notifications_enabled') ?? true;
-      _paymentNotificationsEnabled = prefs.getBool('payment_notifications_enabled') ?? true;
-      _chatNotificationsEnabled = prefs.getBool('chat_notifications_enabled') ?? true;
-      _marketingNotificationsEnabled = prefs.getBool('marketing_notifications_enabled') ?? false;
-      _reminderNotificationsEnabled = prefs.getBool('reminder_notifications_enabled') ?? true;
-      _reminderTime = prefs.getInt('reminder_time') ?? 30;
-    });
-  }
-
-  /// Сохранить настройки
-  Future<void> _saveSettings() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('push_notifications_enabled', _pushNotificationsEnabled);
-    await prefs.setBool('booking_notifications_enabled', _bookingNotificationsEnabled);
-    await prefs.setBool('payment_notifications_enabled', _paymentNotificationsEnabled);
-    await prefs.setBool('chat_notifications_enabled', _chatNotificationsEnabled);
-    await prefs.setBool('marketing_notifications_enabled', _marketingNotificationsEnabled);
-    await prefs.setBool('reminder_notifications_enabled', _reminderNotificationsEnabled);
-    await prefs.setInt('reminder_time', _reminderTime);
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Настройки уведомлений'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        backgroundColor: context.colorScheme.inversePrimary,
         elevation: 0,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: _openSystemSettings,
+      ),
+      body: AnimatedList(
+        children: [
+          _buildSectionHeader(context, 'Уведомления о событиях'),
+          _buildNotificationSwitch(
+            context,
+            title: 'Новые отзывы',
+            subtitle: 'Получать уведомления о новых отзывах',
+            value: settings.reviewNotifications,
+            onChanged: settingsNotifier.updateReviewNotifications,
+            icon: Icons.star,
+          ),
+          _buildNotificationSwitch(
+            context,
+            title: 'Бронирования',
+            subtitle: 'Получать уведомления о статусе бронирований',
+            value: settings.bookingNotifications,
+            onChanged: settingsNotifier.updateBookingNotifications,
+            icon: Icons.event,
+          ),
+          _buildNotificationSwitch(
+            context,
+            title: 'Оплаты',
+            subtitle: 'Получать уведомления об оплатах',
+            value: settings.paymentNotifications,
+            onChanged: settingsNotifier.updatePaymentNotifications,
+            icon: Icons.payment,
+          ),
+          _buildNotificationSwitch(
+            context,
+            title: 'Напоминания',
+            subtitle: 'Получать напоминания о предстоящих событиях',
+            value: settings.reminderNotifications,
+            onChanged: settingsNotifier.updateReminderNotifications,
+            icon: Icons.schedule,
+          ),
+          _buildNotificationSwitch(
+            context,
+            title: 'Маркетинг',
+            subtitle: 'Получать рекламные уведомления и предложения',
+            value: settings.marketingNotifications,
+            onChanged: settingsNotifier.updateMarketingNotifications,
+            icon: Icons.campaign,
+          ),
+          const SizedBox(height: 24),
+          _buildSectionHeader(context, 'Настройки напоминаний'),
+          _buildReminderTimeSelector(
+            context,
+            title: 'Время напоминания',
+            subtitle: 'За сколько часов до события напоминать',
+            value: settings.reminderHoursBefore,
+            onChanged: settingsNotifier.updateReminderHours,
+          ),
+          const SizedBox(height: 24),
+          _buildSectionHeader(context, 'Управление'),
+          _buildActionButton(
+            context,
+            title: 'Очистить все уведомления',
+            subtitle: 'Удалить все уведомления из истории',
+            icon: Icons.clear_all,
+            onTap: () => _showClearNotificationsDialog(context, ref),
+          ),
+          _buildActionButton(
+            context,
+            title: 'Тестовое уведомление',
+            subtitle: 'Отправить тестовое уведомление',
+            icon: Icons.notifications_active,
+            onTap: () => _sendTestNotification(context, ref),
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Общие настройки
-            _buildSection(
-              title: 'Общие настройки',
-              children: [
-                _buildSwitchTile(
-                  title: 'Push-уведомления',
-                  subtitle: 'Включить все push-уведомления',
-                  value: _pushNotificationsEnabled,
-                  onChanged: (value) {
-                    setState(() {
-                      _pushNotificationsEnabled = value;
-                      if (!value) {
-                        // Отключить все остальные уведомления
-                        _bookingNotificationsEnabled = false;
-                        _paymentNotificationsEnabled = false;
-                        _chatNotificationsEnabled = false;
-                        _marketingNotificationsEnabled = false;
-                        _reminderNotificationsEnabled = false;
-                      }
-                    });
-                    _saveSettings();
-                  },
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 24),
-            
-            // Уведомления о заявках
-            _buildSection(
-              title: 'Заявки',
-              children: [
-                _buildSwitchTile(
-                  title: 'Уведомления о заявках',
-                  subtitle: 'Подтверждение, отклонение, отмена заявок',
-                  value: _bookingNotificationsEnabled,
-                  enabled: _pushNotificationsEnabled,
-                  onChanged: (value) {
-                    setState(() {
-                      _bookingNotificationsEnabled = value;
-                    });
-                    _saveSettings();
-                  },
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 24),
-            
-            // Уведомления о платежах
-            _buildSection(
-              title: 'Платежи',
-              children: [
-                _buildSwitchTile(
-                  title: 'Уведомления о платежах',
-                  subtitle: 'Завершение, неудача платежей',
-                  value: _paymentNotificationsEnabled,
-                  enabled: _pushNotificationsEnabled,
-                  onChanged: (value) {
-                    setState(() {
-                      _paymentNotificationsEnabled = value;
-                    });
-                    _saveSettings();
-                  },
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 24),
-            
-            // Уведомления о чатах
-            _buildSection(
-              title: 'Сообщения',
-              children: [
-                _buildSwitchTile(
-                  title: 'Уведомления о сообщениях',
-                  subtitle: 'Новые сообщения в чатах',
-                  value: _chatNotificationsEnabled,
-                  enabled: _pushNotificationsEnabled,
-                  onChanged: (value) {
-                    setState(() {
-                      _chatNotificationsEnabled = value;
-                    });
-                    _saveSettings();
-                  },
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 24),
-            
-            // Напоминания
-            _buildSection(
-              title: 'Напоминания',
-              children: [
-                _buildSwitchTile(
-                  title: 'Напоминания о событиях',
-                  subtitle: 'Уведомления перед началом мероприятия',
-                  value: _reminderNotificationsEnabled,
-                  enabled: _pushNotificationsEnabled,
-                  onChanged: (value) {
-                    setState(() {
-                      _reminderNotificationsEnabled = value;
-                    });
-                    _saveSettings();
-                  },
-                ),
-                
-                if (_reminderNotificationsEnabled) ...[
-                  const SizedBox(height: 16),
-                  _buildSliderTile(
-                    title: 'Время напоминания',
-                    subtitle: 'За сколько минут до события',
-                    value: _reminderTime.toDouble(),
-                    min: 5,
-                    max: 120,
-                    divisions: 23,
-                    onChanged: (value) {
-                      setState(() {
-                        _reminderTime = value.round();
-                      });
-                      _saveSettings();
-                    },
-                  ),
-                ],
-              ],
-            ),
-            
-            const SizedBox(height: 24),
-            
-            // Маркетинговые уведомления
-            _buildSection(
-              title: 'Маркетинг',
-              children: [
-                _buildSwitchTile(
-                  title: 'Маркетинговые уведомления',
-                  subtitle: 'Акции, скидки, новые услуги',
-                  value: _marketingNotificationsEnabled,
-                  enabled: _pushNotificationsEnabled,
-                  onChanged: (value) {
-                    setState(() {
-                      _marketingNotificationsEnabled = value;
-                    });
-                    _saveSettings();
-                  },
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 24),
-            
-            // Информация о FCM токене
-            _buildSection(
-              title: 'Техническая информация',
-              children: [
-                _buildInfoTile(
-                  title: 'FCM токен',
-                  subtitle: _fcmService.fcmToken ?? 'Не получен',
-                  onTap: () => _copyFCMToken(),
-                ),
-                
-                const SizedBox(height: 8),
-                
-                _buildInfoTile(
-                  title: 'Статус уведомлений',
-                  subtitle: 'Проверить разрешения системы',
-                  onTap: _checkNotificationStatus,
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 24),
-            
-            // Кнопки управления
-            _buildActionButtons(),
-          ],
+    );
+  }
+
+  /// Создаёт заголовок секции
+  Widget _buildSectionHeader(BuildContext context, String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
+      child: Text(
+        title,
+        style: context.textTheme.titleMedium?.copyWith(
+          color: context.colorScheme.primary,
+          fontWeight: FontWeight.bold,
         ),
       ),
     );
   }
 
-  /// Построить секцию
-  Widget _buildSection({
-    required String title,
-    required List<Widget> children,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 12),
-        ...children,
-      ],
-    );
-  }
-
-  /// Построить переключатель
-  Widget _buildSwitchTile({
+  /// Создаёт переключатель уведомления
+  Widget _buildNotificationSwitch(
+    BuildContext context, {
     required String title,
     required String subtitle,
     required bool value,
     required ValueChanged<bool> onChanged,
-    bool enabled = true,
+    required IconData icon,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[300]!),
-      ),
-      child: SwitchListTile(
-        title: Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            color: enabled ? Colors.black : Colors.grey[600],
-          ),
-        ),
-        subtitle: Text(
-          subtitle,
-          style: TextStyle(
-            color: enabled ? Colors.grey[600] : Colors.grey[500],
-          ),
-        ),
-        value: value,
-        onChanged: enabled ? onChanged : null,
-        activeColor: Theme.of(context).colorScheme.primary,
-      ),
-    );
-  }
-
-  /// Построить слайдер
-  Widget _buildSliderTile({
-    required String title,
-    required String subtitle,
-    required double value,
-    required double min,
-    required double max,
-    required int divisions,
-    required ValueChanged<double> onChanged,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[300]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    return AnimatedCard(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Row(
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              fontWeight: FontWeight.w500,
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: context.colorScheme.primary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              icon,
+              color: context.colorScheme.primary,
+              size: 24,
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            subtitle,
-            style: TextStyle(
-              color: Colors.grey[600],
-              fontSize: 12,
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colorScheme.onSurface.withOpacity(0.7),
+                  ),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              Expanded(
-                child: Slider(
-                  value: value,
-                  min: min,
-                  max: max,
-                  divisions: divisions,
-                  onChanged: onChanged,
-                  activeColor: Theme.of(context).colorScheme.primary,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Text(
-                '${value.round()} мин',
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
+          Switch(
+            value: value,
+            onChanged: onChanged,
+            activeColor: context.colorScheme.primary,
           ),
         ],
       ),
     );
   }
 
-  /// Построить информационную плитку
-  Widget _buildInfoTile({
+  /// Создаёт селектор времени напоминания
+  Widget _buildReminderTimeSelector(
+    BuildContext context, {
     required String title,
     required String subtitle,
+    required int value,
+    required ValueChanged<int> onChanged,
+  }) {
+    final options = [1, 2, 6, 12, 24, 48, 72];
+    
+    return AnimatedCard(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: context.colorScheme.primary.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Icon(
+                  Icons.schedule,
+                  color: context.colorScheme.primary,
+                  size: 24,
+                ),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: context.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      subtitle,
+                      style: context.textTheme.bodySmall?.copyWith(
+                        color: context.colorScheme.onSurface.withOpacity(0.7),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: options.map((hours) {
+              final isSelected = value == hours;
+              return AnimatedButton(
+                onPressed: () => onChanged(hours),
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  decoration: BoxDecoration(
+                    color: isSelected 
+                        ? context.colorScheme.primary 
+                        : context.colorScheme.surface,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border.all(
+                      color: isSelected 
+                          ? context.colorScheme.primary 
+                          : context.colorScheme.outline.withOpacity(0.3),
+                    ),
+                  ),
+                  child: Text(
+                    _formatHours(hours),
+                    style: context.textTheme.bodySmall?.copyWith(
+                      color: isSelected 
+                          ? context.colorScheme.onPrimary 
+                          : context.colorScheme.onSurface,
+                      fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+                    ),
+                  ),
+                ),
+              );
+            }).toList(),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// Создаёт кнопку действия
+  Widget _buildActionButton(
+    BuildContext context, {
+    required String title,
+    required String subtitle,
+    required IconData icon,
     required VoidCallback onTap,
   }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey[300]!),
-      ),
-      child: ListTile(
-        title: Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        subtitle: Text(
-          subtitle,
-          style: TextStyle(
-            color: Colors.grey[600],
-            fontSize: 12,
-          ),
-        ),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: onTap,
-      ),
-    );
-  }
-
-  /// Построить кнопки действий
-  Widget _buildActionButtons() {
-    return Column(
-      children: [
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton.icon(
-            onPressed: _testNotification,
-            icon: const Icon(Icons.notifications),
-            label: const Text('Тестовое уведомление'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Colors.white,
+    return AnimatedCard(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+      onTap: onTap,
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: context.colorScheme.error.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(
+              icon,
+              color: context.colorScheme.error,
+              size: 24,
             ),
           ),
-        ),
-        
-        const SizedBox(height: 12),
-        
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton.icon(
-            onPressed: _clearAllNotifications,
-            icon: const Icon(Icons.clear_all),
-            label: const Text('Очистить все уведомления'),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: context.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(height: 2),
+                Text(
+                  subtitle,
+                  style: context.textTheme.bodySmall?.copyWith(
+                    color: context.colorScheme.onSurface.withOpacity(0.7),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-      ],
+          Icon(
+            Icons.arrow_forward_ios,
+            size: 16,
+            color: context.colorScheme.onSurface.withOpacity(0.5),
+          ),
+        ],
+      ),
     );
   }
 
-  /// Открыть системные настройки
-  void _openSystemSettings() {
-    _fcmService.openNotificationSettings();
-  }
-
-  /// Скопировать FCM токен
-  void _copyFCMToken() {
-    final token = _fcmService.fcmToken;
-    if (token != null) {
-      // TODO: Реализовать копирование в буфер обмена
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('FCM токен скопирован в буфер обмена'),
-        ),
-      );
+  /// Форматирует часы для отображения
+  String _formatHours(int hours) {
+    if (hours < 24) {
+      return '$hours ч';
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('FCM токен не получен'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      final days = hours ~/ 24;
+      return '$days д';
     }
   }
 
-  /// Проверить статус уведомлений
-  Future<void> _checkNotificationStatus() async {
-    final isEnabled = await _fcmService.areNotificationsEnabled();
-    
-    if (mounted) {
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Статус уведомлений'),
-          content: Text(
-            isEnabled 
-                ? 'Уведомления включены в системе'
-                : 'Уведомления отключены в системе',
+  /// Показывает диалог очистки уведомлений
+  void _showClearNotificationsDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Очистить уведомления'),
+        content: const Text(
+          'Вы уверены, что хотите удалить все уведомления? Это действие нельзя отменить.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Отмена'),
           ),
-          actions: [
-            if (!isEnabled)
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                  _openSystemSettings();
-                },
-                child: const Text('Настройки'),
-              ),
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: const Text('OK'),
-            ),
-          ],
-        ),
-      );
-    }
-  }
-
-  /// Показать тестовое уведомление
-  void _testNotification() {
-    _fcmService.showLocalNotification(
-      id: DateTime.now().millisecondsSinceEpoch,
-      title: 'Тестовое уведомление',
-      body: 'Это тестовое уведомление для проверки настроек',
-    );
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Тестовое уведомление отправлено'),
+          TextButton(
+            onPressed: () {
+              // Здесь будет логика очистки уведомлений
+              Navigator.of(context).pop();
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Уведомления очищены')),
+              );
+            },
+            child: const Text('Очистить'),
+          ),
+        ],
       ),
     );
   }
 
-  /// Очистить все уведомления
-  void _clearAllNotifications() {
-    _fcmService.cancelAllScheduledNotifications();
+  /// Отправляет тестовое уведомление
+  void _sendTestNotification(BuildContext context, WidgetRef ref) {
+    final service = ref.read(notificationServiceProvider);
     
+    // Здесь будет логика отправки тестового уведомления
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Все уведомления очищены'),
-      ),
+      const SnackBar(content: Text('Тестовое уведомление отправлено')),
     );
   }
 }

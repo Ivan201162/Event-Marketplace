@@ -7,6 +7,7 @@ import '../widgets/theme_switch.dart';
 import '../widgets/animated_page_transition.dart';
 import 'customer_profile_edit_screen.dart';
 import 'specialist_profile_edit_screen.dart';
+import 'notification_settings_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -322,6 +323,16 @@ class ProfileScreen extends ConsumerWidget {
               title: const Text('Изменить пароль'),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () => _showChangePasswordDialog(context, ref),
+            ),
+            ListTile(
+              leading: const Icon(Icons.notifications),
+              title: const Text('Уведомления'),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const NotificationSettingsScreen(),
+                ),
+              ),
             ),
             if (user.role == UserRole.guest)
               ListTile(

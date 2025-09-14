@@ -1,292 +1,144 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Типы уведомлений
-enum NotificationType {
-  booking_created,     // Создана заявка
-  booking_confirmed,   // Заявка подтверждена
-  booking_rejected,    // Заявка отклонена
-  booking_cancelled,   // Заявка отменена
-  payment_created,     // Создан платеж
-  payment_completed,   // Платеж завершен
-  payment_failed,      // Платеж неудачен
-  message_received,    // Получено сообщение
-  schedule_updated,    // Обновлено расписание
-  system_announcement, // Системное объявление
-}
-
-/// Приоритеты уведомлений
-enum NotificationPriority {
-  low,      // Низкий
-  normal,   // Обычный
-  high,     // Высокий
-  urgent,   // Срочный
-}
-
-/// Статусы уведомлений
-enum NotificationStatus {
-  unread,   // Непрочитано
-  read,     // Прочитано
-  archived, // Архивировано
-}
-
 /// Модель уведомления
-class AppNotification {
+class Notification {
   final String id;
   final String userId;
-  final NotificationType type;
+  final String type;
   final String title;
   final String body;
-  final NotificationPriority priority;
-  final NotificationStatus status;
+  final Map<String, dynamic> data;
+  final bool isRead;
   final DateTime createdAt;
   final DateTime? readAt;
-  final DateTime? archivedAt;
-  final Map<String, dynamic>? data;
-  final String? actionUrl;
-  final String? imageUrl;
-  final bool isPushSent;
 
-  const AppNotification({
+  const Notification({
     required this.id,
     required this.userId,
     required this.type,
     required this.title,
     required this.body,
-    required this.priority,
-    required this.status,
+    required this.data,
+    this.isRead = false,
     required this.createdAt,
     this.readAt,
-    this.archivedAt,
-    this.data,
-    this.actionUrl,
-    this.imageUrl,
-    this.isPushSent = false,
   });
 
-  /// Создать из документа Firestore
-  factory AppNotification.fromDocument(DocumentSnapshot doc) {
+  /// Создаёт уведомление из документа Firestore
+  factory Notification.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    return AppNotification(
+    
+    return Notification(
       id: doc.id,
-      userId: data['userId'] ?? '',
-      type: _parseNotificationType(data['type']),
-      title: data['title'] ?? '',
-      body: data['body'] ?? '',
-      priority: _parseNotificationPriority(data['priority']),
-      status: _parseNotificationStatus(data['status']),
-      createdAt: data['createdAt'] != null 
-          ? (data['createdAt'] as Timestamp).toDate() 
-          : DateTime.now(),
+      userId: data['userId'] as String,
+      type: data['type'] as String,
+      title: data['title'] as String,
+      body: data['body'] as String,
+      data: Map<String, dynamic>.from(data['data'] as Map? ?? {}),
+      isRead: data['isRead'] as bool? ?? false,
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
       readAt: data['readAt'] != null 
           ? (data['readAt'] as Timestamp).toDate() 
           : null,
-      archivedAt: data['archivedAt'] != null 
-          ? (data['archivedAt'] as Timestamp).toDate() 
-          : null,
-      data: data['data'],
-      actionUrl: data['actionUrl'],
-      imageUrl: data['imageUrl'],
-      isPushSent: data['isPushSent'] ?? false,
     );
   }
 
-  /// Преобразовать в Map для Firestore
+  /// Преобразует уведомление в Map для Firestore
   Map<String, dynamic> toMap() {
     return {
       'userId': userId,
-      'type': type.name,
+      'type': type,
       'title': title,
       'body': body,
-      'priority': priority.name,
-      'status': status.name,
+      'data': data,
+      'isRead': isRead,
       'createdAt': Timestamp.fromDate(createdAt),
       'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
-      'archivedAt': archivedAt != null ? Timestamp.fromDate(archivedAt!) : null,
-      'data': data,
-      'actionUrl': actionUrl,
-      'imageUrl': imageUrl,
-      'isPushSent': isPushSent,
     };
   }
 
-  /// Копировать с изменениями
-  AppNotification copyWith({
+  /// Создаёт копию уведомления с обновлёнными полями
+  Notification copyWith({
     String? id,
     String? userId,
-    NotificationType? type,
+    String? type,
     String? title,
     String? body,
-    NotificationPriority? priority,
-    NotificationStatus? status,
+    Map<String, dynamic>? data,
+    bool? isRead,
     DateTime? createdAt,
     DateTime? readAt,
-    DateTime? archivedAt,
-    Map<String, dynamic>? data,
-    String? actionUrl,
-    String? imageUrl,
-    bool? isPushSent,
   }) {
-    return AppNotification(
+    return Notification(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       type: type ?? this.type,
       title: title ?? this.title,
       body: body ?? this.body,
-      priority: priority ?? this.priority,
-      status: status ?? this.status,
+      data: data ?? this.data,
+      isRead: isRead ?? this.isRead,
       createdAt: createdAt ?? this.createdAt,
       readAt: readAt ?? this.readAt,
-      archivedAt: archivedAt ?? this.archivedAt,
-      data: data ?? this.data,
-      actionUrl: actionUrl ?? this.actionUrl,
-      imageUrl: imageUrl ?? this.imageUrl,
-      isPushSent: isPushSent ?? this.isPushSent,
     );
   }
 
-  /// Проверить, прочитано ли уведомление
-  bool get isRead => status == NotificationStatus.read;
+  /// Типы уведомлений
+  static const String typeReview = 'review';
+  static const String typeBooking = 'booking';
+  static const String typePayment = 'payment';
+  static const String typeReminder = 'reminder';
+  static const String typeMessage = 'message';
+  static const String typeMarketing = 'marketing';
+  static const String typeSystem = 'system';
 
-  /// Проверить, архивировано ли уведомление
-  bool get isArchived => status == NotificationStatus.archived;
-
-  /// Проверить, непрочитано ли уведомление
-  bool get isUnread => status == NotificationStatus.unread;
-
-  /// Получить отображаемое название типа уведомления
-  String get typeDisplayName {
-    switch (type) {
-      case NotificationType.booking_created:
-        return 'Новая заявка';
-      case NotificationType.booking_confirmed:
-        return 'Заявка подтверждена';
-      case NotificationType.booking_rejected:
-        return 'Заявка отклонена';
-      case NotificationType.booking_cancelled:
-        return 'Заявка отменена';
-      case NotificationType.payment_created:
-        return 'Новый платеж';
-      case NotificationType.payment_completed:
-        return 'Платеж завершен';
-      case NotificationType.payment_failed:
-        return 'Платеж неудачен';
-      case NotificationType.message_received:
-        return 'Новое сообщение';
-      case NotificationType.schedule_updated:
-        return 'Расписание обновлено';
-      case NotificationType.system_announcement:
-        return 'Системное объявление';
-    }
-  }
-
-  /// Получить иконку для типа уведомления
+  /// Получает иконку для типа уведомления
   String get typeIcon {
     switch (type) {
-      case NotificationType.booking_created:
-        return '📋';
-      case NotificationType.booking_confirmed:
-        return '✅';
-      case NotificationType.booking_rejected:
-        return '❌';
-      case NotificationType.booking_cancelled:
-        return '🚫';
-      case NotificationType.payment_created:
-        return '💳';
-      case NotificationType.payment_completed:
-        return '💰';
-      case NotificationType.payment_failed:
-        return '⚠️';
-      case NotificationType.message_received:
-        return '💬';
-      case NotificationType.schedule_updated:
+      case typeReview:
+        return '⭐';
+      case typeBooking:
         return '📅';
-      case NotificationType.system_announcement:
+      case typePayment:
+        return '💳';
+      case typeReminder:
+        return '⏰';
+      case typeMessage:
+        return '💬';
+      case typeMarketing:
         return '📢';
-    }
-  }
-
-  /// Получить цвет приоритета
-  String get priorityColor {
-    switch (priority) {
-      case NotificationPriority.low:
-        return 'grey';
-      case NotificationPriority.normal:
-        return 'blue';
-      case NotificationPriority.high:
-        return 'orange';
-      case NotificationPriority.urgent:
-        return 'red';
-    }
-  }
-
-  /// Парсинг типа уведомления
-  static NotificationType _parseNotificationType(dynamic typeData) {
-    if (typeData == null) return NotificationType.system_announcement;
-    
-    final typeString = typeData.toString().toLowerCase();
-    switch (typeString) {
-      case 'booking_created':
-        return NotificationType.booking_created;
-      case 'booking_confirmed':
-        return NotificationType.booking_confirmed;
-      case 'booking_rejected':
-        return NotificationType.booking_rejected;
-      case 'booking_cancelled':
-        return NotificationType.booking_cancelled;
-      case 'payment_created':
-        return NotificationType.payment_created;
-      case 'payment_completed':
-        return NotificationType.payment_completed;
-      case 'payment_failed':
-        return NotificationType.payment_failed;
-      case 'message_received':
-        return NotificationType.message_received;
-      case 'schedule_updated':
-        return NotificationType.schedule_updated;
-      case 'system_announcement':
+      case typeSystem:
+        return '⚙️';
       default:
-        return NotificationType.system_announcement;
+        return '🔔';
     }
   }
 
-  /// Парсинг приоритета уведомления
-  static NotificationPriority _parseNotificationPriority(dynamic priorityData) {
-    if (priorityData == null) return NotificationPriority.normal;
-    
-    final priorityString = priorityData.toString().toLowerCase();
-    switch (priorityString) {
-      case 'low':
-        return NotificationPriority.low;
-      case 'high':
-        return NotificationPriority.high;
-      case 'urgent':
-        return NotificationPriority.urgent;
-      case 'normal':
+  /// Получает цвет для типа уведомления
+  String get typeColor {
+    switch (type) {
+      case typeReview:
+        return '#FFD700'; // Золотой
+      case typeBooking:
+        return '#4CAF50'; // Зелёный
+      case typePayment:
+        return '#2196F3'; // Синий
+      case typeReminder:
+        return '#FF9800'; // Оранжевый
+      case typeMessage:
+        return '#9C27B0'; // Фиолетовый
+      case typeMarketing:
+        return '#E91E63'; // Розовый
+      case typeSystem:
+        return '#607D8B'; // Серый
       default:
-        return NotificationPriority.normal;
-    }
-  }
-
-  /// Парсинг статуса уведомления
-  static NotificationStatus _parseNotificationStatus(dynamic statusData) {
-    if (statusData == null) return NotificationStatus.unread;
-    
-    final statusString = statusData.toString().toLowerCase();
-    switch (statusString) {
-      case 'read':
-        return NotificationStatus.read;
-      case 'archived':
-        return NotificationStatus.archived;
-      case 'unread':
-      default:
-        return NotificationStatus.unread;
+        return '#757575'; // Тёмно-серый
     }
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is AppNotification && other.id == id;
+    return other is Notification && other.id == id;
   }
 
   @override
@@ -294,42 +146,28 @@ class AppNotification {
 
   @override
   String toString() {
-    return 'AppNotification(id: $id, type: $type, title: $title, status: $status)';
+    return 'Notification(id: $id, type: $type, title: $title, isRead: $isRead)';
   }
 }
 
-/// Статистика уведомлений
-class NotificationStatistics {
-  final int totalCount;
-  final int unreadCount;
-  final int readCount;
-  final int archivedCount;
-  final Map<NotificationType, int> typeCounts;
-  final Map<NotificationPriority, int> priorityCounts;
+/// Расширение для работы с уведомлениями
+extension NotificationExtension on List<Notification> {
+  /// Получает непрочитанные уведомления
+  List<Notification> get unread => where((n) => !n.isRead).toList();
 
-  const NotificationStatistics({
-    required this.totalCount,
-    required this.unreadCount,
-    required this.readCount,
-    required this.archivedCount,
-    required this.typeCounts,
-    required this.priorityCounts,
-  });
+  /// Получает уведомления по типу
+  List<Notification> byType(String type) => where((n) => n.type == type).toList();
 
-  factory NotificationStatistics.empty() {
-    return const NotificationStatistics(
-      totalCount: 0,
-      unreadCount: 0,
-      readCount: 0,
-      archivedCount: 0,
-      typeCounts: {},
-      priorityCounts: {},
-    );
-  }
+  /// Получает последние уведомления
+  List<Notification> get recent => 
+      toList()..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
-  /// Процент непрочитанных уведомлений
-  double get unreadPercentage {
-    if (totalCount == 0) return 0;
-    return (unreadCount / totalCount) * 100;
+  /// Группирует уведомления по типу
+  Map<String, List<Notification>> get groupedByType {
+    final Map<String, List<Notification>> grouped = {};
+    for (final notification in this) {
+      grouped.putIfAbsent(notification.type, () => []).add(notification);
+    }
+    return grouped;
   }
 }
