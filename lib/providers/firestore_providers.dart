@@ -61,3 +61,15 @@ class BookingConflictParams {
   @override
   int get hashCode => specialistId.hashCode ^ startTime.hashCode ^ endTime.hashCode ^ excludeBookingId.hashCode;
 }
+
+// Провайдер для получения бронирований по специалисту
+final bookingsBySpecialistProvider = FutureProvider.family<List<Booking>, String>((ref, specialistId) {
+  final firestoreService = ref.watch(firestoreServiceProvider);
+  return firestoreService.getBookingsBySpecialist(specialistId);
+});
+
+// Провайдер для получения бронирований по заказчику
+final bookingsByCustomerProvider = FutureProvider.family<List<Booking>, String>((ref, customerId) {
+  final firestoreService = ref.watch(firestoreServiceProvider);
+  return firestoreService.getBookingsByCustomer(customerId);
+});

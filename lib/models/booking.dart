@@ -12,6 +12,13 @@ class Booking {
   final DateTime createdAt;
   bool prepaymentPaid;
   String paymentStatus; // pending, paid, failed
+  
+  // Дополнительные поля для отображения
+  final String? title;
+  final String? description;
+  final String? customerName;
+  final String? customerPhone;
+  final String? customerEmail;
 
   Booking({
     required this.id,
@@ -25,6 +32,11 @@ class Booking {
     DateTime? createdAt,
     this.prepaymentPaid = false,
     this.paymentStatus = 'pending',
+    this.title,
+    this.description,
+    this.customerName,
+    this.customerPhone,
+    this.customerEmail,
   }) : createdAt = createdAt ?? DateTime.now();
 
   Map<String, dynamic> toMap() {
@@ -39,6 +51,11 @@ class Booking {
       'createdAt': Timestamp.fromDate(createdAt),
       'prepaymentPaid': prepaymentPaid,
       'paymentStatus': paymentStatus,
+      'title': title,
+      'description': description,
+      'customerName': customerName,
+      'customerPhone': customerPhone,
+      'customerEmail': customerEmail,
     };
   }
 
@@ -57,6 +74,11 @@ class Booking {
       createdAt: data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
       prepaymentPaid: data['prepaymentPaid'] ?? false,
       paymentStatus: data['paymentStatus'] ?? 'pending',
+      title: data['title'],
+      description: data['description'],
+      customerName: data['customerName'],
+      customerPhone: data['customerPhone'],
+      customerEmail: data['customerEmail'],
     );
   }
 }

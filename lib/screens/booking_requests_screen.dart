@@ -1,172 +1,354 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import '../models/booking.dart';
 import '../providers/firestore_providers.dart';
-import '../providers/user_role_provider.dart';
+import '../providers/auth_providers.dart';
 
-final bookingRequestsProvider = StreamProvider.autoDispose<List<Booking>>((ref) {
-  final service = ref.watch(firestoreServiceProvider);
-  final specialistId = ref.watch(demoSpecialistIdProvider);
-  return service.bookingsBySpecialistStream(specialistId);
-});
-
-class BookingRequestsScreen extends ConsumerWidget {
+class BookingRequestsScreen extends ConsumerStatefulWidget {
   const BookingRequestsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final async = ref.watch(bookingRequestsProvider);
+  ConsumerState<BookingRequestsScreen> createState() => _BookingRequestsScreenState();
+}
+
+class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final currentUser = ref.watch(currentUserProvider).value;
+    
+    if (currentUser == null) {
+      return const Scaffold(
+        body: Center(child: Text('Пользователь не авторизован')),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Заявки клиентов'),
+        title: const Text('Заявки на бронирование'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        elevation: 0,
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: 'Новые', icon: Icon(Icons.new_releases)),
+            Tab(text: 'Подтвержденные', icon: Icon(Icons.check_circle)),
+            Tab(text: 'Отклоненные', icon: Icon(Icons.cancel)),
+          ],
+        ),
       ),
-      body: async.when(
-        data: (bookings) {
-          if (bookings.isEmpty) return const Center(child: Text('Заявок пока нет'));
-          return ListView.builder(
-            itemCount: bookings.length,
-            itemBuilder: (context, index) {
-              final b = bookings[index];
-              return Card(
-                margin: const EdgeInsets.all(8),
-                child: ListTile(
-                  title: Text('Клиент: ${b.customerId}'),
-                  subtitle: Text('Дата: ${DateFormat('dd.MM.yyyy HH:mm', 'ru').format(b.eventDate)} \nАванс: ${b.prepayment.toStringAsFixed(0)} ₽'),
-                  isThreeLine: true,
-                  trailing: b.status == 'pending'
-                      ? Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: const Icon(Icons.check, color: Colors.green),
-                              onPressed: () => _showConfirmDialog(context, ref, b),
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.close, color: Colors.red),
-                              onPressed: () => _showRejectDialog(context, ref, b),
-                            ),
-                          ],
-                        )
-                      : Text(b.status),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          _buildBookingsList(currentUser.id, 'pending'),
+          _buildBookingsList(currentUser.id, 'confirmed'),
+          _buildBookingsList(currentUser.id, 'rejected'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBookingsList(String specialistId, String status) {
+    final bookingsAsync = ref.watch(bookingsBySpecialistProvider(specialistId));
+
+    return bookingsAsync.when(
+      data: (bookings) {
+        final filteredBookings = bookings.where((booking) => booking is Booking && booking.status == status).cast<Booking>().toList();
+        
+        if (filteredBookings.isEmpty) {
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  _getStatusIcon(status),
+                  size: 64,
+                  color: Colors.grey,
                 ),
-              );
-            },
+                const SizedBox(height: 16),
+                Text(
+                  _getEmptyMessage(status),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
           );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (e, st) => Center(child: Text('Ошибка: $e')),
-      ),
-    );
-  }
+        }
 
-  /// Показать диалог подтверждения заявки
-  Future<void> _showConfirmDialog(BuildContext context, WidgetRef ref, Booking booking) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Подтверждение заявки'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+        return RefreshIndicator(
+          onRefresh: () async {
+            ref.invalidate(bookingsBySpecialistProvider(specialistId));
+          },
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: filteredBookings.length,
+            itemBuilder: (context, index) {
+              final booking = filteredBookings[index];
+              return _buildBookingCard(booking);
+            },
+          ),
+        );
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (error, stack) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text('Вы уверены, что хотите подтвердить заявку от ${booking.customerId}?'),
-            const SizedBox(height: 12),
-            Text('Дата: ${DateFormat('dd.MM.yyyy HH:mm', 'ru').format(booking.eventDate)}'),
-            Text('Аванс: ${booking.prepayment.toStringAsFixed(0)} ₽'),
-            Text('Итого: ${booking.totalPrice.toStringAsFixed(0)} ₽'),
+            const Icon(Icons.error, size: 64, color: Colors.red),
+            const SizedBox(height: 16),
+            Text('Ошибка загрузки: $error'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                ref.invalidate(bookingsBySpecialistProvider(specialistId));
+              },
+              child: const Text('Повторить'),
+            ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
-            child: const Text('Подтвердить'),
-          ),
-        ],
       ),
     );
-
-    if (confirmed == true && context.mounted) {
-      await _updateBookingStatus(context, ref, booking.id, 'confirmed', 'Заявка подтверждена');
-    }
   }
 
-  /// Показать диалог отклонения заявки
-  Future<void> _showRejectDialog(BuildContext context, WidgetRef ref, Booking booking) async {
-    final rejected = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Отклонение заявки'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
+  Widget _buildBookingCard(Booking booking) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Вы уверены, что хотите отклонить заявку от ${booking.customerId}?'),
+            // Заголовок с датой и временем
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        booking.title ?? 'Без названия',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        _formatDateTime(booking.eventDate),
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: _getStatusColor(booking.status).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: _getStatusColor(booking.status)),
+                  ),
+                  child: Text(
+                    _getStatusText(booking.status),
+                    style: TextStyle(
+                      color: _getStatusColor(booking.status),
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            
             const SizedBox(height: 12),
-            Text('Дата: ${DateFormat('dd.MM.yyyy HH:mm', 'ru').format(booking.eventDate)}'),
-            const SizedBox(height: 8),
-            const Text(
-              'Это действие нельзя будет отменить.',
-              style: TextStyle(
-                color: Colors.red,
-                fontWeight: FontWeight.bold,
+            
+            // Информация о заказчике
+            Row(
+              children: [
+                const Icon(Icons.person, size: 16, color: Colors.grey),
+                const SizedBox(width: 8),
+                Text(
+                  'Заказчик: ${booking.customerName ?? 'Не указан'}',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+              ],
+            ),
+            
+            if (booking.customerPhone != null) ...[
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  const Icon(Icons.phone, size: 16, color: Colors.grey),
+                  const SizedBox(width: 8),
+                  Text(
+                    booking.customerPhone!,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
               ),
+            ],
+            
+            if (booking.customerEmail != null) ...[
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  const Icon(Icons.email, size: 16, color: Colors.grey),
+                  const SizedBox(width: 8),
+                  Text(
+                    booking.customerEmail!,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            ],
+            
+            const SizedBox(height: 12),
+            
+            // Описание события
+            if (booking.description != null) ...[
+              Text(
+                'Описание:',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              const SizedBox(height: 4),
+              Text(
+                booking.description!,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 12),
+            ],
+            
+            // Стоимость
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Стоимость:',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  '${booking.totalPrice.toStringAsFixed(0)} ₽',
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                ),
+              ],
             ),
+            
+            if (booking.prepayment > 0) ...[
+              const SizedBox(height: 4),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Аванс:',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  Text(
+                    '${booking.prepayment.toStringAsFixed(0)} ₽',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            
+            const SizedBox(height: 16),
+            
+            // Действия для новых заявок
+            if (booking.status == 'pending') ...[
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => _rejectBooking(booking),
+                      icon: const Icon(Icons.close, size: 16),
+                      label: const Text('Отклонить'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.red,
+                        side: const BorderSide(color: Colors.red),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => _confirmBooking(booking),
+                      icon: const Icon(Icons.check, size: 16),
+                      label: const Text('Подтвердить'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+            
+            // Действия для подтвержденных заявок
+            if (booking.status == 'confirmed') ...[
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => _viewBookingDetails(booking),
+                      icon: const Icon(Icons.info, size: 16),
+                      label: const Text('Подробности'),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => _contactCustomer(booking),
+                      icon: const Icon(Icons.message, size: 16),
+                      label: const Text('Связаться'),
+                    ),
+                  ),
+                ],
+              ),
+            ],
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Отклонить'),
-          ),
-        ],
       ),
     );
-
-    if (rejected == true && context.mounted) {
-      await _updateBookingStatus(context, ref, booking.id, 'rejected', 'Заявка отклонена');
-    }
   }
 
-  /// Обновление статуса заявки с уведомлением
-  Future<void> _updateBookingStatus(
-    BuildContext context,
-    WidgetRef ref,
-    String bookingId,
-    String status,
-    String successMessage,
-  ) async {
+  void _confirmBooking(Booking booking) async {
     try {
-      await ref.read(firestoreServiceProvider).updateBookingStatus(bookingId, status);
+      final firestoreService = ref.read(firestoreServiceProvider);
+      await firestoreService.updateBookingStatus(booking.id, 'confirmed');
       
-      if (context.mounted) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(successMessage),
-            backgroundColor: status == 'confirmed' ? Colors.green : Colors.red,
-            action: SnackBarAction(
-              label: 'OK',
-              textColor: Colors.white,
-              onPressed: () {},
-            ),
+          const SnackBar(
+            content: Text('Заявка подтверждена'),
+            backgroundColor: Colors.green,
           ),
         );
       }
     } catch (e) {
-      if (context.mounted) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Ошибка: $e'),
@@ -174,6 +356,171 @@ class BookingRequestsScreen extends ConsumerWidget {
           ),
         );
       }
+    }
+  }
+
+  void _rejectBooking(Booking booking) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Отклонить заявку'),
+        content: const Text('Вы уверены, что хотите отклонить эту заявку?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Отклонить'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        final firestoreService = ref.read(firestoreServiceProvider);
+        await firestoreService.updateBookingStatus(booking.id, 'rejected');
+        
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Заявка отклонена'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Ошибка: $e'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+    }
+  }
+
+  void _viewBookingDetails(Booking booking) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(booking.title ?? 'Без названия'),
+        content: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              _buildDetailRow('Дата и время:', _formatDateTime(booking.eventDate)),
+              _buildDetailRow('Заказчик:', booking.customerName ?? 'Не указан'),
+              if (booking.customerPhone != null)
+                _buildDetailRow('Телефон:', booking.customerPhone!),
+              if (booking.customerEmail != null)
+                _buildDetailRow('Email:', booking.customerEmail!),
+              if (booking.description != null)
+                _buildDetailRow('Описание:', booking.description!),
+              _buildDetailRow('Стоимость:', '${booking.totalPrice.toStringAsFixed(0)} ₽'),
+              if (booking.prepayment > 0)
+                _buildDetailRow('Аванс:', '${booking.prepayment.toStringAsFixed(0)} ₽'),
+              _buildDetailRow('Статус:', _getStatusText(booking.status)),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Закрыть'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _contactCustomer(Booking booking) {
+    // TODO: Реализовать переход в чат с заказчиком
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Переход в чат будет реализован позже')),
+    );
+  }
+
+  Widget _buildDetailRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 100,
+            child: Text(
+              label,
+              style: const TextStyle(fontWeight: FontWeight.w600),
+            ),
+          ),
+          Expanded(
+            child: Text(value),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String _formatDateTime(DateTime dateTime) {
+    return '${dateTime.day}.${dateTime.month}.${dateTime.year} в ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+  }
+
+  IconData _getStatusIcon(String status) {
+    switch (status) {
+      case 'pending':
+        return Icons.new_releases;
+      case 'confirmed':
+        return Icons.check_circle;
+      case 'rejected':
+        return Icons.cancel;
+      default:
+        return Icons.help;
+    }
+  }
+
+  String _getEmptyMessage(String status) {
+    switch (status) {
+      case 'pending':
+        return 'Нет новых заявок';
+      case 'confirmed':
+        return 'Нет подтвержденных заявок';
+      case 'rejected':
+        return 'Нет отклоненных заявок';
+      default:
+        return 'Нет заявок';
+    }
+  }
+
+  Color _getStatusColor(String status) {
+    switch (status) {
+      case 'pending':
+        return Colors.orange;
+      case 'confirmed':
+        return Colors.green;
+      case 'rejected':
+        return Colors.red;
+      default:
+        return Colors.grey;
+    }
+  }
+
+  String _getStatusText(String status) {
+    switch (status) {
+      case 'pending':
+        return 'Новая';
+      case 'confirmed':
+        return 'Подтверждена';
+      case 'rejected':
+        return 'Отклонена';
+      default:
+        return 'Неизвестно';
     }
   }
 }

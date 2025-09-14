@@ -59,6 +59,28 @@ class FirestoreService {
     });
   }
 
+  // Получить бронирования по специалисту
+  Future<List<Booking>> getBookingsBySpecialist(String specialistId) async {
+    final qs = await _db
+        .collection('bookings')
+        .where('specialistId', isEqualTo: specialistId)
+        .orderBy('eventDate', descending: false)
+        .get();
+    
+    return qs.docs.map((doc) => Booking.fromDocument(doc)).toList();
+  }
+
+  // Получить бронирования по заказчику
+  Future<List<Booking>> getBookingsByCustomer(String customerId) async {
+    final qs = await _db
+        .collection('bookings')
+        .where('customerId', isEqualTo: customerId)
+        .orderBy('eventDate', descending: false)
+        .get();
+    
+    return qs.docs.map((doc) => Booking.fromDocument(doc)).toList();
+  }
+
   // Получить занятые даты (confirmed) для календаря
   Future<List<DateTime>> getBusyDates(String specialistId) async {
     final qs = await _db
