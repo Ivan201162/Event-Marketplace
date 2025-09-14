@@ -17,6 +17,8 @@ class AppUser {
   final DateTime createdAt;
   final DateTime? lastLoginAt;
   final bool isActive;
+  final String? socialProvider; // 'google', 'vk', 'email'
+  final String? socialId; // ID в социальной сети
   final Map<String, dynamic>? additionalData;
 
   const AppUser({
@@ -28,6 +30,8 @@ class AppUser {
     required this.createdAt,
     this.lastLoginAt,
     this.isActive = true,
+    this.socialProvider,
+    this.socialId,
     this.additionalData,
   });
 
@@ -47,6 +51,8 @@ class AppUser {
           ? (data['lastLoginAt'] as Timestamp).toDate() 
           : null,
       isActive: data['isActive'] ?? true,
+      socialProvider: data['socialProvider'],
+      socialId: data['socialId'],
       additionalData: data['additionalData'],
     );
   }
@@ -58,6 +64,8 @@ class AppUser {
     String? displayName,
     String? photoURL,
     UserRole role = UserRole.customer,
+    String? socialProvider,
+    String? socialId,
   }) {
     return AppUser(
       id: uid,
@@ -67,6 +75,8 @@ class AppUser {
       role: role,
       createdAt: DateTime.now(),
       lastLoginAt: DateTime.now(),
+      socialProvider: socialProvider,
+      socialId: socialId,
     );
   }
 
@@ -80,6 +90,8 @@ class AppUser {
       'createdAt': Timestamp.fromDate(createdAt),
       'lastLoginAt': lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
       'isActive': isActive,
+      'socialProvider': socialProvider,
+      'socialId': socialId,
       'additionalData': additionalData,
     };
   }
@@ -94,6 +106,8 @@ class AppUser {
     DateTime? createdAt,
     DateTime? lastLoginAt,
     bool? isActive,
+    String? socialProvider,
+    String? socialId,
     Map<String, dynamic>? additionalData,
   }) {
     return AppUser(
@@ -105,6 +119,8 @@ class AppUser {
       createdAt: createdAt ?? this.createdAt,
       lastLoginAt: lastLoginAt ?? this.lastLoginAt,
       isActive: isActive ?? this.isActive,
+      socialProvider: socialProvider ?? this.socialProvider,
+      socialId: socialId ?? this.socialId,
       additionalData: additionalData ?? this.additionalData,
     );
   }

@@ -1,0 +1,3 @@
+warning: in the working copy of 'lib/models/booking.dart', LF will be replaced by CRLF the next time Git touches it
+lib/models/booking.dart
+lib/services/firestore_service.dart

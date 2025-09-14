@@ -124,6 +124,14 @@ class AuthScreen extends ConsumerWidget {
               const SizedBox(height: 16),
               _buildErrorMessage(context, formState.errorMessage!),
             ],
+            
+            // Разделитель
+            const SizedBox(height: 24),
+            _buildDivider(context),
+            const SizedBox(height: 24),
+            
+            // Кнопки социальных сетей
+            _buildSocialButtons(context, ref, formState),
           ],
         ),
       ),
@@ -373,6 +381,142 @@ class AuthScreen extends ConsumerWidget {
         ],
       ),
     );
+  }
+
+  /// Разделитель
+  Widget _buildDivider(BuildContext context) {
+    return Row(
+      children: [
+        Expanded(child: Divider(color: Theme.of(context).colorScheme.outline)),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Text(
+            'или',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+            ),
+          ),
+        ),
+        Expanded(child: Divider(color: Theme.of(context).colorScheme.outline)),
+      ],
+    );
+  }
+
+  /// Кнопки социальных сетей
+  Widget _buildSocialButtons(BuildContext context, WidgetRef ref, LoginFormState formState) {
+    return Column(
+      children: [
+        // Кнопка Google
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton.icon(
+            onPressed: formState.isLoading ? null : () => _handleGoogleSignIn(context, ref),
+            icon: Container(
+              width: 20,
+              height: 20,
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: NetworkImage('https://developers.google.com/identity/images/g-logo.png'),
+                  fit: BoxFit.contain,
+                ),
+              ),
+            ),
+            label: const Text('Войти через Google'),
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+        ),
+        
+        const SizedBox(height: 12),
+        
+        // Кнопка ВКонтакте
+        SizedBox(
+          width: double.infinity,
+          child: OutlinedButton.icon(
+            onPressed: formState.isLoading ? null : () => _handleVKSignIn(context, ref),
+            icon: Container(
+              width: 20,
+              height: 20,
+              decoration: const BoxDecoration(
+                color: Color(0xFF0077FF),
+                shape: BoxShape.circle,
+              ),
+              child: const Center(
+                child: Text(
+                  'VK',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ),
+            label: const Text('Войти через ВКонтакте'),
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 12),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  /// Обработка входа через Google
+  Future<void> _handleGoogleSignIn(BuildContext context, WidgetRef ref) async {
+    try {
+      final role = ref.read(selectedRoleProvider);
+      final authService = ref.read(authServiceProvider);
+      
+      final user = await authService.signInWithGoogle(role: role);
+      if (user != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Добро пожаловать, ${user.displayNameOrEmail}!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Ошибка входа через Google: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  /// Обработка входа через ВКонтакте
+  Future<void> _handleVKSignIn(BuildContext context, WidgetRef ref) async {
+    try {
+      final role = ref.read(selectedRoleProvider);
+      final authService = ref.read(authServiceProvider);
+      
+      final user = await authService.signInWithVK(role: role);
+      if (user != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Добро пожаловать, ${user.displayNameOrEmail}!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Ошибка входа через ВКонтакте: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
 

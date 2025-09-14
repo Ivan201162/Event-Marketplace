@@ -5,6 +5,7 @@ class Booking {
   final String customerId;
   final String specialistId;
   final DateTime eventDate;
+  final DateTime? endDate; // Время окончания события
   String status; // pending, confirmed, rejected
   final double prepayment;
   final double totalPrice;
@@ -17,6 +18,7 @@ class Booking {
     required this.customerId,
     required this.specialistId,
     required this.eventDate,
+    this.endDate,
     required this.status,
     required this.prepayment,
     required this.totalPrice,
@@ -30,6 +32,7 @@ class Booking {
       'customerId': customerId,
       'specialistId': specialistId,
       'eventDate': Timestamp.fromDate(eventDate),
+      'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
       'status': status,
       'prepayment': prepayment,
       'totalPrice': totalPrice,
@@ -47,6 +50,7 @@ class Booking {
       customerId: data['customerId'] ?? '',
       specialistId: data['specialistId'] ?? '',
       eventDate: (data['eventDate'] as Timestamp).toDate(),
+      endDate: data['endDate'] != null ? (data['endDate'] as Timestamp).toDate() : null,
       status: data['status'] ?? 'pending',
       prepayment: (data['prepayment'] is num) ? (data['prepayment'] as num).toDouble() : 0.0,
       totalPrice: (data['totalPrice'] is num) ? (data['totalPrice'] as num).toDouble() : 0.0,

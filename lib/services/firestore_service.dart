@@ -69,6 +69,52 @@ class FirestoreService {
     return qs.docs.map((d) => (d.data()['eventDate'] as Timestamp).toDate()).toList();
   }
 
+  // Получить занятые даты с временными интервалами
+  Future<List<Map<String, dynamic>>> getBusyDateRanges(String specialistId) async {
+    final qs = await _db
+        .collection('bookings')
+        .where('specialistId', isEqualTo: specialistId)
+        .where('status', isEqualTo: 'confirmed')
+        .get();
+    
+    return qs.docs.map((d) {
+      final data = d.data();
+      return {
+        'bookingId': d.id,
+        'startTime': (data['eventDate'] as Timestamp).toDate(),
+        'endTime': (data['endDate'] as Timestamp?)?.toDate() ?? 
+                   (data['eventDate'] as Timestamp).toDate().add(const Duration(hours: 2)),
+        'customerId': data['customerId'],
+        'title': data['title'] ?? 'Бронирование',
+      };
+    }).toList();
+  }
+
+  // Проверить конфликты бронирования
+  Future<bool> hasBookingConflict(String specialistId, DateTime startTime, DateTime endTime, {String? excludeBookingId}) async {
+    final qs = await _db
+        .collection('bookings')
+        .where('specialistId', isEqualTo: specialistId)
+        .where('status', isEqualTo: 'confirmed')
+        .get();
+    
+    for (final doc in qs.docs) {
+      if (excludeBookingId != null && doc.id == excludeBookingId) continue;
+      
+      final data = doc.data();
+      final existingStart = (data['eventDate'] as Timestamp).toDate();
+      final existingEnd = (data['endDate'] as Timestamp?)?.toDate() ?? 
+                         existingStart.add(const Duration(hours: 2));
+      
+      // Проверяем пересечение временных интервалов
+      if (startTime.isBefore(existingEnd) && endTime.isAfter(existingStart)) {
+        return true; // Есть конфликт
+      }
+    }
+    
+    return false; // Конфликтов нет
+  }
+
   // Добавить тестовые заявки (для локального теста)
   Future<void> addTestBookings() async {
     final now = DateTime.now();
@@ -117,14 +163,29 @@ class FirestoreService {
   // Добавить/обновить заявку с интеграцией календаря
   Future<void> addOrUpdateBookingWithCalendar(Booking booking) async {
     try {
-      // Проверяем доступность даты
+      // Определяем время окончания события
+      final endTime = booking.endDate ?? booking.eventDate.add(const Duration(hours: 2));
+      
+      // Проверяем конфликты бронирования
+      final hasConflict = await hasBookingConflict(
+        booking.specialistId, 
+        booking.eventDate, 
+        endTime,
+        excludeBookingId: booking.id, // Исключаем текущее бронирование при обновлении
+      );
+      
+      if (hasConflict) {
+        throw Exception('Выбранное время уже занято другим бронированием');
+      }
+      
+      // Проверяем доступность через календарный сервис
       final isAvailable = await _calendarService.isDateTimeAvailable(
         booking.specialistId,
         booking.eventDate,
       );
       
       if (!isAvailable) {
-        throw Exception('Выбранная дата и время недоступны');
+        throw Exception('Выбранная дата и время недоступны в расписании специалиста');
       }
       
       // Сохраняем заявку
@@ -137,7 +198,7 @@ class FirestoreService {
           bookingId: booking.id,
           customerName: booking.customerId,
           startTime: booking.eventDate,
-          endTime: booking.eventDate.add(const Duration(hours: 2)), // По умолчанию 2 часа
+          endTime: endTime,
           description: 'Бронирование мероприятия',
         );
       }
@@ -332,22 +393,14 @@ class FirestoreService {
     Map<String, dynamic>? data,
   }) async {
     try {
-      // Получаем FCM токен пользователя из базы данных
-      final userDoc = await _db.collection('users').doc(userId).get();
-      if (userDoc.exists) {
-        final userData = userDoc.data() as Map<String, dynamic>;
-        final fcmToken = userData['fcmToken'];
-        
-        if (fcmToken != null) {
-          // Отправляем локальное уведомление (в реальном приложении здесь был бы HTTP запрос к FCM API)
-          await _fcmService.showLocalNotification(
-            id: DateTime.now().millisecondsSinceEpoch,
-            title: title,
-            body: body,
-            data: data,
-          );
-        }
-      }
+      // Отправляем уведомление через FCM сервис
+      await _fcmService.sendBookingNotification(
+        userId: userId,
+        title: title,
+        body: body,
+        bookingId: data?['bookingId'] ?? '',
+        type: data?['type'] ?? 'booking_update',
+      );
     } catch (e) {
       print('Ошибка отправки push-уведомления: $e');
     }

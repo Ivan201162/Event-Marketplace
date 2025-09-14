@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/specialist.dart';
+import '../models/booking.dart';
 import '../providers/calendar_providers.dart';
 import '../providers/specialist_providers.dart';
+import '../providers/firestore_providers.dart';
+import '../services/firestore_service.dart';
+import 'calendar_widget.dart';
 
 /// Виджет бронирования
 class BookingWidget extends ConsumerStatefulWidget {
@@ -379,19 +383,53 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
 
   /// Выбрать дату
   Future<void> _selectDate() async {
-    final date = await showDatePicker(
+    // Показываем календарь с блокировкой занятых дат
+    showDialog(
       context: context,
-      initialDate: _selectedDate ?? DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime.now().add(const Duration(days: 365)),
+      builder: (context) => Dialog(
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.9,
+          height: MediaQuery.of(context).size.height * 0.7,
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            children: [
+              Text(
+                'Выберите дату',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: CalendarWidget(
+                  specialistId: widget.specialist.id,
+                  initialDate: _selectedDate,
+                  showEvents: true,
+                  showTimeSlots: false,
+                  onDateSelected: (date) {
+                    setState(() {
+                      _selectedDate = date;
+                      _selectedTime = null; // Сброс времени при смене даты
+                    });
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () => Navigator.of(context).pop(),
+                    child: const Text('Отмена'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
     );
-    
-    if (date != null) {
-      setState(() {
-        _selectedDate = date;
-        _selectedTime = null; // Сброс времени при смене даты
-      });
-    }
   }
 
   /// Выбрать время
@@ -424,21 +462,85 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
   }
 
   /// Создать бронирование
-  void _createBooking() {
-    if (_selectedDate == null || _selectedTime == null) return;
-
-    // TODO: Реализовать создание бронирования
-    Navigator.of(context).pop();
-    
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Бронирование ${widget.specialist.name} создано'),
-        action: SnackBarAction(
-          label: 'OK',
-          onPressed: () {},
+  Future<void> _createBooking() async {
+    if (_selectedDate == null || _selectedTime == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Выберите дату и время'),
+          backgroundColor: Colors.red,
         ),
-      ),
-    );
+      );
+      return;
+    }
+
+    try {
+      // Показываем индикатор загрузки
+      showDialog(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => const Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+
+      // Определяем время окончания
+      final endTime = _selectedTime!.add(Duration(hours: _selectedHours));
+      
+      // Проверяем конфликты бронирования
+      final hasConflict = await ref.read(firestoreServiceProvider).hasBookingConflict(
+        widget.specialist.id,
+        _selectedTime!,
+        endTime,
+      );
+
+      if (hasConflict) {
+        Navigator.of(context).pop(); // Закрываем индикатор загрузки
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Выбранное время уже занято'),
+            backgroundColor: Colors.red,
+          ),
+        );
+        return;
+      }
+
+      // Создаем бронирование
+      final booking = Booking(
+        id: 'booking_${DateTime.now().millisecondsSinceEpoch}',
+        customerId: 'current_user_id', // TODO: Получить ID текущего пользователя
+        specialistId: widget.specialist.id,
+        eventDate: _selectedTime!,
+        endDate: endTime,
+        status: 'pending',
+        prepayment: widget.specialist.hourlyRate * _selectedHours * 0.3, // 30% предоплата
+        totalPrice: widget.specialist.hourlyRate * _selectedHours,
+      );
+
+      // Сохраняем бронирование с интеграцией календаря
+      await ref.read(firestoreServiceProvider).addOrUpdateBookingWithCalendar(booking);
+
+      Navigator.of(context).pop(); // Закрываем индикатор загрузки
+      Navigator.of(context).pop(); // Закрываем диалог бронирования
+      
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Бронирование ${widget.specialist.name} создано'),
+          backgroundColor: Colors.green,
+          action: SnackBarAction(
+            label: 'OK',
+            onPressed: () {},
+          ),
+        ),
+      );
+    } catch (e) {
+      Navigator.of(context).pop(); // Закрываем индикатор загрузки
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Ошибка создания бронирования: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }
 

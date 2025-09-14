@@ -376,4 +376,64 @@ class FCMService {
         .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
         ?.openNotificationSettings();
   }
+
+  /// Сохранить FCM токен пользователя в Firestore
+  Future<void> saveUserFCMToken(String userId, String token) async {
+    try {
+      // TODO: Реализовать сохранение токена в Firestore
+      // await FirebaseFirestore.instance
+      //     .collection('users')
+      //     .doc(userId)
+      //     .update({'fcmToken': token});
+      print('FCM token saved for user: $userId');
+    } catch (e) {
+      print('Error saving FCM token: $e');
+    }
+  }
+
+  /// Отправить уведомление о бронировании
+  Future<void> sendBookingNotification({
+    required String userId,
+    required String title,
+    required String body,
+    required String bookingId,
+    required String type, // 'booking_created', 'booking_confirmed', 'booking_rejected', 'booking_cancelled'
+  }) async {
+    try {
+      // В реальном приложении здесь был бы HTTP запрос к FCM API
+      // Для демонстрации показываем локальное уведомление
+      await showLocalNotification(
+        id: DateTime.now().millisecondsSinceEpoch,
+        title: title,
+        body: body,
+        data: {
+          'type': type,
+          'bookingId': bookingId,
+          'userId': userId,
+        },
+      );
+    } catch (e) {
+      print('Error sending booking notification: $e');
+    }
+  }
+
+  /// Подписаться на уведомления о бронированиях
+  Future<void> subscribeToBookingNotifications(String userId) async {
+    try {
+      await subscribeToTopic('bookings_$userId');
+      await subscribeToTopic('bookings_all');
+    } catch (e) {
+      print('Error subscribing to booking notifications: $e');
+    }
+  }
+
+  /// Отписаться от уведомлений о бронированиях
+  Future<void> unsubscribeFromBookingNotifications(String userId) async {
+    try {
+      await unsubscribeFromTopic('bookings_$userId');
+      await unsubscribeFromTopic('bookings_all');
+    } catch (e) {
+      print('Error unsubscribing from booking notifications: $e');
+    }
+  }
 }

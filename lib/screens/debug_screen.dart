@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:event_marketplace_app/services/logger_service.dart';
 import 'package:event_marketplace_app/services/monitoring_service.dart';
+import 'integration_test_screen.dart';
 
 class DebugScreen extends ConsumerStatefulWidget {
   const DebugScreen({Key? key}) : super(key: key);
@@ -22,7 +23,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 4, vsync: this);
+    _tabController = TabController(length: 5, vsync: this);
     _isMonitoring = _monitoring._isMonitoring;
   }
 
@@ -44,6 +45,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
             Tab(icon: Icon(Icons.bug_report), text: 'Логи'),
             Tab(icon: Icon(Icons.settings), text: 'Настройки'),
             Tab(icon: Icon(Icons.info), text: 'Информация'),
+            Tab(icon: Icon(Icons.integration_instructions), text: 'Тесты'),
           ],
         ),
         actions: [
@@ -66,6 +68,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
           _buildLogsTab(),
           _buildSettingsTab(),
           _buildInfoTab(),
+          _buildTestsTab(),
         ],
       ),
     );
@@ -621,6 +624,52 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
     
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('${level.name} сообщение отправлено')),
+    );
+  }
+
+  Widget _buildTestsTab() {
+    return Padding(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Тестирование интеграции',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Запустите тесты для проверки интеграции всех компонентов:',
+                  ),
+                  const SizedBox(height: 16),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton.icon(
+                      onPressed: () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const IntegrationTestScreen(),
+                          ),
+                        );
+                      },
+                      icon: const Icon(Icons.play_arrow),
+                      label: const Text('Запустить тесты интеграции'),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../providers/calendar_providers.dart';
 import '../models/specialist_schedule.dart';
+import '../services/firestore_service.dart';
+import '../providers/firestore_providers.dart';
 
 class CalendarWidget extends ConsumerStatefulWidget {
   final String specialistId;
@@ -39,6 +41,8 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
   @override
   Widget build(BuildContext context) {
     final scheduleAsync = ref.watch(specialistScheduleProvider(widget.specialistId));
+    final busyDatesAsync = ref.watch(busyDatesProvider(widget.specialistId));
+    final busyDateRangesAsync = ref.watch(busyDateRangesProvider(widget.specialistId));
     final calendarState = ref.watch(calendarStateProvider);
 
     return Column(
@@ -77,6 +81,14 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                 ),
                 markersMaxCount: 3,
                 canMarkersOverflow: true,
+                // Стили для занятых дат
+                disabledDecoration: BoxDecoration(
+                  color: Colors.grey.withOpacity(0.3),
+                  shape: BoxShape.circle,
+                ),
+                disabledTextStyle: TextStyle(
+                  color: Colors.grey.withOpacity(0.6),
+                ),
               ),
               headerStyle: HeaderStyle(
                 formatButtonVisible: true,
@@ -91,6 +103,17 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                 ),
               ),
               onDaySelected: (selectedDay, focusedDay) {
+                // Проверяем, не занята ли дата
+                if (_isDateBusy(selectedDay, busyDatesAsync)) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Эта дата уже занята'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                  return;
+                }
+                
                 if (!isSameDay(_selectedDay, selectedDay)) {
                   setState(() {
                     _selectedDay = selectedDay;
@@ -132,6 +155,39 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                      ),
+                    ),
+                  );
+                },
+                // Кастомный билдер для дней
+                defaultBuilder: (context, day, focusedDay) {
+                  final isBusy = _isDateBusy(day, busyDatesAsync);
+                  final isPast = day.isBefore(DateTime.now().subtract(const Duration(days: 1)));
+                  
+                  return Container(
+                    margin: const EdgeInsets.all(4.0),
+                    decoration: BoxDecoration(
+                      color: isBusy 
+                          ? Colors.red.withOpacity(0.3)
+                          : isPast 
+                              ? Colors.grey.withOpacity(0.2)
+                              : null,
+                      shape: BoxShape.circle,
+                      border: isBusy 
+                          ? Border.all(color: Colors.red, width: 2)
+                          : null,
+                    ),
+                    child: Center(
+                      child: Text(
+                        '${day.day}',
+                        style: TextStyle(
+                          color: isBusy 
+                              ? Colors.red
+                              : isPast 
+                                  ? Colors.grey
+                                  : null,
+                          fontWeight: isBusy ? FontWeight.bold : null,
+                        ),
                       ),
                     ),
                   );
@@ -454,5 +510,20 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
   /// Форматировать время
   String _formatTime(DateTime dateTime) {
     return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+  }
+
+  /// Проверить, занята ли дата
+  bool _isDateBusy(DateTime date, AsyncValue<List<DateTime>> busyDatesAsync) {
+    return busyDatesAsync.when(
+      data: (busyDates) {
+        return busyDates.any((busyDate) => 
+          busyDate.year == date.year &&
+          busyDate.month == date.month &&
+          busyDate.day == date.day
+        );
+      },
+      loading: () => false,
+      error: (_, __) => false,
+    );
   }
 }
