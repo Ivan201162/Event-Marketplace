@@ -9,6 +9,8 @@ import 'customer_profile_edit_screen.dart';
 import 'specialist_profile_edit_screen.dart';
 import 'notification_settings_screen.dart';
 import 'badges_screen.dart';
+import 'inspiration_photos_screen.dart';
+import 'customer_notes_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -345,6 +347,28 @@ class ProfileScreen extends ConsumerWidget {
                 ),
               ),
             ),
+            if (user.role == UserRole.customer) ...[
+              ListTile(
+                leading: const Icon(Icons.photo_library),
+                title: const Text('Фотоальбом вдохновения'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => InspirationPhotosScreen(userId: user.id),
+                  ),
+                ),
+              ),
+              ListTile(
+                leading: const Icon(Icons.note),
+                title: const Text('Мои заметки'),
+                trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+                onTap: () => Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => CustomerNotesScreen(userId: user.id),
+                  ),
+                ),
+              ),
+            ],
             if (user.role == UserRole.guest)
               ListTile(
                 leading: const Icon(Icons.person_add),
