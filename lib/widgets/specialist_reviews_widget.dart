@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/review_providers.dart';
+import '../models/review.dart';
 
 /// Виджет отзывов специалиста
 class SpecialistReviewsWidget extends ConsumerWidget {
@@ -13,8 +14,8 @@ class SpecialistReviewsWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final reviewsAsync = ref.watch(specialistReviewsProvider(specialistId));
-    final statisticsAsync = ref.watch(specialistReviewStatisticsProvider(specialistId));
+    final reviewsAsync = ref.watch(reviewsBySpecialistProvider(specialistId));
+    final statisticsAsync = ref.watch(reviewStatsProvider(specialistId));
 
     return Container(
       padding: const EdgeInsets.all(16),
@@ -52,7 +53,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
   }
 
   /// Построить статистику отзывов
-  Widget _buildReviewStatistics(ReviewStatistics statistics) {
+  Widget _buildReviewStatistics(ReviewStats statistics) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -409,7 +410,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
 
 /// Виджет для отображения детального рейтинга
 class DetailedRatingWidget extends StatelessWidget {
-  final DetailedRating detailedRating;
+  final ReviewStats detailedRating;
 
   const DetailedRatingWidget({
     super.key,

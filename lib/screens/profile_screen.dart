@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_providers.dart';
 import '../providers/profile_providers.dart';
 import '../models/user.dart';
+import '../widgets/theme_switch.dart';
+import '../widgets/animated_page_transition.dart';
 import 'customer_profile_edit_screen.dart';
 import 'specialist_profile_edit_screen.dart';
 
@@ -20,6 +22,7 @@ class ProfileScreen extends ConsumerWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         elevation: 0,
         actions: [
+          const ThemeSwitch(),
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => _showLogoutDialog(context, ref),

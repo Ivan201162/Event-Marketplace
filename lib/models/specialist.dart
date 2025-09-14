@@ -403,6 +403,52 @@ class Specialist {
         return 'Охрана';
       case SpecialistCategory.technician:
         return 'Техник';
+      case SpecialistCategory.animator:
+        return 'Аниматор';
+      case SpecialistCategory.florist:
+        return 'Флорист';
+      case SpecialistCategory.lighting:
+        return 'Световое оформление';
+      case SpecialistCategory.sound:
+        return 'Звуковое оборудование';
+      case SpecialistCategory.costume:
+        return 'Платья/костюмы';
+      case SpecialistCategory.fireShow:
+        return 'Фаер-шоу';
+      case SpecialistCategory.fireworks:
+        return 'Салюты';
+      case SpecialistCategory.lightShow:
+        return 'Световые шоу';
+      case SpecialistCategory.coverBand:
+        return 'Кавер-группы';
+      case SpecialistCategory.teamBuilding:
+        return 'Тимбилдинги';
+      case SpecialistCategory.cleaning:
+        return 'Клининг';
+      case SpecialistCategory.rental:
+        return 'Аренда оборудования';
+      case SpecialistCategory.makeup:
+        return 'Визажист';
+      case SpecialistCategory.hairstylist:
+        return 'Парикмахер';
+      case SpecialistCategory.stylist:
+        return 'Стилист';
+      case SpecialistCategory.choreographer:
+        return 'Хореограф';
+      case SpecialistCategory.dance:
+        return 'Танцы';
+      case SpecialistCategory.magic:
+        return 'Фокусы/иллюзионист';
+      case SpecialistCategory.clown:
+        return 'Клоун';
+      case SpecialistCategory.balloon:
+        return 'Аэродизайн';
+      case SpecialistCategory.cake:
+        return 'Торты/кондитер';
+      case SpecialistCategory.transport:
+        return 'Транспорт';
+      case SpecialistCategory.venue:
+        return 'Площадки';
       case SpecialistCategory.other:
         return 'Другое';
     }
@@ -467,6 +513,52 @@ class Specialist {
         return '🛡️';
       case SpecialistCategory.technician:
         return '🔧';
+      case SpecialistCategory.animator:
+        return '🎭';
+      case SpecialistCategory.florist:
+        return '🌸';
+      case SpecialistCategory.lighting:
+        return '💡';
+      case SpecialistCategory.sound:
+        return '🔊';
+      case SpecialistCategory.costume:
+        return '👗';
+      case SpecialistCategory.fireShow:
+        return '🔥';
+      case SpecialistCategory.fireworks:
+        return '🎆';
+      case SpecialistCategory.lightShow:
+        return '✨';
+      case SpecialistCategory.coverBand:
+        return '🎸';
+      case SpecialistCategory.teamBuilding:
+        return '🤝';
+      case SpecialistCategory.cleaning:
+        return '🧹';
+      case SpecialistCategory.rental:
+        return '📦';
+      case SpecialistCategory.makeup:
+        return '💄';
+      case SpecialistCategory.hairstylist:
+        return '💇';
+      case SpecialistCategory.stylist:
+        return '👔';
+      case SpecialistCategory.choreographer:
+        return '💃';
+      case SpecialistCategory.dance:
+        return '🕺';
+      case SpecialistCategory.magic:
+        return '🎩';
+      case SpecialistCategory.clown:
+        return '🤡';
+      case SpecialistCategory.balloon:
+        return '🎈';
+      case SpecialistCategory.cake:
+        return '🎂';
+      case SpecialistCategory.transport:
+        return '🚗';
+      case SpecialistCategory.venue:
+        return '🏢';
       case SpecialistCategory.other:
         return '⭐';
     }

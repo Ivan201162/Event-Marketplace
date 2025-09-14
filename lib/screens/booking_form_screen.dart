@@ -5,6 +5,7 @@ import '../models/booking.dart';
 import '../providers/specialist_providers.dart';
 import '../providers/calendar_providers.dart';
 import '../providers/payment_providers.dart';
+import '../providers/firestore_providers.dart';
 import '../services/firestore_service.dart';
 
 class BookingFormScreen extends ConsumerStatefulWidget {

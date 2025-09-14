@@ -71,7 +71,7 @@ class SpecialistService {
       final querySnapshot = await _db
           .collection('specialists')
           .where('isAvailable', isEqualTo: true)
-          .orderBy('rating', direction: Query.Direction.descending)
+          .orderBy('rating', descending: true)
           .limit(limit)
           .get();
 
@@ -89,7 +89,7 @@ class SpecialistService {
     return _db
         .collection('specialists')
         .where('isAvailable', isEqualTo: true)
-        .orderBy('rating', direction: Query.Direction.descending)
+        .orderBy('rating', descending: true)
         .limit(limit)
         .snapshots()
         .map((querySnapshot) => querySnapshot.docs
@@ -130,19 +130,19 @@ class SpecialistService {
       // Сортировка
       switch (filters.sortBy) {
         case 'rating':
-          query = query.orderBy('rating', direction: filters.sortAscending ? Query.Direction.ascending : Query.Direction.descending);
+          query = query.orderBy('rating', descending: !filters.sortAscending);
           break;
         case 'price':
-          query = query.orderBy('hourlyRate', direction: filters.sortAscending ? Query.Direction.ascending : Query.Direction.descending);
+          query = query.orderBy('hourlyRate', descending: !filters.sortAscending);
           break;
         case 'experience':
-          query = query.orderBy('yearsOfExperience', direction: filters.sortAscending ? Query.Direction.ascending : Query.Direction.descending);
+          query = query.orderBy('yearsOfExperience', descending: !filters.sortAscending);
           break;
         case 'reviews':
-          query = query.orderBy('reviewCount', direction: filters.sortAscending ? Query.Direction.ascending : Query.Direction.descending);
+          query = query.orderBy('reviewCount', descending: !filters.sortAscending);
           break;
         default:
-          query = query.orderBy('rating', direction: Query.Direction.descending);
+          query = query.orderBy('rating', descending: true);
       }
 
       query = query.limit(limit);
@@ -194,19 +194,19 @@ class SpecialistService {
     // Сортировка
     switch (filters.sortBy) {
       case 'rating':
-        query = query.orderBy('rating', direction: filters.sortAscending ? Query.Direction.ascending : Query.Direction.descending);
+        query = query.orderBy('rating', descending: !filters.sortAscending);
         break;
       case 'price':
-        query = query.orderBy('hourlyRate', direction: filters.sortAscending ? Query.Direction.ascending : Query.Direction.descending);
+        query = query.orderBy('hourlyRate', descending: !filters.sortAscending);
         break;
       case 'experience':
-        query = query.orderBy('yearsOfExperience', direction: filters.sortAscending ? Query.Direction.ascending : Query.Direction.descending);
+        query = query.orderBy('yearsOfExperience', descending: !filters.sortAscending);
         break;
       case 'reviews':
-        query = query.orderBy('reviewCount', direction: filters.sortAscending ? Query.Direction.ascending : Query.Direction.descending);
+        query = query.orderBy('reviewCount', descending: !filters.sortAscending);
         break;
       default:
-        query = query.orderBy('rating', direction: Query.Direction.descending);
+        query = query.orderBy('rating', descending: true);
     }
 
     query = query.limit(limit);
@@ -299,7 +299,7 @@ class SpecialistService {
           .collection('specialists')
           .where('category', isEqualTo: category.name)
           .where('isAvailable', isEqualTo: true)
-          .orderBy('rating', direction: Query.Direction.descending)
+          .orderBy('rating', descending: true)
           .limit(limit)
           .get();
 
@@ -319,8 +319,8 @@ class SpecialistService {
           .collection('specialists')
           .where('isAvailable', isEqualTo: true)
           .where('isVerified', isEqualTo: true)
-          .orderBy('rating', direction: Query.Direction.descending)
-          .orderBy('reviewCount', direction: Query.Direction.descending)
+          .orderBy('rating', descending: true)
+          .orderBy('reviewCount', descending: true)
           .limit(limit)
           .get();
 
@@ -551,24 +551,24 @@ class SpecialistService {
       for (final specialistData in testSpecialists) {
         final specialist = Specialist(
           id: _generateSpecialistId(),
-          userId: specialistData['userId'],
-          name: specialistData['name'],
-          description: specialistData['description'],
+          userId: specialistData['userId'] as String,
+          name: specialistData['name'] as String,
+          description: specialistData['description'] as String?,
           category: SpecialistCategory.values.firstWhere((e) => e.name == specialistData['category']),
-          subcategories: List<String>.from(specialistData['subcategories']),
+          subcategories: List<String>.from(specialistData['subcategories'] as List),
           experienceLevel: ExperienceLevel.values.firstWhere((e) => e.name == specialistData['experienceLevel']),
-          yearsOfExperience: specialistData['yearsOfExperience'],
-          hourlyRate: specialistData['hourlyRate'].toDouble(),
-          minBookingHours: specialistData['minBookingHours']?.toDouble(),
-          maxBookingHours: specialistData['maxBookingHours']?.toDouble(),
-          serviceAreas: List<String>.from(specialistData['serviceAreas']),
-          languages: List<String>.from(specialistData['languages']),
-          equipment: List<String>.from(specialistData['equipment']),
-          portfolio: List<String>.from(specialistData['portfolio']),
-          isAvailable: specialistData['isAvailable'],
-          isVerified: specialistData['isVerified'],
-          rating: specialistData['rating'].toDouble(),
-          reviewCount: specialistData['reviewCount'],
+          yearsOfExperience: specialistData['yearsOfExperience'] as int,
+          hourlyRate: (specialistData['hourlyRate'] as num).toDouble(),
+          minBookingHours: specialistData['minBookingHours'] != null ? (specialistData['minBookingHours'] as num).toDouble() : null,
+          maxBookingHours: specialistData['maxBookingHours'] != null ? (specialistData['maxBookingHours'] as num).toDouble() : null,
+          serviceAreas: List<String>.from(specialistData['serviceAreas'] as List),
+          languages: List<String>.from(specialistData['languages'] as List),
+          equipment: List<String>.from(specialistData['equipment'] as List),
+          portfolio: List<String>.from(specialistData['portfolio'] as List),
+          isAvailable: specialistData['isAvailable'] as bool,
+          isVerified: specialistData['isVerified'] as bool,
+          rating: (specialistData['rating'] as num).toDouble(),
+          reviewCount: specialistData['reviewCount'] as int,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         );

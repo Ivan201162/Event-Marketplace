@@ -12,6 +12,7 @@ class Review {
   final String? title;
   final String? comment;
   final List<String> images; // Фото с мероприятия
+  final List<String> tags; // Теги отзыва
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isVerified; // Подтвержден ли отзыв
@@ -29,6 +30,7 @@ class Review {
     this.title,
     this.comment,
     required this.images,
+    this.tags = const [],
     DateTime? createdAt,
     DateTime? updatedAt,
     this.isVerified = false,
@@ -49,6 +51,7 @@ class Review {
       'title': title,
       'comment': comment,
       'images': images,
+      'tags': tags,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
       'isVerified': isVerified,
@@ -71,6 +74,7 @@ class Review {
       title: data['title'],
       comment: data['comment'],
       images: List<String>.from(data['images'] ?? []),
+      tags: List<String>.from(data['tags'] ?? []),
       createdAt: data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
       updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
       isVerified: data['isVerified'] ?? false,
@@ -138,6 +142,10 @@ class ReviewStats {
   final Map<int, int> ratingDistribution; // Количество отзывов по каждой оценке
   final int verifiedReviews;
   final int publicReviews;
+  final double quality; // Средняя оценка качества
+  final double communication; // Средняя оценка общения
+  final double punctuality; // Средняя оценка пунктуальности
+  final double value; // Средняя оценка соотношения цена/качество
 
   ReviewStats({
     required this.averageRating,
@@ -145,6 +153,10 @@ class ReviewStats {
     required this.ratingDistribution,
     required this.verifiedReviews,
     required this.publicReviews,
+    this.quality = 0.0,
+    this.communication = 0.0,
+    this.punctuality = 0.0,
+    this.value = 0.0,
   });
 
   /// Создание из списка отзывов
@@ -156,6 +168,10 @@ class ReviewStats {
         ratingDistribution: {},
         verifiedReviews: 0,
         publicReviews: 0,
+        quality: 0.0,
+        communication: 0.0,
+        punctuality: 0.0,
+        value: 0.0,
       );
     }
 
@@ -176,8 +192,15 @@ class ReviewStats {
       ratingDistribution: ratingDistribution,
       verifiedReviews: verifiedReviews,
       publicReviews: publicReviews,
+      quality: averageRating, // Используем общий рейтинг как качество
+      communication: averageRating,
+      punctuality: averageRating,
+      value: averageRating,
     );
   }
+
+  /// Геттер для совместимости с виджетом
+  Map<int, int> get ratingCounts => ratingDistribution;
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toMap() {
@@ -187,6 +210,10 @@ class ReviewStats {
       'ratingDistribution': ratingDistribution,
       'verifiedReviews': verifiedReviews,
       'publicReviews': publicReviews,
+      'quality': quality,
+      'communication': communication,
+      'punctuality': punctuality,
+      'value': value,
     };
   }
 
@@ -199,6 +226,10 @@ class ReviewStats {
       ratingDistribution: Map<int, int>.from(data['ratingDistribution'] ?? {}),
       verifiedReviews: data['verifiedReviews'] ?? 0,
       publicReviews: data['publicReviews'] ?? 0,
+      quality: (data['quality'] ?? 0.0).toDouble(),
+      communication: (data['communication'] ?? 0.0).toDouble(),
+      punctuality: (data['punctuality'] ?? 0.0).toDouble(),
+      value: (data['value'] ?? 0.0).toDouble(),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'firebase_options.dart';
 import 'providers/auth_providers.dart';
 import 'providers/theme_provider.dart';
@@ -15,6 +16,7 @@ import 'screens/booking_requests_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/debug_screen.dart';
 import 'services/fcm_service.dart';
+import 'widgets/animated_page_transition.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -44,6 +46,32 @@ class MyApp extends ConsumerWidget {
       darkTheme: darkTheme,
       themeMode: themeMode,
       home: _buildHome(authState),
+      // Локализация
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale('ru', 'RU'),
+        Locale('en', 'US'),
+      ],
+      locale: const Locale('ru', 'RU'),
+      // Анимации переходов
+      onGenerateRoute: (settings) {
+        switch (settings.name) {
+          case '/':
+            return AnimatedPageTransitions.fadeTransition(
+              child: _buildHome(authState),
+              context: context,
+            );
+          default:
+            return AnimatedPageTransitions.slideLeftTransition(
+              child: _buildHome(authState),
+              context: context,
+            );
+        }
+      },
     );
   }
 
@@ -133,7 +161,10 @@ class _MainAppState extends ConsumerState<MainApp> {
               _selectedIndex = index;
             });
           },
-          children: pages,
+          children: pages.map((page) => AnimatedAppearance(
+            child: page,
+            delay: const Duration(milliseconds: 100),
+          )).toList(),
         ),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,

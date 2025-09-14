@@ -31,6 +31,12 @@ final reviewStatsProvider = FutureProvider.family<ReviewStats, String>((ref, spe
   return reviewService.getReviewStats(specialistId);
 });
 
+/// Провайдер отзывов специалиста (алиас)
+final specialistReviewsProvider = reviewsBySpecialistProvider;
+
+/// Провайдер статистики отзывов специалиста (алиас)
+final specialistReviewStatisticsProvider = reviewStatsProvider;
+
 /// Провайдер последних отзывов
 final recentReviewsProvider = FutureProvider<List<Review>>((ref) {
   final reviewService = ref.watch(reviewServiceProvider);
