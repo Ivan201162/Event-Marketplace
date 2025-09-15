@@ -1,149 +1,247 @@
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/booking.dart';
-import 'specialist_schedule_service.dart';
-import 'notification_service.dart';
-import 'badge_service.dart';
+import '../models/event.dart';
 
+/// Сервис для работы с бронированиями
 class BookingService {
-  static const String _bookingsKey = 'bookings';
-  final SpecialistScheduleService _scheduleService = SpecialistScheduleService();
-  final NotificationService _notificationService = NotificationService();
-  final BadgeService _badgeService = BadgeService();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  Future<void> addBooking(Booking booking) async {
-    final bookings = await getBookings();
-    bookings.add(booking);
-    await _saveBookings(bookings);
-    
-    // Добавляем дату в расписание специалиста как занятую
-    await _scheduleService.addBusyDate(booking.specialistId, booking.eventDate);
-    
-    // Планируем напоминание об оплате
+  /// Создать новое бронирование
+  Future<String> createBooking(Booking booking) async {
     try {
-      await _notificationService.sendPaymentReminder(
-        customerId: booking.customerId,
-        bookingId: booking.id,
-        eventName: booking.eventName,
-        amount: booking.totalAmount,
-        dueDate: booking.paymentDueDate ?? booking.eventDate,
-      );
+      // Проверяем, есть ли свободные места
+      final eventDoc = await _firestore.collection('events').doc(booking.eventId).get();
+      if (!eventDoc.exists) {
+        throw Exception('Событие не найдено');
+      }
+
+      final event = Event.fromDocument(eventDoc);
+      if (event.currentParticipants + booking.participantsCount > event.maxParticipants) {
+        throw Exception('Недостаточно свободных мест');
+      }
+
+      // Создаем бронирование
+      final docRef = await _firestore.collection('bookings').add(booking.toMap());
+      
+      // Обновляем количество участников в событии
+      await _firestore.collection('events').doc(booking.eventId).update({
+        'currentParticipants': FieldValue.increment(booking.participantsCount),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      return docRef.id;
     } catch (e) {
-      // Логируем ошибку, но не прерываем создание бронирования
-      print('Error scheduling payment reminder: $e');
-    }
-    
-    // Проверяем бейджи
-    try {
-      await _badgeService.checkBookingBadges(booking.customerId, booking.specialistId);
-    } catch (e) {
-      // Логируем ошибку, но не прерываем создание бронирования
-      print('Error checking booking badges: $e');
+      throw Exception('Ошибка создания бронирования: $e');
     }
   }
 
-  Future<List<Booking>> getBookingsForSpecialist(String specialistId) async {
-    final bookings = await getBookings();
-    return bookings.where((booking) => booking.specialistId == specialistId).toList();
+  /// Получить бронирования пользователя
+  Stream<List<Booking>> getUserBookings(String userId) {
+    return _firestore
+        .collection('bookings')
+        .where('userId', isEqualTo: userId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Booking.fromDocument(doc))
+            .toList());
   }
 
-  Future<List<Booking>> getBookingsForCustomer(String customerId) async {
-    final bookings = await getBookings();
-    return bookings.where((booking) => booking.customerId == customerId).toList();
+  /// Получить бронирования для события
+  Stream<List<Booking>> getEventBookings(String eventId) {
+    return _firestore
+        .collection('bookings')
+        .where('eventId', isEqualTo: eventId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Booking.fromDocument(doc))
+            .toList());
   }
 
-  // Проверить доступность даты для специалиста
-  Future<bool> isDateAvailable(String specialistId, DateTime date) async {
-    return await _scheduleService.isDateAvailable(specialistId, date);
+  /// Получить бронирование по ID
+  Future<Booking?> getBookingById(String bookingId) async {
+    try {
+      final doc = await _firestore.collection('bookings').doc(bookingId).get();
+      if (doc.exists) {
+        return Booking.fromDocument(doc);
+      }
+      return null;
+    } catch (e) {
+      throw Exception('Ошибка получения бронирования: $e');
+    }
   }
 
-  // Получить доступные даты для специалиста в диапазоне
-  Future<List<DateTime>> getAvailableDates(
-    String specialistId, 
-    DateTime startDate, 
-    DateTime endDate
-  ) async {
-    return await _scheduleService.getAvailableDates(specialistId, startDate, endDate);
+  /// Обновить статус бронирования
+  Future<void> updateBookingStatus(String bookingId, BookingStatus status) async {
+    try {
+      final booking = await getBookingById(bookingId);
+      if (booking == null) {
+        throw Exception('Бронирование не найдено');
+      }
+
+      await _firestore.collection('bookings').doc(bookingId).update({
+        'status': status.name,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      // Если бронирование отменяется, уменьшаем количество участников
+      if (status == BookingStatus.cancelled && booking.status != BookingStatus.cancelled) {
+        await _firestore.collection('events').doc(booking.eventId).update({
+          'currentParticipants': FieldValue.increment(-booking.participantsCount),
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+      }
+    } catch (e) {
+      throw Exception('Ошибка обновления статуса бронирования: $e');
+    }
   }
 
-  // Отменить бронирование и освободить дату
+  /// Отменить бронирование
   Future<void> cancelBooking(String bookingId) async {
-    final bookings = await getBookings();
-    final bookingIndex = bookings.indexWhere((booking) => booking.id == bookingId);
-    
-    if (bookingIndex != -1) {
-      final booking = bookings[bookingIndex];
-      
-      // Удаляем бронирование
-      bookings.removeAt(bookingIndex);
-      await _saveBookings(bookings);
-      
-      // Освобождаем дату в расписании
-      await _scheduleService.removeBusyDate(booking.specialistId, booking.eventDate);
+    await updateBookingStatus(bookingId, BookingStatus.cancelled);
+  }
+
+  /// Подтвердить бронирование
+  Future<void> confirmBooking(String bookingId) async {
+    await updateBookingStatus(bookingId, BookingStatus.confirmed);
+  }
+
+  /// Завершить бронирование
+  Future<void> completeBooking(String bookingId) async {
+    await updateBookingStatus(bookingId, BookingStatus.completed);
+  }
+
+  /// Удалить бронирование
+  Future<void> deleteBooking(String bookingId) async {
+    try {
+      final booking = await getBookingById(bookingId);
+      if (booking == null) {
+        throw Exception('Бронирование не найдено');
+      }
+
+      // Если бронирование не отменено, уменьшаем количество участников
+      if (booking.status != BookingStatus.cancelled) {
+        await _firestore.collection('events').doc(booking.eventId).update({
+          'currentParticipants': FieldValue.increment(-booking.participantsCount),
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+      }
+
+      await _firestore.collection('bookings').doc(bookingId).delete();
+    } catch (e) {
+      throw Exception('Ошибка удаления бронирования: $e');
     }
   }
 
-  Future<List<Booking>> getBookings() async {
-    final prefs = await SharedPreferences.getInstance();
-    final bookingsJson = prefs.getStringList(_bookingsKey) ?? [];
-    
-    if (bookingsJson.isEmpty) {
-      // Добавляем тестовые данные при первом запуске
-      await _addTestData();
-      return await getBookings();
+  /// Проверить, забронировал ли пользователь событие
+  Future<bool> hasUserBookedEvent(String userId, String eventId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('bookings')
+          .where('userId', isEqualTo: userId)
+          .where('eventId', isEqualTo: eventId)
+          .where('status', whereIn: ['pending', 'confirmed'])
+          .get();
+
+      return snapshot.docs.isNotEmpty;
+    } catch (e) {
+      throw Exception('Ошибка проверки бронирования: $e');
     }
-
-    return bookingsJson
-        .map((json) {
-          final data = jsonDecode(json);
-          return Booking(
-            id: data['id'],
-            customerId: data['customerId'],
-            specialistId: data['specialistId'],
-            eventDate: DateTime.parse(data['eventDate']),
-            status: data['status'],
-            prepayment: data['prepayment'],
-            totalPrice: data['totalPrice'],
-            prepaymentPaid: data['prepaymentPaid'] ?? false,
-            paymentStatus: data['paymentStatus'] ?? "pending",
-            createdAt: DateTime.parse(data['createdAt']),
-          );
-        })
-        .toList();
   }
 
-  Future<void> _saveBookings(List<Booking> bookings) async {
-    final prefs = await SharedPreferences.getInstance();
-    final bookingsJson = bookings
-        .map((booking) => jsonEncode(booking.toMap()))
-        .toList();
-    await prefs.setStringList(_bookingsKey, bookingsJson);
+  /// Получить статистику бронирований пользователя
+  Future<Map<String, int>> getUserBookingStats(String userId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('bookings')
+          .where('userId', isEqualTo: userId)
+          .get();
+
+      int total = 0;
+      int pending = 0;
+      int confirmed = 0;
+      int cancelled = 0;
+      int completed = 0;
+
+      for (final doc in snapshot.docs) {
+        final booking = Booking.fromDocument(doc);
+        total++;
+        
+        switch (booking.status) {
+          case BookingStatus.pending:
+            pending++;
+            break;
+          case BookingStatus.confirmed:
+            confirmed++;
+            break;
+          case BookingStatus.cancelled:
+            cancelled++;
+            break;
+          case BookingStatus.completed:
+            completed++;
+            break;
+        }
+      }
+
+      return {
+        'total': total,
+        'pending': pending,
+        'confirmed': confirmed,
+        'cancelled': cancelled,
+        'completed': completed,
+      };
+    } catch (e) {
+      throw Exception('Ошибка получения статистики бронирований: $e');
+    }
   }
 
-  Future<void> _addTestData() async {
-    final testBookings = [
-      Booking(
-        id: '1',
-        customerId: 'customer1',
-        specialistId: 'specialist1',
-        eventDate: DateTime(2025, 9, 20),
-        status: 'pending',
-        prepayment: 4500.0,
-        totalPrice: 15000.0,
-      ),
-      Booking(
-        id: '2',
-        customerId: 'customer2',
-        specialistId: 'specialist1',
-        eventDate: DateTime(2025, 9, 25),
-        status: 'confirmed',
-        prepayment: 7500.0,
-        totalPrice: 25000.0,
-      ),
-    ];
+  /// Получить статистику бронирований для события
+  Future<Map<String, int>> getEventBookingStats(String eventId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('bookings')
+          .where('eventId', isEqualTo: eventId)
+          .get();
 
-    for (final booking in testBookings) {
-      await addBooking(booking);
+      int total = 0;
+      int pending = 0;
+      int confirmed = 0;
+      int cancelled = 0;
+      int completed = 0;
+      int totalParticipants = 0;
+
+      for (final doc in snapshot.docs) {
+        final booking = Booking.fromDocument(doc);
+        total++;
+        totalParticipants += booking.participantsCount;
+        
+        switch (booking.status) {
+          case BookingStatus.pending:
+            pending++;
+            break;
+          case BookingStatus.confirmed:
+            confirmed++;
+            break;
+          case BookingStatus.cancelled:
+            cancelled++;
+            break;
+          case BookingStatus.completed:
+            completed++;
+            break;
+        }
+      }
+
+      return {
+        'total': total,
+        'pending': pending,
+        'confirmed': confirmed,
+        'cancelled': cancelled,
+        'completed': completed,
+        'totalParticipants': totalParticipants,
+      };
+    } catch (e) {
+      throw Exception('Ошибка получения статистики бронирований события: $e');
     }
   }
 }

@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/event.dart';
 import '../providers/auth_providers.dart';
 import '../providers/event_providers.dart';
+import '../providers/booking_providers.dart';
 import 'create_event_screen.dart';
+import 'create_booking_screen.dart';
 
 /// Экран детального просмотра события
 class EventDetailScreen extends ConsumerWidget {
@@ -512,22 +514,7 @@ class EventDetailScreen extends ConsumerWidget {
         ] else ...[
           // Кнопки для участника
           if (event.status == EventStatus.active && event.hasAvailableSpots) ...[
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  // TODO: Реализовать бронирование
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Функция бронирования будет реализована в следующих шагах')),
-                  );
-                },
-                icon: const Icon(Icons.book_online),
-                label: const Text('Забронировать участие'),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-              ),
-            ),
+            _buildBookingButton(context, ref),
           ] else if (event.status == EventStatus.active && !event.hasAvailableSpots) ...[
             Container(
               width: double.infinity,
@@ -662,6 +649,113 @@ class EventDetailScreen extends ConsumerWidget {
             child: const Text('Удалить'),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Построить кнопку бронирования
+  Widget _buildBookingButton(BuildContext context, WidgetRef ref) {
+    final currentUser = ref.watch(currentUserProvider);
+    
+    return currentUser.when(
+      data: (user) {
+        if (user == null) {
+          return Container(
+            width: double.infinity,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            decoration: BoxDecoration(
+              color: Colors.grey[300],
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: const Text(
+              'Войдите в систему для бронирования',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.grey,
+              ),
+            ),
+          );
+        }
+
+        return FutureBuilder<bool>(
+          future: ref.read(hasUserBookedEventProvider((userId: user.id, eventId: event.id)).future),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                child: const Center(child: CircularProgressIndicator()),
+              );
+            }
+
+            final hasBooked = snapshot.data ?? false;
+            
+            if (hasBooked) {
+              return Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                decoration: BoxDecoration(
+                  color: Colors.blue[100],
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.blue[300]!),
+                ),
+                child: const Text(
+                  'Вы уже забронировали это мероприятие',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.blue,
+                  ),
+                ),
+              );
+            }
+
+            return SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CreateBookingScreen(event: event),
+                    ),
+                  ).then((result) {
+                    if (result == true) {
+                      // Обновляем данные после создания бронирования
+                      ref.invalidate(hasUserBookedEventProvider((userId: user.id, eventId: event.id)));
+                    }
+                  });
+                },
+                icon: const Icon(Icons.book_online),
+                label: const Text('Забронировать участие'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+              ),
+            );
+          },
+        );
+      },
+      loading: () => Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        child: const Center(child: CircularProgressIndicator()),
+      ),
+      error: (error, stack) => Container(
+        width: double.infinity,
+        padding: const EdgeInsets.symmetric(vertical: 16),
+        decoration: BoxDecoration(
+          color: Colors.red[100],
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          'Ошибка: $error',
+          textAlign: TextAlign.center,
+          style: const TextStyle(color: Colors.red),
+        ),
       ),
     );
   }
