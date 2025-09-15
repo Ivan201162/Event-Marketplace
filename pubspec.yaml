@@ -65,6 +65,22 @@ dependencies:
   # Guest management (added for step 13)
   qr_flutter: ^4.1.0
   qr_code_scanner: ^1.0.1
+  # Ideas module (added for step 14)
+  uuid: ^4.1.0
+  # Support system (added for step 15)
+  mailer: ^6.0.1
+  device_info_plus: ^9.1.0
+  # Integrations (added for step 16)
+  google_maps_flutter: ^2.5.0
+  geolocator: ^10.1.0
+  geocoding: ^2.1.1
+  social_share_plugin: ^0.3.0
+  share_plus: ^7.2.1
+  connectivity_plus: ^5.0.1
+  # Localization (added for step 17)
+  flutter_localizations:
+    sdk: flutter
+  intl: ^0.20.2
 
 dev_dependencies:
   flutter_test:
