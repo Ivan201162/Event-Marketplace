@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/event.dart';
+import '../models/event_filter.dart';
 
 /// Сервис для работы с событиями
 class EventService {
