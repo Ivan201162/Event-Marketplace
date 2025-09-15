@@ -6,6 +6,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../models/user.dart';
 import '../services/auth_service.dart';
+import '../providers/auth_providers.dart';
 
 /// Экран редактирования профиля пользователя
 class ProfileEditScreen extends ConsumerStatefulWidget {
@@ -38,19 +39,13 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
   }
 
   Future<void> _loadUserData() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final doc = await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .get();
-      
-      if (doc.exists) {
-        final userData = AppUser.fromDocument(doc);
-        _nameController.text = userData.displayName ?? '';
-        _emailController.text = userData.email;
+    final currentUser = ref.read(currentUserProvider);
+    currentUser.whenData((user) {
+      if (user != null) {
+        _nameController.text = user.displayName ?? '';
+        _emailController.text = user.email;
       }
-    }
+    });
   }
 
   @override
@@ -254,28 +249,13 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
     });
 
     try {
-      final user = FirebaseAuth.instance.currentUser;
-      if (user == null) {
-        throw Exception('Пользователь не авторизован');
-      }
-
-      // Обновляем данные в Firebase Auth
-      await user.updateDisplayName(_nameController.text.trim());
+      final authService = ref.read(authServiceProvider);
       
-      // Обновляем данные в Firestore
-      await FirebaseFirestore.instance
-          .collection('users')
-          .doc(user.uid)
-          .update({
-        'displayName': _nameController.text.trim(),
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
-
-      // TODO: Загрузка изображения в Firebase Storage
-      if (_selectedImage != null) {
-        // Здесь будет загрузка изображения
-        // await _uploadImage(_selectedImage!);
-      }
+      // Обновляем профиль с загрузкой изображения
+      await authService.updateUserProfileWithImage(
+        displayName: _nameController.text.trim(),
+        imageFile: _selectedImage,
+      );
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

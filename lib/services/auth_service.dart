@@ -1,13 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:io';
 import '../models/user.dart';
+import 'storage_service.dart';
 
 /// Сервис для управления аутентификацией пользователей
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final StorageService _storageService = StorageService();
 
   /// Текущий пользователь Firebase
   User? get currentFirebaseUser => _auth.currentUser;
@@ -176,10 +179,39 @@ class AuthService {
       if (role != null) updateData['role'] = role.name;
 
       if (updateData.isNotEmpty) {
+        updateData['updatedAt'] = FieldValue.serverTimestamp();
         await _firestore.collection('users').doc(firebaseUser.uid).update(updateData);
       }
     } catch (e) {
       throw Exception('Ошибка обновления профиля: $e');
+    }
+  }
+
+  /// Обновить профиль с загрузкой изображения
+  Future<void> updateUserProfileWithImage({
+    String? displayName,
+    File? imageFile,
+    UserRole? role,
+  }) async {
+    final firebaseUser = currentFirebaseUser;
+    if (firebaseUser == null) throw Exception('Пользователь не авторизован');
+
+    try {
+      String? photoURL;
+      
+      // Загружаем изображение, если оно выбрано
+      if (imageFile != null) {
+        photoURL = await _storageService.uploadProfileImage(imageFile);
+      }
+
+      // Обновляем профиль
+      await updateUserProfile(
+        displayName: displayName,
+        photoURL: photoURL,
+        role: role,
+      );
+    } catch (e) {
+      throw Exception('Ошибка обновления профиля с изображением: $e');
     }
   }
 
