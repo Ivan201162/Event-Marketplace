@@ -55,6 +55,9 @@ dependencies:
   # Analytics and charts (added for step 10)
   fl_chart: ^0.66.0
   syncfusion_flutter_charts: ^24.1.41
+  # Media handling (added for step 11)
+  video_player: ^2.8.1
+  photo_view: ^0.14.0
 
 dev_dependencies:
   flutter_test:
