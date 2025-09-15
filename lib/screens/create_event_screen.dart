@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/calendar_event.dart';
-import '../services/calendar_service.dart';
+import '../models/event.dart';
+import '../providers/auth_providers.dart';
+import '../providers/event_providers.dart';
+import '../models/user.dart';
 
 /// Экран создания/редактирования события
 class CreateEventScreen extends ConsumerStatefulWidget {
-  final String userId;
-  final String? specialistId;
-  final DateTime? selectedDate;
-  final CalendarEvent? event;
+  final Event? event; // Для редактирования существующего события
 
   const CreateEventScreen({
     super.key,
-    required this.userId,
-    this.specialistId,
-    this.selectedDate,
     this.event,
   });
 
@@ -27,17 +23,18 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _locationController = TextEditingController();
+  final _priceController = TextEditingController();
+  final _maxParticipantsController = TextEditingController();
+  final _contactInfoController = TextEditingController();
+  final _requirementsController = TextEditingController();
   
-  final CalendarService _calendarService = CalendarService();
-  
-  DateTime _startTime = DateTime.now();
-  DateTime _endTime = DateTime.now().add(const Duration(hours: 1));
-  bool _isAllDay = false;
-  EventType _eventType = EventType.booking;
-  EventStatus _eventStatus = EventStatus.scheduled;
-  String? _reminderTime;
-  String? _color;
-  bool _isLoading = false;
+  DateTime _eventDate = DateTime.now();
+  DateTime? _endDate;
+  EventCategory _category = EventCategory.other;
+  int _maxParticipants = 50;
+  double _price = 0.0;
+  bool _isPublic = true;
+  List<String> _tags = [];
 
   @override
   void initState() {
@@ -45,26 +42,25 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
     
     if (widget.event != null) {
       // Редактирование существующего события
-      _titleController.text = widget.event!.title;
-      _descriptionController.text = widget.event!.description;
-      _locationController.text = widget.event!.location;
-      _startTime = widget.event!.startTime;
-      _endTime = widget.event!.endTime;
-      _isAllDay = widget.event!.isAllDay;
-      _eventType = widget.event!.type;
-      _eventStatus = widget.event!.status;
-      _reminderTime = widget.event!.reminderTime;
-      _color = widget.event!.color;
-    } else if (widget.selectedDate != null) {
-      // Создание нового события с предвыбранной датой
-      _startTime = DateTime(
-        widget.selectedDate!.year,
-        widget.selectedDate!.month,
-        widget.selectedDate!.day,
-        DateTime.now().hour,
-        DateTime.now().minute,
-      );
-      _endTime = _startTime.add(const Duration(hours: 1));
+      final event = widget.event!;
+      _titleController.text = event.title;
+      _descriptionController.text = event.description;
+      _locationController.text = event.location;
+      _priceController.text = event.price.toString();
+      _maxParticipantsController.text = event.maxParticipants.toString();
+      _contactInfoController.text = event.contactInfo ?? '';
+      _requirementsController.text = event.requirements ?? '';
+      _eventDate = event.date;
+      _endDate = event.endDate;
+      _category = event.category;
+      _maxParticipants = event.maxParticipants;
+      _price = event.price;
+      _isPublic = event.isPublic;
+      _tags = List.from(event.tags);
+    } else {
+      // Установка значений по умолчанию
+      _maxParticipantsController.text = _maxParticipants.toString();
+      _priceController.text = _price.toString();
     }
   }
 
@@ -73,18 +69,31 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
     _titleController.dispose();
     _descriptionController.dispose();
     _locationController.dispose();
+    _priceController.dispose();
+    _maxParticipantsController.dispose();
+    _contactInfoController.dispose();
+    _requirementsController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final createEventState = ref.watch(createEventProvider);
+    
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.event != null ? 'Редактировать событие' : 'Создать событие'),
+        title: Text(widget.event != null ? 'Редактировать мероприятие' : 'Создать мероприятие'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
           TextButton(
-            onPressed: _isLoading ? null : _saveEvent,
-            child: const Text('Сохранить'),
+            onPressed: createEventState.isLoading ? null : _saveEvent,
+            child: createEventState.isLoading
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Text('Сохранить'),
           ),
         ],
       ),
@@ -100,23 +109,23 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
               
               const SizedBox(height: 24),
               
-              // Время
-              _buildTimeSection(),
+              // Дата и время
+              _buildDateTimeSection(),
               
               const SizedBox(height: 24),
               
-              // Тип и статус
-              _buildTypeAndStatusSection(),
+              // Категория и цена
+              _buildCategoryAndPriceSection(),
               
               const SizedBox(height: 24),
               
-              // Напоминания
-              _buildReminderSection(),
+              // Участники и настройки
+              _buildParticipantsAndSettingsSection(),
               
               const SizedBox(height: 24),
               
-              // Цвет
-              _buildColorSection(),
+              // Дополнительная информация
+              _buildAdditionalInfoSection(),
               
               const SizedBox(height: 24),
               
@@ -124,12 +133,50 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: _isLoading ? null : _saveEvent,
-                  child: _isLoading
-                      ? const CircularProgressIndicator()
-                      : Text(widget.event != null ? 'Обновить событие' : 'Создать событие'),
+                  onPressed: createEventState.isLoading ? null : _saveEvent,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: createEventState.isLoading
+                      ? const Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              width: 20,
+                              height: 20,
+                              child: CircularProgressIndicator(strokeWidth: 2),
+                            ),
+                            SizedBox(width: 12),
+                            Text('Сохранение...'),
+                          ],
+                        )
+                      : Text(widget.event != null ? 'Обновить мероприятие' : 'Создать мероприятие'),
                 ),
               ),
+              
+              if (createEventState.errorMessage != null) ...[
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.red.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.red.withOpacity(0.3)),
+                  ),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.error, color: Colors.red),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          createEventState.errorMessage!,
+                          style: const TextStyle(color: Colors.red),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ],
           ),
         ),
@@ -153,17 +200,18 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
             ),
             const SizedBox(height: 16),
             
-            // Заголовок
+            // Название мероприятия
             TextFormField(
               controller: _titleController,
               decoration: const InputDecoration(
-                labelText: 'Заголовок *',
+                labelText: 'Название мероприятия *',
                 border: OutlineInputBorder(),
-                hintText: 'Введите заголовок события',
+                hintText: 'Введите название мероприятия',
+                prefixIcon: Icon(Icons.event),
               ),
               validator: (value) {
                 if (value == null || value.trim().isEmpty) {
-                  return 'Пожалуйста, введите заголовок';
+                  return 'Пожалуйста, введите название мероприятия';
                 }
                 return null;
               },
@@ -175,23 +223,37 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
             TextFormField(
               controller: _descriptionController,
               decoration: const InputDecoration(
-                labelText: 'Описание',
+                labelText: 'Описание *',
                 border: OutlineInputBorder(),
-                hintText: 'Введите описание события',
+                hintText: 'Опишите ваше мероприятие',
+                prefixIcon: Icon(Icons.description),
               ),
-              maxLines: 3,
+              maxLines: 4,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Пожалуйста, введите описание мероприятия';
+                }
+                return null;
+              },
             ),
             
             const SizedBox(height: 16),
             
-            // Место
+            // Место проведения
             TextFormField(
               controller: _locationController,
               decoration: const InputDecoration(
-                labelText: 'Место',
+                labelText: 'Место проведения *',
                 border: OutlineInputBorder(),
-                hintText: 'Введите место проведения',
+                hintText: 'Введите адрес или название места',
+                prefixIcon: Icon(Icons.location_on),
               ),
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Пожалуйста, введите место проведения';
+                }
+                return null;
+              },
             ),
           ],
         ),
@@ -199,7 +261,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
     );
   }
 
-  Widget _buildTimeSection() {
+  Widget _buildDateTimeSection() {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -207,7 +269,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Время',
+              'Дата и время',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -215,37 +277,32 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
             ),
             const SizedBox(height: 16),
             
-            // Весь день
-            CheckboxListTile(
-              title: const Text('Весь день'),
-              value: _isAllDay,
-              onChanged: (value) {
-                setState(() {
-                  _isAllDay = value ?? false;
-                  if (_isAllDay) {
-                    _startTime = DateTime(_startTime.year, _startTime.month, _startTime.day);
-                    _endTime = DateTime(_endTime.year, _endTime.month, _endTime.day, 23, 59);
-                  }
-                });
-              },
-            ),
-            
-            const SizedBox(height: 16),
-            
-            // Время начала
+            // Дата мероприятия
             ListTile(
-              leading: const Icon(Icons.access_time),
-              title: const Text('Время начала'),
-              subtitle: Text(_formatDateTime(_startTime)),
-              onTap: _isAllDay ? null : _selectStartTime,
+              leading: const Icon(Icons.calendar_today),
+              title: const Text('Дата мероприятия'),
+              subtitle: Text(_formatDate(_eventDate)),
+              onTap: _selectDate,
             ),
             
-            // Время окончания
+            const SizedBox(height: 16),
+            
+            // Дата окончания (опционально)
             ListTile(
-              leading: const Icon(Icons.access_time),
-              title: const Text('Время окончания'),
-              subtitle: Text(_formatDateTime(_endTime)),
-              onTap: _isAllDay ? null : _selectEndTime,
+              leading: const Icon(Icons.event_available),
+              title: const Text('Дата окончания (опционально)'),
+              subtitle: Text(_endDate != null ? _formatDate(_endDate!) : 'Не указана'),
+              onTap: _selectEndDate,
+              trailing: _endDate != null
+                  ? IconButton(
+                      icon: const Icon(Icons.clear),
+                      onPressed: () {
+                        setState(() {
+                          _endDate = null;
+                        });
+                      },
+                    )
+                  : null,
             ),
           ],
         ),
@@ -253,7 +310,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
     );
   }
 
-  Widget _buildTypeAndStatusSection() {
+  Widget _buildCategoryAndPriceSection() {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -261,7 +318,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Тип и статус',
+              'Категория и цена',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -269,149 +326,48 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
             ),
             const SizedBox(height: 16),
             
-            // Тип события
-            DropdownButtonFormField<EventType>(
-              value: _eventType,
+            // Категория мероприятия
+            DropdownButtonFormField<EventCategory>(
+              value: _category,
               decoration: const InputDecoration(
-                labelText: 'Тип события',
+                labelText: 'Категория мероприятия',
                 border: OutlineInputBorder(),
+                prefixIcon: Icon(Icons.category),
               ),
-              items: EventType.values.map((type) {
+              items: EventCategory.values.map((category) {
                 return DropdownMenuItem(
-                  value: type,
-                  child: Text(_getTypeText(type)),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _eventType = value ?? EventType.booking;
-                });
-              },
-            ),
-            
-            const SizedBox(height: 16),
-            
-            // Статус события
-            DropdownButtonFormField<EventStatus>(
-              value: _eventStatus,
-              decoration: const InputDecoration(
-                labelText: 'Статус события',
-                border: OutlineInputBorder(),
-              ),
-              items: EventStatus.values.map((status) {
-                return DropdownMenuItem(
-                  value: status,
-                  child: Text(_getStatusText(status)),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _eventStatus = value ?? EventStatus.scheduled;
-                });
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildReminderSection() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Напоминания',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            
-            DropdownButtonFormField<String>(
-              value: _reminderTime,
-              decoration: const InputDecoration(
-                labelText: 'Напоминание',
-                border: OutlineInputBorder(),
-              ),
-              items: const [
-                DropdownMenuItem(value: null, child: Text('Без напоминания')),
-                DropdownMenuItem(value: '5m', child: Text('За 5 минут')),
-                DropdownMenuItem(value: '15m', child: Text('За 15 минут')),
-                DropdownMenuItem(value: '30m', child: Text('За 30 минут')),
-                DropdownMenuItem(value: '1h', child: Text('За 1 час')),
-                DropdownMenuItem(value: '1d', child: Text('За 1 день')),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  _reminderTime = value;
-                });
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildColorSection() {
-    final colors = [
-      Colors.blue,
-      Colors.green,
-      Colors.orange,
-      Colors.red,
-      Colors.purple,
-      Colors.teal,
-      Colors.pink,
-      Colors.indigo,
-    ];
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Цвет события',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: colors.map((color) {
-                final isSelected = _color == color.value.toRadixString(16);
-                return GestureDetector(
-                  onTap: () {
-                    setState(() {
-                      _color = color.value.toRadixString(16);
-                    });
-                  },
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: color,
-                      shape: BoxShape.circle,
-                      border: isSelected
-                          ? Border.all(color: Colors.black, width: 3)
-                          : null,
-                    ),
-                    child: isSelected
-                        ? const Icon(Icons.check, color: Colors.white)
-                        : null,
+                  value: category,
+                  child: Row(
+                    children: [
+                      Icon(category.categoryIcon, size: 20),
+                      const SizedBox(width: 8),
+                      Text(category.categoryName),
+                    ],
                   ),
                 );
               }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  _category = value ?? EventCategory.other;
+                });
+              },
+            ),
+            
+            const SizedBox(height: 16),
+            
+            // Цена
+            TextFormField(
+              controller: _priceController,
+              decoration: const InputDecoration(
+                labelText: 'Цена (₽)',
+                border: OutlineInputBorder(),
+                hintText: '0 - для бесплатного мероприятия',
+                prefixIcon: Icon(Icons.attach_money),
+              ),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                _price = double.tryParse(value) ?? 0.0;
+              },
             ),
           ],
         ),
@@ -419,56 +375,148 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
     );
   }
 
-  Future<void> _selectStartTime() async {
+  Widget _buildParticipantsAndSettingsSection() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Участники и настройки',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            
+            // Максимальное количество участников
+            TextFormField(
+              controller: _maxParticipantsController,
+              decoration: const InputDecoration(
+                labelText: 'Максимальное количество участников',
+                border: OutlineInputBorder(),
+                hintText: '50',
+                prefixIcon: Icon(Icons.people),
+              ),
+              keyboardType: TextInputType.number,
+              onChanged: (value) {
+                _maxParticipants = int.tryParse(value) ?? 50;
+              },
+            ),
+            
+            const SizedBox(height: 16),
+            
+            // Публичность мероприятия
+            SwitchListTile(
+              title: const Text('Публичное мероприятие'),
+              subtitle: const Text('Другие пользователи смогут найти и забронировать ваше мероприятие'),
+              value: _isPublic,
+              onChanged: (value) {
+                setState(() {
+                  _isPublic = value;
+                });
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAdditionalInfoSection() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Дополнительная информация',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            
+            // Контактная информация
+            TextFormField(
+              controller: _contactInfoController,
+              decoration: const InputDecoration(
+                labelText: 'Контактная информация',
+                border: OutlineInputBorder(),
+                hintText: 'Телефон, email или другие способы связи',
+                prefixIcon: Icon(Icons.contact_phone),
+              ),
+              maxLines: 2,
+            ),
+            
+            const SizedBox(height: 16),
+            
+            // Требования к участникам
+            TextFormField(
+              controller: _requirementsController,
+              decoration: const InputDecoration(
+                labelText: 'Требования к участникам',
+                border: OutlineInputBorder(),
+                hintText: 'Возраст, опыт, специальные требования',
+                prefixIcon: Icon(Icons.info),
+              ),
+              maxLines: 3,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Future<void> _selectDate() async {
     final date = await showDatePicker(
       context: context,
-      initialDate: _startTime,
-      firstDate: DateTime.now().subtract(const Duration(days: 365)),
+      initialDate: _eventDate,
+      firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
 
     if (date != null) {
       final time = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay.fromDateTime(_startTime),
+        initialTime: TimeOfDay.fromDateTime(_eventDate),
       );
 
       if (time != null) {
         setState(() {
-          _startTime = DateTime(
+          _eventDate = DateTime(
             date.year,
             date.month,
             date.day,
             time.hour,
             time.minute,
           );
-          
-          // Автоматически обновляем время окончания
-          if (_endTime.isBefore(_startTime)) {
-            _endTime = _startTime.add(const Duration(hours: 1));
-          }
         });
       }
     }
   }
 
-  Future<void> _selectEndTime() async {
+  Future<void> _selectEndDate() async {
     final date = await showDatePicker(
       context: context,
-      initialDate: _endTime,
-      firstDate: _startTime,
+      initialDate: _endDate ?? _eventDate,
+      firstDate: _eventDate,
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
 
     if (date != null) {
       final time = await showTimePicker(
         context: context,
-        initialTime: TimeOfDay.fromDateTime(_endTime),
+        initialTime: TimeOfDay.fromDateTime(_endDate ?? _eventDate),
       );
 
       if (time != null) {
         setState(() {
-          _endTime = DateTime(
+          _endDate = DateTime(
             date.year,
             date.month,
             date.day,
@@ -483,102 +531,95 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
   Future<void> _saveEvent() async {
     if (!_formKey.currentState!.validate()) return;
 
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final event = CalendarEvent(
-        id: widget.event?.id ?? '',
-        title: _titleController.text.trim(),
-        description: _descriptionController.text.trim(),
-        startTime: _startTime,
-        endTime: _endTime,
-        location: _locationController.text.trim(),
-        specialistId: widget.specialistId ?? 'demo_specialist_id',
-        specialistName: 'Демо Специалист',
-        customerId: widget.userId,
-        customerName: 'Демо Пользователь',
-        bookingId: widget.event?.bookingId ?? 'demo_booking_id',
-        status: _eventStatus,
-        type: _eventType,
-        isAllDay: _isAllDay,
-        reminderTime: _reminderTime,
-        color: _color,
-        createdAt: widget.event?.createdAt ?? DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-
-      bool success;
-      if (widget.event != null) {
-        success = await _calendarService.updateEvent(event);
-      } else {
-        final eventId = await _calendarService.createEvent(event);
-        success = eventId != null;
-      }
-
-      if (success) {
-        Navigator.pop(context, true);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(widget.event != null 
-                ? 'Событие обновлено' 
-                : 'Событие создано'),
-          ),
-        );
-      } else {
+    final currentUser = ref.read(currentUserProvider);
+    currentUser.whenData((user) async {
+      if (user == null) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Ошибка сохранения события'),
+            content: Text('Пользователь не авторизован'),
             backgroundColor: Colors.red,
           ),
         );
+        return;
       }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+
+      final createEventNotifier = ref.read(createEventProvider.notifier);
+      
+      // Обновляем состояние формы
+      createEventNotifier.updateTitle(_titleController.text.trim());
+      createEventNotifier.updateDescription(_descriptionController.text.trim());
+      createEventNotifier.updateDate(_eventDate);
+      createEventNotifier.updateEndDate(_endDate);
+      createEventNotifier.updateLocation(_locationController.text.trim());
+      createEventNotifier.updatePrice(_price);
+      createEventNotifier.updateCategory(_category);
+      createEventNotifier.updateMaxParticipants(_maxParticipants);
+      createEventNotifier.updateContactInfo(_contactInfoController.text.trim().isEmpty ? null : _contactInfoController.text.trim());
+      createEventNotifier.updateRequirements(_requirementsController.text.trim().isEmpty ? null : _requirementsController.text.trim());
+      createEventNotifier.updateIsPublic(_isPublic);
+
+      if (widget.event != null) {
+        // Редактирование существующего события
+        try {
+          final eventService = ref.read(eventServiceProvider);
+          final updatedEvent = widget.event!.copyWith(
+            title: _titleController.text.trim(),
+            description: _descriptionController.text.trim(),
+            date: _eventDate,
+            endDate: _endDate,
+            location: _locationController.text.trim(),
+            price: _price,
+            category: _category,
+            maxParticipants: _maxParticipants,
+            contactInfo: _contactInfoController.text.trim().isEmpty ? null : _contactInfoController.text.trim(),
+            requirements: _requirementsController.text.trim().isEmpty ? null : _requirementsController.text.trim(),
+            isPublic: _isPublic,
+            updatedAt: DateTime.now(),
+          );
+
+          await eventService.updateEvent(widget.event!.id, updatedEvent);
+          
+          if (context.mounted) {
+            Navigator.pop(context, true);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                content: Text('Мероприятие обновлено'),
+                backgroundColor: Colors.green,
+              ),
+            );
+          }
+        } catch (e) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Ошибка обновления: $e'),
+                backgroundColor: Colors.red,
+              ),
+            );
+          }
+        }
+      } else {
+        // Создание нового события
+        final eventId = await createEventNotifier.createEvent(
+          user.id,
+          user.displayNameOrEmail,
+          user.photoURL,
+        );
+
+        if (eventId != null && context.mounted) {
+          Navigator.pop(context, true);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Мероприятие создано'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      }
+    });
   }
 
-  String _formatDateTime(DateTime dateTime) {
+  String _formatDate(DateTime dateTime) {
     return '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
-
-  String _getTypeText(EventType type) {
-    switch (type) {
-      case EventType.booking:
-        return 'Бронирование';
-      case EventType.consultation:
-        return 'Консультация';
-      case EventType.meeting:
-        return 'Встреча';
-      case EventType.reminder:
-        return 'Напоминание';
-      case EventType.deadline:
-        return 'Дедлайн';
-    }
-  }
-
-  String _getStatusText(EventStatus status) {
-    switch (status) {
-      case EventStatus.scheduled:
-        return 'Запланировано';
-      case EventStatus.confirmed:
-        return 'Подтверждено';
-      case EventStatus.cancelled:
-        return 'Отменено';
-      case EventStatus.completed:
-        return 'Завершено';
-      case EventStatus.postponed:
-        return 'Перенесено';
-    }
   }
 }
