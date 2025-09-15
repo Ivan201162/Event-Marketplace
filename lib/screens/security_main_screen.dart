@@ -27,7 +27,7 @@ class SecurityMainScreen extends ConsumerWidget {
                 onTap: () => _navigateToScreen(context, const SecuritySettingsScreen()),
               ),
               _buildSettingsTile(
-                icon: Icons.audit,
+                icon: Icons.security,
                 title: 'Аудит безопасности',
                 subtitle: 'Просмотр событий безопасности',
                 onTap: () => _navigateToScreen(context, const SecurityAuditScreen()),

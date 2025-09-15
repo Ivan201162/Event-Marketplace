@@ -32,9 +32,9 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
 
   Future<void> _loadSecuritySettings() async {
     try {
-      final currentUser = ref.read(authServiceProvider).currentUser;
+      final currentUser = await ref.read(authServiceProvider).getCurrentUser();
       if (currentUser != null) {
-        final settings = await _securityService.getSecuritySettings(currentUser.uid);
+        final settings = await _securityService.getSecuritySettings(currentUser.id);
         if (settings != null) {
           setState(() {
             _biometricAuth = settings.biometricAuth;
@@ -141,13 +141,13 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
                         setState(() {
                           _biometricAuth = true;
                         });
-                        await _updateSecuritySettings();
+                        _updateSecuritySettings();
                       }
                     } else {
                       setState(() {
                         _biometricAuth = false;
                       });
-                      await _updateSecuritySettings();
+                      _updateSecuritySettings();
                     }
                   } : null,
                 );
@@ -212,12 +212,12 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
               title: const Text('Автоблокировка'),
               subtitle: const Text('Автоматически блокировать приложение'),
               value: _autoLock,
-              onChanged: (value) async {
-                setState(() {
-                  _autoLock = value;
-                });
-                await _updateSecuritySettings();
-              },
+                  onChanged: (value) async {
+                    setState(() {
+                      _autoLock = value;
+                    });
+                    _updateSecuritySettings();
+                  },
             ),
             
             if (_autoLock) ...[
@@ -258,12 +258,12 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
               title: const Text('Безопасное хранилище'),
               subtitle: const Text('Хранить данные в зашифрованном виде'),
               value: _secureStorage,
-              onChanged: (value) async {
-                setState(() {
-                  _secureStorage = value;
-                });
-                await _updateSecuritySettings();
-              },
+                  onChanged: (value) async {
+                    setState(() {
+                      _secureStorage = value;
+                    });
+                    _updateSecuritySettings();
+                  },
             ),
             
             const Divider(),
@@ -273,12 +273,12 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
               title: const Text('Шифрование данных'),
               subtitle: const Text('Шифровать все пользовательские данные'),
               value: _dataEncryption,
-              onChanged: (value) async {
-                setState(() {
-                  _dataEncryption = value;
-                });
-                await _updateSecuritySettings();
-              },
+                  onChanged: (value) async {
+                    setState(() {
+                      _dataEncryption = value;
+                    });
+                    _updateSecuritySettings();
+                  },
             ),
           ],
         ),
@@ -307,12 +307,12 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
               title: const Text('Логирование аудита'),
               subtitle: const Text('Записывать события безопасности'),
               value: _auditLogging,
-              onChanged: (value) async {
-                setState(() {
-                  _auditLogging = value;
-                });
-                await _updateSecuritySettings();
-              },
+                  onChanged: (value) async {
+                    setState(() {
+                      _auditLogging = value;
+                    });
+                    _updateSecuritySettings();
+                  },
             ),
             
             const Divider(),
@@ -420,10 +420,10 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
 
   Future<void> _updateSecuritySettings() async {
     try {
-      final currentUser = ref.read(authServiceProvider).currentUser;
+      final currentUser = await ref.read(authServiceProvider).getCurrentUser();
       if (currentUser != null) {
         final settings = SecuritySettings(
-          userId: currentUser.uid,
+          userId: currentUser.id,
           biometricAuth: _biometricAuth,
           pinAuth: _pinAuth,
           twoFactorAuth: _twoFactorAuth,
@@ -440,20 +440,24 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
 
         await _securityService.updateSecuritySettings(settings);
         
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Настройки безопасности обновлены'),
+              backgroundColor: Colors.green,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Настройки безопасности обновлены'),
-            backgroundColor: Colors.green,
+          SnackBar(
+            content: Text('Ошибка обновления настроек: $e'),
+            backgroundColor: Colors.red,
           ),
         );
       }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка обновления настроек: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
     }
   }
 
@@ -495,21 +499,25 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
                   setState(() {
                     _pinAuth = true;
                   });
-                  await _updateSecuritySettings();
+                  _updateSecuritySettings();
                   Navigator.pop(context);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('PIN-код установлен'),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('PIN-код установлен'),
+                        backgroundColor: Colors.green,
+                      ),
+                    );
+                  }
                 } else {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Ошибка установки PIN-кода'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Ошибка установки PIN-кода'),
+                        backgroundColor: Colors.red,
+                      ),
+                    );
+                  }
                 }
               }
             },
@@ -538,14 +546,16 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
                 setState(() {
                   _pinAuth = false;
                 });
-                await _updateSecuritySettings();
+                _updateSecuritySettings();
                 Navigator.pop(context);
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('PIN-код удален'),
-                    backgroundColor: Colors.green,
-                  ),
-                );
+                if (mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('PIN-код удален'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                }
               }
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -556,8 +566,8 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
     );
   }
 
-  void _showTwoFactorSetupDialog() {
-    showDialog(
+  Future<void> _showTwoFactorSetupDialog() async {
+    await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Двухфакторная аутентификация'),
@@ -572,8 +582,8 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
     );
   }
 
-  void _showTwoFactorDisableDialog() {
-    showDialog(
+  Future<void> _showTwoFactorDisableDialog() async {
+    await showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Отключение двухфакторной аутентификации'),
@@ -696,12 +706,14 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
             onPressed: () async {
               await _securityService.clearAllSecureData();
               Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Безопасные данные очищены'),
-                  backgroundColor: Colors.green,
-                ),
-              );
+              if (mounted) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text('Безопасные данные очищены'),
+                    backgroundColor: Colors.green,
+                  ),
+                );
+              }
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Очистить'),

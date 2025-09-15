@@ -172,7 +172,7 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
             
             const SizedBox(height: 12),
             
-            const Row(
+            Row(
               children: [
                 Expanded(
                   child: _buildDeviceInfoItem(
@@ -494,7 +494,7 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
 
   Future<void> _trustDevice(SecurityDevice device) async {
     try {
-      final currentUser = ref.read(authServiceProvider).currentUser;
+      final currentUser = await ref.read(authServiceProvider).getCurrentUser();
       if (currentUser != null) {
         final success = await _securityService.trustDevice(device.id, currentUser.uid);
         if (success) {
@@ -545,7 +545,7 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
 
     if (confirmed == true) {
       try {
-        final currentUser = ref.read(authServiceProvider).currentUser;
+        final currentUser = await ref.read(authServiceProvider).getCurrentUser();
         if (currentUser != null) {
           final success = await _securityService.blockDevice(device.id, currentUser.uid);
           if (success) {
@@ -577,7 +577,7 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
 
   Future<void> _unblockDevice(SecurityDevice device) async {
     try {
-      final currentUser = ref.read(authServiceProvider).currentUser;
+      final currentUser = await ref.read(authServiceProvider).getCurrentUser();
       if (currentUser != null) {
         final success = await _securityService.unblockDevice(device.id, currentUser.uid);
         if (success) {

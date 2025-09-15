@@ -140,7 +140,7 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
   Widget _buildEventsList() {
     return Consumer(
       builder: (context, ref, child) {
-        final currentUser = ref.watch(authServiceProvider).currentUser;
+        final currentUser = await ref.watch(authServiceProvider).getCurrentUser();
         
         if (currentUser == null) {
           return const Center(

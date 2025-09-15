@@ -28,7 +28,7 @@ final biometricAvailableProvider = FutureProvider<bool>((ref) {
 });
 
 /// Провайдер доступных биометрических методов
-final availableBiometricsProvider = FutureProvider<List<BiometricType>>((ref) {
+final availableBiometricsProvider = FutureProvider<List<dynamic>>((ref) {
   return ref.watch(securityServiceProvider).getAvailableBiometrics();
 });
 

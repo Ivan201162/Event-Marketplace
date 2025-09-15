@@ -47,7 +47,7 @@ class SecurityService {
   Future<void> _registerDevice() async {
     try {
       final deviceId = await _getDeviceId();
-      final deviceInfo = await _getDeviceInfo();
+      await _getDeviceInfo();
       
       // TODO: Отправить информацию об устройстве на сервер
       print('Устройство зарегистрировано: $deviceId');
@@ -374,7 +374,7 @@ class SecurityService {
   }) async {
     try {
       final deviceId = await _getDeviceId();
-      final deviceInfo = await _getDeviceInfo();
+      await _getDeviceInfo();
       
       final log = SecurityAuditLog(
         id: '',
