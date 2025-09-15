@@ -5,6 +5,7 @@ enum UserRole {
   customer,    // Заказчик
   specialist,  // Исполнитель/специалист
   guest,       // Гость
+  admin,       // Администратор
 }
 
 /// Модель пользователя
@@ -137,6 +138,9 @@ class AppUser {
   /// Проверить, является ли пользователь гостем
   bool get isGuest => role == UserRole.guest;
 
+  /// Проверить, является ли пользователь администратором
+  bool get isAdmin => role == UserRole.admin;
+
   /// Получить русское название роли
   String get roleDisplayName {
     switch (role) {
@@ -146,6 +150,8 @@ class AppUser {
         return 'Специалист';
       case UserRole.guest:
         return 'Гость';
+      case UserRole.admin:
+        return 'Администратор';
     }
   }
 
@@ -159,6 +165,8 @@ class AppUser {
         return UserRole.specialist;
       case 'guest':
         return UserRole.guest;
+      case 'admin':
+        return UserRole.admin;
       case 'customer':
       default:
         return UserRole.customer;

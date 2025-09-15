@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/booking.dart';
 import '../models/event.dart';
+import 'notification_service.dart';
 
 /// Сервис для работы с бронированиями
 class BookingService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final NotificationService _notificationService = NotificationService();
 
   /// Создать новое бронирование
   Future<String> createBooking(Booking booking) async {
@@ -28,6 +30,14 @@ class BookingService {
         'currentParticipants': FieldValue.increment(booking.participantsCount),
         'updatedAt': FieldValue.serverTimestamp(),
       });
+
+      // Отправляем уведомление организатору
+      await _notificationService.sendBookingNotification(
+        organizerId: booking.organizerId!,
+        eventTitle: booking.eventTitle,
+        userName: booking.userName,
+        participantsCount: booking.participantsCount,
+      );
 
       return docRef.id;
     } catch (e) {
@@ -91,6 +101,13 @@ class BookingService {
           'currentParticipants': FieldValue.increment(-booking.participantsCount),
           'updatedAt': FieldValue.serverTimestamp(),
         });
+
+        // Отправляем уведомление об отмене
+        await _notificationService.sendCancellationNotification(
+          organizerId: booking.organizerId!,
+          eventTitle: booking.eventTitle,
+          userName: booking.userName,
+        );
       }
     } catch (e) {
       throw Exception('Ошибка обновления статуса бронирования: $e');

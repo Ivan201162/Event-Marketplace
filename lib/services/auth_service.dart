@@ -142,6 +142,64 @@ class AuthService {
     }
   }
 
+  /// Войти через Google
+  Future<AppUser?> signInWithGoogle() async {
+    try {
+      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      if (googleUser == null) {
+        return null; // Пользователь отменил вход
+      }
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      final userCredential = await _auth.signInWithCredential(credential);
+      final firebaseUser = userCredential.user;
+      
+      if (firebaseUser == null) return null;
+
+      // Проверяем, существует ли пользователь в Firestore
+      final userDoc = await _firestore.collection('users').doc(firebaseUser.uid).get();
+      
+      if (!userDoc.exists) {
+        // Создаем нового пользователя
+        final appUser = AppUser.fromFirebaseUser(
+          firebaseUser.uid,
+          firebaseUser.email ?? '',
+          displayName: firebaseUser.displayName,
+          photoURL: firebaseUser.photoURL,
+          role: UserRole.customer,
+          socialProvider: 'google',
+          socialId: googleUser.id,
+        );
+        
+        await _firestore.collection('users').doc(firebaseUser.uid).set(appUser.toMap());
+        return appUser;
+      } else {
+        // Обновляем время последнего входа
+        await _updateLastLogin(firebaseUser.uid);
+        return AppUser.fromDocument(userDoc);
+      }
+    } catch (e) {
+      throw Exception('Ошибка входа через Google: $e');
+    }
+  }
+
+  /// Войти через VK
+  Future<AppUser?> signInWithVK({UserRole role = UserRole.customer}) async {
+    try {
+      // TODO: Реализовать VK OAuth
+      // Это требует дополнительной настройки VK SDK
+      // Пока возвращаем заглушку
+      throw Exception('VK Sign-In пока не реализован. Требуется настройка VK SDK.');
+    } catch (e) {
+      throw Exception('Ошибка входа через VK: $e');
+    }
+  }
+
 
   /// Сброс пароля
   Future<void> resetPassword(String email) async {

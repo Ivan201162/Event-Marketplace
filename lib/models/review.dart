@@ -3,233 +3,123 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// Модель отзыва
 class Review {
   final String id;
-  final String specialistId;
-  final String customerId;
-  final String customerName;
-  final String? customerAvatar;
-  final String bookingId;
+  final String eventId;
+  final String eventTitle;
+  final String userId;
+  final String userName;
+  final String? userPhotoUrl;
   final int rating; // 1-5 звезд
-  final String? title;
-  final String? comment;
-  final List<String> images; // Фото с мероприятия
-  final List<String> tags; // Теги отзыва
+  final String comment;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final bool isVerified; // Подтвержден ли отзыв
-  final bool isPublic; // Публичный ли отзыв
-  final Map<String, dynamic>? metadata; // Дополнительные данные
+  final bool isVerified; // Подтвержден ли отзыв (участник действительно был на мероприятии)
 
-  Review({
+  const Review({
     required this.id,
-    required this.specialistId,
-    required this.customerId,
-    required this.customerName,
-    this.customerAvatar,
-    required this.bookingId,
+    required this.eventId,
+    required this.eventTitle,
+    required this.userId,
+    required this.userName,
+    this.userPhotoUrl,
     required this.rating,
-    this.title,
-    this.comment,
-    required this.images,
-    this.tags = const [],
-    DateTime? createdAt,
-    DateTime? updatedAt,
+    required this.comment,
+    required this.createdAt,
+    required this.updatedAt,
     this.isVerified = false,
-    this.isPublic = true,
-    this.metadata,
-  }) : createdAt = createdAt ?? DateTime.now(),
-       updatedAt = updatedAt ?? DateTime.now();
+  });
 
-  /// Преобразование в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'specialistId': specialistId,
-      'customerId': customerId,
-      'customerName': customerName,
-      'customerAvatar': customerAvatar,
-      'bookingId': bookingId,
-      'rating': rating,
-      'title': title,
-      'comment': comment,
-      'images': images,
-      'tags': tags,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'isVerified': isVerified,
-      'isPublic': isPublic,
-      'metadata': metadata,
-    };
-  }
-
-  /// Создание из документа Firestore
+  /// Создать из документа Firestore
   factory Review.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
     return Review(
       id: doc.id,
-      specialistId: data['specialistId'] ?? '',
-      customerId: data['customerId'] ?? '',
-      customerName: data['customerName'] ?? '',
-      customerAvatar: data['customerAvatar'],
-      bookingId: data['bookingId'] ?? '',
+      eventId: data['eventId'] ?? '',
+      eventTitle: data['eventTitle'] ?? '',
+      userId: data['userId'] ?? '',
+      userName: data['userName'] ?? '',
+      userPhotoUrl: data['userPhotoUrl'],
       rating: data['rating'] ?? 5,
-      title: data['title'],
-      comment: data['comment'],
-      images: List<String>.from(data['images'] ?? []),
-      tags: List<String>.from(data['tags'] ?? []),
-      createdAt: data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
-      updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
+      comment: data['comment'] ?? '',
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       isVerified: data['isVerified'] ?? false,
-      isPublic: data['isPublic'] ?? true,
-      metadata: data['metadata'],
     );
   }
 
-  /// Копирование с изменениями
-  Review copyWith({
-    String? id,
-    String? specialistId,
-    String? customerId,
-    String? customerName,
-    String? customerAvatar,
-    String? bookingId,
-    int? rating,
-    String? title,
-    String? comment,
-    List<String>? images,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    bool? isVerified,
-    bool? isPublic,
-    Map<String, dynamic>? metadata,
-  }) {
-    return Review(
-      id: id ?? this.id,
-      specialistId: specialistId ?? this.specialistId,
-      customerId: customerId ?? this.customerId,
-      customerName: customerName ?? this.customerName,
-      customerAvatar: customerAvatar ?? this.customerAvatar,
-      bookingId: bookingId ?? this.bookingId,
-      rating: rating ?? this.rating,
-      title: title ?? this.title,
-      comment: comment ?? this.comment,
-      images: images ?? this.images,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      isVerified: isVerified ?? this.isVerified,
-      isPublic: isPublic ?? this.isPublic,
-      metadata: metadata ?? this.metadata,
-    );
-  }
-
-  @override
-  String toString() {
-    return 'Review(id: $id, specialistId: $specialistId, customerId: $customerId, rating: $rating)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Review && other.id == id;
-  }
-
-  @override
-  int get hashCode => id.hashCode;
-}
-
-/// Статистика отзывов
-class ReviewStats {
-  final double averageRating;
-  final int totalReviews;
-  final Map<int, int> ratingDistribution; // Количество отзывов по каждой оценке
-  final int verifiedReviews;
-  final int publicReviews;
-  final double quality; // Средняя оценка качества
-  final double communication; // Средняя оценка общения
-  final double punctuality; // Средняя оценка пунктуальности
-  final double value; // Средняя оценка соотношения цена/качество
-
-  ReviewStats({
-    required this.averageRating,
-    required this.totalReviews,
-    required this.ratingDistribution,
-    required this.verifiedReviews,
-    required this.publicReviews,
-    this.quality = 0.0,
-    this.communication = 0.0,
-    this.punctuality = 0.0,
-    this.value = 0.0,
-  });
-
-  /// Создание из списка отзывов
-  factory ReviewStats.fromReviews(List<Review> reviews) {
-    if (reviews.isEmpty) {
-      return ReviewStats(
-        averageRating: 0.0,
-        totalReviews: 0,
-        ratingDistribution: {},
-        verifiedReviews: 0,
-        publicReviews: 0,
-        quality: 0.0,
-        communication: 0.0,
-        punctuality: 0.0,
-        value: 0.0,
-      );
-    }
-
-    final totalRating = reviews.fold<int>(0, (sum, review) => sum + review.rating);
-    final averageRating = totalRating / reviews.length;
-
-    final ratingDistribution = <int, int>{};
-    for (int i = 1; i <= 5; i++) {
-      ratingDistribution[i] = reviews.where((review) => review.rating == i).length;
-    }
-
-    final verifiedReviews = reviews.where((review) => review.isVerified).length;
-    final publicReviews = reviews.where((review) => review.isPublic).length;
-
-    return ReviewStats(
-      averageRating: averageRating,
-      totalReviews: reviews.length,
-      ratingDistribution: ratingDistribution,
-      verifiedReviews: verifiedReviews,
-      publicReviews: publicReviews,
-      quality: averageRating, // Используем общий рейтинг как качество
-      communication: averageRating,
-      punctuality: averageRating,
-      value: averageRating,
-    );
-  }
-
-  /// Геттер для совместимости с виджетом
-  Map<int, int> get ratingCounts => ratingDistribution;
-
-  /// Преобразование в Map для Firestore
+  /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() {
     return {
-      'averageRating': averageRating,
-      'totalReviews': totalReviews,
-      'ratingDistribution': ratingDistribution,
-      'verifiedReviews': verifiedReviews,
-      'publicReviews': publicReviews,
-      'quality': quality,
-      'communication': communication,
-      'punctuality': punctuality,
-      'value': value,
+      'eventId': eventId,
+      'eventTitle': eventTitle,
+      'userId': userId,
+      'userName': userName,
+      'userPhotoUrl': userPhotoUrl,
+      'rating': rating,
+      'comment': comment,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+      'isVerified': isVerified,
     };
   }
 
-  /// Создание из документа Firestore
-  factory ReviewStats.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    return ReviewStats(
-      averageRating: (data['averageRating'] ?? 0.0).toDouble(),
-      totalReviews: data['totalReviews'] ?? 0,
-      ratingDistribution: Map<int, int>.from(data['ratingDistribution'] ?? {}),
-      verifiedReviews: data['verifiedReviews'] ?? 0,
-      publicReviews: data['publicReviews'] ?? 0,
-      quality: (data['quality'] ?? 0.0).toDouble(),
-      communication: (data['communication'] ?? 0.0).toDouble(),
-      punctuality: (data['punctuality'] ?? 0.0).toDouble(),
-      value: (data['value'] ?? 0.0).toDouble(),
+  /// Создать копию с изменениями
+  Review copyWith({
+    String? id,
+    String? eventId,
+    String? eventTitle,
+    String? userId,
+    String? userName,
+    String? userPhotoUrl,
+    int? rating,
+    String? comment,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    bool? isVerified,
+  }) {
+    return Review(
+      id: id ?? this.id,
+      eventId: eventId ?? this.eventId,
+      eventTitle: eventTitle ?? this.eventTitle,
+      userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
+      userPhotoUrl: userPhotoUrl ?? this.userPhotoUrl,
+      rating: rating ?? this.rating,
+      comment: comment ?? this.comment,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      isVerified: isVerified ?? this.isVerified,
     );
+  }
+
+  /// Получить цвет рейтинга
+  String get ratingColor {
+    if (rating >= 4) return 'green';
+    if (rating >= 3) return 'orange';
+    return 'red';
+  }
+
+  /// Получить текст рейтинга
+  String get ratingText {
+    switch (rating) {
+      case 5:
+        return 'Отлично';
+      case 4:
+        return 'Хорошо';
+      case 3:
+        return 'Удовлетворительно';
+      case 2:
+        return 'Плохо';
+      case 1:
+        return 'Очень плохо';
+      default:
+        return 'Не оценено';
+    }
+  }
+
+  /// Проверить, можно ли редактировать отзыв
+  bool canEdit(DateTime eventDate) {
+    // Можно редактировать в течение 7 дней после мероприятия
+    final daysSinceEvent = DateTime.now().difference(eventDate).inDays;
+    return daysSinceEvent <= 7;
   }
 }

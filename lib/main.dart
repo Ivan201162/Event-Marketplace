@@ -3,9 +3,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'firebase_options.dart';
 import 'providers/auth_providers.dart';
 import 'providers/theme_provider.dart';
+import 'providers/locale_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/search_screen.dart';
 import 'screens/my_events_screen.dart';
@@ -57,6 +59,7 @@ class MyApp extends ConsumerWidget {
       home: _buildHome(authState),
       // Локализация
       localizationsDelegates: const [
+        AppLocalizations.delegate,
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
@@ -65,7 +68,7 @@ class MyApp extends ConsumerWidget {
         Locale('ru', 'RU'),
         Locale('en', 'US'),
       ],
-      locale: const Locale('ru', 'RU'),
+      locale: ref.watch(localeProvider),
       // Анимации переходов
       onGenerateRoute: (settings) {
         switch (settings.name) {

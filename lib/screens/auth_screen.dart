@@ -30,6 +30,10 @@ class AuthScreen extends ConsumerWidget {
               
               const SizedBox(height: 24),
               
+              // Кнопка входа через Google
+              _buildGoogleSignInButton(context, ref),
+              const SizedBox(height: 16),
+              
               // Кнопка входа как гость
               if (!formState.isSignUpMode) ...[
                 _buildGuestButton(context, ref),
@@ -476,6 +480,30 @@ class AuthScreen extends ConsumerWidget {
       final authService = ref.read(authServiceProvider);
       
       final user = await authService.signInWithGoogle(role: role);
+      if (user != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Добро пожаловать, ${user.displayNameOrEmail}!'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Ошибка входа через Google: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
+
+  /// Обработка входа через Google
+  Future<void> _handleGoogleSignIn(BuildContext context, WidgetRef ref) async {
+    try {
+      final authService = ref.read(authServiceProvider);
+      
+      final user = await authService.signInWithGoogle();
       if (user != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

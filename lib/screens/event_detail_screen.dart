@@ -4,8 +4,12 @@ import '../models/event.dart';
 import '../providers/auth_providers.dart';
 import '../providers/event_providers.dart';
 import '../providers/booking_providers.dart';
+import '../providers/favorites_providers.dart';
+import '../models/review.dart';
+import '../services/review_service.dart';
 import 'create_event_screen.dart';
 import 'create_booking_screen.dart';
+import 'create_review_screen.dart';
 
 /// Экран детального просмотра события
 class EventDetailScreen extends ConsumerWidget {
@@ -28,6 +32,54 @@ class EventDetailScreen extends ConsumerWidget {
         title: const Text('Детали мероприятия'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
+          // Кнопка избранного
+          Consumer(
+            builder: (context, ref, child) {
+              final currentUser = ref.watch(currentUserProvider);
+              return currentUser.when(
+                data: (user) {
+                  if (user == null) return const SizedBox.shrink();
+                  
+                  return FutureBuilder<bool>(
+                    future: ref.read(isFavoriteProvider((userId: user.id, eventId: event.id)).future),
+                    builder: (context, snapshot) {
+                      final isFavorite = snapshot.data ?? false;
+                      
+                      return IconButton(
+                        icon: Icon(
+                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                          color: isFavorite ? Colors.red : null,
+                        ),
+                        onPressed: () async {
+                          try {
+                            final favoritesService = ref.read(favoritesServiceProvider);
+                            if (isFavorite) {
+                              await favoritesService.removeFromFavorites(user.id, event.id);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Удалено из избранного')),
+                              );
+                            } else {
+                              await favoritesService.addToFavorites(user.id, event.id);
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Добавлено в избранное')),
+                              );
+                            }
+                            ref.invalidate(isFavoriteProvider((userId: user.id, eventId: event.id)));
+                          } catch (e) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(content: Text('Ошибка: $e')),
+                            );
+                          }
+                        },
+                      );
+                    },
+                  );
+                },
+                loading: () => const SizedBox.shrink(),
+                error: (error, stack) => const SizedBox.shrink(),
+              );
+            },
+          ),
           if (isOwner)
             PopupMenuButton<String>(
               onSelected: (value) {
@@ -106,6 +158,11 @@ class EventDetailScreen extends ConsumerWidget {
             
             if (event.contactInfo != null || event.requirements != null)
               const SizedBox(height: 24),
+            
+            // Рейтинг и отзывы
+            _buildReviewsSection(context, ref),
+            
+            const SizedBox(height: 24),
             
             // Кнопки действий
             _buildActionButtons(context, ref, isOwner),
@@ -649,6 +706,279 @@ class EventDetailScreen extends ConsumerWidget {
             child: const Text('Удалить'),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Построить секцию рейтинга и отзывов
+  Widget _buildReviewsSection(BuildContext context, WidgetRef ref) {
+    final reviewService = ReviewService();
+    
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text(
+                  'Отзывы и рейтинг',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                TextButton(
+                  onPressed: () {
+                    _showAllReviews(context, ref);
+                  },
+                  child: const Text('Все отзывы'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            
+            // Средний рейтинг
+            FutureBuilder<Map<String, dynamic>>(
+              future: reviewService.getEventReviewStats(event.id),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                
+                if (snapshot.hasError) {
+                  return Text('Ошибка загрузки рейтинга: ${snapshot.error}');
+                }
+                
+                final stats = snapshot.data ?? {};
+                final averageRating = (stats['averageRating'] as num?)?.toDouble() ?? 0.0;
+                final totalReviews = stats['totalReviews'] as int? ?? 0;
+                
+                if (totalReviews == 0) {
+                  return const Text(
+                    'Пока нет отзывов',
+                    style: TextStyle(color: Colors.grey),
+                  );
+                }
+                
+                return Column(
+                  children: [
+                    Row(
+                      children: [
+                        // Звезды рейтинга
+                        Row(
+                          children: List.generate(5, (index) {
+                            return Icon(
+                              index < averageRating ? Icons.star : Icons.star_border,
+                              size: 24,
+                              color: Colors.amber,
+                            );
+                          }),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          averageRating.toStringAsFixed(1),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          '($totalReviews отзыв${totalReviews > 1 ? 'ов' : ''})',
+                          style: const TextStyle(color: Colors.grey),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    
+                    // Последние отзывы
+                    StreamBuilder<List<Review>>(
+                      stream: reviewService.getEventReviews(event.id),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return const Center(child: CircularProgressIndicator());
+                        }
+                        
+                        final reviews = snapshot.data ?? [];
+                        final recentReviews = reviews.take(2).toList();
+                        
+                        if (recentReviews.isEmpty) {
+                          return const SizedBox.shrink();
+                        }
+                        
+                        return Column(
+                          children: recentReviews.map((review) {
+                            return _buildReviewItem(review);
+                          }).toList(),
+                        );
+                      },
+                    ),
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Построить элемент отзыва
+  Widget _buildReviewItem(Review review) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 12),
+      padding: const EdgeInsets.all(12),
+      decoration: BoxDecoration(
+        color: Colors.grey[50],
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: Colors.grey[200]!),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 16,
+                backgroundImage: review.userPhotoUrl != null
+                    ? NetworkImage(review.userPhotoUrl!)
+                    : null,
+                child: review.userPhotoUrl == null
+                    ? Text(review.userName[0].toUpperCase())
+                    : null,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      review.userName,
+                      style: const TextStyle(fontWeight: FontWeight.w500),
+                    ),
+                    Row(
+                      children: [
+                        Row(
+                          children: List.generate(5, (index) {
+                            return Icon(
+                              index < review.rating ? Icons.star : Icons.star_border,
+                              size: 16,
+                              color: Colors.amber,
+                            );
+                          }),
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          review.ratingText,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: _getRatingColor(review.rating),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              if (review.isVerified)
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: Colors.green[100],
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: const Text(
+                    '✓',
+                    style: TextStyle(
+                      color: Colors.green,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            review.comment,
+            style: const TextStyle(fontSize: 14),
+            maxLines: 3,
+            overflow: TextOverflow.ellipsis,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getRatingColor(int rating) {
+    if (rating >= 4) return Colors.green;
+    if (rating >= 3) return Colors.orange;
+    return Colors.red;
+  }
+
+  void _showAllReviews(BuildContext context, WidgetRef ref) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.7,
+        maxChildSize: 0.9,
+        minChildSize: 0.5,
+        builder: (context, scrollController) => Container(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Все отзывы',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => Navigator.pop(context),
+                    icon: const Icon(Icons.close),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: StreamBuilder<List<Review>>(
+                  stream: ReviewService().getEventReviews(event.id),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                    
+                    final reviews = snapshot.data ?? [];
+                    
+                    if (reviews.isEmpty) {
+                      return const Center(
+                        child: Text('Пока нет отзывов'),
+                      );
+                    }
+                    
+                    return ListView.builder(
+                      controller: scrollController,
+                      itemCount: reviews.length,
+                      itemBuilder: (context, index) {
+                        final review = reviews[index];
+                        return _buildReviewItem(review);
+                      },
+                    );
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

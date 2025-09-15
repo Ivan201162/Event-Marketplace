@@ -1,510 +1,291 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/booking.dart';
-import '../providers/firestore_providers.dart';
 import '../providers/auth_providers.dart';
+import '../providers/booking_providers.dart';
+import 'event_detail_screen.dart';
 
-class MyBookingsScreen extends ConsumerStatefulWidget {
+/// Экран моих бронирований
+class MyBookingsScreen extends ConsumerWidget {
   const MyBookingsScreen({super.key});
 
   @override
-  ConsumerState<MyBookingsScreen> createState() => _MyBookingsScreenState();
-}
-
-class _MyBookingsScreenState extends ConsumerState<MyBookingsScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 3, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final currentUser = ref.watch(currentUserProvider).value;
-    
-    if (currentUser == null) {
-      return const Scaffold(
-        body: Center(child: Text('Пользователь не авторизован')),
-      );
-    }
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentUser = ref.watch(currentUserProvider);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Мои заявки'),
+        title: const Text('Мои бронирования'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Отправленные', icon: Icon(Icons.send)),
-            Tab(text: 'Подтвержденные', icon: Icon(Icons.check_circle)),
-            Tab(text: 'Отклоненные', icon: Icon(Icons.cancel)),
-          ],
+      ),
+      body: currentUser.when(
+        data: (user) {
+          if (user == null) {
+            return const Center(
+              child: Text('Пользователь не авторизован'),
+            );
+          }
+
+          final userBookings = ref.watch(userBookingsProvider(user.id));
+
+          return userBookings.when(
+            data: (bookings) {
+              if (bookings.isEmpty) {
+                return _buildEmptyState();
+              }
+
+              return RefreshIndicator(
+                onRefresh: () async {
+                  ref.invalidate(userBookingsProvider(user.id));
+                },
+                child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: bookings.length,
+                  itemBuilder: (context, index) {
+                    final booking = bookings[index];
+                    return _buildBookingCard(context, ref, booking);
+                  },
+                ),
+              );
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (error, stack) => Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text('Ошибка загрузки: $error'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () {
+                      ref.invalidate(userBookingsProvider(user.id));
+                    },
+                    child: const Text('Повторить'),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => Center(
+          child: Text('Ошибка: $error'),
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
+    );
+  }
+
+  Widget _buildEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          _buildBookingsList(currentUser.id, 'pending'),
-          _buildBookingsList(currentUser.id, 'confirmed'),
-          _buildBookingsList(currentUser.id, 'rejected'),
+          Icon(
+            Icons.event_busy,
+            size: 64,
+            color: Colors.grey[400],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'У вас нет бронирований',
+            style: TextStyle(
+              fontSize: 18,
+              color: Colors.grey[600],
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Найдите интересное мероприятие и забронируйте участие',
+            style: TextStyle(color: Colors.grey[500]),
+            textAlign: TextAlign.center,
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildBookingsList(String customerId, String status) {
-    final bookingsAsync = ref.watch(bookingsByCustomerProvider(customerId));
-
-    return bookingsAsync.when(
-      data: (bookings) {
-        final filteredBookings = bookings.where((booking) => booking is Booking && booking.status == status).cast<Booking>().toList();
-        
-        if (filteredBookings.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  _getStatusIcon(status),
-                  size: 64,
-                  color: Colors.grey,
-                ),
-                const SizedBox(height: 16),
-                Text(
-                  _getEmptyMessage(status),
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-
-        return RefreshIndicator(
-          onRefresh: () async {
-            ref.invalidate(bookingsByCustomerProvider(customerId));
-          },
-          child: ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: filteredBookings.length,
-            itemBuilder: (context, index) {
-              final booking = filteredBookings[index];
-              return _buildBookingCard(booking);
-            },
-          ),
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
-            Text('Ошибка загрузки: $error'),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                ref.invalidate(bookingsByCustomerProvider(customerId));
-              },
-              child: const Text('Повторить'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBookingCard(Booking booking) {
+  Widget _buildBookingCard(BuildContext context, WidgetRef ref, Booking booking) {
     return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Заголовок с датой и временем
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        booking.title ?? 'Без названия',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        _formatDateTime(booking.eventDate),
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: _getStatusColor(booking.status).withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: _getStatusColor(booking.status)),
-                  ),
-                  child: Text(
-                    _getStatusText(booking.status),
-                    style: TextStyle(
-                      color: _getStatusColor(booking.status),
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 12),
-            
-            // Описание события
-            if (booking.description != null) ...[
-              Text(
-                'Описание:',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                booking.description!,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-              const SizedBox(height: 12),
-            ],
-            
-            // Стоимость
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Стоимость:',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  '${booking.totalPrice.toStringAsFixed(0)} ₽',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
-                ),
-              ],
-            ),
-            
-            if (booking.prepayment > 0) ...[
-              const SizedBox(height: 4),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    'Аванс:',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  Text(
-                    '${booking.prepayment.toStringAsFixed(0)} ₽',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-            
-            // Статус оплаты
-            if (booking.prepayment > 0) ...[
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  Icon(
-                    booking.prepaymentPaid ? Icons.check_circle : Icons.pending,
-                    size: 16,
-                    color: booking.prepaymentPaid ? Colors.green : Colors.orange,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    booking.prepaymentPaid ? 'Аванс оплачен' : 'Аванс не оплачен',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: booking.prepaymentPaid ? Colors.green : Colors.orange,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-            
-            const SizedBox(height: 16),
-            
-            // Действия в зависимости от статуса
-            if (booking.status == 'pending') ...[
+      margin: const EdgeInsets.only(bottom: 12),
+      child: InkWell(
+        onTap: () {
+          // TODO: Переход к деталям события
+        },
+        borderRadius: BorderRadius.circular(12),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Заголовок и статус
               Row(
                 children: [
                   Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => _viewBookingDetails(booking),
-                      icon: const Icon(Icons.info, size: 16),
-                      label: const Text('Подробности'),
+                    child: Text(
+                      booking.eventTitle,
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => _cancelBooking(booking),
-                      icon: const Icon(Icons.close, size: 16),
-                      label: const Text('Отменить'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.red,
-                        side: const BorderSide(color: Colors.red),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: _getStatusColor(booking.status).withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: _getStatusColor(booking.status).withOpacity(0.3),
                       ),
                     ),
-                  ),
-                ],
-              ),
-            ] else if (booking.status == 'confirmed') ...[
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => _viewBookingDetails(booking),
-                      icon: const Icon(Icons.info, size: 16),
-                      label: const Text('Подробности'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () => _contactSpecialist(booking),
-                      icon: const Icon(Icons.message, size: 16),
-                      label: const Text('Связаться'),
+                    child: Text(
+                      booking.statusText,
+                      style: TextStyle(
+                        color: _getStatusColor(booking.status),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
                 ],
               ),
               
-              // Кнопка оплаты аванса
-              if (booking.prepayment > 0 && !booking.prepaymentPaid) ...[
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: () => _payPrepayment(booking),
-                    icon: const Icon(Icons.payment, size: 16),
-                    label: Text('Оплатить аванс ${booking.prepayment.toStringAsFixed(0)} ₽'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
+              const SizedBox(height: 12),
+              
+              // Дата мероприятия
+              Row(
+                children: [
+                  const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                  const SizedBox(width: 8),
+                  Text(
+                    '${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year}',
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                  const SizedBox(width: 16),
+                  const Icon(Icons.access_time, size: 16, color: Colors.grey),
+                  const SizedBox(width: 8),
+                  Text(
+                    '${booking.eventDate.hour.toString().padLeft(2, '0')}:${booking.eventDate.minute.toString().padLeft(2, '0')}',
+                    style: const TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+              
+              const SizedBox(height: 8),
+              
+              // Количество участников и стоимость
+              Row(
+                children: [
+                  const Icon(Icons.people, size: 16, color: Colors.blue),
+                  const SizedBox(width: 8),
+                  Text(
+                    '${booking.participantsCount} участник${booking.participantsCount > 1 ? 'а' : ''}',
+                    style: const TextStyle(color: Colors.blue),
+                  ),
+                  const Spacer(),
+                  const Icon(Icons.attach_money, size: 16, color: Colors.green),
+                  const SizedBox(width: 8),
+                  Text(
+                    booking.totalPrice == 0 ? 'Бесплатно' : '${booking.totalPrice.toStringAsFixed(0)} ₽',
+                    style: const TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                ),
-              ],
-            ] else if (booking.status == 'rejected') ...[
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: () => _viewBookingDetails(booking),
-                  icon: const Icon(Icons.info, size: 16),
-                  label: const Text('Подробности'),
-                ),
+                ],
+              ),
+              
+              const SizedBox(height: 12),
+              
+              // Кнопки действий
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () {
+                        // TODO: Переход к деталям события
+                      },
+                      icon: const Icon(Icons.visibility, size: 16),
+                      label: const Text('Подробнее'),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  if (booking.canBeCancelled)
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () => _showCancelDialog(context, ref, booking),
+                        icon: const Icon(Icons.cancel, size: 16),
+                        label: const Text('Отменить'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ],
-          ],
+          ),
         ),
       ),
     );
   }
 
-  void _viewBookingDetails(Booking booking) {
+  Color _getStatusColor(BookingStatus status) {
+    switch (status) {
+      case BookingStatus.pending:
+        return Colors.orange;
+      case BookingStatus.confirmed:
+        return Colors.green;
+      case BookingStatus.cancelled:
+        return Colors.red;
+      case BookingStatus.completed:
+        return Colors.blue;
+    }
+  }
+
+  void _showCancelDialog(BuildContext context, WidgetRef ref, Booking booking) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(booking.title ?? 'Без названия'),
-        content: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              _buildDetailRow('Дата и время:', _formatDateTime(booking.eventDate)),
-              if (booking.description != null)
-                _buildDetailRow('Описание:', booking.description!),
-              _buildDetailRow('Стоимость:', '${booking.totalPrice.toStringAsFixed(0)} ₽'),
-              if (booking.prepayment > 0)
-                _buildDetailRow('Аванс:', '${booking.prepayment.toStringAsFixed(0)} ₽'),
-              _buildDetailRow('Статус:', _getStatusText(booking.status)),
-              if (booking.prepayment > 0)
-                _buildDetailRow('Оплата аванса:', booking.prepaymentPaid ? 'Оплачен' : 'Не оплачен'),
-            ],
-          ),
-        ),
+        title: const Text('Отменить бронирование'),
+        content: const Text('Вы уверены, что хотите отменить это бронирование?'),
         actions: [
           TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Закрыть'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _cancelBooking(Booking booking) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Отменить заявку'),
-        content: const Text('Вы уверены, что хотите отменить эту заявку?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
+            onPressed: () => Navigator.pop(context),
             child: const Text('Нет'),
           ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            style: TextButton.styleFrom(foregroundColor: Colors.red),
+          ElevatedButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              try {
+                final bookingService = ref.read(bookingServiceProvider);
+                await bookingService.cancelBooking(booking.id);
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Бронирование отменено'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                }
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Ошибка отмены: $e'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              }
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
             child: const Text('Да, отменить'),
           ),
         ],
       ),
     );
-
-    if (confirmed == true) {
-      try {
-        final firestoreService = ref.read(firestoreServiceProvider);
-        await firestoreService.updateBookingStatus(booking.id, 'cancelled');
-        
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Заявка отменена'),
-              backgroundColor: Colors.orange,
-            ),
-          );
-        }
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Ошибка: $e'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      }
-    }
-  }
-
-  void _contactSpecialist(Booking booking) {
-    // TODO: Реализовать переход в чат со специалистом
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Переход в чат будет реализован позже')),
-    );
-  }
-
-  void _payPrepayment(Booking booking) {
-    // TODO: Реализовать оплату аванса
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('Оплата аванса ${booking.prepayment.toStringAsFixed(0)} ₽ будет реализована позже'),
-      ),
-    );
-  }
-
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 100,
-            child: Text(
-              label,
-              style: const TextStyle(fontWeight: FontWeight.w600),
-            ),
-          ),
-          Expanded(
-            child: Text(value),
-          ),
-        ],
-      ),
-    );
-  }
-
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}.${dateTime.month}.${dateTime.year} в ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
-
-  IconData _getStatusIcon(String status) {
-    switch (status) {
-      case 'pending':
-        return Icons.send;
-      case 'confirmed':
-        return Icons.check_circle;
-      case 'rejected':
-        return Icons.cancel;
-      default:
-        return Icons.help;
-    }
-  }
-
-  String _getEmptyMessage(String status) {
-    switch (status) {
-      case 'pending':
-        return 'Нет отправленных заявок';
-      case 'confirmed':
-        return 'Нет подтвержденных заявок';
-      case 'rejected':
-        return 'Нет отклоненных заявок';
-      default:
-        return 'Нет заявок';
-    }
-  }
-
-  Color _getStatusColor(String status) {
-    switch (status) {
-      case 'pending':
-        return Colors.orange;
-      case 'confirmed':
-        return Colors.green;
-      case 'rejected':
-        return Colors.red;
-      default:
-        return Colors.grey;
-    }
-  }
-
-  String _getStatusText(String status) {
-    switch (status) {
-      case 'pending':
-        return 'Отправлена';
-      case 'confirmed':
-        return 'Подтверждена';
-      case 'rejected':
-        return 'Отклонена';
-      default:
-        return 'Неизвестно';
-    }
   }
 }
