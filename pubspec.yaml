@@ -58,6 +58,10 @@ dependencies:
   # Media handling (added for step 11)
   video_player: ^2.8.1
   photo_view: ^0.14.0
+  # Calendar integration (added for step 12)
+  ics: ^0.0.1
+  share_plus: ^7.2.1
+  url_launcher: ^6.2.2
 
 dev_dependencies:
   flutter_test:
