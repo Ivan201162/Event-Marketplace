@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/notification_providers.dart';
-import '../widgets/animated_page_transition.dart';
+import '../widgets/animated_page_transition.dart' as custom;
 
 /// Экран настроек уведомлений
 class NotificationSettingsScreen extends ConsumerWidget {
@@ -15,10 +15,10 @@ class NotificationSettingsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Настройки уведомлений'),
-        backgroundColor: context.colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         elevation: 0,
       ),
-      body: AnimatedList(
+      body: custom.AnimatedList(
         children: [
           _buildSectionHeader(context, 'Уведомления о событиях'),
           _buildNotificationSwitch(
@@ -97,8 +97,8 @@ class NotificationSettingsScreen extends ConsumerWidget {
       padding: const EdgeInsets.fromLTRB(16, 24, 16, 8),
       child: Text(
         title,
-        style: context.textTheme.titleMedium?.copyWith(
-          color: context.colorScheme.primary,
+        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+          color: Theme.of(context).colorScheme.primary,
           fontWeight: FontWeight.bold,
         ),
       ),
@@ -114,19 +114,19 @@ class NotificationSettingsScreen extends ConsumerWidget {
     required ValueChanged<bool> onChanged,
     required IconData icon,
   }) {
-    return AnimatedCard(
+    return custom.AnimatedCard(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: context.colorScheme.primary.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
               icon,
-              color: context.colorScheme.primary,
+              color: Theme.of(context).colorScheme.primary,
               size: 24,
             ),
           ),
@@ -137,15 +137,15 @@ class NotificationSettingsScreen extends ConsumerWidget {
               children: [
                 Text(
                   title,
-                  style: context.textTheme.titleSmall?.copyWith(
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   subtitle,
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: context.colorScheme.onSurface.withOpacity(0.7),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
               ],
@@ -154,7 +154,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
           Switch(
             value: value,
             onChanged: onChanged,
-            activeColor: context.colorScheme.primary,
+            activeThumbColor: Theme.of(context).colorScheme.primary,
           ),
         ],
       ),
@@ -171,7 +171,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
   }) {
     final options = [1, 2, 6, 12, 24, 48, 72];
     
-    return AnimatedCard(
+    return custom.AnimatedCard(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,12 +181,12 @@ class NotificationSettingsScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: context.colorScheme.primary.withOpacity(0.1),
+                  color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   Icons.schedule,
-                  color: context.colorScheme.primary,
+                  color: Theme.of(context).colorScheme.primary,
                   size: 24,
                 ),
               ),
@@ -197,15 +197,15 @@ class NotificationSettingsScreen extends ConsumerWidget {
                   children: [
                     Text(
                       title,
-                      style: context.textTheme.titleSmall?.copyWith(
+                      style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                     const SizedBox(height: 2),
                     Text(
                       subtitle,
-                      style: context.textTheme.bodySmall?.copyWith(
-                        color: context.colorScheme.onSurface.withOpacity(0.7),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                       ),
                     ),
                   ],
@@ -219,27 +219,27 @@ class NotificationSettingsScreen extends ConsumerWidget {
             runSpacing: 8,
             children: options.map((hours) {
               final isSelected = value == hours;
-              return AnimatedButton(
+              return custom.AnimatedButton(
                 onPressed: () => onChanged(hours),
                 child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     color: isSelected 
-                        ? context.colorScheme.primary 
-                        : context.colorScheme.surface,
+                        ? Theme.of(context).colorScheme.primary 
+                        : Theme.of(context).colorScheme.surface,
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(
                       color: isSelected 
-                          ? context.colorScheme.primary 
-                          : context.colorScheme.outline.withOpacity(0.3),
+                          ? Theme.of(context).colorScheme.primary 
+                          : Theme.of(context).colorScheme.outline.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Text(
                     _formatHours(hours),
-                    style: context.textTheme.bodySmall?.copyWith(
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: isSelected 
-                          ? context.colorScheme.onPrimary 
-                          : context.colorScheme.onSurface,
+                          ? Theme.of(context).colorScheme.onPrimary 
+                          : Theme.of(context).colorScheme.onSurface,
                       fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                     ),
                   ),
@@ -260,7 +260,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
     required IconData icon,
     required VoidCallback onTap,
   }) {
-    return AnimatedCard(
+    return custom.AnimatedCard(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       onTap: onTap,
       child: Row(
@@ -268,12 +268,12 @@ class NotificationSettingsScreen extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: context.colorScheme.error.withOpacity(0.1),
+              color: Theme.of(context).colorScheme.error.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(
               icon,
-              color: context.colorScheme.error,
+              color: Theme.of(context).colorScheme.error,
               size: 24,
             ),
           ),
@@ -284,15 +284,15 @@ class NotificationSettingsScreen extends ConsumerWidget {
               children: [
                 Text(
                   title,
-                  style: context.textTheme.titleSmall?.copyWith(
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w600,
                   ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   subtitle,
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: context.colorScheme.onSurface.withOpacity(0.7),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
                   ),
                 ),
               ],
@@ -301,7 +301,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
           Icon(
             Icons.arrow_forward_ios,
             size: 16,
-            color: context.colorScheme.onSurface.withOpacity(0.5),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.5),
           ),
         ],
       ),
@@ -349,7 +349,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
 
   /// Отправляет тестовое уведомление
   void _sendTestNotification(BuildContext context, WidgetRef ref) {
-    final service = ref.read(notificationServiceProvider);
+    // final service = ref.read(notificationServiceProvider);
     
     // Здесь будет логика отправки тестового уведомления
     ScaffoldMessenger.of(context).showSnackBar(

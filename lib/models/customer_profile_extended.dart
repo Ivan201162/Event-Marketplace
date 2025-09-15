@@ -2,33 +2,42 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'customer_profile.dart';
 
 /// Расширенная модель профиля заказчика
-class CustomerProfileExtended extends CustomerProfile {
+class CustomerProfileExtended {
+  final String id;
+  final String userId;
+  final String? photoURL;
+  final String? bio;
+  final String? phoneNumber;
+  final String? location;
+  final List<String> interests;
+  final List<String> eventTypes;
+  final Map<String, dynamic>? preferences;
+  final DateTime createdAt;
+  final DateTime updatedAt;
   final List<InspirationPhoto> inspirationPhotos;
   final List<CustomerNote> notes;
   final List<String> favoriteSpecialists;
   final List<String> savedEvents;
-  final CustomerPreferences preferences;
+  final CustomerPreferences extendedPreferences;
   final DateTime lastUpdated;
 
   const CustomerProfileExtended({
-    required super.id,
-    required super.userId,
-    required super.name,
-    required super.email,
-    required super.phone,
-    required super.avatarUrl,
-    required super.bio,
-    required super.location,
-    required super.eventTypes,
-    required super.budgetRange,
-    required super.preferredDates,
-    required super.specialRequirements,
-    required super.createdAt,
+    required this.id,
+    required this.userId,
+    this.photoURL,
+    this.bio,
+    this.phoneNumber,
+    this.location,
+    this.interests = const [],
+    this.eventTypes = const [],
+    this.preferences,
+    required this.createdAt,
+    required this.updatedAt,
     this.inspirationPhotos = const [],
     this.notes = const [],
     this.favoriteSpecialists = const [],
     this.savedEvents = const [],
-    required this.preferences,
+    required this.extendedPreferences,
     required this.lastUpdated,
   });
 
@@ -39,21 +48,15 @@ class CustomerProfileExtended extends CustomerProfile {
     return CustomerProfileExtended(
       id: doc.id,
       userId: data['userId'] as String,
-      name: data['name'] as String,
-      email: data['email'] as String,
-      phone: data['phone'] as String?,
-      avatarUrl: data['avatarUrl'] as String?,
+      photoURL: data['photoURL'] as String?,
       bio: data['bio'] as String?,
+      phoneNumber: data['phoneNumber'] as String?,
       location: data['location'] as String?,
+      interests: List<String>.from(data['interests'] as List? ?? []),
       eventTypes: List<String>.from(data['eventTypes'] as List? ?? []),
-      budgetRange: data['budgetRange'] != null 
-          ? BudgetRange.fromMap(data['budgetRange'] as Map<String, dynamic>)
-          : const BudgetRange(min: 0, max: 100000),
-      preferredDates: (data['preferredDates'] as List?)
-          ?.map((date) => (date as Timestamp).toDate())
-          .toList() ?? [],
-      specialRequirements: List<String>.from(data['specialRequirements'] as List? ?? []),
+      preferences: data['preferences'] as Map<String, dynamic>?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
+      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       inspirationPhotos: (data['inspirationPhotos'] as List?)
           ?.map((photo) => InspirationPhoto.fromMap(photo as Map<String, dynamic>))
           .toList() ?? [],
@@ -62,69 +65,72 @@ class CustomerProfileExtended extends CustomerProfile {
           .toList() ?? [],
       favoriteSpecialists: List<String>.from(data['favoriteSpecialists'] as List? ?? []),
       savedEvents: List<String>.from(data['savedEvents'] as List? ?? []),
-      preferences: data['preferences'] != null
-          ? CustomerPreferences.fromMap(data['preferences'] as Map<String, dynamic>)
+      extendedPreferences: data['extendedPreferences'] != null
+          ? CustomerPreferences.fromMap(data['extendedPreferences'] as Map<String, dynamic>)
           : const CustomerPreferences(),
       lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
     );
   }
 
   /// Преобразует расширенный профиль в Map для Firestore
-  @override
   Map<String, dynamic> toMap() {
-    final baseMap = super.toMap();
-    baseMap.addAll({
+    return {
+      'userId': userId,
+      'photoURL': photoURL,
+      'bio': bio,
+      'phoneNumber': phoneNumber,
+      'location': location,
+      'interests': interests,
+      'eventTypes': eventTypes,
+      'preferences': preferences,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
       'inspirationPhotos': inspirationPhotos.map((photo) => photo.toMap()).toList(),
       'notes': notes.map((note) => note.toMap()).toList(),
       'favoriteSpecialists': favoriteSpecialists,
       'savedEvents': savedEvents,
-      'preferences': preferences.toMap(),
+      'extendedPreferences': extendedPreferences.toMap(),
       'lastUpdated': Timestamp.fromDate(lastUpdated),
-    });
-    return baseMap;
+    };
   }
 
   /// Создаёт копию расширенного профиля с обновлёнными полями
   CustomerProfileExtended copyWith({
     String? id,
     String? userId,
-    String? name,
-    String? email,
-    String? phone,
-    String? avatarUrl,
+    String? photoURL,
     String? bio,
+    String? phoneNumber,
     String? location,
+    List<String>? interests,
     List<String>? eventTypes,
-    BudgetRange? budgetRange,
-    List<DateTime>? preferredDates,
-    List<String>? specialRequirements,
+    Map<String, dynamic>? preferences,
     DateTime? createdAt,
+    DateTime? updatedAt,
     List<InspirationPhoto>? inspirationPhotos,
     List<CustomerNote>? notes,
     List<String>? favoriteSpecialists,
     List<String>? savedEvents,
-    CustomerPreferences? preferences,
+    CustomerPreferences? extendedPreferences,
     DateTime? lastUpdated,
   }) {
     return CustomerProfileExtended(
       id: id ?? this.id,
       userId: userId ?? this.userId,
-      name: name ?? this.name,
-      email: email ?? this.email,
-      phone: phone ?? this.phone,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
+      photoURL: photoURL ?? this.photoURL,
       bio: bio ?? this.bio,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
       location: location ?? this.location,
+      interests: interests ?? this.interests,
       eventTypes: eventTypes ?? this.eventTypes,
-      budgetRange: budgetRange ?? this.budgetRange,
-      preferredDates: preferredDates ?? this.preferredDates,
-      specialRequirements: specialRequirements ?? this.specialRequirements,
+      preferences: preferences ?? this.preferences,
       createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       inspirationPhotos: inspirationPhotos ?? this.inspirationPhotos,
       notes: notes ?? this.notes,
       favoriteSpecialists: favoriteSpecialists ?? this.favoriteSpecialists,
       savedEvents: savedEvents ?? this.savedEvents,
-      preferences: preferences ?? this.preferences,
+      extendedPreferences: extendedPreferences ?? this.extendedPreferences,
       lastUpdated: lastUpdated ?? this.lastUpdated,
     );
   }

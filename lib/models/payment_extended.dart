@@ -135,14 +135,14 @@ class PaymentExtended {
   /// Получить следующий платеж к оплате
   PaymentInstallment? get nextPayment {
     final now = DateTime.now();
-    return installments
+    final pendingInstallments = installments
         .where((installment) => 
             installment.dueDate.isAfter(now) && 
             installment.status == PaymentStatus.pending)
         .toList()
         ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
     
-    return installments.isNotEmpty ? installments.first : null;
+    return pendingInstallments.isNotEmpty ? pendingInstallments.first : null;
   }
 
   /// Получить процент оплаты

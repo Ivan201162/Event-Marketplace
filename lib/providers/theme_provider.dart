@@ -91,7 +91,6 @@ ThemeData _getThemeData(ThemeMode themeMode) {
     useMaterial3: true,
     useMaterial3ErrorColors: true,
     primaryTextTheme: const TextTheme(),
-    primaryIconTheme: const IconThemeData(),
     fontFamily: 'Roboto',
   ).copyWith(
     // Кастомизация для Event Marketplace
@@ -130,5 +129,5 @@ extension ThemeExtension on BuildContext {
   Color get surfaceColor => colorScheme.surface;
   
   /// Получает цвет фона
-  Color get backgroundColor => colorScheme.background;
+  Color get backgroundColor => colorScheme.surface;
 }

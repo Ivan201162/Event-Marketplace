@@ -1,9 +1,17 @@
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'chat_message.dart';
 
 /// Расширенная модель сообщения чата
-class ChatMessageExtended extends ChatMessage {
+class ChatMessageExtended {
+  final String id;
+  final String chatId;
+  final String senderId;
+  final String senderName;
+  final String? senderAvatar;
+  final String content;
+  final DateTime timestamp;
+  final bool isRead;
+  final List<String> readBy;
   final MessageType type;
   final String? audioUrl;
   final int? audioDuration; // в секундах
@@ -16,15 +24,15 @@ class ChatMessageExtended extends ChatMessage {
   final Map<String, dynamic> metadata;
 
   const ChatMessageExtended({
-    required super.id,
-    required super.chatId,
-    required super.senderId,
-    required super.senderName,
-    super.senderAvatar,
-    required super.content,
-    required super.timestamp,
-    super.isRead,
-    super.readBy,
+    required this.id,
+    required this.chatId,
+    required this.senderId,
+    required this.senderName,
+    this.senderAvatar,
+    required this.content,
+    required this.timestamp,
+    this.isRead = false,
+    this.readBy = const [],
     this.type = MessageType.text,
     this.audioUrl,
     this.audioDuration,
@@ -37,7 +45,7 @@ class ChatMessageExtended extends ChatMessage {
     this.metadata = const {},
   });
 
-  factory ChatMessageExtended.fromChatMessage(ChatMessage message) {
+  factory ChatMessageExtended.fromChatMessage(ChatMessageExtended message) {
     return ChatMessageExtended(
       id: message.id,
       chatId: message.chatId,

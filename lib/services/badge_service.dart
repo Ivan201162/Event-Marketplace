@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/badge.dart';
-import '../models/user.dart';
+// import '../models/user.dart';
 import '../models/booking.dart';
-import '../models/review.dart';
+// import '../models/review.dart';
 
 /// Сервис для управления бейджами и достижениями
 class BadgeService {
@@ -185,7 +185,7 @@ class BadgeService {
       customerBookings[customerId] = (customerBookings[customerId] ?? 0) + 1;
     }
 
-    return customerBookings.values.where((count) => count > 1).length;
+    return customerBookings.values.where((bookingCount) => bookingCount > 1).length;
   }
 
   /// Выдать бейдж пользователю

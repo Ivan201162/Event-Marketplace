@@ -2,7 +2,47 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'specialist.dart';
 
 /// Расширенная модель профиля специалиста
-class SpecialistProfileExtended extends Specialist {
+class SpecialistProfileExtended {
+  final String id;
+  final String userId;
+  final String name;
+  final String email;
+  final String phone;
+  final String? avatarUrl;
+  final String? bio;
+  final String? location;
+  final List<SpecialistCategory> categories;
+  final int experienceYears;
+  final double hourlyRate;
+  final double rating;
+  final int reviewCount;
+  final bool isAvailable;
+  final bool isVerified;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final List<String> languages;
+  final List<String> specializations;
+  final List<String> equipment;
+  final bool insurance;
+  final List<String> licenses;
+  final Map<String, dynamic> availability;
+  final Map<String, dynamic> pricing;
+  final Map<String, dynamic> policies;
+  final List<String> gallery;
+  final List<dynamic> reviews;
+  final List<dynamic> bookings;
+  final Map<String, dynamic> earnings;
+  final Map<String, dynamic> performance;
+  final Map<String, dynamic> verification;
+  final List<dynamic> badges;
+  final List<dynamic> achievements;
+  final Map<String, dynamic> analytics;
+  final Map<String, dynamic> settings;
+  final Map<String, dynamic> notifications;
+  final Map<String, dynamic> preferences;
+  final Map<String, dynamic> metadata;
+  final String? portfolio;
+  final Map<String, String> socialLinks;
   final List<FAQItem> faqItems;
   final List<PortfolioVideo> portfolioVideos;
   final List<String> certifications;
@@ -12,44 +52,46 @@ class SpecialistProfileExtended extends Specialist {
   final DateTime lastUpdated;
 
   const SpecialistProfileExtended({
-    required super.id,
-    required super.userId,
-    required super.name,
-    required super.email,
-    required super.phone,
-    super.avatarUrl,
-    super.bio,
-    required super.location,
-    required super.categories,
-    required super.experienceYears,
-    required super.hourlyRate,
-    required super.rating,
-    required super.reviewCount,
-    required super.isAvailable,
-    required super.createdAt,
-    super.portfolio,
-    super.socialLinks,
-    super.languages,
-    super.specializations,
-    super.equipment,
-    super.insurance,
-    super.licenses,
-    super.availability,
-    super.pricing,
-    super.policies,
-    super.gallery,
-    super.reviews,
-    super.bookings,
-    super.earnings,
-    super.performance,
-    super.verification,
-    super.badges,
-    super.achievements,
-    super.analytics,
-    super.settings,
-    super.notifications,
-    super.preferences,
-    super.metadata,
+    required this.id,
+    required this.userId,
+    required this.name,
+    required this.email,
+    required this.phone,
+    this.avatarUrl,
+    this.bio,
+    this.location,
+    this.categories = const [],
+    this.experienceYears = 0,
+    this.hourlyRate = 0.0,
+    this.rating = 0.0,
+    this.reviewCount = 0,
+    this.isAvailable = true,
+    this.isVerified = false,
+    required this.createdAt,
+    required this.updatedAt,
+    this.languages = const [],
+    this.specializations = const [],
+    this.equipment = const [],
+    this.insurance = false,
+    this.licenses = const [],
+    this.availability = const {},
+    this.pricing = const {},
+    this.policies = const {},
+    this.gallery = const [],
+    this.reviews = const [],
+    this.bookings = const [],
+    this.earnings = const {},
+    this.performance = const {},
+    this.verification = const {},
+    this.badges = const [],
+    this.achievements = const [],
+    this.analytics = const {},
+    this.settings = const {},
+    this.notifications = const {},
+    this.preferences = const {},
+    this.metadata = const {},
+    this.portfolio,
+    this.socialLinks = const {},
     this.faqItems = const [],
     this.portfolioVideos = const [],
     this.certifications = const [],
@@ -75,7 +117,9 @@ class SpecialistProfileExtended extends Specialist {
       rating: specialist.rating,
       reviewCount: specialist.reviewCount,
       isAvailable: specialist.isAvailable,
+      isVerified: specialist.isVerified,
       createdAt: specialist.createdAt,
+      updatedAt: specialist.updatedAt,
       portfolio: specialist.portfolio,
       socialLinks: specialist.socialLinks,
       languages: specialist.languages,
@@ -98,7 +142,7 @@ class SpecialistProfileExtended extends Specialist {
       settings: specialist.settings,
       notifications: specialist.notifications,
       preferences: specialist.preferences,
-      metadata: specialist.metadata,
+      metadata: specialist.metadata ?? {},
       lastUpdated: DateTime.now(),
     );
   }
@@ -108,65 +152,105 @@ class SpecialistProfileExtended extends Specialist {
     
     return SpecialistProfileExtended(
       id: doc.id,
-      userId: data['userId'] ?? '',
-      name: data['name'] ?? '',
-      email: data['email'] ?? '',
-      phone: data['phone'] ?? '',
-      avatarUrl: data['avatarUrl'],
-      bio: data['bio'],
-      location: data['location'] ?? '',
-      categories: (data['categories'] as List<dynamic>?)
-          ?.map((e) => SpecialistCategory.values.firstWhere(
-                (cat) => cat.name == e,
+      userId: data['userId'] as String,
+      name: data['name'] as String,
+      email: data['email'] as String,
+      phone: data['phone'] as String,
+      avatarUrl: data['avatarUrl'] as String?,
+      bio: data['bio'] as String?,
+      location: data['location'] as String?,
+      categories: (data['categories'] as List?)
+          ?.map((cat) => SpecialistCategory.values.firstWhere(
+                (category) => category.name == cat,
                 orElse: () => SpecialistCategory.photographer,
               ))
           .toList() ?? [],
-      experienceYears: data['experienceYears'] ?? 0,
-      hourlyRate: (data['hourlyRate'] ?? 0).toDouble(),
-      rating: (data['rating'] ?? 0).toDouble(),
-      reviewCount: data['reviewCount'] ?? 0,
-      isAvailable: data['isAvailable'] ?? true,
-      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      portfolio: data['portfolio'],
-      socialLinks: Map<String, String>.from(data['socialLinks'] ?? {}),
-      languages: List<String>.from(data['languages'] ?? []),
-      specializations: List<String>.from(data['specializations'] ?? []),
-      equipment: List<String>.from(data['equipment'] ?? []),
-      insurance: data['insurance'],
-      licenses: List<String>.from(data['licenses'] ?? []),
-      availability: data['availability'],
-      pricing: data['pricing'],
-      policies: data['policies'],
-      gallery: List<String>.from(data['gallery'] ?? []),
-      reviews: data['reviews'],
-      bookings: data['bookings'],
-      earnings: data['earnings'],
-      performance: data['performance'],
-      verification: data['verification'],
-      badges: data['badges'],
-      achievements: data['achievements'],
-      analytics: data['analytics'],
-      settings: data['settings'],
-      notifications: data['notifications'],
-      preferences: data['preferences'],
-      metadata: data['metadata'],
-      faqItems: (data['faqItems'] as List<dynamic>?)
-          ?.map((e) => FAQItem.fromMap(e))
+      experienceYears: data['experienceYears'] as int? ?? 0,
+      hourlyRate: (data['hourlyRate'] as num?)?.toDouble() ?? 0.0,
+      rating: (data['rating'] as num?)?.toDouble() ?? 0.0,
+      reviewCount: data['reviewCount'] as int? ?? 0,
+      isAvailable: data['isAvailable'] as bool? ?? true,
+      isVerified: data['isVerified'] as bool? ?? false,
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      portfolio: data['portfolio'] as String?,
+      socialLinks: Map<String, String>.from(data['socialLinks'] as Map? ?? {}),
+      languages: List<String>.from(data['languages'] as List? ?? []),
+      specializations: List<String>.from(data['specializations'] as List? ?? []),
+      equipment: List<String>.from(data['equipment'] as List? ?? []),
+      insurance: data['insurance'] as bool? ?? false,
+      licenses: List<String>.from(data['licenses'] as List? ?? []),
+      availability: Map<String, dynamic>.from(data['availability'] as Map? ?? {}),
+      pricing: Map<String, dynamic>.from(data['pricing'] as Map? ?? {}),
+      policies: Map<String, dynamic>.from(data['policies'] as Map? ?? {}),
+      gallery: List<String>.from(data['gallery'] as List? ?? []),
+      reviews: data['reviews'] as List? ?? [],
+      bookings: data['bookings'] as List? ?? [],
+      earnings: Map<String, dynamic>.from(data['earnings'] as Map? ?? {}),
+      performance: Map<String, dynamic>.from(data['performance'] as Map? ?? {}),
+      verification: Map<String, dynamic>.from(data['verification'] as Map? ?? {}),
+      badges: data['badges'] as List? ?? [],
+      achievements: data['achievements'] as List? ?? [],
+      analytics: Map<String, dynamic>.from(data['analytics'] as Map? ?? {}),
+      settings: Map<String, dynamic>.from(data['settings'] as Map? ?? {}),
+      notifications: Map<String, dynamic>.from(data['notifications'] as Map? ?? {}),
+      preferences: Map<String, dynamic>.from(data['preferences'] as Map? ?? {}),
+      metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
+      faqItems: (data['faqItems'] as List?)
+          ?.map((faq) => FAQItem.fromMap(faq as Map<String, dynamic>))
           .toList() ?? [],
-      portfolioVideos: (data['portfolioVideos'] as List<dynamic>?)
-          ?.map((e) => PortfolioVideo.fromMap(e))
+      portfolioVideos: (data['portfolioVideos'] as List?)
+          ?.map((video) => PortfolioVideo.fromMap(video as Map<String, dynamic>))
           .toList() ?? [],
-      certifications: List<String>.from(data['certifications'] ?? []),
-      awards: List<String>.from(data['awards'] ?? []),
-      testimonials: List<String>.from(data['testimonials'] ?? []),
-      additionalInfo: Map<String, dynamic>.from(data['additionalInfo'] ?? {}),
-      lastUpdated: (data['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      certifications: List<String>.from(data['certifications'] as List? ?? []),
+      awards: List<String>.from(data['awards'] as List? ?? []),
+      testimonials: List<String>.from(data['testimonials'] as List? ?? []),
+      additionalInfo: Map<String, dynamic>.from(data['additionalInfo'] as Map? ?? {}),
+      lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      ...super.toMap(),
+      'userId': userId,
+      'name': name,
+      'email': email,
+      'phone': phone,
+      'avatarUrl': avatarUrl,
+      'bio': bio,
+      'location': location,
+      'categories': categories.map((cat) => cat.name).toList(),
+      'experienceYears': experienceYears,
+      'hourlyRate': hourlyRate,
+      'rating': rating,
+      'reviewCount': reviewCount,
+      'isAvailable': isAvailable,
+      'isVerified': isVerified,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+      'languages': languages,
+      'specializations': specializations,
+      'equipment': equipment,
+      'insurance': insurance,
+      'licenses': licenses,
+      'availability': availability,
+      'pricing': pricing,
+      'policies': policies,
+      'gallery': gallery,
+      'reviews': reviews,
+      'bookings': bookings,
+      'earnings': earnings,
+      'performance': performance,
+      'verification': verification,
+      'badges': badges,
+      'achievements': achievements,
+      'analytics': analytics,
+      'settings': settings,
+      'notifications': notifications,
+      'preferences': preferences,
+      'metadata': metadata,
+      'portfolio': portfolio,
+      'socialLinks': socialLinks,
       'faqItems': faqItems.map((e) => e.toMap()).toList(),
       'portfolioVideos': portfolioVideos.map((e) => e.toMap()).toList(),
       'certifications': certifications,
@@ -192,7 +276,9 @@ class SpecialistProfileExtended extends Specialist {
     double? rating,
     int? reviewCount,
     bool? isAvailable,
+    bool? isVerified,
     DateTime? createdAt,
+    DateTime? updatedAt,
     String? portfolio,
     Map<String, String>? socialLinks,
     List<String>? languages,
@@ -239,7 +325,9 @@ class SpecialistProfileExtended extends Specialist {
       rating: rating ?? this.rating,
       reviewCount: reviewCount ?? this.reviewCount,
       isAvailable: isAvailable ?? this.isAvailable,
+      isVerified: isVerified ?? this.isVerified,
       createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       portfolio: portfolio ?? this.portfolio,
       socialLinks: socialLinks ?? this.socialLinks,
       languages: languages ?? this.languages,

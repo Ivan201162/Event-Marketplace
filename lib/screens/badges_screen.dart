@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/badge_providers.dart';
 import '../providers/auth_providers.dart';
-import '../models/badge.dart';
+import '../models/badge.dart' as models;
 import '../widgets/badge_widget.dart';
-import '../widgets/animated_page_transition.dart';
+import '../widgets/animated_page_transition.dart' as custom;
 
 /// Экран бейджей и достижений
 class BadgesScreen extends ConsumerStatefulWidget {
@@ -33,12 +33,12 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
   @override
   Widget build(BuildContext context) {
     final currentUser = ref.watch(currentUserProvider);
-    final userRole = ref.watch(currentUserRoleProvider);
+    // final userRole = ref.watch(currentUserRoleProvider);
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Бейджи и достижения'),
-        backgroundColor: context.colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         elevation: 0,
         bottom: TabBar(
           controller: _tabController,
@@ -60,8 +60,8 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
             controller: _tabController,
             children: [
               _buildAllBadgesTab(user.id),
-              _buildCategoryBadgesTab(user.id, BadgeCategory.specialist),
-              _buildCategoryBadgesTab(user.id, BadgeCategory.customer),
+              _buildCategoryBadgesTab(user.id, models.BadgeCategory.specialist),
+              _buildCategoryBadgesTab(user.id, models.BadgeCategory.customer),
               _buildLeaderboardTab(),
             ],
           );
@@ -76,7 +76,7 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
 
   /// Вкладка со всеми бейджами
   Widget _buildAllBadgesTab(String userId) {
-    return AnimatedList(
+    return custom.AnimatedList(
       children: [
         // Статистика
         Padding(
@@ -92,7 +92,7 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
             children: [
               Text(
                 'Последние бейджи',
-                style: context.textTheme.titleMedium?.copyWith(
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -114,7 +114,7 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
             children: [
               Text(
                 'Все бейджи',
-                style: context.textTheme.titleMedium?.copyWith(
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -131,8 +131,8 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
   }
 
   /// Вкладка с бейджами по категории
-  Widget _buildCategoryBadgesTab(String userId, BadgeCategory category) {
-    return AnimatedList(
+  Widget _buildCategoryBadgesTab(String userId, models.BadgeCategory category) {
+    return custom.AnimatedList(
       children: [
         // Информация о категории
         Padding(
@@ -155,7 +155,7 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
 
   /// Вкладка с таблицей лидеров
   Widget _buildLeaderboardTab() {
-    return AnimatedList(
+    return custom.AnimatedList(
       children: [
         Padding(
           padding: const EdgeInsets.all(16),
@@ -166,21 +166,21 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
   }
 
   /// Информация о категории бейджей
-  Widget _buildCategoryInfo(BadgeCategory category) {
+  Widget _buildCategoryInfo(models.BadgeCategory category) {
     final info = _getCategoryInfo(category);
     
-    return AnimatedCard(
+    return custom.AnimatedCard(
       child: Column(
         children: [
           Icon(
             info.icon,
             size: 48,
-            color: context.colorScheme.primary,
+            color: Theme.of(context).colorScheme.primary,
           ),
           const SizedBox(height: 16),
           Text(
             info.title,
-            style: context.textTheme.titleLarge?.copyWith(
+            style: Theme.of(context).textTheme.titleLarge?.copyWith(
               fontWeight: FontWeight.bold,
             ),
             textAlign: TextAlign.center,
@@ -188,8 +188,8 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
           const SizedBox(height: 8),
           Text(
             info.description,
-            style: context.textTheme.bodyMedium?.copyWith(
-              color: context.colorScheme.onSurface.withOpacity(0.7),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
             ),
             textAlign: TextAlign.center,
           ),
@@ -199,21 +199,21 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
   }
 
   /// Получить информацию о категории
-  CategoryInfo _getCategoryInfo(BadgeCategory category) {
+  CategoryInfo _getCategoryInfo(models.BadgeCategory category) {
     switch (category) {
-      case BadgeCategory.specialist:
+      case models.BadgeCategory.specialist:
         return CategoryInfo(
           title: 'Бейджи специалиста',
           description: 'Получайте бейджи за качественную работу и достижения в профессии',
           icon: Icons.person,
         );
-      case BadgeCategory.customer:
+      case models.BadgeCategory.customer:
         return CategoryInfo(
           title: 'Бейджи заказчика',
           description: 'Зарабатывайте бейджи за активность и организацию мероприятий',
           icon: Icons.event,
         );
-      case BadgeCategory.general:
+      case models.BadgeCategory.general:
         return CategoryInfo(
           title: 'Общие бейджи',
           description: 'Специальные бейджи за участие в жизни сообщества',
@@ -238,7 +238,7 @@ class CategoryInfo {
 
 /// Экран детального просмотра бейджа
 class BadgeDetailScreen extends StatelessWidget {
-  final Badge badge;
+  final models.Badge badge;
 
   const BadgeDetailScreen({
     super.key,
@@ -250,7 +250,7 @@ class BadgeDetailScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Детали бейджа'),
-        backgroundColor: context.colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         elevation: 0,
       ),
       body: AnimatedList(
@@ -272,13 +272,13 @@ class BadgeDetailScreen extends StatelessWidget {
   }
 
   Widget _buildAdditionalInfo(BuildContext context) {
-    return AnimatedCard(
+    return custom.AnimatedCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
             'Дополнительная информация',
-            style: context.textTheme.titleMedium?.copyWith(
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -314,7 +314,7 @@ class BadgeDetailScreen extends StatelessWidget {
           Icon(
             icon,
             size: 20,
-            color: context.colorScheme.primary,
+            color: Theme.of(context).colorScheme.primary,
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -323,13 +323,13 @@ class BadgeDetailScreen extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: context.colorScheme.onSurface.withOpacity(0.7),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                   ),
                 ),
                 Text(
                   value,
-                  style: context.textTheme.bodyMedium?.copyWith(
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     fontWeight: FontWeight.w500,
                   ),
                 ),

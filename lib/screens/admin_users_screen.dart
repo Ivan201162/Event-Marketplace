@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user.dart';
-import '../models/admin_panel.dart';
+// import '../models/admin_panel.dart';
 import '../services/admin_panel_service.dart';
 
 /// Экран управления пользователями в админ-панели
@@ -68,7 +68,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
                   children: [
                     Expanded(
                       child: DropdownButtonFormField<UserRole?>(
-                        value: _selectedRole,
+                        initialValue: _selectedRole,
                         decoration: const InputDecoration(
                           labelText: 'Роль',
                           border: OutlineInputBorder(),
@@ -179,7 +179,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
       // Поиск по имени или email
       if (_searchQuery.isNotEmpty) {
         final query = _searchQuery.toLowerCase();
-        if (!user.displayName.toLowerCase().contains(query) &&
+        if (!(user.displayName?.toLowerCase().contains(query) ?? false) &&
             !user.email.toLowerCase().contains(query)) {
           return false;
         }
@@ -191,7 +191,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
       }
 
       // Фильтр по статусу блокировки
-      if (_showBannedOnly && !user.isBanned) {
+      if (_showBannedOnly && user.isActive) {
         return false;
       }
 
@@ -204,12 +204,12 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: user.isBanned ? Colors.red : Theme.of(context).primaryColor,
+          backgroundColor: !user.isActive ? Colors.red : Theme.of(context).primaryColor,
           backgroundImage: user.photoURL != null ? NetworkImage(user.photoURL!) : null,
           child: user.photoURL == null
               ? Text(
-                  user.displayName.isNotEmpty 
-                      ? user.displayName[0].toUpperCase()
+                  (user.displayName?.isNotEmpty ?? false)
+                      ? user.displayName![0].toUpperCase()
                       : '?',
                   style: const TextStyle(color: Colors.white),
                 )
@@ -219,14 +219,14 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
           children: [
             Expanded(
               child: Text(
-                user.displayName,
+                user.displayName ?? 'Без имени',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: user.isBanned ? Colors.red : null,
+                  color: !user.isActive ? Colors.red : null,
                 ),
               ),
             ),
-            if (user.isBanned)
+            if (!user.isActive)
               const Icon(Icons.block, color: Colors.red, size: 16),
           ],
         ),
@@ -253,7 +253,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
         trailing: PopupMenuButton<String>(
           onSelected: (action) => _handleUserAction(action, user),
           itemBuilder: (context) => [
-            if (!user.isBanned)
+            if (user.isActive)
               const PopupMenuItem(
                 value: 'ban',
                 child: Row(
@@ -264,7 +264,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
                   ],
                 ),
               )
-            else
+            if (!user.isActive)
               const PopupMenuItem(
                 value: 'unban',
                 child: Row(
@@ -315,14 +315,18 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
         color = Colors.green;
         text = 'Специалист';
         break;
+      case UserRole.guest:
+        color = Colors.orange;
+        text = 'Гость';
+        break;
     }
     
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Text(
         text,

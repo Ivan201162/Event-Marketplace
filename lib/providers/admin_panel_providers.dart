@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/admin_panel.dart';
+import '../models/user.dart';
 import '../services/admin_panel_service.dart';
 
 /// Провайдер для сервиса админ-панели
@@ -88,7 +89,7 @@ final filteredUsersProvider = StreamProvider.family<List<AppUser>, UserFilter>((
         // Поиск по имени или email
         if (filter.searchQuery.isNotEmpty) {
           final query = filter.searchQuery.toLowerCase();
-          if (!user.displayName.toLowerCase().contains(query) &&
+          if (!(user.displayName?.toLowerCase().contains(query) ?? false) &&
               !user.email.toLowerCase().contains(query)) {
             return false;
           }
@@ -100,7 +101,7 @@ final filteredUsersProvider = StreamProvider.family<List<AppUser>, UserFilter>((
         }
 
         // Фильтр по статусу блокировки
-        if (filter.showBannedOnly && !user.isBanned) {
+        if (filter.showBannedOnly && user.isActive) {
           return false;
         }
 
@@ -116,8 +117,8 @@ final filteredUsersProvider = StreamProvider.family<List<AppUser>, UserFilter>((
         return true;
       }).toList());
     },
-    loading: () => const Stream.value([]),
-    error: (_, __) => const Stream.value([]),
+    loading: () => Stream.value([]),
+    error: (_, __) => Stream.value([]),
   );
 });
 
@@ -129,7 +130,7 @@ class UserFilter {
   final DateTime? startDate;
   final DateTime? endDate;
 
-  const UserFilter({
+  UserFilter({
     this.searchQuery = '',
     this.role,
     this.showBannedOnly = false,
@@ -164,8 +165,8 @@ final userStatsProvider = StreamProvider((ref) {
   return ref.watch(allUsersProvider).when(
     data: (users) {
       final totalUsers = users.length;
-      final activeUsers = users.where((u) => !u.isBanned).length;
-      final bannedUsers = users.where((u) => u.isBanned).length;
+      final activeUsers = users.where((u) => u.isActive).length;
+      final bannedUsers = users.where((u) => !u.isActive).length;
       final customers = users.where((u) => u.role == UserRole.customer).length;
       final specialists = users.where((u) => u.role == UserRole.specialist).length;
 
@@ -190,7 +191,7 @@ class UserStats {
   final int customers;
   final int specialists;
 
-  const UserStats({
+  UserStats({
     required this.totalUsers,
     required this.activeUsers,
     required this.bannedUsers,
@@ -199,7 +200,7 @@ class UserStats {
   });
 
   factory UserStats.empty() {
-    return const UserStats(
+    return UserStats(
       totalUsers: 0,
       activeUsers: 0,
       bannedUsers: 0,
@@ -216,14 +217,14 @@ final userSearchProvider = StreamProvider.family<List<AppUser>, String>((ref, qu
       if (query.isEmpty) return Stream.value(users);
       
       final filtered = users.where((user) {
-        return user.displayName.toLowerCase().contains(query.toLowerCase()) ||
+        return (user.displayName?.toLowerCase().contains(query.toLowerCase()) ?? false) ||
                user.email.toLowerCase().contains(query.toLowerCase());
       }).toList();
       
       return Stream.value(filtered);
     },
-    loading: () => const Stream.value([]),
-    error: (_, __) => const Stream.value([]),
+    loading: () => Stream.value([]),
+    error: (_, __) => Stream.value([]),
   );
 });
 
@@ -239,8 +240,8 @@ final newUsersNotificationsProvider = StreamProvider((ref) {
       
       return Stream.value(newUsers);
     },
-    loading: () => const Stream.value([]),
-    error: (_, __) => const Stream.value([]),
+    loading: () => Stream.value([]),
+    error: (_, __) => Stream.value([]),
   );
 });
 
@@ -248,10 +249,10 @@ final newUsersNotificationsProvider = StreamProvider((ref) {
 final bannedUsersProvider = StreamProvider((ref) {
   return ref.watch(allUsersProvider).when(
     data: (users) {
-      return Stream.value(users.where((user) => user.isBanned).toList());
+      return Stream.value(users.where((user) => !user.isActive).toList());
     },
-    loading: () => const Stream.value([]),
-    error: (_, __) => const Stream.value([]),
+    loading: () => Stream.value([]),
+    error: (_, __) => Stream.value([]),
   );
 });
 
@@ -263,14 +264,14 @@ final activeUsersProvider = StreamProvider((ref) {
       final thirtyDaysAgo = now.subtract(const Duration(days: 30));
       
       final activeUsers = users.where((user) {
-        if (user.isBanned) return false;
-        if (user.lastLogin == null) return false;
-        return user.lastLogin!.isAfter(thirtyDaysAgo);
+        if (!user.isActive) return false;
+        if (user.lastLoginAt == null) return false;
+        return user.lastLoginAt!.isAfter(thirtyDaysAgo);
       }).toList();
       
       return Stream.value(activeUsers);
     },
-    loading: () => const Stream.value([]),
-    error: (_, __) => const Stream.value([]),
+    loading: () => Stream.value([]),
+    error: (_, __) => Stream.value([]),
   );
 });

@@ -42,7 +42,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
   Widget build(BuildContext context) {
     final faqAsync = ref.watch(specialistFAQProvider(widget.specialistId));
     final statsAsync = ref.watch(specialistProfileStatsProvider(widget.specialistId));
-    final faqFilters = ref.watch(faqFiltersProvider);
+    // final faqFilters = ref.watch(faqFiltersProvider);
 
     return Scaffold(
       appBar: AppBar(

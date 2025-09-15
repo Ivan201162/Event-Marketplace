@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'dart:io';
+// import 'dart:io';
 import '../models/customer_profile_extended.dart';
 import '../providers/customer_profile_extended_providers.dart';
 import '../services/customer_profile_extended_service.dart';
@@ -26,7 +26,7 @@ class InspirationPhotosScreen extends ConsumerStatefulWidget {
 class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
-  final ImagePicker _imagePicker = ImagePicker();
+  // final ImagePicker _imagePicker = ImagePicker();
   final TextEditingController _searchController = TextEditingController();
 
   @override
@@ -46,7 +46,7 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
   Widget build(BuildContext context) {
     final photosAsync = ref.watch(inspirationPhotosProvider(widget.userId));
     final statsAsync = ref.watch(customerProfileStatsProvider(widget.userId));
-    final photoFilters = ref.watch(photoFiltersProvider);
+    // final photoFilters = ref.watch(photoFiltersProvider);
 
     return Scaffold(
       appBar: AppBar(

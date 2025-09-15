@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/chat_message_extended.dart';
-import '../models/user.dart';
+// import '../models/user.dart';
 import '../widgets/voice_recorder_widget.dart';
 import '../widgets/voice_player_widget.dart';
 import '../widgets/message_reactions_widget.dart';
@@ -237,7 +237,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
                         _formatTime(message.timestamp),
                         style: TextStyle(
                           color: isOwnMessage 
-                              ? Colors.white.withOpacity(0.7)
+                              ? Colors.white.withValues(alpha: 0.7)
                               : Colors.grey[600],
                           fontSize: 12,
                         ),
@@ -249,7 +249,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
                           size: 16,
                           color: message.isRead 
                               ? Colors.blue[300]
-                              : Colors.white.withOpacity(0.7),
+                              : Colors.white.withValues(alpha: 0.7),
                         ),
                       ],
                     ],
@@ -296,7 +296,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
         color: Theme.of(context).cardColor,
         border: Border(
           top: BorderSide(
-            color: Colors.grey.withOpacity(0.3),
+            color: Colors.grey.withValues(alpha: 0.3),
           ),
         ),
       ),
@@ -337,7 +337,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
               maxLines: null,
               textCapitalization: TextCapitalization.sentences,
               onChanged: _onTextChanged,
-              onSubmitted: _sendTextMessage,
+              onSubmitted: (value) => _sendTextMessage(),
             ),
           ),
           

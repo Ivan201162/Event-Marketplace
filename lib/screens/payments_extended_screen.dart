@@ -358,11 +358,11 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
               const Text('Взносы:', style: TextStyle(fontWeight: FontWeight.bold)),
               ...payment.installments.map((installment) {
                 return ListTile(
-                  title: Text('${_formatDate(installment.dueDate)}'),
+                  title: Text(_formatDate(installment.dueDate)),
                   subtitle: Text('${installment.amount.toStringAsFixed(2)} ₽'),
                   trailing: Text(_getStatusText(installment.status.name)),
                 );
-              }).toList(),
+              }),
             ],
           ),
         ),
@@ -426,14 +426,16 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
       installmentsCount: installments,
     );
 
-    if (paymentId != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Платеж создан успешно')),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ошибка создания платежа')),
-      );
+    if (mounted) {
+      if (paymentId != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Платеж создан успешно')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Ошибка создания платежа')),
+        );
+      }
     }
   }
 
@@ -445,26 +447,28 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
       transactionId: 'demo_transaction_${DateTime.now().millisecondsSinceEpoch}',
     );
 
-    if (success) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Платеж выполнен успешно')),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Ошибка выполнения платежа')),
-      );
+    if (mounted) {
+      if (success) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Платеж выполнен успешно')),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Ошибка выполнения платежа')),
+        );
+      }
     }
   }
 
   void _downloadReceipt(PaymentExtended payment) async {
     if (payment.receiptPdfUrl == null) {
       final url = await _paymentService.generateReceiptPdf(payment);
-      if (url != null) {
+      if (url != null && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Квитанция сгенерирована')),
         );
       }
-    } else {
+    } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Скачивание квитанции (в разработке)')),
       );
@@ -474,12 +478,12 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
   void _downloadInvoice(PaymentExtended payment) async {
     if (payment.invoicePdfUrl == null) {
       final url = await _paymentService.generateInvoicePdf(payment);
-      if (url != null) {
+      if (url != null && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Счёт сгенерирован')),
         );
       }
-    } else {
+    } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Скачивание счёта (в разработке)')),
       );

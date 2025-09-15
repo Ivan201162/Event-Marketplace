@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'specialist.dart';
-import 'user.dart';
+// import 'user.dart';
 
 /// Типы рекомендаций
 enum RecommendationType {

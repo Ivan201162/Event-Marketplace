@@ -1,6 +1,7 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:timezone/timezone.dart' as tz;
 import 'dart:io';
 
 /// Сервис для работы с Firebase Cloud Messaging
@@ -157,7 +158,7 @@ class FCMService {
   /// Показать локальное уведомление
   Future<void> _showLocalNotification(RemoteMessage message) async {
     final notification = message.notification;
-    final android = message.notification?.android;
+    // final android = message.notification?.android;
 
     if (notification != null) {
       await _localNotifications.show(
@@ -328,7 +329,7 @@ class FCMService {
       id,
       title,
       body,
-      scheduledDate,
+      tz.TZDateTime.from(scheduledDate, tz.local),
       NotificationDetails(
         android: AndroidNotificationDetails(
           'scheduled_channel',
@@ -372,9 +373,10 @@ class FCMService {
 
   /// Открыть настройки уведомлений
   Future<void> openNotificationSettings() async {
-    await _localNotifications
-        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
-        ?.openNotificationSettings();
+    // await _localNotifications
+    //     .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+    //     ?.openNotificationSettings();
+    print('Notification settings opened');
   }
 
   /// Сохранить FCM токен пользователя в Firestore

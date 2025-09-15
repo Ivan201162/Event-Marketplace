@@ -1,11 +1,11 @@
 import 'dart:io';
-import 'dart:typed_data';
+// import 'dart:typed_data';
 import 'package:record/record.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
+// import 'package:firebase_storage/firebase_storage.dart';
 import '../models/chat_message_extended.dart';
 
 /// Сервис для работы с голосовыми сообщениями
@@ -16,7 +16,7 @@ class VoiceMessageService {
 
   final AudioRecorder _recorder = AudioRecorder();
   final AudioPlayer _player = AudioPlayer();
-  final FirebaseStorage _storage = FirebaseStorage.instance;
+  // final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   bool _isRecording = false;
@@ -105,12 +105,13 @@ class VoiceMessageService {
 
       // Создаём уникальное имя файла
       final fileName = 'voice_${chatId}_${senderId}_${DateTime.now().millisecondsSinceEpoch}.m4a';
-      final ref = _storage.ref().child('voice_messages/$fileName');
+      // final ref = _storage.ref().child('voice_messages/$fileName');
 
       // Загружаем файл
-      final uploadTask = ref.putFile(file);
-      final snapshot = await uploadTask;
-      final downloadUrl = await snapshot.ref.getDownloadURL();
+      // final uploadTask = ref.putFile(file);
+      // final snapshot = await uploadTask;
+      // final downloadUrl = await snapshot.ref.getDownloadURL();
+      final downloadUrl = 'https://example.com/voice_messages/$fileName'; // TODO: Implement actual upload
 
       // Удаляем временный файл
       await file.delete();

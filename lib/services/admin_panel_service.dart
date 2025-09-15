@@ -19,7 +19,7 @@ class AdminPanelService {
       final doc = await _firestore.collection('admins').doc(userId).get();
       return doc.exists && (doc.data()?['isActive'] ?? false);
     } catch (e) {
-      print('Ошибка проверки прав администратора: $e');
+      // TODO: Log error properly
       return false;
     }
   }
@@ -33,7 +33,7 @@ class AdminPanelService {
       }
       return null;
     } catch (e) {
-      print('Ошибка получения информации об администраторе: $e');
+      // TODO: Log error properly
       return null;
     }
   }
@@ -49,7 +49,7 @@ class AdminPanelService {
       
       return adminInfo.permissions.contains(permission.name);
     } catch (e) {
-      print('Ошибка проверки разрешения: $e');
+      // TODO: Log error properly
       return false;
     }
   }
@@ -129,7 +129,7 @@ class AdminPanelService {
         lastUpdated: DateTime.now(),
       );
     } catch (e) {
-      print('Ошибка получения статистики: $e');
+      // TODO: Log error properly
       return AdminStats.empty();
     }
   }
@@ -148,14 +148,15 @@ class AdminPanelService {
   }
 
   /// Получить всех специалистов
-  Stream<List<Specialist>> getAllSpecialists() {
+  Stream<List<AppUser>> getAllSpecialists() {
     return _firestore
-        .collection('specialists')
+        .collection('users')
+        .where('role', isEqualTo: 'specialist')
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
       return snapshot.docs
-          .map((doc) => Specialist.fromDocument(doc))
+          .map((doc) => AppUser.fromDocument(doc))
           .toList();
     });
   }
@@ -219,7 +220,7 @@ class AdminPanelService {
 
       return true;
     } catch (e) {
-      print('Ошибка блокировки пользователя: $e');
+      // TODO: Log error properly
       return false;
     }
   }
@@ -244,7 +245,7 @@ class AdminPanelService {
 
       return true;
     } catch (e) {
-      print('Ошибка разблокировки пользователя: $e');
+      // TODO: Log error properly
       return false;
     }
   }
@@ -268,7 +269,7 @@ class AdminPanelService {
 
       return true;
     } catch (e) {
-      print('Ошибка верификации специалиста: $e');
+      // TODO: Log error properly
       return false;
     }
   }
@@ -293,7 +294,7 @@ class AdminPanelService {
 
       return true;
     } catch (e) {
-      print('Ошибка отмены верификации специалиста: $e');
+      // TODO: Log error properly
       return false;
     }
   }
@@ -319,7 +320,7 @@ class AdminPanelService {
 
       return true;
     } catch (e) {
-      print('Ошибка модерации отзыва: $e');
+      // TODO: Log error properly
       return false;
     }
   }
@@ -344,7 +345,7 @@ class AdminPanelService {
 
       return true;
     } catch (e) {
-      print('Ошибка отмены бронирования: $e');
+      // TODO: Log error properly
       return false;
     }
   }
@@ -384,7 +385,7 @@ class AdminPanelService {
       });
       return true;
     } catch (e) {
-      print('Ошибка отметки уведомления как прочитанного: $e');
+      // TODO: Log error properly
       return false;
     }
   }
@@ -398,7 +399,7 @@ class AdminPanelService {
       }
       return AdminSettings(lastUpdated: DateTime.now());
     } catch (e) {
-      print('Ошибка получения настроек: $e');
+      // TODO: Log error properly
       return AdminSettings(lastUpdated: DateTime.now());
     }
   }
@@ -419,7 +420,7 @@ class AdminPanelService {
 
       return true;
     } catch (e) {
-      print('Ошибка обновления настроек: $e');
+      // TODO: Log error properly
       return false;
     }
   }
@@ -448,7 +449,7 @@ class AdminPanelService {
       await _firestore.collection('admin_notifications').doc(notification.id).set(notification.toMap());
       return true;
     } catch (e) {
-      print('Ошибка создания уведомления: $e');
+      // TODO: Log error properly
       return false;
     }
   }
@@ -480,7 +481,7 @@ class AdminPanelService {
 
       await _firestore.collection('admin_actions').doc(action.id).set(action.toMap());
     } catch (e) {
-      print('Ошибка логирования действия администратора: $e');
+      // TODO: Log error properly
     }
   }
 
@@ -524,7 +525,7 @@ class AdminPanelService {
 
       return exportData;
     } catch (e) {
-      print('Ошибка экспорта данных: $e');
+      // TODO: Log error properly
       return {};
     }
   }

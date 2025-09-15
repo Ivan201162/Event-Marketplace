@@ -3,7 +3,7 @@ import '../models/recommendation.dart';
 import '../models/specialist.dart';
 import '../models/user.dart';
 import '../models/booking.dart';
-import '../models/review.dart';
+// import '../models/review.dart';
 
 /// Сервис для генерации рекомендаций
 class RecommendationService {
@@ -336,8 +336,9 @@ class RecommendationService {
   }) async {
     try {
       // Получаем местоположение пользователя (если доступно)
-      final userLocation = user.location;
-      if (userLocation == null) return [];
+      // final userLocation = user.location;
+      // if (userLocation == null) return [];
+      return []; // TODO: Implement location-based recommendations
 
       // Ищем специалистов в том же городе
       final nearbySpecialists = await _db
@@ -398,22 +399,22 @@ class RecommendationService {
             .get();
 
         if (specialistDoc.exists) {
-          final specialist = Specialist.fromDocument(specialistDoc);
-          
-          // Анализируем категории
-          final category = specialist.category.name;
-          preferences['categories'][category] = 
-              (preferences['categories'][category] ?? 0) + 1;
+        final specialist = Specialist.fromDocument(specialistDoc);
+        
+        // Анализируем категории
+        final category = specialist.category.name;
+        final categories = preferences['categories'] as Map<String, int>;
+        categories[category] = (categories[category] ?? 0) + 1;
 
           // Анализируем ценовой диапазон
           final priceRange = (specialist.hourlyRate / 1000).floor() * 1000;
-          preferences['priceRange'][priceRange.toDouble()] = 
-              (preferences['priceRange'][priceRange.toDouble()] ?? 0) + 1;
+          final priceRanges = preferences['priceRange'] as Map<double, int>;
+          priceRanges[priceRange.toDouble()] = (priceRanges[priceRange.toDouble()] ?? 0) + 1;
 
           // Анализируем рейтинги
           final ratingRange = (specialist.rating / 0.5).floor() * 0.5;
-          preferences['ratings'][ratingRange] = 
-              (preferences['ratings'][ratingRange] ?? 0) + 1;
+          final ratings = preferences['ratings'] as Map<double, int>;
+          ratings[ratingRange] = (ratings[ratingRange] ?? 0) + 1;
         }
       } catch (e) {
         print('Error analyzing booking: $e');

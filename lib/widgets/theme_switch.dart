@@ -122,15 +122,15 @@ class ThemeToggleButton extends ConsumerWidget {
     final themeMode = ref.watch(themeProvider);
     final themeNotifier = ref.read(themeProvider.notifier);
 
-    return AnimatedButton(
-      onPressed: () => themeNotifier.toggleTheme(),
+    return GestureDetector(
+      onTap: () => themeNotifier.toggleTheme(),
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: context.colorScheme.surface,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: context.colorScheme.outline.withOpacity(0.2),
+            color: context.colorScheme.outline.withValues(alpha: 0.2),
           ),
         ),
         child: Icon(
@@ -179,7 +179,7 @@ class ThemeSwitchWidget extends ConsumerWidget {
               themeNotifier.setLightTheme();
             }
           },
-          activeColor: context.colorScheme.primary,
+          activeThumbColor: context.colorScheme.primary,
         ),
         Icon(
           Icons.dark_mode,
