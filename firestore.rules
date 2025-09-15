@@ -1,46 +1,91 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // Правила для пользователей
+    // Users collection
     match /users/{userId} {
       allow read, write: if request.auth != null && request.auth.uid == userId;
-    }
-    
-    // Правила для специалистов
-    match /specialists/{specialistId} {
-      allow read: if request.auth != null;
-      allow write: if request.auth != null && 
-        (request.auth.uid == resource.data.userId || 
-         request.auth.uid == request.resource.data.userId);
-    }
-    
-    // Правила для бронирований
-    match /bookings/{bookingId} {
       allow read: if request.auth != null && 
-        (request.auth.uid == resource.data.customerId || 
-         request.auth.uid == resource.data.specialistId);
-      allow create: if request.auth != null && 
-        request.auth.uid == request.resource.data.customerId;
-      allow update: if request.auth != null && 
-        (request.auth.uid == resource.data.customerId || 
-         request.auth.uid == resource.data.specialistId);
-      allow delete: if request.auth != null && 
-        (request.auth.uid == resource.data.customerId || 
-         request.auth.uid == resource.data.specialistId);
+        (resource.data.role == 'admin' || 
+         resource.data.isPublic == true);
     }
     
-    // Правила для расписаний
-    match /schedules/{scheduleId} {
+    // Events collection
+    match /events/{eventId} {
       allow read: if request.auth != null;
-      allow write: if request.auth != null && 
-        (request.auth.uid == resource.data.specialistId || 
-         request.auth.uid == request.resource.data.specialistId);
+      allow create: if request.auth != null && 
+        request.auth.uid == resource.data.organizerId;
+      allow update, delete: if request.auth != null && 
+        (request.auth.uid == resource.data.organizerId ||
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
     }
     
-    // Правила для уведомлений
+    // Bookings collection
+    match /bookings/{bookingId} {
+      allow read, write: if request.auth != null && 
+        (request.auth.uid == resource.data.customerId ||
+         request.auth.uid == resource.data.specialistId);
+      allow read: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Reviews collection
+    match /reviews/{reviewId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && 
+        request.auth.uid == resource.data.reviewerId;
+      allow update, delete: if request.auth != null && 
+        (request.auth.uid == resource.data.reviewerId ||
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
+    }
+    
+    // Messages collection
+    match /messages/{messageId} {
+      allow read, write: if request.auth != null && 
+        (request.auth.uid == resource.data.senderId ||
+         request.auth.uid == resource.data.receiverId);
+    }
+    
+    // Notifications collection
     match /notifications/{notificationId} {
       allow read, write: if request.auth != null && 
         request.auth.uid == resource.data.userId;
+    }
+    
+    // Ideas collection
+    match /ideas/{ideaId} {
+      allow read: if request.auth != null;
+      allow create: if request.auth != null && 
+        request.auth.uid == resource.data.authorId;
+      allow update, delete: if request.auth != null && 
+        (request.auth.uid == resource.data.authorId ||
+         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin');
+    }
+    
+    // Support tickets collection
+    match /support_tickets/{ticketId} {
+      allow read, write: if request.auth != null && 
+        request.auth.uid == resource.data.userId;
+      allow read, write: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Security audit logs collection
+    match /security_audit_logs/{logId} {
+      allow read, write: if request.auth != null && 
+        request.auth.uid == resource.data.userId;
+      allow read: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Admin collections
+    match /admin/{document=**} {
+      allow read, write: if request.auth != null && 
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Public collections (read-only for authenticated users)
+    match /public/{document=**} {
+      allow read: if request.auth != null;
     }
   }
 }

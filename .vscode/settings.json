@@ -1,0 +1,29 @@
+{
+  "dart.flutterSdkPath": null,
+  "dart.lineLength": 120,
+  "dart.insertArgumentPlaceholders": false,
+  "dart.previewFlutterUiGuides": true,
+  "dart.previewFlutterUiGuidesCustomTracking": true,
+  "dart.closingLabels": true,
+  "dart.enableSdkFormatter": true,
+  "dart.analysisExcludedFolders": [
+    "build",
+    ".dart_tool"
+  ],
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+  "editor.rulers": [120],
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "files.exclude": {
+    "**/.dart_tool": true,
+    "**/build": true,
+    "**/.packages": true,
+    "**/.pub-cache": true,
+    "**/.pub": true
+  },
+  "search.exclude": {
+    "**/build": true,
+    "**/.dart_tool": true
+  }
+}
