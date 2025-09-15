@@ -62,6 +62,9 @@ dependencies:
   ics: ^0.0.1
   share_plus: ^7.2.1
   url_launcher: ^6.2.2
+  # Guest management (added for step 13)
+  qr_flutter: ^4.1.0
+  qr_code_scanner: ^1.0.1
 
 dev_dependencies:
   flutter_test:
