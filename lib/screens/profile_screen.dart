@@ -14,6 +14,7 @@ import 'customer_notes_screen.dart';
 import 'specialist_faq_screen.dart';
 import 'specialist_portfolio_videos_screen.dart';
 import 'payments_extended_screen.dart';
+import 'analytics_screen.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -359,6 +360,18 @@ class ProfileScreen extends ConsumerWidget {
                   builder: (context) => PaymentsExtendedScreen(
                     userId: user.uid,
                     isCustomer: user.role == UserRole.customer,
+                  ),
+                ),
+              ),
+            ),
+            ListTile(
+              leading: const Icon(Icons.analytics),
+              title: const Text('Аналитика'),
+              trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+              onTap: () => Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => AnalyticsScreen(
+                    userId: user.uid,
                   ),
                 ),
               ),

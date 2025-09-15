@@ -1,473 +1,519 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Типы метрик
-enum MetricType {
-  bookings,      // Заявки
-  payments,      // Платежи
-  reviews,       // Отзывы
-  users,         // Пользователи
-  revenue,       // Доходы
-  conversion,    // Конверсия
-}
-
-/// Периоды для аналитики
-enum AnalyticsPeriod {
-  day,      // День
-  week,     // Неделя
-  month,    // Месяц
-  quarter,  // Квартал
-  year,     // Год
-}
-
-/// Модель метрики
-class Metric {
+/// Модель для аналитики доходов и расходов
+class Analytics {
   final String id;
-  final String name;
-  final MetricType type;
-  final double value;
-  final String unit;
-  final DateTime timestamp;
-  final Map<String, dynamic>? metadata;
-  final String? userId;
-  final String? category;
+  final String userId;
+  final AnalyticsType type;
+  final DateTime date;
+  final double amount;
+  final String category;
+  final String? description;
+  final Map<String, dynamic> metadata;
 
-  const Metric({
+  const Analytics({
     required this.id,
-    required this.name,
+    required this.userId,
     required this.type,
-    required this.value,
-    required this.unit,
-    required this.timestamp,
-    this.metadata,
-    this.userId,
-    this.category,
+    required this.date,
+    required this.amount,
+    required this.category,
+    this.description,
+    this.metadata = const {},
   });
 
-  /// Создать из документа Firestore
-  factory Metric.fromDocument(DocumentSnapshot doc) {
+  factory Analytics.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    return Metric(
-      id: doc.id,
-      name: data['name'] ?? '',
-      type: _parseMetricType(data['type']),
-      value: (data['value'] as num).toDouble(),
-      unit: data['unit'] ?? '',
-      timestamp: data['timestamp'] != null 
-          ? (data['timestamp'] as Timestamp).toDate() 
-          : DateTime.now(),
-      metadata: data['metadata'],
-      userId: data['userId'],
-      category: data['category'],
-    );
-  }
-
-  /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'type': type.name,
-      'value': value,
-      'unit': unit,
-      'timestamp': Timestamp.fromDate(timestamp),
-      'metadata': metadata,
-      'userId': userId,
-      'category': category,
-    };
-  }
-
-  /// Парсинг типа метрики
-  static MetricType _parseMetricType(dynamic typeData) {
-    if (typeData == null) return MetricType.bookings;
     
-    final typeString = typeData.toString().toLowerCase();
-    switch (typeString) {
-      case 'payments':
-        return MetricType.payments;
-      case 'reviews':
-        return MetricType.reviews;
-      case 'users':
-        return MetricType.users;
-      case 'revenue':
-        return MetricType.revenue;
-      case 'conversion':
-        return MetricType.conversion;
-      case 'bookings':
-      default:
-        return MetricType.bookings;
-    }
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Metric && other.id == id;
-  }
-
-  @override
-  int get hashCode => id.hashCode;
-
-  @override
-  String toString() {
-    return 'Metric(id: $id, name: $name, value: $value $unit)';
-  }
-}
-
-/// Модель отчета
-class Report {
-  final String id;
-  final String title;
-  final String description;
-  final ReportType type;
-  final AnalyticsPeriod period;
-  final DateTime startDate;
-  final DateTime endDate;
-  final Map<String, dynamic> data;
-  final DateTime createdAt;
-  final String? userId;
-  final bool isPublic;
-
-  const Report({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.type,
-    required this.period,
-    required this.startDate,
-    required this.endDate,
-    required this.data,
-    required this.createdAt,
-    this.userId,
-    this.isPublic = false,
-  });
-
-  /// Создать из документа Firestore
-  factory Report.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    return Report(
+    return Analytics(
       id: doc.id,
-      title: data['title'] ?? '',
-      description: data['description'] ?? '',
-      type: _parseReportType(data['type']),
-      period: _parseAnalyticsPeriod(data['period']),
-      startDate: (data['startDate'] as Timestamp).toDate(),
-      endDate: (data['endDate'] as Timestamp).toDate(),
-      data: data['data'] ?? {},
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      userId: data['userId'],
-      isPublic: data['isPublic'] ?? false,
+      userId: data['userId'] ?? '',
+      type: AnalyticsType.values.firstWhere(
+        (t) => t.name == data['type'],
+        orElse: () => AnalyticsType.income,
+      ),
+      date: (data['date'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      amount: (data['amount'] ?? 0.0).toDouble(),
+      category: data['category'] ?? '',
+      description: data['description'],
+      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
 
-  /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'title': title,
-      'description': description,
-      'type': type.name,
-      'period': period.name,
-      'startDate': Timestamp.fromDate(startDate),
-      'endDate': Timestamp.fromDate(endDate),
-      'data': data,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'userId': userId,
-      'isPublic': isPublic,
-    };
-  }
-
-  /// Парсинг типа отчета
-  static ReportType _parseReportType(dynamic typeData) {
-    if (typeData == null) return ReportType.summary;
-    
-    final typeString = typeData.toString().toLowerCase();
-    switch (typeString) {
-      case 'financial':
-        return ReportType.financial;
-      case 'performance':
-        return ReportType.performance;
-      case 'user_activity':
-        return ReportType.userActivity;
-      case 'custom':
-        return ReportType.custom;
-      case 'summary':
-      default:
-        return ReportType.summary;
-    }
-  }
-
-  /// Парсинг периода аналитики
-  static AnalyticsPeriod _parseAnalyticsPeriod(dynamic periodData) {
-    if (periodData == null) return AnalyticsPeriod.month;
-    
-    final periodString = periodData.toString().toLowerCase();
-    switch (periodString) {
-      case 'day':
-        return AnalyticsPeriod.day;
-      case 'week':
-        return AnalyticsPeriod.week;
-      case 'quarter':
-        return AnalyticsPeriod.quarter;
-      case 'year':
-        return AnalyticsPeriod.year;
-      case 'month':
-      default:
-        return AnalyticsPeriod.month;
-    }
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Report && other.id == id;
-  }
-
-  @override
-  int get hashCode => id.hashCode;
-
-  @override
-  String toString() {
-    return 'Report(id: $id, title: $title, type: $type)';
-  }
-}
-
-/// Типы отчетов
-enum ReportType {
-  summary,        // Сводный отчет
-  financial,      // Финансовый отчет
-  performance,    // Отчет по производительности
-  userActivity,   // Активность пользователей
-  custom,         // Пользовательский отчет
-}
-
-/// Модель дашборда
-class Dashboard {
-  final String id;
-  final String title;
-  final String description;
-  final List<DashboardWidget> widgets;
-  final String? userId;
-  final bool isPublic;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
-  const Dashboard({
-    required this.id,
-    required this.title,
-    required this.description,
-    required this.widgets,
-    this.userId,
-    this.isPublic = false,
-    required this.createdAt,
-    required this.updatedAt,
-  });
-
-  /// Создать из документа Firestore
-  factory Dashboard.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
-    return Dashboard(
-      id: doc.id,
-      title: data['title'] ?? '',
-      description: data['description'] ?? '',
-      widgets: (data['widgets'] as List<dynamic>?)
-          ?.map((w) => DashboardWidget.fromMap(w as Map<String, dynamic>))
-          .toList() ?? [],
-      userId: data['userId'],
-      isPublic: data['isPublic'] ?? false,
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-    );
-  }
-
-  /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'title': title,
-      'description': description,
-      'widgets': widgets.map((w) => w.toMap()).toList(),
-      'userId': userId,
-      'isPublic': isPublic,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-    };
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Dashboard && other.id == id;
-  }
-
-  @override
-  int get hashCode => id.hashCode;
-
-  @override
-  String toString() {
-    return 'Dashboard(id: $id, title: $title, widgets: ${widgets.length})';
-  }
-}
-
-/// Виджет дашборда
-class DashboardWidget {
-  final String id;
-  final String title;
-  final WidgetType type;
-  final Map<String, dynamic> config;
-  final int position;
-  final int size;
-
-  const DashboardWidget({
-    required this.id,
-    required this.title,
-    required this.type,
-    required this.config,
-    required this.position,
-    this.size = 1,
-  });
-
-  /// Создать из Map
-  factory DashboardWidget.fromMap(Map<String, dynamic> map) {
-    return DashboardWidget(
-      id: map['id'] ?? '',
-      title: map['title'] ?? '',
-      type: _parseWidgetType(map['type']),
-      config: map['config'] ?? {},
-      position: map['position'] ?? 0,
-      size: map['size'] ?? 1,
-    );
-  }
-
-  /// Преобразовать в Map
   Map<String, dynamic> toMap() {
     return {
       'id': id,
-      'title': title,
+      'userId': userId,
       'type': type.name,
-      'config': config,
-      'position': position,
-      'size': size,
+      'date': Timestamp.fromDate(date),
+      'amount': amount,
+      'category': category,
+      'description': description,
+      'metadata': metadata,
     };
   }
 
-  /// Парсинг типа виджета
-  static WidgetType _parseWidgetType(dynamic typeData) {
-    if (typeData == null) return WidgetType.metric;
+  Analytics copyWith({
+    String? id,
+    String? userId,
+    AnalyticsType? type,
+    DateTime? date,
+    double? amount,
+    String? category,
+    String? description,
+    Map<String, dynamic>? metadata,
+  }) {
+    return Analytics(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      type: type ?? this.type,
+      date: date ?? this.date,
+      amount: amount ?? this.amount,
+      category: category ?? this.category,
+      description: description ?? this.description,
+      metadata: metadata ?? this.metadata,
+    );
+  }
+}
+
+/// Тип аналитики
+enum AnalyticsType {
+  income,    // Доход
+  expense,   // Расход
+}
+
+/// Статистика доходов и расходов
+class IncomeExpenseStats {
+  final double totalIncome;
+  final double totalExpense;
+  final double netIncome;
+  final int transactionCount;
+  final DateTime periodStart;
+  final DateTime periodEnd;
+  final Map<String, double> incomeByCategory;
+  final Map<String, double> expenseByCategory;
+  final List<MonthlyData> monthlyData;
+
+  const IncomeExpenseStats({
+    required this.totalIncome,
+    required this.totalExpense,
+    required this.netIncome,
+    required this.transactionCount,
+    required this.periodStart,
+    required this.periodEnd,
+    required this.incomeByCategory,
+    required this.expenseByCategory,
+    required this.monthlyData,
+  });
+
+  factory IncomeExpenseStats.empty() {
+    return IncomeExpenseStats(
+      totalIncome: 0.0,
+      totalExpense: 0.0,
+      netIncome: 0.0,
+      transactionCount: 0,
+      periodStart: DateTime.now(),
+      periodEnd: DateTime.now(),
+      incomeByCategory: {},
+      expenseByCategory: {},
+      monthlyData: [],
+    );
+  }
+
+  /// Получить процент роста доходов
+  double get incomeGrowthPercentage {
+    if (monthlyData.length < 2) return 0.0;
     
-    final typeString = typeData.toString().toLowerCase();
-    switch (typeString) {
-      case 'chart':
-        return WidgetType.chart;
-      case 'table':
-        return WidgetType.table;
-      case 'kpi':
-        return WidgetType.kpi;
-      case 'metric':
-      default:
-        return WidgetType.metric;
+    final currentMonth = monthlyData.last;
+    final previousMonth = monthlyData[monthlyData.length - 2];
+    
+    if (previousMonth.income == 0) return 0.0;
+    
+    return ((currentMonth.income - previousMonth.income) / previousMonth.income) * 100;
+  }
+
+  /// Получить процент роста расходов
+  double get expenseGrowthPercentage {
+    if (monthlyData.length < 2) return 0.0;
+    
+    final currentMonth = monthlyData.last;
+    final previousMonth = monthlyData[monthlyData.length - 2];
+    
+    if (previousMonth.expense == 0) return 0.0;
+    
+    return ((currentMonth.expense - previousMonth.expense) / previousMonth.expense) * 100;
+  }
+}
+
+/// Данные за месяц
+class MonthlyData {
+  final DateTime month;
+  final double income;
+  final double expense;
+  final double netIncome;
+  final int transactionCount;
+
+  const MonthlyData({
+    required this.month,
+    required this.income,
+    required this.expense,
+    required this.netIncome,
+    required this.transactionCount,
+  });
+
+  factory MonthlyData.fromMap(Map<String, dynamic> map) {
+    return MonthlyData(
+      month: (map['month'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      income: (map['income'] ?? 0.0).toDouble(),
+      expense: (map['expense'] ?? 0.0).toDouble(),
+      netIncome: (map['netIncome'] ?? 0.0).toDouble(),
+      transactionCount: map['transactionCount'] ?? 0,
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'month': Timestamp.fromDate(month),
+      'income': income,
+      'expense': expense,
+      'netIncome': netIncome,
+      'transactionCount': transactionCount,
+    };
+  }
+}
+
+/// Данные для графика
+class ChartData {
+  final String label;
+  final double value;
+  final Color? color;
+  final String? description;
+
+  const ChartData({
+    required this.label,
+    required this.value,
+    this.color,
+    this.description,
+  });
+}
+
+/// Период для аналитики
+enum AnalyticsPeriod {
+  week,      // Неделя
+  month,     // Месяц
+  quarter,   // Квартал
+  year,      // Год
+  custom,    // Пользовательский
+}
+
+/// Фильтр для аналитики
+class AnalyticsFilter {
+  final AnalyticsPeriod period;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final AnalyticsType? type;
+  final String? category;
+  final List<String>? categories;
+
+  const AnalyticsFilter({
+    this.period = AnalyticsPeriod.month,
+    this.startDate,
+    this.endDate,
+    this.type,
+    this.category,
+    this.categories,
+  });
+
+  AnalyticsFilter copyWith({
+    AnalyticsPeriod? period,
+    DateTime? startDate,
+    DateTime? endDate,
+    AnalyticsType? type,
+    String? category,
+    List<String>? categories,
+  }) {
+    return AnalyticsFilter(
+      period: period ?? this.period,
+      startDate: startDate ?? this.startDate,
+      endDate: endDate ?? this.endDate,
+      type: type ?? this.type,
+      category: category ?? this.category,
+      categories: categories ?? this.categories,
+    );
+  }
+
+  /// Получить даты для периода
+  (DateTime, DateTime) getDateRange() {
+    final now = DateTime.now();
+    
+    switch (period) {
+      case AnalyticsPeriod.week:
+        final weekStart = now.subtract(Duration(days: now.weekday - 1));
+        return (weekStart, now);
+        
+      case AnalyticsPeriod.month:
+        final monthStart = DateTime(now.year, now.month, 1);
+        return (monthStart, now);
+        
+      case AnalyticsPeriod.quarter:
+        final quarter = ((now.month - 1) / 3).floor();
+        final quarterStart = DateTime(now.year, quarter * 3 + 1, 1);
+        return (quarterStart, now);
+        
+      case AnalyticsPeriod.year:
+        final yearStart = DateTime(now.year, 1, 1);
+        return (yearStart, now);
+        
+      case AnalyticsPeriod.custom:
+        return (startDate ?? now, endDate ?? now);
     }
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is DashboardWidget && other.id == id;
-  }
-
-  @override
-  int get hashCode => id.hashCode;
-
-  @override
-  String toString() {
-    return 'DashboardWidget(id: $id, title: $title, type: $type)';
-  }
 }
 
-/// Типы виджетов
-enum WidgetType {
-  metric,  // Метрика
-  chart,   // График
-  table,   // Таблица
-  kpi,     // KPI
+/// Категории доходов
+class IncomeCategories {
+  static const List<String> categories = [
+    'Услуги',
+    'Консультации',
+    'Обучение',
+    'Продажи',
+    'Партнерство',
+    'Другое',
+  ];
+
+  static const Map<String, String> categoryIcons = {
+    'Услуги': '🛠️',
+    'Консультации': '💬',
+    'Обучение': '📚',
+    'Продажи': '💰',
+    'Партнерство': '🤝',
+    'Другое': '📊',
+  };
+
+  static const Map<String, Color> categoryColors = {
+    'Услуги': Color(0xFF4CAF50),
+    'Консультации': Color(0xFF2196F3),
+    'Обучение': Color(0xFF9C27B0),
+    'Продажи': Color(0xFFFF9800),
+    'Партнерство': Color(0xFFE91E63),
+    'Другое': Color(0xFF607D8B),
+  };
 }
 
-/// Статистика по периодам
-class PeriodStatistics {
-  final AnalyticsPeriod period;
-  final DateTime startDate;
-  final DateTime endDate;
-  final Map<String, double> metrics;
-  final List<Metric> detailedMetrics;
+/// Категории расходов
+class ExpenseCategories {
+  static const List<String> categories = [
+    'Реклама',
+    'Инструменты',
+    'Обучение',
+    'Транспорт',
+    'Канцелярия',
+    'Другое',
+  ];
 
-  const PeriodStatistics({
-    required this.period,
-    required this.startDate,
-    required this.endDate,
-    required this.metrics,
-    required this.detailedMetrics,
-  });
+  static const Map<String, String> categoryIcons = {
+    'Реклама': '📢',
+    'Инструменты': '🔧',
+    'Обучение': '📖',
+    'Транспорт': '🚗',
+    'Канцелярия': '📝',
+    'Другое': '📊',
+  };
 
-  /// Получить метрику по имени
-  double getMetric(String name) {
-    return metrics[name] ?? 0.0;
-  }
-
-  /// Получить процентное изменение по сравнению с предыдущим периодом
-  double getPercentageChange(String metricName, PeriodStatistics? previousPeriod) {
-    if (previousPeriod == null) return 0.0;
-    
-    final currentValue = getMetric(metricName);
-    final previousValue = previousPeriod.getMetric(metricName);
-    
-    if (previousValue == 0) return currentValue > 0 ? 100.0 : 0.0;
-    
-    return ((currentValue - previousValue) / previousValue) * 100;
-  }
+  static const Map<String, Color> categoryColors = {
+    'Реклама': Color(0xFFF44336),
+    'Инструменты': Color(0xFF795548),
+    'Обучение': Color(0xFF3F51B5),
+    'Транспорт': Color(0xFF009688),
+    'Канцелярия': Color(0xFFFF5722),
+    'Другое': Color(0xFF607D8B),
+  };
 }
 
-/// KPI (Ключевые показатели эффективности)
-class KPI {
+/// Цели и бюджеты
+class BudgetGoal {
+  final String id;
+  final String userId;
   final String name;
-  final double value;
-  final String unit;
-  final double target;
-  final double previousValue;
-  final String description;
+  final double targetAmount;
+  final double currentAmount;
+  final DateTime targetDate;
+  final BudgetType type;
+  final String? description;
+  final bool isCompleted;
+  final DateTime createdAt;
 
-  const KPI({
+  const BudgetGoal({
+    required this.id,
+    required this.userId,
     required this.name,
-    required this.value,
-    required this.unit,
-    required this.target,
-    required this.previousValue,
-    required this.description,
+    required this.targetAmount,
+    required this.currentAmount,
+    required this.targetDate,
+    required this.type,
+    this.description,
+    this.isCompleted = false,
+    required this.createdAt,
   });
+
+  factory BudgetGoal.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    
+    return BudgetGoal(
+      id: doc.id,
+      userId: data['userId'] ?? '',
+      name: data['name'] ?? '',
+      targetAmount: (data['targetAmount'] ?? 0.0).toDouble(),
+      currentAmount: (data['currentAmount'] ?? 0.0).toDouble(),
+      targetDate: (data['targetDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      type: BudgetType.values.firstWhere(
+        (t) => t.name == data['type'],
+        orElse: () => BudgetType.income,
+      ),
+      description: data['description'],
+      isCompleted: data['isCompleted'] ?? false,
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'userId': userId,
+      'name': name,
+      'targetAmount': targetAmount,
+      'currentAmount': currentAmount,
+      'targetDate': Timestamp.fromDate(targetDate),
+      'type': type.name,
+      'description': description,
+      'isCompleted': isCompleted,
+      'createdAt': Timestamp.fromDate(createdAt),
+    };
+  }
 
   /// Получить процент выполнения цели
-  double get targetAchievement {
-    if (target == 0) return 0.0;
-    return (value / target) * 100;
-  }
-
-  /// Получить процентное изменение
-  double get percentageChange {
-    if (previousValue == 0) return value > 0 ? 100.0 : 0.0;
-    return ((value - previousValue) / previousValue) * 100;
+  double get progressPercentage {
+    if (targetAmount == 0) return 0.0;
+    return (currentAmount / targetAmount) * 100;
   }
 
   /// Проверить, достигнута ли цель
-  bool get isTargetAchieved => value >= target;
+  bool get isAchieved => currentAmount >= targetAmount;
 
-  /// Получить статус KPI
-  KPIStatus get status {
-    if (isTargetAchieved) return KPIStatus.excellent;
-    if (targetAchievement >= 80) return KPIStatus.good;
-    if (targetAchievement >= 60) return KPIStatus.average;
-    return KPIStatus.poor;
+  /// Получить оставшуюся сумму
+  double get remainingAmount => targetAmount - currentAmount;
+}
+
+/// Тип бюджета
+enum BudgetType {
+  income,    // Цель по доходам
+  expense,   // Лимит расходов
+  savings,   // Накопления
+}
+
+/// Отчет по аналитике
+class AnalyticsReport {
+  final String id;
+  final String userId;
+  final String title;
+  final AnalyticsPeriod period;
+  final DateTime generatedAt;
+  final IncomeExpenseStats stats;
+  final List<ChartData> chartData;
+  final String? notes;
+
+  const AnalyticsReport({
+    required this.id,
+    required this.userId,
+    required this.title,
+    required this.period,
+    required this.generatedAt,
+    required this.stats,
+    required this.chartData,
+    this.notes,
+  });
+
+  factory AnalyticsReport.fromMap(Map<String, dynamic> map) {
+    return AnalyticsReport(
+      id: map['id'] ?? '',
+      userId: map['userId'] ?? '',
+      title: map['title'] ?? '',
+      period: AnalyticsPeriod.values.firstWhere(
+        (p) => p.name == map['period'],
+        orElse: () => AnalyticsPeriod.month,
+      ),
+      generatedAt: (map['generatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      stats: IncomeExpenseStats.fromMap(map['stats'] ?? {}),
+      chartData: (map['chartData'] as List<dynamic>?)
+          ?.map((e) => ChartData.fromMap(e))
+          .toList() ?? [],
+      notes: map['notes'],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'userId': userId,
+      'title': title,
+      'period': period.name,
+      'generatedAt': Timestamp.fromDate(generatedAt),
+      'stats': stats.toMap(),
+      'chartData': chartData.map((e) => e.toMap()).toList(),
+      'notes': notes,
+    };
   }
 }
 
-/// Статусы KPI
-enum KPIStatus {
-  excellent,  // Отлично
-  good,       // Хорошо
-  average,    // Средне
-  poor,       // Плохо
+// Расширения для сериализации
+extension IncomeExpenseStatsExtension on IncomeExpenseStats {
+  Map<String, dynamic> toMap() {
+    return {
+      'totalIncome': totalIncome,
+      'totalExpense': totalExpense,
+      'netIncome': netIncome,
+      'transactionCount': transactionCount,
+      'periodStart': Timestamp.fromDate(periodStart),
+      'periodEnd': Timestamp.fromDate(periodEnd),
+      'incomeByCategory': incomeByCategory,
+      'expenseByCategory': expenseByCategory,
+      'monthlyData': monthlyData.map((e) => e.toMap()).toList(),
+    };
+  }
+
+  factory IncomeExpenseStats.fromMap(Map<String, dynamic> map) {
+    return IncomeExpenseStats(
+      totalIncome: (map['totalIncome'] ?? 0.0).toDouble(),
+      totalExpense: (map['totalExpense'] ?? 0.0).toDouble(),
+      netIncome: (map['netIncome'] ?? 0.0).toDouble(),
+      transactionCount: map['transactionCount'] ?? 0,
+      periodStart: (map['periodStart'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      periodEnd: (map['periodEnd'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      incomeByCategory: Map<String, double>.from(map['incomeByCategory'] ?? {}),
+      expenseByCategory: Map<String, double>.from(map['expenseByCategory'] ?? {}),
+      monthlyData: (map['monthlyData'] as List<dynamic>?)
+          ?.map((e) => MonthlyData.fromMap(e))
+          .toList() ?? [],
+    );
+  }
+}
+
+extension ChartDataExtension on ChartData {
+  Map<String, dynamic> toMap() {
+    return {
+      'label': label,
+      'value': value,
+      'color': color?.value,
+      'description': description,
+    };
+  }
+
+  factory ChartData.fromMap(Map<String, dynamic> map) {
+    return ChartData(
+      label: map['label'] ?? '',
+      value: (map['value'] ?? 0.0).toDouble(),
+      color: map['color'] != null ? Color(map['color']) : null,
+      description: map['description'],
+    );
+  }
 }
