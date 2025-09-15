@@ -563,39 +563,39 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
         try {
           final eventService = ref.read(eventServiceProvider);
           final updatedEvent = widget.event!.copyWith(
-            title: _titleController.text.trim(),
-            description: _descriptionController.text.trim(),
+        title: _titleController.text.trim(),
+        description: _descriptionController.text.trim(),
             date: _eventDate,
             endDate: _endDate,
-            location: _locationController.text.trim(),
+        location: _locationController.text.trim(),
             price: _price,
             category: _category,
             maxParticipants: _maxParticipants,
             contactInfo: _contactInfoController.text.trim().isEmpty ? null : _contactInfoController.text.trim(),
             requirements: _requirementsController.text.trim().isEmpty ? null : _requirementsController.text.trim(),
             isPublic: _isPublic,
-            updatedAt: DateTime.now(),
-          );
+        updatedAt: DateTime.now(),
+      );
 
           await eventService.updateEvent(widget.event!.id, updatedEvent);
           
           if (context.mounted) {
-            Navigator.pop(context, true);
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
+        Navigator.pop(context, true);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
                 content: Text('Мероприятие обновлено'),
                 backgroundColor: Colors.green,
-              ),
-            );
-          }
-        } catch (e) {
+          ),
+        );
+      }
+    } catch (e) {
           if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
                 content: Text('Ошибка обновления: $e'),
-                backgroundColor: Colors.red,
-              ),
-            );
+          backgroundColor: Colors.red,
+        ),
+      );
           }
         }
       } else {

@@ -6,6 +6,7 @@ import '../providers/event_providers.dart';
 import '../models/event.dart';
 import '../models/user.dart';
 import 'create_event_screen.dart';
+import 'event_detail_screen.dart';
 
 class MyEventsScreen extends ConsumerWidget {
   const MyEventsScreen({super.key});
@@ -152,14 +153,22 @@ class MyEventsScreen extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.more_vert),
-                          onPressed: () {
-                            _showEventMenu(context, ref, event);
-                          },
+                    trailing: IconButton(
+                      icon: const Icon(Icons.more_vert),
+                      onPressed: () {
+                        _showEventMenu(context, ref, event);
+                      },
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EventDetailScreen(event: event),
                         ),
-                      ),
-                    );
+                      );
+                    },
+                  ),
+                );
                   },
                 );
               },
@@ -275,14 +284,22 @@ class MyEventsScreen extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        trailing: IconButton(
-                          icon: const Icon(Icons.more_vert),
-                          onPressed: () {
-                            _showEventMenu(context, ref, event);
-                          },
+                    trailing: IconButton(
+                      icon: const Icon(Icons.more_vert),
+                      onPressed: () {
+                        _showEventMenu(context, ref, event);
+                      },
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EventDetailScreen(event: event),
                         ),
-                      ),
-                    );
+                      );
+                    },
+                  ),
+                );
                   },
                 );
               },
@@ -331,9 +348,11 @@ class MyEventsScreen extends ConsumerWidget {
             title: const Text("Просмотреть"),
             onTap: () {
               Navigator.pop(context);
-              // TODO: Переход к детальному просмотру события
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Просмотр мероприятия")),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => EventDetailScreen(event: event),
+                ),
               );
             },
           ),
@@ -342,9 +361,11 @@ class MyEventsScreen extends ConsumerWidget {
             title: const Text("Редактировать"),
             onTap: () {
               Navigator.pop(context);
-              // TODO: Переход к редактированию события
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Редактирование мероприятия")),
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CreateEventScreen(event: event),
+                ),
               );
             },
           ),
