@@ -32,6 +32,9 @@ class FeatureFlags {
   // Гостевой режим
   static const bool guestModeEnabled = false;
 
+  // VK интеграция
+  static const bool vkIntegrationEnabled = false;
+
   // Социальные функции
   static const bool socialLoginEnabled = true;
   static const bool vkLoginEnabled = false;
@@ -75,6 +78,8 @@ class FeatureFlags {
         return ideasEnabled;
       case 'guest_mode':
         return guestModeEnabled;
+      case 'vk_integration':
+        return vkIntegrationEnabled;
       case 'social_login':
         return socialLoginEnabled;
       case 'vk_login':
@@ -108,6 +113,7 @@ class FeatureFlags {
     if (subscriptionsEnabled) features.add('subscriptions');
     if (ideasEnabled) features.add('ideas');
     if (guestModeEnabled) features.add('guest_mode');
+    if (vkIntegrationEnabled) features.add('vk_integration');
     if (socialLoginEnabled) features.add('social_login');
     if (vkLoginEnabled) features.add('vk_login');
     if (debugMode) features.add('debug');
@@ -135,6 +141,7 @@ class FeatureFlags {
       'subscriptions': subscriptionsEnabled,
       'ideas': ideasEnabled,
       'guest_mode': guestModeEnabled,
+      'vk_integration': vkIntegrationEnabled,
       'social_login': socialLoginEnabled,
       'vk_login': vkLoginEnabled,
       'debug': debugMode,
