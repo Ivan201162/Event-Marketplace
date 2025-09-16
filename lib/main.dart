@@ -12,7 +12,7 @@ import 'screens/home_screen.dart';
 import 'screens/search_screen.dart';
 import 'screens/my_events_screen.dart';
 import 'screens/chats_screen.dart';
-import 'screens/profile_screen.dart';
+import 'screens/profile_page.dart';
 import 'screens/my_bookings_screen.dart';
 import 'screens/booking_requests_screen.dart';
 import 'screens/auth_screen.dart';
@@ -145,7 +145,7 @@ class _MainAppState extends ConsumerState<MainApp> {
       isSpecialist
           ? const BookingRequestsScreen()
           : const MyBookingsScreen(),
-      const ProfileScreen(),
+      const ProfilePage(),
       // Добавляем админ-панель только в debug режиме
       if (kDebugMode) const AdminPanelScreen(),
       // Добавляем экран отладки только в debug режиме

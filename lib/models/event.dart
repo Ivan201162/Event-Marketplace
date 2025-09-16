@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 /// Модель события/мероприятия
 class Event {
@@ -343,55 +344,3 @@ enum EventStatus {
   completed,  // Завершено
 }
 
-/// Фильтр для событий
-class EventFilter {
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final List<EventCategory>? categories;
-  final List<EventStatus>? statuses;
-  final double? minPrice;
-  final double? maxPrice;
-  final String? location;
-  final String? searchQuery;
-  final bool? isPublic;
-  final String? organizerId;
-
-  const EventFilter({
-    this.startDate,
-    this.endDate,
-    this.categories,
-    this.statuses,
-    this.minPrice,
-    this.maxPrice,
-    this.location,
-    this.searchQuery,
-    this.isPublic,
-    this.organizerId,
-  });
-
-  EventFilter copyWith({
-    DateTime? startDate,
-    DateTime? endDate,
-    List<EventCategory>? categories,
-    List<EventStatus>? statuses,
-    double? minPrice,
-    double? maxPrice,
-    String? location,
-    String? searchQuery,
-    bool? isPublic,
-    String? organizerId,
-  }) {
-    return EventFilter(
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
-      categories: categories ?? this.categories,
-      statuses: statuses ?? this.statuses,
-      minPrice: minPrice ?? this.minPrice,
-      maxPrice: maxPrice ?? this.maxPrice,
-      location: location ?? this.location,
-      searchQuery: searchQuery ?? this.searchQuery,
-      isPublic: isPublic ?? this.isPublic,
-      organizerId: organizerId ?? this.organizerId,
-    );
-  }
-}
