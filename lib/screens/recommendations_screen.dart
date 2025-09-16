@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/recommendation_providers.dart';
-import '../providers/auth_providers.dart';
-import '../models/recommendation.dart';
-import '../widgets/recommendation_widget.dart';
-import '../widgets/animated_page_transition.dart' as app_transitions;
+import '../services/recommendation_engine.dart';
+import '../models/user.dart';
 
 /// Экран рекомендаций
 class RecommendationsScreen extends ConsumerStatefulWidget {
@@ -16,562 +13,519 @@ class RecommendationsScreen extends ConsumerStatefulWidget {
 }
 
 class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late TabController _tabController;
+  final RecommendationEngine _recommendationEngine = RecommendationEngine();
+  final TextEditingController _searchController = TextEditingController();
+  List<Recommendation> _recommendations = [];
+  bool _isLoading = false;
+  String? _currentUserId;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 4, vsync: this);
+    _currentUserId = 'demo_user_id'; // TODO: Получить реальный ID пользователя
+    _loadRecommendations();
   }
 
   @override
   void dispose() {
     _tabController.dispose();
+    _searchController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = ref.watch(currentUserProvider);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text('Рекомендации'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        elevation: 0,
+        bottom: TabBar(
+          controller: _tabController,
+          isScrollable: true,
+          tabs: const [
+            Tab(text: 'Все', icon: Icon(Icons.recommend)),
+            Tab(text: 'Специалисты', icon: Icon(Icons.person)),
+            Tab(text: 'События', icon: Icon(Icons.event)),
+            Tab(text: 'Идеи', icon: Icon(Icons.lightbulb)),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: () => _refreshRecommendations(),
-            tooltip: 'Обновить рекомендации',
+            onPressed: _refreshRecommendations,
           ),
         ],
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Для вас', icon: Icon(Icons.person)),
-            Tab(text: 'Популярные', icon: Icon(Icons.trending_up)),
-            Tab(text: 'Рядом', icon: Icon(Icons.location_on)),
-            Tab(text: 'Новые', icon: Icon(Icons.new_releases)),
-          ],
-        ),
       ),
-      body: currentUser.when(
-        data: (user) {
-          if (user == null) {
-            return const Center(child: Text('Пользователь не найден'));
-          }
-
-          return TabBarView(
-            controller: _tabController,
-            children: [
-              _buildPersonalRecommendationsTab(user.id),
-              _buildPopularRecommendationsTab(user.id),
-              _buildNearbyRecommendationsTab(user.id),
-              _buildNewRecommendationsTab(user.id),
-            ],
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Text('Ошибка загрузки: $error'),
-        ),
-      ),
-    );
-  }
-
-  /// Вкладка персональных рекомендаций
-  Widget _buildPersonalRecommendationsTab(String userId) {
-    return app_transitions.AnimatedList(
-      children: [
-        // Статистика рекомендаций
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: _buildRecommendationStats(userId),
-        ),
-
-        // Персональные рекомендации
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-          child: RecommendationCollectionWidget(
-            userId: userId,
-            title: 'Рекомендации для вас',
-            showTitle: true,
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// Вкладка популярных рекомендаций
-  Widget _buildPopularRecommendationsTab(String userId) {
-    return app_transitions.AnimatedList(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: RecommendationCollectionWidget(
-            userId: userId,
-            type: RecommendationType.popularInCategory,
-            title: 'Популярные специалисты',
-            showTitle: true,
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// Вкладка рекомендаций рядом
-  Widget _buildNearbyRecommendationsTab(String userId) {
-    return app_transitions.AnimatedList(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: RecommendationCollectionWidget(
-            userId: userId,
-            type: RecommendationType.nearby,
-            title: 'Специалисты рядом с вами',
-            showTitle: true,
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// Вкладка новых рекомендаций
-  Widget _buildNewRecommendationsTab(String userId) {
-    return app_transitions.AnimatedList(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: RecommendationCollectionWidget(
-            userId: userId,
-            type: RecommendationType.trending,
-            title: 'Новые и трендовые',
-            showTitle: true,
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// Статистика рекомендаций
-  Widget _buildRecommendationStats(String userId) {
-    final statsAsync = ref.watch(recommendationStatsProvider(userId));
-
-    return statsAsync.when(
-      data: (stats) => AnimatedCard(
-        child: Column(
-          children: [
-            Text(
-              'Ваши рекомендации',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : TabBarView(
+              controller: _tabController,
               children: [
-                _buildStatItem(
-                  context,
-                  'Всего',
-                  stats.totalRecommendations.toString(),
-                  Icons.recommend,
-                ),
-                _buildStatItem(
-                  context,
-                  'Средняя оценка',
-                  '${(stats.averageScore * 100).toInt()}%',
-                  Icons.star,
-                ),
-                _buildStatItem(
-                  context,
-                  'Типов',
-                  stats.byType.length.toString(),
-                  Icons.category,
-                ),
+                _buildAllRecommendations(),
+                _buildRecommendationsByType(RecommendationType.specialist),
+                _buildRecommendationsByType(RecommendationType.event),
+                _buildRecommendationsByType(RecommendationType.idea),
               ],
             ),
-            if (stats.topTypes.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              Text(
-                'Популярные типы:',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-              const SizedBox(height: 8),
-              Wrap(
-                spacing: 8,
-                children: stats.topTypes.take(3).map((type) {
-                  final typeInfo = type.info;
-                  return Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: _parseColor(typeInfo.color).withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(16),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(typeInfo.icon),
-                        const SizedBox(width: 4),
-                        Text(
-                          typeInfo.title,
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: _parseColor(typeInfo.color),
-                                    fontWeight: FontWeight.w500,
-                                  ),
+    );
+  }
+
+  Widget _buildAllRecommendations() {
+    if (_recommendations.isEmpty) {
+      return _buildEmptyState();
+    }
+
+    return RefreshIndicator(
+      onRefresh: _refreshRecommendations,
+      child: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: _recommendations.length,
+        itemBuilder: (context, index) {
+          final recommendation = _recommendations[index];
+          return _buildRecommendationCard(recommendation);
+        },
+      ),
+    );
+  }
+
+  Widget _buildRecommendationsByType(RecommendationType type) {
+    final filteredRecommendations =
+        _recommendations.where((rec) => rec.type == type).toList();
+
+    if (filteredRecommendations.isEmpty) {
+      return _buildEmptyState(type: type);
+    }
+
+    return RefreshIndicator(
+      onRefresh: _refreshRecommendations,
+      child: ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: filteredRecommendations.length,
+        itemBuilder: (context, index) {
+          final recommendation = filteredRecommendations[index];
+          return _buildRecommendationCard(recommendation);
+        },
+      ),
+    );
+  }
+
+  Widget _buildRecommendationCard(Recommendation recommendation) {
+    return Card(
+      margin: const EdgeInsets.only(bottom: 16),
+      child: InkWell(
+        onTap: () => _handleRecommendationTap(recommendation),
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Изображение
+              Container(
+                width: 80,
+                height: 80,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: Colors.grey[200],
+                ),
+                child: recommendation.imageUrl != null
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(8),
+                        child: Image.network(
+                          recommendation.imageUrl!,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            return _buildDefaultIcon(recommendation.type);
+                          },
                         ),
+                      )
+                    : _buildDefaultIcon(recommendation.type),
+              ),
+              const SizedBox(width: 16),
+              // Контент
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      children: [
+                        _buildTypeChip(recommendation.type),
+                        const Spacer(),
+                        _buildScoreIndicator(recommendation.score),
                       ],
                     ),
-                  );
-                }).toList(),
+                    const SizedBox(height: 8),
+                    Text(
+                      recommendation.title,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      recommendation.description,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+                    if (recommendation.metadata.isNotEmpty)
+                      _buildMetadata(recommendation.metadata),
+                  ],
+                ),
               ),
             ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDefaultIcon(RecommendationType type) {
+    IconData iconData;
+    Color color;
+
+    switch (type) {
+      case RecommendationType.specialist:
+        iconData = Icons.person;
+        color = Colors.blue;
+        break;
+      case RecommendationType.event:
+        iconData = Icons.event;
+        color = Colors.green;
+        break;
+      case RecommendationType.idea:
+        iconData = Icons.lightbulb;
+        color = Colors.orange;
+        break;
+      case RecommendationType.category:
+        iconData = Icons.category;
+        color = Colors.purple;
+        break;
+    }
+
+    return Icon(iconData, size: 40, color: color);
+  }
+
+  Widget _buildTypeChip(RecommendationType type) {
+    String label;
+    Color color;
+
+    switch (type) {
+      case RecommendationType.specialist:
+        label = 'Специалист';
+        color = Colors.blue;
+        break;
+      case RecommendationType.event:
+        label = 'Событие';
+        color = Colors.green;
+        break;
+      case RecommendationType.idea:
+        label = 'Идея';
+        color = Colors.orange;
+        break;
+      case RecommendationType.category:
+        label = 'Категория';
+        color = Colors.purple;
+        break;
+    }
+
+    return Chip(
+      label: Text(
+        label,
+        style: const TextStyle(fontSize: 12, color: Colors.white),
+      ),
+      backgroundColor: color,
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+    );
+  }
+
+  Widget _buildScoreIndicator(double score) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+      decoration: BoxDecoration(
+        color: _getScoreColor(score).withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: _getScoreColor(score)),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.star,
+            size: 16,
+            color: _getScoreColor(score),
+          ),
+          const SizedBox(width: 4),
+          Text(
+            '${(score * 100).toInt()}%',
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.bold,
+              color: _getScoreColor(score),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Color _getScoreColor(double score) {
+    if (score >= 0.8) return Colors.green;
+    if (score >= 0.6) return Colors.orange;
+    return Colors.red;
+  }
+
+  Widget _buildMetadata(Map<String, dynamic> metadata) {
+    return Wrap(
+      spacing: 8,
+      runSpacing: 4,
+      children: metadata.entries.map((entry) {
+        return Chip(
+          label: Text(
+            '${entry.key}: ${entry.value}',
+            style: const TextStyle(fontSize: 10),
+          ),
+          backgroundColor: Colors.grey[100],
+          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        );
+      }).toList(),
+    );
+  }
+
+  Widget _buildEmptyState({RecommendationType? type}) {
+    String message;
+    IconData icon;
+
+    if (type != null) {
+      switch (type) {
+        case RecommendationType.specialist:
+          message = 'Нет рекомендаций специалистов';
+          icon = Icons.person_off;
+          break;
+        case RecommendationType.event:
+          message = 'Нет рекомендаций событий';
+          icon = Icons.event_busy;
+          break;
+        case RecommendationType.idea:
+          message = 'Нет рекомендаций идей';
+          icon = Icons.lightbulb_off;
+          break;
+        case RecommendationType.category:
+          message = 'Нет рекомендаций категорий';
+          icon = Icons.category;
+          break;
+      }
+    } else {
+      message = 'Нет рекомендаций';
+      icon = Icons.recommend_off;
+    }
+
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(icon, size: 64, color: Colors.grey),
+          const SizedBox(height: 16),
+          Text(
+            message,
+            style: const TextStyle(fontSize: 18, color: Colors.grey),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: _refreshRecommendations,
+            child: const Text('Обновить'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleRecommendationTap(Recommendation recommendation) {
+    switch (recommendation.type) {
+      case RecommendationType.specialist:
+        _showSpecialistDetails(recommendation);
+        break;
+      case RecommendationType.event:
+        _showEventDetails(recommendation);
+        break;
+      case RecommendationType.idea:
+        _showIdeaDetails(recommendation);
+        break;
+      case RecommendationType.category:
+        _showCategoryDetails(recommendation);
+        break;
+    }
+  }
+
+  void _showSpecialistDetails(Recommendation recommendation) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(recommendation.title),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(recommendation.description),
+            const SizedBox(height: 16),
+            if (recommendation.metadata['rating'] != null)
+              Text('Рейтинг: ${recommendation.metadata['rating']}'),
+            if (recommendation.metadata['orderCount'] != null)
+              Text('Заказов: ${recommendation.metadata['orderCount']}'),
           ],
         ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Закрыть'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              // TODO: Перейти к профилю специалиста
+            },
+            child: const Text('Посмотреть профиль'),
+          ),
+        ],
       ),
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => const SizedBox.shrink(),
     );
   }
 
-  /// Элемент статистики
-  Widget _buildStatItem(
-      BuildContext context, String label, String value, IconData icon) {
-    return Column(
-      children: [
-        Icon(
-          icon,
-          color: Theme.of(context).colorScheme.primary,
-          size: 24,
+  void _showEventDetails(Recommendation recommendation) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(recommendation.title),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(recommendation.description),
+            const SizedBox(height: 16),
+            if (recommendation.metadata['date'] != null)
+              Text('Дата: ${recommendation.metadata['date']}'),
+            if (recommendation.metadata['price'] != null)
+              Text('Цена: ${recommendation.metadata['price']} ₽'),
+            if (recommendation.metadata['location'] != null)
+              Text('Место: ${recommendation.metadata['location']}'),
+          ],
         ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-        ),
-        Text(
-          label,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-              ),
-        ),
-      ],
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Закрыть'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              // TODO: Перейти к событию
+            },
+            child: const Text('Посмотреть событие'),
+          ),
+        ],
+      ),
     );
   }
 
-  /// Обновить рекомендации
-  void _refreshRecommendations() {
-    final currentUser = ref.read(currentUserProvider);
-    currentUser.whenData((user) {
-      if (user != null) {
-        ref.read(recommendationManagerProvider).refreshRecommendations(user.id);
+  void _showIdeaDetails(Recommendation recommendation) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(recommendation.title),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(recommendation.description),
+            const SizedBox(height: 16),
+            if (recommendation.metadata['authorName'] != null)
+              Text('Автор: ${recommendation.metadata['authorName']}'),
+            if (recommendation.metadata['likesCount'] != null)
+              Text('Лайков: ${recommendation.metadata['likesCount']}'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Закрыть'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              // TODO: Перейти к идее
+            },
+            child: const Text('Посмотреть идею'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showCategoryDetails(Recommendation recommendation) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(recommendation.title),
+        content: Text(recommendation.description),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Закрыть'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              // TODO: Перейти к категории
+            },
+            child: const Text('Посмотреть категорию'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _loadRecommendations() async {
+    if (_currentUserId == null) return;
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final params = RecommendationParams(
+        userId: _currentUserId!,
+        limit: 50,
+      );
+      final recommendations =
+          await _recommendationEngine.getRecommendations(params);
+
+      setState(() {
+        _recommendations = recommendations;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+
+      if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Рекомендации обновляются...')),
+          SnackBar(content: Text('Ошибка загрузки рекомендаций: $e')),
         );
       }
-    });
-  }
-
-  Color _parseColor(String colorString) {
-    try {
-      return Color(int.parse(colorString.replaceFirst('#', '0xFF')));
-    } catch (e) {
-      return Colors.grey;
     }
   }
-}
 
-/// Экран настроек рекомендаций
-class RecommendationSettingsScreen extends ConsumerWidget {
-  const RecommendationSettingsScreen({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Настройки рекомендаций'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        elevation: 0,
-      ),
-      body: AnimatedList(
-        children: [
-          // Настройки типов рекомендаций
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: _buildRecommendationTypesSettings(context),
-          ),
-
-          // Настройки фильтров
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: _buildFiltersSettings(context),
-          ),
-
-          // Действия
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-            child: _buildActions(context, ref),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Настройки типов рекомендаций
-  Widget _buildRecommendationTypesSettings(BuildContext context) {
-    return AnimatedCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Типы рекомендаций',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          const SizedBox(height: 16),
-          ...RecommendationType.values.map((type) {
-            final typeInfo = type.info;
-            return _buildRecommendationTypeSwitch(
-              context,
-              type,
-              typeInfo,
-            );
-          }).toList(),
-        ],
-      ),
-    );
-  }
-
-  /// Переключатель типа рекомендации
-  Widget _buildRecommendationTypeSwitch(
-    BuildContext context,
-    RecommendationType type,
-    RecommendationTypeInfo typeInfo,
-  ) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(8),
-            decoration: BoxDecoration(
-              color: _parseColor(typeInfo.color).withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              typeInfo.icon,
-              style: const TextStyle(fontSize: 20),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  typeInfo.title,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                ),
-                Text(
-                  typeInfo.description,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withOpacity(0.7),
-                      ),
-                ),
-              ],
-            ),
-          ),
-          Switch(
-            value: true, // Здесь будет реальное значение из настроек
-            onChanged: (value) {
-              // Здесь будет логика изменения настроек
-            },
-            activeColor: Theme.of(context).colorScheme.primary,
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Настройки фильтров
-  Widget _buildFiltersSettings(BuildContext context) {
-    return AnimatedCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'Фильтры',
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-          const SizedBox(height: 16),
-          _buildFilterItem(
-            context,
-            'Ценовой диапазон',
-            'От 1000 до 10000 ₽/ч',
-            Icons.attach_money,
-          ),
-          _buildFilterItem(
-            context,
-            'Рейтинг',
-            'От 4.0 звёзд',
-            Icons.star,
-          ),
-          _buildFilterItem(
-            context,
-            'Местоположение',
-            'В радиусе 50 км',
-            Icons.location_on,
-          ),
-          _buildFilterItem(
-            context,
-            'Доступность',
-            'Доступны сейчас',
-            Icons.schedule,
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Элемент фильтра
-  Widget _buildFilterItem(
-      BuildContext context, String title, String subtitle, IconData icon) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: ListTile(
-        leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
-        title: Text(title),
-        subtitle: Text(subtitle),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-        onTap: () {
-          // Здесь будет логика настройки фильтра
-        },
-      ),
-    );
-  }
-
-  /// Действия
-  Widget _buildActions(BuildContext context, WidgetRef ref) {
-    return AnimatedCard(
-      child: Column(
-        children: [
-          _buildActionButton(
-            context,
-            'Сбросить настройки',
-            'Вернуть настройки по умолчанию',
-            Icons.restore,
-            () => _resetSettings(context),
-          ),
-          _buildActionButton(
-            context,
-            'Очистить историю',
-            'Удалить историю просмотров',
-            Icons.clear_all,
-            () => _clearHistory(context, ref),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Кнопка действия
-  Widget _buildActionButton(
-    BuildContext context,
-    String title,
-    String subtitle,
-    IconData icon,
-    VoidCallback onTap,
-  ) {
-    return ListTile(
-      leading: Icon(icon, color: Theme.of(context).colorScheme.error),
-      title: Text(title),
-      subtitle: Text(subtitle),
-      trailing: const Icon(Icons.arrow_forward_ios, size: 16),
-      onTap: onTap,
-    );
-  }
-
-  /// Сбросить настройки
-  void _resetSettings(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Сбросить настройки'),
-        content: const Text(
-          'Вы уверены, что хотите сбросить все настройки рекомендаций?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Настройки сброшены')),
-              );
-            },
-            child: const Text('Сбросить'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Очистить историю
-  void _clearHistory(BuildContext context, WidgetRef ref) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Очистить историю'),
-        content: const Text(
-          'Вы уверены, что хотите удалить всю историю просмотров?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена'),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              ref
-                  .read(recommendationInteractionProvider.notifier)
-                  .clearInteractions();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('История очищена')),
-              );
-            },
-            child: const Text('Очистить'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Color _parseColor(String colorString) {
-    try {
-      return Color(int.parse(colorString.replaceFirst('#', '0xFF')));
-    } catch (e) {
-      return Colors.grey;
-    }
+  Future<void> _refreshRecommendations() async {
+    await _loadRecommendations();
   }
 }
