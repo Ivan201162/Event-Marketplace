@@ -26,6 +26,9 @@ class FeatureFlags {
   // Подписки
   static const bool subscriptionsEnabled = false;
 
+  // Идеи и коллекции
+  static const bool ideasEnabled = false;
+
   // Социальные функции
   static const bool socialLoginEnabled = true;
   static const bool vkLoginEnabled = false;
@@ -65,6 +68,8 @@ class FeatureFlags {
         return shareEnabled;
       case 'subscriptions':
         return subscriptionsEnabled;
+      case 'ideas':
+        return ideasEnabled;
       case 'social_login':
         return socialLoginEnabled;
       case 'vk_login':
@@ -96,6 +101,7 @@ class FeatureFlags {
     if (calendarSyncEnabled) features.add('calendar_sync');
     if (shareEnabled) features.add('share');
     if (subscriptionsEnabled) features.add('subscriptions');
+    if (ideasEnabled) features.add('ideas');
     if (socialLoginEnabled) features.add('social_login');
     if (vkLoginEnabled) features.add('vk_login');
     if (debugMode) features.add('debug');
@@ -121,6 +127,7 @@ class FeatureFlags {
       'calendar_sync': calendarSyncEnabled,
       'share': shareEnabled,
       'subscriptions': subscriptionsEnabled,
+      'ideas': ideasEnabled,
       'social_login': socialLoginEnabled,
       'vk_login': vkLoginEnabled,
       'debug': debugMode,
