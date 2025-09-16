@@ -29,6 +29,8 @@ class Booking {
   final String? organizerName;
   final String? customerId;
   final String? specialistId;
+  final DateTime? endDate;
+  final double? prepayment;
 
   const Booking({
     required this.id,
@@ -50,6 +52,8 @@ class Booking {
     this.organizerName,
     this.customerId,
     this.specialistId,
+    this.endDate,
+    this.prepayment,
   });
 
   /// Создать из документа Firestore
@@ -78,6 +82,8 @@ class Booking {
       organizerName: data['organizerName'],
       customerId: data['customerId'],
       specialistId: data['specialistId'],
+      endDate: data['endDate'] != null ? (data['endDate'] as Timestamp).toDate() : null,
+      prepayment: (data['prepayment'] as num?)?.toDouble(),
     );
   }
 
@@ -102,6 +108,8 @@ class Booking {
       'organizerName': organizerName,
       'customerId': customerId,
       'specialistId': specialistId,
+      'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
+      'prepayment': prepayment,
     };
   }
 
@@ -126,6 +134,8 @@ class Booking {
     String? organizerName,
     String? customerId,
     String? specialistId,
+    DateTime? endDate,
+    double? prepayment,
   }) {
     return Booking(
       id: id ?? this.id,
@@ -147,6 +157,8 @@ class Booking {
       organizerName: organizerName ?? this.organizerName,
       customerId: customerId ?? this.customerId,
       specialistId: specialistId ?? this.specialistId,
+      endDate: endDate ?? this.endDate,
+      prepayment: prepayment ?? this.prepayment,
     );
   }
 

@@ -1,34 +1,487 @@
 {
   "@@locale": "ru",
-  "settings": "Настройки",
-  "language": "Язык",
-  "notifications": "Уведомления",
-  "profile": "Профиль",
-  "events": "Мероприятия",
+  "appTitle": "Маркетплейс Событий",
+  "@appTitle": {
+    "description": "Название приложения"
+  },
+  
+  "welcome": "Добро пожаловать",
+  "@welcome": {
+    "description": "Приветственное сообщение"
+  },
+  
+  "login": "Войти",
+  "@login": {
+    "description": "Текст кнопки входа"
+  },
+  
+  "register": "Регистрация",
+  "@register": {
+    "description": "Текст кнопки регистрации"
+  },
+  
+  "email": "Электронная почта",
+  "@email": {
+    "description": "Метка поля электронной почты"
+  },
+  
+  "password": "Пароль",
+  "@password": {
+    "description": "Метка поля пароля"
+  },
+  
+  "confirmPassword": "Подтвердите пароль",
+  "@confirmPassword": {
+    "description": "Метка поля подтверждения пароля"
+  },
+  
+  "name": "Имя",
+  "@name": {
+    "description": "Метка поля имени"
+  },
+  
+  "phone": "Телефон",
+  "@phone": {
+    "description": "Метка поля телефона"
+  },
+  
+  "forgotPassword": "Забыли пароль?",
+  "@forgotPassword": {
+    "description": "Текст ссылки восстановления пароля"
+  },
+  
+  "dontHaveAccount": "Нет аккаунта?",
+  "@dontHaveAccount": {
+    "description": "Текст для пользователей без аккаунта"
+  },
+  
+  "alreadyHaveAccount": "Уже есть аккаунт?",
+  "@alreadyHaveAccount": {
+    "description": "Текст для пользователей с аккаунтом"
+  },
+  
+  "signInWithGoogle": "Войти через Google",
+  "@signInWithGoogle": {
+    "description": "Текст кнопки входа через Google"
+  },
+  
+  "signInWithVK": "Войти через ВКонтакте",
+  "@signInWithVK": {
+    "description": "Текст кнопки входа через ВКонтакте"
+  },
+  
+  "home": "Главная",
+  "@home": {
+    "description": "Метка вкладки главной"
+  },
+  
+  "events": "События",
+  "@events": {
+    "description": "Метка вкладки событий"
+  },
+  
   "bookings": "Бронирования",
-  "favorites": "Избранное",
-  "admin": "Админ-панель",
-  "logout": "Выйти",
-  "save": "Сохранить",
-  "cancel": "Отмена",
-  "edit": "Редактировать",
-  "delete": "Удалить",
-  "create": "Создать",
+  "@bookings": {
+    "description": "Метка вкладки бронирований"
+  },
+  
+  "profile": "Профиль",
+  "@profile": {
+    "description": "Метка вкладки профиля"
+  },
+  
+  "settings": "Настройки",
+  "@settings": {
+    "description": "Метка вкладки настроек"
+  },
+  
   "search": "Поиск",
+  "@search": {
+    "description": "Плейсхолдер поля поиска"
+  },
+  
+  "searchEvents": "Поиск событий...",
+  "@searchEvents": {
+    "description": "Плейсхолдер поиска событий"
+  },
+  
   "filter": "Фильтр",
+  "@filter": {
+    "description": "Текст кнопки фильтра"
+  },
+  
+  "sort": "Сортировка",
+  "@sort": {
+    "description": "Текст кнопки сортировки"
+  },
+  
   "date": "Дата",
+  "@date": {
+    "description": "Метка поля даты"
+  },
+  
+  "time": "Время",
+  "@time": {
+    "description": "Метка поля времени"
+  },
+  
+  "location": "Местоположение",
+  "@location": {
+    "description": "Метка поля местоположения"
+  },
+  
   "price": "Цена",
-  "location": "Место",
+  "@price": {
+    "description": "Метка поля цены"
+  },
+  
+  "free": "Бесплатно",
+  "@free": {
+    "description": "Метка бесплатной цены"
+  },
+  
   "description": "Описание",
-  "title": "Название",
+  "@description": {
+    "description": "Метка поля описания"
+  },
+  
   "category": "Категория",
-  "participants": "Участники",
+  "@category": {
+    "description": "Метка поля категории"
+  },
+  
+  "organizer": "Организатор",
+  "@organizer": {
+    "description": "Метка поля организатора"
+  },
+  
+  "capacity": "Вместимость",
+  "@capacity": {
+    "description": "Метка поля вместимости"
+  },
+  
+  "availableSpots": "Доступные места",
+  "@availableSpots": {
+    "description": "Метка доступных мест"
+  },
+  
+  "bookEvent": "Забронировать",
+  "@bookEvent": {
+    "description": "Текст кнопки бронирования события"
+  },
+  
+  "cancelBooking": "Отменить бронирование",
+  "@cancelBooking": {
+    "description": "Текст кнопки отмены бронирования"
+  },
+  
+  "editEvent": "Редактировать событие",
+  "@editEvent": {
+    "description": "Текст кнопки редактирования события"
+  },
+  
+  "deleteEvent": "Удалить событие",
+  "@deleteEvent": {
+    "description": "Текст кнопки удаления события"
+  },
+  
+  "createEvent": "Создать событие",
+  "@createEvent": {
+    "description": "Текст кнопки создания события"
+  },
+  
+  "myEvents": "Мои события",
+  "@myEvents": {
+    "description": "Метка вкладки моих событий"
+  },
+  
+  "favorites": "Избранное",
+  "@favorites": {
+    "description": "Метка вкладки избранного"
+  },
+  
+  "addToFavorites": "Добавить в избранное",
+  "@addToFavorites": {
+    "description": "Текст кнопки добавления в избранное"
+  },
+  
+  "removeFromFavorites": "Удалить из избранного",
+  "@removeFromFavorites": {
+    "description": "Текст кнопки удаления из избранного"
+  },
+  
+  "reviews": "Отзывы",
+  "@reviews": {
+    "description": "Метка вкладки отзывов"
+  },
+  
+  "writeReview": "Написать отзыв",
+  "@writeReview": {
+    "description": "Текст кнопки написания отзыва"
+  },
+  
   "rating": "Рейтинг",
-  "review": "Отзыв",
-  "book": "Забронировать",
-  "booked": "Забронировано",
-  "pending": "Ожидает подтверждения",
-  "confirmed": "Подтверждено",
-  "cancelled": "Отменено",
-  "completed": "Завершено"
+  "@rating": {
+    "description": "Метка поля рейтинга"
+  },
+  
+  "reviewTitle": "Заголовок отзыва",
+  "@reviewTitle": {
+    "description": "Метка поля заголовка отзыва"
+  },
+  
+  "reviewContent": "Содержимое отзыва",
+  "@reviewContent": {
+    "description": "Метка поля содержимого отзыва"
+  },
+  
+  "submitReview": "Отправить отзыв",
+  "@submitReview": {
+    "description": "Текст кнопки отправки отзыва"
+  },
+  
+  "notifications": "Уведомления",
+  "@notifications": {
+    "description": "Метка вкладки уведомлений"
+  },
+  
+  "enableNotifications": "Включить уведомления",
+  "@enableNotifications": {
+    "description": "Настройка включения уведомлений"
+  },
+  
+  "language": "Язык",
+  "@language": {
+    "description": "Настройка языка"
+  },
+  
+  "english": "English",
+  "@english": {
+    "description": "Опция английского языка"
+  },
+  
+  "russian": "Русский",
+  "@russian": {
+    "description": "Опция русского языка"
+  },
+  
+  "theme": "Тема",
+  "@theme": {
+    "description": "Настройка темы"
+  },
+  
+  "light": "Светлая",
+  "@light": {
+    "description": "Опция светлой темы"
+  },
+  
+  "dark": "Темная",
+  "@dark": {
+    "description": "Опция темной темы"
+  },
+  
+  "system": "Системная",
+  "@system": {
+    "description": "Опция системной темы"
+  },
+  
+  "logout": "Выйти",
+  "@logout": {
+    "description": "Текст кнопки выхода"
+  },
+  
+  "editProfile": "Редактировать профиль",
+  "@editProfile": {
+    "description": "Текст кнопки редактирования профиля"
+  },
+  
+  "save": "Сохранить",
+  "@save": {
+    "description": "Текст кнопки сохранения"
+  },
+  
+  "cancel": "Отмена",
+  "@cancel": {
+    "description": "Текст кнопки отмены"
+  },
+  
+  "delete": "Удалить",
+  "@delete": {
+    "description": "Текст кнопки удаления"
+  },
+  
+  "confirm": "Подтвердить",
+  "@confirm": {
+    "description": "Текст кнопки подтверждения"
+  },
+  
+  "yes": "Да",
+  "@yes": {
+    "description": "Текст кнопки да"
+  },
+  
+  "no": "Нет",
+  "@no": {
+    "description": "Текст кнопки нет"
+  },
+  
+  "ok": "ОК",
+  "@ok": {
+    "description": "Текст кнопки ОК"
+  },
+  
+  "error": "Ошибка",
+  "@error": {
+    "description": "Заголовок ошибки"
+  },
+  
+  "success": "Успешно",
+  "@success": {
+    "description": "Заголовок успеха"
+  },
+  
+  "loading": "Загрузка...",
+  "@loading": {
+    "description": "Текст загрузки"
+  },
+  
+  "noData": "Нет данных",
+  "@noData": {
+    "description": "Сообщение об отсутствии данных"
+  },
+  
+  "tryAgain": "Попробовать снова",
+  "@tryAgain": {
+    "description": "Текст кнопки повторной попытки"
+  },
+  
+  "retry": "Повторить",
+  "@retry": {
+    "description": "Текст кнопки повтора"
+  },
+  
+  "refresh": "Обновить",
+  "@refresh": {
+    "description": "Текст кнопки обновления"
+  },
+  
+  "back": "Назад",
+  "@back": {
+    "description": "Текст кнопки назад"
+  },
+  
+  "next": "Далее",
+  "@next": {
+    "description": "Текст кнопки далее"
+  },
+  
+  "previous": "Предыдущий",
+  "@previous": {
+    "description": "Текст кнопки предыдущий"
+  },
+  
+  "close": "Закрыть",
+  "@close": {
+    "description": "Текст кнопки закрыть"
+  },
+  
+  "done": "Готово",
+  "@done": {
+    "description": "Текст кнопки готово"
+  },
+  
+  "select": "Выбрать",
+  "@select": {
+    "description": "Текст кнопки выбора"
+  },
+  
+  "upload": "Загрузить",
+  "@upload": {
+    "description": "Текст кнопки загрузки"
+  },
+  
+  "download": "Скачать",
+  "@download": {
+    "description": "Текст кнопки скачивания"
+  },
+  
+  "share": "Поделиться",
+  "@share": {
+    "description": "Текст кнопки поделиться"
+  },
+  
+  "copy": "Копировать",
+  "@copy": {
+    "description": "Текст кнопки копирования"
+  },
+  
+  "paste": "Вставить",
+  "@paste": {
+    "description": "Текст кнопки вставки"
+  },
+  
+  "cut": "Вырезать",
+  "@cut": {
+    "description": "Текст кнопки вырезания"
+  },
+  
+  "undo": "Отменить",
+  "@undo": {
+    "description": "Текст кнопки отмены"
+  },
+  
+  "redo": "Повторить",
+  "@redo": {
+    "description": "Текст кнопки повтора"
+  },
+  
+  "help": "Помощь",
+  "@help": {
+    "description": "Текст кнопки помощи"
+  },
+  
+  "about": "О приложении",
+  "@about": {
+    "description": "Текст кнопки о приложении"
+  },
+  
+  "contact": "Контакты",
+  "@contact": {
+    "description": "Текст кнопки контактов"
+  },
+  
+  "privacy": "Политика конфиденциальности",
+  "@privacy": {
+    "description": "Текст ссылки политики конфиденциальности"
+  },
+  
+  "terms": "Условия использования",
+  "@terms": {
+    "description": "Текст ссылки условий использования"
+  },
+  
+  "version": "Версия",
+  "@version": {
+    "description": "Метка версии"
+  },
+  
+  "build": "Сборка",
+  "@build": {
+    "description": "Метка сборки"
+  },
+  
+  "lastUpdated": "Последнее обновление",
+  "@lastUpdated": {
+    "description": "Метка последнего обновления"
+  },
+  
+  "createdBy": "Создано",
+  "@createdBy": {
+    "description": "Метка создано"
+  },
+  
+  "allRightsReserved": "Все права защищены",
+  "@allRightsReserved": {
+    "description": "Текст все права защищены"
+  }
 }

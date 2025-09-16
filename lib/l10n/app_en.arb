@@ -1,34 +1,487 @@
 {
   "@@locale": "en",
-  "settings": "Settings",
-  "language": "Language",
-  "notifications": "Notifications",
-  "profile": "Profile",
+  "appTitle": "Event Marketplace",
+  "@appTitle": {
+    "description": "The title of the application"
+  },
+  
+  "welcome": "Welcome",
+  "@welcome": {
+    "description": "Welcome message"
+  },
+  
+  "login": "Login",
+  "@login": {
+    "description": "Login button text"
+  },
+  
+  "register": "Register",
+  "@register": {
+    "description": "Register button text"
+  },
+  
+  "email": "Email",
+  "@email": {
+    "description": "Email field label"
+  },
+  
+  "password": "Password",
+  "@password": {
+    "description": "Password field label"
+  },
+  
+  "confirmPassword": "Confirm Password",
+  "@confirmPassword": {
+    "description": "Confirm password field label"
+  },
+  
+  "name": "Name",
+  "@name": {
+    "description": "Name field label"
+  },
+  
+  "phone": "Phone",
+  "@phone": {
+    "description": "Phone field label"
+  },
+  
+  "forgotPassword": "Forgot Password?",
+  "@forgotPassword": {
+    "description": "Forgot password link text"
+  },
+  
+  "dontHaveAccount": "Don't have an account?",
+  "@dontHaveAccount": {
+    "description": "Text for users who don't have an account"
+  },
+  
+  "alreadyHaveAccount": "Already have an account?",
+  "@alreadyHaveAccount": {
+    "description": "Text for users who already have an account"
+  },
+  
+  "signInWithGoogle": "Sign in with Google",
+  "@signInWithGoogle": {
+    "description": "Google sign in button text"
+  },
+  
+  "signInWithVK": "Sign in with VK",
+  "@signInWithVK": {
+    "description": "VK sign in button text"
+  },
+  
+  "home": "Home",
+  "@home": {
+    "description": "Home tab label"
+  },
+  
   "events": "Events",
+  "@events": {
+    "description": "Events tab label"
+  },
+  
   "bookings": "Bookings",
-  "favorites": "Favorites",
-  "admin": "Admin Panel",
-  "logout": "Logout",
-  "save": "Save",
-  "cancel": "Cancel",
-  "edit": "Edit",
-  "delete": "Delete",
-  "create": "Create",
+  "@bookings": {
+    "description": "Bookings tab label"
+  },
+  
+  "profile": "Profile",
+  "@profile": {
+    "description": "Profile tab label"
+  },
+  
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings tab label"
+  },
+  
   "search": "Search",
+  "@search": {
+    "description": "Search field placeholder"
+  },
+  
+  "searchEvents": "Search events...",
+  "@searchEvents": {
+    "description": "Search events field placeholder"
+  },
+  
   "filter": "Filter",
+  "@filter": {
+    "description": "Filter button text"
+  },
+  
+  "sort": "Sort",
+  "@sort": {
+    "description": "Sort button text"
+  },
+  
   "date": "Date",
-  "price": "Price",
+  "@date": {
+    "description": "Date field label"
+  },
+  
+  "time": "Time",
+  "@time": {
+    "description": "Time field label"
+  },
+  
   "location": "Location",
+  "@location": {
+    "description": "Location field label"
+  },
+  
+  "price": "Price",
+  "@price": {
+    "description": "Price field label"
+  },
+  
+  "free": "Free",
+  "@free": {
+    "description": "Free price label"
+  },
+  
   "description": "Description",
-  "title": "Title",
+  "@description": {
+    "description": "Description field label"
+  },
+  
   "category": "Category",
-  "participants": "Participants",
+  "@category": {
+    "description": "Category field label"
+  },
+  
+  "organizer": "Organizer",
+  "@organizer": {
+    "description": "Organizer field label"
+  },
+  
+  "capacity": "Capacity",
+  "@capacity": {
+    "description": "Capacity field label"
+  },
+  
+  "availableSpots": "Available spots",
+  "@availableSpots": {
+    "description": "Available spots label"
+  },
+  
+  "bookEvent": "Book Event",
+  "@bookEvent": {
+    "description": "Book event button text"
+  },
+  
+  "cancelBooking": "Cancel Booking",
+  "@cancelBooking": {
+    "description": "Cancel booking button text"
+  },
+  
+  "editEvent": "Edit Event",
+  "@editEvent": {
+    "description": "Edit event button text"
+  },
+  
+  "deleteEvent": "Delete Event",
+  "@deleteEvent": {
+    "description": "Delete event button text"
+  },
+  
+  "createEvent": "Create Event",
+  "@createEvent": {
+    "description": "Create event button text"
+  },
+  
+  "myEvents": "My Events",
+  "@myEvents": {
+    "description": "My events tab label"
+  },
+  
+  "favorites": "Favorites",
+  "@favorites": {
+    "description": "Favorites tab label"
+  },
+  
+  "addToFavorites": "Add to Favorites",
+  "@addToFavorites": {
+    "description": "Add to favorites button text"
+  },
+  
+  "removeFromFavorites": "Remove from Favorites",
+  "@removeFromFavorites": {
+    "description": "Remove from favorites button text"
+  },
+  
+  "reviews": "Reviews",
+  "@reviews": {
+    "description": "Reviews tab label"
+  },
+  
+  "writeReview": "Write Review",
+  "@writeReview": {
+    "description": "Write review button text"
+  },
+  
   "rating": "Rating",
-  "review": "Review",
-  "book": "Book",
-  "booked": "Booked",
-  "pending": "Pending",
-  "confirmed": "Confirmed",
-  "cancelled": "Cancelled",
-  "completed": "Completed"
+  "@rating": {
+    "description": "Rating field label"
+  },
+  
+  "reviewTitle": "Review Title",
+  "@reviewTitle": {
+    "description": "Review title field label"
+  },
+  
+  "reviewContent": "Review Content",
+  "@reviewContent": {
+    "description": "Review content field label"
+  },
+  
+  "submitReview": "Submit Review",
+  "@submitReview": {
+    "description": "Submit review button text"
+  },
+  
+  "notifications": "Notifications",
+  "@notifications": {
+    "description": "Notifications tab label"
+  },
+  
+  "enableNotifications": "Enable Notifications",
+  "@enableNotifications": {
+    "description": "Enable notifications setting"
+  },
+  
+  "language": "Language",
+  "@language": {
+    "description": "Language setting"
+  },
+  
+  "english": "English",
+  "@english": {
+    "description": "English language option"
+  },
+  
+  "russian": "Русский",
+  "@russian": {
+    "description": "Russian language option"
+  },
+  
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme setting"
+  },
+  
+  "light": "Light",
+  "@light": {
+    "description": "Light theme option"
+  },
+  
+  "dark": "Dark",
+  "@dark": {
+    "description": "Dark theme option"
+  },
+  
+  "system": "System",
+  "@system": {
+    "description": "System theme option"
+  },
+  
+  "logout": "Logout",
+  "@logout": {
+    "description": "Logout button text"
+  },
+  
+  "editProfile": "Edit Profile",
+  "@editProfile": {
+    "description": "Edit profile button text"
+  },
+  
+  "save": "Save",
+  "@save": {
+    "description": "Save button text"
+  },
+  
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+  
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button text"
+  },
+  
+  "confirm": "Confirm",
+  "@confirm": {
+    "description": "Confirm button text"
+  },
+  
+  "yes": "Yes",
+  "@yes": {
+    "description": "Yes button text"
+  },
+  
+  "no": "No",
+  "@no": {
+    "description": "No button text"
+  },
+  
+  "ok": "OK",
+  "@ok": {
+    "description": "OK button text"
+  },
+  
+  "error": "Error",
+  "@error": {
+    "description": "Error title"
+  },
+  
+  "success": "Success",
+  "@success": {
+    "description": "Success title"
+  },
+  
+  "loading": "Loading...",
+  "@loading": {
+    "description": "Loading text"
+  },
+  
+  "noData": "No data available",
+  "@noData": {
+    "description": "No data message"
+  },
+  
+  "tryAgain": "Try Again",
+  "@tryAgain": {
+    "description": "Try again button text"
+  },
+  
+  "retry": "Retry",
+  "@retry": {
+    "description": "Retry button text"
+  },
+  
+  "refresh": "Refresh",
+  "@refresh": {
+    "description": "Refresh button text"
+  },
+  
+  "back": "Back",
+  "@back": {
+    "description": "Back button text"
+  },
+  
+  "next": "Next",
+  "@next": {
+    "description": "Next button text"
+  },
+  
+  "previous": "Previous",
+  "@previous": {
+    "description": "Previous button text"
+  },
+  
+  "close": "Close",
+  "@close": {
+    "description": "Close button text"
+  },
+  
+  "done": "Done",
+  "@done": {
+    "description": "Done button text"
+  },
+  
+  "select": "Select",
+  "@select": {
+    "description": "Select button text"
+  },
+  
+  "upload": "Upload",
+  "@upload": {
+    "description": "Upload button text"
+  },
+  
+  "download": "Download",
+  "@download": {
+    "description": "Download button text"
+  },
+  
+  "share": "Share",
+  "@share": {
+    "description": "Share button text"
+  },
+  
+  "copy": "Copy",
+  "@copy": {
+    "description": "Copy button text"
+  },
+  
+  "paste": "Paste",
+  "@paste": {
+    "description": "Paste button text"
+  },
+  
+  "cut": "Cut",
+  "@cut": {
+    "description": "Cut button text"
+  },
+  
+  "undo": "Undo",
+  "@undo": {
+    "description": "Undo button text"
+  },
+  
+  "redo": "Redo",
+  "@redo": {
+    "description": "Redo button text"
+  },
+  
+  "help": "Help",
+  "@help": {
+    "description": "Help button text"
+  },
+  
+  "about": "About",
+  "@about": {
+    "description": "About button text"
+  },
+  
+  "contact": "Contact",
+  "@contact": {
+    "description": "Contact button text"
+  },
+  
+  "privacy": "Privacy Policy",
+  "@privacy": {
+    "description": "Privacy policy link text"
+  },
+  
+  "terms": "Terms of Service",
+  "@terms": {
+    "description": "Terms of service link text"
+  },
+  
+  "version": "Version",
+  "@version": {
+    "description": "Version label"
+  },
+  
+  "build": "Build",
+  "@build": {
+    "description": "Build label"
+  },
+  
+  "lastUpdated": "Last Updated",
+  "@lastUpdated": {
+    "description": "Last updated label"
+  },
+  
+  "createdBy": "Created by",
+  "@createdBy": {
+    "description": "Created by label"
+  },
+  
+  "allRightsReserved": "All rights reserved",
+  "@allRightsReserved": {
+    "description": "All rights reserved text"
+  }
 }

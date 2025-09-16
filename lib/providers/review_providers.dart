@@ -1,88 +1,58 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/review_service.dart';
 import '../models/review.dart';
+import '../core/feature_flags.dart';
 
 /// Провайдер сервиса отзывов
 final reviewServiceProvider = Provider<ReviewService>((ref) {
   return ReviewService();
 });
 
-/// Провайдер отзывов по специалисту
-final reviewsBySpecialistProvider =
-    FutureProvider.family<List<Review>, String>((ref, specialistId) {
-  final reviewService = ref.watch(reviewServiceProvider);
-  return reviewService.getReviewsBySpecialist(specialistId);
+/// Провайдер для проверки доступности отзывов
+final reviewsAvailableProvider = Provider<bool>((ref) {
+  return FeatureFlags.reviewsEnabled;
 });
 
-/// Провайдер отзывов по заказчику
-final reviewsByCustomerProvider =
-    FutureProvider.family<List<Review>, String>((ref, customerId) {
-  final reviewService = ref.watch(reviewServiceProvider);
-  return reviewService.getReviewsByCustomer(customerId);
+/// Провайдер отзывов для цели
+final reviewsForTargetProvider = StreamProvider.family<List<Review>, ({String targetId, ReviewType type, ReviewFilter? filter})>((ref, params) {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getReviewsForTarget(
+    params.targetId,
+    params.type,
+    filter: params.filter,
+  );
 });
 
-/// Провайдер отзыва по бронированию
-final reviewByBookingProvider =
-    FutureProvider.family<Review?, String>((ref, bookingId) {
-  final reviewService = ref.watch(reviewServiceProvider);
-  return reviewService.getReviewByBooking(bookingId);
+/// Провайдер статистики отзывов
+final reviewStatsProvider = StreamProvider.family<ReviewStats, ({String targetId, ReviewType type})>((ref, params) {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getReviewStatsStream(params.targetId, params.type);
 });
 
-/// Провайдер статистики отзывов специалиста
-final reviewStatsProvider =
-    FutureProvider.family<ReviewStats, String>((ref, specialistId) {
-  final reviewService = ref.watch(reviewServiceProvider);
-  return reviewService.getReviewStats(specialistId);
+/// Провайдер отзыва пользователя для цели
+final userReviewForTargetProvider = FutureProvider.family<Review?, ({String userId, String targetId})>((ref, params) async {
+  final reviewService = ref.read(reviewServiceProvider);
+  return await reviewService.getUserReviewForTarget(params.userId, params.targetId);
 });
 
-/// Провайдер отзывов специалиста (алиас)
-final specialistReviewsProvider = reviewsBySpecialistProvider;
-
-/// Провайдер статистики отзывов специалиста (алиас)
-final specialistReviewStatisticsProvider = reviewStatsProvider;
-
-/// Провайдер последних отзывов
-final recentReviewsProvider = FutureProvider<List<Review>>((ref) {
-  final reviewService = ref.watch(reviewServiceProvider);
-  return reviewService.getRecentReviews();
+/// Провайдер отзывов пользователя
+final userReviewsProvider = StreamProvider.family<List<Review>, String>((ref, userId) {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getUserReviews(userId);
 });
 
-/// Провайдер лучших отзывов
-final topReviewsProvider = FutureProvider<List<Review>>((ref) {
-  final reviewService = ref.watch(reviewServiceProvider);
-  return reviewService.getTopReviews();
+/// Провайдер отзывов на рассмотрении
+final pendingReviewsProvider = StreamProvider<List<Review>>((ref) {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.getPendingReviews();
 });
 
-/// Провайдер проверки возможности оставить отзыв
-final canUserReviewProvider =
-    FutureProvider.family<bool, ReviewCheckParams>((ref, params) {
-  final reviewService = ref.watch(reviewServiceProvider);
-  return reviewService.canUserReview(
-      params.customerId, params.specialistId, params.bookingId);
+/// Провайдер поиска отзывов
+final searchReviewsProvider = StreamProvider.family<List<Review>, ({String? query, ReviewType? type, ReviewFilter? filter})>((ref, params) {
+  final reviewService = ref.read(reviewServiceProvider);
+  return reviewService.searchReviews(
+    query: params.query,
+    type: params.type,
+    filter: params.filter,
+  );
 });
-
-/// Параметры для проверки возможности оставить отзыв
-class ReviewCheckParams {
-  final String customerId;
-  final String specialistId;
-  final String bookingId;
-
-  ReviewCheckParams({
-    required this.customerId,
-    required this.specialistId,
-    required this.bookingId,
-  });
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is ReviewCheckParams &&
-        other.customerId == customerId &&
-        other.specialistId == specialistId &&
-        other.bookingId == bookingId;
-  }
-
-  @override
-  int get hashCode =>
-      customerId.hashCode ^ specialistId.hashCode ^ bookingId.hashCode;
-}
