@@ -26,6 +26,8 @@ service cloud.firestore {
          request.auth.uid == resource.data.specialistId);
       allow read: if request.auth != null && 
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+      // Разрешаем пагинированные запросы для поиска
+      allow list: if request.auth != null;
     }
     
     // Reviews collection
@@ -49,6 +51,8 @@ service cloud.firestore {
     match /notifications/{notificationId} {
       allow read, write: if request.auth != null && 
         request.auth.uid == resource.data.userId;
+      // Разрешаем пагинированные запросы
+      allow list: if request.auth != null;
     }
     
     // Ideas collection
@@ -81,6 +85,15 @@ service cloud.firestore {
     match /admin/{document=**} {
       allow read, write: if request.auth != null && 
         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Specialists collection
+    match /specialists/{specialistId} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null && 
+        request.auth.uid == specialistId;
+      // Разрешаем поиск специалистов
+      allow list: if request.auth != null;
     }
     
     // Public collections (read-only for authenticated users)

@@ -165,7 +165,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
           children: [
             Text(
               'Ваши рекомендации',
-              style: context.textTheme.titleMedium?.copyWith(
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -333,7 +333,7 @@ class RecommendationSettingsScreen extends ConsumerWidget {
         children: [
           Text(
             'Типы рекомендаций',
-            style: context.textTheme.titleMedium?.copyWith(
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -397,7 +397,7 @@ class RecommendationSettingsScreen extends ConsumerWidget {
             onChanged: (value) {
               // Здесь будет логика изменения настроек
             },
-            activeColor: context.colorScheme.primary,
+            activeColor: Theme.of(context).colorScheme.primary,
           ),
         ],
       ),
@@ -412,7 +412,7 @@ class RecommendationSettingsScreen extends ConsumerWidget {
         children: [
           Text(
             'Фильтры',
-            style: context.textTheme.titleMedium?.copyWith(
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -452,7 +452,7 @@ class RecommendationSettingsScreen extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: ListTile(
-        leading: Icon(icon, color: context.colorScheme.primary),
+        leading: Icon(icon, color: Theme.of(context).colorScheme.primary),
         title: Text(title),
         subtitle: Text(subtitle),
         trailing: const Icon(Icons.arrow_forward_ios, size: 16),
@@ -496,7 +496,7 @@ class RecommendationSettingsScreen extends ConsumerWidget {
     VoidCallback onTap,
   ) {
     return ListTile(
-      leading: Icon(icon, color: context.colorScheme.error),
+      leading: Icon(icon, color: Theme.of(context).colorScheme.error),
       title: Text(title),
       subtitle: Text(subtitle),
       trailing: const Icon(Icons.arrow_forward_ios, size: 16),

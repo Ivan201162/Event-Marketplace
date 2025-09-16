@@ -371,4 +371,30 @@ extension EventCategoryExtension on EventCategory {
         return 'Другое';
     }
   }
+
+  /// Получить иконку категории
+  IconData get categoryIcon {
+    switch (this) {
+      case EventCategory.wedding:
+        return Icons.favorite;
+      case EventCategory.birthday:
+        return Icons.cake;
+      case EventCategory.corporate:
+        return Icons.business;
+      case EventCategory.conference:
+        return Icons.people;
+      case EventCategory.seminar:
+        return Icons.school;
+      case EventCategory.exhibition:
+        return Icons.museum;
+      case EventCategory.concert:
+        return Icons.music_note;
+      case EventCategory.sport:
+        return Icons.sports;
+      case EventCategory.travel:
+        return Icons.travel_explore;
+      case EventCategory.other:
+        return Icons.event;
+    }
+  }
 }

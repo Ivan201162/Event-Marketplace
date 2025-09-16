@@ -235,6 +235,7 @@ class Specialist {
   final DateTime createdAt;
   final DateTime updatedAt;
   final Map<String, dynamic>? metadata;
+  final String? avatarUrl;
 
   const Specialist({
     required this.id,
@@ -261,6 +262,7 @@ class Specialist {
     required this.createdAt,
     required this.updatedAt,
     this.metadata,
+    this.avatarUrl,
   });
 
   /// Создать из документа Firestore
@@ -295,6 +297,7 @@ class Specialist {
           ? (data['updatedAt'] as Timestamp).toDate()
           : DateTime.now(),
       metadata: data['metadata'],
+      avatarUrl: data['avatarUrl'],
     );
   }
 
@@ -324,6 +327,7 @@ class Specialist {
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
       'metadata': metadata,
+      'avatarUrl': avatarUrl,
     };
   }
 
@@ -353,6 +357,7 @@ class Specialist {
     DateTime? createdAt,
     DateTime? updatedAt,
     Map<String, dynamic>? metadata,
+    String? avatarUrl,
   }) {
     return Specialist(
       id: id ?? this.id,
@@ -379,6 +384,7 @@ class Specialist {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       metadata: metadata ?? this.metadata,
+      avatarUrl: avatarUrl ?? this.avatarUrl,
     );
   }
 

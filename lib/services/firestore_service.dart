@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/booking.dart';
 import '../models/specialist_schedule.dart';
 import '../models/notification.dart';
+import '../core/safe_log.dart';
 import 'calendar_service.dart';
 import 'notification_service.dart';
 import 'fcm_service.dart';
@@ -444,7 +446,215 @@ class FirestoreService {
         type: data?['type'] ?? 'booking_update',
       );
     } catch (e) {
-      print('Ошибка отправки push-уведомления: $e');
+      SafeLog.error('Ошибка отправки push-уведомления', e);
     }
   }
+
+  // ========== ПАГИНАЦИЯ И ПОИСК ==========
+
+  /// Получить события с пагинацией
+  Future<PaginatedResult<Booking>> getBookingsPaginated({
+    String? customerId,
+    String? specialistId,
+    int limit = 20,
+    DocumentSnapshot? startAfter,
+    String? orderBy = 'eventDate',
+    bool descending = false,
+  }) async {
+    try {
+      Query query = _db.collection('bookings');
+
+      // Добавляем фильтры
+      if (customerId != null) {
+        query = query.where('customerId', isEqualTo: customerId);
+      }
+      if (specialistId != null) {
+        query = query.where('specialistId', isEqualTo: specialistId);
+      }
+
+      // Добавляем сортировку
+      query = query.orderBy(orderBy!, descending: descending);
+
+      // Добавляем лимит
+      query = query.limit(limit);
+
+      // Добавляем курсор пагинации
+      if (startAfter != null) {
+        query = query.startAfterDocument(startAfter);
+      }
+
+      final snapshot = await query.get();
+      final bookings =
+          snapshot.docs.map((doc) => Booking.fromDocument(doc)).toList();
+
+      SafeLog.debug('Получено ${bookings.length} бронирований с пагинацией');
+
+      return PaginatedResult<Booking>(
+        items: bookings,
+        lastDocument: snapshot.docs.isNotEmpty ? snapshot.docs.last : null,
+        hasMore: snapshot.docs.length == limit,
+      );
+    } catch (e, stackTrace) {
+      SafeLog.error(
+          'Ошибка получения бронирований с пагинацией', e, stackTrace);
+      rethrow;
+    }
+  }
+
+  /// Поиск событий с debounce
+  Stream<List<Booking>> searchBookingsDebounced({
+    String? customerId,
+    String? specialistId,
+    String? searchQuery,
+    Duration debounceDelay = const Duration(milliseconds: 500),
+  }) {
+    final controller = StreamController<List<Booking>>.broadcast();
+    Timer? debounceTimer;
+
+    void performSearch() {
+      debounceTimer?.cancel();
+      debounceTimer = Timer(debounceDelay, () async {
+        try {
+          Query query = _db.collection('bookings');
+
+          if (customerId != null) {
+            query = query.where('customerId', isEqualTo: customerId);
+          }
+          if (specialistId != null) {
+            query = query.where('specialistId', isEqualTo: specialistId);
+          }
+
+          if (searchQuery != null && searchQuery.isNotEmpty) {
+            // Простой поиск по названию события
+            query = query
+                .where('eventName', isGreaterThanOrEqualTo: searchQuery)
+                .where('eventName',
+                    isLessThanOrEqualTo: searchQuery + '\uf8ff');
+          }
+
+          query = query.orderBy('eventDate', descending: true).limit(50);
+
+          final snapshot = await query.get();
+          final bookings =
+              snapshot.docs.map((doc) => Booking.fromDocument(doc)).toList();
+
+          SafeLog.debug(
+              'Найдено ${bookings.length} бронирований по запросу "$searchQuery"');
+          controller.add(bookings);
+        } catch (e, stackTrace) {
+          SafeLog.error('Ошибка поиска бронирований', e, stackTrace);
+          controller.addError(e);
+        }
+      });
+    }
+
+    // Выполняем поиск при первом запросе
+    performSearch();
+
+    return controller.stream;
+  }
+
+  /// Получить уведомления с пагинацией
+  Future<PaginatedResult<AppNotification>> getNotificationsPaginated({
+    required String userId,
+    int limit = 20,
+    DocumentSnapshot? startAfter,
+  }) async {
+    try {
+      Query query = _db
+          .collection('notifications')
+          .where('userId', isEqualTo: userId)
+          .orderBy('timestamp', descending: true)
+          .limit(limit);
+
+      if (startAfter != null) {
+        query = query.startAfterDocument(startAfter);
+      }
+
+      final snapshot = await query.get();
+      final notifications = snapshot.docs
+          .map((doc) => AppNotification.fromDocument(doc))
+          .toList();
+
+      SafeLog.debug(
+          'Получено ${notifications.length} уведомлений с пагинацией');
+
+      return PaginatedResult<AppNotification>(
+        items: notifications,
+        lastDocument: snapshot.docs.isNotEmpty ? snapshot.docs.last : null,
+        hasMore: snapshot.docs.length == limit,
+      );
+    } catch (e, stackTrace) {
+      SafeLog.error('Ошибка получения уведомлений с пагинацией', e, stackTrace);
+      rethrow;
+    }
+  }
+
+  /// Поиск специалистов с debounce
+  Stream<List<DocumentSnapshot>> searchSpecialistsDebounced({
+    String? searchQuery,
+    String? category,
+    Duration debounceDelay = const Duration(milliseconds: 500),
+  }) {
+    final controller = StreamController<List<DocumentSnapshot>>.broadcast();
+    Timer? debounceTimer;
+
+    void performSearch() {
+      debounceTimer?.cancel();
+      debounceTimer = Timer(debounceDelay, () async {
+        try {
+          Query query = _db.collection('specialists');
+
+          if (category != null && category.isNotEmpty) {
+            query = query.where('category', isEqualTo: category);
+          }
+
+          if (searchQuery != null && searchQuery.isNotEmpty) {
+            // Поиск по имени или описанию
+            query = query
+                .where('name', isGreaterThanOrEqualTo: searchQuery)
+                .where('name', isLessThanOrEqualTo: searchQuery + '\uf8ff');
+          }
+
+          query = query.orderBy('name').limit(50);
+
+          final snapshot = await query.get();
+          SafeLog.debug(
+              'Найдено ${snapshot.docs.length} специалистов по запросу "$searchQuery"');
+          controller.add(snapshot.docs);
+        } catch (e, stackTrace) {
+          SafeLog.error('Ошибка поиска специалистов', e, stackTrace);
+          controller.addError(e);
+        }
+      });
+    }
+
+    performSearch();
+
+    return controller.stream;
+  }
+
+  /// Очистка ресурсов
+  void dispose() {
+    // Закрываем все активные таймеры и контроллеры
+    // В реальном приложении здесь можно добавить управление ресурсами
+  }
+}
+
+/// Результат пагинированного запроса
+class PaginatedResult<T> {
+  final List<T> items;
+  final DocumentSnapshot? lastDocument;
+  final bool hasMore;
+
+  const PaginatedResult({
+    required this.items,
+    this.lastDocument,
+    required this.hasMore,
+  });
+
+  /// Проверить, есть ли еще данные
+  bool get isEmpty => items.isEmpty;
+  bool get isNotEmpty => items.isNotEmpty;
+  int get length => items.length;
 }

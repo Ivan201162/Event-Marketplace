@@ -27,6 +27,8 @@ class Booking {
   final DateTime updatedAt;
   final String? organizerId;
   final String? organizerName;
+  final String? customerId;
+  final String? specialistId;
 
   const Booking({
     required this.id,
@@ -46,6 +48,8 @@ class Booking {
     required this.updatedAt,
     this.organizerId,
     this.organizerName,
+    this.customerId,
+    this.specialistId,
   });
 
   /// Создать из документа Firestore
@@ -72,6 +76,8 @@ class Booking {
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       organizerId: data['organizerId'],
       organizerName: data['organizerName'],
+      customerId: data['customerId'],
+      specialistId: data['specialistId'],
     );
   }
 
@@ -94,6 +100,8 @@ class Booking {
       'updatedAt': Timestamp.fromDate(updatedAt),
       'organizerId': organizerId,
       'organizerName': organizerName,
+      'customerId': customerId,
+      'specialistId': specialistId,
     };
   }
 
@@ -116,6 +124,8 @@ class Booking {
     DateTime? updatedAt,
     String? organizerId,
     String? organizerName,
+    String? customerId,
+    String? specialistId,
   }) {
     return Booking(
       id: id ?? this.id,
@@ -135,6 +145,8 @@ class Booking {
       updatedAt: updatedAt ?? this.updatedAt,
       organizerId: organizerId ?? this.organizerId,
       organizerName: organizerName ?? this.organizerName,
+      customerId: customerId ?? this.customerId,
+      specialistId: specialistId ?? this.specialistId,
     );
   }
 

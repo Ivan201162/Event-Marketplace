@@ -14,6 +14,8 @@ class Review {
   final DateTime updatedAt;
   final bool
       isVerified; // Подтвержден ли отзыв (участник действительно был на мероприятии)
+  final String? customerId;
+  final String? title;
 
   const Review({
     required this.id,
@@ -27,6 +29,8 @@ class Review {
     required this.createdAt,
     required this.updatedAt,
     this.isVerified = false,
+    this.customerId,
+    this.title,
   });
 
   /// Создать из документа Firestore
@@ -44,6 +48,8 @@ class Review {
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       isVerified: data['isVerified'] ?? false,
+      customerId: data['customerId'],
+      title: data['title'],
     );
   }
 
@@ -60,6 +66,8 @@ class Review {
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
       'isVerified': isVerified,
+      'customerId': customerId,
+      'title': title,
     };
   }
 
@@ -76,6 +84,8 @@ class Review {
     DateTime? createdAt,
     DateTime? updatedAt,
     bool? isVerified,
+    String? customerId,
+    String? title,
   }) {
     return Review(
       id: id ?? this.id,
@@ -89,6 +99,8 @@ class Review {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       isVerified: isVerified ?? this.isVerified,
+      customerId: customerId ?? this.customerId,
+      title: title ?? this.title,
     );
   }
 

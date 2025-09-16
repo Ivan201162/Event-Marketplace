@@ -11,18 +11,18 @@ dependencies:
     sdk: flutter
   shared_preferences: ^2.1.1
   table_calendar: ^3.0.9
-  cloud_firestore: ^4.15.8
-  firebase_core: ^2.24.2
-  firebase_auth: ^4.15.3
-  firebase_messaging: ^14.7.10
-  firebase_analytics: ^10.7.4
-  firebase_storage: ^11.5.6
+  cloud_firestore: ^6.0.1
+  firebase_core: ^4.1.0
+  firebase_auth: ^6.0.2
+  firebase_messaging: ^16.0.1
+  firebase_analytics: ^12.0.1
+  firebase_storage: ^13.0.1
   js: ^0.6.7
   flutter_local_notifications: ^16.3.2
   flutter_riverpod: ^2.4.9
   google_sign_in: ^6.2.1
-  vk_login: ^1.0.0
-  http: ^0.13.6
+  # vk_login: ^1.0.0  # Temporarily disabled due to dependency conflicts
+  http: ^1.1.0
   file_picker: ^8.0.0+1
   image_picker: ^1.0.7
   url_launcher: ^6.2.2
