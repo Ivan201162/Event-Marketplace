@@ -35,6 +35,9 @@ class FeatureFlags {
   // VK интеграция
   static const bool vkIntegrationEnabled = false;
 
+  // Отслеживание годовщин
+  static const bool anniversaryTrackingEnabled = false;
+
   // Социальные функции
   static const bool socialLoginEnabled = true;
   static const bool vkLoginEnabled = false;
@@ -80,6 +83,8 @@ class FeatureFlags {
         return guestModeEnabled;
       case 'vk_integration':
         return vkIntegrationEnabled;
+      case 'anniversary_tracking':
+        return anniversaryTrackingEnabled;
       case 'social_login':
         return socialLoginEnabled;
       case 'vk_login':
@@ -114,6 +119,7 @@ class FeatureFlags {
     if (ideasEnabled) features.add('ideas');
     if (guestModeEnabled) features.add('guest_mode');
     if (vkIntegrationEnabled) features.add('vk_integration');
+    if (anniversaryTrackingEnabled) features.add('anniversary_tracking');
     if (socialLoginEnabled) features.add('social_login');
     if (vkLoginEnabled) features.add('vk_login');
     if (debugMode) features.add('debug');
@@ -142,6 +148,7 @@ class FeatureFlags {
       'ideas': ideasEnabled,
       'guest_mode': guestModeEnabled,
       'vk_integration': vkIntegrationEnabled,
+      'anniversary_tracking': anniversaryTrackingEnabled,
       'social_login': socialLoginEnabled,
       'vk_login': vkLoginEnabled,
       'debug': debugMode,
