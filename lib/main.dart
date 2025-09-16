@@ -26,6 +26,7 @@ import 'screens/payments_extended_screen.dart';
 import 'screens/admin_panel_screen.dart';
 import 'services/fcm_service.dart';
 import 'services/notification_service.dart';
+import 'services/auth_service.dart';
 import 'widgets/animated_page_transition.dart';
 
 void main() async {
@@ -58,6 +59,19 @@ void main() async {
     SafeLog.info('Notification service initialized');
   } catch (e, stackTrace) {
     SafeLog.error('Failed to initialize notification service', e, stackTrace);
+  }
+
+  // Попытка восстановления сессии
+  try {
+    final authService = AuthService();
+    final restoredUser = await authService.restoreSession();
+    if (restoredUser != null) {
+      SafeLog.info('Session restored for user: ${restoredUser.displayName}');
+    } else {
+      SafeLog.info('No active session to restore');
+    }
+  } catch (e, stackTrace) {
+    SafeLog.error('Failed to restore session', e, stackTrace);
   }
 
   SafeLog.info(

@@ -4,6 +4,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
 import '../models/user.dart';
 import 'storage_service.dart';
+import '../core/safe_log.dart';
 
 /// Сервис для управления аутентификацией пользователей
 class AuthService {
@@ -30,9 +31,58 @@ class AuthService {
         return AppUser.fromDocument(doc);
       }
       return null;
-    } catch (e) {
-      print('Ошибка получения пользователя: $e');
+    } catch (e, stackTrace) {
+      SafeLog.error('Ошибка получения пользователя', e, stackTrace);
       return null;
+    }
+  }
+
+  /// Восстановить сессию пользователя
+  Future<AppUser?> restoreSession() async {
+    try {
+      SafeLog.info('Попытка восстановления сессии...');
+      
+      // Проверяем, есть ли активная сессия Firebase
+      final firebaseUser = currentFirebaseUser;
+      if (firebaseUser == null) {
+        SafeLog.info('Нет активной сессии Firebase');
+        return null;
+      }
+
+      // Проверяем, не истекла ли сессия
+      await firebaseUser.reload();
+      if (firebaseUser.uid.isEmpty) {
+        SafeLog.warning('Сессия Firebase истекла');
+        return null;
+      }
+
+      // Получаем данные пользователя из Firestore
+      final appUser = await getCurrentUser();
+      if (appUser != null) {
+        SafeLog.info('Сессия успешно восстановлена для пользователя: ${appUser.displayName}');
+        return appUser;
+      } else {
+        SafeLog.warning('Пользователь не найден в Firestore');
+        return null;
+      }
+    } catch (e, stackTrace) {
+      SafeLog.error('Ошибка восстановления сессии', e, stackTrace);
+      return null;
+    }
+  }
+
+  /// Проверить, валидна ли текущая сессия
+  Future<bool> isSessionValid() async {
+    try {
+      final firebaseUser = currentFirebaseUser;
+      if (firebaseUser == null) return false;
+
+      // Проверяем, не истекла ли сессия
+      await firebaseUser.reload();
+      return firebaseUser.uid.isNotEmpty;
+    } catch (e, stackTrace) {
+      SafeLog.error('Ошибка проверки валидности сессии', e, stackTrace);
+      return false;
     }
   }
 
@@ -153,8 +203,11 @@ class AuthService {
   /// Войти через Google
   Future<AppUser?> signInWithGoogle() async {
     try {
+      SafeLog.info('Начало входа через Google...');
+      
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) {
+        SafeLog.info('Пользователь отменил вход через Google');
         return null; // Пользователь отменил вход
       }
 
@@ -168,7 +221,12 @@ class AuthService {
       final userCredential = await _auth.signInWithCredential(credential);
       final firebaseUser = userCredential.user;
 
-      if (firebaseUser == null) return null;
+      if (firebaseUser == null) {
+        SafeLog.error('Firebase пользователь не создан');
+        return null;
+      }
+
+      SafeLog.info('Firebase аутентификация успешна для: ${firebaseUser.email}');
 
       // Проверяем, существует ли пользователь в Firestore
       final userDoc =
@@ -176,6 +234,7 @@ class AuthService {
 
       if (!userDoc.exists) {
         // Создаем нового пользователя
+        SafeLog.info('Создание нового пользователя в Firestore...');
         final appUser = AppUser.fromFirebaseUser(
           firebaseUser.uid,
           firebaseUser.email ?? '',
@@ -190,13 +249,19 @@ class AuthService {
             .collection('users')
             .doc(firebaseUser.uid)
             .set(appUser.toMap());
+        
+        SafeLog.info('Новый пользователь создан: ${appUser.displayName}');
         return appUser;
       } else {
         // Обновляем время последнего входа
+        SafeLog.info('Обновление времени последнего входа...');
         await _updateLastLogin(firebaseUser.uid);
-        return AppUser.fromDocument(userDoc);
+        final appUser = AppUser.fromDocument(userDoc);
+        SafeLog.info('Пользователь вошел: ${appUser.displayName}');
+        return appUser;
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
+      SafeLog.error('Ошибка входа через Google', e, stackTrace);
       throw Exception('Ошибка входа через Google: $e');
     }
   }
@@ -385,6 +450,21 @@ class AuthService {
       await signOutFromAll();
     } catch (e) {
       throw Exception('Ошибка выхода: $e');
+    }
+  }
+
+  /// Сброс пароля
+  Future<void> resetPassword(String email) async {
+    try {
+      SafeLog.info('Попытка сброса пароля для: $email');
+      await _auth.sendPasswordResetEmail(email: email);
+      SafeLog.info('Письмо для сброса пароля отправлено на: $email');
+    } catch (e, stackTrace) {
+      SafeLog.error('Ошибка сброса пароля', e, stackTrace);
+      if (e is FirebaseAuthException) {
+        throw Exception(_handleAuthException(e));
+      }
+      throw Exception('Ошибка сброса пароля: $e');
     }
   }
 

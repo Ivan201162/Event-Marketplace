@@ -1,0 +1,285 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../providers/auth_providers.dart';
+import '../models/user.dart';
+
+/// Виджет-защитник для проверки аутентификации
+class AuthGuard extends ConsumerWidget {
+  final Widget child;
+  final Widget? loadingWidget;
+  final Widget? unauthenticatedWidget;
+  final List<UserRole>? allowedRoles;
+  final bool requireAuth;
+
+  const AuthGuard({
+    super.key,
+    required this.child,
+    this.loadingWidget,
+    this.unauthenticatedWidget,
+    this.allowedRoles,
+    this.requireAuth = true,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final authState = ref.watch(authStateProvider);
+    final currentUser = ref.watch(currentUserProvider);
+
+    // Если аутентификация не требуется, показываем дочерний виджет
+    if (!requireAuth) {
+      return child;
+    }
+
+    return currentUser.when(
+      data: (user) {
+        // Пользователь не авторизован
+        if (user == null) {
+          return unauthenticatedWidget ?? _buildUnauthenticatedWidget(context);
+        }
+
+        // Проверяем роли, если они указаны
+        if (allowedRoles != null && !allowedRoles!.contains(user.role)) {
+          return _buildUnauthorizedWidget(context, user.role);
+        }
+
+        // Пользователь авторизован и имеет нужную роль
+        return child;
+      },
+      loading: () => loadingWidget ?? _buildLoadingWidget(context),
+      error: (error, stackTrace) => _buildErrorWidget(context, error),
+    );
+  }
+
+  /// Виджет загрузки
+  Widget _buildLoadingWidget(BuildContext context) {
+    return const Scaffold(
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text('Проверка авторизации...'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// Виджет для неавторизованных пользователей
+  Widget _buildUnauthenticatedWidget(BuildContext context) {
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.lock_outline,
+                size: 64,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Требуется авторизация',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Для доступа к этому разделу необходимо войти в систему',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton.icon(
+                onPressed: () {
+                  // TODO: Навигация к экрану авторизации
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Переход к экрану авторизации'),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.login),
+                label: const Text('Войти'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Виджет для пользователей без нужных прав
+  Widget _buildUnauthorizedWidget(BuildContext context, UserRole userRole) {
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.block,
+                size: 64,
+                color: Theme.of(context).colorScheme.error,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Недостаточно прав',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Theme.of(context).colorScheme.error,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Ваша роль: ${userRole.roleDisplayName}\n\nДля доступа к этому разделу требуется другая роль',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                icon: const Icon(Icons.arrow_back),
+                label: const Text('Назад'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Виджет ошибки
+  Widget _buildErrorWidget(BuildContext context, Object error) {
+    return Scaffold(
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(24.0),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                size: 64,
+                color: Theme.of(context).colorScheme.error,
+              ),
+              const SizedBox(height: 24),
+              Text(
+                'Ошибка авторизации',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                  color: Theme.of(context).colorScheme.error,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Произошла ошибка при проверке авторизации: ${error.toString()}',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(height: 32),
+              ElevatedButton.icon(
+                onPressed: () {
+                  // TODO: Попытка повторной авторизации
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Попытка повторной авторизации'),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.refresh),
+                label: const Text('Повторить'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Виджет для условного отображения контента в зависимости от роли
+class RoleBasedWidget extends ConsumerWidget {
+  final Widget customerWidget;
+  final Widget specialistWidget;
+  final Widget? guestWidget;
+  final Widget? adminWidget;
+  final Widget? fallbackWidget;
+
+  const RoleBasedWidget({
+    super.key,
+    required this.customerWidget,
+    required this.specialistWidget,
+    this.guestWidget,
+    this.adminWidget,
+    this.fallbackWidget,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentUser = ref.watch(currentUserProvider);
+
+    return currentUser.when(
+      data: (user) {
+        if (user == null) {
+          return fallbackWidget ?? const SizedBox.shrink();
+        }
+
+        switch (user.role) {
+          case UserRole.customer:
+            return customerWidget;
+          case UserRole.specialist:
+            return specialistWidget;
+          case UserRole.guest:
+            return guestWidget ?? fallbackWidget ?? const SizedBox.shrink();
+          case UserRole.admin:
+            return adminWidget ?? fallbackWidget ?? const SizedBox.shrink();
+        }
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (_, __) => fallbackWidget ?? const SizedBox.shrink(),
+    );
+  }
+}
+
+/// Виджет для отображения информации о пользователе с fallback
+class UserInfoWidget extends ConsumerWidget {
+  final Widget Function(AppUser user) builder;
+  final Widget? fallbackWidget;
+
+  const UserInfoWidget({
+    super.key,
+    required this.builder,
+    this.fallbackWidget,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final currentUser = ref.watch(currentUserProvider);
+
+    return currentUser.when(
+      data: (user) {
+        if (user == null) {
+          return fallbackWidget ?? const SizedBox.shrink();
+        }
+        return builder(user);
+      },
+      loading: () => const Center(child: CircularProgressIndicator()),
+      error: (_, __) => fallbackWidget ?? const SizedBox.shrink(),
+    );
+  }
+}

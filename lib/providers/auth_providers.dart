@@ -52,6 +52,18 @@ final isCustomerProvider = Provider<bool>((ref) {
   return role == UserRole.customer;
 });
 
+/// Провайдер для восстановления сессии
+final sessionRestoreProvider = FutureProvider<AppUser?>((ref) async {
+  final authService = ref.watch(authServiceProvider);
+  return await authService.restoreSession();
+});
+
+/// Провайдер для проверки валидности сессии
+final sessionValidProvider = FutureProvider<bool>((ref) async {
+  final authService = ref.watch(authServiceProvider);
+  return await authService.isSessionValid();
+});
+
 /// Провайдер для проверки, является ли пользователь гостем
 final isGuestProvider = Provider<bool>((ref) {
   final role = ref.watch(currentUserRoleProvider);

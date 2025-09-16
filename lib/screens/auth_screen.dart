@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/auth_providers.dart';
 import '../models/user.dart';
+import 'reset_password_screen.dart';
 
 class AuthScreen extends ConsumerWidget {
   const AuthScreen({super.key});
@@ -373,26 +374,9 @@ class AuthScreen extends ConsumerWidget {
 
   /// Показать диалог сброса пароля
   void _showResetPasswordDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Сброс пароля'),
-        content: const Text(
-          'Введите email для отправки ссылки сброса пароля',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              ref.read(loginFormProvider.notifier).resetPassword();
-              Navigator.of(context).pop();
-            },
-            child: const Text('Отправить'),
-          ),
-        ],
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const ResetPasswordScreen(),
       ),
     );
   }

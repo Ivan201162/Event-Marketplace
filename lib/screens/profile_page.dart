@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user.dart';
 import '../providers/auth_providers.dart';
+import '../widgets/auth_guard_widget.dart';
 import 'profile_edit_screen.dart';
 
 /// Страница профиля пользователя
@@ -15,26 +16,14 @@ class ProfilePage extends ConsumerStatefulWidget {
 class _ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
-    final currentUser = ref.watch(currentUserProvider);
-
-    return currentUser.when(
-      data: (user) {
-        if (user == null) {
-          return const Scaffold(
-            body: Center(
-              child: Text('Пользователь не авторизован'),
-            ),
-          );
-        }
-
-        return _buildProfileContent(context, user);
-      },
-      loading: () => const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
-      ),
-      error: (error, stack) => Scaffold(
-        body: Center(
-          child: Text('Ошибка загрузки профиля: $error'),
+    return AuthGuard(
+      requireAuth: true,
+      child: UserInfoWidget(
+        builder: (user) => _buildProfileContent(context, user),
+        fallbackWidget: const Scaffold(
+          body: Center(
+            child: Text('Пользователь не авторизован'),
+          ),
         ),
       ),
     );
