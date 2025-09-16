@@ -1,163 +1,34 @@
 {
   "@@locale": "en",
-  "appTitle": "Event Marketplace",
-  "@appTitle": {
-    "description": "Application title"
-  },
-  "welcome": "Welcome",
-  "@welcome": {
-    "description": "Welcome message"
-  },
-  "email": "Email",
-  "@email": {
-    "description": "Email field"
-  },
-  "password": "Password",
-  "@password": {
-    "description": "Password field"
-  },
-  "signIn": "Sign In",
-  "@signIn": {
-    "description": "Sign in button"
-  },
-  "signUp": "Sign Up",
-  "@signUp": {
-    "description": "Sign up button"
-  },
-  "signOut": "Sign Out",
-  "@signOut": {
-    "description": "Sign out button"
-  },
-  "profile": "Profile",
-  "@profile": {
-    "description": "User profile"
-  },
   "settings": "Settings",
-  "@settings": {
-    "description": "Application settings"
-  },
-  "events": "Events",
-  "@events": {
-    "description": "Events"
-  },
-  "myEvents": "My Events",
-  "@myEvents": {
-    "description": "My events"
-  },
-  "favorites": "Favorites",
-  "@favorites": {
-    "description": "Favorite events"
-  },
-  "bookings": "Bookings",
-  "@bookings": {
-    "description": "Bookings"
-  },
-  "createEvent": "Create Event",
-  "@createEvent": {
-    "description": "Create event"
-  },
-  "editEvent": "Edit Event",
-  "@editEvent": {
-    "description": "Edit event"
-  },
-  "deleteEvent": "Delete Event",
-  "@deleteEvent": {
-    "description": "Delete event"
-  },
-  "bookEvent": "Book",
-  "@bookEvent": {
-    "description": "Book event"
-  },
-  "cancelBooking": "Cancel Booking",
-  "@cancelBooking": {
-    "description": "Cancel booking"
-  },
-  "addToFavorites": "Add to Favorites",
-  "@addToFavorites": {
-    "description": "Add to favorites"
-  },
-  "removeFromFavorites": "Remove from Favorites",
-  "@removeFromFavorites": {
-    "description": "Remove from favorites"
-  },
-  "writeReview": "Write Review",
-  "@writeReview": {
-    "description": "Write review"
-  },
-  "notifications": "Notifications",
-  "@notifications": {
-    "description": "Notifications"
-  },
   "language": "Language",
-  "@language": {
-    "description": "Interface language"
-  },
-  "russian": "Русский",
-  "@russian": {
-    "description": "Russian language"
-  },
-  "english": "English",
-  "@english": {
-    "description": "English language"
-  },
-  "adminPanel": "Admin Panel",
-  "@adminPanel": {
-    "description": "Admin panel"
-  },
-  "loading": "Loading...",
-  "@loading": {
-    "description": "Loading indicator"
-  },
-  "error": "Error",
-  "@error": {
-    "description": "Error"
-  },
-  "success": "Success",
-  "@success": {
-    "description": "Success"
-  },
-  "cancel": "Cancel",
-  "@cancel": {
-    "description": "Cancel action"
-  },
+  "notifications": "Notifications",
+  "profile": "Profile",
+  "events": "Events",
+  "bookings": "Bookings",
+  "favorites": "Favorites",
+  "admin": "Admin Panel",
+  "logout": "Logout",
   "save": "Save",
-  "@save": {
-    "description": "Save changes"
-  },
-  "delete": "Delete",
-  "@delete": {
-    "description": "Delete item"
-  },
+  "cancel": "Cancel",
   "edit": "Edit",
-  "@edit": {
-    "description": "Edit item"
-  },
+  "delete": "Delete",
+  "create": "Create",
   "search": "Search",
-  "@search": {
-    "description": "Search"
-  },
   "filter": "Filter",
-  "@filter": {
-    "description": "Filter"
-  },
-  "clear": "Clear",
-  "@clear": {
-    "description": "Clear"
-  },
-  "reset": "Reset",
-  "@reset": {
-    "description": "Reset"
-  },
-  "confirm": "Confirm",
-  "@confirm": {
-    "description": "Confirm action"
-  },
-  "yes": "Yes",
-  "@yes": {
-    "description": "Yes"
-  },
-  "no": "No",
-  "@no": {
-    "description": "No"
-  }
+  "date": "Date",
+  "price": "Price",
+  "location": "Location",
+  "description": "Description",
+  "title": "Title",
+  "category": "Category",
+  "participants": "Participants",
+  "rating": "Rating",
+  "review": "Review",
+  "book": "Book",
+  "booked": "Booked",
+  "pending": "Pending",
+  "confirmed": "Confirmed",
+  "cancelled": "Cancelled",
+  "completed": "Completed"
 }

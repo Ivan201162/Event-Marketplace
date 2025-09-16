@@ -344,3 +344,32 @@ enum EventStatus {
   completed,  // Завершено
 }
 
+/// Extension для EventCategory
+extension EventCategoryExtension on EventCategory {
+  /// Получить название категории
+  String get categoryName {
+    switch (this) {
+      case EventCategory.wedding:
+        return 'Свадьба';
+      case EventCategory.birthday:
+        return 'День рождения';
+      case EventCategory.corporate:
+        return 'Корпоратив';
+      case EventCategory.conference:
+        return 'Конференция';
+      case EventCategory.seminar:
+        return 'Семинар';
+      case EventCategory.exhibition:
+        return 'Выставка';
+      case EventCategory.concert:
+        return 'Концерт';
+      case EventCategory.sport:
+        return 'Спорт';
+      case EventCategory.travel:
+        return 'Путешествие';
+      case EventCategory.other:
+        return 'Другое';
+    }
+  }
+}
+

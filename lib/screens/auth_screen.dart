@@ -498,29 +498,21 @@ class AuthScreen extends ConsumerWidget {
     }
   }
 
-  /// Обработка входа через Google
-  Future<void> _handleGoogleSignIn(BuildContext context, WidgetRef ref) async {
-    try {
-      final authService = ref.read(authServiceProvider);
-      
-      final user = await authService.signInWithGoogle();
-      if (user != null) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Добро пожаловать, ${user.displayNameOrEmail}!'),
-            backgroundColor: Colors.green,
-          ),
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка входа через Google: $e'),
-          backgroundColor: Colors.red,
+  /// Кнопка входа через Google
+  Widget _buildGoogleSignInButton(BuildContext context, WidgetRef ref) {
+    return SizedBox(
+      width: double.infinity,
+      child: OutlinedButton.icon(
+        onPressed: () => _handleGoogleSignIn(context, ref),
+        icon: const Icon(Icons.login),
+        label: const Text('Войти через Google'),
+        style: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 12),
         ),
-      );
-    }
+      ),
+    );
   }
+
 
   /// Обработка входа через ВКонтакте
   Future<void> _handleVKSignIn(BuildContext context, WidgetRef ref) async {

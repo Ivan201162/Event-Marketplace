@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/user.dart';
-import '../services/auth_service.dart';
 import '../providers/auth_providers.dart';
 import 'profile_edit_screen.dart';
 
@@ -223,6 +220,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         return Colors.green;
       case UserRole.guest:
         return Colors.orange;
+      case UserRole.admin:
+        return Colors.purple;
     }
   }
 
@@ -234,6 +233,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         return 'Специалист';
       case UserRole.guest:
         return 'Гость';
+      case UserRole.admin:
+        return 'Администратор';
     }
   }
 

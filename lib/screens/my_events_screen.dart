@@ -4,7 +4,7 @@ import '../providers/user_role_provider.dart';
 import '../providers/auth_providers.dart';
 import '../providers/event_providers.dart';
 import '../models/event.dart';
-import '../models/user.dart';
+import '../models/user.dart' show AppUser, UserRole;
 import 'create_event_screen.dart';
 import 'event_detail_screen.dart';
 

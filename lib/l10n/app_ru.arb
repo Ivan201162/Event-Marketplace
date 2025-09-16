@@ -1,163 +1,34 @@
 {
   "@@locale": "ru",
-  "appTitle": "Event Marketplace",
-  "@appTitle": {
-    "description": "Название приложения"
-  },
-  "welcome": "Добро пожаловать",
-  "@welcome": {
-    "description": "Приветствие"
-  },
-  "email": "Email",
-  "@email": {
-    "description": "Поле email"
-  },
-  "password": "Пароль",
-  "@password": {
-    "description": "Поле пароля"
-  },
-  "signIn": "Войти",
-  "@signIn": {
-    "description": "Кнопка входа"
-  },
-  "signUp": "Регистрация",
-  "@signUp": {
-    "description": "Кнопка регистрации"
-  },
-  "signOut": "Выйти",
-  "@signOut": {
-    "description": "Кнопка выхода"
-  },
-  "profile": "Профиль",
-  "@profile": {
-    "description": "Профиль пользователя"
-  },
   "settings": "Настройки",
-  "@settings": {
-    "description": "Настройки приложения"
-  },
-  "events": "Мероприятия",
-  "@events": {
-    "description": "Мероприятия"
-  },
-  "myEvents": "Мои мероприятия",
-  "@myEvents": {
-    "description": "Мои мероприятия"
-  },
-  "favorites": "Избранное",
-  "@favorites": {
-    "description": "Избранные мероприятия"
-  },
-  "bookings": "Бронирования",
-  "@bookings": {
-    "description": "Бронирования"
-  },
-  "createEvent": "Создать мероприятие",
-  "@createEvent": {
-    "description": "Создать мероприятие"
-  },
-  "editEvent": "Редактировать мероприятие",
-  "@editEvent": {
-    "description": "Редактировать мероприятие"
-  },
-  "deleteEvent": "Удалить мероприятие",
-  "@deleteEvent": {
-    "description": "Удалить мероприятие"
-  },
-  "bookEvent": "Забронировать",
-  "@bookEvent": {
-    "description": "Забронировать мероприятие"
-  },
-  "cancelBooking": "Отменить бронирование",
-  "@cancelBooking": {
-    "description": "Отменить бронирование"
-  },
-  "addToFavorites": "Добавить в избранное",
-  "@addToFavorites": {
-    "description": "Добавить в избранное"
-  },
-  "removeFromFavorites": "Удалить из избранного",
-  "@removeFromFavorites": {
-    "description": "Удалить из избранного"
-  },
-  "writeReview": "Написать отзыв",
-  "@writeReview": {
-    "description": "Написать отзыв"
-  },
-  "notifications": "Уведомления",
-  "@notifications": {
-    "description": "Уведомления"
-  },
   "language": "Язык",
-  "@language": {
-    "description": "Язык интерфейса"
-  },
-  "russian": "Русский",
-  "@russian": {
-    "description": "Русский язык"
-  },
-  "english": "English",
-  "@english": {
-    "description": "Английский язык"
-  },
-  "adminPanel": "Админ-панель",
-  "@adminPanel": {
-    "description": "Админ-панель"
-  },
-  "loading": "Загрузка...",
-  "@loading": {
-    "description": "Индикатор загрузки"
-  },
-  "error": "Ошибка",
-  "@error": {
-    "description": "Ошибка"
-  },
-  "success": "Успешно",
-  "@success": {
-    "description": "Успешное выполнение"
-  },
-  "cancel": "Отмена",
-  "@cancel": {
-    "description": "Отмена действия"
-  },
+  "notifications": "Уведомления",
+  "profile": "Профиль",
+  "events": "Мероприятия",
+  "bookings": "Бронирования",
+  "favorites": "Избранное",
+  "admin": "Админ-панель",
+  "logout": "Выйти",
   "save": "Сохранить",
-  "@save": {
-    "description": "Сохранить изменения"
-  },
-  "delete": "Удалить",
-  "@delete": {
-    "description": "Удалить элемент"
-  },
+  "cancel": "Отмена",
   "edit": "Редактировать",
-  "@edit": {
-    "description": "Редактировать элемент"
-  },
+  "delete": "Удалить",
+  "create": "Создать",
   "search": "Поиск",
-  "@search": {
-    "description": "Поиск"
-  },
   "filter": "Фильтр",
-  "@filter": {
-    "description": "Фильтр"
-  },
-  "clear": "Очистить",
-  "@clear": {
-    "description": "Очистить"
-  },
-  "reset": "Сбросить",
-  "@reset": {
-    "description": "Сбросить"
-  },
-  "confirm": "Подтвердить",
-  "@confirm": {
-    "description": "Подтвердить действие"
-  },
-  "yes": "Да",
-  "@yes": {
-    "description": "Да"
-  },
-  "no": "Нет",
-  "@no": {
-    "description": "Нет"
-  }
+  "date": "Дата",
+  "price": "Цена",
+  "location": "Место",
+  "description": "Описание",
+  "title": "Название",
+  "category": "Категория",
+  "participants": "Участники",
+  "rating": "Рейтинг",
+  "review": "Отзыв",
+  "book": "Забронировать",
+  "booked": "Забронировано",
+  "pending": "Ожидает подтверждения",
+  "confirmed": "Подтверждено",
+  "cancelled": "Отменено",
+  "completed": "Завершено"
 }
