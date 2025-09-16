@@ -40,6 +40,7 @@ dependencies:
   # Calendar integration
   googleapis: ^11.4.0
   googleapis_auth: ^1.4.1
+  icalendar_parser: ^2.1.0
   # Audio recording
   record: ^5.0.4
   permission_handler: ^11.0.1
