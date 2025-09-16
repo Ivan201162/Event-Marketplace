@@ -383,58 +383,6 @@ class AuthService {
     }
   }
 
-  /// Вход через Google
-  Future<AppUser?> signInWithGoogle({required UserRole role}) async {
-    try {
-      // Запускаем процесс входа через Google
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
-      if (googleUser == null) return null;
-
-      // Получаем данные аутентификации
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
-
-      // Создаем новый credential
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
-
-      // Входим в Firebase
-      final userCredential = await _auth.signInWithCredential(credential);
-      final firebaseUser = userCredential.user;
-      if (firebaseUser == null) return null;
-
-      // Проверяем, существует ли пользователь в Firestore
-      final existingUser = await getCurrentUser();
-      if (existingUser != null) {
-        await _updateLastLogin(firebaseUser.uid);
-        return existingUser;
-      }
-
-      // Создаем нового пользователя
-      final appUser = AppUser.fromFirebaseUser(
-        firebaseUser.uid,
-        firebaseUser.email ?? '',
-        displayName: firebaseUser.displayName ?? 'Пользователь',
-        photoURL: firebaseUser.photoURL,
-        role: role,
-      );
-
-      await _firestore
-          .collection('users')
-          .doc(firebaseUser.uid)
-          .set(appUser.toMap());
-      return appUser;
-    } catch (e) {
-      throw Exception('Ошибка входа через Google: $e');
-    }
-  }
-
-  /// Вход через ВКонтакте (временно отключен)
-  Future<AppUser?> signInWithVK({required UserRole role}) async {
-    throw Exception('Вход через ВКонтакте временно недоступен');
-  }
 
   /// Выход из всех социальных сетей
   Future<void> signOutFromAll() async {
@@ -455,20 +403,6 @@ class AuthService {
     }
   }
 
-  /// Сброс пароля
-  Future<void> resetPassword(String email) async {
-    try {
-      SafeLog.info('Попытка сброса пароля для: $email');
-      await _auth.sendPasswordResetEmail(email: email);
-      SafeLog.info('Письмо для сброса пароля отправлено на: $email');
-    } catch (e, stackTrace) {
-      SafeLog.error('Ошибка сброса пароля', e, stackTrace);
-      if (e is FirebaseAuthException) {
-        throw Exception(_handleAuthException(e));
-      }
-      throw Exception('Ошибка сброса пароля: $e');
-    }
-  }
 
   /// Обработка исключений Firebase Auth
   String _handleAuthException(FirebaseAuthException e) {

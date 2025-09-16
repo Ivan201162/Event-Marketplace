@@ -4,9 +4,11 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 
 /// Провайдер для управления темой приложения
-class ThemeNotifier extends StateNotifier<ThemeMode> {
-  ThemeNotifier() : super(ThemeMode.system) {
+class ThemeNotifier extends Notifier<ThemeMode> {
+  @override
+  ThemeMode build() {
     _loadThemeMode();
+    return ThemeMode.system;
   }
 
   /// Загружает сохранённый режим темы
@@ -51,7 +53,7 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
 }
 
 /// Провайдер для управления темой
-final themeProvider = StateNotifierProvider<ThemeNotifier, ThemeMode>((ref) {
+final themeProvider = NotifierProvider<ThemeNotifier, ThemeMode>(() {
   return ThemeNotifier();
 });
 

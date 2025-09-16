@@ -333,7 +333,7 @@ class MemoryMetric {
 }
 
 /// Расширение для мониторинга операций
-extension MonitoringExtension on Future<T> {
+extension MonitoringExtension<T> on Future<T> {
   /// Отслеживать выполнение Future операции
   Future<T> monitor(String operationName,
       {Map<String, dynamic>? metadata}) async {

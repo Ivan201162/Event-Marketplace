@@ -16,7 +16,7 @@ import 'package:event_marketplace_app/services/review_service.dart';
 import 'package:event_marketplace_app/services/analytics_service.dart';
 import 'package:event_marketplace_app/services/calendar_service.dart';
 import 'package:event_marketplace_app/services/auth_service.dart';
-import 'package:event_marketplace_app/test/mocks/test_data.dart';
+import 'test_data.dart';
 
 // Mock Specialist Service
 class MockSpecialistService implements SpecialistService {

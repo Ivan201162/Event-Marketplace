@@ -714,18 +714,3 @@ extension SpecialistCategoryExtension on SpecialistCategory {
   }
 }
 
-/// Расширение для отображения названий уровней опыта
-extension ExperienceLevelExtension on ExperienceLevel {
-  String get displayName {
-    switch (this) {
-      case ExperienceLevel.beginner:
-        return 'Начинающий';
-      case ExperienceLevel.intermediate:
-        return 'Средний';
-      case ExperienceLevel.advanced:
-        return 'Продвинутый';
-      case ExperienceLevel.expert:
-        return 'Эксперт';
-    }
-  }
-}

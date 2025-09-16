@@ -211,9 +211,9 @@ enum RecommendationInteractionType {
 
 /// Нотификатор для взаимодействий с рекомендациями
 class RecommendationInteractionNotifier
-    extends StateNotifier<RecommendationInteractionState> {
-  RecommendationInteractionNotifier()
-      : super(const RecommendationInteractionState());
+    extends Notifier<RecommendationInteractionState> {
+  @override
+  RecommendationInteractionState build() => const RecommendationInteractionState();
 
   /// Записать взаимодействие
   void recordInteraction(RecommendationInteraction interaction) {

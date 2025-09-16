@@ -52,8 +52,8 @@ final eventBookingStatsProvider =
 
 /// Провайдер для управления состоянием создания бронирования
 final createBookingProvider =
-    StateNotifierProvider<CreateBookingNotifier, CreateBookingState>((ref) {
-  return CreateBookingNotifier(ref.read(bookingServiceProvider));
+    NotifierProvider<CreateBookingNotifier, CreateBookingState>(() {
+  return CreateBookingNotifier();
 });
 
 /// Состояние создания бронирования
@@ -94,11 +94,14 @@ class CreateBookingState {
 }
 
 /// Нотификатор для создания бронирования
-class CreateBookingNotifier extends StateNotifier<CreateBookingState> {
-  final BookingService _bookingService;
+class CreateBookingNotifier extends Notifier<CreateBookingState> {
+  late final BookingService _bookingService;
 
-  CreateBookingNotifier(this._bookingService)
-      : super(const CreateBookingState());
+  @override
+  CreateBookingState build() {
+    _bookingService = ref.read(bookingServiceProvider);
+    return const CreateBookingState();
+  }
 
   /// Обновить количество участников
   void updateParticipantsCount(int count) {

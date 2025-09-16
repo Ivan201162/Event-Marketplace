@@ -68,8 +68,8 @@ final allSchedulesProvider = StreamProvider<List<SpecialistSchedule>>((ref) {
 
 /// Провайдер для управления состоянием календаря
 final calendarStateProvider =
-    StateNotifierProvider<CalendarStateNotifier, CalendarState>((ref) {
-  return CalendarStateNotifier(ref.read(calendarServiceProvider));
+    NotifierProvider<CalendarStateNotifier, CalendarState>(() {
+  return CalendarStateNotifier();
 });
 
 /// Состояние календаря
@@ -84,8 +84,8 @@ class CalendarState {
   final String? errorMessage;
 
   const CalendarState({
-    this.selectedDate = const DateTime(2025, 1, 1),
-    this.focusedDate = const DateTime(2025, 1, 1),
+    required this.selectedDate,
+    required this.focusedDate,
     this.selectedSpecialistId,
     this.availableDates = const [],
     this.availableTimeSlots = const [],
@@ -119,21 +119,19 @@ class CalendarState {
 }
 
 /// Нотификатор состояния календаря
-class CalendarStateNotifier extends StateNotifier<CalendarState> {
-  final CalendarService _calendarService;
+class CalendarStateNotifier extends Notifier<CalendarState> {
+  late final CalendarService _calendarService;
 
-  CalendarStateNotifier(this._calendarService) : super(const CalendarState()) {
-    _initializeCalendar();
-  }
-
-  /// Инициализация календаря
-  void _initializeCalendar() {
+  @override
+  CalendarState build() {
+    _calendarService = ref.read(calendarServiceProvider);
     final now = DateTime.now();
-    state = state.copyWith(
+    return CalendarState(
       selectedDate: now,
       focusedDate: now,
     );
   }
+
 
   /// Выбрать дату
   void selectDate(DateTime date) {

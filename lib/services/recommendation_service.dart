@@ -342,38 +342,38 @@ class RecommendationService {
       return []; // TODO: Implement location-based recommendations
 
       // Ищем специалистов в том же городе
-      final nearbySpecialists = await _db
-          .collection('specialists')
-          .where('serviceAreas', arrayContains: userLocation)
-          .where('isAvailable', isEqualTo: true)
-          .orderBy('rating', descending: true)
-          .limit(limit)
-          .get();
+      // final nearbySpecialists = await _db
+      //     .collection('specialists')
+      //     .where('serviceAreas', arrayContains: userLocation)
+      //     .where('isAvailable', isEqualTo: true)
+      //     .orderBy('rating', descending: true)
+      //     .limit(limit)
+      //     .get();
 
-      return nearbySpecialists.docs
-          .where((doc) => !excludeIds.contains(doc.id))
-          .map((doc) {
-        final specialist = Specialist.fromDocument(doc);
-        final recommendation = Recommendation(
-          id: '',
-          userId: userId,
-          specialistId: specialist.id,
-          type: RecommendationType.nearby,
-          score: specialist.rating * 0.9 + 0.1, // Бонус за близость
-          reason: 'Работает в вашем городе',
-          metadata: {
-            'location': userLocation,
-            'rating': specialist.rating,
-          },
-          createdAt: DateTime.now(),
-          expiresAt: DateTime.now().add(const Duration(days: 7)),
-        );
+      // return nearbySpecialists.docs
+      //     .where((doc) => !excludeIds.contains(doc.id))
+      //     .map((doc) {
+      //   final specialist = Specialist.fromDocument(doc);
+      //   final recommendation = Recommendation(
+      //     id: '',
+      //     userId: userId,
+      //     specialistId: specialist.id,
+      //     type: RecommendationType.nearby,
+      //     score: specialist.rating * 0.9 + 0.1, // Бонус за близость
+      //     reason: 'Работает в вашем городе',
+      //     metadata: {
+      //       'location': userLocation,
+      //       'rating': specialist.rating,
+      //     },
+      //     createdAt: DateTime.now(),
+      //     expiresAt: DateTime.now().add(const Duration(days: 7)),
+      //   );
 
-        return SpecialistRecommendation.create(
-          recommendation: recommendation,
-          specialist: specialist,
-        );
-      }).toList();
+      //   return SpecialistRecommendation.create(
+      //     recommendation: recommendation,
+      //     specialist: specialist,
+      //   );
+      // }).toList();
     } catch (e) {
       print('Error getting location-based recommendations: $e');
       return [];

@@ -171,7 +171,7 @@ class CalendarService {
   /// Экспортировать события в ICS файл
   Future<String?> exportToICS(List<CalendarEvent> events) async {
     try {
-      final calendar = ICalendar();
+      final calendar = ICalendar(data: '');
 
       for (final event in events) {
         final icsEvent = IEvent(
@@ -617,10 +617,28 @@ class CalendarService {
     await deleteEvent(eventId);
   }
 
-  /// Создать событие из бронирования
-  Future<String?> createEventFromBooking(CalendarEvent event) async {
-    return await createEvent(event);
+  /// Получить события на дату
+  Future<List<CalendarEvent>> getEventsForDate(String specialistId, DateTime date) async {
+    try {
+      final startOfDay = DateTime(date.year, date.month, date.day);
+      final endOfDay = startOfDay.add(const Duration(days: 1));
+
+      final events = await _firestore
+          .collection('calendar_events')
+          .where('specialistId', isEqualTo: specialistId)
+          .where('startTime', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+          .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
+          .get();
+
+      return events.docs
+          .map((doc) => CalendarEvent.fromDocument(doc))
+          .toList();
+    } catch (e) {
+      print('Ошибка получения событий на дату: $e');
+      return [];
+    }
   }
+
 
   /// Создать событие бронирования
   Future<String?> createBookingEvent(CalendarEvent event) async {

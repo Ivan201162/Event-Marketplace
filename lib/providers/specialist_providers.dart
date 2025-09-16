@@ -42,9 +42,18 @@ final specialistsByCategoryProvider =
 });
 
 /// Провайдер фильтров поиска
-final specialistFiltersProvider = StateProvider<SpecialistFilters>((ref) {
-  return const SpecialistFilters();
+final specialistFiltersProvider = NotifierProvider<SpecialistFiltersNotifier, SpecialistFilters>(() {
+  return SpecialistFiltersNotifier();
 });
+
+class SpecialistFiltersNotifier extends Notifier<SpecialistFilters> {
+  @override
+  SpecialistFilters build() => const SpecialistFilters();
+  
+  void updateFilters(SpecialistFilters filters) {
+    state = filters;
+  }
+}
 
 /// Провайдер результатов поиска с фильтрами
 final searchResultsProvider = StreamProvider<List<Specialist>>((ref) {
@@ -76,19 +85,19 @@ final specialistTimeSlotsProvider =
 
 /// Провайдер состояния поиска
 final searchStateProvider =
-    StateNotifierProvider<SearchStateNotifier, SearchState>((ref) {
+    NotifierProvider<SearchStateNotifier, SearchState>(() {
   return SearchStateNotifier();
 });
 
 /// Провайдер избранных специалистов
 final favoriteSpecialistsProvider =
-    StateNotifierProvider<FavoriteSpecialistsNotifier, List<String>>((ref) {
+    NotifierProvider<FavoriteSpecialistsNotifier, List<String>>(() {
   return FavoriteSpecialistsNotifier();
 });
 
 /// Провайдер истории поиска
 final searchHistoryProvider =
-    StateNotifierProvider<SearchHistoryNotifier, List<String>>((ref) {
+    NotifierProvider<SearchHistoryNotifier, List<String>>(() {
   return SearchHistoryNotifier();
 });
 
@@ -174,8 +183,9 @@ class SearchState {
 }
 
 /// Нотификатор состояния поиска
-class SearchStateNotifier extends StateNotifier<SearchState> {
-  SearchStateNotifier() : super(const SearchState());
+class SearchStateNotifier extends Notifier<SearchState> {
+  @override
+  SearchState build() => const SearchState();
 
   /// Начать поиск
   void startSearch(String query, SpecialistFilters filters) {
@@ -225,8 +235,9 @@ class SearchStateNotifier extends StateNotifier<SearchState> {
 }
 
 /// Нотификатор избранных специалистов
-class FavoriteSpecialistsNotifier extends StateNotifier<List<String>> {
-  FavoriteSpecialistsNotifier() : super([]);
+class FavoriteSpecialistsNotifier extends Notifier<List<String>> {
+  @override
+  List<String> build() => [];
 
   /// Добавить в избранное
   void addToFavorites(String specialistId) {
@@ -252,8 +263,9 @@ class FavoriteSpecialistsNotifier extends StateNotifier<List<String>> {
 }
 
 /// Нотификатор истории поиска
-class SearchHistoryNotifier extends StateNotifier<List<String>> {
-  SearchHistoryNotifier() : super([]);
+class SearchHistoryNotifier extends Notifier<List<String>> {
+  @override
+  List<String> build() => [];
 
   /// Добавить запрос в историю
   void addToHistory(String query) {

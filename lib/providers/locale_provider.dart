@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Провайдер для управления локализацией
-final localeProvider = StateNotifierProvider<LocaleNotifier, Locale>((ref) {
+final localeProvider = NotifierProvider<LocaleNotifier, Locale>(() {
   return LocaleNotifier();
 });
 
 /// Нотификатор для управления локалью
-class LocaleNotifier extends StateNotifier<Locale> {
-  LocaleNotifier() : super(const Locale('ru'));
+class LocaleNotifier extends Notifier<Locale> {
+  @override
+  Locale build() => const Locale('ru');
 
   /// Изменить локаль
   void setLocale(Locale locale) {

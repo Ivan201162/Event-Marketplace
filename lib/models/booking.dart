@@ -6,6 +6,7 @@ enum BookingStatus {
   confirmed, // Подтверждено
   cancelled, // Отменено
   completed, // Завершено
+  rejected, // Отклонено
 }
 
 /// Модель бронирования

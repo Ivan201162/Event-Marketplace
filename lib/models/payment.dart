@@ -3,8 +3,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// Типы платежей
 enum PaymentType {
   advance, // Аванс
-  final_payment, // Финальный платеж
-  full_payment, // Полная оплата
+  finalPayment, // Финальный платеж
+  fullPayment, // Полная оплата
   refund, // Возврат
 }
 

@@ -540,9 +540,31 @@ class AuthScreen extends ConsumerWidget {
 }
 
 /// Провайдеры для локального состояния формы
-final displayNameProvider = StateProvider<String>((ref) => '');
-final selectedRoleProvider =
-    StateProvider<UserRole>((ref) => UserRole.customer);
+final displayNameProvider = NotifierProvider<DisplayNameNotifier, String>(() {
+  return DisplayNameNotifier();
+});
+
+final selectedRoleProvider = NotifierProvider<SelectedRoleNotifier, UserRole>(() {
+  return SelectedRoleNotifier();
+});
+
+class DisplayNameNotifier extends Notifier<String> {
+  @override
+  String build() => '';
+  
+  void setDisplayName(String name) {
+    state = name;
+  }
+}
+
+class SelectedRoleNotifier extends Notifier<UserRole> {
+  @override
+  UserRole build() => UserRole.customer;
+  
+  void setRole(UserRole role) {
+    state = role;
+  }
+}
 
 /// Расширение для LoginFormNotifier
 extension LoginFormNotifierExtension on LoginFormNotifier {

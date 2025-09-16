@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../models/app_notification.dart';
 import '../models/booking.dart';
 import '../models/specialist_schedule.dart';
 import '../models/notification.dart';
@@ -343,8 +344,9 @@ class FirestoreService {
 
       // Отправляем уведомление клиенту
       await _notificationService.createBookingNotification(
-        userId: booking.customerId,
-        type: notificationType,
+        userId: booking.customerId!,
+        title: title,
+        content: body,
         bookingId: booking.id,
         specialistName: 'Специалист ${booking.specialistId}',
         customerName: 'Клиент ${booking.customerId}',
@@ -365,8 +367,9 @@ class FirestoreService {
       // Отправляем уведомление специалисту (если статус изменил клиент)
       if (status == 'cancelled') {
         await _notificationService.createBookingNotification(
-          userId: booking.specialistId,
-          type: notificationType,
+          userId: booking.specialistId!,
+          title: title,
+          content: body,
           bookingId: booking.id,
           specialistName: 'Специалист ${booking.specialistId}',
           customerName: 'Клиент ${booking.customerId}',
@@ -375,7 +378,7 @@ class FirestoreService {
 
         // Отправляем push-уведомление специалисту
         await _sendPushNotification(
-          userId: booking.specialistId,
+          userId: booking.specialistId!,
           title: 'Заявка отменена клиентом',
           body:
               'Клиент отменил заявку на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year}',
@@ -410,7 +413,10 @@ class FirestoreService {
       // Отправляем уведомление клиенту
       await _notificationService.createPaymentNotification(
         userId: customerId,
-        type: notificationType,
+        title: status == 'completed' ? 'Платеж завершен' : 'Ошибка платежа',
+        content: status == 'completed' 
+            ? 'Ваш платеж успешно обработан' 
+            : 'Произошла ошибка при обработке платежа',
         paymentId: paymentId,
         amount: 0, // TODO: Получить сумму из платежа
         currency: 'RUB',
@@ -419,7 +425,10 @@ class FirestoreService {
       // Отправляем уведомление специалисту
       await _notificationService.createPaymentNotification(
         userId: specialistId,
-        type: notificationType,
+        title: status == 'completed' ? 'Платеж получен' : 'Ошибка платежа',
+        content: status == 'completed' 
+            ? 'Платеж от клиента успешно обработан' 
+            : 'Произошла ошибка при обработке платежа',
         paymentId: paymentId,
         amount: 0, // TODO: Получить сумму из платежа
         currency: 'RUB',

@@ -98,8 +98,8 @@ enum AuthState {
 
 /// Провайдер для управления состоянием формы входа
 final loginFormProvider =
-    StateNotifierProvider<LoginFormNotifier, LoginFormState>((ref) {
-  return LoginFormNotifier(ref.read(authServiceProvider));
+    NotifierProvider<LoginFormNotifier, LoginFormState>(() {
+  return LoginFormNotifier();
 });
 
 /// Состояние формы входа
@@ -136,10 +136,14 @@ class LoginFormState {
 }
 
 /// Нотификатор для управления формой входа
-class LoginFormNotifier extends StateNotifier<LoginFormState> {
-  final AuthService _authService;
+class LoginFormNotifier extends Notifier<LoginFormState> {
+  late final AuthService _authService;
 
-  LoginFormNotifier(this._authService) : super(const LoginFormState());
+  @override
+  LoginFormState build() {
+    _authService = ref.read(authServiceProvider);
+    return const LoginFormState();
+  }
 
   /// Обновить email
   void updateEmail(String email) {
