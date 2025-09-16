@@ -20,6 +20,7 @@ class FeatureFlags {
 
   // Экспорт и шаринг
   static const bool calendarExportEnabled = true;
+  static const bool calendarSyncEnabled = false;
   static const bool shareEnabled = true;
 
   // Подписки
@@ -58,6 +59,8 @@ class FeatureFlags {
         return userModerationEnabled;
       case 'calendar_export':
         return calendarExportEnabled;
+      case 'calendar_sync':
+        return calendarSyncEnabled;
       case 'share':
         return shareEnabled;
       case 'subscriptions':
@@ -90,6 +93,7 @@ class FeatureFlags {
     if (adminPanelEnabled) features.add('admin_panel');
     if (userModerationEnabled) features.add('user_moderation');
     if (calendarExportEnabled) features.add('calendar_export');
+    if (calendarSyncEnabled) features.add('calendar_sync');
     if (shareEnabled) features.add('share');
     if (subscriptionsEnabled) features.add('subscriptions');
     if (socialLoginEnabled) features.add('social_login');
@@ -114,6 +118,7 @@ class FeatureFlags {
       'admin_panel': adminPanelEnabled,
       'user_moderation': userModerationEnabled,
       'calendar_export': calendarExportEnabled,
+      'calendar_sync': calendarSyncEnabled,
       'share': shareEnabled,
       'subscriptions': subscriptionsEnabled,
       'social_login': socialLoginEnabled,
