@@ -12,7 +12,8 @@ class PaymentGatewayMock implements PaymentGateway {
   @override
   Future<void> initialize() async {
     if (!FeatureFlags.paymentsEnabled) {
-      SafeLog.info('PaymentGatewayMock: Payments are disabled via feature flag');
+      SafeLog.info(
+          'PaymentGatewayMock: Payments are disabled via feature flag');
       return;
     }
 
@@ -57,14 +58,16 @@ class PaymentGatewayMock implements PaymentGateway {
       );
     }
 
-    SafeLog.info('PaymentGatewayMock: Creating payment for booking $bookingId, amount: $amount $currency');
+    SafeLog.info(
+        'PaymentGatewayMock: Creating payment for booking $bookingId, amount: $amount $currency');
 
     // Валидация
     if (amount < getMinimumAmount()) {
       return PaymentResult(
         paymentId: '',
         status: PaymentStatus.failed,
-        errorMessage: 'Сумма меньше минимальной (${getMinimumAmount()} $currency)',
+        errorMessage:
+            'Сумма меньше минимальной (${getMinimumAmount()} $currency)',
       );
     }
 
@@ -72,7 +75,8 @@ class PaymentGatewayMock implements PaymentGateway {
       return PaymentResult(
         paymentId: '',
         status: PaymentStatus.failed,
-        errorMessage: 'Сумма больше максимальной (${getMaximumAmount()} $currency)',
+        errorMessage:
+            'Сумма больше максимальной (${getMaximumAmount()} $currency)',
       );
     }
 
@@ -85,7 +89,8 @@ class PaymentGatewayMock implements PaymentGateway {
     }
 
     // Создаем mock платеж
-    final paymentId = 'mock_payment_${DateTime.now().millisecondsSinceEpoch}_${_random.nextInt(1000)}';
+    final paymentId =
+        'mock_payment_${DateTime.now().millisecondsSinceEpoch}_${_random.nextInt(1000)}';
     final transactionId = 'txn_${_random.nextInt(1000000)}';
 
     // Имитируем задержку обработки
@@ -111,7 +116,8 @@ class PaymentGatewayMock implements PaymentGateway {
 
     _payments[paymentId] = paymentInfo;
 
-    SafeLog.info('PaymentGatewayMock: Payment $paymentId created with status $status');
+    SafeLog.info(
+        'PaymentGatewayMock: Payment $paymentId created with status $status');
 
     return PaymentResult(
       paymentId: paymentId,
@@ -160,7 +166,8 @@ class PaymentGatewayMock implements PaymentGateway {
 
     // 95% успешных подтверждений
     final isSuccess = _random.nextDouble() > 0.05;
-    final newStatus = isSuccess ? PaymentStatus.completed : PaymentStatus.failed;
+    final newStatus =
+        isSuccess ? PaymentStatus.completed : PaymentStatus.failed;
 
     _payments[paymentId] = PaymentInfo(
       id: payment.id,
@@ -176,7 +183,8 @@ class PaymentGatewayMock implements PaymentGateway {
       metadata: payment.metadata,
     );
 
-    SafeLog.info('PaymentGatewayMock: Payment $paymentId confirmed with status $newStatus');
+    SafeLog.info(
+        'PaymentGatewayMock: Payment $paymentId confirmed with status $newStatus');
 
     return PaymentResult(
       paymentId: paymentId,
@@ -241,7 +249,8 @@ class PaymentGatewayMock implements PaymentGateway {
   }
 
   @override
-  Future<PaymentResult> refundPayment(String paymentId, {double? amount}) async {
+  Future<PaymentResult> refundPayment(String paymentId,
+      {double? amount}) async {
     if (!FeatureFlags.paymentsEnabled) {
       SafeLog.info('PaymentGatewayMock: Payment refund disabled');
       return PaymentResult(
@@ -285,7 +294,8 @@ class PaymentGatewayMock implements PaymentGateway {
     final isSuccess = _random.nextDouble() > 0.02;
     final newStatus = isSuccess ? PaymentStatus.refunded : PaymentStatus.failed;
 
-    SafeLog.info('PaymentGatewayMock: Payment $paymentId refunded with status $newStatus');
+    SafeLog.info(
+        'PaymentGatewayMock: Payment $paymentId refunded with status $newStatus');
 
     return PaymentResult(
       paymentId: paymentId,
@@ -315,7 +325,8 @@ class PaymentGatewayMock implements PaymentGateway {
       return [];
     }
 
-    SafeLog.info('PaymentGatewayMock: Getting payment history for booking $bookingId');
+    SafeLog.info(
+        'PaymentGatewayMock: Getting payment history for booking $bookingId');
 
     await Future.delayed(const Duration(milliseconds: 200));
 
@@ -365,10 +376,10 @@ class PaymentGatewayMock implements PaymentGateway {
     try {
       final parts = expiryDate.split('/');
       if (parts.length != 2) return false;
-      
+
       final month = int.parse(parts[0]);
       final year = int.parse(parts[1]);
-      
+
       if (month < 1 || month > 12) return false;
       if (year < DateTime.now().year % 100) return false;
     } catch (e) {
@@ -387,7 +398,8 @@ class PaymentGatewayMock implements PaymentGateway {
       return 0.0;
     }
 
-    SafeLog.info('PaymentGatewayMock: Calculating payment fee for amount $amount, method $method');
+    SafeLog.info(
+        'PaymentGatewayMock: Calculating payment fee for amount $amount, method $method');
 
     await Future.delayed(const Duration(milliseconds: 100));
 
@@ -426,7 +438,7 @@ class PaymentGatewayMock implements PaymentGateway {
     }
 
     SafeLog.info('PaymentGatewayMock: Processing webhook: $webhookData');
-    
+
     // Mock обработка webhook
     await Future.delayed(const Duration(milliseconds: 200));
   }

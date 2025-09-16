@@ -81,23 +81,25 @@ class MapServiceMock implements MapService {
     }
 
     SafeLog.info('MapServiceMock: Searching places for "$query"');
-    
+
     // Mock данные для поиска мест
     await Future.delayed(const Duration(milliseconds: 500));
-    
+
     return [
       PlaceSearchResult(
         id: '1',
         name: 'Москва, Красная площадь',
         address: 'Красная площадь, 1, Москва',
-        coordinates: const MapCoordinates(latitude: 55.7539, longitude: 37.6208),
+        coordinates:
+            const MapCoordinates(latitude: 55.7539, longitude: 37.6208),
         placeId: 'mock_place_1',
       ),
       PlaceSearchResult(
         id: '2',
         name: 'Санкт-Петербург, Дворцовая площадь',
         address: 'Дворцовая площадь, Санкт-Петербург',
-        coordinates: const MapCoordinates(latitude: 59.9386, longitude: 30.3141),
+        coordinates:
+            const MapCoordinates(latitude: 59.9386, longitude: 30.3141),
         placeId: 'mock_place_2',
       ),
     ];
@@ -111,17 +113,18 @@ class MapServiceMock implements MapService {
     }
 
     SafeLog.info('MapServiceMock: Geocoding address "$address"');
-    
+
     // Mock геокодирование
     await Future.delayed(const Duration(milliseconds: 300));
-    
+
     if (address.toLowerCase().contains('москва')) {
       return const MapCoordinates(latitude: 55.7558, longitude: 37.6176);
     } else if (address.toLowerCase().contains('санкт-петербург')) {
       return const MapCoordinates(latitude: 59.9311, longitude: 30.3609);
     }
-    
-    return const MapCoordinates(latitude: 55.7558, longitude: 37.6176); // Москва по умолчанию
+
+    return const MapCoordinates(
+        latitude: 55.7558, longitude: 37.6176); // Москва по умолчанию
   }
 
   @override
@@ -132,10 +135,10 @@ class MapServiceMock implements MapService {
     }
 
     SafeLog.info('MapServiceMock: Reverse geocoding coordinates $coordinates');
-    
+
     // Mock обратное геокодирование
     await Future.delayed(const Duration(milliseconds: 300));
-    
+
     return 'Москва, ул. Примерная, д. 1';
   }
 
@@ -151,10 +154,10 @@ class MapServiceMock implements MapService {
     }
 
     SafeLog.info('MapServiceMock: Calculating route from $start to $end');
-    
+
     // Mock маршрут
     await Future.delayed(const Duration(milliseconds: 800));
-    
+
     return [
       start,
       MapCoordinates(
@@ -176,14 +179,15 @@ class MapServiceMock implements MapService {
     }
 
     SafeLog.info('MapServiceMock: Calculating distance from $start to $end');
-    
+
     // Mock расстояние (простая формула)
     await Future.delayed(const Duration(milliseconds: 200));
-    
+
     final latDiff = start.latitude - end.latitude;
     final lngDiff = start.longitude - end.longitude;
-    final distance = (latDiff * latDiff + lngDiff * lngDiff).abs() * 111000; // Примерно в метрах
-    
+    final distance = (latDiff * latDiff + lngDiff * lngDiff).abs() *
+        111000; // Примерно в метрах
+
     return distance;
   }
 
@@ -195,11 +199,12 @@ class MapServiceMock implements MapService {
     }
 
     SafeLog.info('MapServiceMock: Getting current location');
-    
+
     // Mock текущее местоположение
     await Future.delayed(const Duration(milliseconds: 1000));
-    
-    return const MapCoordinates(latitude: 55.7558, longitude: 37.6176); // Москва
+
+    return const MapCoordinates(
+        latitude: 55.7558, longitude: 37.6176); // Москва
   }
 
   @override
@@ -210,10 +215,10 @@ class MapServiceMock implements MapService {
     }
 
     SafeLog.info('MapServiceMock: Requesting location permission');
-    
+
     // Mock разрешение
     await Future.delayed(const Duration(milliseconds: 500));
-    
+
     return true;
   }
 
@@ -225,10 +230,10 @@ class MapServiceMock implements MapService {
     }
 
     SafeLog.info('MapServiceMock: Checking location permission');
-    
+
     // Mock проверка разрешения
     await Future.delayed(const Duration(milliseconds: 100));
-    
+
     return true;
   }
 
@@ -391,29 +396,30 @@ class MapServiceMock implements MapService {
               ],
             ),
           ),
-          
+
           // Маркеры
           ...markers.map((marker) => Positioned(
-            left: 50 + (marker.coordinates.longitude - center.longitude) * 100,
-            top: 50 + (marker.coordinates.latitude - center.latitude) * 100,
-            child: GestureDetector(
-              onTap: () => onMarkerTap?.call(marker),
-              child: Container(
-                width: 24,
-                height: 24,
-                decoration: BoxDecoration(
-                  color: marker.color ?? Colors.blue,
-                  shape: BoxShape.circle,
-                  border: Border.all(color: Colors.white, width: 2),
+                left: 50 +
+                    (marker.coordinates.longitude - center.longitude) * 100,
+                top: 50 + (marker.coordinates.latitude - center.latitude) * 100,
+                child: GestureDetector(
+                  onTap: () => onMarkerTap?.call(marker),
+                  child: Container(
+                    width: 24,
+                    height: 24,
+                    decoration: BoxDecoration(
+                      color: marker.color ?? Colors.blue,
+                      shape: BoxShape.circle,
+                      border: Border.all(color: Colors.white, width: 2),
+                    ),
+                    child: Icon(
+                      marker.icon ?? Icons.place,
+                      size: 16,
+                      color: Colors.white,
+                    ),
+                  ),
                 ),
-                child: Icon(
-                  marker.icon ?? Icons.place,
-                  size: 16,
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          )),
+              )),
         ],
       ),
     );
@@ -422,7 +428,8 @@ class MapServiceMock implements MapService {
   /// Получить центр событий
   MapCoordinates _getEventsCenter(List<Event> events) {
     if (events.isEmpty) {
-      return const MapCoordinates(latitude: 55.7558, longitude: 37.6176); // Москва по умолчанию
+      return const MapCoordinates(
+          latitude: 55.7558, longitude: 37.6176); // Москва по умолчанию
     }
 
     double totalLat = 0;
@@ -454,7 +461,7 @@ class MapServiceMock implements MapService {
     } else if (location.toLowerCase().contains('новосибирск')) {
       return const MapCoordinates(latitude: 55.0084, longitude: 82.9357);
     }
-    
+
     // По умолчанию Москва
     return const MapCoordinates(latitude: 55.7558, longitude: 37.6176);
   }

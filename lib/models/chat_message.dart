@@ -65,7 +65,7 @@ class ChatMessage {
   /// Создать сообщение из документа Firestore
   factory ChatMessage.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return ChatMessage(
       id: doc.id,
       chatId: data['chatId'] ?? '',
@@ -87,8 +87,8 @@ class ChatMessage {
         orElse: () => MessageStatus.sent,
       ),
       timestamp: (data['timestamp'] as Timestamp).toDate(),
-      editedAt: data['editedAt'] != null 
-          ? (data['editedAt'] as Timestamp).toDate() 
+      editedAt: data['editedAt'] != null
+          ? (data['editedAt'] as Timestamp).toDate()
           : null,
       replyToMessageId: data['replyToMessageId'],
       readBy: List<String>.from(data['readBy'] ?? []),
@@ -163,10 +163,14 @@ class ChatMessage {
   }
 
   /// Проверить, является ли сообщение вложением
-  bool get isAttachment => type != MessageType.text && type != MessageType.system;
+  bool get isAttachment =>
+      type != MessageType.text && type != MessageType.system;
 
   /// Проверить, является ли сообщение медиафайлом
-  bool get isMedia => type == MessageType.image || type == MessageType.video || type == MessageType.audio;
+  bool get isMedia =>
+      type == MessageType.image ||
+      type == MessageType.video ||
+      type == MessageType.audio;
 
   /// Проверить, является ли сообщение файлом
   bool get isFile => type == MessageType.file;
@@ -174,11 +178,12 @@ class ChatMessage {
   /// Получить размер файла в читаемом формате
   String get formattedFileSize {
     if (fileSize == null) return '';
-    
+
     final bytes = fileSize!;
     if (bytes < 1024) return '$bytes B';
     if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+    if (bytes < 1024 * 1024 * 1024)
+      return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
     return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
   }
 
@@ -293,25 +298,27 @@ class Chat {
   /// Создать чат из документа Firestore
   factory Chat.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return Chat(
       id: doc.id,
       name: data['name'] ?? '',
       description: data['description'],
       avatar: data['avatar'],
       participants: List<String>.from(data['participants'] ?? []),
-      participantNames: Map<String, String>.from(data['participantNames'] ?? {}),
-      participantAvatars: Map<String, String>.from(data['participantAvatars'] ?? {}),
+      participantNames:
+          Map<String, String>.from(data['participantNames'] ?? {}),
+      participantAvatars:
+          Map<String, String>.from(data['participantAvatars'] ?? {}),
       lastMessageId: data['lastMessageId'],
       lastMessageContent: data['lastMessageContent'],
-      lastMessageType: data['lastMessageType'] != null 
+      lastMessageType: data['lastMessageType'] != null
           ? MessageType.values.firstWhere(
               (e) => e.name == data['lastMessageType'],
               orElse: () => MessageType.text,
             )
           : null,
-      lastMessageTime: data['lastMessageTime'] != null 
-          ? (data['lastMessageTime'] as Timestamp).toDate() 
+      lastMessageTime: data['lastMessageTime'] != null
+          ? (data['lastMessageTime'] as Timestamp).toDate()
           : null,
       lastMessageSenderId: data['lastMessageSenderId'],
       unreadCount: data['unreadCount'] ?? 0,
@@ -335,7 +342,8 @@ class Chat {
       'lastMessageId': lastMessageId,
       'lastMessageContent': lastMessageContent,
       'lastMessageType': lastMessageType?.name,
-      'lastMessageTime': lastMessageTime != null ? Timestamp.fromDate(lastMessageTime!) : null,
+      'lastMessageTime':
+          lastMessageTime != null ? Timestamp.fromDate(lastMessageTime!) : null,
       'lastMessageSenderId': lastMessageSenderId,
       'unreadCount': unreadCount,
       'createdAt': Timestamp.fromDate(createdAt),

@@ -88,16 +88,19 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
             children: [
               Text(
                 typeInfo.title,
-                style: context.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: _parseColor(typeInfo.color),
-                ),
+                style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w600,
+                      color: _parseColor(typeInfo.color),
+                    ),
               ),
               Text(
                 'Релевантность: ${(recommendation.score * 100).toInt()}%',
-                style: context.textTheme.bodySmall?.copyWith(
-                  color: context.colorScheme.onSurface.withOpacity(0.6),
-                ),
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6),
+                    ),
               ),
             ],
           ),
@@ -126,15 +129,18 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
             children: [
               Text(
                 specialist.name,
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
               ),
               Text(
                 specialist.categoryDisplayName,
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colorScheme.onSurface.withOpacity(0.7),
-                ),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.7),
+                    ),
               ),
               Row(
                 children: [
@@ -146,16 +152,19 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                   const SizedBox(width: 4),
                   Text(
                     specialist.rating.toStringAsFixed(1),
-                    style: context.textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     '(${specialist.reviewCount} отзывов)',
-                    style: context.textTheme.bodySmall?.copyWith(
-                      color: context.colorScheme.onSurface.withOpacity(0.6),
-                    ),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.6),
+                        ),
                   ),
                 ],
               ),
@@ -167,10 +176,10 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
           children: [
             Text(
               '${specialist.hourlyRate.toInt()} ₽/ч',
-              style: context.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: context.colorScheme.primary,
-              ),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
             ),
             if (specialist.isAvailable)
               Container(
@@ -181,10 +190,10 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                 ),
                 child: Text(
                   'Доступен',
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: Colors.green,
-                    fontWeight: FontWeight.w500,
-                  ),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Colors.green,
+                        fontWeight: FontWeight.w500,
+                      ),
                 ),
               ),
           ],
@@ -199,7 +208,7 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: context.colorScheme.surfaceVariant.withOpacity(0.3),
+        color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -207,15 +216,18 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
           Icon(
             Icons.lightbulb_outline,
             size: 16,
-            color: context.colorScheme.primary,
+            color: Theme.of(context).colorScheme.primary,
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
               recommendation.reason,
-              style: context.textTheme.bodySmall?.copyWith(
-                color: context.colorScheme.onSurface.withOpacity(0.8),
-              ),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.8),
+                  ),
             ),
           ),
         ],
@@ -245,15 +257,15 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
             child: Container(
               padding: const EdgeInsets.symmetric(vertical: 12),
               decoration: BoxDecoration(
-                color: context.colorScheme.primary,
+                color: Theme.of(context).colorScheme.primary,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 'Посмотреть профиль',
-                style: context.textTheme.bodyMedium?.copyWith(
-                  color: context.colorScheme.onPrimary,
-                  fontWeight: FontWeight.w600,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.onPrimary,
+                      fontWeight: FontWeight.w600,
+                    ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -351,9 +363,9 @@ class RecommendationCollectionWidget extends ConsumerWidget {
             if (showTitle) ...[
               Text(
                 title ?? _getTitle(),
-                style: context.textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               const SizedBox(height: 16),
             ],
@@ -386,21 +398,23 @@ class RecommendationCollectionWidget extends ConsumerWidget {
           Icon(
             Icons.recommend_outlined,
             size: 64,
-            color: context.colorScheme.onSurface.withOpacity(0.3),
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
           ),
           const SizedBox(height: 16),
           Text(
             'Нет рекомендаций',
-            style: context.textTheme.titleMedium?.copyWith(
-              color: context.colorScheme.onSurface.withOpacity(0.5),
-            ),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                ),
           ),
           const SizedBox(height: 8),
           Text(
             'Мы подберём для вас подходящих специалистов!',
-            style: context.textTheme.bodyMedium?.copyWith(
-              color: context.colorScheme.onSurface.withOpacity(0.5),
-            ),
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -421,14 +435,14 @@ class RecommendationCollectionWidget extends ConsumerWidget {
           Icon(
             Icons.error_outline,
             size: 64,
-            color: context.colorScheme.error,
+            color: Theme.of(context).colorScheme.error,
           ),
           const SizedBox(height: 16),
           Text(
             'Ошибка загрузки рекомендаций',
-            style: context.textTheme.titleMedium?.copyWith(
-              color: context.colorScheme.error,
-            ),
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.error,
+                ),
           ),
         ],
       ),
@@ -507,9 +521,9 @@ class SimilarSpecialistsWidget extends ConsumerWidget {
           children: [
             Text(
               'Похожие специалисты',
-              style: context.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             SizedBox(

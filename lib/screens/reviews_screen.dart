@@ -27,7 +27,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
     with SingleTickerProviderStateMixin {
   final ReviewService _reviewService = ReviewService();
   late TabController _tabController;
-  
+
   ReviewFilter _filter = ReviewFilter.empty();
   String _searchQuery = '';
   bool _isLoading = false;
@@ -149,7 +149,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
             // Информация о фильтрах
             if (_filter.hasActiveFilters || _searchQuery.isNotEmpty)
               _buildFilterInfo(),
-            
+
             // Список отзывов
             Expanded(
               child: ListView.builder(
@@ -188,15 +188,16 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
           );
         }
 
-        final stats = snapshot.data ?? ReviewStats(
-          averageRating: 0.0,
-          totalReviews: 0,
-          ratingDistribution: {},
-          verifiedReviews: 0,
-          helpfulReviews: 0,
-          helpfulPercentage: 0.0,
-          lastUpdated: DateTime.now(),
-        );
+        final stats = snapshot.data ??
+            ReviewStats(
+              averageRating: 0.0,
+              totalReviews: 0,
+              ratingDistribution: {},
+              verifiedReviews: 0,
+              helpfulReviews: 0,
+              helpfulPercentage: 0.0,
+              lastUpdated: DateTime.now(),
+            );
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -206,11 +207,11 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
               // Общая статистика
               _buildOverallStats(stats),
               const SizedBox(height: 24),
-              
+
               // Распределение рейтингов
               _buildRatingDistribution(stats),
               const SizedBox(height: 24),
-              
+
               // Дополнительная статистика
               _buildAdditionalStats(stats),
             ],
@@ -266,13 +267,14 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                   child: Text(
                     review.title,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                 ),
                 if (review.isVerified)
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.green,
                       borderRadius: BorderRadius.circular(12),
@@ -289,7 +291,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
               ],
             ),
             const SizedBox(height: 8),
-            
+
             // Рейтинг и автор
             Row(
               children: [
@@ -298,53 +300,59 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                 Text(
                   review.reviewerName,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+                        fontWeight: FontWeight.w500,
+                      ),
                 ),
                 const SizedBox(width: 8),
                 Text(
                   '•',
                   style: TextStyle(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.5),
                   ),
                 ),
                 const SizedBox(width: 8),
                 Text(
                   _formatDate(review.createdAt),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                  ),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.7),
+                      ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            
+
             // Содержимое отзыва
             Text(
               review.content,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            
+
             // Изображения
             if (review.images.isNotEmpty) ...[
               const SizedBox(height: 12),
               _buildReviewImages(review.images),
             ],
-            
+
             // Теги
             if (review.tags.isNotEmpty) ...[
               const SizedBox(height: 12),
               _buildReviewTags(review.tags),
             ],
-            
+
             // Ответ на отзыв
             if (review.hasResponse) ...[
               const SizedBox(height: 16),
               _buildReviewResponse(review),
             ],
-            
+
             const SizedBox(height: 12),
-            
+
             // Действия
             _buildReviewActions(review, currentUser),
           ],
@@ -405,14 +413,16 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
     return Wrap(
       spacing: 8,
       runSpacing: 4,
-      children: tags.map((tag) => Chip(
-        label: Text(tag),
-        backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
-        labelStyle: TextStyle(
-          color: Theme.of(context).colorScheme.onSurfaceVariant,
-          fontSize: 12,
-        ),
-      )).toList(),
+      children: tags
+          .map((tag) => Chip(
+                label: Text(tag),
+                backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+                labelStyle: TextStyle(
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  fontSize: 12,
+                ),
+              ))
+          .toList(),
     );
   }
 
@@ -443,17 +453,20 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
               Text(
                 'Ответ владельца',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
               ),
               const Spacer(),
               if (review.responseDate != null)
                 Text(
                   _formatDate(review.responseDate!),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                  ),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.7),
+                      ),
                 ),
             ],
           ),
@@ -492,8 +505,9 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
           Text(
             '${review.helpfulCount}',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-            ),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                ),
           ),
           const SizedBox(width: 16),
           Icon(
@@ -505,13 +519,14 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
           Text(
             '${review.notHelpfulCount}',
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-            ),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                ),
           ),
         ],
-        
+
         const Spacer(),
-        
+
         // Действия пользователя
         if (currentUser != null && currentUser.id == review.reviewerId) ...[
           TextButton(
@@ -533,8 +548,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
             Text(
               'Общая оценка',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             Row(
@@ -545,31 +560,38 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                   children: [
                     Text(
                       stats.roundedAverageRating.toString(),
-                      style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                      style:
+                          Theme.of(context).textTheme.displayMedium?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                     ),
                     _buildRatingStars(stats.averageRating.round()),
                     const SizedBox(height: 4),
                     Text(
                       '${stats.totalReviews} отзывов',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                      ),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.7),
+                          ),
                     ),
                   ],
                 ),
                 const SizedBox(width: 32),
-                
+
                 // Дополнительная информация
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _buildStatItem('Проверенные отзывы', '${stats.verifiedReviews}'),
-                      _buildStatItem('Полезные отзывы', '${stats.helpfulReviews}'),
-                      _buildStatItem('Процент полезности', '${stats.helpfulPercentage.toStringAsFixed(1)}%'),
+                      _buildStatItem(
+                          'Проверенные отзывы', '${stats.verifiedReviews}'),
+                      _buildStatItem(
+                          'Полезные отзывы', '${stats.helpfulReviews}'),
+                      _buildStatItem('Процент полезности',
+                          '${stats.helpfulPercentage.toStringAsFixed(1)}%'),
                     ],
                   ),
                 ),
@@ -594,8 +616,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
           Text(
             value,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
         ],
       ),
@@ -612,15 +634,15 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
             Text(
               'Распределение оценок',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             ...List.generate(5, (index) {
               final rating = 5 - index;
               final count = stats.ratingDistribution[rating] ?? 0;
               final percentage = stats.getRatingPercentage(rating);
-              
+
               return Padding(
                 padding: const EdgeInsets.only(bottom: 8),
                 child: Row(
@@ -628,8 +650,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                     Text(
                       '$rating',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     const SizedBox(width: 8),
                     const Icon(Icons.star, color: Colors.amber, size: 16),
@@ -668,11 +690,12 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
             Text(
               'Дополнительная информация',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
-            _buildStatItem('Последнее обновление', _formatDate(stats.lastUpdated)),
+            _buildStatItem(
+                'Последнее обновление', _formatDate(stats.lastUpdated)),
             _buildStatItem('Всего отзывов', '${stats.totalReviews}'),
             _buildStatItem('Проверенные отзывы', '${stats.verifiedReviews}'),
             _buildStatItem('Полезные отзывы', '${stats.helpfulReviews}'),
@@ -685,7 +708,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays > 0) {
       return '${difference.inDays} дн. назад';
     } else if (difference.inHours > 0) {
@@ -699,11 +722,11 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
 
   String _getFilterDescription() {
     final parts = <String>[];
-    
+
     if (_searchQuery.isNotEmpty) {
       parts.add('поиск: "$_searchQuery"');
     }
-    
+
     if (_filter.minRating != null && _filter.maxRating != null) {
       if (_filter.minRating == _filter.maxRating) {
         parts.add('рейтинг: ${_filter.minRating}');
@@ -711,19 +734,19 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
         parts.add('рейтинг: ${_filter.minRating}-${_filter.maxRating}');
       }
     }
-    
+
     if (_filter.verifiedOnly == true) {
       parts.add('только проверенные');
     }
-    
+
     if (_filter.withImages == true) {
       parts.add('с изображениями');
     }
-    
+
     if (_filter.withResponse == true) {
       parts.add('с ответами');
     }
-    
+
     return parts.isEmpty ? 'Нет фильтров' : parts.join(', ');
   }
 
@@ -780,7 +803,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
   }
 
   void _createReview() {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       MaterialPageRoute(
         builder: (context) => ReviewFormScreen(
           targetId: widget.targetId,
@@ -788,7 +812,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
           targetName: widget.targetName,
         ),
       ),
-    ).then((result) {
+    )
+        .then((result) {
       if (result == true) {
         setState(() {});
       }
@@ -796,7 +821,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
   }
 
   void _editReview(Review review) {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       MaterialPageRoute(
         builder: (context) => ReviewFormScreen(
           targetId: widget.targetId,
@@ -805,7 +831,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
           existingReview: review,
         ),
       ),
-    ).then((result) {
+    )
+        .then((result) {
       if (result == true) {
         setState(() {});
       }
@@ -820,7 +847,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
       await _reviewService.voteHelpful(review.id, currentUser.id, isHelpful);
     } catch (e, stackTrace) {
       SafeLog.error('ReviewsScreen: Error voting helpful', e, stackTrace);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка голосования: $e'),

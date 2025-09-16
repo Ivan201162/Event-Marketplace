@@ -24,7 +24,7 @@ final mapInitializationProvider = FutureProvider<void>((ref) async {
 final currentLocationProvider = FutureProvider<MapCoordinates?>((ref) async {
   final mapService = ref.read(mapServiceProvider);
   if (!mapService.isAvailable) return null;
-  
+
   return await mapService.getCurrentLocation();
 });
 
@@ -32,6 +32,6 @@ final currentLocationProvider = FutureProvider<MapCoordinates?>((ref) async {
 final locationPermissionProvider = FutureProvider<bool>((ref) async {
   final mapService = ref.read(mapServiceProvider);
   if (!mapService.isAvailable) return false;
-  
+
   return await mapService.hasLocationPermission();
 });

@@ -47,14 +47,13 @@ class AdminService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      List<AppUser> users = snapshot.docs
-          .map((doc) => AppUser.fromDocument(doc))
-          .toList();
+      List<AppUser> users =
+          snapshot.docs.map((doc) => AppUser.fromDocument(doc)).toList();
 
       if (searchQuery != null && searchQuery.isNotEmpty) {
         users = users.where((user) {
           return user.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
-                 user.email.toLowerCase().contains(searchQuery.toLowerCase());
+              user.email.toLowerCase().contains(searchQuery.toLowerCase());
         }).toList();
       }
 
@@ -88,14 +87,17 @@ class AdminService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      List<Event> events = snapshot.docs
-          .map((doc) => Event.fromDocument(doc))
-          .toList();
+      List<Event> events =
+          snapshot.docs.map((doc) => Event.fromDocument(doc)).toList();
 
       if (searchQuery != null && searchQuery.isNotEmpty) {
         events = events.where((event) {
-          return event.title.toLowerCase().contains(searchQuery.toLowerCase()) ||
-                 event.description.toLowerCase().contains(searchQuery.toLowerCase());
+          return event.title
+                  .toLowerCase()
+                  .contains(searchQuery.toLowerCase()) ||
+              event.description
+                  .toLowerCase()
+                  .contains(searchQuery.toLowerCase());
         }).toList();
       }
 
@@ -335,7 +337,8 @@ class AdminService {
             .length;
 
         // Получаем статистику событий
-        final eventsQuery = await _firestore.collection(_eventsCollection).get();
+        final eventsQuery =
+            await _firestore.collection(_eventsCollection).get();
         final totalEvents = eventsQuery.docs.length;
         final activeEvents = eventsQuery.docs
             .where((doc) => !(doc.data()['isHidden'] ?? false))
@@ -345,24 +348,21 @@ class AdminService {
             .length;
 
         // Получаем статистику бронирований
-        final bookingsQuery = await _firestore.collection(_bookingsCollection).get();
+        final bookingsQuery =
+            await _firestore.collection(_bookingsCollection).get();
         final totalBookings = bookingsQuery.docs.length;
 
         // Получаем статистику за неделю
         final weekAgo = DateTime.now().subtract(const Duration(days: 7));
-        final newUsersThisWeek = usersQuery.docs
-            .where((doc) {
-              final createdAt = (doc.data()['createdAt'] as Timestamp).toDate();
-              return createdAt.isAfter(weekAgo);
-            })
-            .length;
+        final newUsersThisWeek = usersQuery.docs.where((doc) {
+          final createdAt = (doc.data()['createdAt'] as Timestamp).toDate();
+          return createdAt.isAfter(weekAgo);
+        }).length;
 
-        final newEventsThisWeek = eventsQuery.docs
-            .where((doc) {
-              final createdAt = (doc.data()['createdAt'] as Timestamp).toDate();
-              return createdAt.isAfter(weekAgo);
-            })
-            .length;
+        final newEventsThisWeek = eventsQuery.docs.where((doc) {
+          final createdAt = (doc.data()['createdAt'] as Timestamp).toDate();
+          return createdAt.isAfter(weekAgo);
+        }).length;
 
         final stats = {
           'totalUsers': totalUsers,
@@ -422,7 +422,8 @@ class AdminService {
   /// Получить пользователя по ID
   Future<AppUser?> getUserById(String userId) async {
     try {
-      final doc = await _firestore.collection(_usersCollection).doc(userId).get();
+      final doc =
+          await _firestore.collection(_usersCollection).doc(userId).get();
       if (doc.exists) {
         return AppUser.fromDocument(doc);
       }
@@ -436,7 +437,8 @@ class AdminService {
   /// Получить событие по ID
   Future<Event?> getEventById(String eventId) async {
     try {
-      final doc = await _firestore.collection(_eventsCollection).doc(eventId).get();
+      final doc =
+          await _firestore.collection(_eventsCollection).doc(eventId).get();
       if (doc.exists) {
         return Event.fromDocument(doc);
       }
@@ -450,7 +452,8 @@ class AdminService {
   /// Получить бронирование по ID
   Future<Booking?> getBookingById(String bookingId) async {
     try {
-      final doc = await _firestore.collection(_bookingsCollection).doc(bookingId).get();
+      final doc =
+          await _firestore.collection(_bookingsCollection).doc(bookingId).get();
       if (doc.exists) {
         return Booking.fromDocument(doc);
       }
@@ -475,13 +478,15 @@ class AdminService {
   /// Получить настройки админ-панели
   Future<Map<String, dynamic>> getAdminSettings() async {
     try {
-      final doc = await _firestore.collection('admin_settings').doc('main').get();
+      final doc =
+          await _firestore.collection('admin_settings').doc('main').get();
       if (doc.exists) {
         return doc.data() ?? {};
       }
       return {};
     } catch (e, stackTrace) {
-      SafeLog.error('AdminService: Error getting admin settings', e, stackTrace);
+      SafeLog.error(
+          'AdminService: Error getting admin settings', e, stackTrace);
       return {};
     }
   }
@@ -506,7 +511,8 @@ class AdminService {
 
       SafeLog.info('AdminService: Admin settings updated successfully');
     } catch (e, stackTrace) {
-      SafeLog.error('AdminService: Error updating admin settings', e, stackTrace);
+      SafeLog.error(
+          'AdminService: Error updating admin settings', e, stackTrace);
       rethrow;
     }
   }

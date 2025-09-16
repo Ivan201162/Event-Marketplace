@@ -31,10 +31,10 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
   final _titleController = TextEditingController();
   final _contentController = TextEditingController();
   final _tagsController = TextEditingController();
-  
+
   final ReviewService _reviewService = ReviewService();
   final UploadService _uploadService = UploadService();
-  
+
   int _rating = 5;
   List<String> _images = [];
   List<String> _tags = [];
@@ -73,7 +73,9 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.existingReview != null ? 'Редактировать отзыв' : 'Новый отзыв'),
+        title: Text(widget.existingReview != null
+            ? 'Редактировать отзыв'
+            : 'Новый отзыв'),
         actions: [
           if (widget.existingReview != null)
             IconButton(
@@ -99,28 +101,28 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
             // Информация о цели отзыва
             _buildTargetInfo(),
             const SizedBox(height: 24),
-            
+
             // Рейтинг
             _buildRatingSection(),
             const SizedBox(height: 24),
-            
+
             // Заголовок
             _buildTitleField(),
             const SizedBox(height: 16),
-            
+
             // Содержимое
             _buildContentField(),
             const SizedBox(height: 16),
-            
+
             // Теги
             _buildTagsField(),
             const SizedBox(height: 16),
-            
+
             // Изображения
             if (FeatureFlags.fileUploadEnabled) _buildImagesSection(),
-            
+
             const SizedBox(height: 32),
-            
+
             // Кнопки
             _buildActionButtons(),
           ],
@@ -151,15 +153,15 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
                 Text(
                   'Отзыв о ${widget.typeDisplayName.toLowerCase()}',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   widget.targetName,
                   style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
               ],
             ),
@@ -176,8 +178,8 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
         Text(
           'Оценка *',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 12),
         Row(
@@ -199,8 +201,8 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
         Text(
           _getRatingText(_rating),
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-          ),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
         ),
       ],
     );
@@ -257,8 +259,8 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
         Text(
           'Теги',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 8),
         TextFormField(
@@ -281,15 +283,17 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
           Wrap(
             spacing: 8,
             runSpacing: 4,
-            children: _tags.map((tag) => Chip(
-              label: Text(tag),
-              onDeleted: () {
-                setState(() {
-                  _tags.remove(tag);
-                  _tagsController.text = _tags.join(', ');
-                });
-              },
-            )).toList(),
+            children: _tags
+                .map((tag) => Chip(
+                      label: Text(tag),
+                      onDeleted: () {
+                        setState(() {
+                          _tags.remove(tag);
+                          _tagsController.text = _tags.join(', ');
+                        });
+                      },
+                    ))
+                .toList(),
           ),
         ],
       ],
@@ -303,18 +307,18 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
         Text(
           'Изображения',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 8),
         Text(
           'Добавьте фотографии (максимум 5)',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-          ),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
         ),
         const SizedBox(height: 12),
-        
+
         // Сетка изображений
         if (_images.isNotEmpty)
           GridView.builder(
@@ -440,7 +444,9 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
                     height: 20,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   )
-                : Text(widget.existingReview != null ? 'Обновить' : 'Опубликовать'),
+                : Text(widget.existingReview != null
+                    ? 'Обновить'
+                    : 'Опубликовать'),
           ),
         ),
       ],
@@ -494,7 +500,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
       }
     } catch (e, stackTrace) {
       SafeLog.error('ReviewFormScreen: Error adding image', e, stackTrace);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка загрузки изображения: $e'),
@@ -550,8 +556,8 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(widget.existingReview != null 
-                ? 'Отзыв обновлен' 
+            content: Text(widget.existingReview != null
+                ? 'Отзыв обновлен'
                 : 'Отзыв отправлен на модерацию'),
             backgroundColor: Colors.green,
           ),
@@ -560,7 +566,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
       }
     } catch (e, stackTrace) {
       SafeLog.error('ReviewFormScreen: Error submitting review', e, stackTrace);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -581,7 +587,8 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить отзыв'),
-        content: const Text('Вы уверены, что хотите удалить этот отзыв? Это действие нельзя отменить.'),
+        content: const Text(
+            'Вы уверены, что хотите удалить этот отзыв? Это действие нельзя отменить.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -619,7 +626,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
       }
     } catch (e, stackTrace) {
       SafeLog.error('ReviewFormScreen: Error deleting review', e, stackTrace);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

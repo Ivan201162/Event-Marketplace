@@ -14,7 +14,8 @@ final reviewsAvailableProvider = Provider<bool>((ref) {
 });
 
 /// Провайдер отзывов для цели
-final reviewsForTargetProvider = StreamProvider.family<List<Review>, ({String targetId, ReviewType type, ReviewFilter? filter})>((ref, params) {
+final reviewsForTargetProvider = StreamProvider.family<List<Review>,
+    ({String targetId, ReviewType type, ReviewFilter? filter})>((ref, params) {
   final reviewService = ref.read(reviewServiceProvider);
   return reviewService.getReviewsForTarget(
     params.targetId,
@@ -24,19 +25,25 @@ final reviewsForTargetProvider = StreamProvider.family<List<Review>, ({String ta
 });
 
 /// Провайдер статистики отзывов
-final reviewStatsProvider = StreamProvider.family<ReviewStats, ({String targetId, ReviewType type})>((ref, params) {
+final reviewStatsProvider =
+    StreamProvider.family<ReviewStats, ({String targetId, ReviewType type})>(
+        (ref, params) {
   final reviewService = ref.read(reviewServiceProvider);
   return reviewService.getReviewStatsStream(params.targetId, params.type);
 });
 
 /// Провайдер отзыва пользователя для цели
-final userReviewForTargetProvider = FutureProvider.family<Review?, ({String userId, String targetId})>((ref, params) async {
+final userReviewForTargetProvider =
+    FutureProvider.family<Review?, ({String userId, String targetId})>(
+        (ref, params) async {
   final reviewService = ref.read(reviewServiceProvider);
-  return await reviewService.getUserReviewForTarget(params.userId, params.targetId);
+  return await reviewService.getUserReviewForTarget(
+      params.userId, params.targetId);
 });
 
 /// Провайдер отзывов пользователя
-final userReviewsProvider = StreamProvider.family<List<Review>, String>((ref, userId) {
+final userReviewsProvider =
+    StreamProvider.family<List<Review>, String>((ref, userId) {
   final reviewService = ref.read(reviewServiceProvider);
   return reviewService.getUserReviews(userId);
 });
@@ -48,7 +55,8 @@ final pendingReviewsProvider = StreamProvider<List<Review>>((ref) {
 });
 
 /// Провайдер поиска отзывов
-final searchReviewsProvider = StreamProvider.family<List<Review>, ({String? query, ReviewType? type, ReviewFilter? filter})>((ref, params) {
+final searchReviewsProvider = StreamProvider.family<List<Review>,
+    ({String? query, ReviewType? type, ReviewFilter? filter})>((ref, params) {
   final reviewService = ref.read(reviewServiceProvider);
   return reviewService.searchReviews(
     query: params.query,

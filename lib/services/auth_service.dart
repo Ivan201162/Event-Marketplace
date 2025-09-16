@@ -41,7 +41,7 @@ class AuthService {
   Future<AppUser?> restoreSession() async {
     try {
       SafeLog.info('Попытка восстановления сессии...');
-      
+
       // Проверяем, есть ли активная сессия Firebase
       final firebaseUser = currentFirebaseUser;
       if (firebaseUser == null) {
@@ -59,7 +59,8 @@ class AuthService {
       // Получаем данные пользователя из Firestore
       final appUser = await getCurrentUser();
       if (appUser != null) {
-        SafeLog.info('Сессия успешно восстановлена для пользователя: ${appUser.displayName}');
+        SafeLog.info(
+            'Сессия успешно восстановлена для пользователя: ${appUser.displayName}');
         return appUser;
       } else {
         SafeLog.warning('Пользователь не найден в Firestore');
@@ -204,7 +205,7 @@ class AuthService {
   Future<AppUser?> signInWithGoogle() async {
     try {
       SafeLog.info('Начало входа через Google...');
-      
+
       final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
       if (googleUser == null) {
         SafeLog.info('Пользователь отменил вход через Google');
@@ -226,7 +227,8 @@ class AuthService {
         return null;
       }
 
-      SafeLog.info('Firebase аутентификация успешна для: ${firebaseUser.email}');
+      SafeLog.info(
+          'Firebase аутентификация успешна для: ${firebaseUser.email}');
 
       // Проверяем, существует ли пользователь в Firestore
       final userDoc =
@@ -249,7 +251,7 @@ class AuthService {
             .collection('users')
             .doc(firebaseUser.uid)
             .set(appUser.toMap());
-        
+
         SafeLog.info('Новый пользователь создан: ${appUser.displayName}');
         return appUser;
       } else {

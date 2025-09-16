@@ -27,10 +27,12 @@ class ReviewService {
     Map<String, dynamic>? metadata,
   }) async {
     try {
-      SafeLog.info('ReviewService: Creating review for $targetId by $reviewerId');
+      SafeLog.info(
+          'ReviewService: Creating review for $targetId by $reviewerId');
 
       // Проверяем, не оставлял ли пользователь уже отзыв
-      final existingReview = await _getUserReviewForTarget(reviewerId, targetId);
+      final existingReview =
+          await _getUserReviewForTarget(reviewerId, targetId);
       if (existingReview != null) {
         throw Exception('Вы уже оставили отзыв для этого ${type.name}');
       }
@@ -54,8 +56,9 @@ class ReviewService {
       );
 
       // Сохраняем в Firestore
-      final docRef = await _firestore.collection(_reviewsCollection).add(review.toMap());
-      
+      final docRef =
+          await _firestore.collection(_reviewsCollection).add(review.toMap());
+
       // Обновляем ID
       final createdReview = review.copyWith(id: docRef.id);
 
@@ -104,10 +107,12 @@ class ReviewService {
         query = query.where('response', isNotEqualTo: null);
       }
       if (filter.fromDate != null) {
-        query = query.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(filter.fromDate!));
+        query = query.where('createdAt',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(filter.fromDate!));
       }
       if (filter.toDate != null) {
-        query = query.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(filter.toDate!));
+        query = query.where('createdAt',
+            isLessThanOrEqualTo: Timestamp.fromDate(filter.toDate!));
       }
     }
 
@@ -118,9 +123,8 @@ class ReviewService {
     query = query.limit(limit);
 
     return query.snapshots().map((snapshot) {
-      List<Review> reviews = snapshot.docs
-          .map((doc) => Review.fromDocument(doc))
-          .toList();
+      List<Review> reviews =
+          snapshot.docs.map((doc) => Review.fromDocument(doc)).toList();
 
       // Применяем клиентские фильтры
       if (filter != null) {
@@ -142,7 +146,8 @@ class ReviewService {
   }
 
   /// Внутренний метод для получения отзыва пользователя
-  Future<Review?> _getUserReviewForTarget(String userId, String targetId) async {
+  Future<Review?> _getUserReviewForTarget(
+      String userId, String targetId) async {
     final query = await _firestore
         .collection(_reviewsCollection)
         .where('reviewerId', isEqualTo: userId)
@@ -180,10 +185,14 @@ class ReviewService {
       if (tags != null) updateData['tags'] = tags;
       if (metadata != null) updateData['metadata'] = metadata;
 
-      await _firestore.collection(_reviewsCollection).doc(reviewId).update(updateData);
+      await _firestore
+          .collection(_reviewsCollection)
+          .doc(reviewId)
+          .update(updateData);
 
       // Получаем обновленный отзыв
-      final doc = await _firestore.collection(_reviewsCollection).doc(reviewId).get();
+      final doc =
+          await _firestore.collection(_reviewsCollection).doc(reviewId).get();
       final updatedReview = Review.fromDocument(doc);
 
       // Обновляем статистику
@@ -204,13 +213,14 @@ class ReviewService {
       SafeLog.info('ReviewService: Deleting review $reviewId');
 
       // Получаем отзыв для обновления статистики
-      final doc = await _firestore.collection(_reviewsCollection).doc(reviewId).get();
+      final doc =
+          await _firestore.collection(_reviewsCollection).doc(reviewId).get();
       if (doc.exists) {
         final review = Review.fromDocument(doc);
-        
+
         // Удаляем отзыв
         await _firestore.collection(_reviewsCollection).doc(reviewId).delete();
-        
+
         // Обновляем статистику
         await _updateReviewStats(review.targetId, review.type);
       }
@@ -233,7 +243,8 @@ class ReviewService {
       });
 
       // Получаем отзыв для обновления статистики
-      final doc = await _firestore.collection(_reviewsCollection).doc(reviewId).get();
+      final doc =
+          await _firestore.collection(_reviewsCollection).doc(reviewId).get();
       if (doc.exists) {
         final review = Review.fromDocument(doc);
         await _updateReviewStats(review.targetId, review.type);
@@ -287,12 +298,13 @@ class ReviewService {
   }
 
   /// Голосовать за полезность отзыва
-  Future<void> voteHelpful(String reviewId, String userId, bool isHelpful) async {
+  Future<void> voteHelpful(
+      String reviewId, String userId, bool isHelpful) async {
     try {
       SafeLog.info('ReviewService: Voting helpful for review $reviewId');
 
       final reviewDoc = _firestore.collection(_reviewsCollection).doc(reviewId);
-      
+
       await _firestore.runTransaction((transaction) async {
         final snapshot = await transaction.get(reviewDoc);
         if (!snapshot.exists) {
@@ -301,39 +313,48 @@ class ReviewService {
 
         final review = Review.fromDocument(snapshot);
         final currentVote = review.helpfulVotes[userId];
-        
+
         // Если пользователь уже голосовал, отменяем предыдущий голос
         if (currentVote != null) {
           if (currentVote == isHelpful) {
             // Отменяем голос
             final newVotes = Map<String, bool>.from(review.helpfulVotes);
             newVotes.remove(userId);
-            
+
             transaction.update(reviewDoc, {
               'helpfulVotes': newVotes,
-              'helpfulCount': isHelpful ? review.helpfulCount - 1 : review.helpfulCount,
-              'notHelpfulCount': !isHelpful ? review.notHelpfulCount - 1 : review.notHelpfulCount,
+              'helpfulCount':
+                  isHelpful ? review.helpfulCount - 1 : review.helpfulCount,
+              'notHelpfulCount': !isHelpful
+                  ? review.notHelpfulCount - 1
+                  : review.notHelpfulCount,
             });
           } else {
             // Меняем голос
             final newVotes = Map<String, bool>.from(review.helpfulVotes);
             newVotes[userId] = isHelpful;
-            
+
             transaction.update(reviewDoc, {
               'helpfulVotes': newVotes,
-              'helpfulCount': isHelpful ? review.helpfulCount + 1 : review.helpfulCount - 1,
-              'notHelpfulCount': !isHelpful ? review.notHelpfulCount + 1 : review.notHelpfulCount - 1,
+              'helpfulCount':
+                  isHelpful ? review.helpfulCount + 1 : review.helpfulCount - 1,
+              'notHelpfulCount': !isHelpful
+                  ? review.notHelpfulCount + 1
+                  : review.notHelpfulCount - 1,
             });
           }
         } else {
           // Новый голос
           final newVotes = Map<String, bool>.from(review.helpfulVotes);
           newVotes[userId] = isHelpful;
-          
+
           transaction.update(reviewDoc, {
             'helpfulVotes': newVotes,
-            'helpfulCount': isHelpful ? review.helpfulCount + 1 : review.helpfulCount,
-            'notHelpfulCount': !isHelpful ? review.notHelpfulCount + 1 : review.notHelpfulCount,
+            'helpfulCount':
+                isHelpful ? review.helpfulCount + 1 : review.helpfulCount,
+            'notHelpfulCount': !isHelpful
+                ? review.notHelpfulCount + 1
+                : review.notHelpfulCount,
           });
         }
       });
@@ -422,9 +443,8 @@ class ReviewService {
     queryBuilder = queryBuilder.limit(limit);
 
     return queryBuilder.snapshots().map((snapshot) {
-      List<Review> reviews = snapshot.docs
-          .map((doc) => Review.fromDocument(doc))
-          .toList();
+      List<Review> reviews =
+          snapshot.docs.map((doc) => Review.fromDocument(doc)).toList();
 
       // Применяем клиентские фильтры
       if (filter != null) {
@@ -435,8 +455,9 @@ class ReviewService {
       if (query != null && query.isNotEmpty) {
         reviews = reviews.where((review) {
           return review.title.toLowerCase().contains(query.toLowerCase()) ||
-                 review.content.toLowerCase().contains(query.toLowerCase()) ||
-                 review.tags.any((tag) => tag.toLowerCase().contains(query.toLowerCase()));
+              review.content.toLowerCase().contains(query.toLowerCase()) ||
+              review.tags.any(
+                  (tag) => tag.toLowerCase().contains(query.toLowerCase()));
         }).toList();
       }
 
@@ -457,7 +478,8 @@ class ReviewService {
           .where('status', isEqualTo: ReviewStatus.approved.name)
           .get();
 
-      final reviews = reviewsQuery.docs.map((doc) => Review.fromDocument(doc)).toList();
+      final reviews =
+          reviewsQuery.docs.map((doc) => Review.fromDocument(doc)).toList();
 
       // Вычисляем статистику
       final totalReviews = reviews.length;
@@ -480,7 +502,8 @@ class ReviewService {
 
       final verifiedReviews = reviews.where((r) => r.isVerified).length;
       final helpfulReviews = reviews.where((r) => r.isHelpful).length;
-      final helpfulPercentage = totalReviews > 0 ? (helpfulReviews / totalReviews) * 100 : 0.0;
+      final helpfulPercentage =
+          totalReviews > 0 ? (helpfulReviews / totalReviews) * 100 : 0.0;
 
       final stats = ReviewStats(
         averageRating: averageRating,
@@ -500,7 +523,8 @@ class ReviewService {
 
       SafeLog.info('ReviewService: Review stats updated successfully');
     } catch (e, stackTrace) {
-      SafeLog.error('ReviewService: Error updating review stats', e, stackTrace);
+      SafeLog.error(
+          'ReviewService: Error updating review stats', e, stackTrace);
     }
   }
 
@@ -555,7 +579,8 @@ class ReviewService {
       });
 
       // Получаем отзыв для обновления статистики
-      final doc = await _firestore.collection(_reviewsCollection).doc(reviewId).get();
+      final doc =
+          await _firestore.collection(_reviewsCollection).doc(reviewId).get();
       if (doc.exists) {
         final review = Review.fromDocument(doc);
         await _updateReviewStats(review.targetId, review.type);
@@ -563,7 +588,8 @@ class ReviewService {
 
       SafeLog.info('ReviewService: Review marked as verified successfully');
     } catch (e, stackTrace) {
-      SafeLog.error('ReviewService: Error marking review as verified', e, stackTrace);
+      SafeLog.error(
+          'ReviewService: Error marking review as verified', e, stackTrace);
       rethrow;
     }
   }

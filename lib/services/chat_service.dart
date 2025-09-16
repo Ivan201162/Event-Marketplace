@@ -28,13 +28,15 @@ class ChatService {
     bool isGroup = false,
   }) async {
     try {
-      SafeLog.info('ChatService: Creating chat with ${participantIds.length} participants');
+      SafeLog.info(
+          'ChatService: Creating chat with ${participantIds.length} participants');
 
       // Проверяем, существует ли уже чат между этими участниками (для личных чатов)
       if (!isGroup && participantIds.length == 2) {
         final existingChat = await _findExistingPrivateChat(participantIds);
         if (existingChat != null) {
-          SafeLog.info('ChatService: Existing private chat found: ${existingChat.id}');
+          SafeLog.info(
+              'ChatService: Existing private chat found: ${existingChat.id}');
           return existingChat;
         }
       }
@@ -49,14 +51,16 @@ class ChatService {
               .collection(_usersCollection)
               .doc(participantId)
               .get();
-          
+
           if (userDoc.exists) {
             final userData = userDoc.data()!;
-            participantNames[participantId] = userData['name'] ?? 'Неизвестный пользователь';
+            participantNames[participantId] =
+                userData['name'] ?? 'Неизвестный пользователь';
             participantAvatars[participantId] = userData['photoUrl'];
           }
         } catch (e) {
-          SafeLog.warning('ChatService: Could not fetch user data for $participantId: $e');
+          SafeLog.warning(
+              'ChatService: Could not fetch user data for $participantId: $e');
           participantNames[participantId] = 'Неизвестный пользователь';
         }
       }
@@ -75,8 +79,9 @@ class ChatService {
         'unreadCount': 0,
       };
 
-      final chatRef = await _firestore.collection(_chatsCollection).add(chatData);
-      
+      final chatRef =
+          await _firestore.collection(_chatsCollection).add(chatData);
+
       SafeLog.info('ChatService: Chat created successfully: ${chatRef.id}');
 
       return Chat(
@@ -108,13 +113,13 @@ class ChatService {
 
       for (final doc in query.docs) {
         final chat = Chat.fromDocument(doc);
-        if (chat.participants.length == 2 && 
+        if (chat.participants.length == 2 &&
             chat.participants.contains(participantIds[0]) &&
             chat.participants.contains(participantIds[1])) {
           return chat;
         }
       }
-      
+
       return null;
     } catch (e) {
       SafeLog.warning('ChatService: Error finding existing private chat: $e');
@@ -190,9 +195,11 @@ class ChatService {
       });
 
       // Обновляем информацию о последнем сообщении в чате
-      await _updateChatLastMessage(chatId, messageRef.id, content, MessageType.text, senderId);
+      await _updateChatLastMessage(
+          chatId, messageRef.id, content, MessageType.text, senderId);
 
-      SafeLog.info('ChatService: Text message sent successfully: ${messageRef.id}');
+      SafeLog.info(
+          'ChatService: Text message sent successfully: ${messageRef.id}');
 
       return message.copyWith(
         id: messageRef.id,
@@ -257,16 +264,19 @@ class ChatService {
 
       // Обновляем информацию о последнем сообщении в чате
       final lastMessageContent = caption ?? message.typeName;
-      await _updateChatLastMessage(chatId, messageRef.id, lastMessageContent, messageType, senderId);
+      await _updateChatLastMessage(
+          chatId, messageRef.id, lastMessageContent, messageType, senderId);
 
-      SafeLog.info('ChatService: Attachment message sent successfully: ${messageRef.id}');
+      SafeLog.info(
+          'ChatService: Attachment message sent successfully: ${messageRef.id}');
 
       return message.copyWith(
         id: messageRef.id,
         status: MessageStatus.sent,
       );
     } catch (e, stackTrace) {
-      SafeLog.error('ChatService: Error sending attachment message', e, stackTrace);
+      SafeLog.error(
+          'ChatService: Error sending attachment message', e, stackTrace);
       rethrow;
     }
   }
@@ -284,7 +294,8 @@ class ChatService {
     String? caption,
   }) async {
     try {
-      SafeLog.info('ChatService: Sending attachment message from bytes to chat $chatId');
+      SafeLog.info(
+          'ChatService: Sending attachment message from bytes to chat $chatId');
 
       // Загружаем файл
       final uploadResult = await _uploadService.uploadFileFromBytes(
@@ -326,24 +337,29 @@ class ChatService {
 
       // Обновляем информацию о последнем сообщении в чате
       final lastMessageContent = caption ?? message.typeName;
-      await _updateChatLastMessage(chatId, messageRef.id, lastMessageContent, messageType, senderId);
+      await _updateChatLastMessage(
+          chatId, messageRef.id, lastMessageContent, messageType, senderId);
 
-      SafeLog.info('ChatService: Attachment message from bytes sent successfully: ${messageRef.id}');
+      SafeLog.info(
+          'ChatService: Attachment message from bytes sent successfully: ${messageRef.id}');
 
       return message.copyWith(
         id: messageRef.id,
         status: MessageStatus.sent,
       );
     } catch (e, stackTrace) {
-      SafeLog.error('ChatService: Error sending attachment message from bytes', e, stackTrace);
+      SafeLog.error('ChatService: Error sending attachment message from bytes',
+          e, stackTrace);
       rethrow;
     }
   }
 
   /// Отметить сообщения как прочитанные
-  Future<void> markMessagesAsRead(String chatId, String userId, List<String> messageIds) async {
+  Future<void> markMessagesAsRead(
+      String chatId, String userId, List<String> messageIds) async {
     try {
-      SafeLog.info('ChatService: Marking ${messageIds.length} messages as read in chat $chatId');
+      SafeLog.info(
+          'ChatService: Marking ${messageIds.length} messages as read in chat $chatId');
 
       final batch = _firestore.batch();
 
@@ -367,13 +383,15 @@ class ChatService {
 
       SafeLog.info('ChatService: Messages marked as read successfully');
     } catch (e, stackTrace) {
-      SafeLog.error('ChatService: Error marking messages as read', e, stackTrace);
+      SafeLog.error(
+          'ChatService: Error marking messages as read', e, stackTrace);
       rethrow;
     }
   }
 
   /// Редактировать сообщение
-  Future<void> editMessage(String chatId, String messageId, String newContent) async {
+  Future<void> editMessage(
+      String chatId, String messageId, String newContent) async {
     try {
       SafeLog.info('ChatService: Editing message $messageId in chat $chatId');
 
@@ -439,7 +457,8 @@ class ChatService {
   }
 
   /// Обновить счетчик непрочитанных сообщений
-  Future<void> _updateUnreadCount(String chatId, String userId, int count) async {
+  Future<void> _updateUnreadCount(
+      String chatId, String userId, int count) async {
     try {
       await _firestore.collection(_chatsCollection).doc(chatId).update({
         'unreadCount': count,
@@ -468,7 +487,8 @@ class ChatService {
   /// Получить чат по ID
   Future<Chat?> getChat(String chatId) async {
     try {
-      final doc = await _firestore.collection(_chatsCollection).doc(chatId).get();
+      final doc =
+          await _firestore.collection(_chatsCollection).doc(chatId).get();
       if (doc.exists) {
         return Chat.fromDocument(doc);
       }
@@ -480,7 +500,8 @@ class ChatService {
   }
 
   /// Добавить участника в чат
-  Future<void> addParticipant(String chatId, String userId, String userName, String? userAvatar) async {
+  Future<void> addParticipant(
+      String chatId, String userId, String userName, String? userAvatar) async {
     try {
       SafeLog.info('ChatService: Adding participant $userId to chat $chatId');
 
@@ -501,7 +522,8 @@ class ChatService {
   /// Удалить участника из чата
   Future<void> removeParticipant(String chatId, String userId) async {
     try {
-      SafeLog.info('ChatService: Removing participant $userId from chat $chatId');
+      SafeLog.info(
+          'ChatService: Removing participant $userId from chat $chatId');
 
       await _firestore.collection(_chatsCollection).doc(chatId).update({
         'participants': FieldValue.arrayRemove([userId]),
@@ -518,7 +540,8 @@ class ChatService {
   }
 
   /// Обновить настройки чата
-  Future<void> updateChatSettings(String chatId, Map<String, dynamic> settings) async {
+  Future<void> updateChatSettings(
+      String chatId, Map<String, dynamic> settings) async {
     try {
       SafeLog.info('ChatService: Updating chat settings for $chatId');
 
@@ -546,9 +569,7 @@ class ChatService {
         .limit(20)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => ChatMessage.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map((doc) => ChatMessage.fromDocument(doc)).toList();
     });
   }
 }

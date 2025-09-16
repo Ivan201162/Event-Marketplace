@@ -18,44 +18,59 @@ final supportedSharePlatformsProvider = Provider<List<String>>((ref) {
 });
 
 /// Провайдер для шаринга события
-final shareEventProvider = FutureProvider.family<bool, String>((ref, eventId) async {
+final shareEventProvider =
+    FutureProvider.family<bool, String>((ref, eventId) async {
   // Здесь можно добавить логику получения события по ID
   // Пока возвращаем false, так как нужен объект Event
   return false;
 });
 
 /// Провайдер для шаринга профиля
-final shareProfileProvider = FutureProvider.family<bool, String>((ref, userId) async {
+final shareProfileProvider =
+    FutureProvider.family<bool, String>((ref, userId) async {
   // Здесь можно добавить логику получения пользователя по ID
   // Пока возвращаем false, так как нужен объект AppUser
   return false;
 });
 
 /// Провайдер для шаринга бронирования
-final shareBookingProvider = FutureProvider.family<bool, String>((ref, bookingId) async {
+final shareBookingProvider =
+    FutureProvider.family<bool, String>((ref, bookingId) async {
   // Здесь можно добавить логику получения бронирования по ID
   // Пока возвращаем false, так как нужен объект Booking
   return false;
 });
 
 /// Провайдер для шаринга текста
-final shareTextProvider = FutureProvider.family<bool, String>((ref, text) async {
+final shareTextProvider =
+    FutureProvider.family<bool, String>((ref, text) async {
   return await ShareService.shareText(text);
 });
 
 /// Провайдер для шаринга ссылки
-final shareLinkProvider = FutureProvider.family<bool, ({String url, String? title, String? description})>((ref, params) async {
-  return await ShareService.shareLink(params.url, title: params.title, description: params.description);
+final shareLinkProvider = FutureProvider.family<bool,
+    ({String url, String? title, String? description})>((ref, params) async {
+  return await ShareService.shareLink(params.url,
+      title: params.title, description: params.description);
 });
 
 /// Провайдер для шаринга файла
-final shareFileProvider = FutureProvider.family<bool, ({String filePath, String? text, String? subject})>((ref, params) async {
-  return await ShareService.shareFile(params.filePath, text: params.text, subject: params.subject);
+final shareFileProvider = FutureProvider.family<bool,
+    ({String filePath, String? text, String? subject})>((ref, params) async {
+  return await ShareService.shareFile(params.filePath,
+      text: params.text, subject: params.subject);
 });
 
 /// Провайдер для шаринга нескольких файлов
-final shareFilesProvider = FutureProvider.family<bool, ({List<String> filePaths, String? text, String? subject})>((ref, params) async {
-  return await ShareService.shareFiles(params.filePaths, text: params.text, subject: params.subject);
+final shareFilesProvider = FutureProvider.family<
+    bool,
+    ({
+      List<String> filePaths,
+      String? text,
+      String? subject
+    })>((ref, params) async {
+  return await ShareService.shareFiles(params.filePaths,
+      text: params.text, subject: params.subject);
 });
 
 /// Провайдер для открытия ссылки
@@ -64,17 +79,22 @@ final openLinkProvider = FutureProvider.family<bool, String>((ref, url) async {
 });
 
 /// Провайдер для открытия email
-final openEmailProvider = FutureProvider.family<bool, ({String email, String? subject, String? body})>((ref, params) async {
-  return await ShareService.openEmail(params.email, subject: params.subject, body: params.body);
+final openEmailProvider = FutureProvider.family<bool,
+    ({String email, String? subject, String? body})>((ref, params) async {
+  return await ShareService.openEmail(params.email,
+      subject: params.subject, body: params.body);
 });
 
 /// Провайдер для открытия телефона
-final openPhoneProvider = FutureProvider.family<bool, String>((ref, phone) async {
+final openPhoneProvider =
+    FutureProvider.family<bool, String>((ref, phone) async {
   return await ShareService.openPhone(phone);
 });
 
 /// Провайдер для открытия SMS
-final openSmsProvider = FutureProvider.family<bool, ({String phone, String? message})>((ref, params) async {
+final openSmsProvider =
+    FutureProvider.family<bool, ({String phone, String? message})>(
+        (ref, params) async {
   return await ShareService.openSms(params.phone, message: params.message);
 });
 
@@ -99,7 +119,8 @@ final shareHistoryProvider = StateProvider<List<Map<String, dynamic>>>((ref) {
 });
 
 /// Провайдер для настроек шаринга
-final shareSettingsProvider = StateNotifierProvider<ShareSettingsNotifier, ShareSettings>((ref) {
+final shareSettingsProvider =
+    StateNotifierProvider<ShareSettingsNotifier, ShareSettings>((ref) {
   return ShareSettingsNotifier();
 });
 
@@ -140,7 +161,8 @@ class ShareSettings {
       includeAppLink: includeAppLink ?? this.includeAppLink,
       includeUserInfo: includeUserInfo ?? this.includeUserInfo,
       includeEventDetails: includeEventDetails ?? this.includeEventDetails,
-      includeBookingDetails: includeBookingDetails ?? this.includeBookingDetails,
+      includeBookingDetails:
+          includeBookingDetails ?? this.includeBookingDetails,
       defaultMessage: defaultMessage ?? this.defaultMessage,
       autoCopyToClipboard: autoCopyToClipboard ?? this.autoCopyToClipboard,
       showShareDialog: showShareDialog ?? this.showShareDialog,
@@ -261,7 +283,7 @@ final shareInfoProvider = Provider<Map<String, dynamic>>((ref) {
 /// Провайдер для проверки доступности конкретного типа шаринга
 final canShareProvider = Provider.family<bool, String>((ref, type) {
   final isAvailable = ref.watch(shareAvailableProvider);
-  
+
   switch (type) {
     case 'event':
     case 'profile':
@@ -278,7 +300,7 @@ final canShareProvider = Provider.family<bool, String>((ref, type) {
 /// Провайдер для получения рекомендуемого способа шаринга
 final recommendedShareMethodProvider = Provider<String>((ref) {
   final supportedPlatforms = ref.watch(supportedSharePlatformsProvider);
-  
+
   if (supportedPlatforms.contains('Web Share API')) {
     return 'Web Share API';
   } else if (supportedPlatforms.contains('Android Share')) {
@@ -293,7 +315,7 @@ final recommendedShareMethodProvider = Provider<String>((ref) {
 /// Провайдер для получения иконки шаринга
 final shareIconProvider = Provider<String>((ref) {
   final supportedPlatforms = ref.watch(supportedSharePlatformsProvider);
-  
+
   if (supportedPlatforms.contains('WhatsApp')) {
     return 'whatsapp';
   } else if (supportedPlatforms.contains('Telegram')) {
@@ -308,7 +330,7 @@ final shareIconProvider = Provider<String>((ref) {
 /// Провайдер для получения цвета шаринга
 final shareColorProvider = Provider<int>((ref) {
   final supportedPlatforms = ref.watch(supportedSharePlatformsProvider);
-  
+
   if (supportedPlatforms.contains('WhatsApp')) {
     return 0xFF25D366; // WhatsApp green
   } else if (supportedPlatforms.contains('Telegram')) {

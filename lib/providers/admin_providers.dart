@@ -34,11 +34,13 @@ final allBookingsProvider = StreamProvider<List<Booking>>((ref) {
 });
 
 /// Провайдер для получения пользователей с фильтрацией
-final filteredUsersProvider = StreamProvider.family<List<AppUser>, ({
-  bool? isBanned,
-  bool? isVerified,
-  String? searchQuery,
-})>((ref, params) {
+final filteredUsersProvider = StreamProvider.family<
+    List<AppUser>,
+    ({
+      bool? isBanned,
+      bool? isVerified,
+      String? searchQuery,
+    })>((ref, params) {
   final adminService = ref.read(adminServiceProvider);
   return adminService.getUsersWithFilter(
     isBanned: params.isBanned,
@@ -48,10 +50,12 @@ final filteredUsersProvider = StreamProvider.family<List<AppUser>, ({
 });
 
 /// Провайдер для получения событий с фильтрацией
-final filteredEventsProvider = StreamProvider.family<List<Event>, ({
-  bool? isHidden,
-  String? searchQuery,
-})>((ref, params) {
+final filteredEventsProvider = StreamProvider.family<
+    List<Event>,
+    ({
+      bool? isHidden,
+      String? searchQuery,
+    })>((ref, params) {
   final adminService = ref.read(adminServiceProvider);
   return adminService.getEventsWithFilter(
     isHidden: params.isHidden,
@@ -66,31 +70,36 @@ final adminStatsProvider = StreamProvider<Map<String, dynamic>>((ref) {
 });
 
 /// Провайдер для получения логов админ-действий
-final adminLogsProvider = StreamProvider.family<List<Map<String, dynamic>>, int>((ref, limit) {
+final adminLogsProvider =
+    StreamProvider.family<List<Map<String, dynamic>>, int>((ref, limit) {
   final adminService = ref.read(adminServiceProvider);
   return adminService.getAdminLogs(limit: limit);
 });
 
 /// Провайдер для получения пользователя по ID
-final userByIdProvider = FutureProvider.family<AppUser?, String>((ref, userId) async {
+final userByIdProvider =
+    FutureProvider.family<AppUser?, String>((ref, userId) async {
   final adminService = ref.read(adminServiceProvider);
   return await adminService.getUserById(userId);
 });
 
 /// Провайдер для получения события по ID
-final eventByIdProvider = FutureProvider.family<Event?, String>((ref, eventId) async {
+final eventByIdProvider =
+    FutureProvider.family<Event?, String>((ref, eventId) async {
   final adminService = ref.read(adminServiceProvider);
   return await adminService.getEventById(eventId);
 });
 
 /// Провайдер для получения бронирования по ID
-final bookingByIdProvider = FutureProvider.family<Booking?, String>((ref, bookingId) async {
+final bookingByIdProvider =
+    FutureProvider.family<Booking?, String>((ref, bookingId) async {
   final adminService = ref.read(adminServiceProvider);
   return await adminService.getBookingById(bookingId);
 });
 
 /// Провайдер для проверки, является ли пользователь админом
-final isUserAdminProvider = FutureProvider.family<bool, String>((ref, userId) async {
+final isUserAdminProvider =
+    FutureProvider.family<bool, String>((ref, userId) async {
   final adminService = ref.read(adminServiceProvider);
   return await adminService.isUserAdmin(userId);
 });
@@ -117,7 +126,8 @@ final adminActionErrorProvider = StateProvider<String?>((ref) {
 });
 
 /// Провайдер для истории админ-действий
-final adminActionHistoryProvider = StateProvider<List<Map<String, dynamic>>>((ref) {
+final adminActionHistoryProvider =
+    StateProvider<List<Map<String, dynamic>>>((ref) {
   return [];
 });
 
@@ -127,7 +137,8 @@ final activeAdminActionsProvider = StateProvider<Set<String>>((ref) {
 });
 
 /// Провайдер для очереди админ-действий
-final adminActionQueueProvider = StateProvider<List<Map<String, dynamic>>>((ref) {
+final adminActionQueueProvider =
+    StateProvider<List<Map<String, dynamic>>>((ref) {
   return [];
 });
 
@@ -189,14 +200,15 @@ final adminPanelInfoProvider = Provider<Map<String, dynamic>>((ref) {
 });
 
 /// Провайдер для проверки доступности конкретного админ-действия
-final canPerformAdminActionProvider = Provider.family<bool, String>((ref, action) {
+final canPerformAdminActionProvider =
+    Provider.family<bool, String>((ref, action) {
   final isAvailable = ref.watch(adminPanelAvailableProvider);
   final isActionInProgress = ref.watch(isAdminActionInProgressProvider);
-  
+
   if (!isAvailable || isActionInProgress) {
     return false;
   }
-  
+
   switch (action) {
     case 'ban_user':
     case 'unban_user':
@@ -215,11 +227,11 @@ final canPerformAdminActionProvider = Provider.family<bool, String>((ref, action
 final recommendedAdminActionProvider = Provider<String>((ref) {
   final stats = ref.watch(adminStatsProvider);
   final statsData = stats.value;
-  
+
   if (statsData != null) {
     final bannedUsers = statsData['bannedUsers'] ?? 0;
     final hiddenEvents = statsData['hiddenEvents'] ?? 0;
-    
+
     if (bannedUsers > 0) {
       return 'review_banned_users';
     } else if (hiddenEvents > 0) {
@@ -228,7 +240,7 @@ final recommendedAdminActionProvider = Provider<String>((ref) {
       return 'review_new_content';
     }
   }
-  
+
   return 'review_new_content';
 });
 
@@ -295,7 +307,8 @@ final adminActionNameProvider = Provider.family<String, String>((ref, action) {
 });
 
 /// Провайдер для получения описания админ-действия
-final adminActionDescriptionProvider = Provider.family<String, String>((ref, action) {
+final adminActionDescriptionProvider =
+    Provider.family<String, String>((ref, action) {
   switch (action) {
     case 'ban_user':
       return 'Заблокировать пользователя за нарушение правил';

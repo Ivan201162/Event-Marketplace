@@ -18,7 +18,8 @@ final supportedLocalesProvider = Provider<List<Locale>>((ref) {
 });
 
 /// Провайдер для делегатов локализации
-final localizationDelegatesProvider = Provider<List<LocalizationsDelegate>>((ref) {
+final localizationDelegatesProvider =
+    Provider<List<LocalizationsDelegate>>((ref) {
   return const [
     AppLocalizations.delegate,
     GlobalMaterialLocalizations.delegate,

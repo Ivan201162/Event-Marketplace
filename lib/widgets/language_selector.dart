@@ -35,7 +35,8 @@ class LanguageSelector extends ConsumerWidget {
     }
   }
 
-  Widget _buildDialogButton(BuildContext context, WidgetRef ref, String languageName, AppLocalizations l10n) {
+  Widget _buildDialogButton(BuildContext context, WidgetRef ref,
+      String languageName, AppLocalizations l10n) {
     return ListTile(
       leading: Icon(
         Icons.language,
@@ -48,15 +49,16 @@ class LanguageSelector extends ConsumerWidget {
       subtitle: Text(
         languageName,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-        ),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
       ),
       trailing: const Icon(Icons.arrow_forward_ios),
       onTap: () => _showLanguageDialog(context, ref, l10n),
     );
   }
 
-  Widget _buildDropdown(BuildContext context, WidgetRef ref, Locale currentLocale, AppLocalizations l10n) {
+  Widget _buildDropdown(BuildContext context, WidgetRef ref,
+      Locale currentLocale, AppLocalizations l10n) {
     final languageList = ref.watch(languageListProvider);
 
     return DropdownButton<Locale>(
@@ -80,7 +82,8 @@ class LanguageSelector extends ConsumerWidget {
     );
   }
 
-  Widget _buildListTile(BuildContext context, WidgetRef ref, String languageName, AppLocalizations l10n) {
+  Widget _buildListTile(BuildContext context, WidgetRef ref,
+      String languageName, AppLocalizations l10n) {
     return ListTile(
       leading: Icon(
         Icons.language,
@@ -93,15 +96,16 @@ class LanguageSelector extends ConsumerWidget {
       subtitle: Text(
         languageName,
         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-        ),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
       ),
       trailing: const Icon(Icons.arrow_forward_ios),
       onTap: () => _showLanguageDialog(context, ref, l10n),
     );
   }
 
-  void _showLanguageDialog(BuildContext context, WidgetRef ref, AppLocalizations l10n) {
+  void _showLanguageDialog(
+      BuildContext context, WidgetRef ref, AppLocalizations l10n) {
     showDialog(
       context: context,
       builder: (context) => LanguageDialog(l10n: l10n),
@@ -236,15 +240,20 @@ class CurrentLanguageDisplay extends ConsumerWidget {
           Icon(
             Icons.language,
             size: 16,
-            color: iconColor ?? Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            color: iconColor ??
+                Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
           ),
           const SizedBox(width: 4),
         ],
         Text(
           languageName,
-          style: textStyle ?? Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-          ),
+          style: textStyle ??
+              Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.7),
+                  ),
         ),
       ],
     );
@@ -286,9 +295,10 @@ class QuickLanguageToggle extends ConsumerWidget {
           if (showText)
             Text(
               isRussian ? 'EN' : 'RU',
-              style: textStyle ?? Theme.of(context).textTheme.bodySmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+              style: textStyle ??
+                  Theme.of(context).textTheme.bodySmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                      ),
             ),
         ],
       ),

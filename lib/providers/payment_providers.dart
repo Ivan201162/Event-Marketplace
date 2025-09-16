@@ -24,22 +24,24 @@ final paymentInitializationProvider = FutureProvider<void>((ref) async {
 final availablePaymentMethodsProvider = Provider<List<PaymentMethod>>((ref) {
   final paymentGateway = ref.read(paymentGatewayProvider);
   if (!paymentGateway.isAvailable) return [];
-  
+
   return paymentGateway.getAvailablePaymentMethods();
 });
 
 /// Провайдер информации о платеже
-final paymentInfoProvider = FutureProvider.family<PaymentInfo?, String>((ref, paymentId) async {
+final paymentInfoProvider =
+    FutureProvider.family<PaymentInfo?, String>((ref, paymentId) async {
   final paymentGateway = ref.read(paymentGatewayProvider);
   if (!paymentGateway.isAvailable) return null;
-  
+
   return await paymentGateway.getPaymentInfo(paymentId);
 });
 
 /// Провайдер истории платежей для бронирования
-final paymentHistoryProvider = FutureProvider.family<List<PaymentInfo>, String>((ref, bookingId) async {
+final paymentHistoryProvider =
+    FutureProvider.family<List<PaymentInfo>, String>((ref, bookingId) async {
   final paymentGateway = ref.read(paymentGatewayProvider);
   if (!paymentGateway.isAvailable) return [];
-  
+
   return await paymentGateway.getPaymentHistory(bookingId);
 });

@@ -23,28 +23,32 @@ final canExportEventsProvider = Provider.family<bool, int>((ref, count) {
 });
 
 /// Провайдер для экспорта одного события
-final exportEventProvider = FutureProvider.family<String?, String>((ref, eventId) async {
+final exportEventProvider =
+    FutureProvider.family<String?, String>((ref, eventId) async {
   // Здесь можно добавить логику получения события по ID
   // Пока возвращаем null, так как нужен объект Event
   return null;
 });
 
 /// Провайдер для экспорта одного бронирования
-final exportBookingProvider = FutureProvider.family<String?, String>((ref, bookingId) async {
+final exportBookingProvider =
+    FutureProvider.family<String?, String>((ref, bookingId) async {
   // Здесь можно добавить логику получения бронирования по ID
   // Пока возвращаем null, так как нужен объект Booking
   return null;
 });
 
 /// Провайдер для экспорта нескольких событий
-final exportEventsProvider = FutureProvider.family<String?, List<String>>((ref, eventIds) async {
+final exportEventsProvider =
+    FutureProvider.family<String?, List<String>>((ref, eventIds) async {
   // Здесь можно добавить логику получения событий по ID
   // Пока возвращаем null, так как нужны объекты Event
   return null;
 });
 
 /// Провайдер для экспорта нескольких бронирований
-final exportBookingsProvider = FutureProvider.family<String?, List<String>>((ref, bookingIds) async {
+final exportBookingsProvider =
+    FutureProvider.family<String?, List<String>>((ref, bookingIds) async {
   // Здесь можно добавить логику получения бронирований по ID
   // Пока возвращаем null, так как нужны объекты Booking
   return null;
@@ -71,7 +75,8 @@ final exportHistoryProvider = StateProvider<List<Map<String, dynamic>>>((ref) {
 });
 
 /// Провайдер для настроек экспорта
-final exportSettingsProvider = StateNotifierProvider<ExportSettingsNotifier, ExportSettings>((ref) {
+final exportSettingsProvider =
+    StateNotifierProvider<ExportSettingsNotifier, ExportSettings>((ref) {
   return ExportSettingsNotifier();
 });
 

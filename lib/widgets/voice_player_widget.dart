@@ -184,7 +184,9 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
       value: progress,
       backgroundColor: Colors.grey[300],
       valueColor: AlwaysStoppedAnimation<Color>(
-        widget.isOwnMessage ? Theme.of(context).primaryColor : Colors.grey[600],
+        widget.isOwnMessage
+            ? Theme.of(context).primaryColor
+            : Colors.grey[600]!,
       ),
     );
   }

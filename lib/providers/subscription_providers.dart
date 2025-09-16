@@ -14,13 +14,15 @@ final subscriptionsAvailableProvider = Provider<bool>((ref) {
 });
 
 /// Провайдер подписки пользователя
-final userSubscriptionProvider = StreamProvider.family<Subscription?, String>((ref, userId) {
+final userSubscriptionProvider =
+    StreamProvider.family<Subscription?, String>((ref, userId) {
   final subscriptionService = ref.read(subscriptionServiceProvider);
   return subscriptionService.getUserSubscription(userId);
 });
 
 /// Провайдер истории подписок пользователя
-final userSubscriptionHistoryProvider = StreamProvider.family<List<Subscription>, String>((ref, userId) {
+final userSubscriptionHistoryProvider =
+    StreamProvider.family<List<Subscription>, String>((ref, userId) {
   final subscriptionService = ref.read(subscriptionServiceProvider);
   return subscriptionService.getUserSubscriptionHistory(userId);
 });
@@ -32,37 +34,47 @@ final activeSubscriptionsProvider = StreamProvider<List<Subscription>>((ref) {
 });
 
 /// Провайдер подписок, истекающих скоро
-final expiringSubscriptionsProvider = StreamProvider.family<List<Subscription>, int>((ref, daysAhead) {
+final expiringSubscriptionsProvider =
+    StreamProvider.family<List<Subscription>, int>((ref, daysAhead) {
   final subscriptionService = ref.read(subscriptionServiceProvider);
   return subscriptionService.getExpiringSubscriptions(daysAhead: daysAhead);
 });
 
 /// Провайдер типа подписки пользователя
-final userSubscriptionTypeProvider = FutureProvider.family<SubscriptionType, String>((ref, userId) async {
+final userSubscriptionTypeProvider =
+    FutureProvider.family<SubscriptionType, String>((ref, userId) async {
   final subscriptionService = ref.read(subscriptionServiceProvider);
   return await subscriptionService.getUserSubscriptionType(userId);
 });
 
 /// Провайдер доступа к функции
-final featureAccessProvider = FutureProvider.family<bool, ({String userId, String feature})>((ref, params) async {
+final featureAccessProvider =
+    FutureProvider.family<bool, ({String userId, String feature})>(
+        (ref, params) async {
   final subscriptionService = ref.read(subscriptionServiceProvider);
-  return await subscriptionService.hasFeatureAccess(params.userId, params.feature);
+  return await subscriptionService.hasFeatureAccess(
+      params.userId, params.feature);
 });
 
 /// Провайдер лимита пользователя
-final userLimitProvider = FutureProvider.family<int, ({String userId, String limit})>((ref, params) async {
+final userLimitProvider =
+    FutureProvider.family<int, ({String userId, String limit})>(
+        (ref, params) async {
   final subscriptionService = ref.read(subscriptionServiceProvider);
   return await subscriptionService.getUserLimit(params.userId, params.limit);
 });
 
 /// Провайдер проверки превышения лимита
-final limitExceededProvider = FutureProvider.family<bool, ({String userId, String limit, int currentUsage})>((ref, params) async {
+final limitExceededProvider = FutureProvider.family<bool,
+    ({String userId, String limit, int currentUsage})>((ref, params) async {
   final subscriptionService = ref.read(subscriptionServiceProvider);
-  return await subscriptionService.isLimitExceeded(params.userId, params.limit, params.currentUsage);
+  return await subscriptionService.isLimitExceeded(
+      params.userId, params.limit, params.currentUsage);
 });
 
 /// Провайдер статистики подписок
-final subscriptionStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
+final subscriptionStatsProvider =
+    FutureProvider<Map<String, dynamic>>((ref) async {
   final subscriptionService = ref.read(subscriptionServiceProvider);
   return await subscriptionService.getSubscriptionStats();
 });

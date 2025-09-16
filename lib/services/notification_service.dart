@@ -381,6 +381,87 @@ class NotificationService {
       debugPrint('Error unsubscribing from topic: $e');
     }
   }
+
+  /// Отправить уведомление о бронировании
+  Future<void> sendBookingNotification({
+    required String userId,
+    required String title,
+    required String body,
+    Map<String, dynamic>? data,
+  }) async {
+    try {
+      await _firestore.collection('notifications').add({
+        'userId': userId,
+        'title': title,
+        'body': body,
+        'type': 'booking',
+        'data': data ?? {},
+        'createdAt': FieldValue.serverTimestamp(),
+        'isRead': false,
+      });
+    } catch (e) {
+      debugPrint('Error sending booking notification: $e');
+    }
+  }
+
+  /// Отправить уведомление об отмене бронирования
+  Future<void> sendCancellationNotification({
+    required String userId,
+    required String title,
+    required String body,
+    Map<String, dynamic>? data,
+  }) async {
+    try {
+      await _firestore.collection('notifications').add({
+        'userId': userId,
+        'title': title,
+        'body': body,
+        'type': 'cancellation',
+        'data': data ?? {},
+        'createdAt': FieldValue.serverTimestamp(),
+        'isRead': false,
+      });
+    } catch (e) {
+      debugPrint('Error sending cancellation notification: $e');
+    }
+  }
+
+  /// Создать уведомление о бронировании
+  Future<void> createBookingNotification({
+    required String userId,
+    required String title,
+    required String body,
+    Map<String, dynamic>? data,
+  }) async {
+    await sendBookingNotification(
+      userId: userId,
+      title: title,
+      body: body,
+      data: data,
+    );
+  }
+
+  /// Создать уведомление о платеже
+  Future<void> createPaymentNotification({
+    required String userId,
+    required String title,
+    required String body,
+    Map<String, dynamic>? data,
+  }) async {
+    try {
+      await _firestore.collection('notifications').add({
+        'userId': userId,
+        'title': title,
+        'body': body,
+        'type': 'payment',
+        'data': data ?? {},
+        'createdAt': FieldValue.serverTimestamp(),
+        'isRead': false,
+      });
+    } catch (e) {
+      debugPrint('Error sending payment notification: $e');
+    }
+  }
 }
 
 /// Обработчик фоновых сообщений Firebase

@@ -43,7 +43,7 @@ class AnalyticsWrapper extends ConsumerWidget {
     if (!FeatureFlags.analyticsEnabled) return;
 
     final analyticsService = ref.read(analyticsServiceProvider);
-    
+
     analyticsService.logScreenView(
       screenName,
       parameters: parameters,
@@ -153,7 +153,7 @@ class AnalyticsButton extends ConsumerWidget {
     if (!FeatureFlags.analyticsEnabled) return;
 
     final analyticsService = ref.read(analyticsServiceProvider);
-    
+
     analyticsService.logEventWithParams(
       AnalyticsEventType.buttonClicked,
       {
@@ -192,7 +192,7 @@ class AnalyticsNavigator extends ConsumerWidget {
     if (!FeatureFlags.analyticsEnabled) return;
 
     final analyticsService = ref.read(analyticsServiceProvider);
-    
+
     analyticsService.logNavigationEvent(
       fromScreen: 'previous',
       toScreen: routeName,
@@ -220,11 +220,11 @@ class AnalyticsErrorBoundary extends ConsumerWidget {
           return child;
         } catch (error, stackTrace) {
           _trackError(ref, error, stackTrace);
-          
+
           if (errorBuilder != null) {
             return errorBuilder!(error, stackTrace);
           }
-          
+
           return ErrorWidget(error);
         }
       },
@@ -235,7 +235,7 @@ class AnalyticsErrorBoundary extends ConsumerWidget {
     if (!FeatureFlags.analyticsEnabled) return;
 
     final analyticsService = ref.read(analyticsServiceProvider);
-    
+
     analyticsService.logError(
       error: error.toString(),
       description: 'Widget error boundary caught an error',
@@ -263,16 +263,16 @@ class AnalyticsPerformanceTracker extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final startTime = DateTime.now();
-    
+
     return Builder(
       builder: (context) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           final endTime = DateTime.now();
           final duration = endTime.difference(startTime).inMilliseconds;
-          
+
           _trackPerformance(ref, duration);
         });
-        
+
         return child;
       },
     );
@@ -282,7 +282,7 @@ class AnalyticsPerformanceTracker extends ConsumerWidget {
     if (!FeatureFlags.analyticsEnabled) return;
 
     final analyticsService = ref.read(analyticsServiceProvider);
-    
+
     analyticsService.logPerformance(
       operation: operationName,
       durationMs: durationMs,

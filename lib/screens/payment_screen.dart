@@ -32,12 +32,14 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
 
   Future<void> _loadPaymentHistory() async {
     try {
-      final history = await ref.read(paymentHistoryProvider(widget.booking.id).future);
+      final history =
+          await ref.read(paymentHistoryProvider(widget.booking.id).future);
       setState(() {
         _paymentHistory = history;
       });
     } catch (e, stackTrace) {
-      SafeLog.error('PaymentScreen: Error loading payment history', e, stackTrace);
+      SafeLog.error(
+          'PaymentScreen: Error loading payment history', e, stackTrace);
     }
   }
 
@@ -90,16 +92,17 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
           Text(
             'Платежи временно недоступны',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
           Text(
             'Функция платежей отключена в настройках приложения. В демо-режиме вы можете просматривать информацию о платежах.',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-            ),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
@@ -123,12 +126,13 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             Text(
               'Информация о бронировании',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 12),
             _buildInfoRow('Событие', widget.booking.eventTitle),
-            _buildInfoRow('Дата', '${widget.booking.eventDate.day}.${widget.booking.eventDate.month}.${widget.booking.eventDate.year}'),
+            _buildInfoRow('Дата',
+                '${widget.booking.eventDate.day}.${widget.booking.eventDate.month}.${widget.booking.eventDate.year}'),
             _buildInfoRow('Участников', '${widget.booking.participantsCount}'),
             _buildInfoRow('Общая сумма', '${widget.booking.totalPrice} ₽'),
             _buildInfoRow('Статус', widget.booking.statusText),
@@ -149,16 +153,19 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             child: Text(
               label,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-              ),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.7),
+                  ),
             ),
           ),
           Expanded(
             child: Text(
               value,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+                    fontWeight: FontWeight.w500,
+                  ),
             ),
           ),
         ],
@@ -178,11 +185,12 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             Text(
               'Способ оплаты',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 12),
-            ...availableMethods.map((method) => _buildPaymentMethodTile(method)),
+            ...availableMethods
+                .map((method) => _buildPaymentMethodTile(method)),
           ],
         ),
       ),
@@ -222,12 +230,16 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         ElevatedButton.icon(
-          onPressed: _isProcessing ? null : () => _processPayment(PaymentType.prepayment),
-          icon: _isProcessing ? const SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(strokeWidth: 2),
-          ) : const Icon(Icons.payment),
+          onPressed: _isProcessing
+              ? null
+              : () => _processPayment(PaymentType.prepayment),
+          icon: _isProcessing
+              ? const SizedBox(
+                  width: 20,
+                  height: 20,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : const Icon(Icons.payment),
           label: Text(_isProcessing ? 'Обработка...' : 'Оплатить аванс (30%)'),
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -237,7 +249,9 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
         ),
         const SizedBox(height: 12),
         ElevatedButton.icon(
-          onPressed: _isProcessing ? null : () => _processPayment(PaymentType.finalPayment),
+          onPressed: _isProcessing
+              ? null
+              : () => _processPayment(PaymentType.finalPayment),
           icon: const Icon(Icons.account_balance_wallet),
           label: const Text('Оплатить остаток (70%)'),
           style: ElevatedButton.styleFrom(
@@ -248,7 +262,9 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
         ),
         const SizedBox(height: 12),
         OutlinedButton.icon(
-          onPressed: _isProcessing ? null : () => _processPayment(PaymentType.fullPayment),
+          onPressed: _isProcessing
+              ? null
+              : () => _processPayment(PaymentType.fullPayment),
           icon: const Icon(Icons.payment),
           label: const Text('Оплатить полностью'),
           style: OutlinedButton.styleFrom(
@@ -275,8 +291,11 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
               Text(
                 'История платежей пуста',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                ),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.7),
+                    ),
               ),
             ],
           ),
@@ -293,11 +312,12 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             Text(
               'История платежей',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 12),
-            ..._paymentHistory.map((payment) => _buildPaymentHistoryItem(payment)),
+            ..._paymentHistory
+                .map((payment) => _buildPaymentHistoryItem(payment)),
           ],
         ),
       ),
@@ -326,14 +346,17 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                 Text(
                   _getPaymentTypeName(payment.type),
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+                        fontWeight: FontWeight.w500,
+                      ),
                 ),
                 Text(
                   '${payment.amount} ${payment.currency}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                  ),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.7),
+                      ),
                 ),
               ],
             ),
@@ -344,15 +367,18 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
               Text(
                 _getPaymentStatusName(payment.status),
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: _getPaymentStatusColor(payment.status),
-                  fontWeight: FontWeight.w500,
-                ),
+                      color: _getPaymentStatusColor(payment.status),
+                      fontWeight: FontWeight.w500,
+                    ),
               ),
               Text(
                 '${payment.createdAt.day}.${payment.createdAt.month}.${payment.createdAt.year}',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
-                ),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.5),
+                    ),
               ),
             ],
           ),
@@ -382,7 +408,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       _showPaymentConfirmationDialog(type, amount, fee);
     } catch (e, stackTrace) {
       SafeLog.error('PaymentScreen: Error processing payment', e, stackTrace);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка обработки платежа: $e'),
@@ -422,13 +448,14 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             Text(
               'Информация о платеже:',
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 8),
             _buildInfoRow('Тип', typeName),
             _buildInfoRow('Сумма', '$amount ₽'),
-            _buildInfoRow('Способ', _getPaymentMethodInfo(_selectedMethod).name),
+            _buildInfoRow(
+                'Способ', _getPaymentMethodInfo(_selectedMethod).name),
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(12),
@@ -447,8 +474,10 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                     child: Text(
                       'В реальном приложении здесь будет происходить обработка платежа через выбранный способ оплаты.',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context).colorScheme.onPrimaryContainer,
-                      ),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer,
+                          ),
                     ),
                   ),
                 ],
@@ -466,7 +495,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     );
   }
 
-  void _showPaymentConfirmationDialog(PaymentType type, double amount, double fee) {
+  void _showPaymentConfirmationDialog(
+      PaymentType type, double amount, double fee) {
     final typeName = _getPaymentTypeName(type);
     final totalAmount = amount + fee;
 
@@ -483,7 +513,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             _buildInfoRow('Сумма', '$amount ₽'),
             _buildInfoRow('Комиссия', '$fee ₽'),
             _buildInfoRow('Итого', '$totalAmount ₽'),
-            _buildInfoRow('Способ', _getPaymentMethodInfo(_selectedMethod).name),
+            _buildInfoRow(
+                'Способ', _getPaymentMethodInfo(_selectedMethod).name),
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(12),
@@ -503,8 +534,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                     child: Text(
                       'Это демо-режим. Реальные деньги не будут списаны.',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.orange[700],
-                      ),
+                            color: Colors.orange[700],
+                          ),
                     ),
                   ),
                 ],
@@ -536,14 +567,15 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
 
     try {
       final paymentGateway = ref.read(paymentGatewayProvider);
-      
+
       final result = await paymentGateway.createPayment(
         bookingId: widget.booking.id,
         amount: amount,
         currency: 'RUB',
         type: type,
         method: _selectedMethod,
-        description: '${_getPaymentTypeName(type)} для ${widget.booking.eventTitle}',
+        description:
+            '${_getPaymentTypeName(type)} для ${widget.booking.eventTitle}',
       );
 
       if (result.isSuccess) {
@@ -553,7 +585,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             backgroundColor: Colors.green,
           ),
         );
-        
+
         // Обновляем историю платежей
         await _loadPaymentHistory();
       } else {
@@ -566,7 +598,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       }
     } catch (e, stackTrace) {
       SafeLog.error('PaymentScreen: Error executing payment', e, stackTrace);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка выполнения платежа: $e'),

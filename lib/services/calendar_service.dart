@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ics/ics.dart';
+import 'package:icalendar_parser/icalendar_parser.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/calendar_event.dart';
@@ -171,10 +171,10 @@ class CalendarService {
   /// Экспортировать события в ICS файл
   Future<String?> exportToICS(List<CalendarEvent> events) async {
     try {
-      final calendar = IcsCalendar();
+      final calendar = ICalendar();
 
       for (final event in events) {
-        final icsEvent = IcsEvent(
+        final icsEvent = IEvent(
           uid: event.id,
           start: event.startTime,
           end: event.endTime,
@@ -476,5 +476,159 @@ class CalendarService {
       eventsByStatus: eventsByStatus,
       busiestDays: busiestDays,
     );
+  }
+
+  /// Проверить доступность даты
+  Future<bool> isDateAvailable(String specialistId, DateTime date) async {
+    try {
+      final startOfDay = DateTime(date.year, date.month, date.day);
+      final endOfDay = startOfDay.add(const Duration(days: 1));
+
+      final querySnapshot = await _firestore
+          .collection('calendar_events')
+          .where('specialistId', isEqualTo: specialistId)
+          .where('startTime',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+          .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
+          .get();
+
+      return querySnapshot.docs.isEmpty;
+    } catch (e) {
+      print('Ошибка проверки доступности даты: $e');
+      return false;
+    }
+  }
+
+  /// Проверить доступность даты и времени
+  Future<bool> isDateTimeAvailable(
+      String specialistId, DateTime dateTime) async {
+    try {
+      final startOfDay = DateTime(dateTime.year, dateTime.month, dateTime.day);
+      final endOfDay = startOfDay.add(const Duration(days: 1));
+
+      final querySnapshot = await _firestore
+          .collection('calendar_events')
+          .where('specialistId', isEqualTo: specialistId)
+          .where('startTime',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+          .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
+          .get();
+
+      final events = querySnapshot.docs
+          .map((doc) => CalendarEvent.fromDocument(doc))
+          .toList();
+
+      // Проверяем, есть ли конфликтующие события
+      for (final event in events) {
+        if (dateTime.isAfter(event.startTime) &&
+            dateTime.isBefore(event.endTime)) {
+          return false;
+        }
+      }
+      return true;
+    } catch (e) {
+      print('Ошибка проверки доступности даты и времени: $e');
+      return false;
+    }
+  }
+
+  /// Получить доступные временные слоты
+  Future<List<DateTime>> getAvailableTimeSlots(
+      String specialistId, DateTime date, Duration slotDuration) async {
+    try {
+      final startOfDay = DateTime(date.year, date.month, date.day);
+      final endOfDay = startOfDay.add(const Duration(days: 1));
+
+      final querySnapshot = await _firestore
+          .collection('calendar_events')
+          .where('specialistId', isEqualTo: specialistId)
+          .where('startTime',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+          .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
+          .get();
+
+      final events = querySnapshot.docs
+          .map((doc) => CalendarEvent.fromDocument(doc))
+          .toList();
+
+      final availableSlots = <DateTime>[];
+
+      // Генерируем слоты с 9:00 до 18:00
+      final startHour = 9;
+      final endHour = 18;
+
+      for (int hour = startHour; hour < endHour; hour++) {
+        for (int minute = 0; minute < 60; minute += slotDuration.inMinutes) {
+          final slotTime =
+              DateTime(date.year, date.month, date.day, hour, minute);
+
+          // Проверяем, не конфликтует ли слот с существующими событиями
+          bool isAvailable = true;
+          for (final event in events) {
+            if (slotTime.isAfter(event.startTime) &&
+                slotTime.isBefore(event.endTime)) {
+              isAvailable = false;
+              break;
+            }
+          }
+
+          if (isAvailable) {
+            availableSlots.add(slotTime);
+          }
+        }
+      }
+
+      return availableSlots;
+    } catch (e) {
+      print('Ошибка получения доступных слотов: $e');
+      return [];
+    }
+  }
+
+  /// Получить доступные даты
+  Future<List<DateTime>> getAvailableDates(
+      String specialistId, int daysAhead) async {
+    try {
+      final availableDates = <DateTime>[];
+      final today = DateTime.now();
+
+      for (int i = 0; i < daysAhead; i++) {
+        final date = today.add(Duration(days: i));
+        final isAvailable = await isDateAvailable(specialistId, date);
+        if (isAvailable) {
+          availableDates.add(date);
+        }
+      }
+
+      return availableDates;
+    } catch (e) {
+      print('Ошибка получения доступных дат: $e');
+      return [];
+    }
+  }
+
+  /// Добавить событие
+  Future<void> addEvent(String specialistId, CalendarEvent event) async {
+    await createEvent(event);
+  }
+
+  /// Удалить событие
+  Future<void> removeEvent(String specialistId, String eventId) async {
+    await deleteEvent(eventId);
+  }
+
+  /// Создать событие из бронирования
+  Future<String?> createEventFromBooking(CalendarEvent event) async {
+    return await createEvent(event);
+  }
+
+  /// Создать событие бронирования
+  Future<String?> createBookingEvent(CalendarEvent event) async {
+    return await createEvent(event);
+  }
+
+  /// Удалить событие бронирования
+  Future<void> removeBookingEvent(String eventId) async {
+    await deleteEvent(eventId);
   }
 }

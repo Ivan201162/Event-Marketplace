@@ -72,7 +72,8 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.admin_panel_settings_off, size: 100, color: Colors.grey),
+            const Icon(Icons.admin_panel_settings_off,
+                size: 100, color: Colors.grey),
             const SizedBox(height: 20),
             Text(
               'Админ-панель отключена',
@@ -123,7 +124,7 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
           children: [
             // Фильтры
             _buildUserFilters(),
-            
+
             // Список пользователей
             Expanded(
               child: ListView.builder(
@@ -172,7 +173,7 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
           children: [
             // Фильтры
             _buildEventFilters(),
-            
+
             // Список событий
             Expanded(
               child: ListView.builder(
@@ -230,18 +231,18 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
                 'Активных событий': stats['activeEvents'] ?? 0,
                 'Всего бронирований': stats['totalBookings'] ?? 0,
               }),
-              
+
               const SizedBox(height: 16),
-              
+
               // Статистика по пользователям
               _buildStatsCard('Пользователи', {
                 'Новых за неделю': stats['newUsersThisWeek'] ?? 0,
                 'Заблокированных': stats['bannedUsers'] ?? 0,
                 'Верифицированных': stats['verifiedUsers'] ?? 0,
               }),
-              
+
               const SizedBox(height: 16),
-              
+
               // Статистика по событиям
               _buildStatsCard('События', {
                 'Созданных за неделю': stats['newEventsThisWeek'] ?? 0,
@@ -276,9 +277,9 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
               (value) => _updateSetting('autoModerateUsers', value),
             ),
           ]),
-          
+
           const SizedBox(height: 16),
-          
+
           // Настройки уведомлений
           _buildSettingsCard('Уведомления', [
             _buildSwitchTile(
@@ -300,9 +301,9 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
               (value) => _updateSetting('notifyReports', value),
             ),
           ]),
-          
+
           const SizedBox(height: 16),
-          
+
           // Настройки системы
           _buildSettingsCard('Система', [
             _buildSwitchTile(
@@ -347,7 +348,8 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
               DropdownMenuItem(value: 'all', child: Text('Все')),
               DropdownMenuItem(value: 'active', child: Text('Активные')),
               DropdownMenuItem(value: 'banned', child: Text('Заблокированные')),
-              DropdownMenuItem(value: 'verified', child: Text('Верифицированные')),
+              DropdownMenuItem(
+                  value: 'verified', child: Text('Верифицированные')),
             ],
             onChanged: (value) {
               // TODO: Implement user filtering
@@ -398,10 +400,9 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundImage: user.photoUrl != null 
-              ? NetworkImage(user.photoUrl!) 
-              : null,
-          child: user.photoUrl == null 
+          backgroundImage:
+              user.photoUrl != null ? NetworkImage(user.photoUrl!) : null,
+          child: user.photoUrl == null
               ? Text(user.name.isNotEmpty ? user.name[0].toUpperCase() : '?')
               : null,
         ),
@@ -550,26 +551,31 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
             Text(
               title,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
-            ...stats.entries.map((entry) => Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(entry.key),
-                  Text(
-                    entry.value.toString(),
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                  ),
-                ],
-              ),
-            )).toList(),
+            ...stats.entries
+                .map((entry) => Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(entry.key),
+                          Text(
+                            entry.value.toString(),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ))
+                .toList(),
           ],
         ),
       ),
@@ -586,8 +592,8 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
             Text(
               title,
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             ...children,
@@ -597,7 +603,8 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
     );
   }
 
-  Widget _buildSwitchTile(String title, String subtitle, bool value, Function(bool) onChanged) {
+  Widget _buildSwitchTile(
+      String title, String subtitle, bool value, Function(bool) onChanged) {
     return SwitchListTile(
       title: Text(title),
       subtitle: Text(subtitle),
@@ -627,7 +634,8 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
           break;
       }
     } catch (e, stackTrace) {
-      SafeLog.error('AdminPanelPage: Error handling user action', e, stackTrace);
+      SafeLog.error(
+          'AdminPanelPage: Error handling user action', e, stackTrace);
       _showErrorMessage('Ошибка: $e');
     }
   }
@@ -652,7 +660,8 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
           break;
       }
     } catch (e, stackTrace) {
-      SafeLog.error('AdminPanelPage: Error handling event action', e, stackTrace);
+      SafeLog.error(
+          'AdminPanelPage: Error handling event action', e, stackTrace);
       _showErrorMessage('Ошибка: $e');
     }
   }

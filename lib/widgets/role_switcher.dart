@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/user_role_provider.dart';
+import '../models/user.dart';
 
 class RoleSwitcher extends ConsumerWidget {
   const RoleSwitcher({super.key});

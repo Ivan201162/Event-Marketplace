@@ -33,7 +33,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   final ScrollController _scrollController = ScrollController();
   final ChatService _chatService = ChatService();
   final UploadService _uploadService = UploadService();
-  
+
   bool _isLoading = false;
   bool _isSending = false;
   String? _replyToMessageId;
@@ -53,7 +53,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
       // Автоматическая прокрутка вниз при приближении к концу
     }
   }
@@ -79,7 +80,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 children: [
                   Text(
                     widget.chatName,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   if (FeatureFlags.chatAttachmentsEnabled)
                     const Text(
@@ -104,10 +106,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           Expanded(
             child: _buildMessagesList(currentUser),
           ),
-          
+
           // Ответ на сообщение
           if (_replyToMessage != null) _buildReplyPreview(),
-          
+
           // Поле ввода сообщения
           _buildMessageInput(currentUser),
         ],
@@ -178,7 +180,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           itemBuilder: (context, index) {
             final message = messages[index];
             final isOwnMessage = message.senderId == currentUser.id;
-            
+
             return _buildMessageBubble(message, isOwnMessage, currentUser);
           },
         );
@@ -186,26 +188,29 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
   }
 
-  Widget _buildMessageBubble(ChatMessage message, bool isOwnMessage, AppUser currentUser) {
+  Widget _buildMessageBubble(
+      ChatMessage message, bool isOwnMessage, AppUser currentUser) {
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       child: Row(
-        mainAxisAlignment: isOwnMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isOwnMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (!isOwnMessage) ...[
             CircleAvatar(
               radius: 16,
-              backgroundImage: message.senderAvatar != null 
+              backgroundImage: message.senderAvatar != null
                   ? NetworkImage(message.senderAvatar!)
                   : null,
-              child: message.senderAvatar == null 
-                  ? Text(message.senderName.isNotEmpty ? message.senderName[0].toUpperCase() : '?')
+              child: message.senderAvatar == null
+                  ? Text(message.senderName.isNotEmpty
+                      ? message.senderName[0].toUpperCase()
+                      : '?')
                   : null,
             ),
             const SizedBox(width: 8),
           ],
-          
           Flexible(
             child: Container(
               constraints: BoxConstraints(
@@ -213,12 +218,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               ),
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               decoration: BoxDecoration(
-                color: isOwnMessage 
+                color: isOwnMessage
                     ? Theme.of(context).colorScheme.primary
                     : Theme.of(context).colorScheme.surfaceVariant,
                 borderRadius: BorderRadius.circular(20).copyWith(
-                  bottomLeft: isOwnMessage ? const Radius.circular(20) : const Radius.circular(4),
-                  bottomRight: isOwnMessage ? const Radius.circular(4) : const Radius.circular(20),
+                  bottomLeft: isOwnMessage
+                      ? const Radius.circular(20)
+                      : const Radius.circular(4),
+                  bottomRight: isOwnMessage
+                      ? const Radius.circular(4)
+                      : const Radius.circular(20),
                 ),
               ),
               child: Column(
@@ -226,26 +235,27 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 children: [
                   // Ответ на сообщение
                   if (message.isReply) _buildReplyIndicator(message),
-                  
+
                   // Содержимое сообщения
                   _buildMessageContent(message, isOwnMessage),
-                  
+
                   // Метаданные сообщения
                   _buildMessageMetadata(message, isOwnMessage),
                 ],
               ),
             ),
           ),
-          
           if (isOwnMessage) ...[
             const SizedBox(width: 8),
             CircleAvatar(
               radius: 16,
-              backgroundImage: currentUser.photoUrl != null 
+              backgroundImage: currentUser.photoUrl != null
                   ? NetworkImage(currentUser.photoUrl!)
                   : null,
-              child: currentUser.photoUrl == null 
-                  ? Text(currentUser.name.isNotEmpty ? currentUser.name[0].toUpperCase() : '?')
+              child: currentUser.photoUrl == null
+                  ? Text(currentUser.name.isNotEmpty
+                      ? currentUser.name[0].toUpperCase()
+                      : '?')
                   : null,
             ),
           ],
@@ -284,27 +294,27 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         return Text(
           message.content,
           style: TextStyle(
-            color: isOwnMessage 
+            color: isOwnMessage
                 ? Theme.of(context).colorScheme.onPrimary
                 : Theme.of(context).colorScheme.onSurface,
           ),
         );
-      
+
       case MessageType.image:
         return _buildImageMessage(message);
-      
+
       case MessageType.video:
         return _buildVideoMessage(message);
-      
+
       case MessageType.audio:
         return _buildAudioMessage(message);
-      
+
       case MessageType.file:
         return _buildFileMessage(message);
-      
+
       case MessageType.location:
         return _buildLocationMessage(message);
-      
+
       case MessageType.system:
         return _buildSystemMessage(message);
     }
@@ -437,7 +447,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             children: [
               Text(
                 message.fileName ?? 'Файл',
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
               ),
               if (message.fileSize != null)
                 Text(
@@ -492,7 +503,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           '${message.timestamp.hour.toString().padLeft(2, '0')}:${message.timestamp.minute.toString().padLeft(2, '0')}',
           style: TextStyle(
             fontSize: 11,
-            color: isOwnMessage 
+            color: isOwnMessage
                 ? Theme.of(context).colorScheme.onPrimary.withOpacity(0.7)
                 : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
           ),
@@ -511,7 +522,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             'изменено',
             style: TextStyle(
               fontSize: 10,
-              color: isOwnMessage 
+              color: isOwnMessage
                   ? Theme.of(context).colorScheme.onPrimary.withOpacity(0.7)
                   : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
             ),
@@ -558,7 +569,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               children: [
                 Text(
                   'Ответ на сообщение от ${_replyToMessage!.senderName}',
-                  style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                  style: const TextStyle(
+                      fontSize: 12, fontWeight: FontWeight.bold),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -605,7 +617,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               icon: const Icon(Icons.attach_file),
               onPressed: _showAttachmentOptions,
             ),
-          
+
           // Поле ввода
           Expanded(
             child: TextField(
@@ -615,19 +627,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.all(Radius.circular(24)),
                 ),
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 16, vertical: 8),
               ),
               maxLines: null,
               textCapitalization: TextCapitalization.sentences,
               onSubmitted: (text) => _sendMessage(currentUser),
             ),
           ),
-          
+
           const SizedBox(width: 8),
-          
+
           // Кнопка отправки
           IconButton(
-            icon: _isSending 
+            icon: _isSending
                 ? const SizedBox(
                     width: 20,
                     height: 20,
@@ -675,7 +688,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       }
     } catch (e, stackTrace) {
       SafeLog.error('ChatScreen: Error sending message', e, stackTrace);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка отправки сообщения: $e'),
@@ -700,8 +713,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             Text(
               'Прикрепить файл',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 24),
             Row(
@@ -783,7 +796,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       );
     } catch (e, stackTrace) {
       SafeLog.error('ChatScreen: Error sending image', e, stackTrace);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка отправки изображения: $e'),
@@ -812,7 +825,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       );
     } catch (e, stackTrace) {
       SafeLog.error('ChatScreen: Error sending video', e, stackTrace);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка отправки видео: $e'),
@@ -841,7 +854,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       );
     } catch (e, stackTrace) {
       SafeLog.error('ChatScreen: Error sending file', e, stackTrace);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка отправки файла: $e'),

@@ -75,19 +75,48 @@ class UploadService {
 
   // Разрешенные расширения файлов
   static const List<String> _allowedImageExtensions = [
-    'jpg', 'jpeg', 'png', 'gif', 'webp', 'bmp', 'svg'
+    'jpg',
+    'jpeg',
+    'png',
+    'gif',
+    'webp',
+    'bmp',
+    'svg'
   ];
   static const List<String> _allowedVideoExtensions = [
-    'mp4', 'avi', 'mov', 'wmv', 'flv', 'webm', 'mkv'
+    'mp4',
+    'avi',
+    'mov',
+    'wmv',
+    'flv',
+    'webm',
+    'mkv'
   ];
   static const List<String> _allowedAudioExtensions = [
-    'mp3', 'wav', 'aac', 'flac', 'ogg', 'm4a'
+    'mp3',
+    'wav',
+    'aac',
+    'flac',
+    'ogg',
+    'm4a'
   ];
   static const List<String> _allowedDocumentExtensions = [
-    'pdf', 'doc', 'docx', 'xls', 'xlsx', 'ppt', 'pptx', 'txt', 'rtf'
+    'pdf',
+    'doc',
+    'docx',
+    'xls',
+    'xlsx',
+    'ppt',
+    'pptx',
+    'txt',
+    'rtf'
   ];
   static const List<String> _allowedArchiveExtensions = [
-    'zip', 'rar', '7z', 'tar', 'gz'
+    'zip',
+    'rar',
+    '7z',
+    'tar',
+    'gz'
   ];
 
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -108,7 +137,7 @@ class UploadService {
 
     try {
       SafeLog.info('UploadService: Picking image from ${source.name}');
-      
+
       final XFile? image = await _imagePicker.pickImage(
         source: source,
         maxWidth: maxWidth,
@@ -143,7 +172,7 @@ class UploadService {
 
     try {
       SafeLog.info('UploadService: Picking video from ${source.name}');
-      
+
       final XFile? video = await _imagePicker.pickVideo(
         source: source,
         maxDuration: maxDuration,
@@ -175,8 +204,9 @@ class UploadService {
     }
 
     try {
-      SafeLog.info('UploadService: Picking file with extensions: $allowedExtensions');
-      
+      SafeLog.info(
+          'UploadService: Picking file with extensions: $allowedExtensions');
+
       final FilePickerResult? result = await FilePicker.platform.pickFiles(
         type: FileType.any,
         allowedExtensions: allowedExtensions,
@@ -225,7 +255,8 @@ class UploadService {
       // Получаем информацию о файле
       final fileStat = await file.stat();
       final fileName = path.basename(file.path);
-      final fileExtension = path.extension(fileName).toLowerCase().replaceFirst('.', '');
+      final fileExtension =
+          path.extension(fileName).toLowerCase().replaceFirst('.', '');
 
       // Валидация размера файла
       _validateFileSize(fileStat.size, fileType);
@@ -235,7 +266,7 @@ class UploadService {
 
       // Генерируем уникальное имя файла
       final uniqueFileName = '${_uuid.v4()}_$fileName';
-      
+
       // Определяем путь для загрузки
       final uploadPath = customPath ?? _getUploadPath(fileType, uniqueFileName);
 
@@ -254,7 +285,8 @@ class UploadService {
       // Отслеживаем прогресс загрузки
       uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
         final progress = snapshot.bytesTransferred / snapshot.totalBytes;
-        SafeLog.info('UploadService: Upload progress: ${(progress * 100).toStringAsFixed(1)}%');
+        SafeLog.info(
+            'UploadService: Upload progress: ${(progress * 100).toStringAsFixed(1)}%');
       });
 
       // Ждем завершения загрузки
@@ -286,11 +318,11 @@ class UploadService {
       );
     } catch (e, stackTrace) {
       SafeLog.error('UploadService: Error uploading file', e, stackTrace);
-      
+
       if (e is UploadException) {
         rethrow;
       }
-      
+
       throw UploadException('Ошибка загрузки файла: $e');
     }
   }
@@ -314,12 +346,13 @@ class UploadService {
       _validateFileSize(bytes.length, fileType);
 
       // Валидация расширения файла
-      final fileExtension = path.extension(fileName).toLowerCase().replaceFirst('.', '');
+      final fileExtension =
+          path.extension(fileName).toLowerCase().replaceFirst('.', '');
       _validateFileExtension(fileExtension, fileType);
 
       // Генерируем уникальное имя файла
       final uniqueFileName = '${_uuid.v4()}_$fileName';
-      
+
       // Определяем путь для загрузки
       final uploadPath = customPath ?? _getUploadPath(fileType, uniqueFileName);
 
@@ -339,7 +372,8 @@ class UploadService {
       final TaskSnapshot snapshot = await uploadTask;
       final String downloadUrl = await snapshot.ref.getDownloadURL();
 
-      SafeLog.info('UploadService: File uploaded successfully from bytes: $downloadUrl');
+      SafeLog.info(
+          'UploadService: File uploaded successfully from bytes: $downloadUrl');
 
       // Создаем превью для изображений
       String? thumbnailUrl;
@@ -363,12 +397,13 @@ class UploadService {
         },
       );
     } catch (e, stackTrace) {
-      SafeLog.error('UploadService: Error uploading file from bytes', e, stackTrace);
-      
+      SafeLog.error(
+          'UploadService: Error uploading file from bytes', e, stackTrace);
+
       if (e is UploadException) {
         rethrow;
       }
-      
+
       throw UploadException('Ошибка загрузки файла: $e');
     }
   }
@@ -382,10 +417,10 @@ class UploadService {
 
     try {
       SafeLog.info('UploadService: Deleting file: $filePath');
-      
+
       final Reference ref = _storage.ref().child(filePath);
       await ref.delete();
-      
+
       SafeLog.info('UploadService: File deleted successfully: $filePath');
     } catch (e, stackTrace) {
       SafeLog.error('UploadService: Error deleting file', e, stackTrace);
@@ -410,7 +445,8 @@ class UploadService {
       final Reference ref = _storage.ref().child(filePath);
       return await ref.getMetadata();
     } catch (e, stackTrace) {
-      SafeLog.error('UploadService: Error getting file metadata', e, stackTrace);
+      SafeLog.error(
+          'UploadService: Error getting file metadata', e, stackTrace);
       throw UploadException('Ошибка получения метаданных файла: $e');
     }
   }
@@ -418,7 +454,7 @@ class UploadService {
   /// Валидация размера файла
   void _validateFileSize(int fileSize, FileType fileType) {
     int maxSize;
-    
+
     switch (fileType) {
       case FileType.image:
         maxSize = _maxImageSize;
@@ -451,7 +487,7 @@ class UploadService {
   /// Валидация расширения файла
   void _validateFileExtension(String extension, FileType fileType) {
     List<String> allowedExtensions;
-    
+
     switch (fileType) {
       case FileType.image:
         allowedExtensions = _allowedImageExtensions;
@@ -490,20 +526,21 @@ class UploadService {
   /// Определить тип файла по расширению
   FileType _getFileTypeFromExtension(String extension) {
     final ext = extension.toLowerCase();
-    
+
     if (_allowedImageExtensions.contains(ext)) return FileType.image;
     if (_allowedVideoExtensions.contains(ext)) return FileType.video;
     if (_allowedAudioExtensions.contains(ext)) return FileType.audio;
     if (_allowedDocumentExtensions.contains(ext)) return FileType.document;
     if (_allowedArchiveExtensions.contains(ext)) return FileType.archive;
-    
+
     return FileType.other;
   }
 
   /// Получить путь для загрузки
   String _getUploadPath(FileType fileType, String fileName) {
-    final timestamp = DateTime.now().toIso8601String().split('T')[0]; // YYYY-MM-DD
-    
+    final timestamp =
+        DateTime.now().toIso8601String().split('T')[0]; // YYYY-MM-DD
+
     switch (fileType) {
       case FileType.image:
         return '$_imagesPath/$timestamp/$fileName';
@@ -537,7 +574,7 @@ class UploadService {
         return 'image/bmp';
       case 'svg':
         return 'image/svg+xml';
-      
+
       // Видео
       case 'mp4':
         return 'video/mp4';
@@ -553,7 +590,7 @@ class UploadService {
         return 'video/webm';
       case 'mkv':
         return 'video/x-matroska';
-      
+
       // Аудио
       case 'mp3':
         return 'audio/mpeg';
@@ -567,7 +604,7 @@ class UploadService {
         return 'audio/ogg';
       case 'm4a':
         return 'audio/mp4';
-      
+
       // Документы
       case 'pdf':
         return 'application/pdf';
@@ -587,7 +624,7 @@ class UploadService {
         return 'text/plain';
       case 'rtf':
         return 'application/rtf';
-      
+
       // Архивы
       case 'zip':
         return 'application/zip';
@@ -599,7 +636,7 @@ class UploadService {
         return 'application/x-tar';
       case 'gz':
         return 'application/gzip';
-      
+
       default:
         return 'application/octet-stream';
     }
@@ -621,7 +658,8 @@ class UploadService {
   String _formatFileSize(int bytes) {
     if (bytes < 1024) return '$bytes B';
     if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    if (bytes < 1024 * 1024 * 1024) return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+    if (bytes < 1024 * 1024 * 1024)
+      return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
     return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
   }
 

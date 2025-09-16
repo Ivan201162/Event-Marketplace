@@ -14,13 +14,15 @@ final eventsProvider = FutureProvider<List<Event>>((ref) async {
 });
 
 /// Провайдер событий пользователя
-final userEventsProvider = FutureProvider.family<List<Event>, String>((ref, userId) async {
+final userEventsProvider =
+    FutureProvider.family<List<Event>, String>((ref, userId) async {
   final eventService = ref.read(eventServiceProvider);
   return await eventService.getUserEvents(userId);
 });
 
 /// Провайдер события по ID
-final eventProvider = FutureProvider.family<Event?, String>((ref, eventId) async {
+final eventProvider =
+    FutureProvider.family<Event?, String>((ref, eventId) async {
   final eventService = ref.read(eventServiceProvider);
   return await eventService.getEvent(eventId);
 });

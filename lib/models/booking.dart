@@ -82,7 +82,9 @@ class Booking {
       organizerName: data['organizerName'],
       customerId: data['customerId'],
       specialistId: data['specialistId'],
-      endDate: data['endDate'] != null ? (data['endDate'] as Timestamp).toDate() : null,
+      endDate: data['endDate'] != null
+          ? (data['endDate'] as Timestamp).toDate()
+          : null,
       prepayment: (data['prepayment'] as num?)?.toDouble(),
     );
   }

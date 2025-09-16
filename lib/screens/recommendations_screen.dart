@@ -4,7 +4,7 @@ import '../providers/recommendation_providers.dart';
 import '../providers/auth_providers.dart';
 import '../models/recommendation.dart';
 import '../widgets/recommendation_widget.dart';
-import '../widgets/animated_page_transition.dart';
+import '../widgets/animated_page_transition.dart' as app_transitions;
 
 /// Экран рекомендаций
 class RecommendationsScreen extends ConsumerStatefulWidget {
@@ -38,7 +38,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
     return Scaffold(
       appBar: AppBar(
         title: const Text('Рекомендации'),
-        backgroundColor: context.colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         elevation: 0,
         actions: [
           IconButton(
@@ -83,7 +83,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
 
   /// Вкладка персональных рекомендаций
   Widget _buildPersonalRecommendationsTab(String userId) {
-    return AnimatedList(
+    return app_transitions.AnimatedList(
       children: [
         // Статистика рекомендаций
         Padding(
@@ -106,7 +106,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
 
   /// Вкладка популярных рекомендаций
   Widget _buildPopularRecommendationsTab(String userId) {
-    return AnimatedList(
+    return app_transitions.AnimatedList(
       children: [
         Padding(
           padding: const EdgeInsets.all(16),
@@ -123,7 +123,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
 
   /// Вкладка рекомендаций рядом
   Widget _buildNearbyRecommendationsTab(String userId) {
-    return AnimatedList(
+    return app_transitions.AnimatedList(
       children: [
         Padding(
           padding: const EdgeInsets.all(16),
@@ -140,7 +140,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
 
   /// Вкладка новых рекомендаций
   Widget _buildNewRecommendationsTab(String userId) {
-    return AnimatedList(
+    return app_transitions.AnimatedList(
       children: [
         Padding(
           padding: const EdgeInsets.all(16),
@@ -166,8 +166,8 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
             Text(
               'Ваши рекомендации',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             Row(
@@ -197,9 +197,9 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
               const SizedBox(height: 16),
               Text(
                 'Популярные типы:',
-                style: context.textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
               ),
               const SizedBox(height: 8),
               Wrap(
@@ -220,10 +220,11 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
                         const SizedBox(width: 4),
                         Text(
                           typeInfo.title,
-                          style: context.textTheme.bodySmall?.copyWith(
-                            color: _parseColor(typeInfo.color),
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: _parseColor(typeInfo.color),
+                                    fontWeight: FontWeight.w500,
+                                  ),
                         ),
                       ],
                     ),
@@ -246,22 +247,22 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
       children: [
         Icon(
           icon,
-          color: context.colorScheme.primary,
+          color: Theme.of(context).colorScheme.primary,
           size: 24,
         ),
         const SizedBox(height: 4),
         Text(
           value,
-          style: context.textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: context.colorScheme.primary,
-          ),
+          style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.primary,
+              ),
         ),
         Text(
           label,
-          style: context.textTheme.bodySmall?.copyWith(
-            color: context.colorScheme.onSurface.withOpacity(0.7),
-          ),
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
         ),
       ],
     );
@@ -298,7 +299,7 @@ class RecommendationSettingsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Настройки рекомендаций'),
-        backgroundColor: context.colorScheme.inversePrimary,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         elevation: 0,
       ),
       body: AnimatedList(
@@ -334,8 +335,8 @@ class RecommendationSettingsScreen extends ConsumerWidget {
           Text(
             'Типы рекомендаций',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 16),
           ...RecommendationType.values.map((type) {
@@ -379,15 +380,18 @@ class RecommendationSettingsScreen extends ConsumerWidget {
               children: [
                 Text(
                   typeInfo.title,
-                  style: context.textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                 ),
                 Text(
                   typeInfo.description,
-                  style: context.textTheme.bodySmall?.copyWith(
-                    color: context.colorScheme.onSurface.withOpacity(0.7),
-                  ),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.7),
+                      ),
                 ),
               ],
             ),
@@ -413,8 +417,8 @@ class RecommendationSettingsScreen extends ConsumerWidget {
           Text(
             'Фильтры',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 16),
           _buildFilterItem(

@@ -37,7 +37,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
       // Загружаем события
       final eventsAsync = ref.read(eventsProvider.future);
       final events = await eventsAsync;
-      
+
       // Загружаем текущее местоположение, если карты включены
       MapCoordinates? currentLocation;
       if (FeatureFlags.mapsEnabled) {
@@ -124,16 +124,17 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
           Text(
             'Карты временно недоступны',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
           Text(
             'Функция карт отключена в настройках приложения. Вы можете просматривать события в списке.',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-            ),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
@@ -168,17 +169,18 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
           Text(
             'Ошибка загрузки карты',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: Theme.of(context).colorScheme.error,
-            ),
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.error,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
           Text(
             _error ?? 'Неизвестная ошибка',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-            ),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 32),
@@ -194,7 +196,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
 
   Widget _buildMapContent() {
     final mapService = ref.read(mapServiceProvider);
-    
+
     if (!mapService.isAvailable) {
       return _buildMapsDisabledState();
     }
@@ -203,7 +205,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
       children: [
         // Панель фильтров
         _buildFiltersPanel(),
-        
+
         // Карта
         Expanded(
           child: Container(
@@ -229,7 +231,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
             ),
           ),
         ),
-        
+
         // Панель информации
         _buildInfoPanel(),
       ],
@@ -247,7 +249,8 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
                 hintText: 'Поиск событий на карте...',
                 prefixIcon: Icon(Icons.search),
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               ),
               onChanged: _onSearchChanged,
             ),
@@ -293,8 +296,8 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
               Text(
                 'Информация о карте',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
             ],
           ),
@@ -359,16 +362,17 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
           Text(
             label,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-            ),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 2),
           Text(
             value,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -378,7 +382,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
 
   void _onEventTap(Event event) {
     SafeLog.info('EventsMapPage: Event tapped: ${event.title}');
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -391,8 +395,8 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
               Text(
                 'Описание:',
                 style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               const SizedBox(height: 4),
               Text(event.description),
@@ -401,8 +405,8 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
             Text(
               'Местоположение:',
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 4),
             Text(event.location),
@@ -410,8 +414,8 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
             Text(
               'Дата:',
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 4),
             Text('${event.date.day}.${event.date.month}.${event.date.year}'),
@@ -419,8 +423,8 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
             Text(
               'Цена:',
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 4),
             Text('${event.price} ₽'),
@@ -445,10 +449,11 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
 
   void _onMapTap(MapCoordinates coordinates) {
     SafeLog.info('EventsMapPage: Map tapped at $coordinates');
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Координаты: ${coordinates.latitude.toStringAsFixed(4)}, ${coordinates.longitude.toStringAsFixed(4)}'),
+        content: Text(
+            'Координаты: ${coordinates.latitude.toStringAsFixed(4)}, ${coordinates.longitude.toStringAsFixed(4)}'),
         duration: const Duration(seconds: 2),
       ),
     );
@@ -461,7 +466,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
 
   void _showFilters() {
     SafeLog.info('EventsMapPage: Showing filters');
-    
+
     showModalBottomSheet(
       context: context,
       builder: (context) => Container(
@@ -473,8 +478,8 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
             Text(
               'Фильтры карты',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             const Text('Фильтры будут добавлены в следующих версиях'),
@@ -506,13 +511,13 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
     try {
       final mapService = ref.read(mapServiceProvider);
       final hasPermission = await mapService.requestLocationPermission();
-      
+
       if (hasPermission) {
         final location = await mapService.getCurrentLocation();
         setState(() {
           _currentLocation = location;
         });
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Местоположение определено'),
@@ -529,7 +534,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
       }
     } catch (e, stackTrace) {
       SafeLog.error('EventsMapPage: Error requesting location', e, stackTrace);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка определения местоположения: $e'),

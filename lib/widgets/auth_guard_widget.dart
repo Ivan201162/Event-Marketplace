@@ -84,16 +84,19 @@ class AuthGuard extends ConsumerWidget {
               Text(
                 'Требуется авторизация',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
+                      color: Theme.of(context).colorScheme.onSurface,
+                    ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
               Text(
                 'Для доступа к этому разделу необходимо войти в систему',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                ),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.7),
+                    ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
@@ -134,16 +137,19 @@ class AuthGuard extends ConsumerWidget {
               Text(
                 'Недостаточно прав',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.error,
-                ),
+                      color: Theme.of(context).colorScheme.error,
+                    ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
               Text(
                 'Ваша роль: ${userRole.roleDisplayName}\n\nДля доступа к этому разделу требуется другая роль',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                ),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.7),
+                    ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),
@@ -179,16 +185,19 @@ class AuthGuard extends ConsumerWidget {
               Text(
                 'Ошибка авторизации',
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.error,
-                ),
+                      color: Theme.of(context).colorScheme.error,
+                    ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 16),
               Text(
                 'Произошла ошибка при проверке авторизации: ${error.toString()}',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                ),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.7),
+                    ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),

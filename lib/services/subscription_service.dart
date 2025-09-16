@@ -23,11 +23,11 @@ class SubscriptionService {
         .limit(1)
         .snapshots()
         .map((snapshot) {
-      if (snapshot.docs.isNotEmpty) {
-        return Subscription.fromDocument(snapshot.docs.first);
-      }
-      return null;
-    });
+          if (snapshot.docs.isNotEmpty) {
+            return Subscription.fromDocument(snapshot.docs.first);
+          }
+          return null;
+        });
   }
 
   /// Создать подписку
@@ -42,7 +42,8 @@ class SubscriptionService {
     Map<String, dynamic>? metadata,
   }) async {
     try {
-      SafeLog.info('SubscriptionService: Creating subscription for user $userId');
+      SafeLog.info(
+          'SubscriptionService: Creating subscription for user $userId');
 
       // Проверяем, есть ли уже активная подписка
       final existingSubscription = await _getActiveSubscription(userId);
@@ -82,16 +83,20 @@ class SubscriptionService {
       );
 
       // Сохраняем в Firestore
-      final docRef = await _firestore.collection(_subscriptionsCollection).add(subscription.toMap());
-      
+      final docRef = await _firestore
+          .collection(_subscriptionsCollection)
+          .add(subscription.toMap());
+
       // Обновляем ID
       final createdSubscription = subscription.copyWith(id: docRef.id);
 
-      SafeLog.info('SubscriptionService: Subscription created successfully: ${docRef.id}');
+      SafeLog.info(
+          'SubscriptionService: Subscription created successfully: ${docRef.id}');
 
       return createdSubscription;
     } catch (e, stackTrace) {
-      SafeLog.error('SubscriptionService: Error creating subscription', e, stackTrace);
+      SafeLog.error(
+          'SubscriptionService: Error creating subscription', e, stackTrace);
       rethrow;
     }
   }
@@ -108,7 +113,8 @@ class SubscriptionService {
     Map<String, dynamic>? metadata,
   }) async {
     try {
-      SafeLog.info('SubscriptionService: Updating subscription $subscriptionId');
+      SafeLog.info(
+          'SubscriptionService: Updating subscription $subscriptionId');
 
       final updateData = <String, dynamic>{
         'updatedAt': FieldValue.serverTimestamp(),
@@ -133,17 +139,24 @@ class SubscriptionService {
       }
       if (metadata != null) updateData['metadata'] = metadata;
 
-      await _firestore.collection(_subscriptionsCollection).doc(subscriptionId).update(updateData);
+      await _firestore
+          .collection(_subscriptionsCollection)
+          .doc(subscriptionId)
+          .update(updateData);
 
       // Получаем обновленную подписку
-      final doc = await _firestore.collection(_subscriptionsCollection).doc(subscriptionId).get();
+      final doc = await _firestore
+          .collection(_subscriptionsCollection)
+          .doc(subscriptionId)
+          .get();
       final updatedSubscription = Subscription.fromDocument(doc);
 
       SafeLog.info('SubscriptionService: Subscription updated successfully');
 
       return updatedSubscription;
     } catch (e, stackTrace) {
-      SafeLog.error('SubscriptionService: Error updating subscription', e, stackTrace);
+      SafeLog.error(
+          'SubscriptionService: Error updating subscription', e, stackTrace);
       rethrow;
     }
   }
@@ -154,9 +167,13 @@ class SubscriptionService {
     String? reason,
   }) async {
     try {
-      SafeLog.info('SubscriptionService: Cancelling subscription $subscriptionId');
+      SafeLog.info(
+          'SubscriptionService: Cancelling subscription $subscriptionId');
 
-      await _firestore.collection(_subscriptionsCollection).doc(subscriptionId).update({
+      await _firestore
+          .collection(_subscriptionsCollection)
+          .doc(subscriptionId)
+          .update({
         'status': SubscriptionStatus.cancelled.name,
         'cancelledAt': FieldValue.serverTimestamp(),
         'cancellationReason': reason,
@@ -165,7 +182,8 @@ class SubscriptionService {
 
       SafeLog.info('SubscriptionService: Subscription cancelled successfully');
     } catch (e, stackTrace) {
-      SafeLog.error('SubscriptionService: Error cancelling subscription', e, stackTrace);
+      SafeLog.error(
+          'SubscriptionService: Error cancelling subscription', e, stackTrace);
       rethrow;
     }
   }
@@ -176,22 +194,29 @@ class SubscriptionService {
     SubscriptionPeriod? newPeriod,
   }) async {
     try {
-      SafeLog.info('SubscriptionService: Renewing subscription $subscriptionId');
+      SafeLog.info(
+          'SubscriptionService: Renewing subscription $subscriptionId');
 
       // Получаем текущую подписку
-      final doc = await _firestore.collection(_subscriptionsCollection).doc(subscriptionId).get();
+      final doc = await _firestore
+          .collection(_subscriptionsCollection)
+          .doc(subscriptionId)
+          .get();
       if (!doc.exists) {
         throw Exception('Подписка не найдена');
       }
 
       final currentSubscription = Subscription.fromDocument(doc);
       final period = newPeriod ?? currentSubscription.period;
-      
+
       // Вычисляем новую дату окончания
       final newEndDate = _calculateEndDate(currentSubscription.endDate, period);
 
       // Обновляем подписку
-      await _firestore.collection(_subscriptionsCollection).doc(subscriptionId).update({
+      await _firestore
+          .collection(_subscriptionsCollection)
+          .doc(subscriptionId)
+          .update({
         'status': SubscriptionStatus.active.name,
         'period': period.name,
         'endDate': Timestamp.fromDate(newEndDate),
@@ -200,14 +225,18 @@ class SubscriptionService {
       });
 
       // Получаем обновленную подписку
-      final updatedDoc = await _firestore.collection(_subscriptionsCollection).doc(subscriptionId).get();
+      final updatedDoc = await _firestore
+          .collection(_subscriptionsCollection)
+          .doc(subscriptionId)
+          .get();
       final renewedSubscription = Subscription.fromDocument(updatedDoc);
 
       SafeLog.info('SubscriptionService: Subscription renewed successfully');
 
       return renewedSubscription;
     } catch (e, stackTrace) {
-      SafeLog.error('SubscriptionService: Error renewing subscription', e, stackTrace);
+      SafeLog.error(
+          'SubscriptionService: Error renewing subscription', e, stackTrace);
       rethrow;
     }
   }
@@ -215,16 +244,21 @@ class SubscriptionService {
   /// Переключить автопродление
   Future<void> toggleAutoRenew(String subscriptionId, bool autoRenew) async {
     try {
-      SafeLog.info('SubscriptionService: Toggling auto-renew for subscription $subscriptionId');
+      SafeLog.info(
+          'SubscriptionService: Toggling auto-renew for subscription $subscriptionId');
 
-      await _firestore.collection(_subscriptionsCollection).doc(subscriptionId).update({
+      await _firestore
+          .collection(_subscriptionsCollection)
+          .doc(subscriptionId)
+          .update({
         'autoRenew': autoRenew,
         'updatedAt': FieldValue.serverTimestamp(),
       });
 
       SafeLog.info('SubscriptionService: Auto-renew toggled successfully');
     } catch (e, stackTrace) {
-      SafeLog.error('SubscriptionService: Error toggling auto-renew', e, stackTrace);
+      SafeLog.error(
+          'SubscriptionService: Error toggling auto-renew', e, stackTrace);
       rethrow;
     }
   }
@@ -237,7 +271,9 @@ class SubscriptionService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) => Subscription.fromDocument(doc)).toList();
+      return snapshot.docs
+          .map((doc) => Subscription.fromDocument(doc))
+          .toList();
     });
   }
 
@@ -248,21 +284,25 @@ class SubscriptionService {
         .where('status', isEqualTo: SubscriptionStatus.active.name)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) => Subscription.fromDocument(doc)).toList();
+      return snapshot.docs
+          .map((doc) => Subscription.fromDocument(doc))
+          .toList();
     });
   }
 
   /// Получить подписки, истекающие скоро
   Stream<List<Subscription>> getExpiringSubscriptions({int daysAhead = 7}) {
     final futureDate = DateTime.now().add(Duration(days: daysAhead));
-    
+
     return _firestore
         .collection(_subscriptionsCollection)
         .where('status', isEqualTo: SubscriptionStatus.active.name)
         .where('endDate', isLessThanOrEqualTo: Timestamp.fromDate(futureDate))
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs.map((doc) => Subscription.fromDocument(doc)).toList();
+      return snapshot.docs
+          .map((doc) => Subscription.fromDocument(doc))
+          .toList();
     });
   }
 
@@ -275,16 +315,18 @@ class SubscriptionService {
         final freePlan = SubscriptionPlans.getPlanByType(SubscriptionType.free);
         return freePlan?.hasFeature(feature) ?? false;
       }
-      
+
       return subscription.hasFeature(feature);
     } catch (e, stackTrace) {
-      SafeLog.error('SubscriptionService: Error checking feature access', e, stackTrace);
+      SafeLog.error(
+          'SubscriptionService: Error checking feature access', e, stackTrace);
       return false;
     }
   }
 
   /// Проверить, превышен ли лимит
-  Future<bool> isLimitExceeded(String userId, String limit, int currentUsage) async {
+  Future<bool> isLimitExceeded(
+      String userId, String limit, int currentUsage) async {
     try {
       final subscription = await _getActiveSubscription(userId);
       if (subscription == null) {
@@ -292,7 +334,7 @@ class SubscriptionService {
         final freePlan = SubscriptionPlans.getPlanByType(SubscriptionType.free);
         return freePlan?.isLimitExceeded(limit, currentUsage) ?? false;
       }
-      
+
       return subscription.isLimitExceeded(limit, currentUsage);
     } catch (e, stackTrace) {
       SafeLog.error('SubscriptionService: Error checking limit', e, stackTrace);
@@ -309,10 +351,11 @@ class SubscriptionService {
         final freePlan = SubscriptionPlans.getPlanByType(SubscriptionType.free);
         return freePlan?.getLimit(limit) ?? 0;
       }
-      
+
       return subscription.getLimit(limit);
     } catch (e, stackTrace) {
-      SafeLog.error('SubscriptionService: Error getting user limit', e, stackTrace);
+      SafeLog.error(
+          'SubscriptionService: Error getting user limit', e, stackTrace);
       return 0;
     }
   }
@@ -323,7 +366,8 @@ class SubscriptionService {
       final subscription = await _getActiveSubscription(userId);
       return subscription?.type ?? SubscriptionType.free;
     } catch (e, stackTrace) {
-      SafeLog.error('SubscriptionService: Error getting user subscription type', e, stackTrace);
+      SafeLog.error('SubscriptionService: Error getting user subscription type',
+          e, stackTrace);
       return SubscriptionType.free;
     }
   }
@@ -346,7 +390,8 @@ class SubscriptionService {
       }
       return null;
     } catch (e, stackTrace) {
-      SafeLog.error('SubscriptionService: Error getting active subscription', e, stackTrace);
+      SafeLog.error('SubscriptionService: Error getting active subscription', e,
+          stackTrace);
       return null;
     }
   }
@@ -420,7 +465,7 @@ class SubscriptionService {
           .get();
 
       final batch = _firestore.batch();
-      
+
       for (final doc in query.docs) {
         batch.update(doc.reference, {
           'status': SubscriptionStatus.expired.name,
@@ -430,9 +475,13 @@ class SubscriptionService {
 
       await batch.commit();
 
-      SafeLog.info('SubscriptionService: Processed ${query.docs.length} expired subscriptions');
+      SafeLog.info(
+          'SubscriptionService: Processed ${query.docs.length} expired subscriptions');
     } catch (e, stackTrace) {
-      SafeLog.error('SubscriptionService: Error processing expired subscriptions', e, stackTrace);
+      SafeLog.error(
+          'SubscriptionService: Error processing expired subscriptions',
+          e,
+          stackTrace);
     }
   }
 
@@ -446,9 +495,8 @@ class SubscriptionService {
           .where('status', isEqualTo: SubscriptionStatus.active.name)
           .get();
 
-      final totalQuery = await _firestore
-          .collection(_subscriptionsCollection)
-          .get();
+      final totalQuery =
+          await _firestore.collection(_subscriptionsCollection).get();
 
       final stats = <String, dynamic>{
         'totalSubscriptions': totalQuery.docs.length,
@@ -462,7 +510,7 @@ class SubscriptionService {
       // Подсчитываем статистику по типам и статусам
       for (final doc in totalQuery.docs) {
         final subscription = Subscription.fromDocument(doc);
-        
+
         // Статистика по статусам
         switch (subscription.status) {
           case SubscriptionStatus.expired:
@@ -477,7 +525,8 @@ class SubscriptionService {
 
         // Статистика по типам
         final typeName = subscription.type.name;
-        stats['subscriptionTypes'][typeName] = (stats['subscriptionTypes'][typeName] ?? 0) + 1;
+        stats['subscriptionTypes'][typeName] =
+            (stats['subscriptionTypes'][typeName] ?? 0) + 1;
 
         // Доход (только для активных подписок)
         if (subscription.status == SubscriptionStatus.active) {
@@ -489,7 +538,8 @@ class SubscriptionService {
 
       return stats;
     } catch (e, stackTrace) {
-      SafeLog.error('SubscriptionService: Error getting subscription stats', e, stackTrace);
+      SafeLog.error('SubscriptionService: Error getting subscription stats', e,
+          stackTrace);
       return {};
     }
   }

@@ -37,7 +37,8 @@ class ShareService {
   }
 
   /// Поделиться профилем пользователя
-  static Future<bool> shareProfile(AppUser user, {String? customMessage}) async {
+  static Future<bool> shareProfile(AppUser user,
+      {String? customMessage}) async {
     if (!FeatureFlags.shareEnabled) {
       SafeLog.warning('ShareService: Sharing is disabled');
       return false;
@@ -63,7 +64,8 @@ class ShareService {
   }
 
   /// Поделиться бронированием
-  static Future<bool> shareBooking(Booking booking, {String? customMessage}) async {
+  static Future<bool> shareBooking(Booking booking,
+      {String? customMessage}) async {
     if (!FeatureFlags.shareEnabled) {
       SafeLog.warning('ShareService: Sharing is disabled');
       return false;
@@ -112,7 +114,8 @@ class ShareService {
   }
 
   /// Поделиться файлом
-  static Future<bool> shareFile(String filePath, {String? text, String? subject}) async {
+  static Future<bool> shareFile(String filePath,
+      {String? text, String? subject}) async {
     if (!FeatureFlags.shareEnabled) {
       SafeLog.warning('ShareService: Sharing is disabled');
       return false;
@@ -122,7 +125,7 @@ class ShareService {
       SafeLog.info('ShareService: Sharing file: $filePath');
 
       final file = XFile(filePath);
-      
+
       await Share.shareXFiles(
         [file],
         text: text,
@@ -138,7 +141,8 @@ class ShareService {
   }
 
   /// Поделиться несколькими файлами
-  static Future<bool> shareFiles(List<String> filePaths, {String? text, String? subject}) async {
+  static Future<bool> shareFiles(List<String> filePaths,
+      {String? text, String? subject}) async {
     if (!FeatureFlags.shareEnabled) {
       SafeLog.warning('ShareService: Sharing is disabled');
       return false;
@@ -148,7 +152,7 @@ class ShareService {
       SafeLog.info('ShareService: Sharing ${filePaths.length} files');
 
       final files = filePaths.map((path) => XFile(path)).toList();
-      
+
       await Share.shareXFiles(
         files,
         text: text,
@@ -164,7 +168,8 @@ class ShareService {
   }
 
   /// Поделиться ссылкой
-  static Future<bool> shareLink(String url, {String? title, String? description}) async {
+  static Future<bool> shareLink(String url,
+      {String? title, String? description}) async {
     if (!FeatureFlags.shareEnabled) {
       SafeLog.warning('ShareService: Sharing is disabled');
       return false;
@@ -195,7 +200,7 @@ class ShareService {
       SafeLog.info('ShareService: Opening link: $url');
 
       final uri = Uri.parse(url);
-      
+
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
         SafeLog.info('ShareService: Link opened successfully');
@@ -211,7 +216,8 @@ class ShareService {
   }
 
   /// Открыть email клиент
-  static Future<bool> openEmail(String email, {String? subject, String? body}) async {
+  static Future<bool> openEmail(String email,
+      {String? subject, String? body}) async {
     try {
       SafeLog.info('ShareService: Opening email: $email');
 
@@ -220,7 +226,7 @@ class ShareService {
         path: email,
         query: _buildEmailQuery(subject, body),
       );
-      
+
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri);
         SafeLog.info('ShareService: Email opened successfully');
@@ -241,7 +247,7 @@ class ShareService {
       SafeLog.info('ShareService: Opening phone: $phone');
 
       final uri = Uri(scheme: 'tel', path: phone);
-      
+
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri);
         SafeLog.info('ShareService: Phone opened successfully');
@@ -266,7 +272,7 @@ class ShareService {
         path: phone,
         query: message != null ? 'body=${Uri.encodeComponent(message)}' : null,
       );
-      
+
       if (await canLaunchUrl(uri)) {
         await launchUrl(uri);
         SafeLog.info('ShareService: SMS opened successfully');
@@ -284,108 +290,109 @@ class ShareService {
   /// Построить сообщение для шаринга события
   static String _buildEventShareMessage(Event event) {
     final buffer = StringBuffer();
-    
+
     buffer.writeln('🎉 Интересное событие!');
     buffer.writeln();
     buffer.writeln('📅 ${event.title}');
     buffer.writeln('📅 ${_formatDate(event.date)}');
-    
+
     if (event.location.isNotEmpty) {
       buffer.writeln('📍 ${event.location}');
     }
-    
+
     if (event.description.isNotEmpty) {
       buffer.writeln();
       buffer.writeln('📝 ${event.description}');
     }
-    
+
     if (event.price > 0) {
       buffer.writeln();
       buffer.writeln('💰 Цена: ${event.price} руб.');
     }
-    
+
     buffer.writeln();
     buffer.writeln('Скачайте приложение Event Marketplace для участия!');
-    
+
     return buffer.toString();
   }
 
   /// Построить сообщение для шаринга профиля
   static String _buildProfileShareMessage(AppUser user) {
     final buffer = StringBuffer();
-    
+
     buffer.writeln('👤 Познакомьтесь с интересным человеком!');
     buffer.writeln();
     buffer.writeln('👋 ${user.name}');
-    
+
     if (user.bio.isNotEmpty) {
       buffer.writeln();
       buffer.writeln('📝 ${user.bio}');
     }
-    
+
     if (user.specialties.isNotEmpty) {
       buffer.writeln();
       buffer.writeln('🎯 Специализации: ${user.specialties.join(', ')}');
     }
-    
+
     buffer.writeln();
     buffer.writeln('Скачайте приложение Event Marketplace для знакомства!');
-    
+
     return buffer.toString();
   }
 
   /// Построить сообщение для шаринга бронирования
   static String _buildBookingShareMessage(Booking booking) {
     final buffer = StringBuffer();
-    
+
     buffer.writeln('🎫 Я забронировал место на событие!');
     buffer.writeln();
     buffer.writeln('📅 ${booking.eventTitle}');
     buffer.writeln('📅 ${_formatDate(booking.eventDate)}');
     buffer.writeln('👥 Участников: ${booking.participantsCount}');
-    
+
     if (booking.notes != null && booking.notes!.isNotEmpty) {
       buffer.writeln();
       buffer.writeln('📝 Примечания: ${booking.notes}');
     }
-    
+
     buffer.writeln();
     buffer.writeln('Скачайте приложение Event Marketplace для участия!');
-    
+
     return buffer.toString();
   }
 
   /// Построить сообщение для шаринга ссылки
-  static String _buildLinkShareMessage(String url, String? title, String? description) {
+  static String _buildLinkShareMessage(
+      String url, String? title, String? description) {
     final buffer = StringBuffer();
-    
+
     if (title != null) {
       buffer.writeln('🔗 $title');
       buffer.writeln();
     }
-    
+
     if (description != null) {
       buffer.writeln('📝 $description');
       buffer.writeln();
     }
-    
+
     buffer.writeln('🔗 $url');
-    
+
     return buffer.toString();
   }
 
   /// Построить query для email
   static String _buildEmailQuery(String? subject, String? body) {
     final params = <String>[];
-    
+
     if (subject != null) {
       params.add('subject=${Uri.encodeComponent(subject)}');
     }
-    
+
     if (body != null) {
       params.add('body=${Uri.encodeComponent(body)}');
     }
-    
+
     return params.join('&');
   }
 
@@ -412,26 +419,29 @@ class ShareService {
 
   /// Получить информацию о шаринге
   static Map<String, dynamic> get shareInfo => {
-    'isEnabled': isEnabled,
-    'supportedPlatforms': supportedPlatforms,
-    'isWeb': kIsWeb,
-    'isAndroid': !kIsWeb && Platform.isAndroid,
-    'isIOS': !kIsWeb && Platform.isIOS,
-  };
+        'isEnabled': isEnabled,
+        'supportedPlatforms': supportedPlatforms,
+        'isWeb': kIsWeb,
+        'isAndroid': !kIsWeb && Platform.isAndroid,
+        'isIOS': !kIsWeb && Platform.isIOS,
+      };
 }
 
 /// Расширения для удобства использования
 extension EventShare on Event {
   /// Поделиться событием
-  Future<bool> share({String? customMessage}) => ShareService.shareEvent(this, customMessage: customMessage);
+  Future<bool> share({String? customMessage}) =>
+      ShareService.shareEvent(this, customMessage: customMessage);
 }
 
 extension UserShare on AppUser {
   /// Поделиться профилем
-  Future<bool> share({String? customMessage}) => ShareService.shareProfile(this, customMessage: customMessage);
+  Future<bool> share({String? customMessage}) =>
+      ShareService.shareProfile(this, customMessage: customMessage);
 }
 
 extension BookingShare on Booking {
   /// Поделиться бронированием
-  Future<bool> share({String? customMessage}) => ShareService.shareBooking(this, customMessage: customMessage);
+  Future<bool> share({String? customMessage}) =>
+      ShareService.shareBooking(this, customMessage: customMessage);
 }

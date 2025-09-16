@@ -70,7 +70,7 @@ class Review {
   /// Создать отзыв из документа Firestore
   factory Review.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return Review(
       id: doc.id,
       reviewerId: data['reviewerId'] ?? '',
@@ -91,8 +91,8 @@ class Review {
         orElse: () => ReviewStatus.pending,
       ),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: data['updatedAt'] != null 
-          ? (data['updatedAt'] as Timestamp).toDate() 
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] as Timestamp).toDate()
           : null,
       isVerified: data['isVerified'] ?? false,
       isHelpful: data['isHelpful'] ?? false,
@@ -101,8 +101,8 @@ class Review {
       helpfulVotes: Map<String, bool>.from(data['helpfulVotes'] ?? {}),
       response: data['response'],
       responseAuthorId: data['responseAuthorId'],
-      responseDate: data['responseDate'] != null 
-          ? (data['responseDate'] as Timestamp).toDate() 
+      responseDate: data['responseDate'] != null
+          ? (data['responseDate'] as Timestamp).toDate()
           : null,
       metadata: data['metadata'],
     );
@@ -131,7 +131,8 @@ class Review {
       'helpfulVotes': helpfulVotes,
       'response': response,
       'responseAuthorId': responseAuthorId,
-      'responseDate': responseDate != null ? Timestamp.fromDate(responseDate!) : null,
+      'responseDate':
+          responseDate != null ? Timestamp.fromDate(responseDate!) : null,
       'metadata': metadata,
     };
   }
@@ -320,7 +321,7 @@ class ReviewStats {
   /// Создать статистику из документа Firestore
   factory ReviewStats.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return ReviewStats(
       averageRating: (data['averageRating'] ?? 0.0).toDouble(),
       totalReviews: data['totalReviews'] ?? 0,
@@ -416,14 +417,14 @@ class ReviewFilter {
   /// Проверить, есть ли активные фильтры
   bool get hasActiveFilters {
     return minRating != null ||
-           maxRating != null ||
-           (tags != null && tags!.isNotEmpty) ||
-           verifiedOnly == true ||
-           withImages == true ||
-           withResponse == true ||
-           fromDate != null ||
-           toDate != null ||
-           (searchQuery != null && searchQuery!.isNotEmpty);
+        maxRating != null ||
+        (tags != null && tags!.isNotEmpty) ||
+        verifiedOnly == true ||
+        withImages == true ||
+        withResponse == true ||
+        fromDate != null ||
+        toDate != null ||
+        (searchQuery != null && searchQuery!.isNotEmpty);
   }
 
   /// Сбросить все фильтры

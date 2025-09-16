@@ -14,13 +14,15 @@ final chatAvailableProvider = Provider<bool>((ref) {
 });
 
 /// Провайдер чатов пользователя
-final userChatsProvider = StreamProvider.family<List<Chat>, String>((ref, userId) {
+final userChatsProvider =
+    StreamProvider.family<List<Chat>, String>((ref, userId) {
   final chatService = ref.read(chatServiceProvider);
   return chatService.getUserChats(userId);
 });
 
 /// Провайдер сообщений чата
-final chatMessagesProvider = StreamProvider.family<List<ChatMessage>, String>((ref, chatId) {
+final chatMessagesProvider =
+    StreamProvider.family<List<ChatMessage>, String>((ref, chatId) {
   final chatService = ref.read(chatServiceProvider);
   return chatService.getChatMessages(chatId);
 });
@@ -32,7 +34,9 @@ final chatProvider = FutureProvider.family<Chat?, String>((ref, chatId) async {
 });
 
 /// Провайдер поиска сообщений
-final messageSearchProvider = StreamProvider.family<List<ChatMessage>, ({String chatId, String query})>((ref, params) {
+final messageSearchProvider =
+    StreamProvider.family<List<ChatMessage>, ({String chatId, String query})>(
+        (ref, params) {
   final chatService = ref.read(chatServiceProvider);
   return chatService.searchMessages(params.chatId, params.query);
 });

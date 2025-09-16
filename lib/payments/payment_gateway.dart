@@ -2,31 +2,31 @@ import '../models/booking.dart';
 
 /// Статус платежа
 enum PaymentStatus {
-  pending,    // Ожидает обработки
+  pending, // Ожидает обработки
   processing, // Обрабатывается
-  completed,  // Завершен
-  failed,     // Неудачный
-  cancelled,  // Отменен
-  refunded,   // Возвращен
+  completed, // Завершен
+  failed, // Неудачный
+  cancelled, // Отменен
+  refunded, // Возвращен
 }
 
 /// Тип платежа
 enum PaymentType {
-  prepayment,     // Предоплата
-  finalPayment,   // Финальный платеж
-  fullPayment,    // Полная оплата
-  refund,         // Возврат
+  prepayment, // Предоплата
+  finalPayment, // Финальный платеж
+  fullPayment, // Полная оплата
+  refund, // Возврат
 }
 
 /// Способ оплаты
 enum PaymentMethod {
-  card,           // Банковская карта
-  applePay,       // Apple Pay
-  googlePay,      // Google Pay
-  yooMoney,       // ЮMoney
-  qiwi,           // QIWI
-  webmoney,       // WebMoney
-  bankTransfer,   // Банковский перевод
+  card, // Банковская карта
+  applePay, // Apple Pay
+  googlePay, // Google Pay
+  yooMoney, // ЮMoney
+  qiwi, // QIWI
+  webmoney, // WebMoney
+  bankTransfer, // Банковский перевод
 }
 
 /// Результат платежа

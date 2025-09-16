@@ -109,8 +109,9 @@ class CalendarExportWidget extends ConsumerWidget {
         onError?.call();
       }
     } catch (e, stackTrace) {
-      SafeLog.error('CalendarExportWidget: Error exporting calendar', e, stackTrace);
-      
+      SafeLog.error(
+          'CalendarExportWidget: Error exporting calendar', e, stackTrace);
+
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -289,7 +290,8 @@ class CalendarExportDialog extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.calendar_today),
             title: const Text('iCalendar (.ics)'),
-            subtitle: const Text('Совместим с большинством календарных приложений'),
+            subtitle:
+                const Text('Совместим с большинством календарных приложений'),
             onTap: () => _exportIcs(context),
           ),
         ],
@@ -305,7 +307,7 @@ class CalendarExportDialog extends StatelessWidget {
 
   Future<void> _exportIcs(BuildContext context) async {
     Navigator.of(context).pop();
-    
+
     try {
       bool success = false;
 
@@ -322,16 +324,17 @@ class CalendarExportDialog extends StatelessWidget {
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(success 
-                ? 'Событие экспортировано в календарь' 
+            content: Text(success
+                ? 'Событие экспортировано в календарь'
                 : 'Ошибка экспорта в календарь'),
             backgroundColor: success ? Colors.green : Colors.red,
           ),
         );
       }
     } catch (e, stackTrace) {
-      SafeLog.error('CalendarExportDialog: Error exporting calendar', e, stackTrace);
-      
+      SafeLog.error(
+          'CalendarExportDialog: Error exporting calendar', e, stackTrace);
+
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

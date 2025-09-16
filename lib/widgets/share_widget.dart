@@ -91,19 +91,25 @@ class ShareWidget extends ConsumerWidget {
       bool success = false;
 
       if (event != null) {
-        success = await ShareService.shareEvent(event!, customMessage: customMessage);
+        success =
+            await ShareService.shareEvent(event!, customMessage: customMessage);
       } else if (user != null) {
-        success = await ShareService.shareProfile(user!, customMessage: customMessage);
+        success = await ShareService.shareProfile(user!,
+            customMessage: customMessage);
       } else if (booking != null) {
-        success = await ShareService.shareBooking(booking!, customMessage: customMessage);
+        success = await ShareService.shareBooking(booking!,
+            customMessage: customMessage);
       } else if (text != null) {
         success = await ShareService.shareText(text!, subject: title);
       } else if (filePath != null) {
-        success = await ShareService.shareFile(filePath!, text: customMessage, subject: title);
+        success = await ShareService.shareFile(filePath!,
+            text: customMessage, subject: title);
       } else if (filePaths != null) {
-        success = await ShareService.shareFiles(filePaths!, text: customMessage, subject: title);
+        success = await ShareService.shareFiles(filePaths!,
+            text: customMessage, subject: title);
       } else if (url != null) {
-        success = await ShareService.shareLink(url!, title: title, description: customMessage);
+        success = await ShareService.shareLink(url!,
+            title: title, description: customMessage);
       }
 
       if (success) {
@@ -129,7 +135,7 @@ class ShareWidget extends ConsumerWidget {
       }
     } catch (e, stackTrace) {
       SafeLog.error('ShareWidget: Error sharing content', e, stackTrace);
-      
+
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -380,7 +386,10 @@ class ShareDialog extends StatelessWidget {
               onTap: () => _copyLink(context),
             ),
           ],
-          if (text != null || event != null || user != null || booking != null) ...[
+          if (text != null ||
+              event != null ||
+              user != null ||
+              booking != null) ...[
             const SizedBox(height: 8),
             _buildShareOption(
               context,
@@ -419,31 +428,37 @@ class ShareDialog extends StatelessWidget {
 
   Future<void> _shareContent(BuildContext context) async {
     Navigator.of(context).pop();
-    
+
     try {
       bool success = false;
 
       if (event != null) {
-        success = await ShareService.shareEvent(event!, customMessage: customMessage);
+        success =
+            await ShareService.shareEvent(event!, customMessage: customMessage);
       } else if (user != null) {
-        success = await ShareService.shareProfile(user!, customMessage: customMessage);
+        success = await ShareService.shareProfile(user!,
+            customMessage: customMessage);
       } else if (booking != null) {
-        success = await ShareService.shareBooking(booking!, customMessage: customMessage);
+        success = await ShareService.shareBooking(booking!,
+            customMessage: customMessage);
       } else if (text != null) {
         success = await ShareService.shareText(text!, subject: title);
       } else if (filePath != null) {
-        success = await ShareService.shareFile(filePath!, text: customMessage, subject: title);
+        success = await ShareService.shareFile(filePath!,
+            text: customMessage, subject: title);
       } else if (filePaths != null) {
-        success = await ShareService.shareFiles(filePaths!, text: customMessage, subject: title);
+        success = await ShareService.shareFiles(filePaths!,
+            text: customMessage, subject: title);
       } else if (url != null) {
-        success = await ShareService.shareLink(url!, title: title, description: customMessage);
+        success = await ShareService.shareLink(url!,
+            title: title, description: customMessage);
       }
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(success 
-                ? 'Контент успешно поделен' 
+            content: Text(success
+                ? 'Контент успешно поделен'
                 : 'Ошибка при попытке поделиться'),
             backgroundColor: success ? Colors.green : Colors.red,
           ),
@@ -451,7 +466,7 @@ class ShareDialog extends StatelessWidget {
       }
     } catch (e, stackTrace) {
       SafeLog.error('ShareDialog: Error sharing content', e, stackTrace);
-      
+
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -465,7 +480,7 @@ class ShareDialog extends StatelessWidget {
 
   Future<void> _copyLink(BuildContext context) async {
     Navigator.of(context).pop();
-    
+
     if (url != null) {
       // Здесь можно добавить логику копирования в буфер обмена
       if (context.mounted) {
@@ -481,9 +496,9 @@ class ShareDialog extends StatelessWidget {
 
   Future<void> _copyText(BuildContext context) async {
     Navigator.of(context).pop();
-    
+
     String textToCopy = '';
-    
+
     if (text != null) {
       textToCopy = text!;
     } else if (event != null) {
@@ -493,7 +508,7 @@ class ShareDialog extends StatelessWidget {
     } else if (booking != null) {
       textToCopy = ShareService._buildBookingShareMessage(booking!);
     }
-    
+
     if (textToCopy.isNotEmpty) {
       // Здесь можно добавить логику копирования в буфер обмена
       if (context.mounted) {
@@ -543,7 +558,8 @@ class ShareUtils {
   }
 
   /// Показать диалог шаринга для ссылки
-  static void showShareDialog(BuildContext context, String url, {String? title, String? description}) {
+  static void showShareDialog(BuildContext context, String url,
+      {String? title, String? description}) {
     showDialog(
       context: context,
       builder: (context) => ShareDialog(
@@ -575,7 +591,9 @@ class ShareUtils {
   }
 
   /// Быстрый шаринг ссылки
-  static Future<bool> quickShare(String url, {String? title, String? description}) async {
-    return await ShareService.shareLink(url, title: title, description: description);
+  static Future<bool> quickShare(String url,
+      {String? title, String? description}) async {
+    return await ShareService.shareLink(url,
+        title: title, description: description);
   }
 }

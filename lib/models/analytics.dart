@@ -24,7 +24,7 @@ class Analytics {
 
   factory Analytics.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return Analytics(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -78,8 +78,8 @@ class Analytics {
 
 /// Тип аналитики
 enum AnalyticsType {
-  income,    // Доход
-  expense,   // Расход
+  income, // Доход
+  expense, // Расход
 }
 
 /// Статистика доходов и расходов
@@ -123,25 +123,29 @@ class IncomeExpenseStats {
   /// Получить процент роста доходов
   double get incomeGrowthPercentage {
     if (monthlyData.length < 2) return 0.0;
-    
+
     final currentMonth = monthlyData.last;
     final previousMonth = monthlyData[monthlyData.length - 2];
-    
+
     if (previousMonth.income == 0) return 0.0;
-    
-    return ((currentMonth.income - previousMonth.income) / previousMonth.income) * 100;
+
+    return ((currentMonth.income - previousMonth.income) /
+            previousMonth.income) *
+        100;
   }
 
   /// Получить процент роста расходов
   double get expenseGrowthPercentage {
     if (monthlyData.length < 2) return 0.0;
-    
+
     final currentMonth = monthlyData.last;
     final previousMonth = monthlyData[monthlyData.length - 2];
-    
+
     if (previousMonth.expense == 0) return 0.0;
-    
-    return ((currentMonth.expense - previousMonth.expense) / previousMonth.expense) * 100;
+
+    return ((currentMonth.expense - previousMonth.expense) /
+            previousMonth.expense) *
+        100;
   }
 }
 
@@ -199,11 +203,11 @@ class ChartData {
 
 /// Период для аналитики
 enum AnalyticsPeriod {
-  week,      // Неделя
-  month,     // Месяц
-  quarter,   // Квартал
-  year,      // Год
-  custom,    // Пользовательский
+  week, // Неделя
+  month, // Месяц
+  quarter, // Квартал
+  year, // Год
+  custom, // Пользовательский
 }
 
 /// Фильтр для аналитики
@@ -245,25 +249,25 @@ class AnalyticsFilter {
   /// Получить даты для периода
   (DateTime, DateTime) getDateRange() {
     final now = DateTime.now();
-    
+
     switch (period) {
       case AnalyticsPeriod.week:
         final weekStart = now.subtract(Duration(days: now.weekday - 1));
         return (weekStart, now);
-        
+
       case AnalyticsPeriod.month:
         final monthStart = DateTime(now.year, now.month, 1);
         return (monthStart, now);
-        
+
       case AnalyticsPeriod.quarter:
         final quarter = ((now.month - 1) / 3).floor();
         final quarterStart = DateTime(now.year, quarter * 3 + 1, 1);
         return (quarterStart, now);
-        
+
       case AnalyticsPeriod.year:
         final yearStart = DateTime(now.year, 1, 1);
         return (yearStart, now);
-        
+
       case AnalyticsPeriod.custom:
         return (startDate ?? now, endDate ?? now);
     }
@@ -358,14 +362,15 @@ class BudgetGoal {
 
   factory BudgetGoal.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return BudgetGoal(
       id: doc.id,
       userId: data['userId'] ?? '',
       name: data['name'] ?? '',
       targetAmount: (data['targetAmount'] ?? 0.0).toDouble(),
       currentAmount: (data['currentAmount'] ?? 0.0).toDouble(),
-      targetDate: (data['targetDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      targetDate:
+          (data['targetDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
       type: BudgetType.values.firstWhere(
         (t) => t.name == data['type'],
         orElse: () => BudgetType.income,
@@ -406,9 +411,9 @@ class BudgetGoal {
 
 /// Тип бюджета
 enum BudgetType {
-  income,    // Цель по доходам
-  expense,   // Лимит расходов
-  savings,   // Накопления
+  income, // Цель по доходам
+  expense, // Лимит расходов
+  savings, // Накопления
 }
 
 /// Отчет по аналитике
@@ -442,11 +447,13 @@ class AnalyticsReport {
         (p) => p.name == map['period'],
         orElse: () => AnalyticsPeriod.month,
       ),
-      generatedAt: (map['generatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      generatedAt:
+          (map['generatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       stats: IncomeExpenseStats.fromMap(map['stats'] ?? {}),
       chartData: (map['chartData'] as List<dynamic>?)
-          ?.map((e) => ChartData.fromMap(e))
-          .toList() ?? [],
+              ?.map((e) => ChartData.fromMap(e))
+              .toList() ??
+          [],
       notes: map['notes'],
     );
   }
@@ -480,20 +487,26 @@ extension IncomeExpenseStatsExtension on IncomeExpenseStats {
       'monthlyData': monthlyData.map((e) => e.toMap()).toList(),
     };
   }
+}
 
-  factory IncomeExpenseStats.fromMap(Map<String, dynamic> map) {
+// Статические методы для десериализации
+class IncomeExpenseStatsSerializer {
+  static IncomeExpenseStats fromMap(Map<String, dynamic> map) {
     return IncomeExpenseStats(
       totalIncome: (map['totalIncome'] ?? 0.0).toDouble(),
       totalExpense: (map['totalExpense'] ?? 0.0).toDouble(),
       netIncome: (map['netIncome'] ?? 0.0).toDouble(),
       transactionCount: map['transactionCount'] ?? 0,
-      periodStart: (map['periodStart'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      periodStart:
+          (map['periodStart'] as Timestamp?)?.toDate() ?? DateTime.now(),
       periodEnd: (map['periodEnd'] as Timestamp?)?.toDate() ?? DateTime.now(),
       incomeByCategory: Map<String, double>.from(map['incomeByCategory'] ?? {}),
-      expenseByCategory: Map<String, double>.from(map['expenseByCategory'] ?? {}),
+      expenseByCategory:
+          Map<String, double>.from(map['expenseByCategory'] ?? {}),
       monthlyData: (map['monthlyData'] as List<dynamic>?)
-          ?.map((e) => MonthlyData.fromMap(e))
-          .toList() ?? [],
+              ?.map((e) => MonthlyData.fromMap(e))
+              .toList() ??
+          [],
     );
   }
 }
@@ -507,8 +520,11 @@ extension ChartDataExtension on ChartData {
       'description': description,
     };
   }
+}
 
-  factory ChartData.fromMap(Map<String, dynamic> map) {
+// Статические методы для десериализации
+class ChartDataSerializer {
+  static ChartData fromMap(Map<String, dynamic> map) {
     return ChartData(
       label: map['label'] ?? '',
       value: (map['value'] ?? 0.0).toDouble(),

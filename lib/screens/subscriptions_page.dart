@@ -18,7 +18,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
     with SingleTickerProviderStateMixin {
   final SubscriptionService _subscriptionService = SubscriptionService();
   late TabController _tabController;
-  
+
   SubscriptionPeriod _selectedPeriod = SubscriptionPeriod.monthly;
   bool _isLoading = false;
 
@@ -102,15 +102,15 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
           // Заголовок
           _buildHeader(),
           const SizedBox(height: 24),
-          
+
           // Переключатель периода
           _buildPeriodSelector(),
           const SizedBox(height: 24),
-          
+
           // Планы подписки
           _buildPlansGrid(),
           const SizedBox(height: 24),
-          
+
           // FAQ
           _buildFAQ(),
         ],
@@ -162,15 +162,15 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
         Text(
           'Выберите подходящий план',
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 8),
         Text(
           'Получите доступ к расширенным возможностям и улучшите свой опыт работы с платформой',
           style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-          ),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
         ),
       ],
     );
@@ -204,13 +204,13 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
 
   Widget _buildPeriodButton(String label, SubscriptionPeriod period) {
     final isSelected = _selectedPeriod == period;
-    
+
     return GestureDetector(
       onTap: () => setState(() => _selectedPeriod = period),
       child: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
         decoration: BoxDecoration(
-          color: isSelected 
+          color: isSelected
               ? Theme.of(context).colorScheme.primary
               : Colors.transparent,
           borderRadius: BorderRadius.circular(8),
@@ -220,7 +220,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
             Text(
               label,
               style: TextStyle(
-                color: isSelected 
+                color: isSelected
                     ? Theme.of(context).colorScheme.onPrimary
                     : Theme.of(context).colorScheme.onSurface,
                 fontWeight: FontWeight.w500,
@@ -231,7 +231,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
               Text(
                 'Экономия 17%',
                 style: TextStyle(
-                  color: isSelected 
+                  color: isSelected
                       ? Theme.of(context).colorScheme.onPrimary.withOpacity(0.8)
                       : Theme.of(context).colorScheme.primary,
                   fontSize: 12,
@@ -247,7 +247,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
 
   Widget _buildPlansGrid() {
     final plans = SubscriptionPlans.getPaidPlans();
-    
+
     return Column(
       children: plans.map((plan) => _buildPlanCard(plan)).toList(),
     );
@@ -257,11 +257,11 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
     final isPopular = plan.isPopular;
     final price = plan.getPriceForPeriod(_selectedPeriod);
     final savings = plan.getSavingsForPeriod(_selectedPeriod);
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
-        border: isPopular 
+        border: isPopular
             ? Border.all(color: Theme.of(context).colorScheme.primary, width: 2)
             : Border.all(color: Theme.of(context).colorScheme.outline),
         borderRadius: BorderRadius.circular(16),
@@ -273,7 +273,8 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
               top: 0,
               right: 16,
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.primary,
                   borderRadius: const BorderRadius.only(
@@ -291,7 +292,6 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                 ),
               ),
             ),
-          
           Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -306,16 +306,25 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                         children: [
                           Text(
                             plan.name,
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleLarge
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             plan.description,
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withOpacity(0.7),
+                                ),
                           ),
                         ],
                       ),
@@ -325,55 +334,65 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                       children: [
                         Text(
                           plan.formattedPrice,
-                          style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                         ),
                         Text(
                           _getPeriodLabel(),
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onSurface
+                                        .withOpacity(0.7),
+                                  ),
                         ),
                         if (savings > 0) ...[
                           const SizedBox(height: 4),
                           Text(
                             'Экономия ${savings.toStringAsFixed(2)} ${plan.currency}',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.green,
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Colors.green,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                           ),
                         ],
                       ],
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Функции
                 _buildPlanFeatures(plan),
-                
+
                 const SizedBox(height: 20),
-                
+
                 // Кнопка выбора
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
                     onPressed: () => _selectPlan(plan),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: isPopular 
+                      backgroundColor: isPopular
                           ? Theme.of(context).colorScheme.primary
                           : null,
-                      foregroundColor: isPopular 
+                      foregroundColor: isPopular
                           ? Theme.of(context).colorScheme.onPrimary
                           : null,
                       padding: const EdgeInsets.symmetric(vertical: 16),
                     ),
                     child: Text(
-                      plan.type == SubscriptionType.free ? 'Текущий план' : 'Выбрать план',
+                      plan.type == SubscriptionType.free
+                          ? 'Текущий план'
+                          : 'Выбрать план',
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -396,29 +415,31 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
         Text(
           'Включено:',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 12),
-        ...plan.features.map((feature) => Padding(
-          padding: const EdgeInsets.only(bottom: 8),
-          child: Row(
-            children: [
-              Icon(
-                Icons.check_circle,
-                color: Theme.of(context).colorScheme.primary,
-                size: 20,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Text(
-                  feature,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ),
-            ],
-          ),
-        )).toList(),
+        ...plan.features
+            .map((feature) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.check_circle,
+                        color: Theme.of(context).colorScheme.primary,
+                        size: 20,
+                      ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Text(
+                          feature,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ),
+                    ],
+                  ),
+                ))
+            .toList(),
       ],
     );
   }
@@ -430,26 +451,22 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
         Text(
           'Часто задаваемые вопросы',
           style: Theme.of(context).textTheme.titleLarge?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 16),
-        
         _buildFAQItem(
           'Могу ли я изменить план в любое время?',
           'Да, вы можете изменить свой план подписки в любое время. Изменения вступят в силу в следующем биллинговом цикле.',
         ),
-        
         _buildFAQItem(
           'Что происходит при отмене подписки?',
           'При отмене подписки вы сохраните доступ к премиум функциям до конца текущего периода оплаты.',
         ),
-        
         _buildFAQItem(
           'Предоставляется ли возврат средств?',
           'Мы предлагаем 30-дневную гарантию возврата средств для всех платных планов.',
         ),
-        
         _buildFAQItem(
           'Могу ли я использовать бесплатный план?',
           'Да, бесплатный план доступен всем пользователям и включает базовые функции платформы.',
@@ -463,8 +480,8 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
       title: Text(
         question,
         style: Theme.of(context).textTheme.titleMedium?.copyWith(
-          fontWeight: FontWeight.w500,
-        ),
+              fontWeight: FontWeight.w500,
+            ),
       ),
       children: [
         Padding(
@@ -472,8 +489,9 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
           child: Text(
             answer,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-            ),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                ),
           ),
         ),
       ],
@@ -509,7 +527,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
 
   Widget _buildSubscriptionDetails(Subscription subscription) {
     final plan = SubscriptionPlans.getPlanByType(subscription.type);
-    
+
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
       child: Column(
@@ -518,15 +536,15 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
           // Текущий план
           _buildCurrentPlanCard(subscription, plan),
           const SizedBox(height: 24),
-          
+
           // Детали подписки
           _buildSubscriptionDetailsCard(subscription),
           const SizedBox(height: 24),
-          
+
           // Использование
           if (plan != null) _buildUsageCard(plan),
           const SizedBox(height: 24),
-          
+
           // Действия
           _buildSubscriptionActions(subscription),
         ],
@@ -534,7 +552,8 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
     );
   }
 
-  Widget _buildCurrentPlanCard(Subscription subscription, SubscriptionPlan? plan) {
+  Widget _buildCurrentPlanCard(
+      Subscription subscription, SubscriptionPlan? plan) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(20),
@@ -550,21 +569,25 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                       Text(
                         subscription.typeDisplayName,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                              fontWeight: FontWeight.bold,
+                            ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         subscription.typeDescription,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                        ),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.7),
+                            ),
                       ),
                     ],
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: subscription.isActive ? Colors.green : Colors.orange,
                     borderRadius: BorderRadius.circular(12),
@@ -580,7 +603,6 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                 ),
               ],
             ),
-            
             if (subscription.isExpiringSoon) ...[
               const SizedBox(height: 16),
               Container(
@@ -623,17 +645,17 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
             Text(
               'Детали подписки',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
-            
             _buildDetailRow('Период', subscription.periodDisplayName),
             _buildDetailRow('Цена', subscription.formattedPrice),
             _buildDetailRow('Дата начала', _formatDate(subscription.startDate)),
-            _buildDetailRow('Дата окончания', _formatDate(subscription.endDate)),
-            _buildDetailRow('Автопродление', subscription.autoRenew ? 'Включено' : 'Отключено'),
-            
+            _buildDetailRow(
+                'Дата окончания', _formatDate(subscription.endDate)),
+            _buildDetailRow('Автопродление',
+                subscription.autoRenew ? 'Включено' : 'Отключено'),
             if (subscription.paymentMethod != null)
               _buildDetailRow('Способ оплаты', subscription.paymentMethod!),
           ],
@@ -652,15 +674,17 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
             Text(
               'Использование',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
-            
-            _buildUsageItem('События в месяц', 0, plan.getLimit('events_per_month')),
-            _buildUsageItem('Уведомления в день', 0, plan.getLimit('notifications_per_day')),
+            _buildUsageItem(
+                'События в месяц', 0, plan.getLimit('events_per_month')),
+            _buildUsageItem('Уведомления в день', 0,
+                plan.getLimit('notifications_per_day')),
             _buildUsageItem('Хранилище', 0, plan.getLimit('storage_mb')),
-            _buildUsageItem('Участники команды', 0, plan.getLimit('team_members')),
+            _buildUsageItem(
+                'Участники команды', 0, plan.getLimit('team_members')),
           ],
         ),
       ),
@@ -670,7 +694,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
   Widget _buildUsageItem(String label, int used, int limit) {
     final percentage = limit > 0 ? (used / limit) : 0.0;
     final isUnlimited = limit == -1;
-    
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
@@ -681,12 +705,10 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
             children: [
               Text(label),
               Text(
-                isUnlimited 
-                    ? 'Неограниченно'
-                    : '$used / $limit',
+                isUnlimited ? 'Неограниченно' : '$used / $limit',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  fontWeight: FontWeight.w500,
-                ),
+                      fontWeight: FontWeight.w500,
+                    ),
               ),
             ],
           ),
@@ -696,7 +718,9 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
               value: percentage,
               backgroundColor: Colors.grey[300],
               valueColor: AlwaysStoppedAnimation<Color>(
-                percentage > 0.8 ? Colors.red : Theme.of(context).colorScheme.primary,
+                percentage > 0.8
+                    ? Colors.red
+                    : Theme.of(context).colorScheme.primary,
               ),
             ),
         ],
@@ -714,11 +738,10 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
             Text(
               'Действия',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
-            
             if (subscription.type != SubscriptionType.free) ...[
               SizedBox(
                 width: double.infinity,
@@ -729,17 +752,18 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                 ),
               ),
               const SizedBox(height: 12),
-              
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
                   onPressed: () => _toggleAutoRenew(subscription),
-                  icon: Icon(subscription.autoRenew ? Icons.pause : Icons.play_arrow),
-                  label: Text(subscription.autoRenew ? 'Отключить автопродление' : 'Включить автопродление'),
+                  icon: Icon(
+                      subscription.autoRenew ? Icons.pause : Icons.play_arrow),
+                  label: Text(subscription.autoRenew
+                      ? 'Отключить автопродление'
+                      : 'Включить автопродление'),
                 ),
               ),
               const SizedBox(height: 12),
-              
               SizedBox(
                 width: double.infinity,
                 child: OutlinedButton.icon(
@@ -781,8 +805,8 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
           Text(
             value,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              fontWeight: FontWeight.w500,
-            ),
+                  fontWeight: FontWeight.w500,
+                ),
           ),
         ],
       ),
@@ -814,7 +838,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
     try {
       // В демо-версии показываем диалог вместо реальной оплаты
       final confirmed = await _showPaymentDialog(plan);
-      
+
       if (confirmed) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -822,13 +846,13 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
             backgroundColor: Colors.green,
           ),
         );
-        
+
         // Переключаемся на вкладку "Моя подписка"
         _tabController.animateTo(1);
       }
     } catch (e, stackTrace) {
       SafeLog.error('SubscriptionsPage: Error selecting plan', e, stackTrace);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка активации подписки: $e'),
@@ -842,40 +866,41 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
 
   Future<bool> _showPaymentDialog(SubscriptionPlan plan) async {
     final price = plan.getPriceForPeriod(_selectedPeriod);
-    
+
     return await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Активация ${plan.name}'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Выбранный план: ${plan.name}'),
-            Text('Период: ${_getPeriodLabel()}'),
-            Text('Цена: ${price.toStringAsFixed(2)} ${plan.currency}'),
-            const SizedBox(height: 16),
-            const Text(
-              'В демо-версии оплата не производится. Подписка будет активирована автоматически.',
-              style: TextStyle(
-                fontStyle: FontStyle.italic,
-                color: Colors.grey,
-              ),
+          context: context,
+          builder: (context) => AlertDialog(
+            title: Text('Активация ${plan.name}'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('Выбранный план: ${plan.name}'),
+                Text('Период: ${_getPeriodLabel()}'),
+                Text('Цена: ${price.toStringAsFixed(2)} ${plan.currency}'),
+                const SizedBox(height: 16),
+                const Text(
+                  'В демо-версии оплата не производится. Подписка будет активирована автоматически.',
+                  style: TextStyle(
+                    fontStyle: FontStyle.italic,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Отмена'),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Отмена'),
+              ),
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Активировать'),
+              ),
+            ],
           ),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Активировать'),
-          ),
-        ],
-      ),
-    ) ?? false;
+        ) ??
+        false;
   }
 
   void _changePlan() {
@@ -885,7 +910,8 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
   void _toggleAutoRenew(Subscription subscription) {
     // TODO: Реализовать переключение автопродления
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Функция будет реализована в следующей версии')),
+      const SnackBar(
+          content: Text('Функция будет реализована в следующей версии')),
     );
   }
 
@@ -907,7 +933,9 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
               Navigator.of(context).pop();
               // TODO: Реализовать отмену подписки
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Функция будет реализована в следующей версии')),
+                const SnackBar(
+                    content:
+                        Text('Функция будет реализована в следующей версии')),
               );
             },
             style: TextButton.styleFrom(foregroundColor: Colors.red),

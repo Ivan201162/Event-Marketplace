@@ -8,6 +8,23 @@ enum UserRole {
   admin, // Администратор
 }
 
+/// Расширение для UserRole
+extension UserRoleExtension on UserRole {
+  /// Получить отображаемое имя роли
+  String get roleDisplayName {
+    switch (this) {
+      case UserRole.customer:
+        return 'Клиент';
+      case UserRole.specialist:
+        return 'Специалист';
+      case UserRole.guest:
+        return 'Гость';
+      case UserRole.admin:
+        return 'Администратор';
+    }
+  }
+}
+
 /// Модель пользователя
 class AppUser {
   final String id;

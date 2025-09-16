@@ -43,16 +43,15 @@ class MockSpecialistService implements SpecialistService {
     DateTime? availableDate,
   }) async {
     await Future.delayed(Duration(milliseconds: 200));
-    
+
     _searchResults.clear();
     _searchResults.addAll(_specialists);
 
     // Apply filters
     if (query != null && query.isNotEmpty) {
-      _searchResults.retainWhere((s) => 
-        s.name.toLowerCase().contains(query.toLowerCase()) ||
-        s.description.toLowerCase().contains(query.toLowerCase())
-      );
+      _searchResults.retainWhere((s) =>
+          s.name.toLowerCase().contains(query.toLowerCase()) ||
+          s.description.toLowerCase().contains(query.toLowerCase()));
     }
 
     if (category != null) {
@@ -75,19 +74,23 @@ class MockSpecialistService implements SpecialistService {
   }
 
   @override
-  Future<bool> isSpecialistAvailableOnDate(String specialistId, DateTime date) async {
+  Future<bool> isSpecialistAvailableOnDate(
+      String specialistId, DateTime date) async {
     await Future.delayed(Duration(milliseconds: 50));
     return true; // Mock always available
   }
 
   @override
-  Future<bool> isSpecialistAvailableOnDateTime(String specialistId, DateTime dateTime) async {
+  Future<bool> isSpecialistAvailableOnDateTime(
+      String specialistId, DateTime dateTime) async {
     await Future.delayed(Duration(milliseconds: 50));
     return true; // Mock always available
   }
 
   @override
-  Future<List<DateTime>> getAvailableTimeSlots(String specialistId, DateTime date, {Duration slotDuration = const Duration(hours: 1)}) async {
+  Future<List<DateTime>> getAvailableTimeSlots(
+      String specialistId, DateTime date,
+      {Duration slotDuration = const Duration(hours: 1)}) async {
     await Future.delayed(Duration(milliseconds: 100));
     return [
       DateTime(date.year, date.month, date.day, 9, 0),
@@ -120,7 +123,8 @@ class MockSpecialistService implements SpecialistService {
   }
 
   @override
-  Future<void> updateSpecialistRating(String specialistId, double rating, int reviewCount) async {
+  Future<void> updateSpecialistRating(
+      String specialistId, double rating, int reviewCount) async {
     await Future.delayed(Duration(milliseconds: 100));
     final index = _specialists.indexWhere((s) => s.id == specialistId);
     if (index != -1) {
@@ -162,7 +166,8 @@ class MockFirestoreService implements FirestoreService {
   }
 
   @override
-  Future<void> updateBookingStatusWithCalendar(String bookingId, String status) async {
+  Future<void> updateBookingStatusWithCalendar(
+      String bookingId, String status) async {
     await Future.delayed(Duration(milliseconds: 100));
     final index = _bookings.indexWhere((b) => b.id == bookingId);
     if (index != -1) {
@@ -174,13 +179,16 @@ class MockFirestoreService implements FirestoreService {
   }
 
   @override
-  Future<bool> isSpecialistAvailable(String specialistId, DateTime dateTime) async {
+  Future<bool> isSpecialistAvailable(
+      String specialistId, DateTime dateTime) async {
     await Future.delayed(Duration(milliseconds: 50));
     return true; // Mock always available
   }
 
   @override
-  Future<List<DateTime>> getAvailableTimeSlots(String specialistId, DateTime date, {Duration slotDuration = const Duration(hours: 1)}) async {
+  Future<List<DateTime>> getAvailableTimeSlots(
+      String specialistId, DateTime date,
+      {Duration slotDuration = const Duration(hours: 1)}) async {
     await Future.delayed(Duration(milliseconds: 100));
     return [
       DateTime(date.year, date.month, date.day, 9, 0),
@@ -190,14 +198,16 @@ class MockFirestoreService implements FirestoreService {
   }
 
   @override
-  Future<List<ScheduleEvent>> getSpecialistEventsForDate(String specialistId, DateTime date) async {
+  Future<List<ScheduleEvent>> getSpecialistEventsForDate(
+      String specialistId, DateTime date) async {
     await Future.delayed(Duration(milliseconds: 100));
-    return TestData.testScheduleEvents.where((e) => 
-      e.specialistId == specialistId && 
-      e.startTime.year == date.year && 
-      e.startTime.month == date.month && 
-      e.startTime.day == date.day
-    ).toList();
+    return TestData.testScheduleEvents
+        .where((e) =>
+            e.specialistId == specialistId &&
+            e.startTime.year == date.year &&
+            e.startTime.month == date.month &&
+            e.startTime.day == date.day)
+        .toList();
   }
 
   @override
@@ -231,7 +241,8 @@ class MockPaymentService implements PaymentService {
   }
 
   @override
-  Future<void> updatePaymentStatus(String paymentId, PaymentStatus status) async {
+  Future<void> updatePaymentStatus(
+      String paymentId, PaymentStatus status) async {
     await Future.delayed(Duration(milliseconds: 100));
     final index = _payments.indexWhere((p) => p.id == paymentId);
     if (index != -1) {
@@ -272,7 +283,8 @@ class MockPaymentService implements PaymentService {
   }
 
   @override
-  Future<bool> processPayment(String paymentId, Map<String, dynamic> paymentData) async {
+  Future<bool> processPayment(
+      String paymentId, Map<String, dynamic> paymentData) async {
     await Future.delayed(Duration(milliseconds: 200));
     // Mock payment processing - 90% success rate
     return DateTime.now().millisecondsSinceEpoch % 10 != 0;
@@ -304,7 +316,7 @@ class MockPaymentService implements PaymentService {
       customerId: booking.customerId,
       specialistId: booking.specialistId,
       amount: booking.totalPrice * 0.7,
-      type: PaymentType.final,
+      type: PaymentType.finalPayment,
       status: PaymentStatus.pending,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
@@ -320,7 +332,8 @@ class MockPaymentService implements PaymentService {
   }
 
   @override
-  Future<Map<String, double>> calculatePaymentAmounts(double totalAmount, OrganizationType organizationType) async {
+  Future<Map<String, double>> calculatePaymentAmounts(
+      double totalAmount, OrganizationType organizationType) async {
     await Future.delayed(Duration(milliseconds: 50));
     return {
       'advance': totalAmount * 0.3,
@@ -360,7 +373,8 @@ class MockChatService implements ChatService {
   @override
   Stream<List<Chat>> getChatsForUserStream(String userId) async* {
     await Future.delayed(Duration(milliseconds: 100));
-    final userChats = _chats.where((c) => c.participants.contains(userId)).toList();
+    final userChats =
+        _chats.where((c) => c.participants.contains(userId)).toList();
     yield userChats;
   }
 
@@ -368,7 +382,7 @@ class MockChatService implements ChatService {
   Future<void> sendMessage(ChatMessage message) async {
     await Future.delayed(Duration(milliseconds: 100));
     _messages.add(message);
-    
+
     // Update chat
     final chatIndex = _chats.indexWhere((c) => c.id == message.chatId);
     if (chatIndex != -1) {
@@ -417,9 +431,11 @@ class MockNotificationService implements NotificationService {
   }
 
   @override
-  Stream<List<AppNotification>> getNotificationsForUserStream(String userId) async* {
+  Stream<List<AppNotification>> getNotificationsForUserStream(
+      String userId) async* {
     await Future.delayed(Duration(milliseconds: 100));
-    final userNotifications = _notifications.where((n) => n.userId == userId).toList();
+    final userNotifications =
+        _notifications.where((n) => n.userId == userId).toList();
     yield userNotifications;
   }
 
@@ -433,11 +449,13 @@ class MockNotificationService implements NotificationService {
   }
 
   @override
-  Stream<NotificationStatistics> getNotificationStatisticsStream(String userId) async* {
+  Stream<NotificationStatistics> getNotificationStatisticsStream(
+      String userId) async* {
     await Future.delayed(Duration(milliseconds: 100));
-    final userNotifications = _notifications.where((n) => n.userId == userId).toList();
+    final userNotifications =
+        _notifications.where((n) => n.userId == userId).toList();
     final unreadCount = userNotifications.where((n) => !n.isRead).length;
-    
+
     yield NotificationStatistics(
       userId: userId,
       unreadCount: unreadCount,
@@ -461,7 +479,8 @@ class MockNotificationService implements NotificationService {
       userId: userId,
       type: type,
       title: _getBookingNotificationTitle(type),
-      body: _getBookingNotificationBody(type, specialistName, customerName, eventDate),
+      body: _getBookingNotificationBody(
+          type, specialistName, customerName, eventDate),
       timestamp: DateTime.now(),
       isRead: false,
       priority: NotificationPriority.high,
@@ -558,7 +577,8 @@ class MockNotificationService implements NotificationService {
     }
   }
 
-  String _getBookingNotificationBody(NotificationType type, String specialistName, String customerName, DateTime eventDate) {
+  String _getBookingNotificationBody(NotificationType type,
+      String specialistName, String customerName, DateTime eventDate) {
     final dateStr = '${eventDate.day}.${eventDate.month}.${eventDate.year}';
     switch (type) {
       case NotificationType.booking_confirmed:
@@ -583,7 +603,8 @@ class MockNotificationService implements NotificationService {
     }
   }
 
-  String _getPaymentNotificationBody(NotificationType type, double amount, String currency) {
+  String _getPaymentNotificationBody(
+      NotificationType type, double amount, String currency) {
     switch (type) {
       case NotificationType.payment_completed:
         return 'Ваш платеж на ${amount.toStringAsFixed(0)} $currency успешно обработан';
@@ -606,24 +627,29 @@ class MockReviewService implements ReviewService {
   }
 
   @override
-  Stream<List<Review>> getReviewsForSpecialistStream(String specialistId) async* {
+  Stream<List<Review>> getReviewsForSpecialistStream(
+      String specialistId) async* {
     await Future.delayed(Duration(milliseconds: 100));
-    final specialistReviews = _reviews.where((r) => r.specialistId == specialistId).toList();
+    final specialistReviews =
+        _reviews.where((r) => r.specialistId == specialistId).toList();
     yield specialistReviews;
   }
 
   @override
   Stream<List<Review>> getReviewsByCustomerStream(String customerId) async* {
     await Future.delayed(Duration(milliseconds: 100));
-    final customerReviews = _reviews.where((r) => r.customerId == customerId).toList();
+    final customerReviews =
+        _reviews.where((r) => r.customerId == customerId).toList();
     yield customerReviews;
   }
 
   @override
-  Stream<ReviewStatistics> getReviewStatisticsForSpecialistStream(String specialistId) async* {
+  Stream<ReviewStatistics> getReviewStatisticsForSpecialistStream(
+      String specialistId) async* {
     await Future.delayed(Duration(milliseconds: 100));
-    final specialistReviews = _reviews.where((r) => r.specialistId == specialistId).toList();
-    
+    final specialistReviews =
+        _reviews.where((r) => r.specialistId == specialistId).toList();
+
     if (specialistReviews.isEmpty) {
       yield ReviewStatistics(
         specialistId: specialistId,
@@ -640,18 +666,32 @@ class MockReviewService implements ReviewService {
       return;
     }
 
-    final averageRating = specialistReviews.map((r) => r.rating).reduce((a, b) => a + b) / specialistReviews.length;
-    
+    final averageRating =
+        specialistReviews.map((r) => r.rating).reduce((a, b) => a + b) /
+            specialistReviews.length;
+
     final ratingCounts = <int, int>{};
     for (final review in specialistReviews) {
       final rating = review.rating.round();
       ratingCounts[rating] = (ratingCounts[rating] ?? 0) + 1;
     }
 
-    final qualityAvg = specialistReviews.map((r) => r.detailedRating.quality).reduce((a, b) => a + b) / specialistReviews.length;
-    final communicationAvg = specialistReviews.map((r) => r.detailedRating.communication).reduce((a, b) => a + b) / specialistReviews.length;
-    final punctualityAvg = specialistReviews.map((r) => r.detailedRating.punctuality).reduce((a, b) => a + b) / specialistReviews.length;
-    final valueAvg = specialistReviews.map((r) => r.detailedRating.value).reduce((a, b) => a + b) / specialistReviews.length;
+    final qualityAvg = specialistReviews
+            .map((r) => r.detailedRating.quality)
+            .reduce((a, b) => a + b) /
+        specialistReviews.length;
+    final communicationAvg = specialistReviews
+            .map((r) => r.detailedRating.communication)
+            .reduce((a, b) => a + b) /
+        specialistReviews.length;
+    final punctualityAvg = specialistReviews
+            .map((r) => r.detailedRating.punctuality)
+            .reduce((a, b) => a + b) /
+        specialistReviews.length;
+    final valueAvg = specialistReviews
+            .map((r) => r.detailedRating.value)
+            .reduce((a, b) => a + b) /
+        specialistReviews.length;
 
     yield ReviewStatistics(
       specialistId: specialistId,
@@ -668,7 +708,8 @@ class MockReviewService implements ReviewService {
   }
 
   @override
-  Stream<List<Specialist>> getTopRatedSpecialistsStream({int limit = 10}) async* {
+  Stream<List<Specialist>> getTopRatedSpecialistsStream(
+      {int limit = 10}) async* {
     await Future.delayed(Duration(milliseconds: 100));
     // Mock implementation - return specialists sorted by rating
     final specialists = TestData.testSpecialists;
@@ -707,22 +748,26 @@ class MockAnalyticsService implements AnalyticsService {
     }
 
     if (period != null) {
-      filteredMetrics = filteredMetrics.where((m) => m.period == period).toList();
+      filteredMetrics =
+          filteredMetrics.where((m) => m.period == period).toList();
     }
 
     if (startDate != null) {
-      filteredMetrics = filteredMetrics.where((m) => m.timestamp.isAfter(startDate)).toList();
+      filteredMetrics =
+          filteredMetrics.where((m) => m.timestamp.isAfter(startDate)).toList();
     }
 
     if (endDate != null) {
-      filteredMetrics = filteredMetrics.where((m) => m.timestamp.isBefore(endDate)).toList();
+      filteredMetrics =
+          filteredMetrics.where((m) => m.timestamp.isBefore(endDate)).toList();
     }
 
     return filteredMetrics;
   }
 
   @override
-  Future<Report> generateReport(ReportType type, AnalyticsPeriod period, {Map<String, dynamic>? filters}) async {
+  Future<Report> generateReport(ReportType type, AnalyticsPeriod period,
+      {Map<String, dynamic>? filters}) async {
     await Future.delayed(Duration(milliseconds: 200));
     return Report(
       id: 'report_${DateTime.now().millisecondsSinceEpoch}',
@@ -755,7 +800,8 @@ class MockAnalyticsService implements AnalyticsService {
   }
 
   @override
-  Future<Dashboard> createDashboard(String name, String userId, List<Map<String, dynamic>> widgets) async {
+  Future<Dashboard> createDashboard(
+      String name, String userId, List<Map<String, dynamic>> widgets) async {
     await Future.delayed(Duration(milliseconds: 100));
     return Dashboard(
       id: 'dashboard_${DateTime.now().millisecondsSinceEpoch}',
@@ -781,7 +827,8 @@ class MockAnalyticsService implements AnalyticsService {
   }
 
   @override
-  Future<void> updateDashboard(String id, List<Map<String, dynamic>> widgets) async {
+  Future<void> updateDashboard(
+      String id, List<Map<String, dynamic>> widgets) async {
     await Future.delayed(Duration(milliseconds: 100));
     // Mock implementation
   }
@@ -810,7 +857,8 @@ class MockAnalyticsService implements AnalyticsService {
   }
 
   @override
-  Future<List<PeriodStatistics>> getPeriodStatistics(AnalyticsPeriod period) async {
+  Future<List<PeriodStatistics>> getPeriodStatistics(
+      AnalyticsPeriod period) async {
     await Future.delayed(Duration(milliseconds: 100));
     return [
       PeriodStatistics(
@@ -853,17 +901,19 @@ class MockCalendarService implements CalendarService {
   }
 
   @override
-  Future<bool> isDateTimeAvailable(String specialistId, DateTime dateTime) async {
+  Future<bool> isDateTimeAvailable(
+      String specialistId, DateTime dateTime) async {
     await Future.delayed(Duration(milliseconds: 50));
-    return !_events.any((e) => 
-      e.specialistId == specialistId &&
-      e.startTime.isBefore(dateTime) &&
-      e.endTime.isAfter(dateTime)
-    );
+    return !_events.any((e) =>
+        e.specialistId == specialistId &&
+        e.startTime.isBefore(dateTime) &&
+        e.endTime.isAfter(dateTime));
   }
 
   @override
-  Future<List<DateTime>> getAvailableTimeSlots(String specialistId, DateTime date, {Duration slotDuration = const Duration(hours: 1)}) async {
+  Future<List<DateTime>> getAvailableTimeSlots(
+      String specialistId, DateTime date,
+      {Duration slotDuration = const Duration(hours: 1)}) async {
     await Future.delayed(Duration(milliseconds: 100));
     return [
       DateTime(date.year, date.month, date.day, 9, 0),
@@ -875,18 +925,21 @@ class MockCalendarService implements CalendarService {
   }
 
   @override
-  Future<List<ScheduleEvent>> getEventsForDate(String specialistId, DateTime date) async {
+  Future<List<ScheduleEvent>> getEventsForDate(
+      String specialistId, DateTime date) async {
     await Future.delayed(Duration(milliseconds: 100));
-    return _events.where((e) => 
-      e.specialistId == specialistId && 
-      e.startTime.year == date.year && 
-      e.startTime.month == date.month && 
-      e.startTime.day == date.day
-    ).toList();
+    return _events
+        .where((e) =>
+            e.specialistId == specialistId &&
+            e.startTime.year == date.year &&
+            e.startTime.month == date.month &&
+            e.startTime.day == date.day)
+        .toList();
   }
 
   @override
-  Future<void> addUnavailablePeriod(String specialistId, DateTime startTime, DateTime endTime, String reason) async {
+  Future<void> addUnavailablePeriod(String specialistId, DateTime startTime,
+      DateTime endTime, String reason) async {
     await Future.delayed(Duration(milliseconds: 100));
     final event = ScheduleEvent(
       id: 'event_${DateTime.now().millisecondsSinceEpoch}',
@@ -905,7 +958,8 @@ class MockCalendarService implements CalendarService {
   }
 
   @override
-  Future<void> addVacationPeriod(String specialistId, DateTime startTime, DateTime endTime, String reason) async {
+  Future<void> addVacationPeriod(String specialistId, DateTime startTime,
+      DateTime endTime, String reason) async {
     await Future.delayed(Duration(milliseconds: 100));
     final event = ScheduleEvent(
       id: 'event_${DateTime.now().millisecondsSinceEpoch}',
@@ -942,7 +996,8 @@ class MockAuthService implements AuthService {
   bool get isAuthenticated => _isAuthenticated;
 
   @override
-  Future<AppUser?> signInWithEmailAndPassword(String email, String password) async {
+  Future<AppUser?> signInWithEmailAndPassword(
+      String email, String password) async {
     await Future.delayed(Duration(milliseconds: 200));
     if (email == 'test@example.com' && password == 'password') {
       _currentUser = TestData.testUsers.first;
@@ -953,7 +1008,8 @@ class MockAuthService implements AuthService {
   }
 
   @override
-  Future<AppUser?> createUserWithEmailAndPassword(String email, String password, String name) async {
+  Future<AppUser?> createUserWithEmailAndPassword(
+      String email, String password, String name) async {
     await Future.delayed(Duration(milliseconds: 200));
     _currentUser = AppUser(
       id: 'user_${DateTime.now().millisecondsSinceEpoch}',
@@ -1021,5 +1077,3 @@ class MockAuthService implements AuthService {
     // Mock implementation
   }
 }
-
-

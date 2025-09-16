@@ -17,46 +17,45 @@ dependencies:
   firebase_messaging: ^16.0.1
   firebase_analytics: ^12.0.1
   firebase_storage: ^13.0.1
-  js: ^0.6.7
-  flutter_local_notifications: ^16.3.2
-  flutter_riverpod: ^2.4.9
-  google_sign_in: ^6.2.1
+  flutter_local_notifications: ^19.4.2
+  flutter_riverpod: ^3.0.0
+  google_sign_in: ^7.1.1
   # vk_login: ^1.0.0  # Temporarily disabled due to dependency conflicts
   http: ^1.1.0
-  file_picker: ^8.0.0+1
+  file_picker: ^10.3.3
   image_picker: ^1.0.7
   url_launcher: ^6.2.2
-  cached_network_image: ^3.3.1
+  cached_network_image: ^3.4.1
   # UX Improvements
   flutter_animate: ^4.5.0
   page_transition: ^2.1.0
   # Theme and UI
-  flex_color_scheme: ^7.3.1
+  flex_color_scheme: ^8.3.0
   # PDF Generation
   pdf: ^3.10.7
   printing: ^5.12.0
   # File handling
   path_provider: ^2.1.1
   # Calendar integration
-  googleapis: ^11.4.0
-  googleapis_auth: ^1.4.1
+  googleapis: ^14.0.0
+  googleapis_auth: ^2.0.0
   icalendar_parser: ^2.1.0
   # Audio recording
-  record: ^5.0.4
-  permission_handler: ^11.0.1
+  record: ^6.1.1
+  permission_handler: ^12.0.1
   # Emoji picker
-  emoji_picker_flutter: ^1.6.3
+  emoji_picker_flutter: ^4.3.0
   # Audio playback
-  audioplayers: ^5.2.1
+  audioplayers: ^6.5.1
   # Localization
   flutter_localizations:
     sdk: flutter
   intl: ^0.20.2
   # Analytics and charts (added for step 10)
-  fl_chart: ^0.66.0
+  fl_chart: ^1.1.1
   # Media handling (added for step 11)
   video_player: ^2.8.1
-  photo_view: ^0.14.0
+  photo_view: ^0.15.0
   # Calendar integration (added for step 12)
   # Guest management (added for step 13)
   qr_flutter: ^4.1.0
@@ -65,19 +64,21 @@ dependencies:
   uuid: ^4.1.0
   # Support system (added for step 15)
   mailer: ^6.0.1
-  device_info_plus: ^9.1.0
+  device_info_plus: ^12.1.0
   # Integrations (added for step 16)
   google_maps_flutter: ^2.5.0
-  geolocator: ^10.1.0
-  geocoding: ^2.1.1
-  connectivity_plus: ^5.0.1
+  geolocator: ^10.1.1
+  geocoding: ^2.2.2
+  connectivity_plus: ^5.0.2
   # Security (added for step 18)
   crypto: ^3.0.3
   encrypt: ^5.0.1
   local_auth: ^2.1.6
   flutter_secure_storage: ^9.0.0
-  package_info_plus: ^4.2.0
-  timezone: ^0.9.4
+  package_info_plus: ^8.3.1
+  timezone: ^0.10.1
+  # Share functionality
+  share_plus: ^7.0.2
 
 dev_dependencies:
   flutter_test:

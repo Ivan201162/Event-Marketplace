@@ -60,9 +60,9 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
                     });
                   },
                 ),
-                
+
                 const SizedBox(height: 12),
-                
+
                 // Фильтры
                 Row(
                   children: [
@@ -94,9 +94,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
                         },
                       ),
                     ),
-                    
                     const SizedBox(width: 12),
-                    
                     FilterChip(
                       label: const Text('Заблокированные'),
                       selected: _showBannedOnly,
@@ -111,7 +109,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
               ],
             ),
           ),
-          
+
           // Список пользователей
           Expanded(
             child: StreamBuilder<List<AppUser>>(
@@ -147,7 +145,8 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.people_outline, size: 64, color: Colors.grey),
+                        Icon(Icons.people_outline,
+                            size: 64, color: Colors.grey),
                         SizedBox(height: 16),
                         Text(
                           'Пользователи не найдены',
@@ -204,8 +203,10 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
       margin: const EdgeInsets.only(bottom: 8),
       child: ListTile(
         leading: CircleAvatar(
-          backgroundColor: !user.isActive ? Colors.red : Theme.of(context).primaryColor,
-          backgroundImage: user.photoURL != null ? NetworkImage(user.photoURL!) : null,
+          backgroundColor:
+              !user.isActive ? Colors.red : Theme.of(context).primaryColor,
+          backgroundImage:
+              user.photoURL != null ? NetworkImage(user.photoURL!) : null,
           child: user.photoURL == null
               ? Text(
                   (user.displayName?.isNotEmpty ?? false)
@@ -263,7 +264,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
                     Text('Заблокировать'),
                   ],
                 ),
-              )
+              ),
             if (!user.isActive)
               const PopupMenuItem(
                 value: 'unban',
@@ -305,7 +306,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
   Widget _buildRoleChip(UserRole role) {
     Color color;
     String text;
-    
+
     switch (role) {
       case UserRole.customer:
         color = Colors.blue;
@@ -320,7 +321,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
         text = 'Гость';
         break;
     }
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
       decoration: BoxDecoration(
@@ -368,7 +369,8 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
             children: [
               _buildDetailRow('Email', user.email),
               _buildDetailRow('Роль', _getRoleText(user.role)),
-              _buildDetailRow('Статус', user.isBanned ? 'Заблокирован' : 'Активен'),
+              _buildDetailRow(
+                  'Статус', user.isBanned ? 'Заблокирован' : 'Активен'),
               _buildDetailRow('Дата создания', _formatDate(user.createdAt)),
               if (user.lastLogin != null)
                 _buildDetailRow('Последний вход', _formatDate(user.lastLogin!)),
@@ -428,7 +430,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
 
   void _showBanUserDialog(AppUser user) {
     final reasonController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -436,7 +438,8 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Вы уверены, что хотите заблокировать пользователя ${user.displayName}?'),
+            Text(
+                'Вы уверены, что хотите заблокировать пользователя ${user.displayName}?'),
             const SizedBox(height: 16),
             TextField(
               controller: reasonController,
@@ -471,7 +474,8 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Редактирование пользователя'),
-        content: const Text('Функция редактирования пользователя будет добавлена в следующих версиях.'),
+        content: const Text(
+            'Функция редактирования пользователя будет добавлена в следующих версиях.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -486,9 +490,9 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
     try {
       // TODO: Получить ID текущего администратора
       final adminId = 'demo_admin_id';
-      
+
       final success = await _adminService.banUser(user.uid, adminId, reason);
-      
+
       if (success) {
         _showSuccessSnackBar('Пользователь ${user.displayName} заблокирован');
       } else {
@@ -503,9 +507,9 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
     try {
       // TODO: Получить ID текущего администратора
       final adminId = 'demo_admin_id';
-      
+
       final success = await _adminService.unbanUser(user.uid, adminId);
-      
+
       if (success) {
         _showSuccessSnackBar('Пользователь ${user.displayName} разблокирован');
       } else {

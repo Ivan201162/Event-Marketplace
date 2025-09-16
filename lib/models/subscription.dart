@@ -61,7 +61,7 @@ class Subscription {
     this.paymentMethod,
     required this.features,
     required this.limits,
-    this.autoRenew = true,
+    required this.autoRenew,
     this.cancelledAt,
     this.cancellationReason,
     required this.createdAt,
@@ -69,10 +69,9 @@ class Subscription {
     this.metadata,
   });
 
-  /// Создать подписку из документа Firestore
+  /// Создать из Firestore документа
   factory Subscription.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
     return Subscription(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -96,14 +95,16 @@ class Subscription {
       paymentMethod: data['paymentMethod'],
       features: Map<String, dynamic>.from(data['features'] ?? {}),
       limits: Map<String, dynamic>.from(data['limits'] ?? {}),
-      autoRenew: data['autoRenew'] ?? true,
-      cancelledAt: data['cancelledAt'] != null 
-          ? (data['cancelledAt'] as Timestamp).toDate() 
+      autoRenew: data['autoRenew'] ?? false,
+      cancelledAt: data['cancelledAt'] != null
+          ? (data['cancelledAt'] as Timestamp).toDate()
           : null,
       cancellationReason: data['cancellationReason'],
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      metadata: data['metadata'],
+      metadata: data['metadata'] != null
+          ? Map<String, dynamic>.from(data['metadata'])
+          : null,
     );
   }
 
@@ -123,7 +124,8 @@ class Subscription {
       'features': features,
       'limits': limits,
       'autoRenew': autoRenew,
-      'cancelledAt': cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
+      'cancelledAt':
+          cancelledAt != null ? Timestamp.fromDate(cancelledAt!) : null,
       'cancellationReason': cancellationReason,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
@@ -131,7 +133,7 @@ class Subscription {
     };
   }
 
-  /// Создать копию с изменениями
+  /// Копировать с изменениями
   Subscription copyWith({
     String? id,
     String? userId,
@@ -177,117 +179,35 @@ class Subscription {
   }
 
   /// Проверить, активна ли подписка
-  bool get isActive => status == SubscriptionStatus.active && endDate.isAfter(DateTime.now());
-
-  /// Проверить, истекает ли подписка скоро
-  bool get isExpiringSoon {
-    final daysUntilExpiry = endDate.difference(DateTime.now()).inDays;
-    return isActive && daysUntilExpiry <= 7;
+  bool get isActive {
+    return status == SubscriptionStatus.active &&
+        endDate.isAfter(DateTime.now());
   }
 
   /// Проверить, истекла ли подписка
-  bool get isExpired => endDate.isBefore(DateTime.now());
-
-  /// Получить количество дней до истечения
-  int get daysUntilExpiry {
-    final difference = endDate.difference(DateTime.now()).inDays;
-    return difference > 0 ? difference : 0;
+  bool get isExpired {
+    return endDate.isBefore(DateTime.now());
   }
 
-  /// Проверить, есть ли доступ к функции
+  /// Получить оставшиеся дни
+  int get remainingDays {
+    if (isExpired) return 0;
+    return endDate.difference(DateTime.now()).inDays;
+  }
+
+  /// Проверить доступность функции
   bool hasFeature(String feature) {
     return features[feature] == true;
   }
 
-  /// Получить лимит для функции
+  /// Получить лимит
   int getLimit(String limit) {
     return limits[limit] ?? 0;
   }
 
-  /// Проверить, превышен ли лимит
-  bool isLimitExceeded(String limit, int currentUsage) {
-    final limitValue = getLimit(limit);
-    return limitValue > 0 && currentUsage >= limitValue;
-  }
-
-  /// Получить название типа подписки
-  String get typeDisplayName {
-    switch (type) {
-      case SubscriptionType.free:
-        return 'Бесплатная';
-      case SubscriptionType.basic:
-        return 'Базовая';
-      case SubscriptionType.premium:
-        return 'Премиум';
-      case SubscriptionType.enterprise:
-        return 'Корпоративная';
-    }
-  }
-
-  /// Получить описание типа подписки
-  String get typeDescription {
-    switch (type) {
-      case SubscriptionType.free:
-        return 'Базовые возможности для начала работы';
-      case SubscriptionType.basic:
-        return 'Расширенные функции для активных пользователей';
-      case SubscriptionType.premium:
-        return 'Полный доступ ко всем возможностям';
-      case SubscriptionType.enterprise:
-        return 'Корпоративные решения с приоритетной поддержкой';
-    }
-  }
-
-  /// Получить название периода
-  String get periodDisplayName {
-    switch (period) {
-      case SubscriptionPeriod.monthly:
-        return 'Месячная';
-      case SubscriptionPeriod.quarterly:
-        return 'Квартальная';
-      case SubscriptionPeriod.yearly:
-        return 'Годовая';
-      case SubscriptionPeriod.lifetime:
-        return 'Пожизненная';
-    }
-  }
-
-  /// Получить название статуса
-  String get statusDisplayName {
-    switch (status) {
-      case SubscriptionStatus.active:
-        return 'Активна';
-      case SubscriptionStatus.inactive:
-        return 'Неактивна';
-      case SubscriptionStatus.cancelled:
-        return 'Отменена';
-      case SubscriptionStatus.expired:
-        return 'Истекла';
-      case SubscriptionStatus.pending:
-        return 'Ожидает активации';
-    }
-  }
-
-  /// Получить цвет статуса
-  String get statusColor {
-    switch (status) {
-      case SubscriptionStatus.active:
-        return 'green';
-      case SubscriptionStatus.inactive:
-        return 'grey';
-      case SubscriptionStatus.cancelled:
-        return 'red';
-      case SubscriptionStatus.expired:
-        return 'orange';
-      case SubscriptionStatus.pending:
-        return 'blue';
-    }
-  }
-
-  /// Получить отформатированную цену
-  String get formattedPrice {
-    if (price == 0) return 'Бесплатно';
-    return '${price.toStringAsFixed(2)} $currency';
+  @override
+  String toString() {
+    return 'Subscription(id: $id, type: $type, status: $status, price: $price)';
   }
 
   @override
@@ -298,11 +218,6 @@ class Subscription {
 
   @override
   int get hashCode => id.hashCode;
-
-  @override
-  String toString() {
-    return 'Subscription(id: $id, type: $type, status: $status, period: $period)';
-  }
 }
 
 /// План подписки
@@ -314,7 +229,7 @@ class SubscriptionPlan {
   final double yearlyPrice;
   final String currency;
   final List<String> features;
-  final Map<String, int> limits;
+  final Map<String, dynamic> limits;
   final bool isPopular;
   final String? badge;
 
@@ -332,7 +247,7 @@ class SubscriptionPlan {
   });
 
   /// Получить цену для периода
-  double getPriceForPeriod(SubscriptionPeriod period) {
+  double getPrice(SubscriptionPeriod period) {
     switch (period) {
       case SubscriptionPeriod.monthly:
         return monthlyPrice;
@@ -345,34 +260,7 @@ class SubscriptionPlan {
     }
   }
 
-  /// Получить экономию для периода
-  double getSavingsForPeriod(SubscriptionPeriod period) {
-    final monthlyTotal = monthlyPrice * _getMonthsInPeriod(period);
-    final periodPrice = getPriceForPeriod(period);
-    return monthlyTotal - periodPrice;
-  }
-
-  /// Получить процент экономии
-  double getSavingsPercentage(SubscriptionPeriod period) {
-    final monthlyTotal = monthlyPrice * _getMonthsInPeriod(period);
-    final periodPrice = getPriceForPeriod(period);
-    return ((monthlyTotal - periodPrice) / monthlyTotal) * 100;
-  }
-
-  int _getMonthsInPeriod(SubscriptionPeriod period) {
-    switch (period) {
-      case SubscriptionPeriod.monthly:
-        return 1;
-      case SubscriptionPeriod.quarterly:
-        return 3;
-      case SubscriptionPeriod.yearly:
-        return 12;
-      case SubscriptionPeriod.lifetime:
-        return 60; // 5 лет
-    }
-  }
-
-  /// Проверить, есть ли функция
+  /// Проверить доступность функции
   bool hasFeature(String feature) {
     return features.contains(feature);
   }
@@ -431,7 +319,7 @@ class SubscriptionPlans {
         'notifications_per_day': 100,
         'storage_mb': 1000,
         'team_members': 3,
-      ],
+      },
     ),
     SubscriptionPlan(
       type: SubscriptionType.premium,

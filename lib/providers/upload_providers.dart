@@ -13,27 +13,31 @@ final fileUploadAvailableProvider = Provider<bool>((ref) {
 });
 
 /// Провайдер для загрузки изображения
-final imageUploadProvider = FutureProvider.family<UploadResult?, ImageSource>((ref, source) async {
+final imageUploadProvider =
+    FutureProvider.family<UploadResult?, ImageSource>((ref, source) async {
   final uploadService = ref.read(uploadServiceProvider);
   if (!uploadService.isAvailable) return null;
-  
+
   return await uploadService.pickAndUploadImage(source: source);
 });
 
 /// Провайдер для загрузки видео
-final videoUploadProvider = FutureProvider.family<UploadResult?, ImageSource>((ref, source) async {
+final videoUploadProvider =
+    FutureProvider.family<UploadResult?, ImageSource>((ref, source) async {
   final uploadService = ref.read(uploadServiceProvider);
   if (!uploadService.isAvailable) return null;
-  
+
   return await uploadService.pickAndUploadVideo(source: source);
 });
 
 /// Провайдер для загрузки файла
-final fileUploadProvider = FutureProvider.family<UploadResult?, List<String>?>((ref, allowedExtensions) async {
+final fileUploadProvider = FutureProvider.family<UploadResult?, List<String>?>(
+    (ref, allowedExtensions) async {
   final uploadService = ref.read(uploadServiceProvider);
   if (!uploadService.isAvailable) return null;
-  
-  return await uploadService.pickAndUploadFile(allowedExtensions: allowedExtensions);
+
+  return await uploadService.pickAndUploadFile(
+      allowedExtensions: allowedExtensions);
 });
 
 /// Провайдер для получения максимального размера файла
@@ -43,7 +47,8 @@ final maxFileSizeProvider = Provider.family<int, FileType>((ref, fileType) {
 });
 
 /// Провайдер для получения разрешенных расширений
-final allowedExtensionsProvider = Provider.family<List<String>, FileType>((ref, fileType) {
+final allowedExtensionsProvider =
+    Provider.family<List<String>, FileType>((ref, fileType) {
   final uploadService = ref.read(uploadServiceProvider);
   return uploadService.getAllowedExtensions(fileType);
 });

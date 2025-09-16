@@ -8,7 +8,8 @@ class ResetPasswordScreen extends ConsumerStatefulWidget {
   const ResetPasswordScreen({super.key});
 
   @override
-  ConsumerState<ResetPasswordScreen> createState() => _ResetPasswordScreenState();
+  ConsumerState<ResetPasswordScreen> createState() =>
+      _ResetPasswordScreenState();
 }
 
 class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
@@ -33,7 +34,7 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
     try {
       final authService = ref.read(authServiceProvider);
       await authService.resetPassword(_emailController.text.trim());
-      
+
       setState(() {
         _emailSent = true;
         _isLoading = false;
@@ -91,16 +92,17 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
           Text(
             'Сброс пароля',
             style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
           Text(
             'Введите ваш email адрес, и мы отправим вам ссылку для сброса пароля',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-            ),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 48),
@@ -117,7 +119,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
               if (value == null || value.isEmpty) {
                 return 'Пожалуйста, введите email';
               }
-              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                  .hasMatch(value)) {
                 return 'Пожалуйста, введите корректный email';
               }
               return null;
@@ -161,17 +164,17 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
         Text(
           'Письмо отправлено!',
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.primary,
-          ),
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.primary,
+              ),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 16),
         Text(
           'Мы отправили ссылку для сброса пароля на адрес:\n${_emailController.text}',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-          ),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
           textAlign: TextAlign.center,
         ),
         const SizedBox(height: 24),
@@ -191,8 +194,8 @@ class _ResetPasswordScreenState extends ConsumerState<ResetPasswordScreen> {
               Text(
                 'Проверьте папку "Спам", если письмо не пришло в течение нескольких минут',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Theme.of(context).colorScheme.onPrimaryContainer,
-                ),
+                      color: Theme.of(context).colorScheme.onPrimaryContainer,
+                    ),
                 textAlign: TextAlign.center,
               ),
             ],
