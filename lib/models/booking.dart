@@ -208,6 +208,8 @@ class Booking {
         return 'red';
       case BookingStatus.completed:
         return 'blue';
+      case BookingStatus.rejected:
+        return 'red';
     }
   }
 
@@ -222,6 +224,8 @@ class Booking {
         return 'Отменено';
       case BookingStatus.completed:
         return 'Завершено';
+      case BookingStatus.rejected:
+        return 'Отклонено';
     }
   }
 

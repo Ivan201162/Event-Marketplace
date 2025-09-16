@@ -479,7 +479,7 @@ class AuthScreen extends ConsumerWidget {
       final role = ref.read(selectedRoleProvider);
       final authService = ref.read(authServiceProvider);
 
-      final user = await authService.signInWithGoogle(role: role);
+      final user = await authService.signInWithGoogle();
       if (user != null) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

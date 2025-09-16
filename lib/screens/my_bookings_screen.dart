@@ -248,6 +248,8 @@ class MyBookingsScreen extends ConsumerWidget {
         return Colors.red;
       case BookingStatus.completed:
         return Colors.blue;
+      case BookingStatus.rejected:
+        return Colors.red;
     }
   }
 

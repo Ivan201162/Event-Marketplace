@@ -136,7 +136,6 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 _searchController.text = query;
                 _performSearch();
               },
-              deleteIcon: const Icon(Icons.close, size: 16),
               onDeleted: () {
                 ref
                     .read(searchHistoryProvider.notifier)

@@ -171,7 +171,12 @@ class CalendarService {
   /// Экспортировать события в ICS файл
   Future<String?> exportToICS(List<CalendarEvent> events) async {
     try {
-      final calendar = ICalendar(data: '');
+      final calendar = ICalendar(
+        headData: ICalendarHeadData(
+          prodId: 'Event Marketplace App',
+          version: '2.0',
+        ),
+      );
 
       for (final event in events) {
         final icsEvent = IEvent(
@@ -181,7 +186,6 @@ class CalendarService {
           summary: event.title,
           description: event.description,
           location: event.location,
-          status: _getICSStatus(event.status),
         );
 
         calendar.addEvent(icsEvent);

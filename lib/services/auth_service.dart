@@ -10,7 +10,9 @@ import '../core/safe_log.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final GoogleSignIn _googleSignIn = GoogleSignIn();
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: ['email', 'profile'],
+  );
   final StorageService _storageService = StorageService();
 
   /// Текущий пользователь Firebase
@@ -206,7 +208,7 @@ class AuthService {
     try {
       SafeLog.info('Начало входа через Google...');
 
-      final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         SafeLog.info('Пользователь отменил вход через Google');
         return null; // Пользователь отменил вход

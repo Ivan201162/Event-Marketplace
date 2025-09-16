@@ -252,6 +252,9 @@ class BookingService {
           case BookingStatus.completed:
             completed++;
             break;
+          case BookingStatus.rejected:
+            cancelled++; // Отклоненные считаем как отмененные
+            break;
         }
       }
 
@@ -299,6 +302,9 @@ class BookingService {
             break;
           case BookingStatus.completed:
             completed++;
+            break;
+          case BookingStatus.rejected:
+            cancelled++; // Отклоненные считаем как отмененные
             break;
         }
       }
