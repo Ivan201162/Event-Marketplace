@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import '../models/payment.dart';
 import '../models/booking.dart';
+import '../core/feature_flags.dart';
 
 /// Сервис для управления платежами
 class PaymentService {
@@ -153,23 +155,47 @@ class PaymentService {
     }
   }
 
-  /// Создать платежи для заявки
+  /// Создать платежи для заявки с расширенной логикой
   Future<List<Payment>> createPaymentsForBooking({
     required Booking booking,
     required OrganizationType organizationType,
   }) async {
+    if (!FeatureFlags.paymentsEnabled) {
+      return _createMockPayments(booking, organizationType);
+    }
+
     try {
       final config = PaymentConfiguration.getDefault(organizationType);
       final payments = <Payment>[];
 
-      // Создаем авансовый платеж, если требуется
+      // Для государственных учреждений - только постоплата
+      if (organizationType == OrganizationType.government) {
+        final fullPayment = await createPayment(
+          bookingId: booking.id,
+          customerId: booking.userId,
+          specialistId: booking.specialistId ?? '',
+          type: PaymentType.fullPayment,
+          amount: booking.totalPrice,
+          organizationType: organizationType,
+          description: 'Полная постоплата (государственное учреждение)',
+          metadata: {
+            'paymentType': 'postpayment',
+            'totalAmount': booking.totalPrice,
+            'isGovernment': true,
+          },
+        );
+        payments.add(fullPayment);
+        return payments;
+      }
+
+      // Для коммерческих организаций - аванс + постоплата
       if (config.requiresAdvance) {
         final advanceAmount = config.calculateAdvanceAmount(booking.totalPrice);
         if (advanceAmount > 0) {
           final advancePayment = await createPayment(
             bookingId: booking.id,
-            customerId: booking.customerId,
-            specialistId: booking.specialistId,
+            customerId: booking.userId,
+            specialistId: booking.specialistId ?? '',
             type: PaymentType.advance,
             amount: advanceAmount,
             organizationType: organizationType,
@@ -178,6 +204,7 @@ class PaymentService {
             metadata: {
               'advancePercentage': config.advancePercentage,
               'totalAmount': booking.totalPrice,
+              'paymentType': 'prepayment',
             },
           );
           payments.add(advancePayment);
@@ -192,15 +219,16 @@ class PaymentService {
       if (finalAmount > 0) {
         final finalPayment = await createPayment(
           bookingId: booking.id,
-          customerId: booking.customerId,
-          specialistId: booking.specialistId,
-          type: PaymentType.final_payment,
+          customerId: booking.userId,
+          specialistId: booking.specialistId ?? '',
+          type: PaymentType.finalPayment,
           amount: finalAmount,
           organizationType: organizationType,
-          description: 'Финальный платеж',
+          description: 'Финальный платеж после выполнения услуг',
           metadata: {
             'advanceAmount': advanceAmount,
             'totalAmount': booking.totalPrice,
+            'paymentType': 'postpayment',
           },
         );
         payments.add(finalPayment);
@@ -208,7 +236,7 @@ class PaymentService {
 
       return payments;
     } catch (e) {
-      print('Ошибка создания платежей для заявки: $e');
+      debugPrint('Ошибка создания платежей для заявки: $e');
       throw Exception('Не удалось создать платежи: $e');
     }
   }
@@ -351,6 +379,143 @@ class PaymentService {
     }
   }
 
+  /// Получить платежную схему для организации
+  PaymentScheme getPaymentScheme(OrganizationType organizationType) {
+    switch (organizationType) {
+      case OrganizationType.individual:
+        return PaymentScheme(
+          advancePercentage: 30.0,
+          requiresAdvance: true,
+          allowsPostpayment: true,
+          maxAdvanceAmount: 50000.0,
+          description: 'Физическое лицо: 30% аванс, 70% постоплата',
+        );
+      case OrganizationType.commercial:
+        return PaymentScheme(
+          advancePercentage: 30.0,
+          requiresAdvance: true,
+          allowsPostpayment: true,
+          maxAdvanceAmount: 200000.0,
+          description: 'Коммерческая организация: 30% аванс, 70% постоплата',
+        );
+      case OrganizationType.government:
+        return PaymentScheme(
+          advancePercentage: 0.0,
+          requiresAdvance: false,
+          allowsPostpayment: true,
+          maxAdvanceAmount: 0.0,
+          description: 'Государственное учреждение: 100% постоплата',
+        );
+      case OrganizationType.nonprofit:
+        return PaymentScheme(
+          advancePercentage: 20.0,
+          requiresAdvance: true,
+          allowsPostpayment: true,
+          maxAdvanceAmount: 100000.0,
+          description: 'Некоммерческая организация: 20% аванс, 80% постоплата',
+        );
+    }
+  }
+
+  /// Рассчитать платежи по схеме
+  PaymentCalculation calculatePayments({
+    required double totalAmount,
+    required OrganizationType organizationType,
+  }) {
+    final scheme = getPaymentScheme(organizationType);
+
+    double advanceAmount = 0.0;
+    double finalAmount = totalAmount;
+
+    if (scheme.requiresAdvance) {
+      advanceAmount = (totalAmount * scheme.advancePercentage / 100);
+      finalAmount = totalAmount - advanceAmount;
+
+      // Ограничиваем максимальный аванс
+      if (scheme.maxAdvanceAmount > 0 &&
+          advanceAmount > scheme.maxAdvanceAmount) {
+        advanceAmount = scheme.maxAdvanceAmount;
+        finalAmount = totalAmount - advanceAmount;
+      }
+    }
+
+    return PaymentCalculation(
+      totalAmount: totalAmount,
+      advanceAmount: advanceAmount,
+      finalAmount: finalAmount,
+      advancePercentage: scheme.advancePercentage,
+      scheme: scheme,
+    );
+  }
+
+  /// Проверить возможность постоплаты
+  bool canUsePostpayment(OrganizationType organizationType, double amount) {
+    final scheme = getPaymentScheme(organizationType);
+    return scheme.allowsPostpayment;
+  }
+
+  /// Получить рекомендуемую схему оплаты
+  String getRecommendedPaymentScheme(OrganizationType organizationType) {
+    final scheme = getPaymentScheme(organizationType);
+    return scheme.description;
+  }
+
+  /// Создать mock платежи для демонстрации
+  List<Payment> _createMockPayments(
+      Booking booking, OrganizationType organizationType) {
+    final calculation = calculatePayments(
+      totalAmount: booking.totalPrice,
+      organizationType: organizationType,
+    );
+
+    final payments = <Payment>[];
+
+    if (calculation.advanceAmount > 0) {
+      payments.add(Payment(
+        id: 'mock_advance_${DateTime.now().millisecondsSinceEpoch}',
+        bookingId: booking.id,
+        customerId: booking.userId,
+        specialistId: booking.specialistId ?? '',
+        type: PaymentType.advance,
+        status: PaymentStatus.pending,
+        amount: calculation.advanceAmount,
+        currency: 'RUB',
+        createdAt: DateTime.now(),
+        description:
+            'Авансовый платеж (${calculation.advancePercentage.toInt()}%)',
+        organizationType: organizationType,
+        metadata: {
+          'isMock': true,
+          'advancePercentage': calculation.advancePercentage,
+          'totalAmount': calculation.totalAmount,
+        },
+      ));
+    }
+
+    if (calculation.finalAmount > 0) {
+      payments.add(Payment(
+        id: 'mock_final_${DateTime.now().millisecondsSinceEpoch}',
+        bookingId: booking.id,
+        customerId: booking.userId,
+        specialistId: booking.specialistId ?? '',
+        type: PaymentType.finalPayment,
+        status: PaymentStatus.pending,
+        amount: calculation.finalAmount,
+        currency: 'RUB',
+        createdAt: DateTime.now(),
+        description: 'Финальный платеж после выполнения услуг',
+        organizationType: organizationType,
+        metadata: {
+          'isMock': true,
+          'advanceAmount': calculation.advanceAmount,
+          'totalAmount': calculation.totalAmount,
+        },
+      ));
+    }
+
+    return payments;
+  }
+
   /// Генерировать ID платежа
   String _generatePaymentId() {
     final timestamp = DateTime.now().millisecondsSinceEpoch;
@@ -402,4 +567,54 @@ class PaymentStatistics {
     if (totalAmount == 0) return 0;
     return (completedAmount / totalAmount) * 100;
   }
+}
+
+/// Платежная схема
+class PaymentScheme {
+  final double advancePercentage;
+  final bool requiresAdvance;
+  final bool allowsPostpayment;
+  final double maxAdvanceAmount;
+  final String description;
+
+  const PaymentScheme({
+    required this.advancePercentage,
+    required this.requiresAdvance,
+    required this.allowsPostpayment,
+    required this.maxAdvanceAmount,
+    required this.description,
+  });
+}
+
+/// Расчет платежей
+class PaymentCalculation {
+  final double totalAmount;
+  final double advanceAmount;
+  final double finalAmount;
+  final double advancePercentage;
+  final PaymentScheme scheme;
+
+  const PaymentCalculation({
+    required this.totalAmount,
+    required this.advanceAmount,
+    required this.finalAmount,
+    required this.advancePercentage,
+    required this.scheme,
+  });
+
+  /// Получить описание расчета
+  String get description {
+    if (advanceAmount == 0) {
+      return 'Полная постоплата: ${totalAmount.toStringAsFixed(0)} ${'RUB'}';
+    } else {
+      return 'Аванс: ${advanceAmount.toStringAsFixed(0)} ${'RUB'} (${advancePercentage.toInt()}%), '
+          'Остаток: ${finalAmount.toStringAsFixed(0)} ${'RUB'}';
+    }
+  }
+
+  /// Проверить, является ли схема постоплатой
+  bool get isPostpayment => advanceAmount == 0;
+
+  /// Проверить, является ли схема авансовой
+  bool get isPrepayment => advanceAmount > 0;
 }
