@@ -534,7 +534,7 @@ class ShareUtils {
   }
 
   /// Показать диалог шаринга для профиля
-  static void showShareDialog(BuildContext context, AppUser user) {
+  static void showProfileShareDialog(BuildContext context, AppUser user) {
     showDialog(
       context: context,
       builder: (context) => ShareDialog(user: user),
@@ -542,7 +542,7 @@ class ShareUtils {
   }
 
   /// Показать диалог шаринга для бронирования
-  static void showShareDialog(BuildContext context, Booking booking) {
+  static void showBookingShareDialog(BuildContext context, Booking booking) {
     showDialog(
       context: context,
       builder: (context) => ShareDialog(booking: booking),
@@ -550,7 +550,7 @@ class ShareUtils {
   }
 
   /// Показать диалог шаринга для текста
-  static void showShareDialog(BuildContext context, String text) {
+  static void showTextShareDialog(BuildContext context, String text) {
     showDialog(
       context: context,
       builder: (context) => ShareDialog(text: text),
@@ -558,7 +558,7 @@ class ShareUtils {
   }
 
   /// Показать диалог шаринга для ссылки
-  static void showShareDialog(BuildContext context, String url,
+  static void showLinkShareDialog(BuildContext context, String url,
       {String? title, String? description}) {
     showDialog(
       context: context,
@@ -576,22 +576,22 @@ class ShareUtils {
   }
 
   /// Быстрый шаринг профиля
-  static Future<bool> quickShare(AppUser user) async {
+  static Future<bool> quickShareProfile(AppUser user) async {
     return await ShareService.shareProfile(user);
   }
 
   /// Быстрый шаринг бронирования
-  static Future<bool> quickShare(Booking booking) async {
+  static Future<bool> quickShareBooking(Booking booking) async {
     return await ShareService.shareBooking(booking);
   }
 
   /// Быстрый шаринг текста
-  static Future<bool> quickShare(String text) async {
+  static Future<bool> quickShareText(String text) async {
     return await ShareService.shareText(text);
   }
 
   /// Быстрый шаринг ссылки
-  static Future<bool> quickShare(String url,
+  static Future<bool> quickShareLink(String url,
       {String? title, String? description}) async {
     return await ShareService.shareLink(url,
         title: title, description: description);

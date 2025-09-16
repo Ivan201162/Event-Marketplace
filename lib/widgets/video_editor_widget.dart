@@ -355,7 +355,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
     });
 
     try {
-      final service = ref.read(specialistProfileExtendedServiceProvider);
+      final service = ref.read(specialistServiceProvider);
 
       if (widget.existingVideo != null) {
         // Обновляем существующее видео

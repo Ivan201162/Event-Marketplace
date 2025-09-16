@@ -7,6 +7,47 @@ enum ReviewType {
   service,
 }
 
+/// Теги отзывов
+class ReviewTags {
+  static const List<String> eventTags = [
+    'отличная организация',
+    'интересная программа',
+    'хорошее место',
+    'дружелюбная атмосфера',
+    'полезная информация',
+    'профессиональный подход',
+  ];
+
+  static const List<String> specialistTags = [
+    'профессионализм',
+    'вежливость',
+    'пунктуальность',
+    'качество работы',
+    'коммуникабельность',
+    'креативность',
+  ];
+
+  static const List<String> serviceTags = [
+    'быстрое обслуживание',
+    'качественный сервис',
+    'доступные цены',
+    'удобство',
+    'надежность',
+    'индивидуальный подход',
+  ];
+
+  static List<String> getTagsForType(ReviewType type) {
+    switch (type) {
+      case ReviewType.event:
+        return eventTags;
+      case ReviewType.specialist:
+        return specialistTags;
+      case ReviewType.service:
+        return serviceTags;
+    }
+  }
+}
+
 /// Статус отзыва
 enum ReviewStatus {
   pending,
@@ -282,6 +323,10 @@ class Review {
         return 'grey';
     }
   }
+
+  /// Геттеры для совместимости с виджетами
+  bool get hasComment => content.isNotEmpty;
+  bool get isPublic => status == ReviewStatus.approved;
 
   @override
   bool operator ==(Object other) {

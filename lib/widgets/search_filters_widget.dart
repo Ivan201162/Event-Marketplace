@@ -131,7 +131,7 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<SpecialistCategory?>(
-          value: _filters.category,
+          initialValue: _filters.category,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -224,7 +224,7 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
         ),
         const SizedBox(height: 8),
         DropdownButtonFormField<ExperienceLevel?>(
-          value: _filters.minExperienceLevel,
+          initialValue: _filters.minExperienceLevel,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -640,76 +640,3 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
   }
 }
 
-/// Расширение для отображения названий категорий
-extension SpecialistCategoryExtension on SpecialistCategory {
-  String get displayName {
-    switch (this) {
-      case SpecialistCategory.photographer:
-        return 'Фотограф';
-      case SpecialistCategory.videographer:
-        return 'Видеограф';
-      case SpecialistCategory.dj:
-        return 'DJ';
-      case SpecialistCategory.host:
-        return 'Ведущий';
-      case SpecialistCategory.decorator:
-        return 'Декоратор';
-      case SpecialistCategory.musician:
-        return 'Музыкант';
-      case SpecialistCategory.caterer:
-        return 'Кейтеринг';
-      case SpecialistCategory.security:
-        return 'Охрана';
-      case SpecialistCategory.technician:
-        return 'Техник';
-      case SpecialistCategory.animator:
-        return 'Аниматор';
-      case SpecialistCategory.florist:
-        return 'Флорист';
-      case SpecialistCategory.lighting:
-        return 'Световое оформление';
-      case SpecialistCategory.sound:
-        return 'Звуковое оборудование';
-      case SpecialistCategory.costume:
-        return 'Платья/костюмы';
-      case SpecialistCategory.fireShow:
-        return 'Фаер-шоу';
-      case SpecialistCategory.fireworks:
-        return 'Салюты';
-      case SpecialistCategory.lightShow:
-        return 'Световые шоу';
-      case SpecialistCategory.coverBand:
-        return 'Кавер-группы';
-      case SpecialistCategory.teamBuilding:
-        return 'Тимбилдинги';
-      case SpecialistCategory.cleaning:
-        return 'Клининг';
-      case SpecialistCategory.rental:
-        return 'Аренда оборудования';
-      case SpecialistCategory.makeup:
-        return 'Визажист';
-      case SpecialistCategory.hairstylist:
-        return 'Парикмахер';
-      case SpecialistCategory.stylist:
-        return 'Стилист';
-      case SpecialistCategory.choreographer:
-        return 'Хореограф';
-      case SpecialistCategory.dance:
-        return 'Танцы';
-      case SpecialistCategory.magic:
-        return 'Фокусы/иллюзионист';
-      case SpecialistCategory.clown:
-        return 'Клоун';
-      case SpecialistCategory.balloon:
-        return 'Аэродизайн';
-      case SpecialistCategory.cake:
-        return 'Торты/кондитер';
-      case SpecialistCategory.transport:
-        return 'Транспорт';
-      case SpecialistCategory.venue:
-        return 'Площадки';
-      case SpecialistCategory.other:
-        return 'Другое';
-    }
-  }
-}

@@ -61,6 +61,50 @@ class Guest {
     };
   }
 
+  /// Геттеры для совместимости с виджетами
+  String get guestName => name;
+  String? get guestEmail => email;
+  String? get guestPhone => phone;
+  String? get guestPhotoUrl => avatar;
+  int get greetingsCount => metadata['greetingsCount'] as int? ?? 0;
+  DateTime? get registeredAt => metadata['registeredAt'] != null 
+      ? DateTime.parse(metadata['registeredAt'] as String) 
+      : null;
+  DateTime? get confirmedAt => metadata['confirmedAt'] != null 
+      ? DateTime.parse(metadata['confirmedAt'] as String) 
+      : null;
+  DateTime? get checkedInAt => metadata['checkedInAt'] != null 
+      ? DateTime.parse(metadata['checkedInAt'] as String) 
+      : null;
+  DateTime? get checkedOutAt => metadata['checkedOutAt'] != null 
+      ? DateTime.parse(metadata['checkedOutAt'] as String) 
+      : null;
+
+  /// Цвет статуса
+  String get statusColor {
+    switch (status) {
+      case GuestStatus.invited:
+        return 'blue';
+      case GuestStatus.confirmed:
+        return 'green';
+      case GuestStatus.declined:
+        return 'red';
+      case GuestStatus.attended:
+        return 'green';
+      case GuestStatus.noShow:
+        return 'orange';
+      case GuestStatus.registered:
+        return 'purple';
+      case GuestStatus.checkedIn:
+        return 'green';
+      case GuestStatus.cancelled:
+        return 'red';
+    }
+  }
+
+  /// Текст статуса
+  String get statusText => status.displayName;
+
   /// Копировать с изменениями
   Guest copyWith({
     String? id,
@@ -95,7 +139,10 @@ enum GuestStatus {
   confirmed,
   declined,
   attended,
-  noShow;
+  noShow,
+  registered,
+  checkedIn,
+  cancelled;
 
   String get displayName {
     switch (this) {
@@ -109,6 +156,12 @@ enum GuestStatus {
         return 'Присутствовал';
       case GuestStatus.noShow:
         return 'Не пришел';
+      case GuestStatus.registered:
+        return 'Зарегистрирован';
+      case GuestStatus.checkedIn:
+        return 'Зарегистрирован на месте';
+      case GuestStatus.cancelled:
+        return 'Отменен';
     }
   }
 }

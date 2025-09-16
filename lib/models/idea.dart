@@ -94,6 +94,51 @@ class Idea {
     };
   }
 
+  /// Геттеры для совместимости с виджетами
+  String? get authorPhotoUrl => authorAvatar;
+  int get viewsCount => metadata['viewsCount'] as int? ?? 0;
+  String? get url => sourceUrl;
+
+  /// Цвет категории
+  String get categoryColor {
+    switch (category.toLowerCase()) {
+      case 'декор':
+        return 'pink';
+      case 'еда':
+        return 'orange';
+      case 'развлечения':
+        return 'purple';
+      case 'фото':
+        return 'blue';
+      case 'музыка':
+        return 'green';
+      case 'одежда':
+        return 'red';
+      default:
+        return 'grey';
+    }
+  }
+
+  /// Иконка категории
+  String get categoryIcon {
+    switch (category.toLowerCase()) {
+      case 'декор':
+        return '🎨';
+      case 'еда':
+        return '🍰';
+      case 'развлечения':
+        return '🎪';
+      case 'фото':
+        return '📸';
+      case 'музыка':
+        return '🎵';
+      case 'одежда':
+        return '👗';
+      default:
+        return '💡';
+    }
+  }
+
   /// Копировать с изменениями
   Idea copyWith({
     String? id,

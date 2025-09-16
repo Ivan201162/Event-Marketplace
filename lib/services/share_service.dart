@@ -425,6 +425,77 @@ class ShareService {
         'isAndroid': !kIsWeb && Platform.isAndroid,
         'isIOS': !kIsWeb && Platform.isIOS,
       };
+
+  /// Построить сообщение для шаринга события
+  static String _buildEventShareMessage(Event event) {
+    final buffer = StringBuffer();
+    buffer.writeln('🎉 ${event.title}');
+    buffer.writeln();
+    buffer.writeln('📅 Дата: ${_formatDate(event.date)}');
+    buffer.writeln('📍 Место: ${event.location}');
+    buffer.writeln('💰 Цена: ${event.price} руб.');
+    buffer.writeln();
+    if (event.description.isNotEmpty) {
+      buffer.writeln('📝 Описание:');
+      buffer.writeln(event.description);
+      buffer.writeln();
+    }
+    buffer.writeln('Присоединяйтесь к событию!');
+    return buffer.toString();
+  }
+
+  /// Построить сообщение для шаринга профиля
+  static String _buildProfileShareMessage(AppUser user) {
+    final buffer = StringBuffer();
+    buffer.writeln('👤 ${user.name}');
+    buffer.writeln();
+    if (user.bio.isNotEmpty) {
+      buffer.writeln('📝 О себе:');
+      buffer.writeln(user.bio);
+      buffer.writeln();
+    }
+    if (user.specialization.isNotEmpty) {
+      buffer.writeln('🎯 Специализация: ${user.specialization}');
+    }
+    buffer.writeln();
+    buffer.writeln('Посмотрите профиль этого специалиста!');
+    return buffer.toString();
+  }
+
+  /// Построить сообщение для шаринга бронирования
+  static String _buildBookingShareMessage(Booking booking) {
+    final buffer = StringBuffer();
+    buffer.writeln('📋 Бронирование');
+    buffer.writeln();
+    buffer.writeln('🎉 Событие: ${booking.eventTitle}');
+    buffer.writeln('📅 Дата: ${_formatDate(booking.eventDate)}');
+    buffer.writeln('👤 Заказчик: ${booking.userName}');
+    buffer.writeln('💰 Стоимость: ${booking.totalPrice} руб.');
+    buffer.writeln();
+    if (booking.notes.isNotEmpty) {
+      buffer.writeln('📝 Примечания:');
+      buffer.writeln(booking.notes);
+      buffer.writeln();
+    }
+    buffer.writeln('Статус: ${_getBookingStatusText(booking.status)}');
+    return buffer.toString();
+  }
+
+  /// Получить текст статуса бронирования
+  static String _getBookingStatusText(BookingStatus status) {
+    switch (status) {
+      case BookingStatus.pending:
+        return 'Ожидает подтверждения';
+      case BookingStatus.confirmed:
+        return 'Подтверждено';
+      case BookingStatus.cancelled:
+        return 'Отменено';
+      case BookingStatus.completed:
+        return 'Завершено';
+      case BookingStatus.rejected:
+        return 'Отклонено';
+    }
+  }
 }
 
 /// Расширения для удобства использования
