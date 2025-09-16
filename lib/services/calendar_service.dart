@@ -618,7 +618,8 @@ class CalendarService {
   }
 
   /// Получить события на дату
-  Future<List<CalendarEvent>> getEventsForDate(String specialistId, DateTime date) async {
+  Future<List<CalendarEvent>> getEventsForDate(
+      String specialistId, DateTime date) async {
     try {
       final startOfDay = DateTime(date.year, date.month, date.day);
       final endOfDay = startOfDay.add(const Duration(days: 1));
@@ -626,19 +627,17 @@ class CalendarService {
       final events = await _firestore
           .collection('calendar_events')
           .where('specialistId', isEqualTo: specialistId)
-          .where('startTime', isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+          .where('startTime',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
           .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
           .get();
 
-      return events.docs
-          .map((doc) => CalendarEvent.fromDocument(doc))
-          .toList();
+      return events.docs.map((doc) => CalendarEvent.fromDocument(doc)).toList();
     } catch (e) {
       print('Ошибка получения событий на дату: $e');
       return [];
     }
   }
-
 
   /// Создать событие бронирования
   Future<String?> createBookingEvent(CalendarEvent event) async {

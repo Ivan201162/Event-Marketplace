@@ -8,6 +8,50 @@ class BookingService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final NotificationService _notificationService = NotificationService();
 
+  /// Отправить уведомление о изменении статуса заявки
+  Future<void> _sendStatusChangeNotification(
+      Booking booking, BookingStatus oldStatus) async {
+    if (booking.status == oldStatus) return;
+
+    final statusMessages = {
+      BookingStatus.pending: 'Ваша заявка ожидает подтверждения',
+      BookingStatus.confirmed: 'Ваша заявка подтверждена!',
+      BookingStatus.cancelled: 'Ваша заявка отменена',
+      BookingStatus.completed: 'Ваша заявка завершена',
+      BookingStatus.rejected: 'Ваша заявка отклонена',
+    };
+
+    final message = statusMessages[booking.status] ?? 'Статус заявки изменен';
+
+    // Уведомление заказчику
+    await _notificationService.sendNotification(
+      userId: booking.userId,
+      title: 'Статус заявки изменен',
+      body: message,
+      type: 'booking_status_changed',
+      data: {
+        'bookingId': booking.id,
+        'eventId': booking.eventId,
+        'status': booking.status.name,
+      },
+    );
+
+    // Уведомление специалисту (если есть)
+    if (booking.specialistId != null) {
+      await _notificationService.sendNotification(
+        userId: booking.specialistId!,
+        title: 'Статус заявки изменен',
+        body: 'Заявка "${booking.eventTitle}" - ${message.toLowerCase()}',
+        type: 'booking_status_changed',
+        data: {
+          'bookingId': booking.id,
+          'eventId': booking.eventId,
+          'status': booking.status.name,
+        },
+      );
+    }
+  }
+
   /// Создать новое бронирование
   Future<String> createBooking(Booking booking) async {
     try {
@@ -92,6 +136,8 @@ class BookingService {
         throw Exception('Бронирование не найдено');
       }
 
+      final oldStatus = booking.status;
+
       await _firestore.collection('bookings').doc(bookingId).update({
         'status': status.name,
         'updatedAt': FieldValue.serverTimestamp(),
@@ -113,6 +159,10 @@ class BookingService {
           userName: booking.userName,
         );
       }
+
+      // Отправляем уведомления о изменении статуса
+      final updatedBooking = booking.copyWith(status: status);
+      await _sendStatusChangeNotification(updatedBooking, oldStatus);
     } catch (e) {
       throw Exception('Ошибка обновления статуса бронирования: $e');
     }

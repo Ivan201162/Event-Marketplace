@@ -33,6 +33,13 @@ class Booking {
   final DateTime? endDate;
   final double? prepayment;
 
+  // Дополнительные поля для совместимости
+  final String? title;
+  final String? customerName;
+  final String? customerPhone;
+  final String? customerEmail;
+  final String? description;
+
   const Booking({
     required this.id,
     required this.eventId,
@@ -48,6 +55,11 @@ class Booking {
     required this.totalPrice,
     this.notes,
     required this.createdAt,
+    this.title,
+    this.customerName,
+    this.customerPhone,
+    this.customerEmail,
+    this.description,
     required this.updatedAt,
     this.organizerId,
     this.organizerName,
@@ -87,6 +99,11 @@ class Booking {
           ? (data['endDate'] as Timestamp).toDate()
           : null,
       prepayment: (data['prepayment'] as num?)?.toDouble(),
+      title: data['title'],
+      customerName: data['customerName'],
+      customerPhone: data['customerPhone'],
+      customerEmail: data['customerEmail'],
+      description: data['description'],
     );
   }
 
@@ -113,6 +130,11 @@ class Booking {
       'specialistId': specialistId,
       'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
       'prepayment': prepayment,
+      'title': title,
+      'customerName': customerName,
+      'customerPhone': customerPhone,
+      'customerEmail': customerEmail,
+      'description': description,
     };
   }
 
@@ -139,6 +161,11 @@ class Booking {
     String? specialistId,
     DateTime? endDate,
     double? prepayment,
+    String? title,
+    String? customerName,
+    String? customerPhone,
+    String? customerEmail,
+    String? description,
   }) {
     return Booking(
       id: id ?? this.id,
@@ -162,6 +189,11 @@ class Booking {
       specialistId: specialistId ?? this.specialistId,
       endDate: endDate ?? this.endDate,
       prepayment: prepayment ?? this.prepayment,
+      title: title ?? this.title,
+      customerName: customerName ?? this.customerName,
+      customerPhone: customerPhone ?? this.customerPhone,
+      customerEmail: customerEmail ?? this.customerEmail,
+      description: description ?? this.description,
     );
   }
 

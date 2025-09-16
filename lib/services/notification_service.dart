@@ -462,6 +462,29 @@ class NotificationService {
       debugPrint('Error sending payment notification: $e');
     }
   }
+
+  /// Универсальный метод для отправки уведомлений
+  Future<void> sendNotification({
+    required String userId,
+    required String title,
+    required String body,
+    String? type,
+    Map<String, dynamic>? data,
+  }) async {
+    try {
+      await _firestore.collection('notifications').add({
+        'userId': userId,
+        'title': title,
+        'body': body,
+        'type': type ?? 'general',
+        'data': data ?? {},
+        'createdAt': FieldValue.serverTimestamp(),
+        'isRead': false,
+      });
+    } catch (e) {
+      debugPrint('Error sending notification: $e');
+    }
+  }
 }
 
 /// Обработчик фоновых сообщений Firebase
@@ -469,4 +492,21 @@ class NotificationService {
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   debugPrint('Background message received: ${message.messageId}');
   // Здесь можно добавить обработку фоновых сообщений
+}
+
+/// Универсальный метод для отправки уведомлений
+Future<void> sendNotification({
+  required String userId,
+  required String title,
+  required String body,
+  String? type,
+  Map<String, dynamic>? data,
+}) async {
+  final notificationService = NotificationService();
+  await notificationService.sendBookingNotification(
+    userId: userId,
+    title: title,
+    body: body,
+    data: data,
+  );
 }

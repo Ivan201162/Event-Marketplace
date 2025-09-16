@@ -383,7 +383,6 @@ class AuthService {
     }
   }
 
-
   /// Выход из всех социальных сетей
   Future<void> signOutFromAll() async {
     try {
@@ -402,7 +401,6 @@ class AuthService {
       throw Exception('Ошибка выхода: $e');
     }
   }
-
 
   /// Обработка исключений Firebase Auth
   String _handleAuthException(FirebaseAuthException e) {

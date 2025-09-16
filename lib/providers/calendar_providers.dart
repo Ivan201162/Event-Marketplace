@@ -132,7 +132,6 @@ class CalendarStateNotifier extends Notifier<CalendarState> {
     );
   }
 
-
   /// Выбрать дату
   void selectDate(DateTime date) {
     state = state.copyWith(selectedDate: date);

@@ -414,8 +414,8 @@ class FirestoreService {
       await _notificationService.createPaymentNotification(
         userId: customerId,
         title: status == 'completed' ? 'Платеж завершен' : 'Ошибка платежа',
-        content: status == 'completed' 
-            ? 'Ваш платеж успешно обработан' 
+        content: status == 'completed'
+            ? 'Ваш платеж успешно обработан'
             : 'Произошла ошибка при обработке платежа',
         paymentId: paymentId,
         amount: 0, // TODO: Получить сумму из платежа
@@ -426,8 +426,8 @@ class FirestoreService {
       await _notificationService.createPaymentNotification(
         userId: specialistId,
         title: status == 'completed' ? 'Платеж получен' : 'Ошибка платежа',
-        content: status == 'completed' 
-            ? 'Платеж от клиента успешно обработан' 
+        content: status == 'completed'
+            ? 'Платеж от клиента успешно обработан'
             : 'Произошла ошибка при обработке платежа',
         paymentId: paymentId,
         amount: 0, // TODO: Получить сумму из платежа

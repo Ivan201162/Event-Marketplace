@@ -8,7 +8,7 @@ final userRoleProvider = NotifierProvider<UserRoleNotifier, UserRole>(() {
 class UserRoleNotifier extends Notifier<UserRole> {
   @override
   UserRole build() => UserRole.customer;
-  
+
   void setRole(UserRole role) {
     state = role;
   }

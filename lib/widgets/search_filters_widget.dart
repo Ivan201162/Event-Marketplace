@@ -713,4 +713,3 @@ extension SpecialistCategoryExtension on SpecialistCategory {
     }
   }
 }
-

@@ -42,14 +42,15 @@ final specialistsByCategoryProvider =
 });
 
 /// Провайдер фильтров поиска
-final specialistFiltersProvider = NotifierProvider<SpecialistFiltersNotifier, SpecialistFilters>(() {
+final specialistFiltersProvider =
+    NotifierProvider<SpecialistFiltersNotifier, SpecialistFilters>(() {
   return SpecialistFiltersNotifier();
 });
 
 class SpecialistFiltersNotifier extends Notifier<SpecialistFilters> {
   @override
   SpecialistFilters build() => const SpecialistFilters();
-  
+
   void updateFilters(SpecialistFilters filters) {
     state = filters;
   }

@@ -544,14 +544,15 @@ final displayNameProvider = NotifierProvider<DisplayNameNotifier, String>(() {
   return DisplayNameNotifier();
 });
 
-final selectedRoleProvider = NotifierProvider<SelectedRoleNotifier, UserRole>(() {
+final selectedRoleProvider =
+    NotifierProvider<SelectedRoleNotifier, UserRole>(() {
   return SelectedRoleNotifier();
 });
 
 class DisplayNameNotifier extends Notifier<String> {
   @override
   String build() => '';
-  
+
   void setDisplayName(String name) {
     state = name;
   }
@@ -560,7 +561,7 @@ class DisplayNameNotifier extends Notifier<String> {
 class SelectedRoleNotifier extends Notifier<UserRole> {
   @override
   UserRole build() => UserRole.customer;
-  
+
   void setRole(UserRole role) {
     state = role;
   }
