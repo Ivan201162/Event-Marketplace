@@ -38,6 +38,9 @@ class FeatureFlags {
   // Отслеживание годовщин
   static const bool anniversaryTrackingEnabled = false;
 
+  // Плейлисты диджеев
+  static const bool djPlaylistsEnabled = false;
+
   // Социальные функции
   static const bool socialLoginEnabled = true;
   static const bool vkLoginEnabled = false;
@@ -85,6 +88,8 @@ class FeatureFlags {
         return vkIntegrationEnabled;
       case 'anniversary_tracking':
         return anniversaryTrackingEnabled;
+      case 'dj_playlists':
+        return djPlaylistsEnabled;
       case 'social_login':
         return socialLoginEnabled;
       case 'vk_login':
@@ -120,6 +125,7 @@ class FeatureFlags {
     if (guestModeEnabled) features.add('guest_mode');
     if (vkIntegrationEnabled) features.add('vk_integration');
     if (anniversaryTrackingEnabled) features.add('anniversary_tracking');
+    if (djPlaylistsEnabled) features.add('dj_playlists');
     if (socialLoginEnabled) features.add('social_login');
     if (vkLoginEnabled) features.add('vk_login');
     if (debugMode) features.add('debug');
@@ -149,6 +155,7 @@ class FeatureFlags {
       'guest_mode': guestModeEnabled,
       'vk_integration': vkIntegrationEnabled,
       'anniversary_tracking': anniversaryTrackingEnabled,
+      'dj_playlists': djPlaylistsEnabled,
       'social_login': socialLoginEnabled,
       'vk_login': vkLoginEnabled,
       'debug': debugMode,
