@@ -29,6 +29,9 @@ class FeatureFlags {
   // Идеи и коллекции
   static const bool ideasEnabled = false;
 
+  // Гостевой режим
+  static const bool guestModeEnabled = false;
+
   // Социальные функции
   static const bool socialLoginEnabled = true;
   static const bool vkLoginEnabled = false;
@@ -70,6 +73,8 @@ class FeatureFlags {
         return subscriptionsEnabled;
       case 'ideas':
         return ideasEnabled;
+      case 'guest_mode':
+        return guestModeEnabled;
       case 'social_login':
         return socialLoginEnabled;
       case 'vk_login':
@@ -102,6 +107,7 @@ class FeatureFlags {
     if (shareEnabled) features.add('share');
     if (subscriptionsEnabled) features.add('subscriptions');
     if (ideasEnabled) features.add('ideas');
+    if (guestModeEnabled) features.add('guest_mode');
     if (socialLoginEnabled) features.add('social_login');
     if (vkLoginEnabled) features.add('vk_login');
     if (debugMode) features.add('debug');
@@ -128,6 +134,7 @@ class FeatureFlags {
       'share': shareEnabled,
       'subscriptions': subscriptionsEnabled,
       'ideas': ideasEnabled,
+      'guest_mode': guestModeEnabled,
       'social_login': socialLoginEnabled,
       'vk_login': vkLoginEnabled,
       'debug': debugMode,

@@ -1,587 +1,418 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:share_plus/share_plus.dart';
+import 'package:flutter/foundation.dart';
 import '../models/guest.dart';
+import '../models/event.dart';
+import '../core/feature_flags.dart';
 
-/// Сервис для работы с гостями
+/// Сервис для работы с гостями мероприятий
 class GuestService {
-  static final GuestService _instance = GuestService._internal();
-  factory GuestService() => _instance;
-  GuestService._internal();
-
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
-  final ImagePicker _imagePicker = ImagePicker();
-
-  /// Создать событие для гостей
-  Future<String?> createGuestEvent({
-    required String title,
-    required String description,
-    required DateTime startTime,
-    required DateTime endTime,
-    required String location,
-    required String organizerId,
-    required String organizerName,
-    required int maxGuests,
-    String? organizerPhotoUrl,
-    String? eventPhotoUrl,
-    bool isPublic = true,
-    bool allowGreetings = true,
-  }) async {
-    try {
-      final eventRef = _firestore.collection('guest_events').doc();
-
-      // Генерируем QR код и ссылку для приглашения
-      final qrCode = await _generateQRCode(eventRef.id);
-      final invitationLink =
-          'https://eventmarketplace.app/guest/${eventRef.id}';
-
-      final event = GuestEvent(
-        id: eventRef.id,
-        title: title,
-        description: description,
-        startTime: startTime,
-        endTime: endTime,
-        location: location,
-        organizerId: organizerId,
-        organizerName: organizerName,
-        organizerPhotoUrl: organizerPhotoUrl,
-        eventPhotoUrl: eventPhotoUrl,
-        maxGuests: maxGuests,
-        currentGuests: 0,
-        isPublic: isPublic,
-        allowGreetings: allowGreetings,
-        invitationLink: invitationLink,
-        qrCode: qrCode,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-
-      await eventRef.set(event.toMap());
-      return eventRef.id;
-    } catch (e) {
-      print('Ошибка создания события для гостей: $e');
-      return null;
-    }
-  }
-
-  /// Получить событие для гостей
-  Future<GuestEvent?> getGuestEvent(String eventId) async {
-    try {
-      final doc =
-          await _firestore.collection('guest_events').doc(eventId).get();
-      if (doc.exists) {
-        return GuestEvent.fromDocument(doc);
-      }
-      return null;
-    } catch (e) {
-      print('Ошибка получения события для гостей: $e');
-      return null;
-    }
-  }
-
-  /// Получить события организатора
-  Stream<List<GuestEvent>> getOrganizerEvents(String organizerId) {
-    return _firestore
-        .collection('guest_events')
-        .where('organizerId', isEqualTo: organizerId)
-        .orderBy('startTime', descending: false)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) => GuestEvent.fromDocument(doc)).toList();
-    });
-  }
-
-  /// Получить публичные события
-  Stream<List<GuestEvent>> getPublicEvents() {
-    return _firestore
-        .collection('guest_events')
-        .where('isPublic', isEqualTo: true)
-        .where('startTime', isGreaterThan: Timestamp.fromDate(DateTime.now()))
-        .orderBy('startTime', descending: false)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) => GuestEvent.fromDocument(doc)).toList();
-    });
-  }
-
-  /// Зарегистрировать гостя
-  Future<String?> registerGuest({
-    required String eventId,
-    required String guestName,
-    required String guestEmail,
-    String? guestPhone,
-    String? guestPhotoUrl,
-  }) async {
-    try {
-      // Проверяем, существует ли событие
-      final event = await getGuestEvent(eventId);
-      if (event == null) {
-        throw Exception('Событие не найдено');
-      }
-
-      // Проверяем, есть ли свободные места
-      if (!event.hasAvailableSpots) {
-        throw Exception('Нет свободных мест');
-      }
-
-      // Проверяем, не зарегистрирован ли уже гость с таким email
-      final existingGuest = await _getGuestByEmail(eventId, guestEmail);
-      if (existingGuest != null) {
-        throw Exception('Гость с таким email уже зарегистрирован');
-      }
-
-      final guestRef = _firestore.collection('guests').doc();
-
-      // Генерируем QR код для гостя
-      final qrCode = await _generateGuestQRCode(guestRef.id);
-      final invitationCode = _generateInvitationCode();
-
-      final guest = Guest(
-        id: guestRef.id,
-        eventId: eventId,
-        eventTitle: event.title,
-        guestName: guestName,
-        guestEmail: guestEmail,
-        guestPhone: guestPhone,
-        guestPhotoUrl: guestPhotoUrl,
-        status: GuestStatus.registered,
-        registeredAt: DateTime.now(),
-        qrCode: qrCode,
-        invitationCode: invitationCode,
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-
-      await guestRef.set(guest.toMap());
-
-      // Обновляем счетчик гостей в событии
-      await _updateEventGuestCount(eventId, 1);
-
-      return guestRef.id;
-    } catch (e) {
-      print('Ошибка регистрации гостя: $e');
-      return null;
-    }
-  }
 
   /// Получить гостей события
-  Stream<List<Guest>> getEventGuests(String eventId, GuestFilter filter) {
-    Query query =
-        _firestore.collection('guests').where('eventId', isEqualTo: eventId);
-
-    // Применяем фильтры
-    if (filter.statuses != null && filter.statuses!.isNotEmpty) {
-      query = query.where('status',
-          whereIn: filter.statuses!.map((s) => s.name).toList());
+  Stream<List<Guest>> getEventGuests(String eventId) {
+    if (!FeatureFlags.guestModeEnabled) {
+      return Stream.value([]);
     }
 
-    if (filter.startDate != null) {
-      query = query.where('registeredAt',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!));
-    }
-
-    if (filter.endDate != null) {
-      query = query.where('registeredAt',
-          isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
-    }
-
-    // Сортировка по времени регистрации
-    query = query.orderBy('registeredAt', descending: true);
-
-    return query.snapshots().map((snapshot) {
-      var guests = snapshot.docs.map((doc) => Guest.fromDocument(doc)).toList();
-
-      // Применяем фильтры, которые нельзя применить в Firestore
-      if (filter.searchQuery != null && filter.searchQuery!.isNotEmpty) {
-        final query = filter.searchQuery!.toLowerCase();
-        guests = guests
-            .where((guest) =>
-                guest.guestName.toLowerCase().contains(query) ||
-                guest.guestEmail.toLowerCase().contains(query))
-            .toList();
-      }
-
-      if (filter.hasGreetings != null) {
-        guests = guests
-            .where((guest) => filter.hasGreetings!
-                ? guest.greetings.isNotEmpty
-                : guest.greetings.isEmpty)
-            .toList();
-      }
-
-      if (filter.isCheckedIn != null) {
-        guests = guests
-            .where((guest) =>
-                filter.isCheckedIn! ? guest.isCheckedIn : !guest.isCheckedIn)
-            .toList();
-      }
-
-      if (filter.isCheckedOut != null) {
-        guests = guests
-            .where((guest) =>
-                filter.isCheckedOut! ? guest.isCheckedOut : !guest.isCheckedOut)
-            .toList();
-      }
-
-      return guests;
+    return _firestore
+        .collection('guests')
+        .where('eventId', isEqualTo: eventId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return Guest.fromMap({
+          'id': doc.id,
+          ...doc.data(),
+        });
+      }).toList();
     });
+  }
+
+  /// Добавить гостя к событию
+  Future<String> addGuest({
+    required String eventId,
+    required String name,
+    String? email,
+    String? phone,
+    String? avatar,
+  }) async {
+    if (!FeatureFlags.guestModeEnabled) {
+      throw Exception('Гостевой режим отключен');
+    }
+
+    try {
+      final guest = Guest(
+        id: '', // Будет установлен Firestore
+        eventId: eventId,
+        name: name,
+        email: email,
+        phone: phone,
+        avatar: avatar,
+        status: GuestStatus.invited,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      final docRef = await _firestore.collection('guests').add(guest.toMap());
+      return docRef.id;
+    } catch (e) {
+      debugPrint('Error adding guest: $e');
+      throw Exception('Ошибка добавления гостя: $e');
+    }
+  }
+
+  /// Обновить статус гостя
+  Future<void> updateGuestStatus(String guestId, GuestStatus status) async {
+    if (!FeatureFlags.guestModeEnabled) {
+      throw Exception('Гостевой режим отключен');
+    }
+
+    try {
+      await _firestore.collection('guests').doc(guestId).update({
+        'status': status.name,
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      debugPrint('Error updating guest status: $e');
+      throw Exception('Ошибка обновления статуса гостя: $e');
+    }
+  }
+
+  /// Удалить гостя
+  Future<void> removeGuest(String guestId) async {
+    if (!FeatureFlags.guestModeEnabled) {
+      throw Exception('Гостевой режим отключен');
+    }
+
+    try {
+      await _firestore.collection('guests').doc(guestId).delete();
+    } catch (e) {
+      debugPrint('Error removing guest: $e');
+      throw Exception('Ошибка удаления гостя: $e');
+    }
   }
 
   /// Получить гостя по ID
-  Future<Guest?> getGuest(String guestId) async {
+  Future<Guest?> getGuestById(String guestId) async {
+    if (!FeatureFlags.guestModeEnabled) {
+      return null;
+    }
+
     try {
       final doc = await _firestore.collection('guests').doc(guestId).get();
-      if (doc.exists) {
-        return Guest.fromDocument(doc);
+      if (!doc.exists) {
+        return null;
       }
-      return null;
+
+      return Guest.fromMap({
+        'id': doc.id,
+        ...doc.data()!,
+      });
     } catch (e) {
-      print('Ошибка получения гостя: $e');
+      debugPrint('Error getting guest: $e');
       return null;
     }
   }
 
-  /// Получить гостя по email
-  Future<Guest?> _getGuestByEmail(String eventId, String email) async {
+  /// Создать гостевой доступ к событию
+  Future<GuestEventAccess> createGuestAccess({
+    required String eventId,
+    int maxUses = 1,
+    Duration? expiresIn,
+  }) async {
+    if (!FeatureFlags.guestModeEnabled) {
+      throw Exception('Гостевой режим отключен');
+    }
+
     try {
-      final snapshot = await _firestore
-          .collection('guests')
-          .where('eventId', isEqualTo: eventId)
-          .where('guestEmail', isEqualTo: email)
+      final accessCode = _generateAccessCode();
+      final qrCode = _generateQRCode(eventId, accessCode);
+      final expiresAt =
+          DateTime.now().add(expiresIn ?? const Duration(days: 7));
+
+      final guestAccess = GuestEventAccess(
+        id: '', // Будет установлен Firestore
+        eventId: eventId,
+        accessCode: accessCode,
+        qrCode: qrCode,
+        expiresAt: expiresAt,
+        isActive: true,
+        maxUses: maxUses,
+        currentUses: 0,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      final docRef =
+          await _firestore.collection('guest_access').add(guestAccess.toMap());
+
+      return guestAccess.copyWith(id: docRef.id);
+    } catch (e) {
+      debugPrint('Error creating guest access: $e');
+      throw Exception('Ошибка создания гостевого доступа: $e');
+    }
+  }
+
+  /// Получить событие по коду доступа
+  Future<Event?> getEventByAccessCode(String accessCode) async {
+    if (!FeatureFlags.guestModeEnabled) {
+      return null;
+    }
+
+    try {
+      final accessQuery = await _firestore
+          .collection('guest_access')
+          .where('accessCode', isEqualTo: accessCode)
+          .where('isActive', isEqualTo: true)
           .limit(1)
           .get();
 
-      if (snapshot.docs.isNotEmpty) {
-        return Guest.fromDocument(snapshot.docs.first);
+      if (accessQuery.docs.isEmpty) {
+        return null;
       }
-      return null;
-    } catch (e) {
-      print('Ошибка получения гостя по email: $e');
-      return null;
-    }
-  }
 
-  /// Подтвердить участие гостя
-  Future<bool> confirmGuest(String guestId) async {
-    try {
-      await _firestore.collection('guests').doc(guestId).update({
-        'status': GuestStatus.confirmed.name,
-        'confirmedAt': Timestamp.fromDate(DateTime.now()),
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      });
-      return true;
-    } catch (e) {
-      print('Ошибка подтверждения гостя: $e');
-      return false;
-    }
-  }
-
-  /// Отменить участие гостя
-  Future<bool> cancelGuest(String guestId) async {
-    try {
-      await _firestore.collection('guests').doc(guestId).update({
-        'status': GuestStatus.cancelled.name,
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      });
-      return true;
-    } catch (e) {
-      print('Ошибка отмены участия гостя: $e');
-      return false;
-    }
-  }
-
-  /// Регистрация на мероприятие (check-in)
-  Future<bool> checkInGuest(String guestId) async {
-    try {
-      await _firestore.collection('guests').doc(guestId).update({
-        'status': GuestStatus.checkedIn.name,
-        'checkedInAt': Timestamp.fromDate(DateTime.now()),
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      });
-      return true;
-    } catch (e) {
-      print('Ошибка регистрации на мероприятие: $e');
-      return false;
-    }
-  }
-
-  /// Выход с мероприятия (check-out)
-  Future<bool> checkOutGuest(String guestId) async {
-    try {
-      await _firestore.collection('guests').doc(guestId).update({
-        'status': GuestStatus.checkedOut.name,
-        'checkedOutAt': Timestamp.fromDate(DateTime.now()),
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      });
-      return true;
-    } catch (e) {
-      print('Ошибка выхода с мероприятия: $e');
-      return false;
-    }
-  }
-
-  /// Добавить поздравление от гостя
-  Future<String?> addGuestGreeting({
-    required String guestId,
-    required String guestName,
-    required String message,
-    String? photoUrl,
-    String? videoUrl,
-    GreetingType type = GreetingType.text,
-    bool isPublic = true,
-  }) async {
-    try {
-      final greetingRef = _firestore.collection('guest_greetings').doc();
-
-      final greeting = GuestGreeting(
-        id: greetingRef.id,
-        guestId: guestId,
-        guestName: guestName,
-        message: message,
-        photoUrl: photoUrl,
-        videoUrl: videoUrl,
-        type: type,
-        isPublic: isPublic,
-        createdAt: DateTime.now(),
-      );
-
-      await greetingRef.set(greeting.toMap());
-
-      // Добавляем поздравление к гостю
-      await _firestore.collection('guests').doc(guestId).update({
-        'greetings': FieldValue.arrayUnion([greeting.toMap()]),
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      final access = GuestEventAccess.fromMap({
+        'id': accessQuery.docs.first.id,
+        ...accessQuery.docs.first.data(),
       });
 
-      return greetingRef.id;
+      // Проверяем срок действия
+      if (access.expiresAt.isBefore(DateTime.now())) {
+        return null;
+      }
+
+      // Проверяем количество использований
+      if (access.currentUses >= access.maxUses) {
+        return null;
+      }
+
+      // Получаем событие
+      final eventDoc =
+          await _firestore.collection('events').doc(access.eventId).get();
+
+      if (!eventDoc.exists) {
+        return null;
+      }
+
+      return Event.fromMap({
+        'id': eventDoc.id,
+        ...eventDoc.data()!,
+      });
     } catch (e) {
-      print('Ошибка добавления поздравления: $e');
+      debugPrint('Error getting event by access code: $e');
       return null;
     }
   }
 
-  /// Получить поздравления события
-  Stream<List<GuestGreeting>> getEventGreetings(String eventId) {
+  /// Использовать код доступа
+  Future<bool> useAccessCode(String accessCode) async {
+    if (!FeatureFlags.guestModeEnabled) {
+      return false;
+    }
+
+    try {
+      final accessQuery = await _firestore
+          .collection('guest_access')
+          .where('accessCode', isEqualTo: accessCode)
+          .where('isActive', isEqualTo: true)
+          .limit(1)
+          .get();
+
+      if (accessQuery.docs.isEmpty) {
+        return false;
+      }
+
+      final accessDoc = accessQuery.docs.first;
+      final access = GuestEventAccess.fromMap({
+        'id': accessDoc.id,
+        ...accessDoc.data(),
+      });
+
+      // Проверяем срок действия
+      if (access.expiresAt.isBefore(DateTime.now())) {
+        return false;
+      }
+
+      // Проверяем количество использований
+      if (access.currentUses >= access.maxUses) {
+        return false;
+      }
+
+      // Увеличиваем счетчик использований
+      await _firestore.collection('guest_access').doc(accessDoc.id).update({
+        'currentUses': FieldValue.increment(1),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      return true;
+    } catch (e) {
+      debugPrint('Error using access code: $e');
+      return false;
+    }
+  }
+
+  /// Получить приветствия гостей
+  Stream<List<GuestGreeting>> getGuestGreetings(String eventId) {
+    if (!FeatureFlags.guestModeEnabled) {
+      return Stream.value([]);
+    }
+
     return _firestore
         .collection('guest_greetings')
+        .where('eventId', isEqualTo: eventId)
         .where('isPublic', isEqualTo: true)
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => GuestGreeting.fromMap(doc.data()))
-          .toList();
+      return snapshot.docs.map((doc) {
+        return GuestGreeting.fromMap({
+          'id': doc.id,
+          ...doc.data(),
+        });
+      }).toList();
     });
   }
 
-  /// Загрузить фото для поздравления
-  Future<String?> uploadGreetingPhoto(XFile imageFile) async {
-    try {
-      final fileName =
-          'greeting_photo_${DateTime.now().millisecondsSinceEpoch}.jpg';
-      final ref = _storage.ref().child('guest_greetings/$fileName');
-
-      final uploadTask = ref.putFile(File(imageFile.path));
-      final snapshot = await uploadTask;
-      final downloadUrl = await snapshot.ref.getDownloadURL();
-
-      return downloadUrl;
-    } catch (e) {
-      print('Ошибка загрузки фото поздравления: $e');
-      return null;
+  /// Добавить приветствие от гостя
+  Future<String> addGuestGreeting({
+    required String eventId,
+    required String guestId,
+    required String guestName,
+    String? guestAvatar,
+    required GreetingType type,
+    String? text,
+    String? imageUrl,
+    String? videoUrl,
+    String? audioUrl,
+  }) async {
+    if (!FeatureFlags.guestModeEnabled) {
+      throw Exception('Гостевой режим отключен');
     }
-  }
 
-  /// Загрузить видео для поздравления
-  Future<String?> uploadGreetingVideo(XFile videoFile) async {
     try {
-      final fileName =
-          'greeting_video_${DateTime.now().millisecondsSinceEpoch}.mp4';
-      final ref = _storage.ref().child('guest_greetings/$fileName');
-
-      final uploadTask = ref.putFile(File(videoFile.path));
-      final snapshot = await uploadTask;
-      final downloadUrl = await snapshot.ref.getDownloadURL();
-
-      return downloadUrl;
-    } catch (e) {
-      print('Ошибка загрузки видео поздравления: $e');
-      return null;
-    }
-  }
-
-  /// Выбрать фото из галереи
-  Future<List<XFile>> pickPhotos({int maxImages = 5}) async {
-    try {
-      final List<XFile> images = await _imagePicker.pickMultiImage(
-        maxWidth: 1920,
-        maxHeight: 1080,
-        imageQuality: 85,
+      final greeting = GuestGreeting(
+        id: '', // Будет установлен Firestore
+        eventId: eventId,
+        guestId: guestId,
+        guestName: guestName,
+        guestAvatar: guestAvatar,
+        type: type,
+        text: text,
+        imageUrl: imageUrl,
+        videoUrl: videoUrl,
+        audioUrl: audioUrl,
+        createdAt: DateTime.now(),
+        likedBy: [],
+        likesCount: 0,
+        isPublic: true,
       );
-      return images.take(maxImages).toList();
+
+      final docRef =
+          await _firestore.collection('guest_greetings').add(greeting.toMap());
+
+      return docRef.id;
     } catch (e) {
-      print('Ошибка выбора фото: $e');
-      return [];
+      debugPrint('Error adding guest greeting: $e');
+      throw Exception('Ошибка добавления приветствия: $e');
     }
   }
 
-  /// Выбрать видео из галереи
-  Future<XFile?> pickVideo() async {
-    try {
-      return await _imagePicker.pickVideo(
-        source: ImageSource.gallery,
-        maxDuration: const Duration(minutes: 5),
-      );
-    } catch (e) {
-      print('Ошибка выбора видео: $e');
-      return null;
+  /// Лайкнуть приветствие
+  Future<void> toggleGreetingLike(String greetingId, String userId) async {
+    if (!FeatureFlags.guestModeEnabled) {
+      throw Exception('Гостевой режим отключен');
     }
-  }
 
-  /// Снять фото
-  Future<XFile?> takePhoto() async {
     try {
-      return await _imagePicker.pickImage(
-        source: ImageSource.camera,
-        maxWidth: 1920,
-        maxHeight: 1080,
-        imageQuality: 85,
-      );
-    } catch (e) {
-      print('Ошибка съемки фото: $e');
-      return null;
-    }
-  }
+      final greetingRef =
+          _firestore.collection('guest_greetings').doc(greetingId);
 
-  /// Снять видео
-  Future<XFile?> takeVideo() async {
-    try {
-      return await _imagePicker.pickVideo(
-        source: ImageSource.camera,
-        maxDuration: const Duration(minutes: 5),
-      );
-    } catch (e) {
-      print('Ошибка съемки видео: $e');
-      return null;
-    }
-  }
+      await _firestore.runTransaction((transaction) async {
+        final greetingDoc = await transaction.get(greetingRef);
+        if (!greetingDoc.exists) {
+          throw Exception('Приветствие не найдено');
+        }
 
-  /// Поделиться ссылкой на событие
-  Future<void> shareEventLink(String eventId) async {
-    try {
-      final event = await getGuestEvent(eventId);
-      if (event != null && event.invitationLink != null) {
-        await Share.share(
-          'Приглашаю вас на мероприятие "${event.title}"!\n\n'
-          'Дата: ${_formatDate(event.startTime)}\n'
-          'Место: ${event.location}\n\n'
-          'Регистрация: ${event.invitationLink}',
-          subject: 'Приглашение на мероприятие "${event.title}"',
-        );
-      }
+        final greeting = GuestGreeting.fromMap({
+          'id': greetingDoc.id,
+          ...greetingDoc.data()!,
+        });
+
+        final isLiked = greeting.likedBy.contains(userId);
+        final newLikedBy = List<String>.from(greeting.likedBy);
+
+        if (isLiked) {
+          newLikedBy.remove(userId);
+        } else {
+          newLikedBy.add(userId);
+        }
+
+        transaction.update(greetingRef, {
+          'likedBy': newLikedBy,
+          'likesCount': newLikedBy.length,
+        });
+      });
     } catch (e) {
-      print('Ошибка шаринга ссылки на событие: $e');
+      debugPrint('Error toggling greeting like: $e');
+      throw Exception('Ошибка изменения лайка: $e');
     }
   }
 
   /// Получить статистику гостей
-  Future<GuestStats> getGuestStats(String eventId) async {
+  Future<Map<String, int>> getGuestStats(String eventId) async {
+    if (!FeatureFlags.guestModeEnabled) {
+      return {};
+    }
+
     try {
-      final snapshot = await _firestore
+      final guestsQuery = await _firestore
           .collection('guests')
           .where('eventId', isEqualTo: eventId)
           .get();
 
-      final guests =
-          snapshot.docs.map((doc) => Guest.fromDocument(doc)).toList();
+      final stats = <String, int>{
+        'total': 0,
+        'invited': 0,
+        'confirmed': 0,
+        'declined': 0,
+        'attended': 0,
+        'noShow': 0,
+      };
 
-      return _calculateGuestStats(guests);
+      for (final doc in guestsQuery.docs) {
+        final guest = Guest.fromMap({
+          'id': doc.id,
+          ...doc.data(),
+        });
+
+        stats['total'] = (stats['total'] ?? 0) + 1;
+        stats[guest.status.name] = (stats[guest.status.name] ?? 0) + 1;
+      }
+
+      return stats;
     } catch (e) {
-      print('Ошибка получения статистики гостей: $e');
-      return GuestStats.empty();
+      debugPrint('Error getting guest stats: $e');
+      return {};
     }
   }
 
-  /// Обновить счетчик гостей в событии
-  Future<void> _updateEventGuestCount(String eventId, int delta) async {
-    try {
-      await _firestore.collection('guest_events').doc(eventId).update({
-        'currentGuests': FieldValue.increment(delta),
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      });
-    } catch (e) {
-      print('Ошибка обновления счетчика гостей: $e');
-    }
-  }
-
-  /// Генерировать QR код для события
-  Future<String> _generateQRCode(String eventId) async {
-    // TODO: Реализовать генерацию QR кода
-    return 'event_$eventId';
-  }
-
-  /// Генерировать QR код для гостя
-  Future<String> _generateGuestQRCode(String guestId) async {
-    // TODO: Реализовать генерацию QR кода для гостя
-    return 'guest_$guestId';
-  }
-
-  /// Генерировать код приглашения
-  String _generateInvitationCode() {
+  /// Генерировать код доступа
+  String _generateAccessCode() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     final random = DateTime.now().millisecondsSinceEpoch;
     final code = StringBuffer();
 
-    for (int i = 0; i < 6; i++) {
+    for (int i = 0; i < 8; i++) {
       code.write(chars[random % chars.length]);
     }
 
     return code.toString();
   }
 
-  /// Подсчитать статистику гостей
-  GuestStats _calculateGuestStats(List<Guest> guests) {
-    final totalGuests = guests.length;
-    final invitedGuests =
-        guests.where((g) => g.status == GuestStatus.invited).length;
-    final registeredGuests =
-        guests.where((g) => g.status == GuestStatus.registered).length;
-    final confirmedGuests =
-        guests.where((g) => g.status == GuestStatus.confirmed).length;
-    final checkedInGuests =
-        guests.where((g) => g.status == GuestStatus.checkedIn).length;
-    final checkedOutGuests =
-        guests.where((g) => g.status == GuestStatus.checkedOut).length;
-    final cancelledGuests =
-        guests.where((g) => g.status == GuestStatus.cancelled).length;
-
-    final totalGreetings =
-        guests.fold<int>(0, (sum, guest) => sum + guest.greetingsCount);
-
-    final attendanceRate =
-        totalGuests > 0 ? checkedInGuests / totalGuests : 0.0;
-    final confirmationRate =
-        totalGuests > 0 ? confirmedGuests / totalGuests : 0.0;
-
-    return GuestStats(
-      totalGuests: totalGuests,
-      invitedGuests: invitedGuests,
-      registeredGuests: registeredGuests,
-      confirmedGuests: confirmedGuests,
-      checkedInGuests: checkedInGuests,
-      checkedOutGuests: checkedOutGuests,
-      cancelledGuests: cancelledGuests,
-      totalGreetings: totalGreetings,
-      attendanceRate: attendanceRate,
-      confirmationRate: confirmationRate,
-    );
-  }
-
-  String _formatDate(DateTime date) {
-    return '${date.day}.${date.month}.${date.year}';
+  /// Генерировать QR код (заглушка)
+  String _generateQRCode(String eventId, String accessCode) {
+    // В реальном приложении здесь будет генерация QR кода
+    return 'QR_${eventId}_$accessCode';
   }
 }
