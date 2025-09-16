@@ -1,12 +1,126 @@
 rules_version = '2';
 
-// Craft rules based on data in your Firestore database
-// allow write: if firestore.get(
-//    /databases/(default)/documents/users/$(request.auth.uid)).data.isAdmin;
+// Правила безопасности для Firebase Storage
 service firebase.storage {
   match /b/{bucket}/o {
+    
+    // Публичные файлы (только чтение)
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if false;
+    }
+    
+    // Загрузки пользователей
+    match /uploads/{allPaths=**} {
+      // Чтение разрешено всем авторизованным пользователям
+      allow read: if request.auth != null;
+      
+      // Запись разрешена только авторизованным пользователям
+      allow write: if request.auth != null
+        && isValidFileType(resource.contentType)
+        && isValidFileSize(resource.size)
+        && isValidPath(resource.name);
+    }
+    
+    // Профильные изображения пользователей
+    match /profiles/{userId}/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null 
+        && request.auth.uid == userId
+        && isValidImageType(resource.contentType)
+        && resource.size <= 10 * 1024 * 1024; // 10 MB
+    }
+    
+    // Изображения событий
+    match /events/{eventId}/{allPaths=**} {
+      allow read: if request.auth != null;
+      allow write: if request.auth != null
+        && isValidImageType(resource.contentType)
+        && resource.size <= 10 * 1024 * 1024; // 10 MB
+        && isEventOwner(eventId);
+    }
+    
+    // Вложения чатов
+    match /chat/{chatId}/{allPaths=**} {
+      allow read: if request.auth != null
+        && isChatParticipant(chatId);
+      allow write: if request.auth != null
+        && isChatParticipant(chatId)
+        && isValidFileType(resource.contentType)
+        && resource.size <= 25 * 1024 * 1024; // 25 MB
+    }
+    
+    // Временные файлы (автоудаление через 24 часа)
+    match /temp/{userId}/{allPaths=**} {
+      allow read, write: if request.auth != null 
+        && request.auth.uid == userId
+        && isValidFileType(resource.contentType)
+        && resource.size <= 50 * 1024 * 1024; // 50 MB
+    }
+    
+    // Админские файлы
+    match /admin/{allPaths=**} {
+      allow read, write: if request.auth != null
+        && isAdmin();
+    }
+    
+    // Все остальные файлы запрещены
     match /{allPaths=**} {
       allow read, write: if false;
     }
+  }
+  
+  // Функции валидации
+  
+  // Проверка типа файла
+  function isValidFileType(contentType) {
+    return contentType.matches('image/.*') ||
+           contentType.matches('video/.*') ||
+           contentType.matches('audio/.*') ||
+           contentType.matches('application/pdf') ||
+           contentType.matches('application/msword') ||
+           contentType.matches('application/vnd.openxmlformats-officedocument.*') ||
+           contentType.matches('text/.*') ||
+           contentType.matches('application/zip') ||
+           contentType.matches('application/x-rar-compressed') ||
+           contentType.matches('application/x-7z-compressed');
+  }
+  
+  // Проверка типа изображения
+  function isValidImageType(contentType) {
+    return contentType.matches('image/jpeg') ||
+           contentType.matches('image/png') ||
+           contentType.matches('image/gif') ||
+           contentType.matches('image/webp') ||
+           contentType.matches('image/bmp') ||
+           contentType.matches('image/svg\\+xml');
+  }
+  
+  // Проверка размера файла (максимум 100 MB)
+  function isValidFileSize(size) {
+    return size <= 100 * 1024 * 1024;
+  }
+  
+  // Проверка пути файла (запрет на опасные имена)
+  function isValidPath(fileName) {
+    return !fileName.matches('.*\\.(exe|bat|cmd|com|pif|scr|vbs|js|jar|sh|ps1).*') &&
+           !fileName.matches('.*\\.(php|asp|jsp|py|rb|pl).*') &&
+           fileName.size() <= 255;
+  }
+  
+  // Проверка прав администратора
+  function isAdmin() {
+    return firestore.get(/databases/(default)/documents/users/$(request.auth.uid)).data.role == 'admin';
+  }
+  
+  // Проверка владельца события
+  function isEventOwner(eventId) {
+    return firestore.get(/databases/(default)/documents/events/$(eventId)).data.organizerId == request.auth.uid;
+  }
+  
+  // Проверка участника чата
+  function isChatParticipant(chatId) {
+    let chatData = firestore.get(/databases/(default)/documents/chats/$(chatId)).data;
+    return chatData.participants[request.auth.uid] != null;
   }
 }

@@ -1,63 +1,31 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/analytics.dart';
-import '../services/analytics_service.dart';
+import '../analytics/analytics_service.dart';
+import '../core/feature_flags.dart';
 
+/// Провайдер сервиса аналитики
 final analyticsServiceProvider = Provider<AnalyticsService>((ref) {
   return AnalyticsService();
 });
 
-final userAnalyticsProvider =
-    StreamProvider.family<List<Analytics>, (String, AnalyticsFilter)>(
-        (ref, params) {
-  final (userId, filter) = params;
-  final service = ref.read(analyticsServiceProvider);
-  return service.getUserAnalytics(userId, filter);
+/// Провайдер для проверки доступности аналитики
+final analyticsAvailableProvider = Provider<bool>((ref) {
+  return FeatureFlags.analyticsEnabled;
 });
 
-final incomeExpenseStatsProvider =
-    FutureProvider.family<IncomeExpenseStats, (String, AnalyticsFilter)>(
-        (ref, params) {
-  final (userId, filter) = params;
-  final service = ref.read(analyticsServiceProvider);
-  return service.getIncomeExpenseStats(userId, filter);
+/// Провайдер для инициализации аналитики
+final analyticsInitializationProvider = FutureProvider<void>((ref) async {
+  final analyticsService = ref.read(analyticsServiceProvider);
+  await analyticsService.initialize();
 });
 
-final userBudgetGoalsProvider =
-    StreamProvider.family<List<BudgetGoal>, String>((ref, userId) {
-  final service = ref.read(analyticsServiceProvider);
-  return service.getUserBudgetGoals(userId);
+/// Провайдер текущего ID пользователя в аналитике
+final analyticsUserIdProvider = Provider<String?>((ref) {
+  final analyticsService = ref.read(analyticsServiceProvider);
+  return analyticsService.currentUserId;
 });
 
-final analyticsFilterProvider = StateProvider<AnalyticsFilter>((ref) {
-  return const AnalyticsFilter();
-});
-
-final incomeChartDataProvider =
-    FutureProvider.family<List<ChartData>, (String, int)>((ref, params) {
-  final (userId, months) = params;
-  final service = ref.read(analyticsServiceProvider);
-  return service.getIncomeChartData(userId, months);
-});
-
-final expenseChartDataProvider =
-    FutureProvider.family<List<ChartData>, (String, int)>((ref, params) {
-  final (userId, months) = params;
-  final service = ref.read(analyticsServiceProvider);
-  return service.getExpenseChartData(userId, months);
-});
-
-final incomeCategoryChartDataProvider =
-    FutureProvider.family<List<ChartData>, (String, AnalyticsFilter)>(
-        (ref, params) {
-  final (userId, filter) = params;
-  final service = ref.read(analyticsServiceProvider);
-  return service.getIncomeCategoryChartData(userId, filter);
-});
-
-final expenseCategoryChartDataProvider =
-    FutureProvider.family<List<ChartData>, (String, AnalyticsFilter)>(
-        (ref, params) {
-  final (userId, filter) = params;
-  final service = ref.read(analyticsServiceProvider);
-  return service.getExpenseCategoryChartData(userId, filter);
+/// Провайдер текущего ID сессии в аналитике
+final analyticsSessionIdProvider = Provider<String?>((ref) {
+  final analyticsService = ref.read(analyticsServiceProvider);
+  return analyticsService.currentSessionId;
 });
