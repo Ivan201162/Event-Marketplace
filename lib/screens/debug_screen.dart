@@ -12,11 +12,12 @@ class DebugScreen extends ConsumerStatefulWidget {
   ConsumerState<DebugScreen> createState() => _DebugScreenState();
 }
 
-class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderStateMixin {
+class _DebugScreenState extends ConsumerState<DebugScreen>
+    with TickerProviderStateMixin {
   late TabController _tabController;
   final MonitoringService _monitoring = MonitoringService();
   final LoggerService _logger = LoggerService();
-  
+
   LogLevel _selectedLogLevel = LogLevel.info;
   bool _isMonitoring = false;
 
@@ -52,7 +53,9 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
           IconButton(
             icon: Icon(_isMonitoring ? Icons.stop : Icons.play_arrow),
             onPressed: _toggleMonitoring,
-            tooltip: _isMonitoring ? 'Остановить мониторинг' : 'Запустить мониторинг',
+            tooltip: _isMonitoring
+                ? 'Остановить мониторинг'
+                : 'Запустить мониторинг',
           ),
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -133,7 +136,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
 
   Widget _buildPerformanceStats() {
     final stats = _monitoring.getPerformanceStats();
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -149,11 +152,11 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
               const Text('Нет данных о производительности')
             else
               ...stats.entries.map((entry) => _buildStatItem(
-                entry.key,
-                '${entry.value['count']} операций',
-                'Среднее время: ${entry.value['averageTime']?.toStringAsFixed(1)}ms',
-                Icons.speed,
-              )),
+                    entry.key,
+                    '${entry.value['count']} операций',
+                    'Среднее время: ${entry.value['averageTime']?.toStringAsFixed(1)}ms',
+                    Icons.speed,
+                  )),
           ],
         ),
       ),
@@ -162,7 +165,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
 
   Widget _buildErrorStats() {
     final stats = _monitoring.getErrorStats();
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -182,15 +185,15 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
               color: Colors.red,
             ),
             if (stats['errorTypes'] != null)
-              ...(stats['errorTypes'] as Map<String, int>).entries.map((entry) => 
-                _buildStatItem(
-                  entry.key,
-                  '${entry.value}',
-                  '',
-                  Icons.warning,
-                  color: Colors.orange,
-                )
-              ),
+              ...(stats['errorTypes'] as Map<String, int>)
+                  .entries
+                  .map((entry) => _buildStatItem(
+                        entry.key,
+                        '${entry.value}',
+                        '',
+                        Icons.warning,
+                        color: Colors.orange,
+                      )),
           ],
         ),
       ),
@@ -199,7 +202,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
 
   Widget _buildMemoryStats() {
     final stats = _monitoring.getMemoryStats();
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -242,7 +245,9 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
     );
   }
 
-  Widget _buildStatItem(String title, String value, String subtitle, IconData icon, {Color? color}) {
+  Widget _buildStatItem(
+      String title, String value, String subtitle, IconData icon,
+      {Color? color}) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Row(
@@ -256,22 +261,25 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
                 Text(
                   title,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+                        fontWeight: FontWeight.w500,
+                      ),
                 ),
                 Text(
                   value,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    color: color ?? Theme.of(context).colorScheme.primary,
-                    fontWeight: FontWeight.bold,
-                  ),
+                        color: color ?? Theme.of(context).colorScheme.primary,
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 if (subtitle.isNotEmpty)
                   Text(
                     subtitle,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                    ),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.7),
+                        ),
                   ),
               ],
             ),
@@ -344,7 +352,8 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
                     _logger.setMinLevel(newValue);
                   }
                 },
-                items: LogLevel.values.map<DropdownMenuItem<LogLevel>>((LogLevel level) {
+                items: LogLevel.values
+                    .map<DropdownMenuItem<LogLevel>>((LogLevel level) {
                   return DropdownMenuItem<LogLevel>(
                     value: level,
                     child: Text(level.name.toUpperCase()),
@@ -401,7 +410,8 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
                   const SizedBox(height: 16),
                   SwitchListTile(
                     title: const Text('Автоматический мониторинг'),
-                    subtitle: const Text('Запускать мониторинг при старте приложения'),
+                    subtitle: const Text(
+                        'Запускать мониторинг при старте приложения'),
                     value: _isMonitoring,
                     onChanged: (value) => _toggleMonitoring(),
                   ),
@@ -415,7 +425,8 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
                   ),
                   SwitchListTile(
                     title: const Text('Мониторинг производительности'),
-                    subtitle: const Text('Отслеживать время выполнения операций'),
+                    subtitle:
+                        const Text('Отслеживать время выполнения операций'),
                     value: true,
                     onChanged: (value) {
                       // TODO: Implement performance monitoring toggle
@@ -447,7 +458,8 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
                   ),
                   SwitchListTile(
                     title: const Text('Логирование в консоль'),
-                    subtitle: const Text('Выводить логи в консоль разработчика'),
+                    subtitle:
+                        const Text('Выводить логи в консоль разработчика'),
                     value: true,
                     onChanged: (value) {
                       // TODO: Implement console logging toggle
@@ -483,7 +495,8 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
                   _buildInfoItem('Сборка', '1'),
                   _buildInfoItem('Платформа', 'Flutter'),
                   _buildInfoItem('Режим отладки', kDebugMode ? 'Да' : 'Нет'),
-                  _buildInfoItem('Профиль', kProfileMode ? 'Профилирование' : 'Релиз'),
+                  _buildInfoItem(
+                      'Профиль', kProfileMode ? 'Профилирование' : 'Релиз'),
                 ],
               ),
             ),
@@ -500,10 +513,14 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 16),
-                  _buildInfoItem('Статус', _isMonitoring ? 'Активен' : 'Остановлен'),
-                  _buildInfoItem('Метрики производительности', '${_monitoring.getPerformanceMetrics().length}'),
-                  _buildInfoItem('Метрики ошибок', '${_monitoring.getErrorMetrics().length}'),
-                  _buildInfoItem('Метрики памяти', '${_monitoring.getMemoryMetrics().length}'),
+                  _buildInfoItem(
+                      'Статус', _isMonitoring ? 'Активен' : 'Остановлен'),
+                  _buildInfoItem('Метрики производительности',
+                      '${_monitoring.getPerformanceMetrics().length}'),
+                  _buildInfoItem('Метрики ошибок',
+                      '${_monitoring.getErrorMetrics().length}'),
+                  _buildInfoItem('Метрики памяти',
+                      '${_monitoring.getMemoryMetrics().length}'),
                 ],
               ),
             ),
@@ -524,8 +541,8 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
             child: Text(
               label,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+                    fontWeight: FontWeight.w500,
+                  ),
             ),
           ),
           Expanded(
@@ -543,7 +560,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
     setState(() {
       _isMonitoring = !_isMonitoring;
     });
-    
+
     if (_isMonitoring) {
       _monitoring.startMonitoring();
     } else {
@@ -566,7 +583,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
   void _exportMetrics() {
     final metrics = _monitoring.exportMetrics();
     final jsonString = metrics.toString();
-    
+
     Clipboard.setData(ClipboardData(text: jsonString));
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Метрики скопированы в буфер обмена')),
@@ -575,14 +592,14 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
 
   void _testPerformance() {
     _monitoring.startOperation('test_operation');
-    
+
     // Симулируем работу
     Future.delayed(Duration(milliseconds: 500), () {
       _monitoring.endOperation('test_operation', metadata: {
         'test': true,
         'duration': 500,
       });
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Тест производительности выполнен')),
       );
@@ -595,7 +612,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
       throw Exception('Тестовая ошибка для мониторинга');
     } catch (e, stack) {
       _monitoring._recordError('Test Error', e, stack);
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Тестовая ошибка записана')),
       );
@@ -621,7 +638,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
         _logger.fatal('Тестовое fatal сообщение', tag: 'TEST');
         break;
     }
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('${level.name} сообщение отправлено')),
     );
@@ -642,8 +659,8 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
                   Text(
                     'Тестирование интеграции',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                   const SizedBox(height: 16),
                   const Text(
@@ -673,4 +690,3 @@ class _DebugScreenState extends ConsumerState<DebugScreen> with TickerProviderSt
     );
   }
 }
-

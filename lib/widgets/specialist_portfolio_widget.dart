@@ -23,8 +23,8 @@ class SpecialistPortfolioWidget extends StatelessWidget {
               Text(
                 'Портфолио',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               const Spacer(),
               if (specialist.portfolio.isNotEmpty)
@@ -34,9 +34,9 @@ class SpecialistPortfolioWidget extends StatelessWidget {
                 ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Портфолио
           if (specialist.portfolio.isEmpty)
             _buildEmptyPortfolio()
@@ -92,7 +92,8 @@ class SpecialistPortfolioWidget extends StatelessWidget {
         mainAxisSpacing: 12,
         childAspectRatio: 1.2,
       ),
-      itemCount: specialist.portfolio.length > 6 ? 6 : specialist.portfolio.length,
+      itemCount:
+          specialist.portfolio.length > 6 ? 6 : specialist.portfolio.length,
       itemBuilder: (context, index) {
         final portfolioItem = specialist.portfolio[index];
         return _buildPortfolioItem(portfolioItem, index);
@@ -138,7 +139,7 @@ class SpecialistPortfolioWidget extends StatelessWidget {
                     ? Icon(Icons.image, size: 48, color: Colors.grey[400])
                     : null,
               ),
-              
+
               // Оверлей
               Container(
                 decoration: BoxDecoration(
@@ -152,7 +153,7 @@ class SpecialistPortfolioWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               // Информация
               Positioned(
                 bottom: 8,
@@ -179,7 +180,7 @@ class SpecialistPortfolioWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               // Иконка увеличения
               Positioned(
                 top: 8,
@@ -245,7 +246,7 @@ class SpecialistPortfolioWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               // Сетка портфолио
               Expanded(
                 child: GridView.builder(
@@ -327,7 +328,7 @@ class PortfolioItemWidget extends StatelessWidget {
                       : null,
                 ),
               ),
-              
+
               // Информация
               Container(
                 padding: const EdgeInsets.all(12),

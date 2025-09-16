@@ -44,31 +44,36 @@ class ReviewCard extends StatelessWidget {
                   _buildRatingStars(review.rating),
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Комментарий
               if (review.hasComment) ...[
                 Text(
                   review.comment!,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.8),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.8),
                   ),
                 ),
                 const SizedBox(height: 12),
               ],
-              
+
               // Теги
               if (review.tags.isNotEmpty) ...[
                 Wrap(
                   spacing: 8,
                   runSpacing: 4,
-                  children: review.tags.map((tag) => _buildTagChip(context, tag)).toList(),
+                  children: review.tags
+                      .map((tag) => _buildTagChip(context, tag))
+                      .toList(),
                 ),
                 const SizedBox(height: 12),
               ],
-              
+
               // Информация о дате и статусе
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -77,7 +82,10 @@ class ReviewCard extends StatelessWidget {
                     _formatDate(review.createdAt),
                     style: TextStyle(
                       fontSize: 12,
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6),
                     ),
                   ),
                   Row(
@@ -186,11 +194,11 @@ class ReviewStatisticsWidget extends StatelessWidget {
             Text(
               'Статистика отзывов',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
-            
+
             // Общий рейтинг
             Row(
               children: [
@@ -201,26 +209,28 @@ class ReviewStatisticsWidget extends StatelessWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Популярные теги
             if (statistics.commonTags.isNotEmpty) ...[
               Text(
                 'Популярные теги',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                      fontWeight: FontWeight.w600,
+                    ),
               ),
               const SizedBox(height: 8),
               Wrap(
                 spacing: 8,
                 runSpacing: 4,
-                children: statistics.commonTags.map((tag) => _buildTagChip(context, tag)).toList(),
+                children: statistics.commonTags
+                    .map((tag) => _buildTagChip(context, tag))
+                    .toList(),
               ),
               const SizedBox(height: 16),
             ],
-            
+
             // Дополнительная информация
             _buildAdditionalInfo(context),
           ],
@@ -269,7 +279,7 @@ class ReviewStatisticsWidget extends StatelessWidget {
         final rating = 5 - index;
         final percentage = statistics.getRatingPercentage(rating);
         final count = statistics.ratingDistribution[rating] ?? 0;
-        
+
         return Padding(
           padding: const EdgeInsets.symmetric(vertical: 2),
           child: Row(
@@ -436,15 +446,15 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
             Text(
               'Оставить отзыв',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
-            
+
             // Рейтинг
             _buildRatingSection(context, formState),
             const SizedBox(height: 16),
-            
+
             // Заголовок
             TextField(
               decoration: const InputDecoration(
@@ -457,7 +467,7 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
               },
             ),
             const SizedBox(height: 16),
-            
+
             // Комментарий
             TextField(
               decoration: const InputDecoration(
@@ -471,15 +481,15 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
               },
             ),
             const SizedBox(height: 16),
-            
+
             // Теги
             _buildTagsSection(context, formState),
             const SizedBox(height: 16),
-            
+
             // Настройки
             _buildSettingsSection(context, formState),
             const SizedBox(height: 16),
-            
+
             // Ошибка
             if (formState.errorMessage != null) ...[
               Container(
@@ -504,12 +514,13 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
               ),
               const SizedBox(height: 16),
             ],
-            
+
             // Кнопка отправки
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: formState.isSubmitting || !ref.read(reviewFormProvider.notifier).isValid
+                onPressed: formState.isSubmitting ||
+                        !ref.read(reviewFormProvider.notifier).isValid
                     ? null
                     : () => _submitReview(),
                 child: formState.isSubmitting
@@ -567,7 +578,7 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
   /// Построить секцию тегов
   Widget _buildTagsSection(BuildContext context, ReviewFormState formState) {
     final availableTags = ReviewTags.getTagsByRating(formState.rating);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -599,7 +610,8 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
   }
 
   /// Построить секцию настроек
-  Widget _buildSettingsSection(BuildContext context, ReviewFormState formState) {
+  Widget _buildSettingsSection(
+      BuildContext context, ReviewFormState formState) {
     return Column(
       children: [
         SwitchListTile(
@@ -620,18 +632,18 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
 
     try {
       await ref.read(reviewStateProvider.notifier).createReview(
-        bookingId: widget.bookingId,
-        customerId: widget.customerId,
-        specialistId: widget.specialistId,
-        rating: ref.read(reviewFormProvider).rating,
-        title: ref.read(reviewFormProvider).title.isEmpty 
-            ? null 
-            : ref.read(reviewFormProvider).title,
-        comment: ref.read(reviewFormProvider).comment.isEmpty 
-            ? null 
-            : ref.read(reviewFormProvider).comment,
-        tags: ref.read(reviewFormProvider).selectedTags,
-      );
+            bookingId: widget.bookingId,
+            customerId: widget.customerId,
+            specialistId: widget.specialistId,
+            rating: ref.read(reviewFormProvider).rating,
+            title: ref.read(reviewFormProvider).title.isEmpty
+                ? null
+                : ref.read(reviewFormProvider).title,
+            comment: ref.read(reviewFormProvider).comment.isEmpty
+                ? null
+                : ref.read(reviewFormProvider).comment,
+            tags: ref.read(reviewFormProvider).selectedTags,
+          );
 
       ref.read(reviewFormProvider.notifier).finishSubmitting();
       widget.onSubmit?.call();
@@ -672,7 +684,8 @@ class ReviewListWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final reviewsAsync = ref.watch(specialistReviewsProvider(SpecialistReviewsParams(
+    final reviewsAsync =
+        ref.watch(specialistReviewsProvider(SpecialistReviewsParams(
       specialistId: specialistId,
       onlyPublic: !showAll,
     )));

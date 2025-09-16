@@ -38,7 +38,8 @@ class ChatService {
   }
 
   /// Получить чат между пользователями
-  Future<Chat?> getChatBetweenUsers(String customerId, String specialistId) async {
+  Future<Chat?> getChatBetweenUsers(
+      String customerId, String specialistId) async {
     try {
       final querySnapshot = await _db
           .collection('chats')
@@ -72,18 +73,18 @@ class ChatService {
   }
 
   /// Поток чатов для пользователя
-  Stream<List<Chat>> getChatsForUserStream(String userId, {bool isSpecialist = false}) {
+  Stream<List<Chat>> getChatsForUserStream(String userId,
+      {bool isSpecialist = false}) {
     final field = isSpecialist ? 'specialistId' : 'customerId';
-    
+
     return _db
         .collection('chats')
         .where(field, isEqualTo: userId)
         .where('isActive', isEqualTo: true)
         .orderBy('updatedAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Chat.fromDocument(doc))
-            .toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Chat.fromDocument(doc)).toList());
   }
 
   /// Отправить сообщение
@@ -126,7 +127,8 @@ class ChatService {
   }
 
   /// Получить сообщения чата
-  Future<List<ChatMessage>> getChatMessages(String chatId, {int limit = 50}) async {
+  Future<List<ChatMessage>> getChatMessages(String chatId,
+      {int limit = 50}) async {
     try {
       final querySnapshot = await _db
           .collection('messages')
@@ -147,7 +149,8 @@ class ChatService {
   }
 
   /// Поток сообщений чата
-  Stream<List<ChatMessage>> getChatMessagesStream(String chatId, {int limit = 50}) {
+  Stream<List<ChatMessage>> getChatMessagesStream(String chatId,
+      {int limit = 50}) {
     return _db
         .collection('messages')
         .where('chatId', isEqualTo: chatId)
@@ -165,7 +168,7 @@ class ChatService {
   Future<void> markMessagesAsRead(String chatId, String userId) async {
     try {
       final batch = _db.batch();
-      
+
       // Получаем непрочитанные сообщения
       final querySnapshot = await _db
           .collection('messages')
@@ -298,7 +301,8 @@ class ChatService {
   }
 
   /// Обновить последнее сообщение в чате
-  Future<void> _updateChatLastMessage(String chatId, ChatMessage message) async {
+  Future<void> _updateChatLastMessage(
+      String chatId, ChatMessage message) async {
     try {
       await _db.collection('chats').doc(chatId).update({
         'lastMessage': message.toMap(),
@@ -310,13 +314,15 @@ class ChatService {
   }
 
   /// Обновить счетчик непрочитанных сообщений
-  Future<void> _updateChatUnreadCount(String chatId, String userId, int count) async {
+  Future<void> _updateChatUnreadCount(
+      String chatId, String userId, int count) async {
     try {
       final chat = await getChat(chatId);
       if (chat == null) return;
 
       final isSpecialist = chat.specialistId == userId;
-      final field = isSpecialist ? 'specialistUnreadCount' : 'customerUnreadCount';
+      final field =
+          isSpecialist ? 'specialistUnreadCount' : 'customerUnreadCount';
 
       await _db.collection('chats').doc(chatId).update({
         field: count,

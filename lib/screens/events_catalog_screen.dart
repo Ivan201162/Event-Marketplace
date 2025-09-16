@@ -11,7 +11,8 @@ class EventsCatalogScreen extends ConsumerStatefulWidget {
   const EventsCatalogScreen({super.key});
 
   @override
-  ConsumerState<EventsCatalogScreen> createState() => _EventsCatalogScreenState();
+  ConsumerState<EventsCatalogScreen> createState() =>
+      _EventsCatalogScreenState();
 }
 
 class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
@@ -36,7 +37,8 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: Icon(_showFilters ? Icons.filter_list_off : Icons.filter_list),
+            icon:
+                Icon(_showFilters ? Icons.filter_list_off : Icons.filter_list),
             onPressed: () {
               setState(() {
                 _showFilters = !_showFilters;
@@ -49,10 +51,10 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
         children: [
           // Поисковая строка
           _buildSearchBar(),
-          
+
           // Фильтры
           if (_showFilters) _buildFiltersSection(),
-          
+
           // Результаты поиска
           Expanded(
             child: _buildEventsList(filteredEvents),
@@ -128,17 +130,17 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
             ],
           ),
           const SizedBox(height: 16),
-          
+
           // Фильтр по категории
           _buildCategoryFilter(),
-          
+
           const SizedBox(height: 16),
-          
+
           // Фильтр по цене
           _buildPriceFilter(),
-          
+
           const SizedBox(height: 16),
-          
+
           // Фильтр по дате
           _buildDateFilter(),
         ],
@@ -159,13 +161,15 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
         Wrap(
           spacing: 8,
           children: EventCategory.values.map((category) {
-            final isSelected = _currentFilter.categories?.contains(category) ?? false;
+            final isSelected =
+                _currentFilter.categories?.contains(category) ?? false;
             return FilterChip(
               label: Text(category.categoryName),
               selected: isSelected,
               onSelected: (selected) {
                 setState(() {
-                  final categories = List<EventCategory>.from(_currentFilter.categories ?? []);
+                  final categories =
+                      List<EventCategory>.from(_currentFilter.categories ?? []);
                   if (selected) {
                     categories.add(category);
                   } else {
@@ -287,7 +291,7 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
         if (events.isEmpty) {
           return _buildEmptyState();
         }
-        
+
         return RefreshIndicator(
           onRefresh: () async {
             _performSearch();
@@ -351,8 +355,8 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
           Text(
             'Мероприятия не найдены',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Colors.grey[600],
-            ),
+                  color: Colors.grey[600],
+                ),
           ),
           const SizedBox(height: 8),
           Text(
@@ -372,7 +376,7 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
   /// Выполнить поиск
   void _performSearch() {
     final query = _searchController.text.trim();
-    
+
     setState(() {
       _currentFilter = _currentFilter.copyWith(
         searchQuery: query.isEmpty ? null : query,
@@ -410,7 +414,8 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
   Future<void> _selectEndDate() async {
     final date = await showDatePicker(
       context: context,
-      initialDate: _currentFilter.endDate ?? DateTime.now().add(const Duration(days: 30)),
+      initialDate: _currentFilter.endDate ??
+          DateTime.now().add(const Duration(days: 30)),
       firstDate: _currentFilter.startDate ?? DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );

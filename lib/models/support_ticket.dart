@@ -42,7 +42,7 @@ class SupportTicket {
 
   factory SupportTicket.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return SupportTicket(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -63,8 +63,9 @@ class SupportTicket {
         orElse: () => SupportStatus.open,
       ),
       messages: (data['messages'] as List<dynamic>?)
-          ?.map((e) => SupportMessage.fromMap(e))
-          .toList() ?? [],
+              ?.map((e) => SupportMessage.fromMap(e))
+              .toList() ??
+          [],
       attachments: List<String>.from(data['attachments'] ?? []),
       assignedTo: data['assignedTo'],
       assignedToName: data['assignedToName'],
@@ -380,7 +381,7 @@ class FAQItem {
 
   factory FAQItem.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return FAQItem(
       id: doc.id,
       question: data['question'] ?? '',

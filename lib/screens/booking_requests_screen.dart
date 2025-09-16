@@ -8,7 +8,8 @@ class BookingRequestsScreen extends ConsumerStatefulWidget {
   const BookingRequestsScreen({super.key});
 
   @override
-  ConsumerState<BookingRequestsScreen> createState() => _BookingRequestsScreenState();
+  ConsumerState<BookingRequestsScreen> createState() =>
+      _BookingRequestsScreenState();
 }
 
 class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
@@ -30,7 +31,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
   @override
   Widget build(BuildContext context) {
     final currentUser = ref.watch(currentUserProvider).value;
-    
+
     if (currentUser == null) {
       return const Scaffold(
         body: Center(child: Text('Пользователь не авторизован')),
@@ -66,8 +67,11 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
 
     return bookingsAsync.when(
       data: (bookings) {
-        final filteredBookings = bookings.where((booking) => booking is Booking && booking.status == status).cast<Booking>().toList();
-        
+        final filteredBookings = bookings
+            .where((booking) => booking is Booking && booking.status == status)
+            .cast<Booking>()
+            .toList();
+
         if (filteredBookings.isEmpty) {
           return Center(
             child: Column(
@@ -82,8 +86,8 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                 Text(
                   _getEmptyMessage(status),
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    color: Colors.grey,
-                  ),
+                        color: Colors.grey,
+                      ),
                 ),
               ],
             ),
@@ -143,22 +147,24 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                     children: [
                       Text(
                         booking.title ?? 'Без названия',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         _formatDateTime(booking.eventDate),
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Colors.grey[600],
-                        ),
+                              color: Colors.grey[600],
+                            ),
                       ),
                     ],
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: _getStatusColor(booking.status).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -175,9 +181,9 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             // Информация о заказчике
             Row(
               children: [
@@ -189,7 +195,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                 ),
               ],
             ),
-            
+
             if (booking.customerPhone != null) ...[
               const SizedBox(height: 4),
               Row(
@@ -203,7 +209,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                 ],
               ),
             ],
-            
+
             if (booking.customerEmail != null) ...[
               const SizedBox(height: 4),
               Row(
@@ -217,16 +223,16 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                 ],
               ),
             ],
-            
+
             const SizedBox(height: 12),
-            
+
             // Описание события
             if (booking.description != null) ...[
               Text(
                 'Описание:',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                ),
+                      fontWeight: FontWeight.w600,
+                    ),
               ),
               const SizedBox(height: 4),
               Text(
@@ -235,7 +241,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
               ),
               const SizedBox(height: 12),
             ],
-            
+
             // Стоимость
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -243,19 +249,19 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                 Text(
                   'Стоимость:',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                        fontWeight: FontWeight.w600,
+                      ),
                 ),
                 Text(
                   '${booking.totalPrice.toStringAsFixed(0)} ₽',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                 ),
               ],
             ),
-            
+
             if (booking.prepayment > 0) ...[
               const SizedBox(height: 4),
               Row(
@@ -264,21 +270,21 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                   Text(
                     'Аванс:',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                          color: Colors.grey[600],
+                        ),
                   ),
                   Text(
                     '${booking.prepayment.toStringAsFixed(0)} ₽',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey[600],
-                    ),
+                          color: Colors.grey[600],
+                        ),
                   ),
                 ],
               ),
             ],
-            
+
             const SizedBox(height: 16),
-            
+
             // Действия для новых заявок
             if (booking.status == 'pending') ...[
               Row(
@@ -305,7 +311,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                 ],
               ),
             ],
-            
+
             // Действия для подтвержденных заявок
             if (booking.status == 'confirmed') ...[
               Row(
@@ -338,7 +344,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
     try {
       final firestoreService = ref.read(firestoreServiceProvider);
       await firestoreService.updateBookingStatus(booking.id, 'confirmed');
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -383,7 +389,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
       try {
         final firestoreService = ref.read(firestoreServiceProvider);
         await firestoreService.updateBookingStatus(booking.id, 'rejected');
-        
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -415,7 +421,8 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildDetailRow('Дата и время:', _formatDateTime(booking.eventDate)),
+              _buildDetailRow(
+                  'Дата и время:', _formatDateTime(booking.eventDate)),
               _buildDetailRow('Заказчик:', booking.customerName ?? 'Не указан'),
               if (booking.customerPhone != null)
                 _buildDetailRow('Телефон:', booking.customerPhone!),
@@ -423,9 +430,11 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                 _buildDetailRow('Email:', booking.customerEmail!),
               if (booking.description != null)
                 _buildDetailRow('Описание:', booking.description!),
-              _buildDetailRow('Стоимость:', '${booking.totalPrice.toStringAsFixed(0)} ₽'),
+              _buildDetailRow(
+                  'Стоимость:', '${booking.totalPrice.toStringAsFixed(0)} ₽'),
               if (booking.prepayment > 0)
-                _buildDetailRow('Аванс:', '${booking.prepayment.toStringAsFixed(0)} ₽'),
+                _buildDetailRow(
+                    'Аванс:', '${booking.prepayment.toStringAsFixed(0)} ₽'),
               _buildDetailRow('Статус:', _getStatusText(booking.status)),
             ],
           ),

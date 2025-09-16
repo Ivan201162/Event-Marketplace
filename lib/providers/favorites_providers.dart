@@ -8,19 +8,23 @@ final favoritesServiceProvider = Provider<FavoritesService>((ref) {
 });
 
 /// Провайдер избранных событий пользователя
-final userFavoritesProvider = StreamProvider.family<List<Event>, String>((ref, userId) {
+final userFavoritesProvider =
+    StreamProvider.family<List<Event>, String>((ref, userId) {
   final favoritesService = ref.watch(favoritesServiceProvider);
   return favoritesService.getUserFavorites(userId);
 });
 
 /// Провайдер проверки, добавлено ли событие в избранное
-final isFavoriteProvider = FutureProvider.family<bool, ({String userId, String eventId})>((ref, params) {
+final isFavoriteProvider =
+    FutureProvider.family<bool, ({String userId, String eventId})>(
+        (ref, params) {
   final favoritesService = ref.watch(favoritesServiceProvider);
   return favoritesService.isFavorite(params.userId, params.eventId);
 });
 
 /// Провайдер количества избранных событий
-final favoritesCountProvider = StreamProvider.family<int, String>((ref, userId) {
+final favoritesCountProvider =
+    StreamProvider.family<int, String>((ref, userId) {
   final favoritesService = ref.watch(favoritesServiceProvider);
   return favoritesService.getFavoritesCount(userId);
 });

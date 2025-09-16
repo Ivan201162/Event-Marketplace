@@ -36,9 +36,9 @@ class CalendarEventWidget extends StatelessWidget {
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              
+
               const SizedBox(width: 12),
-              
+
               // Иконка события
               Container(
                 width: 40,
@@ -53,9 +53,9 @@ class CalendarEventWidget extends StatelessWidget {
                   size: 20,
                 ),
               ),
-              
+
               const SizedBox(width: 12),
-              
+
               // Основная информация
               Expanded(
                 child: Column(
@@ -71,9 +71,9 @@ class CalendarEventWidget extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    
+
                     const SizedBox(height: 4),
-                    
+
                     // Время
                     Row(
                       children: [
@@ -92,7 +92,7 @@ class CalendarEventWidget extends StatelessWidget {
                         ),
                       ],
                     ),
-                    
+
                     // Место
                     if (event.location.isNotEmpty) ...[
                       const SizedBox(height: 2),
@@ -118,18 +118,21 @@ class CalendarEventWidget extends StatelessWidget {
                         ],
                       ),
                     ],
-                    
+
                     // Статус
                     const SizedBox(height: 4),
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
-                            color: _getStatusColor(event.status).withOpacity(0.1),
+                            color:
+                                _getStatusColor(event.status).withOpacity(0.1),
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
-                              color: _getStatusColor(event.status).withOpacity(0.3),
+                              color: _getStatusColor(event.status)
+                                  .withOpacity(0.3),
                             ),
                           ),
                           child: Text(
@@ -144,7 +147,8 @@ class CalendarEventWidget extends StatelessWidget {
                         const Spacer(),
                         if (event.isAllDay)
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 6, vertical: 2),
                             decoration: BoxDecoration(
                               color: Colors.blue.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(10),
@@ -166,7 +170,7 @@ class CalendarEventWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               // Действия
               if (onEdit != null || onDelete != null) ...[
                 const SizedBox(width: 8),
@@ -294,8 +298,7 @@ class CalendarEventListTile extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(_formatTime(event.startTime, event.endTime)),
-          if (event.location.isNotEmpty)
-            Text(event.location),
+          if (event.location.isNotEmpty) Text(event.location),
         ],
       ),
       trailing: Row(

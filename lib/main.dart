@@ -5,6 +5,8 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'firebase_options.dart';
+import 'core/feature_flags.dart';
+import 'core/safe_log.dart';
 import 'providers/auth_providers.dart';
 import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
@@ -28,17 +30,63 @@ import 'widgets/animated_page_transition.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
-  
+
+  // Настройка глобальных обработчиков ошибок
+  _setupErrorHandlers();
+
+  try {
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
+    SafeLog.info('Firebase initialized successfully');
+  } catch (e, stackTrace) {
+    SafeLog.critical('Failed to initialize Firebase', e, stackTrace);
+    rethrow;
+  }
+
   // Инициализация FCM
-  await FCMService().initialize();
-  
+  try {
+    await FCMService().initialize();
+    SafeLog.info('FCM service initialized');
+  } catch (e, stackTrace) {
+    SafeLog.error('Failed to initialize FCM service', e, stackTrace);
+  }
+
   // Инициализация сервиса уведомлений
-  await NotificationService().initialize();
-  
+  try {
+    await NotificationService().initialize();
+    SafeLog.info('Notification service initialized');
+  } catch (e, stackTrace) {
+    SafeLog.error('Failed to initialize notification service', e, stackTrace);
+  }
+
+  SafeLog.info(
+      'App starting with features: ${FeatureFlags.getEnabledFeatures()}');
+
   runApp(const ProviderScope(child: MyApp()));
+}
+
+/// Настройка глобальных обработчиков ошибок
+void _setupErrorHandlers() {
+  // Обработчик ошибок Flutter
+  FlutterError.onError = (FlutterErrorDetails details) {
+    SafeLog.error(
+      'Flutter error: ${details.exception}',
+      details.exception,
+      details.stack,
+    );
+
+    // В debug режиме показываем красный экран
+    if (kDebugMode) {
+      FlutterError.presentError(details);
+    }
+  };
+
+  // Обработчик ошибок платформы
+  PlatformDispatcher.instance.onError = (error, stack) {
+    SafeLog.critical('Platform error: $error', error, stack);
+    return true;
+  };
 }
 
 class MyApp extends ConsumerWidget {
@@ -129,7 +177,7 @@ class _MainAppState extends ConsumerState<MainApp> {
 
   @override
   Widget build(BuildContext context) {
-         final isSpecialist = ref.watch(isSpecialistProvider);
+    final isSpecialist = ref.watch(isSpecialistProvider);
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
 
@@ -140,9 +188,7 @@ class _MainAppState extends ConsumerState<MainApp> {
       const MyEventsScreen(),
       const ChatsDemoScreen(),
       // роль влияет на 6-ю вкладку
-      isSpecialist
-          ? const BookingRequestsScreen()
-          : const MyBookingsScreen(),
+      isSpecialist ? const BookingRequestsScreen() : const MyBookingsScreen(),
       const ProfilePage(),
       // Добавляем админ-панель только в debug режиме
       if (kDebugMode) const AdminPanelScreen(),
@@ -153,8 +199,10 @@ class _MainAppState extends ConsumerState<MainApp> {
     final bottomNavItems = [
       const BottomNavigationBarItem(icon: Icon(Icons.home), label: "Главная"),
       const BottomNavigationBarItem(icon: Icon(Icons.search), label: "Поиск"),
-      const BottomNavigationBarItem(icon: Icon(Icons.recommend), label: "Рекомендации"),
-      const BottomNavigationBarItem(icon: Icon(Icons.event), label: "Мероприятия"),
+      const BottomNavigationBarItem(
+          icon: Icon(Icons.recommend), label: "Рекомендации"),
+      const BottomNavigationBarItem(
+          icon: Icon(Icons.event), label: "Мероприятия"),
       const BottomNavigationBarItem(icon: Icon(Icons.chat), label: "Чаты"),
       BottomNavigationBarItem(
         icon: Icon(isSpecialist ? Icons.assignment : Icons.book_online),
@@ -162,9 +210,13 @@ class _MainAppState extends ConsumerState<MainApp> {
       ),
       const BottomNavigationBarItem(icon: Icon(Icons.person), label: "Профиль"),
       // Добавляем админ-панель только в debug режиме
-      if (kDebugMode) const BottomNavigationBarItem(icon: Icon(Icons.admin_panel_settings), label: "Админ"),
+      if (kDebugMode)
+        const BottomNavigationBarItem(
+            icon: Icon(Icons.admin_panel_settings), label: "Админ"),
       // Добавляем вкладку отладки только в debug режиме
-      if (kDebugMode) const BottomNavigationBarItem(icon: Icon(Icons.bug_report), label: "Отладка"),
+      if (kDebugMode)
+        const BottomNavigationBarItem(
+            icon: Icon(Icons.bug_report), label: "Отладка"),
     ];
 
     if (isMobile) {
@@ -177,10 +229,12 @@ class _MainAppState extends ConsumerState<MainApp> {
               _selectedIndex = index;
             });
           },
-                 children: pages.map((page) => AnimatedAppearance(
-                   delay: const Duration(milliseconds: 100),
-                   child: page,
-                 )).toList(),
+          children: pages
+              .map((page) => AnimatedAppearance(
+                    delay: const Duration(milliseconds: 100),
+                    child: page,
+                  ))
+              .toList(),
         ),
         bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
@@ -214,10 +268,12 @@ class _MainAppState extends ConsumerState<MainApp> {
                 });
               },
               labelType: NavigationRailLabelType.all,
-              destinations: bottomNavItems.map((item) => NavigationRailDestination(
-                icon: item.icon,
-                label: Text(item.label!),
-              )).toList(),
+              destinations: bottomNavItems
+                  .map((item) => NavigationRailDestination(
+                        icon: item.icon,
+                        label: Text(item.label!),
+                      ))
+                  .toList(),
             ),
             const VerticalDivider(thickness: 1, width: 1),
             Expanded(

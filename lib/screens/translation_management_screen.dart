@@ -9,10 +9,12 @@ class TranslationManagementScreen extends ConsumerStatefulWidget {
   const TranslationManagementScreen({super.key});
 
   @override
-  ConsumerState<TranslationManagementScreen> createState() => _TranslationManagementScreenState();
+  ConsumerState<TranslationManagementScreen> createState() =>
+      _TranslationManagementScreenState();
 }
 
-class _TranslationManagementScreenState extends ConsumerState<TranslationManagementScreen> {
+class _TranslationManagementScreenState
+    extends ConsumerState<TranslationManagementScreen> {
   final LocalizationService _localizationService = LocalizationService();
   String _selectedLanguage = 'ru';
   String _searchQuery = '';
@@ -34,7 +36,7 @@ class _TranslationManagementScreenState extends ConsumerState<TranslationManagem
         children: [
           // Фильтры
           _buildFilters(),
-          
+
           // Список переводов
           Expanded(
             child: _buildTranslationsList(),
@@ -57,8 +59,9 @@ class _TranslationManagementScreenState extends ConsumerState<TranslationManagem
               Expanded(
                 child: Consumer(
                   builder: (context, ref, child) {
-                    final supportedLanguages = ref.watch(supportedLanguagesProvider);
-                    
+                    final supportedLanguages =
+                        ref.watch(supportedLanguagesProvider);
+
                     return DropdownButton<String>(
                       value: _selectedLanguage,
                       isExpanded: true,
@@ -79,9 +82,9 @@ class _TranslationManagementScreenState extends ConsumerState<TranslationManagem
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Поиск и категория
           Row(
             children: [
@@ -100,9 +103,9 @@ class _TranslationManagementScreenState extends ConsumerState<TranslationManagem
                   },
                 ),
               ),
-              
+
               const SizedBox(width: 16),
-              
+
               // Категория
               Expanded(
                 child: DropdownButton<String>(
@@ -111,11 +114,14 @@ class _TranslationManagementScreenState extends ConsumerState<TranslationManagem
                   items: const [
                     DropdownMenuItem(value: 'all', child: Text('Все')),
                     DropdownMenuItem(value: 'general', child: Text('Общие')),
-                    DropdownMenuItem(value: 'navigation', child: Text('Навигация')),
+                    DropdownMenuItem(
+                        value: 'navigation', child: Text('Навигация')),
                     DropdownMenuItem(value: 'events', child: Text('События')),
                     DropdownMenuItem(value: 'profile', child: Text('Профиль')),
-                    DropdownMenuItem(value: 'settings', child: Text('Настройки')),
-                    DropdownMenuItem(value: 'notifications', child: Text('Уведомления')),
+                    DropdownMenuItem(
+                        value: 'settings', child: Text('Настройки')),
+                    DropdownMenuItem(
+                        value: 'notifications', child: Text('Уведомления')),
                     DropdownMenuItem(value: 'errors', child: Text('Ошибки')),
                     DropdownMenuItem(value: 'success', child: Text('Успех')),
                   ],
@@ -137,17 +143,18 @@ class _TranslationManagementScreenState extends ConsumerState<TranslationManagem
     return Consumer(
       builder: (context, ref, child) {
         final currentLocalization = ref.watch(currentLocalizationProvider);
-        
+
         if (currentLocalization == null) {
           return const Center(child: CircularProgressIndicator());
         }
-        
-        final translations = _filterTranslations(currentLocalization.translations);
-        
+
+        final translations =
+            _filterTranslations(currentLocalization.translations);
+
         if (translations.isEmpty) {
           return _buildEmptyState();
         }
-        
+
         return ListView.builder(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           itemCount: translations.length,
@@ -212,19 +219,19 @@ class _TranslationManagementScreenState extends ConsumerState<TranslationManagem
               children: [
                 // Ключ
                 _buildInfoRow('Ключ', key),
-                
+
                 const SizedBox(height: 8),
-                
+
                 // Значение
                 _buildInfoRow('Значение', value),
-                
+
                 const SizedBox(height: 8),
-                
+
                 // Категория
                 _buildInfoRow('Категория', _getCategoryFromKey(key)),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Действия
                 Row(
                   children: [
@@ -280,18 +287,18 @@ class _TranslationManagementScreenState extends ConsumerState<TranslationManagem
 
   Map<String, String> _filterTranslations(Map<String, String> translations) {
     var filtered = translations;
-    
+
     // Фильтр по поисковому запросу
     if (_searchQuery.isNotEmpty) {
       final query = _searchQuery.toLowerCase();
       filtered = Map.fromEntries(
         filtered.entries.where((entry) {
           return entry.key.toLowerCase().contains(query) ||
-                 entry.value.toLowerCase().contains(query);
+              entry.value.toLowerCase().contains(query);
         }),
       );
     }
-    
+
     // Фильтр по категории
     if (_selectedCategory != 'all') {
       filtered = Map.fromEntries(
@@ -300,22 +307,33 @@ class _TranslationManagementScreenState extends ConsumerState<TranslationManagem
         }),
       );
     }
-    
+
     return filtered;
   }
 
   String _getCategoryFromKey(String key) {
-    if (key.startsWith('app_') || key.startsWith('loading') || key.startsWith('error') || key.startsWith('success')) {
+    if (key.startsWith('app_') ||
+        key.startsWith('loading') ||
+        key.startsWith('error') ||
+        key.startsWith('success')) {
       return 'general';
-    } else if (key.startsWith('home') || key.startsWith('events') || key.startsWith('profile') || key.startsWith('settings')) {
+    } else if (key.startsWith('home') ||
+        key.startsWith('events') ||
+        key.startsWith('profile') ||
+        key.startsWith('settings')) {
       return 'navigation';
     } else if (key.startsWith('event_')) {
       return 'events';
     } else if (key.startsWith('profile_')) {
       return 'profile';
-    } else if (key.startsWith('language') || key.startsWith('theme') || key.startsWith('notifications_settings')) {
+    } else if (key.startsWith('language') ||
+        key.startsWith('theme') ||
+        key.startsWith('notifications_settings')) {
       return 'settings';
-    } else if (key.startsWith('notification_') || key.startsWith('push_') || key.startsWith('email_') || key.startsWith('sms_')) {
+    } else if (key.startsWith('notification_') ||
+        key.startsWith('push_') ||
+        key.startsWith('email_') ||
+        key.startsWith('sms_')) {
       return 'notifications';
     } else if (key.startsWith('error_')) {
       return 'errors';
@@ -333,7 +351,9 @@ class _TranslationManagementScreenState extends ConsumerState<TranslationManagem
         onSave: (key, value) {
           // TODO: Реализовать добавление перевода
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Функция добавления перевода будет доступна в следующих обновлениях')),
+            const SnackBar(
+                content: Text(
+                    'Функция добавления перевода будет доступна в следующих обновлениях')),
           );
         },
       ),
@@ -350,7 +370,9 @@ class _TranslationManagementScreenState extends ConsumerState<TranslationManagem
         onSave: (newKey, newValue) {
           // TODO: Реализовать редактирование перевода
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Функция редактирования перевода будет доступна в следующих обновлениях')),
+            const SnackBar(
+                content: Text(
+                    'Функция редактирования перевода будет доступна в следующих обновлениях')),
           );
         },
       ),
@@ -360,7 +382,9 @@ class _TranslationManagementScreenState extends ConsumerState<TranslationManagem
   void _copyTranslation(String key, String value) {
     // TODO: Реализовать копирование перевода
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Функция копирования перевода будет доступна в следующих обновлениях')),
+      const SnackBar(
+          content: Text(
+              'Функция копирования перевода будет доступна в следующих обновлениях')),
     );
   }
 }
@@ -406,7 +430,9 @@ class _TranslationDialogState extends State<_TranslationDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text(widget.initialKey == null ? 'Добавить перевод' : 'Редактировать перевод'),
+      title: Text(widget.initialKey == null
+          ? 'Добавить перевод'
+          : 'Редактировать перевод'),
       content: Form(
         key: _formKey,
         child: Column(
@@ -425,7 +451,8 @@ class _TranslationDialogState extends State<_TranslationDialog> {
                 DropdownMenuItem(value: 'events', child: Text('События')),
                 DropdownMenuItem(value: 'profile', child: Text('Профиль')),
                 DropdownMenuItem(value: 'settings', child: Text('Настройки')),
-                DropdownMenuItem(value: 'notifications', child: Text('Уведомления')),
+                DropdownMenuItem(
+                    value: 'notifications', child: Text('Уведомления')),
                 DropdownMenuItem(value: 'errors', child: Text('Ошибки')),
                 DropdownMenuItem(value: 'success', child: Text('Успех')),
               ],
@@ -435,9 +462,9 @@ class _TranslationDialogState extends State<_TranslationDialog> {
                 });
               },
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Ключ
             TextFormField(
               controller: _keyController,
@@ -453,9 +480,9 @@ class _TranslationDialogState extends State<_TranslationDialog> {
                 return null;
               },
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Значение
             TextFormField(
               controller: _valueController,
@@ -490,11 +517,11 @@ class _TranslationDialogState extends State<_TranslationDialog> {
 
   void _saveTranslation() {
     if (_formKey.currentState!.validate()) {
-      final key = _selectedCategory == 'general' 
+      final key = _selectedCategory == 'general'
           ? _keyController.text
           : '${_selectedCategory}_${_keyController.text}';
       final value = _valueController.text;
-      
+
       widget.onSave(key, value);
       Navigator.pop(context);
     }

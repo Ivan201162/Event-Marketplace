@@ -21,7 +21,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     with TickerProviderStateMixin {
   final AnalyticsService _analyticsService = AnalyticsService();
   late TabController _tabController;
-  
+
   AnalyticsFilter _filter = const AnalyticsFilter();
   IncomeExpenseStats? _stats;
   List<BudgetGoal> _goals = [];
@@ -146,14 +146,14 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             stats: _stats!,
             onViewDetails: () => _tabController.animateTo(1),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Последние транзакции
           _buildRecentTransactions(),
-          
+
           const SizedBox(height: 16),
-          
+
           // Быстрые действия
           _buildQuickActions(),
         ],
@@ -178,7 +178,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   ),
                 );
               }
-              
+
               return AnalyticsChartWidget(
                 data: snapshot.data ?? [],
                 type: ChartType.line,
@@ -187,9 +187,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               );
             },
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // График расходов по месяцам
           FutureBuilder<List<ChartData>>(
             future: _analyticsService.getExpenseChartData(widget.userId, 6),
@@ -202,7 +202,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   ),
                 );
               }
-              
+
               return AnalyticsChartWidget(
                 data: snapshot.data ?? [],
                 type: ChartType.bar,
@@ -211,12 +211,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               );
             },
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Доходы по категориям
           FutureBuilder<List<ChartData>>(
-            future: _analyticsService.getIncomeCategoryChartData(widget.userId, _filter),
+            future: _analyticsService.getIncomeCategoryChartData(
+                widget.userId, _filter),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Card(
@@ -226,7 +227,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   ),
                 );
               }
-              
+
               return AnalyticsChartWidget(
                 data: snapshot.data ?? [],
                 type: ChartType.pie,
@@ -235,12 +236,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               );
             },
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Расходы по категориям
           FutureBuilder<List<ChartData>>(
-            future: _analyticsService.getExpenseCategoryChartData(widget.userId, _filter),
+            future: _analyticsService.getExpenseCategoryChartData(
+                widget.userId, _filter),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Card(
@@ -250,7 +252,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   ),
                 );
               }
-              
+
               return AnalyticsChartWidget(
                 data: snapshot.data ?? [],
                 type: ChartType.pie,
@@ -274,9 +276,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
             goals: _goals,
             onAddGoal: _showAddGoalDialog,
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Прогресс по целям
           if (_goals.isNotEmpty) _buildGoalsProgress(),
         ],
@@ -308,9 +310,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               ],
             ),
             const SizedBox(height: 16),
-            
             StreamBuilder<List<Analytics>>(
-              stream: _analyticsService.getUserAnalytics(widget.userId, _filter),
+              stream:
+                  _analyticsService.getUserAnalytics(widget.userId, _filter),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -329,12 +331,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                   children: recentTransactions.map((transaction) {
                     return ListTile(
                       leading: CircleAvatar(
-                        backgroundColor: transaction.type == AnalyticsType.income 
-                            ? Colors.green 
-                            : Colors.red,
+                        backgroundColor:
+                            transaction.type == AnalyticsType.income
+                                ? Colors.green
+                                : Colors.red,
                         child: Icon(
-                          transaction.type == AnalyticsType.income 
-                              ? Icons.trending_up 
+                          transaction.type == AnalyticsType.income
+                              ? Icons.trending_up
                               : Icons.trending_down,
                           color: Colors.white,
                           size: 16,
@@ -350,8 +353,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                             '${transaction.amount.toStringAsFixed(0)} ₽',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
-                              color: transaction.type == AnalyticsType.income 
-                                  ? Colors.green 
+                              color: transaction.type == AnalyticsType.income
+                                  ? Colors.green
                                   : Colors.red,
                             ),
                           ),
@@ -387,7 +390,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               ),
             ),
             const SizedBox(height: 16),
-            
             Row(
               children: [
                 Expanded(
@@ -409,9 +411,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 12),
-            
             Row(
               children: [
                 Expanded(
@@ -439,7 +439,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     );
   }
 
-  Widget _buildActionButton(String title, IconData icon, Color color, VoidCallback onTap) {
+  Widget _buildActionButton(
+      String title, IconData icon, Color color, VoidCallback onTap) {
     return InkWell(
       onTap: onTap,
       borderRadius: BorderRadius.circular(8),
@@ -484,7 +485,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
               ),
             ),
             const SizedBox(height: 16),
-            
             ..._goals.map((goal) {
               return Padding(
                 padding: const EdgeInsets.only(bottom: 12),
@@ -503,7 +503,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                           '${goal.progressPercentage.toStringAsFixed(1)}%',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: goal.isAchieved ? Colors.green : Colors.grey[600],
+                            color: goal.isAchieved
+                                ? Colors.green
+                                : Colors.grey[600],
                           ),
                         ),
                       ],
@@ -513,7 +515,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                       value: goal.progressPercentage / 100,
                       backgroundColor: Colors.grey[300],
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        goal.isAchieved ? Colors.green : Theme.of(context).primaryColor,
+                        goal.isAchieved
+                            ? Colors.green
+                            : Theme.of(context).primaryColor,
                       ),
                     ),
                   ],
@@ -643,7 +647,7 @@ class _AddTransactionDialogState extends State<_AddTransactionDialog> {
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
-  
+
   AnalyticsType _type = AnalyticsType.income;
   String _category = '';
   DateTime _date = DateTime.now();
@@ -655,7 +659,7 @@ class _AddTransactionDialogState extends State<_AddTransactionDialog> {
     if (widget.initialType != null) {
       _type = widget.initialType!;
     }
-    _category = _type == AnalyticsType.income 
+    _category = _type == AnalyticsType.income
         ? IncomeCategories.categories.first
         : ExpenseCategories.categories.first;
   }
@@ -670,7 +674,8 @@ class _AddTransactionDialogState extends State<_AddTransactionDialog> {
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      title: Text('Добавить ${_type == AnalyticsType.income ? 'доход' : 'расход'}'),
+      title: Text(
+          'Добавить ${_type == AnalyticsType.income ? 'доход' : 'расход'}'),
       content: Form(
         key: _formKey,
         child: SingleChildScrollView(
@@ -708,7 +713,7 @@ class _AddTransactionDialogState extends State<_AddTransactionDialog> {
                   ),
                 ],
               ),
-              
+
               // Сумма
               TextFormField(
                 controller: _amountController,
@@ -728,9 +733,9 @@ class _AddTransactionDialogState extends State<_AddTransactionDialog> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Категория
               DropdownButtonFormField<String>(
                 value: _category,
@@ -738,9 +743,10 @@ class _AddTransactionDialogState extends State<_AddTransactionDialog> {
                   labelText: 'Категория',
                   border: OutlineInputBorder(),
                 ),
-                items: (_type == AnalyticsType.income 
-                    ? IncomeCategories.categories 
-                    : ExpenseCategories.categories).map((category) {
+                items: (_type == AnalyticsType.income
+                        ? IncomeCategories.categories
+                        : ExpenseCategories.categories)
+                    .map((category) {
                   return DropdownMenuItem(
                     value: category,
                     child: Text(category),
@@ -752,9 +758,9 @@ class _AddTransactionDialogState extends State<_AddTransactionDialog> {
                   });
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Описание
               TextFormField(
                 controller: _descriptionController,
@@ -764,9 +770,9 @@ class _AddTransactionDialogState extends State<_AddTransactionDialog> {
                 ),
                 maxLines: 2,
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Дата
               ListTile(
                 title: const Text('Дата'),
@@ -808,14 +814,16 @@ class _AddTransactionDialogState extends State<_AddTransactionDialog> {
 
     try {
       final amount = double.parse(_amountController.text);
-      
+
       String? id;
       if (_type == AnalyticsType.income) {
         id = await _analyticsService.addIncome(
           userId: widget.userId,
           amount: amount,
           category: _category,
-          description: _descriptionController.text.isEmpty ? null : _descriptionController.text,
+          description: _descriptionController.text.isEmpty
+              ? null
+              : _descriptionController.text,
           date: _date,
         );
       } else {
@@ -823,7 +831,9 @@ class _AddTransactionDialogState extends State<_AddTransactionDialog> {
           userId: widget.userId,
           amount: amount,
           category: _category,
-          description: _descriptionController.text.isEmpty ? null : _descriptionController.text,
+          description: _descriptionController.text.isEmpty
+              ? null
+              : _descriptionController.text,
           date: _date,
         );
       }
@@ -870,7 +880,7 @@ class _AddGoalDialogState extends State<_AddGoalDialog> {
   final _nameController = TextEditingController();
   final _amountController = TextEditingController();
   final _descriptionController = TextEditingController();
-  
+
   BudgetType _type = BudgetType.income;
   DateTime _targetDate = DateTime.now().add(const Duration(days: 30));
   final AnalyticsService _analyticsService = AnalyticsService();
@@ -907,9 +917,9 @@ class _AddGoalDialogState extends State<_AddGoalDialog> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Тип цели
               DropdownButtonFormField<BudgetType>(
                 value: _type,
@@ -929,9 +939,9 @@ class _AddGoalDialogState extends State<_AddGoalDialog> {
                   });
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Сумма
               TextFormField(
                 controller: _amountController,
@@ -951,9 +961,9 @@ class _AddGoalDialogState extends State<_AddGoalDialog> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Дата
               ListTile(
                 title: const Text('Целевая дата'),
@@ -973,9 +983,9 @@ class _AddGoalDialogState extends State<_AddGoalDialog> {
                   }
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Описание
               TextFormField(
                 controller: _descriptionController,
@@ -1007,14 +1017,16 @@ class _AddGoalDialogState extends State<_AddGoalDialog> {
 
     try {
       final amount = double.parse(_amountController.text);
-      
+
       final id = await _analyticsService.createBudgetGoal(
         userId: widget.userId,
         name: _nameController.text,
         targetAmount: amount,
         targetDate: _targetDate,
         type: _type,
-        description: _descriptionController.text.isEmpty ? null : _descriptionController.text,
+        description: _descriptionController.text.isEmpty
+            ? null
+            : _descriptionController.text,
       );
 
       if (id != null) {
@@ -1100,9 +1112,9 @@ class _FilterDialogState extends State<_FilterDialog> {
               });
             },
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Тип
           DropdownButtonFormField<AnalyticsType?>(
             value: _filter.type,

@@ -254,11 +254,13 @@ class _SearchScreenState extends State<SearchScreen> {
                       child: Text('${index + 1}'),
                     ),
                     title: Text('Специалист ${index + 1}'),
-                    subtitle: Text('Категория: ${_categories[index % _categories.length]}'),
+                    subtitle: Text(
+                        'Категория: ${_categories[index % _categories.length]}'),
                     trailing: const Icon(Icons.star, color: Colors.amber),
                     onTap: () {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Выбран специалист ${index + 1}')),
+                        SnackBar(
+                            content: Text('Выбран специалист ${index + 1}')),
                       );
                     },
                   ),
@@ -307,8 +309,10 @@ class BookingsScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text('Специалист: Фотограф ${index + 1}'),
-                        Text('Дата: ${DateTime.now().add(Duration(days: index + 1)).toString().split(' ')[0]}'),
-                        Text('Статус: ${index % 2 == 0 ? 'Подтверждено' : 'Ожидает'}'),
+                        Text(
+                            'Дата: ${DateTime.now().add(Duration(days: index + 1)).toString().split(' ')[0]}'),
+                        Text(
+                            'Статус: ${index % 2 == 0 ? 'Подтверждено' : 'Ожидает'}'),
                         const SizedBox(height: 8),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.end,
@@ -316,7 +320,8 @@ class BookingsScreen extends StatelessWidget {
                             TextButton(
                               onPressed: () {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Детали бронирования')),
+                                  const SnackBar(
+                                      content: Text('Детали бронирования')),
                                 );
                               },
                               child: const Text('Подробнее'),

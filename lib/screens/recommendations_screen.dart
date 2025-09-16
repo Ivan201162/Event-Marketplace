@@ -11,7 +11,8 @@ class RecommendationsScreen extends ConsumerStatefulWidget {
   const RecommendationsScreen({super.key});
 
   @override
-  ConsumerState<RecommendationsScreen> createState() => _RecommendationsScreenState();
+  ConsumerState<RecommendationsScreen> createState() =>
+      _RecommendationsScreenState();
 }
 
 class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
@@ -89,7 +90,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
           padding: const EdgeInsets.all(16),
           child: _buildRecommendationStats(userId),
         ),
-        
+
         // Персональные рекомендации
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -206,7 +207,8 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
                 children: stats.topTypes.take(3).map((type) {
                   final typeInfo = type.info;
                   return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: _parseColor(typeInfo.color).withOpacity(0.1),
                       borderRadius: BorderRadius.circular(16),
@@ -238,7 +240,8 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
   }
 
   /// Элемент статистики
-  Widget _buildStatItem(BuildContext context, String label, String value, IconData icon) {
+  Widget _buildStatItem(
+      BuildContext context, String label, String value, IconData icon) {
     return Column(
       children: [
         Icon(
@@ -305,13 +308,13 @@ class RecommendationSettingsScreen extends ConsumerWidget {
             padding: const EdgeInsets.all(16),
             child: _buildRecommendationTypesSettings(context),
           ),
-          
+
           // Настройки фильтров
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
             child: _buildFiltersSettings(context),
           ),
-          
+
           // Действия
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -444,7 +447,8 @@ class RecommendationSettingsScreen extends ConsumerWidget {
   }
 
   /// Элемент фильтра
-  Widget _buildFilterItem(BuildContext context, String title, String subtitle, IconData icon) {
+  Widget _buildFilterItem(
+      BuildContext context, String title, String subtitle, IconData icon) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: ListTile(
@@ -545,7 +549,9 @@ class RecommendationSettingsScreen extends ConsumerWidget {
           TextButton(
             onPressed: () {
               Navigator.of(context).pop();
-              ref.read(recommendationInteractionProvider.notifier).clearInteractions();
+              ref
+                  .read(recommendationInteractionProvider.notifier)
+                  .clearInteractions();
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('История очищена')),
               );

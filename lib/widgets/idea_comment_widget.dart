@@ -30,16 +30,16 @@ class IdeaCommentWidget extends StatelessWidget {
                 : null,
             child: comment.authorPhotoUrl == null
                 ? Text(
-                    comment.authorName.isNotEmpty 
+                    comment.authorName.isNotEmpty
                         ? comment.authorName[0].toUpperCase()
                         : '?',
                     style: const TextStyle(fontSize: 12),
                   )
                 : null,
           ),
-          
+
           const SizedBox(width: 12),
-          
+
           // Содержимое комментария
           Expanded(
             child: Column(
@@ -65,9 +65,9 @@ class IdeaCommentWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                
+
                 const SizedBox(height: 4),
-                
+
                 // Текст комментария
                 Text(
                   comment.content,
@@ -76,9 +76,9 @@ class IdeaCommentWidget extends StatelessWidget {
                     height: 1.4,
                   ),
                 ),
-                
+
                 const SizedBox(height: 8),
-                
+
                 // Действия
                 Row(
                   children: [
@@ -90,7 +90,9 @@ class IdeaCommentWidget extends StatelessWidget {
                           Icon(
                             Icons.favorite,
                             size: 16,
-                            color: comment.isLikedBy(userId) ? Colors.red : Colors.grey[600],
+                            color: comment.isLikedBy(userId)
+                                ? Colors.red
+                                : Colors.grey[600],
                           ),
                           const SizedBox(width: 4),
                           Text(
@@ -103,9 +105,9 @@ class IdeaCommentWidget extends StatelessWidget {
                         ],
                       ),
                     ),
-                    
+
                     const SizedBox(width: 16),
-                    
+
                     // Ответить
                     GestureDetector(
                       onTap: () {
@@ -132,7 +134,7 @@ class IdeaCommentWidget extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inMinutes < 1) {
       return 'только что';
     } else if (difference.inMinutes < 60) {
@@ -174,7 +176,7 @@ class IdeaCommentListTile extends StatelessWidget {
             : null,
         child: comment.authorPhotoUrl == null
             ? Text(
-                comment.authorName.isNotEmpty 
+                comment.authorName.isNotEmpty
                     ? comment.authorName[0].toUpperCase()
                     : '?',
                 style: const TextStyle(fontSize: 14),
@@ -217,7 +219,9 @@ class IdeaCommentListTile extends StatelessWidget {
                     Icon(
                       Icons.favorite,
                       size: 16,
-                      color: comment.isLikedBy(userId) ? Colors.red : Colors.grey[600],
+                      color: comment.isLikedBy(userId)
+                          ? Colors.red
+                          : Colors.grey[600],
                     ),
                     const SizedBox(width: 4),
                     Text(
@@ -252,7 +256,7 @@ class IdeaCommentListTile extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inMinutes < 1) {
       return 'только что';
     } else if (difference.inMinutes < 60) {
@@ -303,7 +307,7 @@ class IdeaCommentCard extends StatelessWidget {
                       : null,
                   child: comment.authorPhotoUrl == null
                       ? Text(
-                          comment.authorName.isNotEmpty 
+                          comment.authorName.isNotEmpty
                               ? comment.authorName[0].toUpperCase()
                               : '?',
                           style: const TextStyle(fontSize: 12),
@@ -334,9 +338,9 @@ class IdeaCommentCard extends StatelessWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             // Содержимое
             Text(
               comment.content,
@@ -345,9 +349,9 @@ class IdeaCommentCard extends StatelessWidget {
                 height: 1.4,
               ),
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             // Действия
             Row(
               children: [
@@ -359,7 +363,9 @@ class IdeaCommentCard extends StatelessWidget {
                       Icon(
                         Icons.favorite,
                         size: 16,
-                        color: comment.isLikedBy(userId) ? Colors.red : Colors.grey[600],
+                        color: comment.isLikedBy(userId)
+                            ? Colors.red
+                            : Colors.grey[600],
                       ),
                       const SizedBox(width: 4),
                       Text(
@@ -372,9 +378,9 @@ class IdeaCommentCard extends StatelessWidget {
                     ],
                   ),
                 ),
-                
+
                 const SizedBox(width: 16),
-                
+
                 // Ответить
                 GestureDetector(
                   onTap: onReply,
@@ -397,7 +403,7 @@ class IdeaCommentCard extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inMinutes < 1) {
       return 'только что';
     } else if (difference.inMinutes < 60) {

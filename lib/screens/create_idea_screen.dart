@@ -21,9 +21,9 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _tagsController = TextEditingController();
-  
+
   final IdeaService _ideaService = IdeaService();
-  
+
   String _selectedCategory = 'Декор';
   IdeaType _selectedType = IdeaType.general;
   List<IdeaImage> _images = [];
@@ -70,29 +70,29 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
             children: [
               // Основная информация
               _buildBasicInfoSection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Категория и тип
               _buildCategoryAndTypeSection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Изображения
               _buildImagesSection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Теги
               _buildTagsSection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Настройки
               _buildSettingsSection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Кнопка сохранения
               SizedBox(
                 width: double.infinity,
@@ -125,7 +125,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Заголовок
             TextFormField(
               controller: _titleController,
@@ -141,9 +141,9 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
                 return null;
               },
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Описание
             TextFormField(
               controller: _descriptionController,
@@ -181,7 +181,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Категория
             DropdownButtonFormField<String>(
               value: _selectedCategory,
@@ -201,9 +201,9 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
                 });
               },
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Тип идеи
             DropdownButtonFormField<IdeaType>(
               value: _selectedType,
@@ -255,7 +255,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Кнопки добавления изображений
             Row(
               children: [
@@ -276,9 +276,9 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Список изображений
             if (_images.isNotEmpty) ...[
               SizedBox(
@@ -359,7 +359,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Поле ввода тегов
             TextFormField(
               controller: _tagsController,
@@ -370,9 +370,9 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
               ),
               onFieldSubmitted: _addTag,
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Список тегов
             if (_tags.isNotEmpty) ...[
               Wrap(
@@ -387,9 +387,9 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
                 }).toList(),
               ),
             ],
-            
+
             const SizedBox(height: 8),
-            
+
             // Предустановленные теги
             const Text(
               'Популярные теги:',
@@ -441,7 +441,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Публичная идея
             SwitchListTile(
               title: const Text('Публичная идея'),
@@ -461,7 +461,8 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
 
   Future<void> _pickImages() async {
     try {
-      final images = await _ideaService.pickImages(maxImages: 10 - _images.length);
+      final images =
+          await _ideaService.pickImages(maxImages: 10 - _images.length);
       for (final image in images) {
         final ideaImage = await _ideaService.uploadIdeaImage(image);
         if (ideaImage != null) {

@@ -9,7 +9,8 @@ class SpecialistScheduleService {
   Future<SpecialistSchedule?> getSpecialistSchedule(String specialistId) async {
     final schedules = await getAllSchedules();
     try {
-      return schedules.firstWhere((schedule) => schedule.specialistId == specialistId);
+      return schedules
+          .firstWhere((schedule) => schedule.specialistId == specialistId);
     } catch (e) {
       return null;
     }
@@ -19,7 +20,7 @@ class SpecialistScheduleService {
   Future<List<SpecialistSchedule>> getAllSchedules() async {
     final prefs = await SharedPreferences.getInstance();
     final schedulesJson = prefs.getStringList(_schedulesKey) ?? [];
-    
+
     if (schedulesJson.isEmpty) {
       // Добавляем тестовые данные при первом запуске
       await _addTestData();
@@ -34,13 +35,13 @@ class SpecialistScheduleService {
   // Сохранить расписание специалиста
   Future<void> saveSpecialistSchedule(SpecialistSchedule schedule) async {
     final schedules = await getAllSchedules();
-    
+
     // Удаляем старое расписание если существует
     schedules.removeWhere((s) => s.specialistId == schedule.specialistId);
-    
+
     // Добавляем новое
     schedules.add(schedule);
-    
+
     await _saveSchedules(schedules);
   }
 
@@ -78,24 +79,23 @@ class SpecialistScheduleService {
 
   // Получить доступные даты в диапазоне
   Future<List<DateTime>> getAvailableDates(
-    String specialistId, 
-    DateTime startDate, 
-    DateTime endDate
-  ) async {
+      String specialistId, DateTime startDate, DateTime endDate) async {
     final schedule = await getSpecialistSchedule(specialistId);
     if (schedule == null) {
       // Если расписания нет, все даты доступны
       final availableDates = <DateTime>[];
-      var currentDate = DateTime(startDate.year, startDate.month, startDate.day);
+      var currentDate =
+          DateTime(startDate.year, startDate.month, startDate.day);
       final end = DateTime(endDate.year, endDate.month, endDate.day);
 
       while (currentDate.isBefore(end) || currentDate.isAtSameMomentAs(end)) {
-        availableDates.add(DateTime(currentDate.year, currentDate.month, currentDate.day));
+        availableDates.add(
+            DateTime(currentDate.year, currentDate.month, currentDate.day));
         currentDate = currentDate.add(const Duration(days: 1));
       }
       return availableDates;
     }
-    
+
     return schedule.getAvailableDates(startDate, endDate);
   }
 
@@ -108,9 +108,8 @@ class SpecialistScheduleService {
   // Сохранить список расписаний
   Future<void> _saveSchedules(List<SpecialistSchedule> schedules) async {
     final prefs = await SharedPreferences.getInstance();
-    final schedulesJson = schedules
-        .map((schedule) => jsonEncode(schedule.toMap()))
-        .toList();
+    final schedulesJson =
+        schedules.map((schedule) => jsonEncode(schedule.toMap())).toList();
     await prefs.setStringList(_schedulesKey, schedulesJson);
   }
 

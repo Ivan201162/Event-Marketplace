@@ -73,21 +73,24 @@ class _VisibilityDetectorState extends State<VisibilityDetector> {
   }
 
   void _checkVisibility() {
-    final RenderBox? renderBox = _key.currentContext?.findRenderObject() as RenderBox?;
+    final RenderBox? renderBox =
+        _key.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox != null) {
       final position = renderBox.localToGlobal(Offset.zero);
       final size = renderBox.size;
       final screenSize = MediaQuery.of(context).size;
-      
+
       final visibleTop = position.dy < screenSize.height;
       final visibleBottom = position.dy + size.height > 0;
-      
+
       if (visibleTop && visibleBottom) {
-        final visibleHeight = (position.dy + size.height).clamp(0.0, screenSize.height) - 
-                             position.dy.clamp(0.0, screenSize.height);
+        final visibleHeight =
+            (position.dy + size.height).clamp(0.0, screenSize.height) -
+                position.dy.clamp(0.0, screenSize.height);
         final visibleFraction = visibleHeight / size.height;
-        
-        widget.onVisibilityChanged(VisibilityInfo(visibleFraction: visibleFraction));
+
+        widget.onVisibilityChanged(
+            VisibilityInfo(visibleFraction: visibleFraction));
       }
     }
   }
@@ -129,15 +132,17 @@ class CachedImageWidget extends StatelessWidget {
         fit: fit,
         loadingBuilder: (context, child, loadingProgress) {
           if (loadingProgress == null) return child;
-          return placeholder ?? const Center(
-            child: CircularProgressIndicator(),
-          );
+          return placeholder ??
+              const Center(
+                child: CircularProgressIndicator(),
+              );
         },
         errorBuilder: (context, error, stackTrace) {
-          return errorWidget ?? Container(
-            color: Colors.grey[300],
-            child: const Icon(Icons.error),
-          );
+          return errorWidget ??
+              Container(
+                color: Colors.grey[300],
+                child: const Icon(Icons.error),
+              );
         },
       ),
     );
@@ -224,7 +229,7 @@ class _PaginatedListState extends State<PaginatedList> {
 
     try {
       final newItems = await widget.loadData(_currentPage, widget.itemsPerPage);
-      
+
       setState(() {
         _items.addAll(newItems);
         _currentPage++;
@@ -242,47 +247,51 @@ class _PaginatedListState extends State<PaginatedList> {
   @override
   Widget build(BuildContext context) {
     if (_error != null) {
-      return widget.errorWidget ?? Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
-            Text('Ошибка: $_error'),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  _error = null;
-                  _currentPage = 0;
-                  _items.clear();
-                  _hasMore = true;
-                });
-                _loadMore();
-              },
-              child: const Text('Повторить'),
+      return widget.errorWidget ??
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error, size: 64, color: Colors.red),
+                const SizedBox(height: 16),
+                Text('Ошибка: $_error'),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      _error = null;
+                      _currentPage = 0;
+                      _items.clear();
+                      _hasMore = true;
+                    });
+                    _loadMore();
+                  },
+                  child: const Text('Повторить'),
+                ),
+              ],
             ),
-          ],
-        ),
-      );
+          );
     }
 
     if (_items.isEmpty && _isLoading) {
-      return widget.loadingWidget ?? const Center(
-        child: CircularProgressIndicator(),
-      );
+      return widget.loadingWidget ??
+          const Center(
+            child: CircularProgressIndicator(),
+          );
     }
 
     if (_items.isEmpty) {
-      return widget.emptyWidget ?? const Center(
-        child: Text('Нет данных'),
-      );
+      return widget.emptyWidget ??
+          const Center(
+            child: Text('Нет данных'),
+          );
     }
 
     return NotificationListener<ScrollNotification>(
       onNotification: (notification) {
         if (notification is ScrollEndNotification &&
-            notification.metrics.pixels >= notification.metrics.maxScrollExtent - 200) {
+            notification.metrics.pixels >=
+                notification.metrics.maxScrollExtent - 200) {
           _loadMore();
         }
         return false;
@@ -429,9 +438,10 @@ class _PreloadWidgetState extends State<PreloadWidget> {
   @override
   Widget build(BuildContext context) {
     if (_isPreloading) {
-      return widget.loadingWidget ?? const Center(
-        child: CircularProgressIndicator(),
-      );
+      return widget.loadingWidget ??
+          const Center(
+            child: CircularProgressIndicator(),
+          );
     }
 
     if (_error != null) {

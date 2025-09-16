@@ -41,9 +41,9 @@ class IntegrationWidget extends StatelessWidget {
                       size: 24,
                     ),
                   ),
-                  
+
                   const SizedBox(width: 12),
-                  
+
                   // Название и описание
                   Expanded(
                     child: Column(
@@ -69,10 +69,11 @@ class IntegrationWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  
+
                   // Статус
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: integration.statusColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
@@ -91,15 +92,16 @@ class IntegrationWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Тип и разрешения
               Row(
                 children: [
                   // Тип
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: integration.typeColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
@@ -124,9 +126,9 @@ class IntegrationWidget extends StatelessWidget {
                       ],
                     ),
                   ),
-                  
+
                   const SizedBox(width: 8),
-                  
+
                   // Разрешения
                   if (integration.permissions.isNotEmpty) ...[
                     Icon(
@@ -145,9 +147,9 @@ class IntegrationWidget extends StatelessWidget {
                   ],
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Дополнительная информация
               Row(
                 children: [
@@ -168,7 +170,6 @@ class IntegrationWidget extends StatelessWidget {
                     ),
                     const SizedBox(width: 16),
                   ],
-                  
                   if (integration.websiteUrl != null) ...[
                     Icon(
                       Icons.language,
@@ -380,9 +381,9 @@ class IntegrationGridTile extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Название
               Text(
                 integration.name,
@@ -393,9 +394,9 @@ class IntegrationGridTile extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               const SizedBox(height: 4),
-              
+
               // Описание
               Text(
                 integration.description,
@@ -406,9 +407,9 @@ class IntegrationGridTile extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               const Spacer(),
-              
+
               // Статус и тип
               Row(
                 children: [

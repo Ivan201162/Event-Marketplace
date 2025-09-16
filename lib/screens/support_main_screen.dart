@@ -18,7 +18,7 @@ class SupportMainScreen extends ConsumerStatefulWidget {
 
 class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
   final SupportService _supportService = SupportService();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -35,10 +35,10 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
         children: [
           // Быстрые действия
           _buildQuickActions(),
-          
+
           // FAQ секция
           _buildFAQSection(),
-          
+
           // Мои тикеты
           Expanded(
             child: _buildMyTicketsSection(),
@@ -268,7 +268,8 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
           const SizedBox(height: 8),
           Expanded(
             child: StreamBuilder<List<SupportTicket>>(
-              stream: _supportService.getUserTickets('demo_user_id'), // TODO: Получить из контекста
+              stream: _supportService.getUserTickets(
+                  'demo_user_id'), // TODO: Получить из контекста
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -344,11 +345,13 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
   }
 
   void _createTicket() {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       MaterialPageRoute(
         builder: (context) => const CreateSupportTicketScreen(),
       ),
-    ).then((result) {
+    )
+        .then((result) {
       if (result == true) {
         setState(() {});
       }
@@ -356,13 +359,15 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
   }
 
   void _showTicketDetail(SupportTicket ticket) {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       MaterialPageRoute(
         builder: (context) => SupportTicketDetailScreen(
           ticket: ticket,
         ),
       ),
-    ).then((result) {
+    )
+        .then((result) {
       if (result == true) {
         setState(() {});
       }

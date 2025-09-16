@@ -9,10 +9,12 @@ class SpecialistCalendarScreen extends ConsumerStatefulWidget {
   const SpecialistCalendarScreen({super.key});
 
   @override
-  ConsumerState<SpecialistCalendarScreen> createState() => _SpecialistCalendarScreenState();
+  ConsumerState<SpecialistCalendarScreen> createState() =>
+      _SpecialistCalendarScreenState();
 }
 
-class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScreen> {
+class _SpecialistCalendarScreenState
+    extends ConsumerState<SpecialistCalendarScreen> {
   @override
   void initState() {
     super.initState();
@@ -20,7 +22,9 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final currentUser = ref.read(currentUserProvider).value;
       if (currentUser != null && currentUser.isSpecialist) {
-        ref.read(calendarStateProvider.notifier).selectSpecialist(currentUser.id);
+        ref
+            .read(calendarStateProvider.notifier)
+            .selectSpecialist(currentUser.id);
       }
     });
   }
@@ -75,9 +79,9 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
               children: [
                 // Статистика
                 _buildStatsCard(context, user.id),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Календарь
                 CalendarWidget(
                   specialistId: user.id,
@@ -87,9 +91,9 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
                     // Обработка выбора даты
                   },
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Быстрые действия
                 _buildQuickActionsCard(context, user.id),
               ],
@@ -125,24 +129,37 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
             Text(
               'Статистика',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             scheduleAsync.when(
               data: (schedule) {
                 final totalEvents = schedule?.events.length ?? 0;
-                final bookingEvents = schedule?.events.where((e) => e.type == ScheduleEventType.booking).length ?? 0;
-                final unavailableEvents = schedule?.events.where((e) => e.type == ScheduleEventType.unavailable).length ?? 0;
-                final vacationEvents = schedule?.events.where((e) => e.type == ScheduleEventType.vacation).length ?? 0;
+                final bookingEvents = schedule?.events
+                        .where((e) => e.type == ScheduleEventType.booking)
+                        .length ??
+                    0;
+                final unavailableEvents = schedule?.events
+                        .where((e) => e.type == ScheduleEventType.unavailable)
+                        .length ??
+                    0;
+                final vacationEvents = schedule?.events
+                        .where((e) => e.type == ScheduleEventType.vacation)
+                        .length ??
+                    0;
 
                 return Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    _buildStatItem(context, 'Всего событий', totalEvents, Colors.blue),
-                    _buildStatItem(context, 'Бронирования', bookingEvents, Colors.green),
-                    _buildStatItem(context, 'Недоступность', unavailableEvents, Colors.red),
-                    _buildStatItem(context, 'Отпуск', vacationEvents, Colors.orange),
+                    _buildStatItem(
+                        context, 'Всего событий', totalEvents, Colors.blue),
+                    _buildStatItem(
+                        context, 'Бронирования', bookingEvents, Colors.green),
+                    _buildStatItem(context, 'Недоступность', unavailableEvents,
+                        Colors.red),
+                    _buildStatItem(
+                        context, 'Отпуск', vacationEvents, Colors.orange),
                   ],
                 );
               },
@@ -156,12 +173,13 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
   }
 
   /// Элемент статистики
-  Widget _buildStatItem(BuildContext context, String label, int count, Color color) {
+  Widget _buildStatItem(
+      BuildContext context, String label, int count, Color color) {
     return Column(
       children: [
         Container(
           padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
+          decoration: BoxDecoration(
             color: color.withOpacity(0.1),
             shape: BoxShape.circle,
           ),
@@ -199,15 +217,16 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
             Text(
               'Быстрые действия',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () => _showAddUnavailableDialog(context, specialistId),
+                    onPressed: () =>
+                        _showAddUnavailableDialog(context, specialistId),
                     icon: const Icon(Icons.block),
                     label: const Text('Недоступность'),
                     style: ElevatedButton.styleFrom(
@@ -219,7 +238,8 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
                 const SizedBox(width: 12),
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () => _showAddVacationDialog(context, specialistId),
+                    onPressed: () =>
+                        _showAddVacationDialog(context, specialistId),
                     icon: const Icon(Icons.beach_access),
                     label: const Text('Отпуск'),
                     style: ElevatedButton.styleFrom(
@@ -302,7 +322,9 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
                 ),
                 const SizedBox(height: 16),
                 ListTile(
-                  title: Text(startDate == null ? 'Выберите дату начала' : 'Начало: ${_formatDate(startDate!)}'),
+                  title: Text(startDate == null
+                      ? 'Выберите дату начала'
+                      : 'Начало: ${_formatDate(startDate!)}'),
                   trailing: const Icon(Icons.calendar_today),
                   onTap: () async {
                     final date = await showDatePicker(
@@ -317,7 +339,9 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
                   },
                 ),
                 ListTile(
-                  title: Text(endDate == null ? 'Выберите дату окончания' : 'Окончание: ${_formatDate(endDate!)}'),
+                  title: Text(endDate == null
+                      ? 'Выберите дату окончания'
+                      : 'Окончание: ${_formatDate(endDate!)}'),
                   trailing: const Icon(Icons.calendar_today),
                   onTap: () async {
                     final date = await showDatePicker(
@@ -341,21 +365,28 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
             ),
             ElevatedButton(
               onPressed: () async {
-                if (titleController.text.isEmpty || startDate == null || endDate == null) {
+                if (titleController.text.isEmpty ||
+                    startDate == null ||
+                    endDate == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Заполните все обязательные поля')),
+                    const SnackBar(
+                        content: Text('Заполните все обязательные поля')),
                   );
                   return;
                 }
 
                 try {
-                  await ref.read(calendarServiceProvider).createUnavailableEvent(
-                    specialistId: specialistId,
-                    title: titleController.text,
-                    startTime: startDate!,
-                    endTime: endDate!,
-                    description: descriptionController.text.isEmpty ? null : descriptionController.text,
-                  );
+                  await ref
+                      .read(calendarServiceProvider)
+                      .createUnavailableEvent(
+                        specialistId: specialistId,
+                        title: titleController.text,
+                        startTime: startDate!,
+                        endTime: endDate!,
+                        description: descriptionController.text.isEmpty
+                            ? null
+                            : descriptionController.text,
+                      );
 
                   if (context.mounted) {
                     Navigator.of(context).pop();
@@ -412,7 +443,9 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
                 ),
                 const SizedBox(height: 16),
                 ListTile(
-                  title: Text(startDate == null ? 'Выберите дату начала' : 'Начало: ${_formatDate(startDate!)}'),
+                  title: Text(startDate == null
+                      ? 'Выберите дату начала'
+                      : 'Начало: ${_formatDate(startDate!)}'),
                   trailing: const Icon(Icons.calendar_today),
                   onTap: () async {
                     final date = await showDatePicker(
@@ -427,7 +460,9 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
                   },
                 ),
                 ListTile(
-                  title: Text(endDate == null ? 'Выберите дату окончания' : 'Окончание: ${_formatDate(endDate!)}'),
+                  title: Text(endDate == null
+                      ? 'Выберите дату окончания'
+                      : 'Окончание: ${_formatDate(endDate!)}'),
                   trailing: const Icon(Icons.calendar_today),
                   onTap: () async {
                     final date = await showDatePicker(
@@ -451,21 +486,26 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
             ),
             ElevatedButton(
               onPressed: () async {
-                if (titleController.text.isEmpty || startDate == null || endDate == null) {
+                if (titleController.text.isEmpty ||
+                    startDate == null ||
+                    endDate == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Заполните все обязательные поля')),
+                    const SnackBar(
+                        content: Text('Заполните все обязательные поля')),
                   );
                   return;
                 }
 
                 try {
                   await ref.read(calendarServiceProvider).createVacationEvent(
-                    specialistId: specialistId,
-                    title: titleController.text,
-                    startTime: startDate!,
-                    endTime: endDate!,
-                    description: descriptionController.text.isEmpty ? null : descriptionController.text,
-                  );
+                        specialistId: specialistId,
+                        title: titleController.text,
+                        startTime: startDate!,
+                        endTime: endDate!,
+                        description: descriptionController.text.isEmpty
+                            ? null
+                            : descriptionController.text,
+                      );
 
                   if (context.mounted) {
                     Navigator.of(context).pop();
@@ -495,7 +535,8 @@ class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScr
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Тестовые данные'),
-        content: const Text('Добавить тестовые данные календаря для разработки?'),
+        content:
+            const Text('Добавить тестовые данные календаря для разработки?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),

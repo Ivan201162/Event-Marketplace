@@ -8,15 +8,17 @@ class CustomerProfileEditScreen extends ConsumerStatefulWidget {
   const CustomerProfileEditScreen({super.key});
 
   @override
-  ConsumerState<CustomerProfileEditScreen> createState() => _CustomerProfileEditScreenState();
+  ConsumerState<CustomerProfileEditScreen> createState() =>
+      _CustomerProfileEditScreenState();
 }
 
-class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditScreen> {
+class _CustomerProfileEditScreenState
+    extends ConsumerState<CustomerProfileEditScreen> {
   final _formKey = GlobalKey<FormState>();
   final _bioController = TextEditingController();
   final _phoneController = TextEditingController();
   final _locationController = TextEditingController();
-  
+
   MaritalStatus? _selectedMaritalStatus;
   DateTime? _weddingDate;
   DateTime? _anniversaryDate;
@@ -40,7 +42,9 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
   void _loadProfile() {
     final currentUser = ref.read(currentUserProvider).value;
     if (currentUser != null) {
-      ref.read(customerProfileEditProvider.notifier).loadProfile(currentUser.id);
+      ref
+          .read(customerProfileEditProvider.notifier)
+          .loadProfile(currentUser.id);
     }
   }
 
@@ -68,9 +72,13 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
         actions: [
           if (editState.isDirty)
             TextButton(
-              onPressed: editState.isLoading ? null : () {
-                ref.read(customerProfileEditProvider.notifier).saveProfile();
-              },
+              onPressed: editState.isLoading
+                  ? null
+                  : () {
+                      ref
+                          .read(customerProfileEditProvider.notifier)
+                          .saveProfile();
+                    },
               child: editState.isLoading
                   ? const SizedBox(
                       width: 20,
@@ -130,7 +138,8 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
         children: [
           CircleAvatar(
             radius: 60,
-            backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+            backgroundColor:
+                Theme.of(context).colorScheme.primary.withOpacity(0.1),
             child: const Icon(
               Icons.person,
               size: 60,
@@ -150,7 +159,8 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
                 onPressed: () {
                   // TODO: Реализовать загрузку фото
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Загрузка фото будет реализована позже')),
+                    const SnackBar(
+                        content: Text('Загрузка фото будет реализована позже')),
                   );
                 },
               ),
@@ -171,11 +181,11 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
             Text(
               'Основная информация',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
-            
+
             // Биография
             TextFormField(
               controller: _bioController,
@@ -186,7 +196,9 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
               ),
               maxLines: 3,
               onChanged: (value) {
-                ref.read(customerProfileEditProvider.notifier).updateField(bio: value);
+                ref
+                    .read(customerProfileEditProvider.notifier)
+                    .updateField(bio: value);
               },
             ),
             const SizedBox(height: 16),
@@ -202,7 +214,9 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
               ),
               keyboardType: TextInputType.phone,
               onChanged: (value) {
-                ref.read(customerProfileEditProvider.notifier).updateField(phoneNumber: value);
+                ref
+                    .read(customerProfileEditProvider.notifier)
+                    .updateField(phoneNumber: value);
               },
             ),
             const SizedBox(height: 16),
@@ -217,7 +231,9 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
                 prefixIcon: Icon(Icons.location_on),
               ),
               onChanged: (value) {
-                ref.read(customerProfileEditProvider.notifier).updateField(location: value);
+                ref
+                    .read(customerProfileEditProvider.notifier)
+                    .updateField(location: value);
               },
             ),
           ],
@@ -236,11 +252,10 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
             Text(
               'Семейное положение',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
-            
             Wrap(
               spacing: 8,
               children: MaritalStatus.values.map((status) {
@@ -252,8 +267,8 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
                       _selectedMaritalStatus = selected ? status : null;
                     });
                     ref.read(customerProfileEditProvider.notifier).updateField(
-                      maritalStatus: _selectedMaritalStatus,
-                    );
+                          maritalStatus: _selectedMaritalStatus,
+                        );
                   },
                 );
               }).toList(),
@@ -274,16 +289,16 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
             Text(
               'Важные даты',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
-            
+
             // Дата свадьбы
             ListTile(
               leading: const Icon(Icons.favorite),
               title: const Text('Дата свадьбы'),
-              subtitle: Text(_weddingDate != null 
+              subtitle: Text(_weddingDate != null
                   ? '${_weddingDate!.day}.${_weddingDate!.month}.${_weddingDate!.year}'
                   : 'Не указана'),
               trailing: const Icon(Icons.arrow_forward_ios),
@@ -299,17 +314,17 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
                     _weddingDate = date;
                   });
                   ref.read(customerProfileEditProvider.notifier).updateField(
-                    weddingDate: _weddingDate,
-                  );
+                        weddingDate: _weddingDate,
+                      );
                 }
               },
             ),
-            
+
             // Дата годовщины
             ListTile(
               leading: const Icon(Icons.celebration),
               title: const Text('Дата годовщины'),
-              subtitle: Text(_anniversaryDate != null 
+              subtitle: Text(_anniversaryDate != null
                   ? '${_anniversaryDate!.day}.${_anniversaryDate!.month}.${_anniversaryDate!.year}'
                   : 'Не указана'),
               trailing: const Icon(Icons.arrow_forward_ios),
@@ -325,8 +340,8 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
                     _anniversaryDate = date;
                   });
                   ref.read(customerProfileEditProvider.notifier).updateField(
-                    anniversaryDate: _anniversaryDate,
-                  );
+                        anniversaryDate: _anniversaryDate,
+                      );
                 }
               },
             ),
@@ -338,8 +353,18 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
 
   Widget _buildInterests() {
     final predefinedInterests = [
-      'Спорт', 'Музыка', 'Кино', 'Книги', 'Путешествия', 'Кулинария',
-      'Фотография', 'Искусство', 'Театр', 'Танцы', 'Йога', 'Готовка'
+      'Спорт',
+      'Музыка',
+      'Кино',
+      'Книги',
+      'Путешествия',
+      'Кулинария',
+      'Фотография',
+      'Искусство',
+      'Театр',
+      'Танцы',
+      'Йога',
+      'Готовка'
     ];
 
     return Card(
@@ -351,11 +376,10 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
             Text(
               'Интересы',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
-            
             Wrap(
               spacing: 8,
               children: predefinedInterests.map((interest) {
@@ -372,8 +396,8 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
                       }
                     });
                     ref.read(customerProfileEditProvider.notifier).updateField(
-                      interests: _interests,
-                    );
+                          interests: _interests,
+                        );
                   },
                 );
               }).toList(),
@@ -386,8 +410,15 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
 
   Widget _buildEventTypes() {
     final eventTypes = [
-      'Свадьба', 'День рождения', 'Корпоратив', 'Детский праздник',
-      'Юбилей', 'Выпускной', 'Новый год', '8 марта', '23 февраля'
+      'Свадьба',
+      'День рождения',
+      'Корпоратив',
+      'Детский праздник',
+      'Юбилей',
+      'Выпускной',
+      'Новый год',
+      '8 марта',
+      '23 февраля'
     ];
 
     return Card(
@@ -399,18 +430,20 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
             Text(
               'Типы мероприятий',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 8),
             Text(
               'Какие мероприятия вы планируете?',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
-              ),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.6),
+                  ),
             ),
             const SizedBox(height: 16),
-            
             Wrap(
               spacing: 8,
               children: eventTypes.map((eventType) {
@@ -427,8 +460,8 @@ class _CustomerProfileEditScreenState extends ConsumerState<CustomerProfileEditS
                       }
                     });
                     ref.read(customerProfileEditProvider.notifier).updateField(
-                      eventTypes: _eventTypes,
-                    );
+                          eventTypes: _eventTypes,
+                        );
                   },
                 );
               }).toList(),

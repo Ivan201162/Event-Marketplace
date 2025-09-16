@@ -9,10 +9,12 @@ class LocalizationSettingsScreen extends ConsumerStatefulWidget {
   const LocalizationSettingsScreen({super.key});
 
   @override
-  ConsumerState<LocalizationSettingsScreen> createState() => _LocalizationSettingsScreenState();
+  ConsumerState<LocalizationSettingsScreen> createState() =>
+      _LocalizationSettingsScreenState();
 }
 
-class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSettingsScreen> {
+class _LocalizationSettingsScreenState
+    extends ConsumerState<LocalizationSettingsScreen> {
   final LocalizationService _localizationService = LocalizationService();
 
   @override
@@ -38,8 +40,9 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
       ),
       body: Consumer(
         builder: (context, ref, child) {
-          final initializationAsync = ref.watch(localizationInitializationProvider);
-          
+          final initializationAsync =
+              ref.watch(localizationInitializationProvider);
+
           return initializationAsync.when(
             data: (_) => _buildContent(),
             loading: () => const Center(child: CircularProgressIndicator()),
@@ -58,24 +61,24 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
         children: [
           // Текущий язык
           _buildCurrentLanguage(),
-          
+
           const SizedBox(height: 24),
-          
+
           // Выбор языка
           _buildLanguageSelection(),
-          
+
           const SizedBox(height: 24),
-          
+
           // Дополнительные настройки
           _buildAdditionalSettings(),
-          
+
           const SizedBox(height: 24),
-          
+
           // Статистика локализации
           _buildLocalizationStats(),
-          
+
           const SizedBox(height: 24),
-          
+
           // Действия
           _buildActions(),
         ],
@@ -88,7 +91,7 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
       builder: (context, ref, child) {
         final currentLanguage = ref.watch(currentLanguageProvider);
         final currentLocalization = ref.watch(currentLocalizationProvider);
-        
+
         return Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -103,7 +106,6 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
                   ),
                 ),
                 const SizedBox(height: 16),
-                
                 Row(
                   children: [
                     Container(
@@ -175,12 +177,12 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
               ),
             ),
             const SizedBox(height: 16),
-            
             Consumer(
               builder: (context, ref, child) {
-                final supportedLanguages = ref.watch(supportedLanguagesProvider);
+                final supportedLanguages =
+                    ref.watch(supportedLanguagesProvider);
                 final currentLanguage = ref.watch(currentLanguageProvider);
-                
+
                 return ListView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
@@ -188,13 +190,13 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
                   itemBuilder: (context, index) {
                     final language = supportedLanguages[index];
                     final isSelected = language.languageCode == currentLanguage;
-                    
+
                     return ListTile(
                       leading: Container(
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: isSelected 
+                          color: isSelected
                               ? Colors.blue.withOpacity(0.1)
                               : Colors.grey.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
@@ -208,7 +210,8 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
                       title: Text(
                         language.displayName,
                         style: TextStyle(
-                          fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                          fontWeight:
+                              isSelected ? FontWeight.bold : FontWeight.normal,
                           color: isSelected ? Colors.blue : null,
                         ),
                       ),
@@ -218,7 +221,7 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
                           color: Colors.grey[600],
                         ),
                       ),
-                      trailing: isSelected 
+                      trailing: isSelected
                           ? const Icon(Icons.check, color: Colors.blue)
                           : null,
                       onTap: () => _changeLanguage(language.languageCode),
@@ -237,7 +240,7 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
     return Consumer(
       builder: (context, ref, child) {
         final settings = ref.watch(localizationSettingsProvider);
-        
+
         return Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -252,7 +255,7 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Автоматическое определение языка
                 SwitchListTile(
                   title: const Text('Автоматическое определение языка'),
@@ -265,13 +268,14 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
                     ));
                   },
                 ),
-                
+
                 const Divider(),
-                
+
                 // Показывать родные названия
                 SwitchListTile(
                   title: const Text('Показывать родные названия'),
-                  subtitle: const Text('Отображать названия языков на их родном языке'),
+                  subtitle: const Text(
+                      'Отображать названия языков на их родном языке'),
                   value: settings?.showNativeNames ?? false,
                   onChanged: (value) {
                     _updateSettings(settings?.copyWith(
@@ -303,11 +307,10 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
               ),
             ),
             const SizedBox(height: 16),
-            
             Consumer(
               builder: (context, ref, child) {
                 final allStatsAsync = ref.watch(allLocalizationStatsProvider);
-                
+
                 return allStatsAsync.when(
                   data: (stats) {
                     if (stats.isEmpty) {
@@ -315,7 +318,7 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
                         child: Text('Нет данных о статистике'),
                       );
                     }
-                    
+
                     return ListView.builder(
                       shrinkWrap: true,
                       physics: const NeverScrollableScrollPhysics(),
@@ -367,31 +370,31 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.w500,
-                  color: stat.completionPercentage >= 80 
-                      ? Colors.green 
-                      : stat.completionPercentage >= 50 
-                          ? Colors.orange 
+                  color: stat.completionPercentage >= 80
+                      ? Colors.green
+                      : stat.completionPercentage >= 50
+                          ? Colors.orange
                           : Colors.red,
                 ),
               ),
             ],
           ),
           const SizedBox(height: 8),
-          
+
           // Прогресс-бар
           LinearProgressIndicator(
             value: stat.completionPercentage / 100,
             backgroundColor: Colors.grey[300],
             valueColor: AlwaysStoppedAnimation<Color>(
-              stat.completionPercentage >= 80 
-                  ? Colors.green 
-                  : stat.completionPercentage >= 50 
-                      ? Colors.orange 
+              stat.completionPercentage >= 80
+                  ? Colors.green
+                  : stat.completionPercentage >= 50
+                      ? Colors.orange
                       : Colors.red,
             ),
           ),
           const SizedBox(height: 8),
-          
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -432,7 +435,7 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Очистить кэш
             ListTile(
               leading: const Icon(Icons.clear_all, color: Colors.orange),
@@ -441,9 +444,9 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
               trailing: const Icon(Icons.chevron_right),
               onTap: _clearCache,
             ),
-            
+
             const Divider(),
-            
+
             // Экспорт переводов
             ListTile(
               leading: const Icon(Icons.download, color: Colors.blue),
@@ -452,9 +455,9 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
               trailing: const Icon(Icons.chevron_right),
               onTap: _exportTranslations,
             ),
-            
+
             const Divider(),
-            
+
             // Импорт переводов
             ListTile(
               leading: const Icon(Icons.upload, color: Colors.green),
@@ -526,7 +529,7 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
 
   Future<void> _updateSettings(LocalizationSettings? settings) async {
     if (settings == null) return;
-    
+
     try {
       await ref.read(updateLocalizationSettingsProvider(settings).future);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -588,7 +591,8 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Экспорт переводов'),
-        content: const Text('Функция экспорта переводов будет доступна в следующих обновлениях.'),
+        content: const Text(
+            'Функция экспорта переводов будет доступна в следующих обновлениях.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -604,7 +608,8 @@ class _LocalizationSettingsScreenState extends ConsumerState<LocalizationSetting
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Импорт переводов'),
-        content: const Text('Функция импорта переводов будет доступна в следующих обновлениях.'),
+        content: const Text(
+            'Функция импорта переводов будет доступна в следующих обновлениях.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

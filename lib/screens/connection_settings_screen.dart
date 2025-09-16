@@ -8,12 +8,14 @@ class ConnectionSettingsScreen extends ConsumerStatefulWidget {
   const ConnectionSettingsScreen({super.key});
 
   @override
-  ConsumerState<ConnectionSettingsScreen> createState() => _ConnectionSettingsScreenState();
+  ConsumerState<ConnectionSettingsScreen> createState() =>
+      _ConnectionSettingsScreenState();
 }
 
-class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScreen> {
+class _ConnectionSettingsScreenState
+    extends ConsumerState<ConnectionSettingsScreen> {
   final IntegrationService _integrationService = IntegrationService();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,19 +35,19 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
           children: [
             // Статус подключения
             _buildConnectionStatus(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Тип подключения
             _buildConnectionType(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Настройки синхронизации
             _buildSyncSettings(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Диагностика
             _buildDiagnostics(),
           ],
@@ -69,11 +71,10 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
               ),
             ),
             const SizedBox(height: 16),
-            
             Consumer(
               builder: (context, ref, child) {
                 final connectivityAsync = ref.watch(connectivityStatusProvider);
-                
+
                 return connectivityAsync.when(
                   data: (isConnected) {
                     return Row(
@@ -89,16 +90,21 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                isConnected ? 'Подключено к интернету' : 'Нет подключения к интернету',
+                                isConnected
+                                    ? 'Подключено к интернету'
+                                    : 'Нет подключения к интернету',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
-                                  color: isConnected ? Colors.green : Colors.red,
+                                  color:
+                                      isConnected ? Colors.green : Colors.red,
                                 ),
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                isConnected ? 'Все функции доступны' : 'Некоторые функции недоступны',
+                                isConnected
+                                    ? 'Все функции доступны'
+                                    : 'Некоторые функции недоступны',
                                 style: TextStyle(
                                   fontSize: 14,
                                   color: Colors.grey[600],
@@ -170,11 +176,10 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
               ),
             ),
             const SizedBox(height: 16),
-            
             Consumer(
               builder: (context, ref, child) {
                 final connectionTypeAsync = ref.watch(connectionTypeProvider);
-                
+
                 return connectionTypeAsync.when(
                   data: (connectionType) {
                     return _buildConnectionTypeInfo(connectionType);
@@ -296,11 +301,12 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Автоматическая синхронизация
             SwitchListTile(
               title: const Text('Автоматическая синхронизация'),
-              subtitle: const Text('Автоматически синхронизировать данные при подключении к Wi-Fi'),
+              subtitle: const Text(
+                  'Автоматически синхронизировать данные при подключении к Wi-Fi'),
               value: true, // TODO: Получить из настроек
               onChanged: (value) {
                 // TODO: Сохранить настройку
@@ -309,13 +315,14 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
                 );
               },
             ),
-            
+
             const Divider(),
-            
+
             // Синхронизация только по Wi-Fi
             SwitchListTile(
               title: const Text('Синхронизация только по Wi-Fi'),
-              subtitle: const Text('Синхронизировать данные только при подключении к Wi-Fi'),
+              subtitle: const Text(
+                  'Синхронизировать данные только при подключении к Wi-Fi'),
               value: false, // TODO: Получить из настроек
               onChanged: (value) {
                 // TODO: Сохранить настройку
@@ -324,13 +331,14 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
                 );
               },
             ),
-            
+
             const Divider(),
-            
+
             // Синхронизация в фоне
             SwitchListTile(
               title: const Text('Синхронизация в фоне'),
-              subtitle: const Text('Разрешить синхронизацию данных в фоновом режиме'),
+              subtitle:
+                  const Text('Разрешить синхронизацию данных в фоновом режиме'),
               value: true, // TODO: Получить из настроек
               onChanged: (value) {
                 // TODO: Сохранить настройку
@@ -360,7 +368,7 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Проверить подключение
             ListTile(
               leading: const Icon(Icons.network_check, color: Colors.blue),
@@ -369,9 +377,9 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
               trailing: const Icon(Icons.chevron_right),
               onTap: _checkConnection,
             ),
-            
+
             const Divider(),
-            
+
             // Тест скорости
             ListTile(
               leading: const Icon(Icons.speed, color: Colors.green),
@@ -380,20 +388,21 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
               trailing: const Icon(Icons.chevron_right),
               onTap: _testSpeed,
             ),
-            
+
             const Divider(),
-            
+
             // Сброс сетевых настроек
             ListTile(
               leading: const Icon(Icons.refresh, color: Colors.orange),
               title: const Text('Сброс сетевых настроек'),
-              subtitle: const Text('Сбросить настройки сети и переподключиться'),
+              subtitle:
+                  const Text('Сбросить настройки сети и переподключиться'),
               trailing: const Icon(Icons.chevron_right),
               onTap: _resetNetworkSettings,
             ),
-            
+
             const Divider(),
-            
+
             // Логи подключения
             ListTile(
               leading: const Icon(Icons.history, color: Colors.purple),
@@ -412,7 +421,7 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
     // Обновляем провайдеры
     ref.invalidate(connectivityStatusProvider);
     ref.invalidate(connectionTypeProvider);
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Статус подключения обновлен')),
     );
@@ -507,7 +516,8 @@ class _ConnectionSettingsScreenState extends ConsumerState<ConnectionSettingsScr
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Сброс сетевых настроек'),
-        content: const Text('Вы уверены, что хотите сбросить сетевые настройки? Это может потребовать переподключения к Wi-Fi.'),
+        content: const Text(
+            'Вы уверены, что хотите сбросить сетевые настройки? Это может потребовать переподключения к Wi-Fi.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

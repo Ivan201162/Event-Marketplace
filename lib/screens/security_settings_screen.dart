@@ -9,12 +9,14 @@ class SecuritySettingsScreen extends ConsumerStatefulWidget {
   const SecuritySettingsScreen({super.key});
 
   @override
-  ConsumerState<SecuritySettingsScreen> createState() => _SecuritySettingsScreenState();
+  ConsumerState<SecuritySettingsScreen> createState() =>
+      _SecuritySettingsScreenState();
 }
 
-class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen> {
+class _SecuritySettingsScreenState
+    extends ConsumerState<SecuritySettingsScreen> {
   final SecurityService _securityService = SecurityService();
-  
+
   bool _biometricAuth = false;
   bool _pinAuth = false;
   bool _twoFactorAuth = false;
@@ -34,7 +36,8 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
     try {
       final currentUser = await ref.read(authServiceProvider).getCurrentUser();
       if (currentUser != null) {
-        final settings = await _securityService.getSecuritySettings(currentUser.id);
+        final settings =
+            await _securityService.getSecuritySettings(currentUser.id);
         if (settings != null) {
           setState(() {
             _biometricAuth = settings.biometricAuth;
@@ -72,29 +75,29 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
           children: [
             // Аутентификация
             _buildAuthenticationSection(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Автоблокировка
             _buildAutoLockSection(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Шифрование данных
             _buildEncryptionSection(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Аудит
             _buildAuditSection(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Устройства
             _buildDevicesSection(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Действия
             _buildActionsSection(),
           ],
@@ -118,7 +121,7 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Биометрическая аутентификация
             FutureBuilder<bool>(
               future: _securityService.isBiometricAvailable(),
@@ -127,35 +130,38 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
                 return SwitchListTile(
                   title: const Text('Биометрическая аутентификация'),
                   subtitle: Text(
-                    isAvailable 
+                    isAvailable
                         ? 'Использовать отпечаток пальца или Face ID'
                         : 'Биометрическая аутентификация недоступна',
                   ),
                   value: _biometricAuth && isAvailable,
-                  onChanged: isAvailable ? (value) async {
-                    if (value) {
-                      final success = await _securityService.authenticateWithBiometrics(
-                        reason: 'Включить биометрическую аутентификацию',
-                      );
-                      if (success) {
-                        setState(() {
-                          _biometricAuth = true;
-                        });
-                        _updateSecuritySettings();
-                      }
-                    } else {
-                      setState(() {
-                        _biometricAuth = false;
-                      });
-                      _updateSecuritySettings();
-                    }
-                  } : null,
+                  onChanged: isAvailable
+                      ? (value) async {
+                          if (value) {
+                            final success = await _securityService
+                                .authenticateWithBiometrics(
+                              reason: 'Включить биометрическую аутентификацию',
+                            );
+                            if (success) {
+                              setState(() {
+                                _biometricAuth = true;
+                              });
+                              _updateSecuritySettings();
+                            }
+                          } else {
+                            setState(() {
+                              _biometricAuth = false;
+                            });
+                            _updateSecuritySettings();
+                          }
+                        }
+                      : null,
                 );
               },
             ),
-            
+
             const Divider(),
-            
+
             // PIN-код
             SwitchListTile(
               title: const Text('PIN-код'),
@@ -169,9 +175,9 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
                 }
               },
             ),
-            
+
             const Divider(),
-            
+
             // Двухфакторная аутентификация
             SwitchListTile(
               title: const Text('Двухфакторная аутентификация'),
@@ -206,23 +212,23 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Автоблокировка
             SwitchListTile(
               title: const Text('Автоблокировка'),
               subtitle: const Text('Автоматически блокировать приложение'),
               value: _autoLock,
-                  onChanged: (value) async {
-                    setState(() {
-                      _autoLock = value;
-                    });
-                    _updateSecuritySettings();
-                  },
+              onChanged: (value) async {
+                setState(() {
+                  _autoLock = value;
+                });
+                _updateSecuritySettings();
+              },
             ),
-            
+
             if (_autoLock) ...[
               const Divider(),
-              
+
               // Таймаут автоблокировки
               ListTile(
                 title: const Text('Время автоблокировки'),
@@ -252,33 +258,33 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Безопасное хранилище
             SwitchListTile(
               title: const Text('Безопасное хранилище'),
               subtitle: const Text('Хранить данные в зашифрованном виде'),
               value: _secureStorage,
-                  onChanged: (value) async {
-                    setState(() {
-                      _secureStorage = value;
-                    });
-                    _updateSecuritySettings();
-                  },
+              onChanged: (value) async {
+                setState(() {
+                  _secureStorage = value;
+                });
+                _updateSecuritySettings();
+              },
             ),
-            
+
             const Divider(),
-            
+
             // Шифрование данных
             SwitchListTile(
               title: const Text('Шифрование данных'),
               subtitle: const Text('Шифровать все пользовательские данные'),
               value: _dataEncryption,
-                  onChanged: (value) async {
-                    setState(() {
-                      _dataEncryption = value;
-                    });
-                    _updateSecuritySettings();
-                  },
+              onChanged: (value) async {
+                setState(() {
+                  _dataEncryption = value;
+                });
+                _updateSecuritySettings();
+              },
             ),
           ],
         ),
@@ -301,22 +307,22 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Логирование аудита
             SwitchListTile(
               title: const Text('Логирование аудита'),
               subtitle: const Text('Записывать события безопасности'),
               value: _auditLogging,
-                  onChanged: (value) async {
-                    setState(() {
-                      _auditLogging = value;
-                    });
-                    _updateSecuritySettings();
-                  },
+              onChanged: (value) async {
+                setState(() {
+                  _auditLogging = value;
+                });
+                _updateSecuritySettings();
+              },
             ),
-            
+
             const Divider(),
-            
+
             // Просмотр логов
             ListTile(
               title: const Text('Просмотр логов безопасности'),
@@ -345,17 +351,18 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Управление устройствами
             ListTile(
               title: const Text('Управление устройствами'),
-              subtitle: const Text('Просмотр и управление подключенными устройствами'),
+              subtitle: const Text(
+                  'Просмотр и управление подключенными устройствами'),
               trailing: const Icon(Icons.chevron_right),
               onTap: _showDevicesManagement,
             ),
-            
+
             const Divider(),
-            
+
             // Текущее устройство
             ListTile(
               title: const Text('Текущее устройство'),
@@ -384,7 +391,7 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Изменить пароль
             ListTile(
               title: const Text('Изменить пароль'),
@@ -392,9 +399,9 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
               trailing: const Icon(Icons.chevron_right),
               onTap: _changePassword,
             ),
-            
+
             const Divider(),
-            
+
             // Очистить данные
             ListTile(
               title: const Text('Очистить безопасные данные'),
@@ -402,9 +409,9 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
               trailing: const Icon(Icons.chevron_right),
               onTap: _clearSecureData,
             ),
-            
+
             const Divider(),
-            
+
             // Экспорт данных
             ListTile(
               title: const Text('Экспорт данных безопасности'),
@@ -439,7 +446,7 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
         );
 
         await _securityService.updateSecuritySettings(settings);
-        
+
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -463,7 +470,7 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
 
   Future<void> _showPinSetupDialog() async {
     final pinController = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -571,7 +578,8 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Двухфакторная аутентификация'),
-        content: const Text('Функция двухфакторной аутентификации будет доступна в следующих обновлениях.'),
+        content: const Text(
+            'Функция двухфакторной аутентификации будет доступна в следующих обновлениях.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -587,7 +595,8 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Отключение двухфакторной аутентификации'),
-        content: const Text('Функция двухфакторной аутентификации будет доступна в следующих обновлениях.'),
+        content: const Text(
+            'Функция двухфакторной аутентификации будет доступна в следующих обновлениях.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -666,28 +675,36 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
   void _showAuditLogs() {
     // TODO: Реализовать просмотр логов аудита
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Просмотр логов аудита будет доступен в следующих обновлениях')),
+      const SnackBar(
+          content: Text(
+              'Просмотр логов аудита будет доступен в следующих обновлениях')),
     );
   }
 
   void _showDevicesManagement() {
     // TODO: Реализовать управление устройствами
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Управление устройствами будет доступно в следующих обновлениях')),
+      const SnackBar(
+          content: Text(
+              'Управление устройствами будет доступно в следующих обновлениях')),
     );
   }
 
   void _showCurrentDeviceInfo() {
     // TODO: Реализовать отображение информации об устройстве
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Информация об устройстве будет доступна в следующих обновлениях')),
+      const SnackBar(
+          content: Text(
+              'Информация об устройстве будет доступна в следующих обновлениях')),
     );
   }
 
   void _changePassword() {
     // TODO: Реализовать изменение пароля
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Изменение пароля будет доступно в следующих обновлениях')),
+      const SnackBar(
+          content:
+              Text('Изменение пароля будет доступно в следующих обновлениях')),
     );
   }
 
@@ -696,7 +713,8 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Очистка данных'),
-        content: const Text('Вы уверены, что хотите удалить все зашифрованные данные? Это действие нельзя отменить.'),
+        content: const Text(
+            'Вы уверены, что хотите удалить все зашифрованные данные? Это действие нельзя отменить.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -726,7 +744,9 @@ class _SecuritySettingsScreenState extends ConsumerState<SecuritySettingsScreen>
   void _exportSecurityData() {
     // TODO: Реализовать экспорт данных безопасности
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Экспорт данных безопасности будет доступен в следующих обновлениях')),
+      const SnackBar(
+          content: Text(
+              'Экспорт данных безопасности будет доступен в следующих обновлениях')),
     );
   }
 }

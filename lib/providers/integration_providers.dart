@@ -13,17 +13,20 @@ final availableIntegrationsProvider = StreamProvider<List<Integration>>((ref) {
 });
 
 /// Провайдер интеграций пользователя
-final userIntegrationsProvider = StreamProvider.family<List<IntegrationSettings>, String>((ref, userId) {
+final userIntegrationsProvider =
+    StreamProvider.family<List<IntegrationSettings>, String>((ref, userId) {
   return ref.watch(integrationServiceProvider).getUserIntegrations(userId);
 });
 
 /// Провайдер событий интеграции пользователя
-final userIntegrationEventsProvider = StreamProvider.family<List<IntegrationEvent>, String>((ref, userId) {
+final userIntegrationEventsProvider =
+    StreamProvider.family<List<IntegrationEvent>, String>((ref, userId) {
   return ref.watch(integrationServiceProvider).getUserIntegrationEvents(userId);
 });
 
 /// Провайдер статистики интеграций
-final integrationStatsProvider = FutureProvider.family<Map<String, dynamic>, String>((ref, userId) {
+final integrationStatsProvider =
+    FutureProvider.family<Map<String, dynamic>, String>((ref, userId) {
   return ref.watch(integrationServiceProvider).getIntegrationStats(userId);
 });
 

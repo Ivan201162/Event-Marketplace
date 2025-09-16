@@ -10,7 +10,7 @@ import '../providers/chat_providers.dart';
 class GuestChatScreen extends ConsumerStatefulWidget {
   final String? specialistId;
   final String? eventId;
-  
+
   const GuestChatScreen({
     super.key,
     this.specialistId,
@@ -27,7 +27,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
   final FocusNode _messageFocusNode = FocusNode();
-  
+
   // Вложения
   List<File> _attachments = [];
   bool _showAttachmentOptions = false;
@@ -82,11 +82,11 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
               Text(
                 'Информация о госте',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               const SizedBox(height: 16),
-              
+
               // Поля ввода информации
               TextField(
                 controller: _nameController,
@@ -97,7 +97,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-              
+
               TextField(
                 controller: _emailController,
                 decoration: const InputDecoration(
@@ -108,7 +108,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
                 keyboardType: TextInputType.emailAddress,
               ),
               const SizedBox(height: 12),
-              
+
               TextField(
                 controller: _phoneController,
                 decoration: const InputDecoration(
@@ -121,12 +121,12 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
             ],
           ),
         ),
-        
+
         // Сообщения
         Expanded(
           child: _buildMessagesList(),
         ),
-        
+
         // Поле ввода сообщения
         _buildMessageInput(),
       ],
@@ -158,14 +158,14 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
                     Text(
                       'Режим специалиста',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     Text(
                       'Просмотр сообщений от гостей',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                            color: Colors.grey[600],
+                          ),
                     ),
                   ],
                 ),
@@ -177,12 +177,12 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
             ],
           ),
         ),
-        
+
         // Сообщения
         Expanded(
           child: _buildMessagesList(),
         ),
-        
+
         // Поле ввода сообщения
         _buildMessageInput(),
       ],
@@ -205,15 +205,15 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
           Text(
             'Гостевой чат',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              color: Colors.grey.withOpacity(0.7),
-            ),
+                  color: Colors.grey.withOpacity(0.7),
+                ),
           ),
           const SizedBox(height: 8),
           Text(
             'Отправьте сообщение организатору мероприятия',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Colors.grey.withOpacity(0.7),
-            ),
+                  color: Colors.grey.withOpacity(0.7),
+                ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -226,7 +226,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
       children: [
         // Вложения
         if (_attachments.isNotEmpty) _buildAttachmentsPreview(),
-        
+
         // Поле ввода сообщения
         Container(
           padding: const EdgeInsets.all(16),
@@ -242,7 +242,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
             children: [
               // Опции вложений
               if (_showAttachmentOptions) _buildAttachmentOptions(),
-              
+
               Row(
                 children: [
                   // Кнопка вложений
@@ -257,14 +257,16 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
                       color: _showAttachmentOptions ? Colors.red : null,
                     ),
                   ),
-                  
+
                   // Поле ввода
                   Expanded(
                     child: TextField(
                       controller: _messageController,
                       focusNode: _messageFocusNode,
                       decoration: InputDecoration(
-                        hintText: _isGuestMode ? 'Сообщение организатору...' : 'Ответ гостю...',
+                        hintText: _isGuestMode
+                            ? 'Сообщение организатору...'
+                            : 'Ответ гостю...',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
                         ),
@@ -275,15 +277,16 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
                       ),
                       maxLines: null,
                       onSubmitted: (value) {
-                        if (value.trim().isNotEmpty || _attachments.isNotEmpty) {
+                        if (value.trim().isNotEmpty ||
+                            _attachments.isNotEmpty) {
                           _sendMessage();
                         }
                       },
                     ),
                   ),
-                  
+
                   const SizedBox(width: 8),
-                  
+
                   // Кнопка отправки
                   FloatingActionButton.small(
                     onPressed: _canSendMessage() ? _sendMessage : null,
@@ -300,10 +303,12 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
 
   bool _canSendMessage() {
     if (_isGuestMode) {
-      return _nameController.text.trim().isNotEmpty && 
-             (_messageController.text.trim().isNotEmpty || _attachments.isNotEmpty);
+      return _nameController.text.trim().isNotEmpty &&
+          (_messageController.text.trim().isNotEmpty ||
+              _attachments.isNotEmpty);
     } else {
-      return _messageController.text.trim().isNotEmpty || _attachments.isNotEmpty;
+      return _messageController.text.trim().isNotEmpty ||
+          _attachments.isNotEmpty;
     }
   }
 
@@ -314,10 +319,10 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
       // TODO: Реализовать отправку сообщения в Firestore
       // Создать или получить chatId
       // Отправить сообщение с вложениями
-      
+
       final message = _messageController.text.trim();
       final attachments = _attachments.map((file) => file.path).toList();
-      
+
       // Показать уведомление об успешной отправке
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -325,14 +330,13 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
           backgroundColor: Colors.green,
         ),
       );
-      
+
       // Очистить поля
       _messageController.clear();
       setState(() {
         _attachments.clear();
         _showAttachmentOptions = false;
       });
-      
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -359,7 +363,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
   Future<void> _pickImages() async {
     final ImagePicker picker = ImagePicker();
     final List<XFile> images = await picker.pickMultiImage();
-    
+
     if (images.isNotEmpty) {
       setState(() {
         _attachments.addAll(images.map((image) => File(image.path)));
@@ -371,7 +375,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
   Future<void> _pickVideo() async {
     final ImagePicker picker = ImagePicker();
     final XFile? video = await picker.pickVideo(source: ImageSource.gallery);
-    
+
     if (video != null) {
       setState(() {
         _attachments.add(File(video.path));
@@ -418,15 +422,18 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
   /// Отправка в WhatsApp
   Future<void> _sendToWhatsApp() async {
     if (_attachments.isEmpty) return;
-    
-    final phoneNumber = widget.specialistId; // Предполагаем, что specialistId - это номер телефона
+
+    final phoneNumber = widget
+        .specialistId; // Предполагаем, что specialistId - это номер телефона
     if (phoneNumber == null) return;
-    
-    final message = _messageController.text.isNotEmpty ? _messageController.text : 'Файлы для мероприятия';
+
+    final message = _messageController.text.isNotEmpty
+        ? _messageController.text
+        : 'Файлы для мероприятия';
     final encodedMessage = Uri.encodeComponent(message);
-    
+
     final whatsappUrl = 'https://wa.me/$phoneNumber?text=$encodedMessage';
-    
+
     if (await canLaunchUrl(Uri.parse(whatsappUrl))) {
       await launchUrl(Uri.parse(whatsappUrl));
     } else {
@@ -441,15 +448,18 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
   /// Отправка в Telegram
   Future<void> _sendToTelegram() async {
     if (_attachments.isEmpty) return;
-    
-    final username = widget.specialistId; // Предполагаем, что specialistId - это username
+
+    final username =
+        widget.specialistId; // Предполагаем, что specialistId - это username
     if (username == null) return;
-    
-    final message = _messageController.text.isNotEmpty ? _messageController.text : 'Файлы для мероприятия';
+
+    final message = _messageController.text.isNotEmpty
+        ? _messageController.text
+        : 'Файлы для мероприятия';
     final encodedMessage = Uri.encodeComponent(message);
-    
+
     final telegramUrl = 'https://t.me/$username?text=$encodedMessage';
-    
+
     if (await canLaunchUrl(Uri.parse(telegramUrl))) {
       await launchUrl(Uri.parse(telegramUrl));
     } else {
@@ -553,11 +563,11 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
           Text(
             'Прикрепить файлы:',
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
+                  fontWeight: FontWeight.w600,
+                ),
           ),
           const SizedBox(height: 12),
-          
+
           // Кнопки типов файлов
           Row(
             children: [
@@ -586,16 +596,16 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Кнопки мессенджеров
           if (_attachments.isNotEmpty) ...[
             Text(
               'Отправить через мессенджер:',
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+                    fontWeight: FontWeight.w600,
+                  ),
             ),
             const SizedBox(height: 8),
             Row(

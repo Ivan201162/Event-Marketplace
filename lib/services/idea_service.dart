@@ -31,7 +31,7 @@ class IdeaService {
   }) async {
     try {
       final ideaRef = _firestore.collection('ideas').doc();
-      
+
       final idea = Idea(
         id: ideaRef.id,
         title: title,
@@ -86,11 +86,13 @@ class IdeaService {
     }
 
     if (filter.startDate != null) {
-      query = query.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!));
+      query = query.where('createdAt',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!));
     }
 
     if (filter.endDate != null) {
-      query = query.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
+      query = query.where('createdAt',
+          isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
     }
 
     // Сортировка
@@ -108,7 +110,8 @@ class IdeaService {
         query = query.orderBy('savesCount', descending: !filter.sortAscending);
         break;
       case IdeaSortBy.comments:
-        query = query.orderBy('commentsCount', descending: !filter.sortAscending);
+        query =
+            query.orderBy('commentsCount', descending: !filter.sortAscending);
         break;
       case IdeaSortBy.title:
         query = query.orderBy('title', descending: !filter.sortAscending);
@@ -116,22 +119,23 @@ class IdeaService {
     }
 
     return query.snapshots().map((snapshot) {
-      var ideas = snapshot.docs
-          .map((doc) => Idea.fromDocument(doc))
-          .toList();
+      var ideas = snapshot.docs.map((doc) => Idea.fromDocument(doc)).toList();
 
       // Применяем фильтры, которые нельзя применить в Firestore
       if (filter.tags != null && filter.tags!.isNotEmpty) {
-        ideas = ideas.where((idea) => 
-            idea.tags.any((tag) => filter.tags!.contains(tag))).toList();
+        ideas = ideas
+            .where((idea) => idea.tags.any((tag) => filter.tags!.contains(tag)))
+            .toList();
       }
 
       if (filter.searchQuery != null && filter.searchQuery!.isNotEmpty) {
         final query = filter.searchQuery!.toLowerCase();
-        ideas = ideas.where((idea) => 
-            idea.title.toLowerCase().contains(query) ||
-            idea.description.toLowerCase().contains(query) ||
-            idea.tags.any((tag) => tag.toLowerCase().contains(query))).toList();
+        ideas = ideas
+            .where((idea) =>
+                idea.title.toLowerCase().contains(query) ||
+                idea.description.toLowerCase().contains(query) ||
+                idea.tags.any((tag) => tag.toLowerCase().contains(query)))
+            .toList();
       }
 
       return ideas;
@@ -294,7 +298,7 @@ class IdeaService {
   }) async {
     try {
       final commentRef = _firestore.collection('idea_comments').doc();
-      
+
       final comment = IdeaComment(
         id: commentRef.id,
         ideaId: ideaId,
@@ -346,7 +350,7 @@ class IdeaService {
     try {
       final fileName = 'idea_image_${_uuid.v4()}.jpg';
       final ref = _storage.ref().child('idea_images/$fileName');
-      
+
       final uploadTask = ref.putFile(File(imageFile.path));
       final snapshot = await uploadTask;
       final downloadUrl = await snapshot.ref.getDownloadURL();
@@ -354,7 +358,8 @@ class IdeaService {
       return IdeaImage(
         id: _uuid.v4(),
         url: downloadUrl,
-        thumbnailUrl: downloadUrl, // Для простоты используем оригинал как thumbnail
+        thumbnailUrl:
+            downloadUrl, // Для простоты используем оригинал как thumbnail
         caption: caption,
         createdAt: DateTime.now(),
       );
@@ -423,9 +428,7 @@ class IdeaService {
         .orderBy('updatedAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => Idea.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map((doc) => Idea.fromDocument(doc)).toList();
     });
   }
 
@@ -452,7 +455,7 @@ class IdeaService {
   }) async {
     try {
       final collectionRef = _firestore.collection('idea_collections').doc();
-      
+
       final collection = IdeaCollection(
         id: collectionRef.id,
         name: name,
@@ -501,7 +504,8 @@ class IdeaService {
   }
 
   /// Удалить идею из коллекции
-  Future<bool> removeIdeaFromCollection(String collectionId, String ideaId) async {
+  Future<bool> removeIdeaFromCollection(
+      String collectionId, String ideaId) async {
     try {
       await _firestore.collection('idea_collections').doc(collectionId).update({
         'ideaIds': FieldValue.arrayRemove([ideaId]),
@@ -517,19 +521,23 @@ class IdeaService {
   /// Подсчитать статистику идей
   IdeaStats _calculateIdeaStats(List<Idea> ideas) {
     final totalIdeas = ideas.length;
-    final publishedIdeas = ideas.where((i) => i.status == IdeaStatus.published).length;
+    final publishedIdeas =
+        ideas.where((i) => i.status == IdeaStatus.published).length;
     final draftIdeas = ideas.where((i) => i.status == IdeaStatus.draft).length;
-    final archivedIdeas = ideas.where((i) => i.status == IdeaStatus.archived).length;
-    
+    final archivedIdeas =
+        ideas.where((i) => i.status == IdeaStatus.archived).length;
+
     final totalLikes = ideas.fold<int>(0, (sum, idea) => sum + idea.likesCount);
     final totalViews = ideas.fold<int>(0, (sum, idea) => sum + idea.viewsCount);
     final totalSaves = ideas.fold<int>(0, (sum, idea) => sum + idea.savesCount);
-    final totalComments = ideas.fold<int>(0, (sum, idea) => sum + idea.commentsCount);
+    final totalComments =
+        ideas.fold<int>(0, (sum, idea) => sum + idea.commentsCount);
 
     // Статистика по категориям
     final ideasByCategory = <String, int>{};
     for (final idea in ideas) {
-      ideasByCategory[idea.category] = (ideasByCategory[idea.category] ?? 0) + 1;
+      ideasByCategory[idea.category] =
+          (ideasByCategory[idea.category] ?? 0) + 1;
     }
 
     // Статистика по типам

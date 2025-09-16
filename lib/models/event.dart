@@ -54,7 +54,7 @@ class Event {
   /// Создать событие из документа Firestore
   factory Event.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return Event(
       id: doc.id,
       title: data['title'] ?? '',
@@ -337,11 +337,11 @@ enum EventCategory {
 
 /// Статусы событий
 enum EventStatus {
-  draft,      // Черновик
-  active,     // Активно
-  full,       // Заполнено
-  cancelled,  // Отменено
-  completed,  // Завершено
+  draft, // Черновик
+  active, // Активно
+  full, // Заполнено
+  cancelled, // Отменено
+  completed, // Завершено
 }
 
 /// Extension для EventCategory
@@ -372,4 +372,3 @@ extension EventCategoryExtension on EventCategory {
     }
   }
 }
-

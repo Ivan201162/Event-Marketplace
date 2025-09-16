@@ -33,7 +33,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
   final List<ChatMessageExtended> _messages = [];
-  
+
   bool _showVoiceRecorder = false;
   bool _isTyping = false;
 
@@ -62,7 +62,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
                   ? NetworkImage(widget.otherUserAvatar!)
                   : null,
               child: widget.otherUserAvatar == null
-                  ? Text(widget.otherUserName.isNotEmpty 
+                  ? Text(widget.otherUserName.isNotEmpty
                       ? widget.otherUserName[0].toUpperCase()
                       : '?')
                   : null,
@@ -74,7 +74,8 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
                 children: [
                   Text(
                     widget.otherUserName,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        fontSize: 16, fontWeight: FontWeight.bold),
                   ),
                   if (_isTyping)
                     const Text(
@@ -143,12 +144,12 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
               itemBuilder: (context, index) {
                 final message = _messages[index];
                 final isOwnMessage = message.senderId == widget.currentUserId;
-                
+
                 return _buildMessageBubble(message, isOwnMessage);
               },
             ),
           ),
-          
+
           // Голосовой рекордер
           if (_showVoiceRecorder)
             VoiceRecorderWidget(
@@ -158,7 +159,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
               senderAvatar: widget.currentUserAvatar,
               onVoiceMessageSent: _onVoiceMessageSent,
             ),
-          
+
           // Поле ввода сообщения
           _buildMessageInput(),
         ],
@@ -170,9 +171,8 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 4),
       child: Row(
-        mainAxisAlignment: isOwnMessage 
-            ? MainAxisAlignment.end 
-            : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isOwnMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           if (!isOwnMessage) ...[
@@ -182,14 +182,13 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
                   ? NetworkImage(widget.otherUserAvatar!)
                   : null,
               child: widget.otherUserAvatar == null
-                  ? Text(widget.otherUserName.isNotEmpty 
+                  ? Text(widget.otherUserName.isNotEmpty
                       ? widget.otherUserName[0].toUpperCase()
                       : '?')
                   : null,
             ),
             const SizedBox(width: 8),
           ],
-          
           Flexible(
             child: Container(
               constraints: BoxConstraints(
@@ -197,14 +196,14 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
               ),
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isOwnMessage 
+                color: isOwnMessage
                     ? Theme.of(context).primaryColor
                     : Colors.grey[200],
                 borderRadius: BorderRadius.circular(16).copyWith(
-                  bottomLeft: isOwnMessage 
+                  bottomLeft: isOwnMessage
                       ? const Radius.circular(16)
                       : const Radius.circular(4),
-                  bottomRight: isOwnMessage 
+                  bottomRight: isOwnMessage
                       ? const Radius.circular(4)
                       : const Radius.circular(16),
                 ),
@@ -226,9 +225,9 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
                         fontSize: 16,
                       ),
                     ),
-                  
+
                   const SizedBox(height: 8),
-                  
+
                   // Время и статус
                   Row(
                     mainAxisSize: MainAxisSize.min,
@@ -236,7 +235,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
                       Text(
                         _formatTime(message.timestamp),
                         style: TextStyle(
-                          color: isOwnMessage 
+                          color: isOwnMessage
                               ? Colors.white.withValues(alpha: 0.7)
                               : Colors.grey[600],
                           fontSize: 12,
@@ -247,14 +246,14 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
                         Icon(
                           message.isRead ? Icons.done_all : Icons.done,
                           size: 16,
-                          color: message.isRead 
+                          color: message.isRead
                               ? Colors.blue[300]
                               : Colors.white.withValues(alpha: 0.7),
                         ),
                       ],
                     ],
                   ),
-                  
+
                   // Реакции
                   if (message.reactions.isNotEmpty) ...[
                     const SizedBox(height: 8),
@@ -269,7 +268,6 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
               ),
             ),
           ),
-          
           if (isOwnMessage) ...[
             const SizedBox(width: 8),
             CircleAvatar(
@@ -278,7 +276,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
                   ? NetworkImage(widget.currentUserAvatar!)
                   : null,
               child: widget.currentUserAvatar == null
-                  ? Text(widget.currentUserName.isNotEmpty 
+                  ? Text(widget.currentUserName.isNotEmpty
                       ? widget.currentUserName[0].toUpperCase()
                       : '?')
                   : null,
@@ -306,7 +304,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
           IconButton(
             icon: Icon(
               _showVoiceRecorder ? Icons.keyboard : Icons.mic,
-              color: _showVoiceRecorder 
+              color: _showVoiceRecorder
                   ? Theme.of(context).primaryColor
                   : Colors.grey[600],
             ),
@@ -316,7 +314,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
               });
             },
           ),
-          
+
           // Поле ввода текста
           Expanded(
             child: TextField(
@@ -340,9 +338,9 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
               onSubmitted: (value) => _sendTextMessage(),
             ),
           ),
-          
+
           const SizedBox(width: 8),
-          
+
           // Кнопка отправки
           GestureDetector(
             onTap: _sendTextMessage,
@@ -412,7 +410,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
 
     _messageController.clear();
     _scrollToBottom();
-    
+
     // TODO: Отправить сообщение в Firestore
   }
 
@@ -421,7 +419,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
       _messages.add(message);
       _showVoiceRecorder = false;
     });
-    
+
     _scrollToBottom();
   }
 
@@ -486,7 +484,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
                     ? NetworkImage(widget.otherUserAvatar!)
                     : null,
                 child: widget.otherUserAvatar == null
-                    ? Text(widget.otherUserName.isNotEmpty 
+                    ? Text(widget.otherUserName.isNotEmpty
                         ? widget.otherUserName[0].toUpperCase()
                         : '?')
                     : null,
@@ -561,7 +559,7 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
   String _formatTime(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
-    
+
     if (difference.inDays == 0) {
       return '${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
     } else if (difference.inDays == 1) {

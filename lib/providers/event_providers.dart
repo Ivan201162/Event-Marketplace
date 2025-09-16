@@ -15,7 +15,8 @@ final allEventsProvider = StreamProvider<List<Event>>((ref) {
 });
 
 /// Провайдер событий пользователя
-final userEventsProvider = StreamProvider.family<List<Event>, String>((ref, userId) {
+final userEventsProvider =
+    StreamProvider.family<List<Event>, String>((ref, userId) {
   final eventService = ref.watch(eventServiceProvider);
   return eventService.getUserEvents(userId);
 });
@@ -39,31 +40,36 @@ final upcomingEventsProvider = StreamProvider<List<Event>>((ref) {
 });
 
 /// Провайдер событий по категории
-final eventsByCategoryProvider = StreamProvider.family<List<Event>, EventCategory>((ref, category) {
+final eventsByCategoryProvider =
+    StreamProvider.family<List<Event>, EventCategory>((ref, category) {
   final eventService = ref.watch(eventServiceProvider);
   return eventService.getEventsByCategory(category);
 });
 
 /// Провайдер событий по дате
-final eventsByDateProvider = StreamProvider.family<List<Event>, DateTime>((ref, date) {
+final eventsByDateProvider =
+    StreamProvider.family<List<Event>, DateTime>((ref, date) {
   final eventService = ref.watch(eventServiceProvider);
   return eventService.getEventsByDate(date);
 });
 
 /// Провайдер событий с фильтрацией
-final filteredEventsProvider = StreamProvider.family<List<Event>, EventFilter>((ref, filter) {
+final filteredEventsProvider =
+    StreamProvider.family<List<Event>, EventFilter>((ref, filter) {
   final eventService = ref.watch(eventServiceProvider);
   return eventService.getFilteredEvents(filter);
 });
 
 /// Провайдер статистики событий пользователя
-final userEventStatsProvider = FutureProvider.family<Map<String, int>, String>((ref, userId) {
+final userEventStatsProvider =
+    FutureProvider.family<Map<String, int>, String>((ref, userId) {
   final eventService = ref.watch(eventServiceProvider);
   return eventService.getUserEventStats(userId);
 });
 
 /// Провайдер для управления состоянием создания события
-final createEventProvider = StateNotifierProvider<CreateEventNotifier, CreateEventState>((ref) {
+final createEventProvider =
+    StateNotifierProvider<CreateEventNotifier, CreateEventState>((ref) {
   return CreateEventNotifier(ref.read(eventServiceProvider));
 });
 
@@ -179,7 +185,8 @@ class CreateEventNotifier extends StateNotifier<CreateEventState> {
 
   /// Обновить максимальное количество участников
   void updateMaxParticipants(int maxParticipants) {
-    state = state.copyWith(maxParticipants: maxParticipants, errorMessage: null);
+    state =
+        state.copyWith(maxParticipants: maxParticipants, errorMessage: null);
   }
 
   /// Обновить теги
@@ -203,8 +210,12 @@ class CreateEventNotifier extends StateNotifier<CreateEventState> {
   }
 
   /// Создать событие
-  Future<String?> createEvent(String organizerId, String organizerName, String? organizerPhoto) async {
-    if (state.title.isEmpty || state.description.isEmpty || state.date == null || state.location.isEmpty) {
+  Future<String?> createEvent(
+      String organizerId, String organizerName, String? organizerPhoto) async {
+    if (state.title.isEmpty ||
+        state.description.isEmpty ||
+        state.date == null ||
+        state.location.isEmpty) {
       state = state.copyWith(errorMessage: 'Заполните все обязательные поля');
       return null;
     }

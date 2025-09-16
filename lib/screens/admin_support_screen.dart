@@ -15,7 +15,7 @@ class AdminSupportScreen extends ConsumerStatefulWidget {
 
 class _AdminSupportScreenState extends ConsumerState<AdminSupportScreen> {
   final SupportService _supportService = SupportService();
-  
+
   SupportStatus? _selectedStatus;
   SupportCategory? _selectedCategory;
   SupportPriority? _selectedPriority;
@@ -40,10 +40,10 @@ class _AdminSupportScreenState extends ConsumerState<AdminSupportScreen> {
         children: [
           // Статистика
           _buildStatsSection(),
-          
+
           // Фильтры
           _buildFiltersSection(),
-          
+
           // Список тикетов
           Expanded(
             child: _buildTicketsList(),
@@ -148,7 +148,8 @@ class _AdminSupportScreenState extends ConsumerState<AdminSupportScreen> {
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon, Color color) {
+  Widget _buildStatItem(
+      String label, String value, IconData icon, Color color) {
     return Column(
       children: [
         Icon(icon, color: color, size: 20),
@@ -185,7 +186,8 @@ class _AdminSupportScreenState extends ConsumerState<AdminSupportScreen> {
               decoration: const InputDecoration(
                 labelText: 'Статус',
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
               items: [
                 const DropdownMenuItem(
@@ -219,9 +221,9 @@ class _AdminSupportScreenState extends ConsumerState<AdminSupportScreen> {
               },
             ),
           ),
-          
+
           const SizedBox(width: 8),
-          
+
           // Фильтр по категории
           Expanded(
             child: DropdownButtonFormField<SupportCategory?>(
@@ -229,7 +231,8 @@ class _AdminSupportScreenState extends ConsumerState<AdminSupportScreen> {
               decoration: const InputDecoration(
                 labelText: 'Категория',
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
               items: [
                 const DropdownMenuItem(
@@ -256,9 +259,9 @@ class _AdminSupportScreenState extends ConsumerState<AdminSupportScreen> {
               },
             ),
           ),
-          
+
           const SizedBox(width: 8),
-          
+
           // Фильтр по приоритету
           Expanded(
             child: DropdownButtonFormField<SupportPriority?>(
@@ -266,7 +269,8 @@ class _AdminSupportScreenState extends ConsumerState<AdminSupportScreen> {
               decoration: const InputDecoration(
                 labelText: 'Приоритет',
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
               items: [
                 const DropdownMenuItem(
@@ -391,13 +395,15 @@ class _AdminSupportScreenState extends ConsumerState<AdminSupportScreen> {
   }
 
   void _showTicketDetail(SupportTicket ticket) {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       MaterialPageRoute(
         builder: (context) => SupportTicketDetailScreen(
           ticket: ticket,
         ),
       ),
-    ).then((result) {
+    )
+        .then((result) {
       if (result == true) {
         setState(() {});
       }

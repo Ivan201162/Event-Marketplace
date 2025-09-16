@@ -44,7 +44,7 @@ class CustomerProfileExtended {
   /// Создаёт расширенный профиль из документа Firestore
   factory CustomerProfileExtended.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return CustomerProfileExtended(
       id: doc.id,
       userId: data['userId'] as String,
@@ -58,15 +58,21 @@ class CustomerProfileExtended {
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       inspirationPhotos: (data['inspirationPhotos'] as List?)
-          ?.map((photo) => InspirationPhoto.fromMap(photo as Map<String, dynamic>))
-          .toList() ?? [],
+              ?.map((photo) =>
+                  InspirationPhoto.fromMap(photo as Map<String, dynamic>))
+              .toList() ??
+          [],
       notes: (data['notes'] as List?)
-          ?.map((note) => CustomerNote.fromMap(note as Map<String, dynamic>))
-          .toList() ?? [],
-      favoriteSpecialists: List<String>.from(data['favoriteSpecialists'] as List? ?? []),
+              ?.map(
+                  (note) => CustomerNote.fromMap(note as Map<String, dynamic>))
+              .toList() ??
+          [],
+      favoriteSpecialists:
+          List<String>.from(data['favoriteSpecialists'] as List? ?? []),
       savedEvents: List<String>.from(data['savedEvents'] as List? ?? []),
       extendedPreferences: data['extendedPreferences'] != null
-          ? CustomerPreferences.fromMap(data['extendedPreferences'] as Map<String, dynamic>)
+          ? CustomerPreferences.fromMap(
+              data['extendedPreferences'] as Map<String, dynamic>)
           : const CustomerPreferences(),
       lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
     );
@@ -85,7 +91,8 @@ class CustomerProfileExtended {
       'preferences': preferences,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
-      'inspirationPhotos': inspirationPhotos.map((photo) => photo.toMap()).toList(),
+      'inspirationPhotos':
+          inspirationPhotos.map((photo) => photo.toMap()).toList(),
       'notes': notes.map((note) => note.toMap()).toList(),
       'favoriteSpecialists': favoriteSpecialists,
       'savedEvents': savedEvents,
@@ -305,8 +312,10 @@ class CustomerPreferences {
   /// Создаёт предпочтения из Map
   factory CustomerPreferences.fromMap(Map<String, dynamic> map) {
     return CustomerPreferences(
-      preferredCategories: List<String>.from(map['preferredCategories'] as List? ?? []),
-      preferredLocations: List<String>.from(map['preferredLocations'] as List? ?? []),
+      preferredCategories:
+          List<String>.from(map['preferredCategories'] as List? ?? []),
+      preferredLocations:
+          List<String>.from(map['preferredLocations'] as List? ?? []),
       preferredTimeStart: map['preferredTimeStart'] != null
           ? TimeOfDay.fromMap(map['preferredTimeStart'] as Map<String, dynamic>)
           : null,
@@ -402,10 +411,12 @@ class TimeOfDay {
 /// Расширения для работы с расширенным профилем
 extension CustomerProfileExtendedExtension on CustomerProfileExtended {
   /// Получает закреплённые заметки
-  List<CustomerNote> get pinnedNotes => notes.where((note) => note.isPinned).toList();
+  List<CustomerNote> get pinnedNotes =>
+      notes.where((note) => note.isPinned).toList();
 
   /// Получает публичные фото
-  List<InspirationPhoto> get publicPhotos => inspirationPhotos.where((photo) => photo.isPublic).toList();
+  List<InspirationPhoto> get publicPhotos =>
+      inspirationPhotos.where((photo) => photo.isPublic).toList();
 
   /// Получает заметки по тегу
   List<CustomerNote> getNotesByTag(String tag) {
@@ -414,7 +425,9 @@ extension CustomerProfileExtendedExtension on CustomerProfileExtended {
 
   /// Получает фото по тегу
   List<InspirationPhoto> getPhotosByTag(String tag) {
-    return inspirationPhotos.where((photo) => photo.tags.contains(tag)).toList();
+    return inspirationPhotos
+        .where((photo) => photo.tags.contains(tag))
+        .toList();
   }
 
   /// Получает все теги из заметок

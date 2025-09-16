@@ -36,7 +36,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         elevation: 0,
         actions: [
           IconButton(
-            icon: Icon(_showFilters ? Icons.filter_list_off : Icons.filter_list),
+            icon:
+                Icon(_showFilters ? Icons.filter_list_off : Icons.filter_list),
             onPressed: () {
               setState(() {
                 _showFilters = !_showFilters;
@@ -49,14 +50,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         children: [
           // Поисковая строка
           _buildSearchBar(),
-          
+
           // Статистика поиска
           if (searchStats.hasActiveFilters || searchResults.hasValue)
             _buildSearchStats(searchStats),
-          
+
           // Фильтры
           if (_showFilters) _buildFiltersSection(),
-          
+
           // Результаты поиска
           Expanded(
             child: _buildSearchResults(searchResults, searchHistory),
@@ -105,9 +106,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               }
             },
           ),
-          
+
           // История поиска
-          if (_searchController.text.isEmpty && ref.watch(searchHistoryProvider).isNotEmpty)
+          if (_searchController.text.isEmpty &&
+              ref.watch(searchHistoryProvider).isNotEmpty)
             _buildSearchHistory(),
         ],
       ),
@@ -117,7 +119,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   /// Построить историю поиска
   Widget _buildSearchHistory() {
     final history = ref.watch(searchHistoryProvider);
-    
+
     return Container(
       margin: const EdgeInsets.only(top: 8),
       height: 40,
@@ -136,7 +138,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
               },
               deleteIcon: const Icon(Icons.close, size: 16),
               onDeleted: () {
-                ref.read(searchHistoryProvider.notifier).removeFromHistory(query);
+                ref
+                    .read(searchHistoryProvider.notifier)
+                    .removeFromHistory(query);
               },
             ),
           );
@@ -164,7 +168,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           if (stats.hasActiveFilters)
             TextButton(
               onPressed: () {
-                ref.read(specialistFiltersProvider.notifier).state = const SpecialistFilters();
+                ref.read(specialistFiltersProvider.notifier).state =
+                    const SpecialistFilters();
                 _performSearch();
               },
               child: const Text('Сбросить фильтры'),
@@ -195,13 +200,14 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   /// Построить результаты поиска
-  Widget _buildSearchResults(AsyncValue<List<Specialist>> searchResults, List<String> searchHistory) {
+  Widget _buildSearchResults(
+      AsyncValue<List<Specialist>> searchResults, List<String> searchHistory) {
     return searchResults.when(
       data: (specialists) {
         if (specialists.isEmpty) {
           return _buildEmptyState(searchHistory);
         }
-        
+
         return RefreshIndicator(
           onRefresh: () async {
             _performSearch();
@@ -265,8 +271,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           Text(
             'Специалисты не найдены',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              color: Colors.grey[600],
-            ),
+                  color: Colors.grey[600],
+                ),
           ),
           const SizedBox(height: 8),
           Text(
@@ -299,13 +305,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   void _performSearch() {
     final query = _searchController.text.trim();
     final currentFilters = ref.read(specialistFiltersProvider);
-    
+
     final updatedFilters = currentFilters.copyWith(
       searchQuery: query.isEmpty ? null : query,
     );
-    
+
     ref.read(specialistFiltersProvider.notifier).state = updatedFilters;
-    
+
     if (query.isNotEmpty) {
       ref.read(searchHistoryProvider.notifier).addToHistory(query);
     }
@@ -315,7 +321,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   void _navigateToSpecialistProfile(Specialist specialist) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => SpecialistProfileScreen(specialistId: specialist.id),
+        builder: (context) =>
+            SpecialistProfileScreen(specialistId: specialist.id),
       ),
     );
   }

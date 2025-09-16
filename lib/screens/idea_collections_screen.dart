@@ -15,12 +15,13 @@ class IdeaCollectionsScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<IdeaCollectionsScreen> createState() => _IdeaCollectionsScreenState();
+  ConsumerState<IdeaCollectionsScreen> createState() =>
+      _IdeaCollectionsScreenState();
 }
 
 class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
   final IdeaService _ideaService = IdeaService();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -114,13 +115,15 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
   }
 
   void _createCollection() {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       MaterialPageRoute(
         builder: (context) => CreateIdeaCollectionScreen(
           userId: widget.userId,
         ),
       ),
-    ).then((result) {
+    )
+        .then((result) {
       if (result == true) {
         setState(() {});
       }
@@ -146,7 +149,8 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить коллекцию'),
-        content: Text('Вы уверены, что хотите удалить коллекцию "${collection.name}"?'),
+        content: Text(
+            'Вы уверены, что хотите удалить коллекцию "${collection.name}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -157,7 +161,8 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
               Navigator.pop(context);
               // TODO: Реализовать удаление коллекции
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Коллекция "${collection.name}" удалена')),
+                SnackBar(
+                    content: Text('Коллекция "${collection.name}" удалена')),
               );
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -179,16 +184,18 @@ class CreateIdeaCollectionScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<CreateIdeaCollectionScreen> createState() => _CreateIdeaCollectionScreenState();
+  ConsumerState<CreateIdeaCollectionScreen> createState() =>
+      _CreateIdeaCollectionScreenState();
 }
 
-class _CreateIdeaCollectionScreenState extends ConsumerState<CreateIdeaCollectionScreen> {
+class _CreateIdeaCollectionScreenState
+    extends ConsumerState<CreateIdeaCollectionScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _descriptionController = TextEditingController();
-  
+
   final IdeaService _ideaService = IdeaService();
-  
+
   bool _isPublic = false;
   bool _isLoading = false;
 
@@ -233,7 +240,7 @@ class _CreateIdeaCollectionScreenState extends ConsumerState<CreateIdeaCollectio
                         ),
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Название
                       TextFormField(
                         controller: _nameController,
@@ -249,9 +256,9 @@ class _CreateIdeaCollectionScreenState extends ConsumerState<CreateIdeaCollectio
                           return null;
                         },
                       ),
-                      
+
                       const SizedBox(height: 16),
-                      
+
                       // Описание
                       TextFormField(
                         controller: _descriptionController,
@@ -266,9 +273,9 @@ class _CreateIdeaCollectionScreenState extends ConsumerState<CreateIdeaCollectio
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Настройки
               Card(
                 child: Padding(
@@ -284,11 +291,12 @@ class _CreateIdeaCollectionScreenState extends ConsumerState<CreateIdeaCollectio
                         ),
                       ),
                       const SizedBox(height: 16),
-                      
+
                       // Публичная коллекция
                       SwitchListTile(
                         title: const Text('Публичная коллекция'),
-                        subtitle: const Text('Коллекция будет видна всем пользователям'),
+                        subtitle: const Text(
+                            'Коллекция будет видна всем пользователям'),
                         value: _isPublic,
                         onChanged: (value) {
                           setState(() {
@@ -300,9 +308,9 @@ class _CreateIdeaCollectionScreenState extends ConsumerState<CreateIdeaCollectio
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 24),
-              
+
               // Кнопка сохранения
               SizedBox(
                 width: double.infinity,

@@ -39,16 +39,16 @@ class GuestWidget extends StatelessWidget {
                     : null,
                 child: guest.guestPhotoUrl == null
                     ? Text(
-                        guest.guestName.isNotEmpty 
+                        guest.guestName.isNotEmpty
                             ? guest.guestName[0].toUpperCase()
                             : '?',
                         style: const TextStyle(fontSize: 18),
                       )
                     : null,
               ),
-              
+
               const SizedBox(width: 12),
-              
+
               // Основная информация
               Expanded(
                 child: Column(
@@ -62,9 +62,9 @@ class GuestWidget extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-                    
+
                     const SizedBox(height: 4),
-                    
+
                     // Email
                     Text(
                       guest.guestEmail,
@@ -73,7 +73,7 @@ class GuestWidget extends StatelessWidget {
                         color: Colors.grey[600],
                       ),
                     ),
-                    
+
                     // Телефон
                     if (guest.guestPhone != null) ...[
                       const SizedBox(height: 2),
@@ -85,15 +85,16 @@ class GuestWidget extends StatelessWidget {
                         ),
                       ),
                     ],
-                    
+
                     const SizedBox(height: 8),
-                    
+
                     // Статус и дополнительная информация
                     Row(
                       children: [
                         // Статус
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
                             color: guest.statusColor.withOpacity(0.1),
                             borderRadius: BorderRadius.circular(12),
@@ -110,9 +111,9 @@ class GuestWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-                        
+
                         const Spacer(),
-                        
+
                         // Поздравления
                         if (guest.greetingsCount > 0) ...[
                           Row(
@@ -139,9 +140,12 @@ class GuestWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               // Действия
-              if (onCheckIn != null || onCheckOut != null || onCancel != null || onShare != null) ...[
+              if (onCheckIn != null ||
+                  onCheckOut != null ||
+                  onCancel != null ||
+                  onShare != null) ...[
                 const SizedBox(width: 8),
                 PopupMenuButton<String>(
                   onSelected: (value) {
@@ -161,7 +165,8 @@ class GuestWidget extends StatelessWidget {
                     }
                   },
                   itemBuilder: (context) => [
-                    if (onCheckIn != null && guest.status == GuestStatus.registered)
+                    if (onCheckIn != null &&
+                        guest.status == GuestStatus.registered)
                       const PopupMenuItem(
                         value: 'checkin',
                         child: Row(
@@ -172,7 +177,8 @@ class GuestWidget extends StatelessWidget {
                           ],
                         ),
                       ),
-                    if (onCheckOut != null && guest.status == GuestStatus.checkedIn)
+                    if (onCheckOut != null &&
+                        guest.status == GuestStatus.checkedIn)
                       const PopupMenuItem(
                         value: 'checkout',
                         child: Row(
@@ -183,7 +189,8 @@ class GuestWidget extends StatelessWidget {
                           ],
                         ),
                       ),
-                    if (onCancel != null && guest.status != GuestStatus.cancelled)
+                    if (onCancel != null &&
+                        guest.status != GuestStatus.cancelled)
                       const PopupMenuItem(
                         value: 'cancel',
                         child: Row(
@@ -244,7 +251,7 @@ class GuestListTile extends StatelessWidget {
             : null,
         child: guest.guestPhotoUrl == null
             ? Text(
-                guest.guestName.isNotEmpty 
+                guest.guestName.isNotEmpty
                     ? guest.guestName[0].toUpperCase()
                     : '?',
                 style: const TextStyle(fontSize: 16),
@@ -378,16 +385,16 @@ class GuestGridTile extends StatelessWidget {
                     : null,
                 child: guest.guestPhotoUrl == null
                     ? Text(
-                        guest.guestName.isNotEmpty 
+                        guest.guestName.isNotEmpty
                             ? guest.guestName[0].toUpperCase()
                             : '?',
                         style: const TextStyle(fontSize: 24),
                       )
                     : null,
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Имя
               Text(
                 guest.guestName,
@@ -399,9 +406,9 @@ class GuestGridTile extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               const SizedBox(height: 4),
-              
+
               // Статус
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
@@ -421,9 +428,9 @@ class GuestGridTile extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 4),
-              
+
               // Поздравления
               if (guest.greetingsCount > 0)
                 Row(
@@ -477,30 +484,32 @@ class GuestStatsWidget extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Основная информация
             _buildInfoRow('Имя', guest.guestName),
             _buildInfoRow('Email', guest.guestEmail),
             if (guest.guestPhone != null)
               _buildInfoRow('Телефон', guest.guestPhone!),
             _buildInfoRow('Статус', guest.statusText),
-            
+
             const SizedBox(height: 16),
-            
+
             // Временные метки
             if (guest.registeredAt != null)
-              _buildInfoRow('Зарегистрирован', _formatDateTime(guest.registeredAt!)),
+              _buildInfoRow(
+                  'Зарегистрирован', _formatDateTime(guest.registeredAt!)),
             if (guest.confirmedAt != null)
               _buildInfoRow('Подтвержден', _formatDateTime(guest.confirmedAt!)),
             if (guest.checkedInAt != null)
-              _buildInfoRow('На мероприятии', _formatDateTime(guest.checkedInAt!)),
+              _buildInfoRow(
+                  'На мероприятии', _formatDateTime(guest.checkedInAt!)),
             if (guest.checkedOutAt != null)
               _buildInfoRow('Покинул', _formatDateTime(guest.checkedOutAt!)),
-            
+
             const SizedBox(height: 16),
-            
+
             // Поздравления
             if (guest.greetingsCount > 0)
               _buildInfoRow('Поздравлений', guest.greetingsCount.toString()),

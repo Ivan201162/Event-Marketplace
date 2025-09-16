@@ -105,7 +105,8 @@ class MyBookingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildBookingCard(BuildContext context, WidgetRef ref, Booking booking) {
+  Widget _buildBookingCard(
+      BuildContext context, WidgetRef ref, Booking booking) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: InkWell(
@@ -125,14 +126,15 @@ class MyBookingsScreen extends ConsumerWidget {
                     child: Text(
                       booking.eventTitle,
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: _getStatusColor(booking.status).withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
@@ -151,13 +153,14 @@ class MyBookingsScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Дата мероприятия
               Row(
                 children: [
-                  const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
+                  const Icon(Icons.calendar_today,
+                      size: 16, color: Colors.grey),
                   const SizedBox(width: 8),
                   Text(
                     '${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year}',
@@ -172,9 +175,9 @@ class MyBookingsScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Количество участников и стоимость
               Row(
                 children: [
@@ -188,7 +191,9 @@ class MyBookingsScreen extends ConsumerWidget {
                   const Icon(Icons.attach_money, size: 16, color: Colors.green),
                   const SizedBox(width: 8),
                   Text(
-                    booking.totalPrice == 0 ? 'Бесплатно' : '${booking.totalPrice.toStringAsFixed(0)} ₽',
+                    booking.totalPrice == 0
+                        ? 'Бесплатно'
+                        : '${booking.totalPrice.toStringAsFixed(0)} ₽',
                     style: const TextStyle(
                       color: Colors.green,
                       fontWeight: FontWeight.w500,
@@ -196,9 +201,9 @@ class MyBookingsScreen extends ConsumerWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Кнопки действий
               Row(
                 children: [
@@ -215,7 +220,8 @@ class MyBookingsScreen extends ConsumerWidget {
                   if (booking.canBeCancelled)
                     Expanded(
                       child: ElevatedButton.icon(
-                        onPressed: () => _showCancelDialog(context, ref, booking),
+                        onPressed: () =>
+                            _showCancelDialog(context, ref, booking),
                         icon: const Icon(Icons.cancel, size: 16),
                         label: const Text('Отменить'),
                         style: ElevatedButton.styleFrom(
@@ -250,7 +256,8 @@ class MyBookingsScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Отменить бронирование'),
-        content: const Text('Вы уверены, что хотите отменить это бронирование?'),
+        content:
+            const Text('Вы уверены, что хотите отменить это бронирование?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

@@ -24,7 +24,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
   final IdeaService _ideaService = IdeaService();
   final _commentController = TextEditingController();
   final _scrollController = ScrollController();
-  
+
   late Idea _idea;
   bool _isLoading = false;
   bool _showComments = false;
@@ -85,13 +85,13 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
           children: [
             // Изображения
             if (_idea.images.isNotEmpty) _buildImagesSection(),
-            
+
             // Основная информация
             _buildMainInfoSection(),
-            
+
             // Действия
             _buildActionsSection(),
-            
+
             // Комментарии
             _buildCommentsSection(),
           ],
@@ -147,7 +147,8 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
               ),
               const SizedBox(width: 8),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
                   color: _idea.categoryColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(16),
@@ -177,9 +178,9 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Автор и дата
           Row(
             children: [
@@ -190,7 +191,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
                     : null,
                 child: _idea.authorPhotoUrl == null
                     ? Text(
-                        _idea.authorName.isNotEmpty 
+                        _idea.authorName.isNotEmpty
                             ? _idea.authorName[0].toUpperCase()
                             : '?',
                         style: const TextStyle(fontSize: 16),
@@ -221,9 +222,9 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Описание
           Text(
             _idea.description,
@@ -232,9 +233,9 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
               height: 1.5,
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Теги
           if (_idea.tags.isNotEmpty) ...[
             Wrap(
@@ -242,7 +243,8 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
               runSpacing: 8,
               children: _idea.tags.map((tag) {
                 return Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.grey[200],
                     borderRadius: BorderRadius.circular(12),
@@ -279,7 +281,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
               onTap: _toggleLike,
             ),
           ),
-          
+
           // Сохранение
           Expanded(
             child: _buildActionButton(
@@ -290,7 +292,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
               onTap: _toggleSave,
             ),
           ),
-          
+
           // Комментарии
           Expanded(
             child: _buildActionButton(
@@ -301,7 +303,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
               onTap: _toggleComments,
             ),
           ),
-          
+
           // Шаринг
           Expanded(
             child: _buildActionButton(
@@ -381,7 +383,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           // Список комментариев
           StreamBuilder<List<IdeaComment>>(
             stream: _ideaService.getIdeaComments(_idea.id),
@@ -392,7 +394,8 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
 
               if (snapshot.hasError) {
                 return Center(
-                  child: Text('Ошибка загрузки комментариев: ${snapshot.error}'),
+                  child:
+                      Text('Ошибка загрузки комментариев: ${snapshot.error}'),
                 );
               }
 
@@ -440,7 +443,8 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
               decoration: const InputDecoration(
                 hintText: 'Добавить комментарий...',
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               ),
               maxLines: null,
             ),
@@ -529,7 +533,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
     setState(() {
       _showComments = !_showComments;
     });
-    
+
     if (_showComments) {
       // Прокручиваем к комментариям
       Future.delayed(const Duration(milliseconds: 100), () {
@@ -596,7 +600,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня';
     } else if (difference.inDays == 1) {

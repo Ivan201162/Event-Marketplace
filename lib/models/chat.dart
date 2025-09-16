@@ -2,20 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Типы сообщений
 enum MessageType {
-  text,           // Текстовое сообщение
-  image,          // Изображение
-  file,           // Файл
-  system,         // Системное сообщение
+  text, // Текстовое сообщение
+  image, // Изображение
+  file, // Файл
+  system, // Системное сообщение
   booking_update, // Обновление заявки
   payment_update, // Обновление платежа
 }
 
 /// Статусы сообщений
 enum MessageStatus {
-  sent,      // Отправлено
+  sent, // Отправлено
   delivered, // Доставлено
-  read,      // Прочитано
-  failed,    // Неудачно
+  read, // Прочитано
+  failed, // Неудачно
 }
 
 /// Модель сообщения
@@ -59,11 +59,11 @@ class ChatMessage {
       type: _parseMessageType(data['type']),
       content: data['content'] ?? '',
       status: _parseMessageStatus(data['status']),
-      createdAt: data['createdAt'] != null 
-          ? (data['createdAt'] as Timestamp).toDate() 
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
-      readAt: data['readAt'] != null 
-          ? (data['readAt'] as Timestamp).toDate() 
+      readAt: data['readAt'] != null
+          ? (data['readAt'] as Timestamp).toDate()
           : null,
       metadata: data['metadata'],
       replyToMessageId: data['replyToMessageId'],
@@ -152,7 +152,7 @@ class ChatMessage {
   /// Парсинг типа сообщения
   static MessageType _parseMessageType(dynamic typeData) {
     if (typeData == null) return MessageType.text;
-    
+
     final typeString = typeData.toString().toLowerCase();
     switch (typeString) {
       case 'image':
@@ -174,7 +174,7 @@ class ChatMessage {
   /// Парсинг статуса сообщения
   static MessageStatus _parseMessageStatus(dynamic statusData) {
     if (statusData == null) return MessageStatus.sent;
-    
+
     final statusString = statusData.toString().toLowerCase();
     switch (statusString) {
       case 'delivered':
@@ -238,14 +238,15 @@ class Chat {
       customerId: data['customerId'] ?? '',
       specialistId: data['specialistId'] ?? '',
       bookingId: data['bookingId'],
-      createdAt: data['createdAt'] != null 
-          ? (data['createdAt'] as Timestamp).toDate() 
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
-      updatedAt: data['updatedAt'] != null 
-          ? (data['updatedAt'] as Timestamp).toDate() 
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] as Timestamp).toDate()
           : DateTime.now(),
-      lastMessage: data['lastMessage'] != null 
-          ? ChatMessage.fromDocument(DocumentSnapshot.fromMap(data['lastMessage']))
+      lastMessage: data['lastMessage'] != null
+          ? ChatMessage.fromDocument(
+              DocumentSnapshot.fromMap(data['lastMessage']))
           : null,
       unreadCount: data['unreadCount'] ?? 0,
       isActive: data['isActive'] ?? true,

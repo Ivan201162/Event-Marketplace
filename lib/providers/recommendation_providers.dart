@@ -9,13 +9,17 @@ final recommendationServiceProvider = Provider<RecommendationService>((ref) {
 });
 
 /// Провайдер для рекомендаций пользователя
-final userRecommendationsProvider = FutureProvider.family<List<SpecialistRecommendation>, String>((ref, userId) {
+final userRecommendationsProvider =
+    FutureProvider.family<List<SpecialistRecommendation>, String>(
+        (ref, userId) {
   final service = ref.read(recommendationServiceProvider);
   return service.getRecommendations(userId, limit: 20);
 });
 
 /// Провайдер для рекомендаций по типу
-final recommendationsByTypeProvider = FutureProvider.family<List<SpecialistRecommendation>, RecommendationParams>((ref, params) {
+final recommendationsByTypeProvider =
+    FutureProvider.family<List<SpecialistRecommendation>, RecommendationParams>(
+        (ref, params) {
   final service = ref.read(recommendationServiceProvider);
   return service.getRecommendations(
     params.userId,
@@ -38,7 +42,8 @@ class RecommendationParams {
 }
 
 /// Провайдер для похожих специалистов
-final similarSpecialistsProvider = FutureProvider.family<List<Specialist>, String>((ref, specialistId) {
+final similarSpecialistsProvider =
+    FutureProvider.family<List<Specialist>, String>((ref, specialistId) {
   final service = ref.read(recommendationServiceProvider);
   // Здесь можно добавить логику для получения похожих специалистов
   // Пока возвращаем пустой список
@@ -46,7 +51,9 @@ final similarSpecialistsProvider = FutureProvider.family<List<Specialist>, Strin
 });
 
 /// Провайдер для популярных в категории
-final popularInCategoryProvider = FutureProvider.family<List<Specialist>, SpecialistCategory>((ref, category) {
+final popularInCategoryProvider =
+    FutureProvider.family<List<Specialist>, SpecialistCategory>(
+        (ref, category) {
   final service = ref.read(recommendationServiceProvider);
   // Здесь можно добавить логику для получения популярных в категории
   // Пока возвращаем пустой список
@@ -97,9 +104,10 @@ class RecommendationManager {
 }
 
 /// Провайдер для статистики рекомендаций
-final recommendationStatsProvider = FutureProvider.family<RecommendationStats, String>((ref, userId) {
+final recommendationStatsProvider =
+    FutureProvider.family<RecommendationStats, String>((ref, userId) {
   final recommendationsAsync = ref.watch(userRecommendationsProvider(userId));
-  
+
   return recommendationsAsync.when(
     data: (recommendations) async {
       final stats = RecommendationStats(
@@ -108,14 +116,14 @@ final recommendationStatsProvider = FutureProvider.family<RecommendationStats, S
           (type, recs) => MapEntry(type, recs.length),
         ),
         averageScore: recommendations.isNotEmpty
-            ? recommendations.map((r) => r.relevanceScore).reduce((a, b) => a + b) / recommendations.length
+            ? recommendations
+                    .map((r) => r.relevanceScore)
+                    .reduce((a, b) => a + b) /
+                recommendations.length
             : 0.0,
-        topTypes: recommendations.groupedByType.entries
-            .toList()
-            ..sort((a, b) => b.value.length.compareTo(a.value.length))
-            ..take(3)
-            .map((e) => e.key)
-            .toList(),
+        topTypes: recommendations.groupedByType.entries.toList()
+          ..sort((a, b) => b.value.length.compareTo(a.value.length))
+          ..take(3).map((e) => e.key).toList(),
       );
       return stats;
     },
@@ -149,7 +157,8 @@ class RecommendationStats {
 }
 
 /// Провайдер для отслеживания взаимодействий с рекомендациями
-final recommendationInteractionProvider = StateNotifierProvider<RecommendationInteractionNotifier, RecommendationInteractionState>((ref) {
+final recommendationInteractionProvider = StateNotifierProvider<
+    RecommendationInteractionNotifier, RecommendationInteractionState>((ref) {
   return RecommendationInteractionNotifier();
 });
 
@@ -193,28 +202,31 @@ class RecommendationInteraction {
 
 /// Типы взаимодействий с рекомендациями
 enum RecommendationInteractionType {
-  viewed,      // Просмотр
-  clicked,     // Клик
-  booked,      // Бронирование
-  dismissed,   // Отклонение
-  saved,       // Сохранение
+  viewed, // Просмотр
+  clicked, // Клик
+  booked, // Бронирование
+  dismissed, // Отклонение
+  saved, // Сохранение
 }
 
 /// Нотификатор для взаимодействий с рекомендациями
-class RecommendationInteractionNotifier extends StateNotifier<RecommendationInteractionState> {
-  RecommendationInteractionNotifier() : super(const RecommendationInteractionState());
+class RecommendationInteractionNotifier
+    extends StateNotifier<RecommendationInteractionState> {
+  RecommendationInteractionNotifier()
+      : super(const RecommendationInteractionState());
 
   /// Записать взаимодействие
   void recordInteraction(RecommendationInteraction interaction) {
-    final userId = 'current_user'; // В реальном приложении получать из контекста
-    
+    final userId =
+        'current_user'; // В реальном приложении получать из контекста
+
     final userInteractions = state.interactions[userId] ?? [];
     userInteractions.add(interaction);
-    
+
     // Обновляем оценки специалистов
     final specialistScores = Map<String, double>.from(state.specialistScores);
     final currentScore = specialistScores[interaction.specialistId] ?? 0.0;
-    
+
     switch (interaction.type) {
       case RecommendationInteractionType.viewed:
         specialistScores[interaction.specialistId] = currentScore + 0.1;
@@ -232,7 +244,7 @@ class RecommendationInteractionNotifier extends StateNotifier<RecommendationInte
         specialistScores[interaction.specialistId] = currentScore + 0.5;
         break;
     }
-    
+
     state = state.copyWith(
       interactions: {
         ...state.interactions,
@@ -259,27 +271,34 @@ class RecommendationInteractionNotifier extends StateNotifier<RecommendationInte
 }
 
 /// Провайдер для персональных рекомендаций
-final personalizedRecommendationsProvider = FutureProvider.family<List<SpecialistRecommendation>, String>((ref, userId) {
+final personalizedRecommendationsProvider =
+    FutureProvider.family<List<SpecialistRecommendation>, String>(
+        (ref, userId) {
   final service = ref.read(recommendationServiceProvider);
   final interactionState = ref.watch(recommendationInteractionProvider);
-  
+
   return service.getRecommendations(userId, limit: 15).then((recommendations) {
     // Сортируем рекомендации на основе взаимодействий пользователя
-    return recommendations..sort((a, b) {
-      final scoreA = interactionState.specialistScores[a.specialist.id] ?? 0.0;
-      final scoreB = interactionState.specialistScores[b.specialist.id] ?? 0.0;
-      
-      // Комбинируем оценку рекомендации с оценкой взаимодействий
-      final finalScoreA = a.relevanceScore + scoreA * 0.3;
-      final finalScoreB = b.relevanceScore + scoreB * 0.3;
-      
-      return finalScoreB.compareTo(finalScoreA);
-    });
+    return recommendations
+      ..sort((a, b) {
+        final scoreA =
+            interactionState.specialistScores[a.specialist.id] ?? 0.0;
+        final scoreB =
+            interactionState.specialistScores[b.specialist.id] ?? 0.0;
+
+        // Комбинируем оценку рекомендации с оценкой взаимодействий
+        final finalScoreA = a.relevanceScore + scoreA * 0.3;
+        final finalScoreB = b.relevanceScore + scoreB * 0.3;
+
+        return finalScoreB.compareTo(finalScoreA);
+      });
   });
 });
 
 /// Провайдер для рекомендаций "Похожие специалисты"
-final similarSpecialistsRecommendationsProvider = FutureProvider.family<List<SpecialistRecommendation>, String>((ref, specialistId) {
+final similarSpecialistsRecommendationsProvider =
+    FutureProvider.family<List<SpecialistRecommendation>, String>(
+        (ref, specialistId) {
   final service = ref.read(recommendationServiceProvider);
   // Здесь можно добавить логику для получения похожих специалистов
   // Пока возвращаем пустой список
@@ -287,7 +306,9 @@ final similarSpecialistsRecommendationsProvider = FutureProvider.family<List<Spe
 });
 
 /// Провайдер для рекомендаций "Популярные в категории"
-final categoryPopularRecommendationsProvider = FutureProvider.family<List<SpecialistRecommendation>, SpecialistCategory>((ref, category) {
+final categoryPopularRecommendationsProvider =
+    FutureProvider.family<List<SpecialistRecommendation>, SpecialistCategory>(
+        (ref, category) {
   final service = ref.read(recommendationServiceProvider);
   // Здесь можно добавить логику для получения популярных в категории
   // Пока возвращаем пустой список

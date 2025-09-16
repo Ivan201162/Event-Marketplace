@@ -57,9 +57,9 @@ class ChatsDemoScreen extends ConsumerWidget {
               ),
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Список чатов
           _buildChatList(context),
         ],
@@ -215,7 +215,8 @@ class ChatsDemoScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Новый чат'),
-        content: const Text('Функция создания нового чата будет добавлена в следующих версиях.'),
+        content: const Text(
+            'Функция создания нового чата будет добавлена в следующих версиях.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

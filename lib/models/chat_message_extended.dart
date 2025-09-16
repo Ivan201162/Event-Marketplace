@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Расширенная модель сообщения чата
@@ -61,7 +60,7 @@ class ChatMessageExtended {
 
   factory ChatMessageExtended.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return ChatMessageExtended(
       id: doc.id,
       chatId: data['chatId'] ?? '',
@@ -80,8 +79,9 @@ class ChatMessageExtended {
       audioDuration: data['audioDuration'],
       audioWaveform: data['audioWaveform'],
       reactions: (data['reactions'] as List<dynamic>?)
-          ?.map((e) => MessageReaction.fromMap(e))
-          .toList() ?? [],
+              ?.map((e) => MessageReaction.fromMap(e))
+              .toList() ??
+          [],
       isEdited: data['isEdited'] ?? false,
       editedAt: (data['editedAt'] as Timestamp?)?.toDate(),
       replyToMessageId: data['replyToMessageId'],
@@ -165,8 +165,8 @@ class ChatMessageExtended {
 
   /// Проверить, есть ли реакция от пользователя
   bool hasReactionFromUser(String userId, String emoji) {
-    return reactions.any((reaction) => 
-        reaction.userId == userId && reaction.emoji == emoji);
+    return reactions.any(
+        (reaction) => reaction.userId == userId && reaction.emoji == emoji);
   }
 
   /// Получить все уникальные эмодзи реакций
@@ -278,10 +278,10 @@ class AudioWaveform {
   /// Получить нормализованные сэмплы для отображения
   List<double> get normalizedSamples {
     if (samples.isEmpty) return [];
-    
+
     final maxSample = samples.reduce((a, b) => a.abs() > b.abs() ? a : b).abs();
     if (maxSample == 0) return samples;
-    
+
     return samples.map((sample) => sample / maxSample).toList();
   }
 }

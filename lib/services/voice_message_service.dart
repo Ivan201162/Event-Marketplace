@@ -98,20 +98,23 @@ class VoiceMessageService {
   }
 
   /// Загрузить голосовое сообщение в Firebase Storage
-  Future<String?> uploadVoiceMessage(String filePath, String chatId, String senderId) async {
+  Future<String?> uploadVoiceMessage(
+      String filePath, String chatId, String senderId) async {
     try {
       final file = File(filePath);
       if (!await file.exists()) return null;
 
       // Создаём уникальное имя файла
-      final fileName = 'voice_${chatId}_${senderId}_${DateTime.now().millisecondsSinceEpoch}.m4a';
+      final fileName =
+          'voice_${chatId}_${senderId}_${DateTime.now().millisecondsSinceEpoch}.m4a';
       // final ref = _storage.ref().child('voice_messages/$fileName');
 
       // Загружаем файл
       // final uploadTask = ref.putFile(file);
       // final snapshot = await uploadTask;
       // final downloadUrl = await snapshot.ref.getDownloadURL();
-      final downloadUrl = 'https://example.com/voice_messages/$fileName'; // TODO: Implement actual upload
+      final downloadUrl =
+          'https://example.com/voice_messages/$fileName'; // TODO: Implement actual upload
 
       // Удаляем временный файл
       await file.delete();
@@ -200,7 +203,7 @@ class VoiceMessageService {
   }) async {
     try {
       final messageRef = _firestore.collection('chat_messages').doc();
-      
+
       final message = ChatMessageExtended(
         id: messageRef.id,
         chatId: chatId,
@@ -239,7 +242,7 @@ class VoiceMessageService {
   Future<bool> _checkPermissions() async {
     final microphonePermission = await Permission.microphone.request();
     final storagePermission = await Permission.storage.request();
-    
+
     return microphonePermission.isGranted && storagePermission.isGranted;
   }
 

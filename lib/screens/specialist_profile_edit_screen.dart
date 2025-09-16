@@ -12,10 +12,12 @@ class SpecialistProfileEditScreen extends ConsumerStatefulWidget {
   const SpecialistProfileEditScreen({super.key});
 
   @override
-  ConsumerState<SpecialistProfileEditScreen> createState() => _SpecialistProfileEditScreenState();
+  ConsumerState<SpecialistProfileEditScreen> createState() =>
+      _SpecialistProfileEditScreenState();
 }
 
-class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileEditScreen> {
+class _SpecialistProfileEditScreenState
+    extends ConsumerState<SpecialistProfileEditScreen> {
   final _formKey = GlobalKey<FormState>();
   final _bioController = TextEditingController();
   final _phoneController = TextEditingController();
@@ -24,16 +26,16 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
   final _vkController = TextEditingController();
   final _instagramController = TextEditingController();
   final _telegramController = TextEditingController();
-  
+
   List<SpecialistCategory> _selectedCategories = [];
   int _experienceYears = 0;
   List<String> _services = [];
-  
+
   // Портфолио
   List<File> _portfolioImages = [];
   List<File> _portfolioVideos = [];
   List<File> _portfolioFiles = [];
-  
+
   // Календарь занятости
   List<DateTime> _unavailableDates = [];
   bool _isCalendarExpanded = false;
@@ -59,7 +61,9 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
   void _loadProfile() {
     final currentUser = ref.read(currentUserProvider).value;
     if (currentUser != null) {
-      ref.read(specialistProfileEditProvider.notifier).loadProfile(currentUser.id);
+      ref
+          .read(specialistProfileEditProvider.notifier)
+          .loadProfile(currentUser.id);
     }
   }
 
@@ -67,7 +71,7 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
   Future<void> _pickImages() async {
     final ImagePicker picker = ImagePicker();
     final List<XFile> images = await picker.pickMultiImage();
-    
+
     if (images.isNotEmpty) {
       setState(() {
         _portfolioImages.addAll(images.map((image) => File(image.path)));
@@ -79,7 +83,7 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
   Future<void> _pickVideos() async {
     final ImagePicker picker = ImagePicker();
     final XFile? video = await picker.pickVideo(source: ImageSource.gallery);
-    
+
     if (video != null) {
       setState(() {
         _portfolioVideos.add(File(video.path));
@@ -112,7 +116,7 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
   /// Добавление даты недоступности
   void _addUnavailableDate(DateTime date) {
     setState(() {
-      if (!_unavailableDates.any((d) => 
+      if (!_unavailableDates.any((d) =>
           d.year == date.year && d.month == date.month && d.day == date.day)) {
         _unavailableDates.add(date);
       }
@@ -122,7 +126,7 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
   /// Удаление даты недоступности
   void _removeUnavailableDate(DateTime date) {
     setState(() {
-      _unavailableDates.removeWhere((d) => 
+      _unavailableDates.removeWhere((d) =>
           d.year == date.year && d.month == date.month && d.day == date.day);
     });
   }
@@ -153,9 +157,13 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
         actions: [
           if (editState.isDirty)
             TextButton(
-              onPressed: editState.isLoading ? null : () {
-                ref.read(specialistProfileEditProvider.notifier).saveProfile();
-              },
+              onPressed: editState.isLoading
+                  ? null
+                  : () {
+                      ref
+                          .read(specialistProfileEditProvider.notifier)
+                          .saveProfile();
+                    },
               child: editState.isLoading
                   ? const SizedBox(
                       width: 20,
@@ -223,7 +231,8 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
         children: [
           CircleAvatar(
             radius: 60,
-            backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+            backgroundColor:
+                Theme.of(context).colorScheme.primary.withOpacity(0.1),
             child: const Icon(
               Icons.person,
               size: 60,
@@ -243,7 +252,8 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
                 onPressed: () {
                   // TODO: Реализовать загрузку фото
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Загрузка фото будет реализована позже')),
+                    const SnackBar(
+                        content: Text('Загрузка фото будет реализована позже')),
                   );
                 },
               ),
@@ -264,11 +274,11 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
             Text(
               'Основная информация',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
-            
+
             // Биография
             TextFormField(
               controller: _bioController,
@@ -279,7 +289,9 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
               ),
               maxLines: 3,
               onChanged: (value) {
-                ref.read(specialistProfileEditProvider.notifier).updateField(bio: value);
+                ref
+                    .read(specialistProfileEditProvider.notifier)
+                    .updateField(bio: value);
               },
             ),
             const SizedBox(height: 16),
@@ -295,7 +307,9 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
               ),
               keyboardType: TextInputType.phone,
               onChanged: (value) {
-                ref.read(specialistProfileEditProvider.notifier).updateField(phoneNumber: value);
+                ref
+                    .read(specialistProfileEditProvider.notifier)
+                    .updateField(phoneNumber: value);
               },
             ),
             const SizedBox(height: 16),
@@ -310,7 +324,9 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
                 prefixIcon: Icon(Icons.location_on),
               ),
               onChanged: (value) {
-                ref.read(specialistProfileEditProvider.notifier).updateField(location: value);
+                ref
+                    .read(specialistProfileEditProvider.notifier)
+                    .updateField(location: value);
               },
             ),
           ],
@@ -329,17 +345,17 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
             Text(
               'Категории и опыт',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
-            
+
             // Категории
             Text(
               'Категории услуг',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+                    fontWeight: FontWeight.w500,
+                  ),
             ),
             const SizedBox(height: 8),
             Wrap(
@@ -357,9 +373,11 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
                         _selectedCategories.remove(category);
                       }
                     });
-                    ref.read(specialistProfileEditProvider.notifier).updateField(
-                      categories: _selectedCategories,
-                    );
+                    ref
+                        .read(specialistProfileEditProvider.notifier)
+                        .updateField(
+                          categories: _selectedCategories,
+                        );
                   },
                 );
               }).toList(),
@@ -370,8 +388,8 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
             Text(
               'Опыт работы (лет)',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w500,
-              ),
+                    fontWeight: FontWeight.w500,
+                  ),
             ),
             const SizedBox(height: 8),
             Slider(
@@ -385,8 +403,8 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
                   _experienceYears = value.round();
                 });
                 ref.read(specialistProfileEditProvider.notifier).updateField(
-                  experienceYears: _experienceYears,
-                );
+                      experienceYears: _experienceYears,
+                    );
               },
             ),
           ],
@@ -405,11 +423,10 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
             Text(
               'Ценообразование',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
-            
             TextFormField(
               controller: _hourlyRateController,
               decoration: const InputDecoration(
@@ -422,8 +439,8 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
               onChanged: (value) {
                 final rate = double.tryParse(value) ?? 0.0;
                 ref.read(specialistProfileEditProvider.notifier).updateField(
-                  hourlyRate: rate,
-                );
+                      hourlyRate: rate,
+                    );
               },
             ),
           ],
@@ -442,11 +459,11 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
             Text(
               'Социальные сети',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
-            
+
             // ВКонтакте
             TextFormField(
               controller: _vkController,
@@ -460,8 +477,8 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
                 final socialLinks = <String, String>{};
                 if (value.isNotEmpty) socialLinks['vk'] = value;
                 ref.read(specialistProfileEditProvider.notifier).updateField(
-                  socialLinks: socialLinks,
-                );
+                      socialLinks: socialLinks,
+                    );
               },
             ),
             const SizedBox(height: 16),
@@ -479,8 +496,8 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
                 final socialLinks = <String, String>{};
                 if (value.isNotEmpty) socialLinks['instagram'] = value;
                 ref.read(specialistProfileEditProvider.notifier).updateField(
-                  socialLinks: socialLinks,
-                );
+                      socialLinks: socialLinks,
+                    );
               },
             ),
             const SizedBox(height: 16),
@@ -498,8 +515,8 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
                 final socialLinks = <String, String>{};
                 if (value.isNotEmpty) socialLinks['telegram'] = value;
                 ref.read(specialistProfileEditProvider.notifier).updateField(
-                  socialLinks: socialLinks,
-                );
+                      socialLinks: socialLinks,
+                    );
               },
             ),
           ],
@@ -521,8 +538,8 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
                 Text(
                   'Услуги',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.add),
@@ -533,7 +550,6 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
               ],
             ),
             const SizedBox(height: 16),
-            
             if (_services.isEmpty)
               const Text('Добавьте услуги, которые вы предоставляете')
             else
@@ -547,9 +563,11 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
                       setState(() {
                         _services.remove(service);
                       });
-                      ref.read(specialistProfileEditProvider.notifier).updateField(
-                        services: _services,
-                      );
+                      ref
+                          .read(specialistProfileEditProvider.notifier)
+                          .updateField(
+                            services: _services,
+                          );
                     },
                   );
                 }).toList(),
@@ -570,11 +588,11 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
             Text(
               'Портфолио',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
-            
+
             // Изображения
             _buildPortfolioSection(
               'Фотографии',
@@ -583,7 +601,7 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
               _pickImages,
             ),
             const SizedBox(height: 16),
-            
+
             // Видео
             _buildPortfolioSection(
               'Видео',
@@ -592,7 +610,7 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
               _pickVideos,
             ),
             const SizedBox(height: 16),
-            
+
             // Файлы
             _buildPortfolioSection(
               'Документы',
@@ -606,7 +624,8 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
     );
   }
 
-  Widget _buildPortfolioSection(String title, IconData icon, List<File> files, VoidCallback onAdd) {
+  Widget _buildPortfolioSection(
+      String title, IconData icon, List<File> files, VoidCallback onAdd) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -620,8 +639,8 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
                 Text(
                   title,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                        fontWeight: FontWeight.w600,
+                      ),
                 ),
               ],
             ),
@@ -633,7 +652,6 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
           ],
         ),
         const SizedBox(height: 8),
-        
         if (files.isEmpty)
           Container(
             width: double.infinity,
@@ -725,11 +743,13 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
                 Text(
                   'Календарь занятости',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 IconButton(
-                  icon: Icon(_isCalendarExpanded ? Icons.expand_less : Icons.expand_more),
+                  icon: Icon(_isCalendarExpanded
+                      ? Icons.expand_less
+                      : Icons.expand_more),
                   onPressed: () {
                     setState(() {
                       _isCalendarExpanded = !_isCalendarExpanded;
@@ -742,22 +762,21 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
             Text(
               'Отметьте даты, когда вы недоступны для работы',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[600],
-              ),
+                    color: Colors.grey[600],
+                  ),
             ),
-            
             if (_isCalendarExpanded) ...[
               const SizedBox(height: 16),
               _buildSimpleCalendar(),
               const SizedBox(height: 16),
-              
+
               // Список недоступных дат
               if (_unavailableDates.isNotEmpty) ...[
                 Text(
                   'Недоступные даты:',
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
+                        fontWeight: FontWeight.w600,
+                      ),
                 ),
                 const SizedBox(height: 8),
                 Wrap(
@@ -813,9 +832,9 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
         titleCentered: true,
       ),
       onDaySelected: (selectedDay, focusedDay) {
-        if (_unavailableDates.any((d) => 
-            d.year == selectedDay.year && 
-            d.month == selectedDay.month && 
+        if (_unavailableDates.any((d) =>
+            d.year == selectedDay.year &&
+            d.month == selectedDay.month &&
             d.day == selectedDay.day)) {
           _removeUnavailableDate(selectedDay);
         } else {
@@ -823,18 +842,14 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
         }
       },
       selectedDayPredicate: (day) {
-        return _unavailableDates.any((d) => 
-            d.year == day.year && 
-            d.month == day.month && 
-            d.day == day.day);
+        return _unavailableDates.any((d) =>
+            d.year == day.year && d.month == day.month && d.day == day.day);
       },
       calendarBuilders: CalendarBuilders(
         defaultBuilder: (context, day, focusedDay) {
-          final isUnavailable = _unavailableDates.any((d) => 
-              d.year == day.year && 
-              d.month == day.month && 
-              d.day == day.day);
-          
+          final isUnavailable = _unavailableDates.any((d) =>
+              d.year == day.year && d.month == day.month && d.day == day.day);
+
           if (isUnavailable) {
             return Container(
               margin: const EdgeInsets.all(2),
@@ -884,7 +899,7 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
 
   void _showAddServiceDialog() {
     final controller = TextEditingController();
-    
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -908,8 +923,8 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
                   _services.add(controller.text);
                 });
                 ref.read(specialistProfileEditProvider.notifier).updateField(
-                  services: _services,
-                );
+                      services: _services,
+                    );
                 Navigator.of(context).pop();
               }
             },
@@ -969,14 +984,15 @@ class _SpecialistProfileEditScreenState extends ConsumerState<SpecialistProfileE
     final item = PortfolioItem(
       id: DateTime.now().millisecondsSinceEpoch.toString(),
       type: type,
-      url: 'https://example.com/portfolio/${type}_${DateTime.now().millisecondsSinceEpoch}',
+      url:
+          'https://example.com/portfolio/${type}_${DateTime.now().millisecondsSinceEpoch}',
       title: 'Новая работа',
       description: 'Описание работы',
       createdAt: DateTime.now(),
     );
-    
+
     ref.read(specialistProfileEditProvider.notifier).addPortfolioItem(item);
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Загрузка файлов будет реализована позже')),
     );

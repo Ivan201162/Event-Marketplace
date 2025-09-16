@@ -26,8 +26,7 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen> {
     final bookings =
         await bookingService.getBookingsForSpecialist(widget.specialistId);
     setState(() {
-      pendingBookings =
-          bookings.where((b) => b.status == 'pending').toList();
+      pendingBookings = bookings.where((b) => b.status == 'pending').toList();
     });
   }
 
@@ -85,4 +84,3 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen> {
     );
   }
 }
-

@@ -25,12 +25,16 @@ class AdaptiveNavigationBar extends StatelessWidget {
       return NavigationRail(
         selectedIndex: currentIndex,
         onDestinationSelected: onTap,
-        labelType: showLabels ? NavigationRailLabelType.all : NavigationRailLabelType.none,
-        destinations: destinations.map((dest) => NavigationRailDestination(
-          icon: dest.icon,
-          selectedIcon: dest.selectedIcon,
-          label: Text(dest.label),
-        )).toList(),
+        labelType: showLabels
+            ? NavigationRailLabelType.all
+            : NavigationRailLabelType.none,
+        destinations: destinations
+            .map((dest) => NavigationRailDestination(
+                  icon: dest.icon,
+                  selectedIcon: dest.selectedIcon,
+                  label: Text(dest.label),
+                ))
+            .toList(),
       );
     } else {
       // На телефонах используем NavigationBar
@@ -68,11 +72,13 @@ class AdaptiveBottomNavigationBar extends StatelessWidget {
       return NavigationBar(
         selectedIndex: currentIndex,
         onDestinationSelected: onTap,
-        destinations: items.map((item) => NavigationDestination(
-          icon: item.icon,
-          selectedIcon: item.activeIcon,
-          label: item.label ?? '',
-        )).toList(),
+        destinations: items
+            .map((item) => NavigationDestination(
+                  icon: item.icon,
+                  selectedIcon: item.activeIcon,
+                  label: item.label ?? '',
+                ))
+            .toList(),
       );
     } else {
       // На телефонах используем BottomNavigationBar
@@ -238,12 +244,12 @@ class _AdaptiveSpeedDialState extends State<AdaptiveSpeedDial>
       children: [
         if (_isOpen) ...[
           ...widget.children.map((child) => ScaleTransition(
-            scale: _animation,
-            child: FadeTransition(
-              opacity: _animation,
-              child: child,
-            ),
-          )),
+                scale: _animation,
+                child: FadeTransition(
+                  opacity: _animation,
+                  child: child,
+                ),
+              )),
           const SizedBox(height: 8),
         ],
         FloatingActionButton(
@@ -332,8 +338,8 @@ class AdaptiveTabBar extends StatelessWidget implements PreferredSizeWidget {
       indicatorPadding: indicatorPadding ?? EdgeInsets.zero,
       automaticIndicatorColorAdjustment: automaticIndicatorColorAdjustment,
       labelStyle: Theme.of(context).textTheme.titleSmall?.copyWith(
-        fontWeight: FontWeight.w600,
-      ),
+            fontWeight: FontWeight.w600,
+          ),
       unselectedLabelStyle: Theme.of(context).textTheme.titleSmall,
     );
   }
@@ -343,7 +349,8 @@ class AdaptiveTabBar extends StatelessWidget implements PreferredSizeWidget {
 }
 
 /// Адаптивный AppBar с TabBar
-class AdaptiveAppBarWithTabs extends StatelessWidget implements PreferredSizeWidget {
+class AdaptiveAppBarWithTabs extends StatelessWidget
+    implements PreferredSizeWidget {
   final String title;
   final List<Widget>? actions;
   final Widget? leading;
@@ -376,7 +383,8 @@ class AdaptiveAppBarWithTabs extends StatelessWidget implements PreferredSizeWid
       actions: actions,
       leading: leading,
       centerTitle: centerTitle,
-      backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.inversePrimary,
+      backgroundColor:
+          backgroundColor ?? Theme.of(context).colorScheme.inversePrimary,
       foregroundColor: foregroundColor,
       elevation: elevation,
       bottom: AdaptiveTabBar(

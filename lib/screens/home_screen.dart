@@ -20,7 +20,8 @@ class HomeScreen extends ConsumerWidget {
             icon: const Icon(Icons.notifications),
             onPressed: () {
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Уведомления пока не реализованы")),
+                const SnackBar(
+                    content: Text("Уведомления пока не реализованы")),
               );
             },
           ),
@@ -32,7 +33,7 @@ class HomeScreen extends ConsumerWidget {
           children: [
             // Переключатель ролей
             const RoleSwitcher(),
-            
+
             // Приветствие
             Padding(
               padding: const EdgeInsets.all(16),
@@ -45,7 +46,9 @@ class HomeScreen extends ConsumerWidget {
                       Row(
                         children: [
                           Icon(
-                            userRole == UserRole.customer ? Icons.person : Icons.work,
+                            userRole == UserRole.customer
+                                ? Icons.person
+                                : Icons.work,
                             size: 32,
                             color: Theme.of(context).colorScheme.primary,
                           ),
@@ -56,13 +59,17 @@ class HomeScreen extends ConsumerWidget {
                               children: [
                                 Text(
                                   "Добро пожаловать!",
-                                  style: Theme.of(context).textTheme.headlineSmall,
+                                  style:
+                                      Theme.of(context).textTheme.headlineSmall,
                                 ),
                                 Text(
                                   "Вы вошли как $roleString",
-                                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                        color: Colors.grey[600],
+                                      ),
                                 ),
                               ],
                             ),
@@ -84,7 +91,7 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 12),
-            
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: GridView.count(
@@ -110,14 +117,23 @@ class HomeScreen extends ConsumerWidget {
                   ),
                   _buildQuickActionCard(
                     context,
-                    icon: userRole == UserRole.customer ? Icons.book_online : Icons.assignment,
-                    title: userRole == UserRole.customer ? "Мои заявки" : "Заявки клиентов",
-                    subtitle: userRole == UserRole.customer ? "Просмотр заявок" : "Управление заявками",
+                    icon: userRole == UserRole.customer
+                        ? Icons.book_online
+                        : Icons.assignment,
+                    title: userRole == UserRole.customer
+                        ? "Мои заявки"
+                        : "Заявки клиентов",
+                    subtitle: userRole == UserRole.customer
+                        ? "Просмотр заявок"
+                        : "Управление заявками",
                     color: Colors.green,
                     onTap: () {
                       // TODO: Переход на экран заявок
                       ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text(userRole == UserRole.customer ? "Мои заявки" : "Заявки клиентов")),
+                        SnackBar(
+                            content: Text(userRole == UserRole.customer
+                                ? "Мои заявки"
+                                : "Заявки клиентов")),
                       );
                     },
                   ),
@@ -162,7 +178,7 @@ class HomeScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 12),
-            
+
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Card(
@@ -173,9 +189,12 @@ class HomeScreen extends ConsumerWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          _buildStatItem(context, "Активных заявок", "0", Icons.assignment),
-                          _buildStatItem(context, "Завершенных", "0", Icons.check_circle),
-                          _buildStatItem(context, "В ожидании", "0", Icons.schedule),
+                          _buildStatItem(context, "Активных заявок", "0",
+                              Icons.assignment),
+                          _buildStatItem(
+                              context, "Завершенных", "0", Icons.check_circle),
+                          _buildStatItem(
+                              context, "В ожидании", "0", Icons.schedule),
                         ],
                       ),
                     ],
@@ -233,7 +252,8 @@ class HomeScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatItem(BuildContext context, String label, String value, IconData icon) {
+  Widget _buildStatItem(
+      BuildContext context, String label, String value, IconData icon) {
     return Column(
       children: [
         Icon(icon, color: Theme.of(context).colorScheme.primary, size: 24),

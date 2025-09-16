@@ -12,7 +12,8 @@ class Review {
   final String comment;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final bool isVerified; // Подтвержден ли отзыв (участник действительно был на мероприятии)
+  final bool
+      isVerified; // Подтвержден ли отзыв (участник действительно был на мероприятии)
 
   const Review({
     required this.id,

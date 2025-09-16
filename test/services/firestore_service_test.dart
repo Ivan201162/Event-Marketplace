@@ -7,7 +7,14 @@ import 'package:event_marketplace_app/models/booking.dart';
 
 import 'firestore_service_test.mocks.dart';
 
-@GenerateMocks([FirebaseFirestore, CollectionReference, DocumentReference, DocumentSnapshot, QuerySnapshot, QueryDocumentSnapshot])
+@GenerateMocks([
+  FirebaseFirestore,
+  CollectionReference,
+  DocumentReference,
+  DocumentSnapshot,
+  QuerySnapshot,
+  QueryDocumentSnapshot
+])
 void main() {
   group('FirestoreService', () {
     late FirestoreService firestoreService;
@@ -118,8 +125,10 @@ void main() {
         final mockQueryDocumentSnapshot = MockQueryDocumentSnapshot();
 
         when(mockFirestore.collection('bookings')).thenReturn(mockCollection);
-        when(mockCollection.where('customerId', isEqualTo: customerId)).thenReturn(mockCollection);
-        when(mockCollection.orderBy('eventDate', descending: true)).thenReturn(mockCollection);
+        when(mockCollection.where('customerId', isEqualTo: customerId))
+            .thenReturn(mockCollection);
+        when(mockCollection.orderBy('eventDate', descending: true))
+            .thenReturn(mockCollection);
         when(mockCollection.get()).thenAnswer((_) async => mockQuerySnapshot);
         when(mockQuerySnapshot.docs).thenReturn([mockQueryDocumentSnapshot]);
         when(mockQueryDocumentSnapshot.id).thenReturn('booking_1');
@@ -149,8 +158,10 @@ void main() {
         final mockQuerySnapshot = MockQuerySnapshot();
 
         when(mockFirestore.collection('bookings')).thenReturn(mockCollection);
-        when(mockCollection.where('customerId', isEqualTo: customerId)).thenReturn(mockCollection);
-        when(mockCollection.orderBy('eventDate', descending: true)).thenReturn(mockCollection);
+        when(mockCollection.where('customerId', isEqualTo: customerId))
+            .thenReturn(mockCollection);
+        when(mockCollection.orderBy('eventDate', descending: true))
+            .thenReturn(mockCollection);
         when(mockCollection.get()).thenAnswer((_) async => mockQuerySnapshot);
         when(mockQuerySnapshot.docs).thenReturn([]);
 
@@ -171,8 +182,10 @@ void main() {
         final mockQueryDocumentSnapshot = MockQueryDocumentSnapshot();
 
         when(mockFirestore.collection('bookings')).thenReturn(mockCollection);
-        when(mockCollection.where('specialistId', isEqualTo: specialistId)).thenReturn(mockCollection);
-        when(mockCollection.orderBy('eventDate', descending: true)).thenReturn(mockCollection);
+        when(mockCollection.where('specialistId', isEqualTo: specialistId))
+            .thenReturn(mockCollection);
+        when(mockCollection.orderBy('eventDate', descending: true))
+            .thenReturn(mockCollection);
         when(mockCollection.get()).thenAnswer((_) async => mockQuerySnapshot);
         when(mockQuerySnapshot.docs).thenReturn([mockQueryDocumentSnapshot]);
         when(mockQueryDocumentSnapshot.id).thenReturn('booking_1');
@@ -188,7 +201,8 @@ void main() {
         });
 
         // Act
-        final result = await firestoreService.getBookingsBySpecialist(specialistId);
+        final result =
+            await firestoreService.getBookingsBySpecialist(specialistId);
 
         // Assert
         expect(result, isA<List<Booking>>());
@@ -214,5 +228,3 @@ void main() {
     });
   });
 }
-
-

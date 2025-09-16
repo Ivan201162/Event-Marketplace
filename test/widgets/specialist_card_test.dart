@@ -24,7 +24,10 @@ void main() {
         serviceAreas: ['Москва', 'Санкт-Петербург'],
         languages: ['Русский', 'Английский'],
         equipment: ['Canon EOS R5', 'Canon 24-70mm f/2.8'],
-        portfolio: ['https://example.com/portfolio1', 'https://example.com/portfolio2'],
+        portfolio: [
+          'https://example.com/portfolio1',
+          'https://example.com/portfolio2'
+        ],
         isAvailable: true,
         isVerified: true,
         rating: 4.8,
@@ -34,7 +37,8 @@ void main() {
       );
     });
 
-    testWidgets('should display specialist information correctly', (WidgetTester tester) async {
+    testWidgets('should display specialist information correctly',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -60,7 +64,8 @@ void main() {
       expect(find.text('портретная съемка'), findsOneWidget);
     });
 
-    testWidgets('should display rating and review count', (WidgetTester tester) async {
+    testWidgets('should display rating and review count',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -81,7 +86,8 @@ void main() {
       expect(find.byIcon(Icons.star), findsWidgets);
     });
 
-    testWidgets('should display verification badge for verified specialist', (WidgetTester tester) async {
+    testWidgets('should display verification badge for verified specialist',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -100,7 +106,9 @@ void main() {
       expect(find.text('✓'), findsOneWidget);
     });
 
-    testWidgets('should not display verification badge for unverified specialist', (WidgetTester tester) async {
+    testWidgets(
+        'should not display verification badge for unverified specialist',
+        (WidgetTester tester) async {
       // Arrange
       final unverifiedSpecialist = testSpecialist.copyWith(isVerified: false);
 
@@ -122,7 +130,8 @@ void main() {
       expect(find.text('✓'), findsNothing);
     });
 
-    testWidgets('should display availability status correctly', (WidgetTester tester) async {
+    testWidgets('should display availability status correctly',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -142,7 +151,8 @@ void main() {
       expect(find.byIcon(Icons.check_circle), findsOneWidget);
     });
 
-    testWidgets('should display unavailable status for unavailable specialist', (WidgetTester tester) async {
+    testWidgets('should display unavailable status for unavailable specialist',
+        (WidgetTester tester) async {
       // Arrange
       final unavailableSpecialist = testSpecialist.copyWith(isAvailable: false);
 
@@ -165,7 +175,8 @@ void main() {
       expect(find.byIcon(Icons.cancel), findsOneWidget);
     });
 
-    testWidgets('should call onTap when card is tapped', (WidgetTester tester) async {
+    testWidgets('should call onTap when card is tapped',
+        (WidgetTester tester) async {
       // Arrange
       bool tapped = false;
 
@@ -192,7 +203,8 @@ void main() {
       expect(tapped, isTrue);
     });
 
-    testWidgets('should display action buttons when showActions is true', (WidgetTester tester) async {
+    testWidgets('should display action buttons when showActions is true',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -215,7 +227,8 @@ void main() {
       expect(find.byIcon(Icons.info_outline), findsOneWidget);
     });
 
-    testWidgets('should not display action buttons when showActions is false', (WidgetTester tester) async {
+    testWidgets('should not display action buttons when showActions is false',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -255,7 +268,8 @@ void main() {
       expect(find.byIcon(Icons.favorite_border), findsOneWidget);
     });
 
-    testWidgets('should display price range correctly', (WidgetTester tester) async {
+    testWidgets('should display price range correctly',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -274,7 +288,8 @@ void main() {
       expect(find.text('6000 - 36000 ₽'), findsOneWidget);
     });
 
-    testWidgets('should display hourly rate when no min/max booking hours', (WidgetTester tester) async {
+    testWidgets('should display hourly rate when no min/max booking hours',
+        (WidgetTester tester) async {
       // Arrange
       final specialistWithoutHours = testSpecialist.copyWith(
         minBookingHours: null,
@@ -329,7 +344,8 @@ void main() {
       );
     });
 
-    testWidgets('should display compact specialist information', (WidgetTester tester) async {
+    testWidgets('should display compact specialist information',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -351,7 +367,8 @@ void main() {
       expect(find.text('6000 - 36000 ₽'), findsOneWidget);
     });
 
-    testWidgets('should display verification icon for verified specialist', (WidgetTester tester) async {
+    testWidgets('should display verification icon for verified specialist',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -370,7 +387,8 @@ void main() {
       expect(find.byIcon(Icons.verified), findsOneWidget);
     });
 
-    testWidgets('should call onTap when compact card is tapped', (WidgetTester tester) async {
+    testWidgets('should call onTap when compact card is tapped',
+        (WidgetTester tester) async {
       // Arrange
       bool tapped = false;
 
@@ -398,5 +416,3 @@ void main() {
     });
   });
 }
-
-

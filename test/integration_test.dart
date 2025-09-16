@@ -14,13 +14,13 @@ void main() {
 
       // Проверка загрузки главного экрана
       expect(find.byType(MaterialApp), findsOneWidget);
-      
+
       // Ожидание загрузки
       await tester.pumpAndSettle(Duration(seconds: 3));
 
       // Проверка основных элементов интерфейса
       expect(find.text('Event Marketplace'), findsOneWidget);
-      
+
       print('✅ App successfully loaded');
     });
 
@@ -30,7 +30,7 @@ void main() {
 
       // Тест навигации по основным экранам
       // (Здесь можно добавить тесты навигации)
-      
+
       print('✅ Navigation test completed');
     });
 
@@ -40,20 +40,20 @@ void main() {
 
       // Тест переключения темы
       // (Здесь можно добавить тесты темы)
-      
+
       print('✅ Theme switching test completed');
     });
 
     testWidgets('Performance test', (WidgetTester tester) async {
       app.main();
-      
+
       // Измерение времени загрузки
       final stopwatch = Stopwatch()..start();
       await tester.pumpAndSettle();
       stopwatch.stop();
-      
+
       print('✅ App load time: ${stopwatch.elapsedMilliseconds}ms');
-      
+
       // Проверка производительности
       expect(stopwatch.elapsedMilliseconds, lessThan(5000));
     });

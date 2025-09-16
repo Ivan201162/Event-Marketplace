@@ -3,49 +3,49 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// Категории специалистов
 enum SpecialistCategory {
   // Основные категории
-  photographer,    // Фотограф
-  videographer,    // Видеограф
-  dj,             // DJ
-  host,           // Ведущий
-  decorator,      // Декоратор
-  musician,       // Музыкант
-  caterer,        // Кейтеринг
-  security,       // Охрана
-  technician,     // Техник
-  
+  photographer, // Фотограф
+  videographer, // Видеограф
+  dj, // DJ
+  host, // Ведущий
+  decorator, // Декоратор
+  musician, // Музыкант
+  caterer, // Кейтеринг
+  security, // Охрана
+  technician, // Техник
+
   // Расширенные категории
-  animator,       // Аниматор
-  florist,        // Флорист
-  lighting,       // Световое оформление
-  sound,          // Звуковое оборудование
-  costume,        // Платья/костюмы
-  fireShow,       // Фаер-шоу
-  fireworks,      // Салюты
-  lightShow,      // Световые шоу
-  coverBand,      // Кавер-группы
-  teamBuilding,   // Тимбилдинги
-  cleaning,       // Клининг
-  rental,         // Аренда оборудования
-  makeup,         // Визажист
-  hairstylist,    // Парикмахер
-  stylist,        // Стилист
-  choreographer,  // Хореограф
-  dance,          // Танцы
-  magic,          // Фокусы/иллюзионист
-  clown,          // Клоун
-  balloon,        // Аэродизайн
-  cake,           // Торты/кондитер
-  transport,      // Транспорт
-  venue,          // Площадки
-  other,          // Другое
+  animator, // Аниматор
+  florist, // Флорист
+  lighting, // Световое оформление
+  sound, // Звуковое оборудование
+  costume, // Платья/костюмы
+  fireShow, // Фаер-шоу
+  fireworks, // Салюты
+  lightShow, // Световые шоу
+  coverBand, // Кавер-группы
+  teamBuilding, // Тимбилдинги
+  cleaning, // Клининг
+  rental, // Аренда оборудования
+  makeup, // Визажист
+  hairstylist, // Парикмахер
+  stylist, // Стилист
+  choreographer, // Хореограф
+  dance, // Танцы
+  magic, // Фокусы/иллюзионист
+  clown, // Клоун
+  balloon, // Аэродизайн
+  cake, // Торты/кондитер
+  transport, // Транспорт
+  venue, // Площадки
+  other, // Другое
 }
 
 /// Уровень опыта специалиста
 enum ExperienceLevel {
-  beginner,       // Начинающий
-  intermediate,   // Средний
-  advanced,       // Продвинутый
-  expert,         // Эксперт
+  beginner, // Начинающий
+  intermediate, // Средний
+  advanced, // Продвинутый
+  expert, // Эксперт
 }
 
 /// Расширение для получения названий категорий
@@ -288,11 +288,11 @@ class Specialist {
       isVerified: data['isVerified'] ?? false,
       rating: (data['rating'] ?? 0.0).toDouble(),
       reviewCount: data['reviewCount'] ?? 0,
-      createdAt: data['createdAt'] != null 
-          ? (data['createdAt'] as Timestamp).toDate() 
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
-      updatedAt: data['updatedAt'] != null 
-          ? (data['updatedAt'] as Timestamp).toDate() 
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] as Timestamp).toDate()
           : DateTime.now(),
       metadata: data['metadata'],
     );

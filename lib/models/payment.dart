@@ -2,28 +2,28 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Типы платежей
 enum PaymentType {
-  advance,    // Аванс
+  advance, // Аванс
   final_payment, // Финальный платеж
-  full_payment,  // Полная оплата
-  refund,     // Возврат
+  full_payment, // Полная оплата
+  refund, // Возврат
 }
 
 /// Статусы платежей
 enum PaymentStatus {
-  pending,    // Ожидает оплаты
+  pending, // Ожидает оплаты
   processing, // Обрабатывается
-  completed,  // Завершен
-  failed,     // Неудачный
-  cancelled,  // Отменен
-  refunded,   // Возвращен
+  completed, // Завершен
+  failed, // Неудачный
+  cancelled, // Отменен
+  refunded, // Возвращен
 }
 
 /// Типы организаций для расчета платежей
 enum OrganizationType {
-  individual,     // Физическое лицо
-  commercial,     // Коммерческая организация
-  government,     // Государственное учреждение
-  non_profit,     // Некоммерческая организация
+  individual, // Физическое лицо
+  commercial, // Коммерческая организация
+  government, // Государственное учреждение
+  non_profit, // Некоммерческая организация
 }
 
 /// Модель платежа
@@ -76,19 +76,20 @@ class Payment {
       specialistId: data['specialistId'] ?? '',
       type: _parsePaymentType(data['type']),
       status: _parsePaymentStatus(data['status']),
-      amount: (data['amount'] is num) ? (data['amount'] as num).toDouble() : 0.0,
-      originalAmount: data['originalAmount'] != null 
-          ? (data['originalAmount'] as num).toDouble() 
+      amount:
+          (data['amount'] is num) ? (data['amount'] as num).toDouble() : 0.0,
+      originalAmount: data['originalAmount'] != null
+          ? (data['originalAmount'] as num).toDouble()
           : null,
       currency: data['currency'] ?? 'RUB',
-      createdAt: data['createdAt'] != null 
-          ? (data['createdAt'] as Timestamp).toDate() 
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
-      completedAt: data['completedAt'] != null 
-          ? (data['completedAt'] as Timestamp).toDate() 
+      completedAt: data['completedAt'] != null
+          ? (data['completedAt'] as Timestamp).toDate()
           : null,
-      failedAt: data['failedAt'] != null 
-          ? (data['failedAt'] as Timestamp).toDate() 
+      failedAt: data['failedAt'] != null
+          ? (data['failedAt'] as Timestamp).toDate()
           : null,
       paymentMethod: data['paymentMethod'],
       transactionId: data['transactionId'],
@@ -110,7 +111,8 @@ class Payment {
       'originalAmount': originalAmount,
       'currency': currency,
       'createdAt': Timestamp.fromDate(createdAt),
-      'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+      'completedAt':
+          completedAt != null ? Timestamp.fromDate(completedAt!) : null,
       'failedAt': failedAt != null ? Timestamp.fromDate(failedAt!) : null,
       'paymentMethod': paymentMethod,
       'transactionId': transactionId,
@@ -223,7 +225,7 @@ class Payment {
   /// Парсинг типа платежа
   static PaymentType _parsePaymentType(dynamic typeData) {
     if (typeData == null) return PaymentType.advance;
-    
+
     final typeString = typeData.toString().toLowerCase();
     switch (typeString) {
       case 'final_payment':
@@ -241,7 +243,7 @@ class Payment {
   /// Парсинг статуса платежа
   static PaymentStatus _parsePaymentStatus(dynamic statusData) {
     if (statusData == null) return PaymentStatus.pending;
-    
+
     final statusString = statusData.toString().toLowerCase();
     switch (statusString) {
       case 'processing':
@@ -263,7 +265,7 @@ class Payment {
   /// Парсинг типа организации
   static OrganizationType _parseOrganizationType(dynamic typeData) {
     if (typeData == null) return OrganizationType.individual;
-    
+
     final typeString = typeData.toString().toLowerCase();
     switch (typeString) {
       case 'commercial':
@@ -357,13 +359,13 @@ class PaymentConfiguration {
   /// Рассчитать сумму аванса
   double calculateAdvanceAmount(double totalAmount) {
     if (!requiresAdvance) return 0.0;
-    
+
     final advanceAmount = totalAmount * (advancePercentage / 100);
-    
+
     if (maxAdvanceAmount != null && advanceAmount > maxAdvanceAmount!) {
       return maxAdvanceAmount!;
     }
-    
+
     return advanceAmount;
   }
 

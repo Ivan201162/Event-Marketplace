@@ -17,7 +17,8 @@ class PaymentsExtendedScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<PaymentsExtendedScreen> createState() => _PaymentsExtendedScreenState();
+  ConsumerState<PaymentsExtendedScreen> createState() =>
+      _PaymentsExtendedScreenState();
 }
 
 class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
@@ -77,7 +78,8 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
 
   Widget _buildAllPaymentsTab() {
     return StreamBuilder<List<PaymentExtended>>(
-      stream: _paymentService.getUserPayments(widget.userId, isCustomer: widget.isCustomer),
+      stream: _paymentService.getUserPayments(widget.userId,
+          isCustomer: widget.isCustomer),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -119,12 +121,14 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
             return PaymentCardWidget(
               payment: payment,
               onTap: () => _showPaymentDetails(payment),
-              onPay: payment.remainingAmount > 0 ? () => _showPaymentDialog(payment) : null,
-              onDownloadReceipt: payment.receiptPdfUrl != null 
-                  ? () => _downloadReceipt(payment) 
+              onPay: payment.remainingAmount > 0
+                  ? () => _showPaymentDialog(payment)
                   : null,
-              onDownloadInvoice: payment.invoicePdfUrl != null 
-                  ? () => _downloadInvoice(payment) 
+              onDownloadReceipt: payment.receiptPdfUrl != null
+                  ? () => _downloadReceipt(payment)
+                  : null,
+              onDownloadInvoice: payment.invoicePdfUrl != null
+                  ? () => _downloadInvoice(payment)
                   : null,
             );
           },
@@ -135,15 +139,19 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
 
   Widget _buildPendingPaymentsTab() {
     return StreamBuilder<List<PaymentExtended>>(
-      stream: _paymentService.getUserPayments(widget.userId, isCustomer: widget.isCustomer),
+      stream: _paymentService.getUserPayments(widget.userId,
+          isCustomer: widget.isCustomer),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
         }
 
         final allPayments = snapshot.data ?? [];
-        final pendingPayments = allPayments.where((p) => 
-            p.status == PaymentStatus.pending || p.status == PaymentStatus.processing).toList();
+        final pendingPayments = allPayments
+            .where((p) =>
+                p.status == PaymentStatus.pending ||
+                p.status == PaymentStatus.processing)
+            .toList();
 
         if (pendingPayments.isEmpty) {
           return _buildEmptyState(
@@ -162,11 +170,11 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
               payment: payment,
               onTap: () => _showPaymentDetails(payment),
               onPay: () => _showPaymentDialog(payment),
-              onDownloadReceipt: payment.receiptPdfUrl != null 
-                  ? () => _downloadReceipt(payment) 
+              onDownloadReceipt: payment.receiptPdfUrl != null
+                  ? () => _downloadReceipt(payment)
                   : null,
-              onDownloadInvoice: payment.invoicePdfUrl != null 
-                  ? () => _downloadInvoice(payment) 
+              onDownloadInvoice: payment.invoicePdfUrl != null
+                  ? () => _downloadInvoice(payment)
                   : null,
             );
           },
@@ -177,7 +185,8 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
 
   Widget _buildStatsTab() {
     return FutureBuilder<PaymentStats>(
-      future: _paymentService.getPaymentStats(widget.userId, isCustomer: widget.isCustomer),
+      future: _paymentService.getPaymentStats(widget.userId,
+          isCustomer: widget.isCustomer),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -192,27 +201,44 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
             children: [
               // Общая статистика
               _buildStatsCard('Общая статистика', [
-                _buildStatItem('Всего платежей', stats.totalPayments.toString(), Icons.payment),
-                _buildStatItem('Завершено', stats.completedPayments.toString(), Icons.check_circle),
-                _buildStatItem('Ожидают', stats.pendingPayments.toString(), Icons.pending),
-                _buildStatItem('Ошибки', stats.failedPayments.toString(), Icons.error),
+                _buildStatItem('Всего платежей', stats.totalPayments.toString(),
+                    Icons.payment),
+                _buildStatItem('Завершено', stats.completedPayments.toString(),
+                    Icons.check_circle),
+                _buildStatItem(
+                    'Ожидают', stats.pendingPayments.toString(), Icons.pending),
+                _buildStatItem(
+                    'Ошибки', stats.failedPayments.toString(), Icons.error),
               ]),
-              
+
               const SizedBox(height: 16),
-              
+
               // Финансовая статистика
               _buildStatsCard('Финансовая статистика', [
-                _buildStatItem('Общая сумма', '${stats.totalAmount.toStringAsFixed(2)} ₽', Icons.account_balance_wallet),
-                _buildStatItem('Оплачено', '${stats.paidAmount.toStringAsFixed(2)} ₽', Icons.check_circle),
-                _buildStatItem('Остаток', '${stats.pendingAmount.toStringAsFixed(2)} ₽', Icons.pending),
-                _buildStatItem('Успешность', '${stats.successRate.toStringAsFixed(1)}%', Icons.trending_up),
+                _buildStatItem(
+                    'Общая сумма',
+                    '${stats.totalAmount.toStringAsFixed(2)} ₽',
+                    Icons.account_balance_wallet),
+                _buildStatItem(
+                    'Оплачено',
+                    '${stats.paidAmount.toStringAsFixed(2)} ₽',
+                    Icons.check_circle),
+                _buildStatItem(
+                    'Остаток',
+                    '${stats.pendingAmount.toStringAsFixed(2)} ₽',
+                    Icons.pending),
+                _buildStatItem(
+                    'Успешность',
+                    '${stats.successRate.toStringAsFixed(1)}%',
+                    Icons.trending_up),
               ]),
-              
+
               const SizedBox(height: 16),
-              
+
               // Типы платежей
               if (stats.paymentsByType.isNotEmpty) ...[
-                _buildStatsCard('По типам платежей', 
+                _buildStatsCard(
+                  'По типам платежей',
                   stats.paymentsByType.entries.map((entry) {
                     return _buildStatItem(
                       _getPaymentTypeText(entry.key),
@@ -223,10 +249,11 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
                 ),
                 const SizedBox(height: 16),
               ],
-              
+
               // Статусы платежей
               if (stats.paymentsByStatus.isNotEmpty) ...[
-                _buildStatsCard('По статусам', 
+                _buildStatsCard(
+                  'По статусам',
                   stats.paymentsByStatus.entries.map((entry) {
                     return _buildStatItem(
                       _getStatusText(entry.key),
@@ -329,7 +356,8 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
           child: PaymentTypeSelector(
             totalAmount: 50000.0, // TODO: Получить из контекста
             settings: _settings,
-            onPaymentTypeSelected: (type, advancePercentage, installments) async {
+            onPaymentTypeSelected:
+                (type, advancePercentage, installments) async {
               Navigator.pop(context);
               await _createPayment(type, advancePercentage, installments);
             },
@@ -355,7 +383,8 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
               Text('Оплачено: ${payment.paidAmount.toStringAsFixed(2)} ₽'),
               Text('Остаток: ${payment.remainingAmount.toStringAsFixed(2)} ₽'),
               const SizedBox(height: 16),
-              const Text('Взносы:', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('Взносы:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               ...payment.installments.map((installment) {
                 return ListTile(
                   title: Text(_formatDate(installment.dueDate)),
@@ -381,7 +410,8 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Оплата'),
-        content: const Text('Функция оплаты будет интегрирована с платежными системами.'),
+        content: const Text(
+            'Функция оплаты будет интегрирована с платежными системами.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -404,7 +434,8 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Настройки предоплаты'),
-        content: const Text('Настройки предоплаты будут доступны в следующих версиях.'),
+        content: const Text(
+            'Настройки предоплаты будут доступны в следующих версиях.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -415,7 +446,8 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
     );
   }
 
-  Future<void> _createPayment(PaymentType type, double? advancePercentage, int? installments) async {
+  Future<void> _createPayment(
+      PaymentType type, double? advancePercentage, int? installments) async {
     final paymentId = await _paymentService.createPayment(
       bookingId: 'demo_booking_${DateTime.now().millisecondsSinceEpoch}',
       customerId: widget.userId,
@@ -444,7 +476,8 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
     final success = await _paymentService.payInstallment(
       paymentId: payment.id,
       installmentId: payment.installments.first.id,
-      transactionId: 'demo_transaction_${DateTime.now().millisecondsSinceEpoch}',
+      transactionId:
+          'demo_transaction_${DateTime.now().millisecondsSinceEpoch}',
     );
 
     if (mounted) {

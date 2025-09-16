@@ -12,7 +12,8 @@ class PaymentsScreen extends ConsumerStatefulWidget {
   ConsumerState<PaymentsScreen> createState() => _PaymentsScreenState();
 }
 
-class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with SingleTickerProviderStateMixin {
+class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -118,7 +119,9 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with SingleTick
 
         return RefreshIndicator(
           onRefresh: () async {
-            ref.invalidate(isSpecialist ? paymentsBySpecialistProvider(userId) : paymentsByCustomerProvider(userId));
+            ref.invalidate(isSpecialist
+                ? paymentsBySpecialistProvider(userId)
+                : paymentsByCustomerProvider(userId));
           },
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
@@ -148,7 +151,9 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with SingleTick
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                ref.invalidate(isSpecialist ? paymentsBySpecialistProvider(userId) : paymentsByCustomerProvider(userId));
+                ref.invalidate(isSpecialist
+                    ? paymentsBySpecialistProvider(userId)
+                    : paymentsByCustomerProvider(userId));
               },
               child: const Text('Повторить'),
             ),
@@ -191,7 +196,9 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with SingleTick
 
         return RefreshIndicator(
           onRefresh: () async {
-            ref.invalidate(isSpecialist ? paymentsBySpecialistProvider(userId) : paymentsByCustomerProvider(userId));
+            ref.invalidate(isSpecialist
+                ? paymentsBySpecialistProvider(userId)
+                : paymentsByCustomerProvider(userId));
           },
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
@@ -239,14 +246,14 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with SingleTick
             children: [
               // Статистика
               PaymentStatisticsWidget(statistics: statistics),
-              
+
               const SizedBox(height: 16),
-              
+
               // Быстрые действия
               _buildQuickActionsCard(context, userId, isSpecialist),
-              
+
               const SizedBox(height: 16),
-              
+
               // Информация о типах организаций
               _buildOrganizationTypesCard(context),
             ],
@@ -268,7 +275,8 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with SingleTick
   }
 
   /// Карточка быстрых действий
-  Widget _buildQuickActionsCard(BuildContext context, String userId, bool isSpecialist) {
+  Widget _buildQuickActionsCard(
+      BuildContext context, String userId, bool isSpecialist) {
     return Card(
       elevation: 4,
       child: Padding(
@@ -279,8 +287,8 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with SingleTick
             Text(
               'Быстрые действия',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             if (!isSpecialist) ...[
@@ -318,8 +326,8 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with SingleTick
             Text(
               'Типы организаций и платежи',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             _buildOrganizationTypeInfo(
@@ -395,7 +403,10 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with SingleTick
                   description,
                   style: TextStyle(
                     fontSize: 12,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.7),
                   ),
                 ),
               ],
@@ -418,9 +429,11 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with SingleTick
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildDetailRow('ID платежа', payment.id),
-              _buildDetailRow('Сумма', '${payment.amount.toStringAsFixed(0)} ${payment.currency}'),
+              _buildDetailRow('Сумма',
+                  '${payment.amount.toStringAsFixed(0)} ${payment.currency}'),
               _buildDetailRow('Статус', payment.statusDisplayName),
-              _buildDetailRow('Тип организации', _getOrganizationTypeName(payment.organizationType)),
+              _buildDetailRow('Тип организации',
+                  _getOrganizationTypeName(payment.organizationType)),
               if (payment.description != null)
                 _buildDetailRow('Описание', payment.description!),
               if (payment.paymentMethod != null)
@@ -470,14 +483,15 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with SingleTick
                 const SizedBox(height: 16),
                 const Text('Тип организации:'),
                 const SizedBox(height: 8),
-                ...OrganizationType.values.map((type) => RadioListTile<OrganizationType>(
-                  title: Text(_getOrganizationTypeName(type)),
-                  value: type,
-                  groupValue: selectedType,
-                  onChanged: (value) {
-                    setState(() => selectedType = value!);
-                  },
-                )),
+                ...OrganizationType.values
+                    .map((type) => RadioListTile<OrganizationType>(
+                          title: Text(_getOrganizationTypeName(type)),
+                          value: type,
+                          groupValue: selectedType,
+                          onChanged: (value) {
+                            setState(() => selectedType = value!);
+                          },
+                        )),
                 if (amountController.text.isNotEmpty) ...[
                   const SizedBox(height: 16),
                   PaymentCalculationWidget(
@@ -509,7 +523,8 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen> with SingleTick
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Тестовые данные'),
-        content: const Text('Добавить тестовые данные платежей для разработки?'),
+        content:
+            const Text('Добавить тестовые данные платежей для разработки?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),

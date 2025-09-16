@@ -16,12 +16,13 @@ class GuestManagementScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<GuestManagementScreen> createState() => _GuestManagementScreenState();
+  ConsumerState<GuestManagementScreen> createState() =>
+      _GuestManagementScreenState();
 }
 
 class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
   final GuestService _guestService = GuestService();
-  
+
   String _selectedEventId = '';
   GuestFilter _filter = const GuestFilter();
   String _searchQuery = '';
@@ -50,10 +51,10 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
         children: [
           // Выбор события
           _buildEventSelector(),
-          
+
           // Статистика
           if (_selectedEventId.isNotEmpty) _buildStatsSection(),
-          
+
           // Список гостей
           Expanded(
             child: _selectedEventId.isEmpty
@@ -93,7 +94,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
         }
 
         final events = snapshot.data ?? [];
-        
+
         if (events.isEmpty) {
           return Container(
             padding: const EdgeInsets.all(16),
@@ -188,9 +189,9 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Процентные показатели
                   Row(
                     children: [
@@ -229,7 +230,8 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon, Color color) {
+  Widget _buildStatItem(
+      String label, String value, IconData icon, Color color) {
     return Column(
       children: [
         Icon(icon, color: color, size: 24),
@@ -359,22 +361,24 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
 
   List<Guest> _filterGuests(List<Guest> guests) {
     if (_searchQuery.isEmpty) return guests;
-    
+
     final query = _searchQuery.toLowerCase();
     return guests.where((guest) {
       return guest.guestName.toLowerCase().contains(query) ||
-             guest.guestEmail.toLowerCase().contains(query);
+          guest.guestEmail.toLowerCase().contains(query);
     }).toList();
   }
 
   void _createEvent() {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       MaterialPageRoute(
         builder: (context) => CreateGuestEventScreen(
           organizerId: widget.organizerId,
         ),
       ),
-    ).then((result) {
+    )
+        .then((result) {
       if (result == true) {
         setState(() {});
       }
@@ -382,13 +386,15 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
   }
 
   void _addGuest() {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       MaterialPageRoute(
         builder: (context) => GuestRegistrationScreen(
           eventId: _selectedEventId,
         ),
       ),
-    ).then((result) {
+    )
+        .then((result) {
       if (result == true) {
         setState(() {});
       }
@@ -442,7 +448,8 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Регистрация гостя'),
-        content: Text('Подтвердить регистрацию ${guest.guestName} на мероприятие?'),
+        content:
+            Text('Подтвердить регистрацию ${guest.guestName} на мероприятие?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -629,15 +636,16 @@ class _FilterDialogState extends State<_FilterDialog> {
                   if (value == true) {
                     _filter = _filter.copyWith(statuses: [...statuses, status]);
                   } else {
-                    _filter = _filter.copyWith(statuses: statuses.where((s) => s != status).toList());
+                    _filter = _filter.copyWith(
+                        statuses: statuses.where((s) => s != status).toList());
                   }
                 });
               },
             );
           }),
-          
+
           const SizedBox(height: 16),
-          
+
           // Дополнительные фильтры
           CheckboxListTile(
             title: const Text('С поздравлениями'),
@@ -648,7 +656,7 @@ class _FilterDialogState extends State<_FilterDialog> {
               });
             },
           ),
-          
+
           CheckboxListTile(
             title: const Text('На мероприятии'),
             value: _filter.isCheckedIn ?? false,
@@ -658,7 +666,7 @@ class _FilterDialogState extends State<_FilterDialog> {
               });
             },
           ),
-          
+
           CheckboxListTile(
             title: const Text('Покинули мероприятие'),
             value: _filter.isCheckedOut ?? false,

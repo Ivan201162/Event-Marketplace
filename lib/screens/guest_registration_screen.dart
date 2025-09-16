@@ -13,17 +13,19 @@ class GuestRegistrationScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<GuestRegistrationScreen> createState() => _GuestRegistrationScreenState();
+  ConsumerState<GuestRegistrationScreen> createState() =>
+      _GuestRegistrationScreenState();
 }
 
-class _GuestRegistrationScreenState extends ConsumerState<GuestRegistrationScreen> {
+class _GuestRegistrationScreenState
+    extends ConsumerState<GuestRegistrationScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _phoneController = TextEditingController();
-  
+
   final GuestService _guestService = GuestService();
-  
+
   bool _isLoading = false;
   GuestEvent? _event;
 
@@ -61,14 +63,14 @@ class _GuestRegistrationScreenState extends ConsumerState<GuestRegistrationScree
         children: [
           // Информация о событии
           _buildEventInfo(),
-          
+
           const SizedBox(height: 24),
-          
+
           // Форма регистрации
           _buildRegistrationForm(),
-          
+
           const SizedBox(height: 24),
-          
+
           // Кнопка регистрации
           SizedBox(
             width: double.infinity,
@@ -98,9 +100,9 @@ class _GuestRegistrationScreenState extends ConsumerState<GuestRegistrationScree
                 fontWeight: FontWeight.bold,
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Название события
             Row(
               children: [
@@ -117,9 +119,9 @@ class _GuestRegistrationScreenState extends ConsumerState<GuestRegistrationScree
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             // Дата и время
             Row(
               children: [
@@ -133,9 +135,9 @@ class _GuestRegistrationScreenState extends ConsumerState<GuestRegistrationScree
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             // Место
             Row(
               children: [
@@ -149,9 +151,9 @@ class _GuestRegistrationScreenState extends ConsumerState<GuestRegistrationScree
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             // Организатор
             Row(
               children: [
@@ -165,9 +167,9 @@ class _GuestRegistrationScreenState extends ConsumerState<GuestRegistrationScree
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             // Свободные места
             Row(
               children: [
@@ -203,9 +205,9 @@ class _GuestRegistrationScreenState extends ConsumerState<GuestRegistrationScree
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Имя
               TextFormField(
                 controller: _nameController,
@@ -221,9 +223,9 @@ class _GuestRegistrationScreenState extends ConsumerState<GuestRegistrationScree
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Email
               TextFormField(
                 controller: _emailController,
@@ -237,15 +239,16 @@ class _GuestRegistrationScreenState extends ConsumerState<GuestRegistrationScree
                   if (value == null || value.trim().isEmpty) {
                     return 'Пожалуйста, введите email';
                   }
-                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                      .hasMatch(value)) {
                     return 'Пожалуйста, введите корректный email';
                   }
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Телефон
               TextFormField(
                 controller: _phoneController,
@@ -256,9 +259,9 @@ class _GuestRegistrationScreenState extends ConsumerState<GuestRegistrationScree
                 ),
                 keyboardType: TextInputType.phone,
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Информация о регистрации
               Container(
                 padding: const EdgeInsets.all(12),
@@ -352,8 +355,8 @@ class _GuestRegistrationScreenState extends ConsumerState<GuestRegistrationScree
         eventId: widget.eventId,
         guestName: _nameController.text.trim(),
         guestEmail: _emailController.text.trim(),
-        guestPhone: _phoneController.text.trim().isNotEmpty 
-            ? _phoneController.text.trim() 
+        guestPhone: _phoneController.text.trim().isNotEmpty
+            ? _phoneController.text.trim()
             : null,
       );
 

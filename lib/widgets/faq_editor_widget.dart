@@ -56,7 +56,9 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
         child: Column(
           children: [
             AppBar(
-              title: Text(widget.existingFAQ == null ? 'Новый вопрос' : 'Редактировать вопрос'),
+              title: Text(widget.existingFAQ == null
+                  ? 'Новый вопрос'
+                  : 'Редактировать вопрос'),
               actions: [
                 TextButton(
                   onPressed: _isSaving ? null : _saveFAQ,
@@ -87,7 +89,7 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
                       textCapitalization: TextCapitalization.sentences,
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Ответ
                     TextField(
                       controller: _answerController,
@@ -101,7 +103,7 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
                       textCapitalization: TextCapitalization.sentences,
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Категория и порядок
                     Row(
                       children: [
@@ -113,12 +115,23 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
                               border: OutlineInputBorder(),
                             ),
                             items: const [
-                              DropdownMenuItem(value: 'general', child: Text('Общие вопросы')),
-                              DropdownMenuItem(value: 'pricing', child: Text('Цены и оплата')),
-                              DropdownMenuItem(value: 'booking', child: Text('Бронирование')),
-                              DropdownMenuItem(value: 'services', child: Text('Услуги')),
-                              DropdownMenuItem(value: 'equipment', child: Text('Оборудование')),
-                              DropdownMenuItem(value: 'cancellation', child: Text('Отмена и возврат')),
+                              DropdownMenuItem(
+                                  value: 'general',
+                                  child: Text('Общие вопросы')),
+                              DropdownMenuItem(
+                                  value: 'pricing',
+                                  child: Text('Цены и оплата')),
+                              DropdownMenuItem(
+                                  value: 'booking',
+                                  child: Text('Бронирование')),
+                              DropdownMenuItem(
+                                  value: 'services', child: Text('Услуги')),
+                              DropdownMenuItem(
+                                  value: 'equipment',
+                                  child: Text('Оборудование')),
+                              DropdownMenuItem(
+                                  value: 'cancellation',
+                                  child: Text('Отмена и возврат')),
                             ],
                             onChanged: (value) {
                               setState(() {
@@ -142,7 +155,7 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Настройки
                     _buildSettingsSection(),
                   ],
@@ -164,7 +177,6 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
-        
         SwitchListTile(
           title: const Text('Опубликовать вопрос'),
           subtitle: const Text('Клиенты смогут видеть этот вопрос'),
@@ -183,7 +195,7 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
     final question = _questionController.text.trim();
     final answer = _answerController.text.trim();
     final orderText = _orderController.text.trim();
-    
+
     if (question.isEmpty || answer.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Заполните вопрос и ответ')),
@@ -199,7 +211,7 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
 
     try {
       final service = ref.read(specialistProfileExtendedServiceProvider);
-      
+
       if (widget.existingFAQ != null) {
         // Обновляем существующий FAQ
         final updatedFAQ = widget.existingFAQ!.copyWith(
@@ -209,7 +221,7 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
           order: order,
           isPublished: _isPublished,
         );
-        
+
         await service.updateFAQItem(widget.specialistId, updatedFAQ);
       } else {
         // Создаём новый FAQ
@@ -225,14 +237,12 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
 
       Navigator.pop(context);
       widget.onFAQSaved();
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            widget.existingFAQ == null 
-                ? 'Вопрос добавлен' 
-                : 'Вопрос обновлён'
-          ),
+          content: Text(widget.existingFAQ == null
+              ? 'Вопрос добавлен'
+              : 'Вопрос обновлён'),
         ),
       );
     } catch (e) {

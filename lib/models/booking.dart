@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Статус бронирования
 enum BookingStatus {
-  pending,    // Ожидает подтверждения
-  confirmed,  // Подтверждено
-  cancelled,  // Отменено
-  completed,  // Завершено
+  pending, // Ожидает подтверждения
+  confirmed, // Подтверждено
+  cancelled, // Отменено
+  completed, // Завершено
 }
 
 /// Модель бронирования

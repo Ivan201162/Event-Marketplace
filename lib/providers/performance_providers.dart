@@ -35,5 +35,3 @@ final monitoringStatsProvider = Provider<Map<String, dynamic>>((ref) {
   final monitoringService = ref.watch(monitoringServiceProvider);
   return monitoringService.getOverallStats();
 });
-
-

@@ -27,14 +27,14 @@ class LocalizedText extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final translate = ref.watch(translateProvider);
     final hasTranslation = ref.watch(hasTranslationProvider);
-    
+
     String text;
     if (hasTranslation(textKey)) {
       text = translate(textKey, params: params);
     } else {
       text = fallback ?? textKey;
     }
-    
+
     return Text(
       text,
       style: style,
@@ -71,7 +71,8 @@ class AnimatedLocalizedText extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<AnimatedLocalizedText> createState() => _AnimatedLocalizedTextState();
+  ConsumerState<AnimatedLocalizedText> createState() =>
+      _AnimatedLocalizedTextState();
 }
 
 class _AnimatedLocalizedTextState extends ConsumerState<AnimatedLocalizedText>
@@ -103,14 +104,14 @@ class _AnimatedLocalizedTextState extends ConsumerState<AnimatedLocalizedText>
   Widget build(BuildContext context) {
     final translate = ref.watch(translateProvider);
     final hasTranslation = ref.watch(hasTranslationProvider);
-    
+
     String text;
     if (hasTranslation(widget.textKey)) {
       text = translate(widget.textKey, params: widget.params);
     } else {
       text = widget.fallback ?? widget.textKey;
     }
-    
+
     return AnimatedBuilder(
       animation: _animation,
       builder: (context, child) {
@@ -155,14 +156,14 @@ class LocalizedButton extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final translate = ref.watch(translateProvider);
     final hasTranslation = ref.watch(hasTranslationProvider);
-    
+
     String text;
     if (hasTranslation(textKey)) {
       text = translate(textKey, params: params);
     } else {
       text = fallback ?? textKey;
     }
-    
+
     return ElevatedButton(
       onPressed: onPressed,
       style: style,
@@ -223,14 +224,14 @@ class LocalizedTextField extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final translate = ref.watch(translateProvider);
     final hasTranslation = ref.watch(hasTranslationProvider);
-    
+
     String label;
     if (hasTranslation(labelKey)) {
       label = translate(labelKey);
     } else {
       label = fallbackLabel ?? labelKey;
     }
-    
+
     String? hint;
     if (hintKey != null) {
       if (hasTranslation(hintKey!)) {
@@ -239,7 +240,7 @@ class LocalizedTextField extends ConsumerWidget {
         hint = fallbackHint ?? hintKey;
       }
     }
-    
+
     String? helper;
     if (helperKey != null) {
       if (hasTranslation(helperKey!)) {
@@ -248,7 +249,7 @@ class LocalizedTextField extends ConsumerWidget {
         helper = fallbackHelper ?? helperKey;
       }
     }
-    
+
     return TextField(
       controller: controller,
       onChanged: onChanged,
@@ -288,14 +289,14 @@ class LocalizedDialog extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final translate = ref.watch(translateProvider);
     final hasTranslation = ref.watch(hasTranslationProvider);
-    
+
     String title;
     if (hasTranslation(titleKey)) {
       title = translate(titleKey);
     } else {
       title = fallbackTitle ?? titleKey;
     }
-    
+
     String? content;
     if (contentKey != null) {
       if (hasTranslation(contentKey!)) {
@@ -304,7 +305,7 @@ class LocalizedDialog extends ConsumerWidget {
         content = fallbackContent ?? contentKey;
       }
     }
-    
+
     return AlertDialog(
       title: Text(title),
       content: content != null ? Text(content) : null,
@@ -328,14 +329,14 @@ class LocalizedDialogAction {
   Widget build(WidgetRef ref) {
     final translate = ref.watch(translateProvider);
     final hasTranslation = ref.watch(hasTranslationProvider);
-    
+
     String text;
     if (hasTranslation(textKey)) {
       text = translate(textKey);
     } else {
       text = fallback ?? textKey;
     }
-    
+
     return TextButton(
       onPressed: onPressed,
       child: Text(text),
@@ -372,14 +373,14 @@ class LocalizedListTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final translate = ref.watch(translateProvider);
     final hasTranslation = ref.watch(hasTranslationProvider);
-    
+
     String title;
     if (hasTranslation(titleKey)) {
       title = translate(titleKey, params: titleParams);
     } else {
       title = fallbackTitle ?? titleKey;
     }
-    
+
     String? subtitle;
     if (subtitleKey != null) {
       if (hasTranslation(subtitleKey!)) {
@@ -388,7 +389,7 @@ class LocalizedListTile extends ConsumerWidget {
         subtitle = fallbackSubtitle ?? subtitleKey;
       }
     }
-    
+
     return ListTile(
       title: Text(title),
       subtitle: subtitle != null ? Text(subtitle) : null,
@@ -420,14 +421,14 @@ class LocalizedAppBar extends ConsumerWidget implements PreferredSizeWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final translate = ref.watch(translateProvider);
     final hasTranslation = ref.watch(hasTranslationProvider);
-    
+
     String title;
     if (hasTranslation(titleKey)) {
       title = translate(titleKey, params: titleParams);
     } else {
       title = fallbackTitle ?? titleKey;
     }
-    
+
     return AppBar(
       title: Text(title),
       actions: actions,

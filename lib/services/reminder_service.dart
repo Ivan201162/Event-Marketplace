@@ -17,12 +17,13 @@ class ReminderService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final remindersEnabled = prefs.getBool(_remindersEnabledKey) ?? true;
-      
+
       if (!remindersEnabled) return;
 
       final reminderTime = prefs.getInt(_reminderTimeKey) ?? 30; // минуты
-      final reminderDate = booking.eventDate.subtract(Duration(minutes: reminderTime));
-      
+      final reminderDate =
+          booking.eventDate.subtract(Duration(minutes: reminderTime));
+
       // Проверяем, что напоминание в будущем
       if (reminderDate.isAfter(DateTime.now())) {
         await _fcmService.scheduleLocalNotification(
@@ -32,8 +33,9 @@ class ReminderService {
           scheduledDate: reminderDate,
           payload: 'booking_reminder_${booking.id}',
         );
-        
-        print('Напоминание создано для заявки ${booking.id} на ${reminderDate}');
+
+        print(
+            'Напоминание создано для заявки ${booking.id} на ${reminderDate}');
       }
     } catch (e) {
       print('Ошибка создания напоминания: $e');
@@ -45,7 +47,7 @@ class ReminderService {
     try {
       // Удаляем старое напоминание
       await cancelBookingReminder(booking);
-      
+
       // Создаем новое
       await createBookingReminder(booking);
     } catch (e) {
@@ -73,12 +75,12 @@ class ReminderService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final remindersEnabled = prefs.getBool(_remindersEnabledKey) ?? true;
-      
+
       if (!remindersEnabled) return;
 
       // Напоминание за день до срока платежа
       final reminderDate = dueDate.subtract(const Duration(days: 1));
-      
+
       if (reminderDate.isAfter(DateTime.now())) {
         await _fcmService.scheduleLocalNotification(
           id: paymentId.hashCode,
@@ -87,8 +89,9 @@ class ReminderService {
           scheduledDate: reminderDate,
           payload: 'payment_reminder_$paymentId',
         );
-        
-        print('Напоминание о платеже создано для $paymentId на ${reminderDate}');
+
+        print(
+            'Напоминание о платеже создано для $paymentId на ${reminderDate}');
       }
     } catch (e) {
       print('Ошибка создания напоминания о платеже: $e');
@@ -104,12 +107,13 @@ class ReminderService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final remindersEnabled = prefs.getBool(_remindersEnabledKey) ?? true;
-      
+
       if (!remindersEnabled) return;
 
       final reminderTime = prefs.getInt(_reminderTimeKey) ?? 30; // минуты
-      final reminderDate = meetingDate.subtract(Duration(minutes: reminderTime));
-      
+      final reminderDate =
+          meetingDate.subtract(Duration(minutes: reminderTime));
+
       if (reminderDate.isAfter(DateTime.now())) {
         await _fcmService.scheduleLocalNotification(
           id: meetingId.hashCode,
@@ -118,8 +122,9 @@ class ReminderService {
           scheduledDate: reminderDate,
           payload: 'meeting_reminder_$meetingId',
         );
-        
-        print('Напоминание о встрече создано для $meetingId на ${reminderDate}');
+
+        print(
+            'Напоминание о встрече создано для $meetingId на ${reminderDate}');
       }
     } catch (e) {
       print('Ошибка создания напоминания о встрече: $e');
@@ -136,7 +141,7 @@ class ReminderService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final remindersEnabled = prefs.getBool(_remindersEnabledKey) ?? true;
-      
+
       if (!remindersEnabled) return;
 
       // Создаем напоминание на сегодня
@@ -161,8 +166,9 @@ class ReminderService {
         scheduledDate: reminderDate,
         payload: 'daily_reminder_$reminderId',
       );
-      
-      print('Ежедневное напоминание создано для $reminderId на ${reminderDate}');
+
+      print(
+          'Ежедневное напоминание создано для $reminderId на ${reminderDate}');
     } catch (e) {
       print('Ошибка создания ежедневного напоминания: $e');
     }
@@ -190,7 +196,7 @@ class ReminderService {
   Future<void> setRemindersEnabled(bool enabled) async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(_remindersEnabledKey, enabled);
-    
+
     if (!enabled) {
       // Отменяем все запланированные напоминания
       await _fcmService.cancelAllScheduledNotifications();
@@ -201,15 +207,15 @@ class ReminderService {
   Future<void> createRemindersForActiveBookings(List<Booking> bookings) async {
     try {
       final now = DateTime.now();
-      final activeBookings = bookings.where((booking) => 
-        booking.status == 'confirmed' && 
-        booking.eventDate.isAfter(now)
-      ).toList();
+      final activeBookings = bookings
+          .where((booking) =>
+              booking.status == 'confirmed' && booking.eventDate.isAfter(now))
+          .toList();
 
       for (final booking in activeBookings) {
         await createBookingReminder(booking);
       }
-      
+
       print('Создано напоминаний для ${activeBookings.length} активных заявок');
     } catch (e) {
       print('Ошибка создания напоминаний для активных заявок: $e');
@@ -230,7 +236,7 @@ class ReminderService {
   Future<void> createTestReminder() async {
     try {
       final testDate = DateTime.now().add(const Duration(seconds: 10));
-      
+
       await _fcmService.scheduleLocalNotification(
         id: 999999,
         title: 'Тестовое напоминание',
@@ -238,11 +244,10 @@ class ReminderService {
         scheduledDate: testDate,
         payload: 'test_reminder',
       );
-      
+
       print('Тестовое напоминание создано на ${testDate}');
     } catch (e) {
       print('Ошибка создания тестового напоминания: $e');
     }
   }
 }
-

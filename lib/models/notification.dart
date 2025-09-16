@@ -27,7 +27,7 @@ class Notification {
   /// Создаёт уведомление из документа Firestore
   factory Notification.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return Notification(
       id: doc.id,
       userId: data['userId'] as String,
@@ -37,8 +37,8 @@ class Notification {
       data: Map<String, dynamic>.from(data['data'] as Map? ?? {}),
       isRead: data['isRead'] as bool? ?? false,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
-      readAt: data['readAt'] != null 
-          ? (data['readAt'] as Timestamp).toDate() 
+      readAt: data['readAt'] != null
+          ? (data['readAt'] as Timestamp).toDate()
           : null,
     );
   }
@@ -156,10 +156,11 @@ extension NotificationExtension on List<Notification> {
   List<Notification> get unread => where((n) => !n.isRead).toList();
 
   /// Получает уведомления по типу
-  List<Notification> byType(String type) => where((n) => n.type == type).toList();
+  List<Notification> byType(String type) =>
+      where((n) => n.type == type).toList();
 
   /// Получает последние уведомления
-  List<Notification> get recent => 
+  List<Notification> get recent =>
       toList()..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
   /// Группирует уведомления по типу

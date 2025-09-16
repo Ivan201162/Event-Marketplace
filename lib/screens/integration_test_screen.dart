@@ -10,7 +10,8 @@ class IntegrationTestScreen extends ConsumerStatefulWidget {
   const IntegrationTestScreen({super.key});
 
   @override
-  ConsumerState<IntegrationTestScreen> createState() => _IntegrationTestScreenState();
+  ConsumerState<IntegrationTestScreen> createState() =>
+      _IntegrationTestScreenState();
 }
 
 class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
@@ -33,8 +34,8 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
             Text(
               'Тестирование функционала',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 24),
 
@@ -59,7 +60,8 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
             // Тест бронирования
             _buildTestCard(
               title: 'Тест бронирования',
-              description: 'Проверка создания бронирования с проверкой конфликтов',
+              description:
+                  'Проверка создания бронирования с проверкой конфликтов',
               onTest: _testBookingCreation,
             ),
 
@@ -107,15 +109,15 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
             Text(
               title,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 8),
             Text(
               description,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
+                    color: Colors.grey[600],
+                  ),
             ),
             const SizedBox(height: 16),
             SizedBox(
@@ -143,8 +145,8 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
             Text(
               'Результаты тестов',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             // Здесь будут отображаться результаты тестов
@@ -158,8 +160,10 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
   /// Тест занятых дат
   Future<void> _testBusyDates() async {
     try {
-      final busyDates = await ref.read(firestoreServiceProvider).getBusyDates(testSpecialistId);
-      
+      final busyDates = await ref
+          .read(firestoreServiceProvider)
+          .getBusyDates(testSpecialistId);
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -188,11 +192,12 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
         testSpecialistId,
         DateTime.now().add(const Duration(days: 1)),
       );
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Календарь работает: дата ${isAvailable ? 'доступна' : 'занята'}'),
+            content: Text(
+                'Календарь работает: дата ${isAvailable ? 'доступна' : 'занята'}'),
             backgroundColor: Colors.green,
           ),
         );
@@ -214,18 +219,19 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
     try {
       final firestoreService = ref.read(firestoreServiceProvider);
       final testDate = DateTime.now().add(const Duration(days: 2));
-      
+
       // Проверяем конфликты
       final hasConflict = await firestoreService.hasBookingConflict(
         testSpecialistId,
         testDate,
         testDate.add(const Duration(hours: 2)),
       );
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('Проверка конфликтов: ${hasConflict ? 'есть конфликт' : 'конфликтов нет'}'),
+            content: Text(
+                'Проверка конфликтов: ${hasConflict ? 'есть конфликт' : 'конфликтов нет'}'),
             backgroundColor: hasConflict ? Colors.orange : Colors.green,
           ),
         );
@@ -246,7 +252,7 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
   Future<void> _testFCM() async {
     try {
       final fcmService = ref.read(fcmServiceProvider);
-      
+
       // Отправляем тестовое уведомление
       await fcmService.sendBookingNotification(
         userId: testCustomerId,
@@ -255,7 +261,7 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
         bookingId: 'test_booking_1',
         type: 'test',
       );
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -290,14 +296,15 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
         prepayment: 1000,
         totalPrice: 5000,
       );
-      
+
       final firestoreService = ref.read(firestoreServiceProvider);
       await firestoreService.addOrUpdateBookingWithCalendar(testBooking);
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
-            content: Text('Тестовое бронирование создано (Cloud Functions сработают автоматически)'),
+            content: Text(
+                'Тестовое бронирование создано (Cloud Functions сработают автоматически)'),
             backgroundColor: Colors.green,
           ),
         );
@@ -314,4 +321,3 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
     }
   }
 }
-

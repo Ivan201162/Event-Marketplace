@@ -48,7 +48,7 @@ class SecurityService {
     try {
       final deviceId = await _getDeviceId();
       await _getDeviceInfo();
-      
+
       // TODO: Отправить информацию об устройстве на сервер
       print('Устройство зарегистрировано: $deviceId');
     } catch (e) {
@@ -83,7 +83,7 @@ class SecurityService {
     try {
       final packageInfo = await PackageInfo.fromPlatform();
       final deviceInfo = await _deviceInfo.deviceInfo;
-      
+
       return {
         'appVersion': packageInfo.version,
         'buildNumber': packageInfo.buildNumber,
@@ -225,7 +225,7 @@ class SecurityService {
   Future<bool> removePinCode() async {
     try {
       await _secureStorage.delete(key: _pinKey);
-      
+
       await _logSecurityEvent(
         eventType: SecurityEventType.passwordChange,
         description: 'PIN-код удален',
@@ -249,7 +249,7 @@ class SecurityService {
       final encrypter = Encrypter(AES(key));
       final iv = IV.fromSecureRandom(16);
       final encrypted = encrypter.encrypt(data, iv: iv);
-      
+
       return '${iv.base64}:${encrypted.base64}';
     } catch (e) {
       print('Ошибка шифрования данных: $e');
@@ -264,13 +264,14 @@ class SecurityService {
       if (keyString == null) throw Exception('Ключ шифрования не найден');
 
       final parts = encryptedData.split(':');
-      if (parts.length != 2) throw Exception('Неверный формат зашифрованных данных');
+      if (parts.length != 2)
+        throw Exception('Неверный формат зашифрованных данных');
 
       final key = Key.fromBase64(keyString);
       final encrypter = Encrypter(AES(key));
       final iv = IV.fromBase64(parts[0]);
       final encrypted = Encrypted.fromBase64(parts[1]);
-      
+
       return encrypter.decrypt(encrypted, iv: iv);
     } catch (e) {
       print('Ошибка расшифровки данных: $e');
@@ -294,7 +295,7 @@ class SecurityService {
     try {
       final encryptedValue = await _secureStorage.read(key: key);
       if (encryptedValue == null) return null;
-      
+
       return await decryptData(encryptedValue);
     } catch (e) {
       print('Ошибка безопасного чтения: $e');
@@ -314,10 +315,8 @@ class SecurityService {
   /// Получить настройки безопасности пользователя
   Future<SecuritySettings?> getSecuritySettings(String userId) async {
     try {
-      final doc = await _firestore
-          .collection('security_settings')
-          .doc(userId)
-          .get();
+      final doc =
+          await _firestore.collection('security_settings').doc(userId).get();
 
       if (doc.exists) {
         return SecuritySettings.fromDocument(doc);
@@ -375,7 +374,7 @@ class SecurityService {
     try {
       final deviceId = await _getDeviceId();
       await _getDeviceInfo();
-      
+
       final log = SecurityAuditLog(
         id: '',
         userId: userId ?? 'anonymous',
@@ -410,10 +409,7 @@ class SecurityService {
   /// Заблокировать устройство
   Future<bool> blockDevice(String deviceId, String userId) async {
     try {
-      await _firestore
-          .collection('security_devices')
-          .doc(deviceId)
-          .update({
+      await _firestore.collection('security_devices').doc(deviceId).update({
         'isBlocked': true,
         'lastSeen': Timestamp.now(),
       });
@@ -435,10 +431,7 @@ class SecurityService {
   /// Разблокировать устройство
   Future<bool> unblockDevice(String deviceId, String userId) async {
     try {
-      await _firestore
-          .collection('security_devices')
-          .doc(deviceId)
-          .update({
+      await _firestore.collection('security_devices').doc(deviceId).update({
         'isBlocked': false,
         'lastSeen': Timestamp.now(),
       });
@@ -460,10 +453,7 @@ class SecurityService {
   /// Доверять устройству
   Future<bool> trustDevice(String deviceId, String userId) async {
     try {
-      await _firestore
-          .collection('security_devices')
-          .doc(deviceId)
-          .update({
+      await _firestore.collection('security_devices').doc(deviceId).update({
         'isTrusted': true,
         'lastSeen': Timestamp.now(),
       });
@@ -564,7 +554,8 @@ class SecurityService {
     if (chars.isEmpty) chars = lowercase + numbers;
 
     final random = Random.secure();
-    return List.generate(length, (index) => chars[random.nextInt(chars.length)]).join();
+    return List.generate(length, (index) => chars[random.nextInt(chars.length)])
+        .join();
   }
 
   /// Очистить все безопасные данные

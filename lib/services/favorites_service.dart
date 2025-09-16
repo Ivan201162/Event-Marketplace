@@ -8,10 +8,7 @@ class FavoritesService {
   /// Добавить событие в избранное
   Future<void> addToFavorites(String userId, String eventId) async {
     try {
-      await _firestore
-          .collection('favorites')
-          .doc('${userId}_$eventId')
-          .set({
+      await _firestore.collection('favorites').doc('${userId}_$eventId').set({
         'userId': userId,
         'eventId': eventId,
         'createdAt': FieldValue.serverTimestamp(),
@@ -41,8 +38,9 @@ class FavoritesService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .asyncMap((snapshot) async {
-      final eventIds = snapshot.docs.map((doc) => doc.data()['eventId'] as String).toList();
-      
+      final eventIds =
+          snapshot.docs.map((doc) => doc.data()['eventId'] as String).toList();
+
       if (eventIds.isEmpty) return <Event>[];
 
       final eventsSnapshot = await _firestore
@@ -50,9 +48,7 @@ class FavoritesService {
           .where(FieldPath.documentId, whereIn: eventIds)
           .get();
 
-      return eventsSnapshot.docs
-          .map((doc) => Event.fromDocument(doc))
-          .toList();
+      return eventsSnapshot.docs.map((doc) => Event.fromDocument(doc)).toList();
     });
   }
 

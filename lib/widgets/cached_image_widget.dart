@@ -59,7 +59,7 @@ class CachedImageWidget extends StatelessWidget {
 
   Widget _buildPlaceholder() {
     if (placeholder != null) return placeholder!;
-    
+
     return Container(
       width: width,
       height: height,
@@ -72,7 +72,7 @@ class CachedImageWidget extends StatelessWidget {
 
   Widget _buildErrorWidget() {
     if (errorWidget != null) return errorWidget!;
-    
+
     return Container(
       width: width,
       height: height,
@@ -109,7 +109,7 @@ class CachedAvatar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     if (imageUrl != null && imageUrl!.isNotEmpty) {
       return CircleAvatar(
         radius: radius,
@@ -197,7 +197,7 @@ class CachedImageGrid extends StatelessWidget {
     final displayImages = maxImages != null && imageUrls.length > maxImages!
         ? imageUrls.take(maxImages!).toList()
         : imageUrls;
-    
+
     final hasMoreImages = maxImages != null && imageUrls.length > maxImages!;
 
     return GridView.builder(
@@ -209,12 +209,15 @@ class CachedImageGrid extends StatelessWidget {
         mainAxisSpacing: spacing,
         childAspectRatio: childAspectRatio,
       ),
-      itemCount: displayImages.length + (hasMoreImages && showMoreIndicator ? 1 : 0),
+      itemCount:
+          displayImages.length + (hasMoreImages && showMoreIndicator ? 1 : 0),
       itemBuilder: (context, index) {
-        if (hasMoreImages && showMoreIndicator && index == displayImages.length) {
+        if (hasMoreImages &&
+            showMoreIndicator &&
+            index == displayImages.length) {
           return _buildMoreIndicator(context, imageUrls.length - maxImages!);
         }
-        
+
         return _buildImageItem(context, displayImages[index], index);
       },
     );

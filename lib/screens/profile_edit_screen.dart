@@ -20,7 +20,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
   final _formKey = GlobalKey<FormState>();
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
-  
+
   File? _selectedImage;
   final ImagePicker _imagePicker = ImagePicker();
   bool _isLoading = false;
@@ -75,7 +75,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 20),
-              
+
               // Аватар с возможностью изменения
               GestureDetector(
                 onTap: _pickImage,
@@ -118,9 +118,9 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                   ],
                 ),
               ),
-              
+
               const SizedBox(height: 20),
-              
+
               Text(
                 'Нажмите на аватар, чтобы изменить фото',
                 style: TextStyle(
@@ -128,9 +128,9 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                   fontSize: 14,
                 ),
               ),
-              
+
               const SizedBox(height: 30),
-              
+
               // Поле имени
               TextFormField(
                 controller: _nameController,
@@ -146,9 +146,9 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Поле email
               TextFormField(
                 controller: _emailController,
@@ -162,15 +162,16 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                   if (value == null || value.trim().isEmpty) {
                     return 'Введите email';
                   }
-                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+                  if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                      .hasMatch(value)) {
                     return 'Введите корректный email';
                   }
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 30),
-              
+
               // Кнопка сохранения
               SizedBox(
                 width: double.infinity,
@@ -195,9 +196,9 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
                       : const Text('Сохранить изменения'),
                 ),
               ),
-              
+
               const SizedBox(height: 16),
-              
+
               // Кнопка отмены
               SizedBox(
                 width: double.infinity,
@@ -221,7 +222,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
         maxHeight: 512,
         imageQuality: 80,
       );
-      
+
       if (image != null) {
         setState(() {
           _selectedImage = File(image.path);
@@ -250,7 +251,7 @@ class _ProfileEditScreenState extends ConsumerState<ProfileEditScreen> {
 
     try {
       final authService = ref.read(authServiceProvider);
-      
+
       // Обновляем профиль с загрузкой изображения
       await authService.updateUserProfileWithImage(
         displayName: _nameController.text.trim(),

@@ -16,22 +16,24 @@ class CreateReviewExtendedScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<CreateReviewExtendedScreen> createState() => _CreateReviewExtendedScreenState();
+  ConsumerState<CreateReviewExtendedScreen> createState() =>
+      _CreateReviewExtendedScreenState();
 }
 
-class _CreateReviewExtendedScreenState extends ConsumerState<CreateReviewExtendedScreen> {
+class _CreateReviewExtendedScreenState
+    extends ConsumerState<CreateReviewExtendedScreen> {
   final _formKey = GlobalKey<FormState>();
   final _commentController = TextEditingController();
   final _tagsController = TextEditingController();
-  
+
   final ReviewExtendedService _reviewService = ReviewExtendedService();
-  
+
   int _rating = 5;
   double _quality = 5.0;
   double _communication = 5.0;
   double _punctuality = 5.0;
   double _value = 5.0;
-  
+
   List<ReviewMedia> _media = [];
   List<String> _tags = [];
   bool _isLoading = false;
@@ -64,29 +66,29 @@ class _CreateReviewExtendedScreenState extends ConsumerState<CreateReviewExtende
             children: [
               // Общий рейтинг
               _buildOverallRating(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Детальные оценки
               _buildDetailedRatings(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Комментарий
               _buildCommentSection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Медиа
               _buildMediaSection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Теги
               _buildTagsSection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Кнопка отправки
               SizedBox(
                 width: double.infinity,
@@ -166,25 +168,21 @@ class _CreateReviewExtendedScreenState extends ConsumerState<CreateReviewExtende
               ),
             ),
             const SizedBox(height: 16),
-            
             _buildRatingSlider('Качество услуг', _quality, (value) {
               setState(() {
                 _quality = value;
               });
             }),
-            
             _buildRatingSlider('Общение', _communication, (value) {
               setState(() {
                 _communication = value;
               });
             }),
-            
             _buildRatingSlider('Пунктуальность', _punctuality, (value) {
               setState(() {
                 _punctuality = value;
               });
             }),
-            
             _buildRatingSlider('Соотношение цена/качество', _value, (value) {
               setState(() {
                 _value = value;
@@ -196,7 +194,8 @@ class _CreateReviewExtendedScreenState extends ConsumerState<CreateReviewExtende
     );
   }
 
-  Widget _buildRatingSlider(String label, double value, Function(double) onChanged) {
+  Widget _buildRatingSlider(
+      String label, double value, Function(double) onChanged) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -282,7 +281,7 @@ class _CreateReviewExtendedScreenState extends ConsumerState<CreateReviewExtende
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Кнопки добавления медиа
             Row(
               children: [
@@ -311,9 +310,9 @@ class _CreateReviewExtendedScreenState extends ConsumerState<CreateReviewExtende
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Список медиа
             if (_media.isNotEmpty) ...[
               SizedBox(
@@ -404,7 +403,7 @@ class _CreateReviewExtendedScreenState extends ConsumerState<CreateReviewExtende
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Поле ввода тегов
             TextFormField(
               controller: _tagsController,
@@ -415,9 +414,9 @@ class _CreateReviewExtendedScreenState extends ConsumerState<CreateReviewExtende
               ),
               onFieldSubmitted: _addTag,
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Список тегов
             if (_tags.isNotEmpty) ...[
               Wrap(
@@ -432,9 +431,9 @@ class _CreateReviewExtendedScreenState extends ConsumerState<CreateReviewExtende
                 }).toList(),
               ),
             ],
-            
+
             const SizedBox(height: 8),
-            
+
             // Предустановленные теги
             const Text(
               'Популярные теги:',
@@ -469,7 +468,8 @@ class _CreateReviewExtendedScreenState extends ConsumerState<CreateReviewExtende
 
   Future<void> _pickPhotos() async {
     try {
-      final images = await _reviewService.pickPhotos(maxImages: 10 - _media.length);
+      final images =
+          await _reviewService.pickPhotos(maxImages: 10 - _media.length);
       for (final image in images) {
         final media = await _reviewService.uploadPhoto(image);
         if (media != null) {

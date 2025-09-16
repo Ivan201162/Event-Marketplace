@@ -10,11 +10,9 @@ class ProfileService {
   /// Получить профиль заказчика
   Future<CustomerProfile?> getCustomerProfile(String userId) async {
     try {
-      final doc = await _firestore
-          .collection('customer_profiles')
-          .doc(userId)
-          .get();
-      
+      final doc =
+          await _firestore.collection('customer_profiles').doc(userId).get();
+
       if (doc.exists) {
         return CustomerProfile.fromDocument(doc);
       }
@@ -41,11 +39,9 @@ class ProfileService {
   /// Получить профиль специалиста
   Future<SpecialistProfile?> getSpecialistProfile(String userId) async {
     try {
-      final doc = await _firestore
-          .collection('specialist_profiles')
-          .doc(userId)
-          .get();
-      
+      final doc =
+          await _firestore.collection('specialist_profiles').doc(userId).get();
+
       if (doc.exists) {
         return SpecialistProfile.fromDocument(doc);
       }
@@ -57,7 +53,8 @@ class ProfileService {
   }
 
   /// Создать или обновить профиль специалиста
-  Future<void> createOrUpdateSpecialistProfile(SpecialistProfile profile) async {
+  Future<void> createOrUpdateSpecialistProfile(
+      SpecialistProfile profile) async {
     try {
       await _firestore
           .collection('specialist_profiles')
@@ -112,7 +109,8 @@ class ProfileService {
   }
 
   /// Загрузить элемент портфолио
-  Future<String?> uploadPortfolioItem(String userId, String filePath, String type) async {
+  Future<String?> uploadPortfolioItem(
+      String userId, String filePath, String type) async {
     try {
       // В реальном приложении здесь была бы загрузка в Firebase Storage
       // Для демонстрации возвращаем фиктивный URL
@@ -124,7 +122,8 @@ class ProfileService {
   }
 
   /// Получить всех специалистов по категории
-  Future<List<SpecialistProfile>> getSpecialistsByCategory(SpecialistCategory category) async {
+  Future<List<SpecialistProfile>> getSpecialistsByCategory(
+      SpecialistCategory category) async {
     try {
       final querySnapshot = await _firestore
           .collection('specialist_profiles')
@@ -155,7 +154,8 @@ class ProfileService {
 
       // Фильтр по категориям
       if (categories != null && categories.isNotEmpty) {
-        queryRef = queryRef.where('categories', arrayContainsAny: categories.map((e) => e.name).toList());
+        queryRef = queryRef.where('categories',
+            arrayContainsAny: categories.map((e) => e.name).toList());
       }
 
       // Фильтр по рейтингу
@@ -165,7 +165,8 @@ class ProfileService {
 
       // Фильтр по цене
       if (maxHourlyRate != null) {
-        queryRef = queryRef.where('hourlyRate', isLessThanOrEqualTo: maxHourlyRate);
+        queryRef =
+            queryRef.where('hourlyRate', isLessThanOrEqualTo: maxHourlyRate);
       }
 
       // Фильтр по локации
@@ -173,10 +174,8 @@ class ProfileService {
         queryRef = queryRef.where('location', isEqualTo: location);
       }
 
-      final querySnapshot = await queryRef
-          .orderBy('rating', descending: true)
-          .limit(50)
-          .get();
+      final querySnapshot =
+          await queryRef.orderBy('rating', descending: true).limit(50).get();
 
       List<SpecialistProfile> specialists = querySnapshot.docs
           .map((doc) => SpecialistProfile.fromDocument(doc))
@@ -187,8 +186,10 @@ class ProfileService {
         final lowerQuery = query.toLowerCase();
         specialists = specialists.where((specialist) {
           return specialist.bio?.toLowerCase().contains(lowerQuery) == true ||
-                 specialist.services.any((service) => service.toLowerCase().contains(lowerQuery)) ||
-                 specialist.categoryDisplayNames.any((category) => category.toLowerCase().contains(lowerQuery));
+              specialist.services.any(
+                  (service) => service.toLowerCase().contains(lowerQuery)) ||
+              specialist.categoryDisplayNames.any(
+                  (category) => category.toLowerCase().contains(lowerQuery));
         }).toList();
       }
 
@@ -227,7 +228,10 @@ class ProfileService {
           await _firestore.collection('customer_profiles').doc(userId).delete();
           break;
         case UserRole.specialist:
-          await _firestore.collection('specialist_profiles').doc(userId).delete();
+          await _firestore
+              .collection('specialist_profiles')
+              .doc(userId)
+              .delete();
           break;
         case UserRole.guest:
           throw Exception('Гости не могут иметь профили');
@@ -239,7 +243,8 @@ class ProfileService {
   }
 
   /// Получить статистику профиля
-  Future<Map<String, dynamic>> getProfileStats(String userId, UserRole role) async {
+  Future<Map<String, dynamic>> getProfileStats(
+      String userId, UserRole role) async {
     try {
       Map<String, dynamic> stats = {};
 
@@ -257,10 +262,15 @@ class ProfileService {
 
         stats = {
           'totalBookings': bookingsQuery.docs.length,
-          'completedBookings': bookingsQuery.docs.where((doc) => doc.data()['status'] == 'completed').length,
+          'completedBookings': bookingsQuery.docs
+              .where((doc) => doc.data()['status'] == 'completed')
+              .length,
           'totalReviews': reviewsQuery.docs.length,
           'averageRating': reviewsQuery.docs.isNotEmpty
-              ? reviewsQuery.docs.map((doc) => doc.data()['rating'] as double).reduce((a, b) => a + b) / reviewsQuery.docs.length
+              ? reviewsQuery.docs
+                      .map((doc) => doc.data()['rating'] as double)
+                      .reduce((a, b) => a + b) /
+                  reviewsQuery.docs.length
               : 0.0,
         };
       } else if (role == UserRole.customer) {
@@ -272,7 +282,9 @@ class ProfileService {
 
         stats = {
           'totalBookings': bookingsQuery.docs.length,
-          'completedBookings': bookingsQuery.docs.where((doc) => doc.data()['status'] == 'completed').length,
+          'completedBookings': bookingsQuery.docs
+              .where((doc) => doc.data()['status'] == 'completed')
+              .length,
         };
       }
 

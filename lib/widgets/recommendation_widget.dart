@@ -29,13 +29,13 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
       onTap: () {
         // Записываем взаимодействие
         ref.read(recommendationInteractionProvider.notifier).recordInteraction(
-          RecommendationInteraction(
-            recommendationId: rec.id,
-            specialistId: specialist.id,
-            type: RecommendationInteractionType.viewed,
-            timestamp: DateTime.now(),
-          ),
-        );
+              RecommendationInteraction(
+                recommendationId: rec.id,
+                specialistId: specialist.id,
+                type: RecommendationInteractionType.viewed,
+                timestamp: DateTime.now(),
+              ),
+            );
         onTap?.call();
       },
       child: Column(
@@ -43,19 +43,19 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
         children: [
           // Заголовок с типом рекомендации
           _buildRecommendationHeader(context, rec),
-          
+
           const SizedBox(height: 12),
-          
+
           // Информация о специалисте
           _buildSpecialistInfo(context, specialist),
-          
+
           const SizedBox(height: 12),
-          
+
           // Причина рекомендации
           _buildRecommendationReason(context, rec),
-          
+
           const SizedBox(height: 12),
-          
+
           // Действия
           _buildActions(context, ref),
         ],
@@ -64,9 +64,10 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
   }
 
   /// Заголовок рекомендации
-  Widget _buildRecommendationHeader(BuildContext context, Recommendation recommendation) {
+  Widget _buildRecommendationHeader(
+      BuildContext context, Recommendation recommendation) {
     final typeInfo = recommendation.type.info;
-    
+
     return Row(
       children: [
         Container(
@@ -111,10 +112,10 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
       children: [
         CircleAvatar(
           radius: 24,
-          backgroundImage: specialist.avatarUrl != null 
-              ? NetworkImage(specialist.avatarUrl!) 
+          backgroundImage: specialist.avatarUrl != null
+              ? NetworkImage(specialist.avatarUrl!)
               : null,
-          child: specialist.avatarUrl == null 
+          child: specialist.avatarUrl == null
               ? Text(specialist.name[0].toUpperCase())
               : null,
         ),
@@ -193,7 +194,8 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
   }
 
   /// Причина рекомендации
-  Widget _buildRecommendationReason(BuildContext context, Recommendation recommendation) {
+  Widget _buildRecommendationReason(
+      BuildContext context, Recommendation recommendation) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -228,14 +230,16 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
         Expanded(
           child: AnimatedButton(
             onPressed: () {
-              ref.read(recommendationInteractionProvider.notifier).recordInteraction(
-                RecommendationInteraction(
-                  recommendationId: recommendation.recommendation.id,
-                  specialistId: recommendation.specialist.id,
-                  type: RecommendationInteractionType.clicked,
-                  timestamp: DateTime.now(),
-                ),
-              );
+              ref
+                  .read(recommendationInteractionProvider.notifier)
+                  .recordInteraction(
+                    RecommendationInteraction(
+                      recommendationId: recommendation.recommendation.id,
+                      specialistId: recommendation.specialist.id,
+                      type: RecommendationInteractionType.clicked,
+                      timestamp: DateTime.now(),
+                    ),
+                  );
               onTap?.call();
             },
             child: Container(
@@ -258,14 +262,16 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
         const SizedBox(width: 8),
         IconButton(
           onPressed: () {
-            ref.read(recommendationInteractionProvider.notifier).recordInteraction(
-              RecommendationInteraction(
-                recommendationId: recommendation.recommendation.id,
-                specialistId: recommendation.specialist.id,
-                type: RecommendationInteractionType.saved,
-                timestamp: DateTime.now(),
-              ),
-            );
+            ref
+                .read(recommendationInteractionProvider.notifier)
+                .recordInteraction(
+                  RecommendationInteraction(
+                    recommendationId: recommendation.recommendation.id,
+                    specialistId: recommendation.specialist.id,
+                    type: RecommendationInteractionType.saved,
+                    timestamp: DateTime.now(),
+                  ),
+                );
             onSave?.call();
           },
           icon: const Icon(Icons.bookmark_border),
@@ -273,14 +279,16 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
         ),
         IconButton(
           onPressed: () {
-            ref.read(recommendationInteractionProvider.notifier).recordInteraction(
-              RecommendationInteraction(
-                recommendationId: recommendation.recommendation.id,
-                specialistId: recommendation.specialist.id,
-                type: RecommendationInteractionType.dismissed,
-                timestamp: DateTime.now(),
-              ),
-            );
+            ref
+                .read(recommendationInteractionProvider.notifier)
+                .recordInteraction(
+                  RecommendationInteraction(
+                    recommendationId: recommendation.recommendation.id,
+                    specialistId: recommendation.specialist.id,
+                    type: RecommendationInteractionType.dismissed,
+                    timestamp: DateTime.now(),
+                  ),
+                );
             onDismiss?.call();
           },
           icon: const Icon(Icons.close),
@@ -323,13 +331,14 @@ class RecommendationCollectionWidget extends ConsumerWidget {
     return recommendationsAsync.when(
       data: (recommendations) {
         var filteredRecommendations = recommendations;
-        
+
         if (type != null) {
           filteredRecommendations = filteredRecommendations.byType(type!);
         }
-        
+
         if (limit != null) {
-          filteredRecommendations = filteredRecommendations.take(limit!).toList();
+          filteredRecommendations =
+              filteredRecommendations.take(limit!).toList();
         }
 
         if (filteredRecommendations.isEmpty) {
@@ -348,15 +357,20 @@ class RecommendationCollectionWidget extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
             ],
-            ...filteredRecommendations.map((recommendation) => Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: SpecialistRecommendationWidget(
-                recommendation: recommendation,
-                onTap: () => _showSpecialistProfile(context, recommendation.specialist),
-                onDismiss: () => _dismissRecommendation(context, ref, recommendation),
-                onSave: () => _saveRecommendation(context, ref, recommendation),
-              ),
-            )).toList(),
+            ...filteredRecommendations
+                .map((recommendation) => Padding(
+                      padding: const EdgeInsets.only(bottom: 16),
+                      child: SpecialistRecommendationWidget(
+                        recommendation: recommendation,
+                        onTap: () => _showSpecialistProfile(
+                            context, recommendation.specialist),
+                        onDismiss: () => _dismissRecommendation(
+                            context, ref, recommendation),
+                        onSave: () =>
+                            _saveRecommendation(context, ref, recommendation),
+                      ),
+                    ))
+                .toList(),
           ],
         );
       },
@@ -423,7 +437,7 @@ class RecommendationCollectionWidget extends ConsumerWidget {
 
   String _getTitle() {
     if (type == null) return 'Рекомендации для вас';
-    
+
     switch (type!) {
       case RecommendationType.similarSpecialists:
         return 'Похожие специалисты';
@@ -451,13 +465,15 @@ class RecommendationCollectionWidget extends ConsumerWidget {
     );
   }
 
-  void _dismissRecommendation(BuildContext context, WidgetRef ref, SpecialistRecommendation recommendation) {
+  void _dismissRecommendation(BuildContext context, WidgetRef ref,
+      SpecialistRecommendation recommendation) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Рекомендация скрыта')),
     );
   }
 
-  void _saveRecommendation(BuildContext context, WidgetRef ref, SpecialistRecommendation recommendation) {
+  void _saveRecommendation(BuildContext context, WidgetRef ref,
+      SpecialistRecommendation recommendation) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Рекомендация сохранена')),
     );
@@ -477,7 +493,8 @@ class SimilarSpecialistsWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final similarAsync = ref.watch(similarSpecialistsRecommendationsProvider(specialistId));
+    final similarAsync =
+        ref.watch(similarSpecialistsRecommendationsProvider(specialistId));
 
     return similarAsync.when(
       data: (similar) {
@@ -510,7 +527,8 @@ class SimilarSpecialistsWidget extends ConsumerWidget {
                       ),
                       child: SpecialistRecommendationWidget(
                         recommendation: recommendation,
-                        onTap: () => _showSpecialistProfile(context, recommendation.specialist),
+                        onTap: () => _showSpecialistProfile(
+                            context, recommendation.specialist),
                       ),
                     ),
                   );

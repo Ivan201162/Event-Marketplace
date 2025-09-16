@@ -27,7 +27,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
   final _maxParticipantsController = TextEditingController();
   final _contactInfoController = TextEditingController();
   final _requirementsController = TextEditingController();
-  
+
   DateTime _eventDate = DateTime.now();
   DateTime? _endDate;
   EventCategory _category = EventCategory.other;
@@ -39,7 +39,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
   @override
   void initState() {
     super.initState();
-    
+
     if (widget.event != null) {
       // Редактирование существующего события
       final event = widget.event!;
@@ -79,10 +79,12 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
   @override
   Widget build(BuildContext context) {
     final createEventState = ref.watch(createEventProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.event != null ? 'Редактировать мероприятие' : 'Создать мероприятие'),
+        title: Text(widget.event != null
+            ? 'Редактировать мероприятие'
+            : 'Создать мероприятие'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
           TextButton(
@@ -106,29 +108,29 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
             children: [
               // Основная информация
               _buildBasicInfoSection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Дата и время
               _buildDateTimeSection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Категория и цена
               _buildCategoryAndPriceSection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Участники и настройки
               _buildParticipantsAndSettingsSection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Дополнительная информация
               _buildAdditionalInfoSection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Кнопка сохранения
               SizedBox(
                 width: double.infinity,
@@ -150,10 +152,12 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                             Text('Сохранение...'),
                           ],
                         )
-                      : Text(widget.event != null ? 'Обновить мероприятие' : 'Создать мероприятие'),
+                      : Text(widget.event != null
+                          ? 'Обновить мероприятие'
+                          : 'Создать мероприятие'),
                 ),
               ),
-              
+
               if (createEventState.errorMessage != null) ...[
                 const SizedBox(height: 16),
                 Container(
@@ -199,7 +203,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Название мероприятия
             TextFormField(
               controller: _titleController,
@@ -216,9 +220,9 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                 return null;
               },
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Описание
             TextFormField(
               controller: _descriptionController,
@@ -236,9 +240,9 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                 return null;
               },
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Место проведения
             TextFormField(
               controller: _locationController,
@@ -276,7 +280,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Дата мероприятия
             ListTile(
               leading: const Icon(Icons.calendar_today),
@@ -284,14 +288,15 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
               subtitle: Text(_formatDate(_eventDate)),
               onTap: _selectDate,
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Дата окончания (опционально)
             ListTile(
               leading: const Icon(Icons.event_available),
               title: const Text('Дата окончания (опционально)'),
-              subtitle: Text(_endDate != null ? _formatDate(_endDate!) : 'Не указана'),
+              subtitle: Text(
+                  _endDate != null ? _formatDate(_endDate!) : 'Не указана'),
               onTap: _selectEndDate,
               trailing: _endDate != null
                   ? IconButton(
@@ -325,7 +330,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Категория мероприятия
             DropdownButtonFormField<EventCategory>(
               value: _category,
@@ -352,9 +357,9 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                 });
               },
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Цена
             TextFormField(
               controller: _priceController,
@@ -390,7 +395,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Максимальное количество участников
             TextFormField(
               controller: _maxParticipantsController,
@@ -405,13 +410,14 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                 _maxParticipants = int.tryParse(value) ?? 50;
               },
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Публичность мероприятия
             SwitchListTile(
               title: const Text('Публичное мероприятие'),
-              subtitle: const Text('Другие пользователи смогут найти и забронировать ваше мероприятие'),
+              subtitle: const Text(
+                  'Другие пользователи смогут найти и забронировать ваше мероприятие'),
               value: _isPublic,
               onChanged: (value) {
                 setState(() {
@@ -440,7 +446,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Контактная информация
             TextFormField(
               controller: _contactInfoController,
@@ -452,9 +458,9 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
               ),
               maxLines: 2,
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Требования к участникам
             TextFormField(
               controller: _requirementsController,
@@ -544,7 +550,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
       }
 
       final createEventNotifier = ref.read(createEventProvider.notifier);
-      
+
       // Обновляем состояние формы
       createEventNotifier.updateTitle(_titleController.text.trim());
       createEventNotifier.updateDescription(_descriptionController.text.trim());
@@ -554,8 +560,14 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
       createEventNotifier.updatePrice(_price);
       createEventNotifier.updateCategory(_category);
       createEventNotifier.updateMaxParticipants(_maxParticipants);
-      createEventNotifier.updateContactInfo(_contactInfoController.text.trim().isEmpty ? null : _contactInfoController.text.trim());
-      createEventNotifier.updateRequirements(_requirementsController.text.trim().isEmpty ? null : _requirementsController.text.trim());
+      createEventNotifier.updateContactInfo(
+          _contactInfoController.text.trim().isEmpty
+              ? null
+              : _contactInfoController.text.trim());
+      createEventNotifier.updateRequirements(
+          _requirementsController.text.trim().isEmpty
+              ? null
+              : _requirementsController.text.trim());
       createEventNotifier.updateIsPublic(_isPublic);
 
       if (widget.event != null) {
@@ -563,39 +575,43 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
         try {
           final eventService = ref.read(eventServiceProvider);
           final updatedEvent = widget.event!.copyWith(
-        title: _titleController.text.trim(),
-        description: _descriptionController.text.trim(),
+            title: _titleController.text.trim(),
+            description: _descriptionController.text.trim(),
             date: _eventDate,
             endDate: _endDate,
-        location: _locationController.text.trim(),
+            location: _locationController.text.trim(),
             price: _price,
             category: _category,
             maxParticipants: _maxParticipants,
-            contactInfo: _contactInfoController.text.trim().isEmpty ? null : _contactInfoController.text.trim(),
-            requirements: _requirementsController.text.trim().isEmpty ? null : _requirementsController.text.trim(),
+            contactInfo: _contactInfoController.text.trim().isEmpty
+                ? null
+                : _contactInfoController.text.trim(),
+            requirements: _requirementsController.text.trim().isEmpty
+                ? null
+                : _requirementsController.text.trim(),
             isPublic: _isPublic,
-        updatedAt: DateTime.now(),
-      );
+            updatedAt: DateTime.now(),
+          );
 
           await eventService.updateEvent(widget.event!.id, updatedEvent);
-          
+
           if (context.mounted) {
-        Navigator.pop(context, true);
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
+            Navigator.pop(context, true);
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
                 content: Text('Мероприятие обновлено'),
                 backgroundColor: Colors.green,
-          ),
-        );
-      }
-    } catch (e) {
+              ),
+            );
+          }
+        } catch (e) {
           if (context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
                 content: Text('Ошибка обновления: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+                backgroundColor: Colors.red,
+              ),
+            );
           }
         }
       } else {

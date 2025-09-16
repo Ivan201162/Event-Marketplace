@@ -23,12 +23,12 @@ class CalendarScreen extends ConsumerStatefulWidget {
 
 class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   final CalendarService _calendarService = CalendarService();
-  
+
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   List<CalendarEvent> _selectedEvents = [];
-  
+
   CalendarFilter _filter = const CalendarFilter();
   String _searchQuery = '';
 
@@ -97,7 +97,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         children: [
           // Календарь
           _buildCalendar(),
-          
+
           // Список событий
           Expanded(
             child: _buildEventsList(),
@@ -193,7 +193,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             ],
           ),
         ),
-        
+
         // Список событий
         Expanded(
           child: _selectedEvents.isEmpty
@@ -245,23 +245,26 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
   Stream<List<CalendarEvent>> _getEventsStream() {
     if (widget.specialistId != null) {
-      return _calendarService.getSpecialistEvents(widget.specialistId!, _filter);
+      return _calendarService.getSpecialistEvents(
+          widget.specialistId!, _filter);
     } else {
       return _calendarService.getUserEvents(widget.userId, _filter);
     }
   }
 
-  Map<DateTime, List<CalendarEvent>> _getEventSource(List<CalendarEvent> events) {
+  Map<DateTime, List<CalendarEvent>> _getEventSource(
+      List<CalendarEvent> events) {
     final eventSource = <DateTime, List<CalendarEvent>>{};
-    
+
     for (final event in events) {
-      final day = DateTime(event.startTime.year, event.startTime.month, event.startTime.day);
+      final day = DateTime(
+          event.startTime.year, event.startTime.month, event.startTime.day);
       if (eventSource[day] == null) {
         eventSource[day] = [];
       }
       eventSource[day]!.add(event);
     }
-    
+
     return eventSource;
   }
 
@@ -270,7 +273,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     final today = DateTime(now.year, now.month, now.day);
     final yesterday = today.subtract(const Duration(days: 1));
     final tomorrow = today.add(const Duration(days: 1));
-    
+
     if (date == today) {
       return 'Сегодня';
     } else if (date == yesterday) {
@@ -283,7 +286,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   }
 
   void _createEvent() {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       MaterialPageRoute(
         builder: (context) => CreateEventScreen(
           userId: widget.userId,
@@ -291,7 +295,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           selectedDate: _selectedDay,
         ),
       ),
-    ).then((result) {
+    )
+        .then((result) {
       if (result == true) {
         setState(() {});
       }
@@ -299,7 +304,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   }
 
   void _editEvent(CalendarEvent event) {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       MaterialPageRoute(
         builder: (context) => CreateEventScreen(
           userId: widget.userId,
@@ -307,7 +313,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           event: event,
         ),
       ),
-    ).then((result) {
+    )
+        .then((result) {
       if (result == true) {
         setState(() {});
       }
@@ -319,7 +326,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить событие'),
-        content: Text('Вы уверены, что хотите удалить событие "${event.title}"?'),
+        content:
+            Text('Вы уверены, что хотите удалить событие "${event.title}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -353,19 +361,23 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (event.description.isNotEmpty) ...[
-              const Text('Описание:', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('Описание:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               Text(event.description),
               const SizedBox(height: 8),
             ],
             const Text('Время:', style: TextStyle(fontWeight: FontWeight.bold)),
-            Text('${_formatDateTime(event.startTime)} - ${_formatDateTime(event.endTime)}'),
+            Text(
+                '${_formatDateTime(event.startTime)} - ${_formatDateTime(event.endTime)}'),
             const SizedBox(height: 8),
             if (event.location.isNotEmpty) ...[
-              const Text('Место:', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text('Место:',
+                  style: TextStyle(fontWeight: FontWeight.bold)),
               Text(event.location),
               const SizedBox(height: 8),
             ],
-            const Text('Статус:', style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text('Статус:',
+                style: TextStyle(fontWeight: FontWeight.bold)),
             Text(_getStatusText(event.status)),
           ],
         ),
@@ -573,15 +585,16 @@ class _FilterDialogState extends State<_FilterDialog> {
                   if (value == true) {
                     _filter = _filter.copyWith(statuses: [...statuses, status]);
                   } else {
-                    _filter = _filter.copyWith(statuses: statuses.where((s) => s != status).toList());
+                    _filter = _filter.copyWith(
+                        statuses: statuses.where((s) => s != status).toList());
                   }
                 });
               },
             );
           }),
-          
+
           const SizedBox(height: 16),
-          
+
           // Типы
           const Text('Тип:', style: TextStyle(fontWeight: FontWeight.bold)),
           ...EventType.values.map((type) {
@@ -594,7 +607,8 @@ class _FilterDialogState extends State<_FilterDialog> {
                   if (value == true) {
                     _filter = _filter.copyWith(types: [...types, type]);
                   } else {
-                    _filter = _filter.copyWith(types: types.where((t) => t != type).toList());
+                    _filter = _filter.copyWith(
+                        types: types.where((t) => t != type).toList());
                   }
                 });
               },

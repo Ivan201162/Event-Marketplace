@@ -43,10 +43,10 @@ class AdminPanelService {
     try {
       final adminInfo = await getAdminInfo(userId);
       if (adminInfo == null) return false;
-      
+
       // Супер-администратор имеет все права
       if (adminInfo.role == AdminRole.superAdmin) return true;
-      
+
       return adminInfo.permissions.contains(permission.name);
     } catch (e) {
       // TODO: Log error properly
@@ -82,25 +82,29 @@ class AdminPanelService {
       // Активные пользователи (за последние 30 дней)
       final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
       int activeUsers = usersSnapshot.docs.where((doc) {
-        final lastLogin = (doc.data() as Map<String, dynamic>)['lastLogin'] as Timestamp?;
+        final lastLogin =
+            (doc.data() as Map<String, dynamic>)['lastLogin'] as Timestamp?;
         return lastLogin != null && lastLogin.toDate().isAfter(thirtyDaysAgo);
       }).length;
 
       // Ожидающие бронирования
       int pendingBookings = bookingsSnapshot.docs.where((doc) {
-        final status = (doc.data() as Map<String, dynamic>)['status'] as String?;
+        final status =
+            (doc.data() as Map<String, dynamic>)['status'] as String?;
         return status == 'pending';
       }).length;
 
       // Ожидающие отзывы (не модерированные)
       int pendingReviews = reviewsSnapshot.docs.where((doc) {
-        final isModerated = (doc.data() as Map<String, dynamic>)['isModerated'] as bool?;
+        final isModerated =
+            (doc.data() as Map<String, dynamic>)['isModerated'] as bool?;
         return isModerated != true;
       }).length;
 
       // Заблокированные пользователи
       int bannedUsers = usersSnapshot.docs.where((doc) {
-        final isBanned = (doc.data() as Map<String, dynamic>)['isBanned'] as bool?;
+        final isBanned =
+            (doc.data() as Map<String, dynamic>)['isBanned'] as bool?;
         return isBanned == true;
       }).length;
 
@@ -141,9 +145,7 @@ class AdminPanelService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => AppUser.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map((doc) => AppUser.fromDocument(doc)).toList();
     });
   }
 
@@ -155,9 +157,7 @@ class AdminPanelService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => AppUser.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map((doc) => AppUser.fromDocument(doc)).toList();
     });
   }
 
@@ -168,9 +168,7 @@ class AdminPanelService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => Booking.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map((doc) => Booking.fromDocument(doc)).toList();
     });
   }
 
@@ -194,9 +192,7 @@ class AdminPanelService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => Review.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map((doc) => Review.fromDocument(doc)).toList();
     });
   }
 
@@ -275,7 +271,8 @@ class AdminPanelService {
   }
 
   /// Отменить верификацию специалиста
-  Future<bool> unverifySpecialist(String specialistId, String adminId, String reason) async {
+  Future<bool> unverifySpecialist(
+      String specialistId, String adminId, String reason) async {
     try {
       await _firestore.collection('specialists').doc(specialistId).update({
         'isVerified': false,
@@ -300,7 +297,8 @@ class AdminPanelService {
   }
 
   /// Модерировать отзыв
-  Future<bool> moderateReview(String reviewId, String adminId, bool approved, String? comment) async {
+  Future<bool> moderateReview(
+      String reviewId, String adminId, bool approved, String? comment) async {
     try {
       await _firestore.collection('reviews').doc(reviewId).update({
         'isModerated': true,
@@ -315,7 +313,8 @@ class AdminPanelService {
         type: AdminActionType.reviewModerated,
         targetId: reviewId,
         targetType: 'review',
-        description: 'Отзыв ${approved ? 'одобрен' : 'отклонен'}: ${comment ?? 'без комментария'}',
+        description:
+            'Отзыв ${approved ? 'одобрен' : 'отклонен'}: ${comment ?? 'без комментария'}',
       );
 
       return true;
@@ -326,7 +325,8 @@ class AdminPanelService {
   }
 
   /// Отменить бронирование
-  Future<bool> cancelBooking(String bookingId, String adminId, String reason) async {
+  Future<bool> cancelBooking(
+      String bookingId, String adminId, String reason) async {
     try {
       await _firestore.collection('bookings').doc(bookingId).update({
         'status': 'cancelled',
@@ -358,9 +358,7 @@ class AdminPanelService {
         .limit(limit)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => AdminAction.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map((doc) => AdminAction.fromDocument(doc)).toList();
     });
   }
 
@@ -380,7 +378,10 @@ class AdminPanelService {
   /// Отметить уведомление как прочитанное
   Future<bool> markNotificationAsRead(String notificationId) async {
     try {
-      await _firestore.collection('admin_notifications').doc(notificationId).update({
+      await _firestore
+          .collection('admin_notifications')
+          .doc(notificationId)
+          .update({
         'isRead': true,
       });
       return true;
@@ -393,7 +394,8 @@ class AdminPanelService {
   /// Получить настройки админ-панели
   Future<AdminSettings> getAdminSettings() async {
     try {
-      final doc = await _firestore.collection('admin_settings').doc('main').get();
+      final doc =
+          await _firestore.collection('admin_settings').doc('main').get();
       if (doc.exists) {
         return AdminSettings.fromMap(doc.data()!);
       }
@@ -405,10 +407,14 @@ class AdminPanelService {
   }
 
   /// Обновить настройки админ-панели
-  Future<bool> updateAdminSettings(AdminSettings settings, String adminId) async {
+  Future<bool> updateAdminSettings(
+      AdminSettings settings, String adminId) async {
     try {
       final updatedSettings = settings.copyWith(lastUpdated: DateTime.now());
-      await _firestore.collection('admin_settings').doc('main').set(updatedSettings.toMap());
+      await _firestore
+          .collection('admin_settings')
+          .doc('main')
+          .set(updatedSettings.toMap());
 
       await _logAdminAction(
         adminId: adminId,
@@ -446,7 +452,10 @@ class AdminPanelService {
         metadata: metadata ?? {},
       );
 
-      await _firestore.collection('admin_notifications').doc(notification.id).set(notification.toMap());
+      await _firestore
+          .collection('admin_notifications')
+          .doc(notification.id)
+          .set(notification.toMap());
       return true;
     } catch (e) {
       // TODO: Log error properly
@@ -479,7 +488,10 @@ class AdminPanelService {
         metadata: metadata ?? {},
       );
 
-      await _firestore.collection('admin_actions').doc(action.id).set(action.toMap());
+      await _firestore
+          .collection('admin_actions')
+          .doc(action.id)
+          .set(action.toMap());
     } catch (e) {
       // TODO: Log error properly
     }
@@ -494,20 +506,23 @@ class AdminPanelService {
   }) async {
     try {
       final exportData = <String, dynamic>{};
-      
+
       for (final collection in collections) {
         Query query = _firestore.collection(collection);
-        
+
         if (startDate != null) {
-          query = query.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+          query = query.where('createdAt',
+              isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
         }
-        
+
         if (endDate != null) {
-          query = query.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+          query = query.where('createdAt',
+              isLessThanOrEqualTo: Timestamp.fromDate(endDate));
         }
-        
+
         final snapshot = await query.get();
-        exportData[collection] = snapshot.docs.map((doc) => doc.data()).toList();
+        exportData[collection] =
+            snapshot.docs.map((doc) => doc.data()).toList();
       }
 
       await _logAdminAction(

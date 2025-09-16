@@ -16,7 +16,7 @@ class ResponsiveWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    
+
     if (screenWidth >= 1200) {
       return desktop ?? tablet ?? mobile;
     } else if (screenWidth >= 600) {
@@ -50,7 +50,7 @@ class ResponsiveGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     int columns;
-    
+
     if (screenWidth >= 1200) {
       columns = desktopColumns ?? 4;
     } else if (screenWidth >= 600) {
@@ -88,8 +88,9 @@ class ResponsiveContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final effectiveMaxWidth = maxWidth ?? (screenWidth >= 1200 ? 1200.0 : screenWidth);
-    
+    final effectiveMaxWidth =
+        maxWidth ?? (screenWidth >= 1200 ? 1200.0 : screenWidth);
+
     return Center(
       child: Container(
         width: effectiveMaxWidth,
@@ -121,7 +122,7 @@ class ResponsiveText extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final baseStyle = style ?? Theme.of(context).textTheme.bodyMedium;
-    
+
     // Адаптивный размер шрифта
     double fontSize = baseStyle?.fontSize ?? 14;
     if (screenWidth >= 1200) {
@@ -161,9 +162,9 @@ class ResponsiveButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
-    
+
     Widget button;
-    
+
     if (icon != null) {
       button = ElevatedButton.icon(
         onPressed: onPressed,
@@ -211,7 +212,7 @@ class ResponsiveCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
-    
+
     return Card(
       elevation: elevation ?? (isMobile ? 2 : 4),
       color: color,
@@ -245,7 +246,7 @@ class ResponsiveList extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
-    
+
     if (isMobile) {
       return ListView.separated(
         shrinkWrap: shrinkWrap,
@@ -282,26 +283,30 @@ class ResponsiveNavigation extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
-    
+
     if (isMobile) {
       return BottomNavigationBar(
         currentIndex: currentIndex,
         onTap: onTap,
         type: BottomNavigationBarType.fixed,
-        items: items.map((item) => BottomNavigationBarItem(
-          icon: Icon(item.icon),
-          label: item.label,
-        )).toList(),
+        items: items
+            .map((item) => BottomNavigationBarItem(
+                  icon: Icon(item.icon),
+                  label: item.label,
+                ))
+            .toList(),
       );
     } else {
       return NavigationRail(
         selectedIndex: currentIndex,
         onDestinationSelected: onTap,
         labelType: NavigationRailLabelType.all,
-        destinations: items.map((item) => NavigationRailDestination(
-          icon: Icon(item.icon),
-          label: Text(item.label),
-        )).toList(),
+        destinations: items
+            .map((item) => NavigationRailDestination(
+                  icon: Icon(item.icon),
+                  label: Text(item.label),
+                ))
+            .toList(),
       );
     }
   }
@@ -337,7 +342,7 @@ class ResponsiveDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
-    
+
     if (isFullScreen || isMobile) {
       return Dialog.fullscreen(
         child: Column(
@@ -386,7 +391,7 @@ class ResponsiveForm extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
-    
+
     return Form(
       key: formKey,
       child: Padding(
@@ -429,7 +434,7 @@ class ResponsiveTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isMobile = screenWidth < 600;
-    
+
     return TextFormField(
       controller: controller,
       validator: validator,
@@ -452,4 +457,3 @@ class ResponsiveTextField extends StatelessWidget {
     );
   }
 }
-

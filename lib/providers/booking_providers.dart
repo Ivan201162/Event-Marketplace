@@ -8,43 +8,51 @@ final bookingServiceProvider = Provider<BookingService>((ref) {
 });
 
 /// Провайдер бронирований пользователя
-final userBookingsProvider = StreamProvider.family<List<Booking>, String>((ref, userId) {
+final userBookingsProvider =
+    StreamProvider.family<List<Booking>, String>((ref, userId) {
   final bookingService = ref.watch(bookingServiceProvider);
   return bookingService.getUserBookings(userId);
 });
 
 /// Провайдер бронирований для события
-final eventBookingsProvider = StreamProvider.family<List<Booking>, String>((ref, eventId) {
+final eventBookingsProvider =
+    StreamProvider.family<List<Booking>, String>((ref, eventId) {
   final bookingService = ref.watch(bookingServiceProvider);
   return bookingService.getEventBookings(eventId);
 });
 
 /// Провайдер бронирования по ID
-final bookingByIdProvider = FutureProvider.family<Booking?, String>((ref, bookingId) {
+final bookingByIdProvider =
+    FutureProvider.family<Booking?, String>((ref, bookingId) {
   final bookingService = ref.watch(bookingServiceProvider);
   return bookingService.getBookingById(bookingId);
 });
 
 /// Провайдер проверки, забронировал ли пользователь событие
-final hasUserBookedEventProvider = FutureProvider.family<bool, ({String userId, String eventId})>((ref, params) {
+final hasUserBookedEventProvider =
+    FutureProvider.family<bool, ({String userId, String eventId})>(
+        (ref, params) {
   final bookingService = ref.watch(bookingServiceProvider);
   return bookingService.hasUserBookedEvent(params.userId, params.eventId);
 });
 
 /// Провайдер статистики бронирований пользователя
-final userBookingStatsProvider = FutureProvider.family<Map<String, int>, String>((ref, userId) {
+final userBookingStatsProvider =
+    FutureProvider.family<Map<String, int>, String>((ref, userId) {
   final bookingService = ref.watch(bookingServiceProvider);
   return bookingService.getUserBookingStats(userId);
 });
 
 /// Провайдер статистики бронирований для события
-final eventBookingStatsProvider = FutureProvider.family<Map<String, int>, String>((ref, eventId) {
+final eventBookingStatsProvider =
+    FutureProvider.family<Map<String, int>, String>((ref, eventId) {
   final bookingService = ref.watch(bookingServiceProvider);
   return bookingService.getEventBookingStats(eventId);
 });
 
 /// Провайдер для управления состоянием создания бронирования
-final createBookingProvider = StateNotifierProvider<CreateBookingNotifier, CreateBookingState>((ref) {
+final createBookingProvider =
+    StateNotifierProvider<CreateBookingNotifier, CreateBookingState>((ref) {
   return CreateBookingNotifier(ref.read(bookingServiceProvider));
 });
 
@@ -89,7 +97,8 @@ class CreateBookingState {
 class CreateBookingNotifier extends StateNotifier<CreateBookingState> {
   final BookingService _bookingService;
 
-  CreateBookingNotifier(this._bookingService) : super(const CreateBookingState());
+  CreateBookingNotifier(this._bookingService)
+      : super(const CreateBookingState());
 
   /// Обновить количество участников
   void updateParticipantsCount(int count) {
@@ -123,7 +132,8 @@ class CreateBookingNotifier extends StateNotifier<CreateBookingState> {
     required String organizerName,
   }) async {
     if (state.participantsCount <= 0) {
-      state = state.copyWith(errorMessage: 'Количество участников должно быть больше 0');
+      state = state.copyWith(
+          errorMessage: 'Количество участников должно быть больше 0');
       return null;
     }
 

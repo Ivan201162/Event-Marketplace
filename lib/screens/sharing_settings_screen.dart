@@ -7,12 +7,13 @@ class SharingSettingsScreen extends ConsumerStatefulWidget {
   const SharingSettingsScreen({super.key});
 
   @override
-  ConsumerState<SharingSettingsScreen> createState() => _SharingSettingsScreenState();
+  ConsumerState<SharingSettingsScreen> createState() =>
+      _SharingSettingsScreenState();
 }
 
 class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
   final IntegrationService _integrationService = IntegrationService();
-  
+
   bool _shareEvents = true;
   bool _shareProfile = true;
   bool _shareReviews = true;
@@ -33,14 +34,14 @@ class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
           children: [
             // Основные настройки
             _buildMainSettings(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Быстрые действия
             _buildQuickActions(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Шаблоны шаринга
             _buildSharingTemplates(),
           ],
@@ -64,7 +65,7 @@ class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // События
             SwitchListTile(
               title: const Text('События'),
@@ -76,7 +77,7 @@ class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
                 });
               },
             ),
-            
+
             // Профиль
             SwitchListTile(
               title: const Text('Профиль'),
@@ -88,7 +89,7 @@ class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
                 });
               },
             ),
-            
+
             // Отзывы
             SwitchListTile(
               title: const Text('Отзывы'),
@@ -100,7 +101,7 @@ class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
                 });
               },
             ),
-            
+
             // Идеи
             SwitchListTile(
               title: const Text('Идеи'),
@@ -112,7 +113,7 @@ class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
                 });
               },
             ),
-            
+
             // Бронирования
             SwitchListTile(
               title: const Text('Бронирования'),
@@ -124,7 +125,7 @@ class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
                 });
               },
             ),
-            
+
             // Аналитика
             SwitchListTile(
               title: const Text('Аналитика'),
@@ -157,7 +158,7 @@ class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Поделиться приложением
             ListTile(
               leading: const Icon(Icons.share, color: Colors.blue),
@@ -166,9 +167,9 @@ class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
               trailing: const Icon(Icons.chevron_right),
               onTap: _shareApp,
             ),
-            
+
             const Divider(),
-            
+
             // Поделиться профилем
             ListTile(
               leading: const Icon(Icons.person, color: Colors.green),
@@ -177,9 +178,9 @@ class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
               trailing: const Icon(Icons.chevron_right),
               onTap: _shareProfile,
             ),
-            
+
             const Divider(),
-            
+
             // Поделиться событием
             ListTile(
               leading: const Icon(Icons.event, color: Colors.orange),
@@ -188,9 +189,9 @@ class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
               trailing: const Icon(Icons.chevron_right),
               onTap: _shareEvent,
             ),
-            
+
             const Divider(),
-            
+
             // Поделиться отзывом
             ListTile(
               leading: const Icon(Icons.star, color: Colors.amber),
@@ -220,29 +221,32 @@ class _SharingSettingsScreenState extends ConsumerState<SharingSettingsScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Шаблон для события
             _buildSharingTemplate(
               title: 'Шаблон для события',
-              template: 'Приглашаю на событие: {eventName}\n{eventDescription}\nДата: {eventDate}\nМесто: {eventLocation}\n\nСкачай приложение Event Marketplace!',
+              template:
+                  'Приглашаю на событие: {eventName}\n{eventDescription}\nДата: {eventDate}\nМесто: {eventLocation}\n\nСкачай приложение Event Marketplace!',
               onEdit: () => _editSharingTemplate('event'),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Шаблон для профиля
             _buildSharingTemplate(
               title: 'Шаблон для профиля',
-              template: 'Привет! Посмотри мой профиль в Event Marketplace: {profileName}\n{profileDescription}\n\nСкачай приложение Event Marketplace!',
+              template:
+                  'Привет! Посмотри мой профиль в Event Marketplace: {profileName}\n{profileDescription}\n\nСкачай приложение Event Marketplace!',
               onEdit: () => _editSharingTemplate('profile'),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Шаблон для отзыва
             _buildSharingTemplate(
               title: 'Шаблон для отзыва',
-              template: 'Оставил отзыв о {specialistName} в Event Marketplace:\n{reviewText}\n\nСкачай приложение Event Marketplace!',
+              template:
+                  'Оставил отзыв о {specialistName} в Event Marketplace:\n{reviewText}\n\nСкачай приложение Event Marketplace!',
               onEdit: () => _editSharingTemplate('review'),
             ),
           ],
@@ -396,7 +400,8 @@ https://eventmarketplace.com
       context: context,
       builder: (context) => AlertDialog(
         title: Text('Редактировать шаблон для $type'),
-        content: const Text('Функция редактирования шаблонов пока не реализована'),
+        content:
+            const Text('Функция редактирования шаблонов пока не реализована'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

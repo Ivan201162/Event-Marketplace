@@ -84,7 +84,7 @@ class _SwipeableWidgetState extends State<SwipeableWidget>
                 ],
               ),
             ),
-          
+
           // Основной контент
           AnimatedBuilder(
             animation: _animation,
@@ -106,7 +106,7 @@ class _SwipeableWidgetState extends State<SwipeableWidget>
 
   void _onDragUpdate(DragUpdateDetails details) {
     if (_isAnimating) return;
-    
+
     setState(() {
       _dragExtent += details.delta.dx;
       _dragExtent = _dragExtent.clamp(-200.0, 200.0);
@@ -231,7 +231,7 @@ class _LongPressWidgetState extends State<LongPressWidget>
     _isLongPressing = true;
     _controller.forward();
     widget.onLongPressStart?.call();
-    
+
     Future.delayed(widget.duration, () {
       if (_isLongPressing) {
         widget.onLongPress?.call();
@@ -304,9 +304,11 @@ class _PinchZoomWidgetState extends State<PinchZoomWidget> {
 
   void _onScaleUpdate(ScaleUpdateDetails details) {
     setState(() {
-      _scale = (_previousScale * details.scale).clamp(widget.minScale, widget.maxScale);
-      
-      final newOffset = _previousOffset + details.focalPoint - details.localFocalPoint;
+      _scale = (_previousScale * details.scale)
+          .clamp(widget.minScale, widget.maxScale);
+
+      final newOffset =
+          _previousOffset + details.focalPoint - details.localFocalPoint;
       _offset = newOffset;
     });
   }
@@ -355,7 +357,7 @@ class _DoubleTapWidgetState extends State<DoubleTapWidget> {
 
   void _onTap() {
     _tapCount++;
-    
+
     if (_tapCount == 1) {
       _timer = Timer(widget.doubleTapTimeout, () {
         if (_tapCount == 1) {
@@ -422,7 +424,7 @@ class _DraggableWidgetState extends State<DraggableWidget> {
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        transform: _isDragging 
+        transform: _isDragging
             ? (Matrix4.identity()..scale(1.05))
             : Matrix4.identity(),
         child: widget.child,
@@ -455,18 +457,20 @@ class DismissibleWidget extends StatelessWidget {
     return Dismissible(
       key: Key(key),
       direction: direction,
-      background: background ?? Container(
-        color: Colors.red,
-        alignment: Alignment.centerLeft,
-        padding: const EdgeInsets.only(left: 20),
-        child: const Icon(Icons.delete, color: Colors.white),
-      ),
-      secondaryBackground: secondaryBackground ?? Container(
-        color: Colors.green,
-        alignment: Alignment.centerRight,
-        padding: const EdgeInsets.only(right: 20),
-        child: const Icon(Icons.archive, color: Colors.white),
-      ),
+      background: background ??
+          Container(
+            color: Colors.red,
+            alignment: Alignment.centerLeft,
+            padding: const EdgeInsets.only(left: 20),
+            child: const Icon(Icons.delete, color: Colors.white),
+          ),
+      secondaryBackground: secondaryBackground ??
+          Container(
+            color: Colors.green,
+            alignment: Alignment.centerRight,
+            padding: const EdgeInsets.only(right: 20),
+            child: const Icon(Icons.archive, color: Colors.white),
+          ),
       onDismissed: (direction) {
         onDismissed?.call();
       },

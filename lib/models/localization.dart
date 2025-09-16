@@ -21,13 +21,13 @@ class LocalizationModel {
   /// Получить перевод по ключу
   String translate(String key, {Map<String, dynamic>? params}) {
     String translation = translations[key] ?? key;
-    
+
     if (params != null) {
       params.forEach((key, value) {
         translation = translation.replaceAll('{$key}', value.toString());
       });
     }
-    
+
     return translation;
   }
 
@@ -167,7 +167,7 @@ class Translation {
       context: map['context'],
       description: map['description'],
       isPlural: map['isPlural'] ?? false,
-      pluralForms: map['pluralForms'] != null 
+      pluralForms: map['pluralForms'] != null
           ? Map<String, String>.from(map['pluralForms'])
           : null,
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] ?? 0),

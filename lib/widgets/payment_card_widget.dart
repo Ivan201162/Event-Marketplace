@@ -47,30 +47,30 @@ class PaymentCardWidget extends StatelessWidget {
                   _buildStatusChip(),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Суммы
               _buildAmountsSection(),
-              
+
               const SizedBox(height: 12),
-              
+
               // Прогресс оплаты
               _buildProgressSection(),
-              
+
               const SizedBox(height: 12),
-              
+
               // Взносы
               if (payment.installments.isNotEmpty) ...[
                 _buildInstallmentsSection(),
                 const SizedBox(height: 12),
               ],
-              
+
               // Действия
               _buildActionsSection(context),
-              
+
               const SizedBox(height: 8),
-              
+
               // Информация о дате
               Row(
                 children: [
@@ -108,7 +108,7 @@ class PaymentCardWidget extends StatelessWidget {
   Widget _buildStatusIcon() {
     IconData icon;
     Color color;
-    
+
     switch (payment.status) {
       case PaymentStatus.completed:
         icon = Icons.check_circle;
@@ -135,14 +135,14 @@ class PaymentCardWidget extends StatelessWidget {
         color = Colors.purple;
         break;
     }
-    
+
     return Icon(icon, color: color, size: 20);
   }
 
   Widget _buildStatusChip() {
     Color backgroundColor;
     Color textColor;
-    
+
     switch (payment.status) {
       case PaymentStatus.completed:
         backgroundColor = Colors.green[100]!;
@@ -169,7 +169,7 @@ class PaymentCardWidget extends StatelessWidget {
         textColor = Colors.purple[800]!;
         break;
     }
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -289,7 +289,6 @@ class PaymentCardWidget extends StatelessWidget {
         ...payment.installments.take(3).map((installment) {
           return _buildInstallmentItem(installment);
         }).toList(),
-        
         if (payment.installments.length > 3) ...[
           const SizedBox(height: 4),
           Text(
@@ -351,7 +350,6 @@ class PaymentCardWidget extends StatelessWidget {
           ),
           const SizedBox(width: 8),
         ],
-        
         if (payment.receiptPdfUrl != null && onDownloadReceipt != null) ...[
           IconButton(
             onPressed: onDownloadReceipt,
@@ -359,7 +357,6 @@ class PaymentCardWidget extends StatelessWidget {
             tooltip: 'Скачать квитанцию',
           ),
         ],
-        
         if (payment.invoicePdfUrl != null && onDownloadInvoice != null) ...[
           IconButton(
             onPressed: onDownloadInvoice,

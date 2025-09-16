@@ -24,7 +24,7 @@ class AdminPanel {
 
   factory AdminPanel.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return AdminPanel(
       id: doc.id,
       adminId: data['adminId'] ?? '',
@@ -78,10 +78,10 @@ class AdminPanel {
 
 /// Роли администратора
 enum AdminRole {
-  superAdmin,    // Супер-администратор
-  admin,         // Администратор
-  moderator,     // Модератор
-  support,       // Поддержка
+  superAdmin, // Супер-администратор
+  admin, // Администратор
+  moderator, // Модератор
+  support, // Поддержка
 }
 
 /// Разрешения администратора
@@ -91,38 +91,38 @@ enum AdminPermission {
   editUsers,
   deleteUsers,
   banUsers,
-  
+
   // Управление специалистами
   viewSpecialists,
   editSpecialists,
   deleteSpecialists,
   verifySpecialists,
-  
+
   // Управление бронированиями
   viewBookings,
   editBookings,
   deleteBookings,
   cancelBookings,
-  
+
   // Управление платежами
   viewPayments,
   editPayments,
   refundPayments,
-  
+
   // Управление отзывами
   viewReviews,
   editReviews,
   deleteReviews,
   moderateReviews,
-  
+
   // Аналитика
   viewAnalytics,
   exportData,
-  
+
   // Системные настройки
   viewSettings,
   editSettings,
-  
+
   // Управление админами
   viewAdmins,
   editAdmins,
@@ -185,7 +185,8 @@ class AdminStats {
       pendingBookings: map['pendingBookings'] ?? 0,
       pendingReviews: map['pendingReviews'] ?? 0,
       bannedUsers: map['bannedUsers'] ?? 0,
-      lastUpdated: (map['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      lastUpdated:
+          (map['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
 
@@ -232,7 +233,7 @@ class AdminAction {
 
   factory AdminAction.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return AdminAction(
       id: doc.id,
       adminId: data['adminId'] ?? '',
@@ -315,7 +316,7 @@ class AdminNotification {
 
   factory AdminNotification.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return AdminNotification(
       id: doc.id,
       title: data['title'] ?? '',
@@ -416,10 +417,13 @@ class AdminSettings {
       enableEmailNotifications: map['enableEmailNotifications'] ?? true,
       enableSmsNotifications: map['enableSmsNotifications'] ?? false,
       maxFileSize: map['maxFileSize'] ?? 10485760,
-      allowedFileTypes: List<String>.from(map['allowedFileTypes'] ?? ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx']),
+      allowedFileTypes: List<String>.from(map['allowedFileTypes'] ??
+          ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx']),
       paymentSettings: Map<String, dynamic>.from(map['paymentSettings'] ?? {}),
-      notificationSettings: Map<String, dynamic>.from(map['notificationSettings'] ?? {}),
-      lastUpdated: (map['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      notificationSettings:
+          Map<String, dynamic>.from(map['notificationSettings'] ?? {}),
+      lastUpdated:
+          (map['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
 
@@ -451,11 +455,15 @@ class AdminSettings {
     DateTime? lastUpdated,
   }) {
     return AdminSettings(
-      enableUserRegistration: enableUserRegistration ?? this.enableUserRegistration,
-      enableSpecialistVerification: enableSpecialistVerification ?? this.enableSpecialistVerification,
+      enableUserRegistration:
+          enableUserRegistration ?? this.enableUserRegistration,
+      enableSpecialistVerification:
+          enableSpecialistVerification ?? this.enableSpecialistVerification,
       enableAutoModeration: enableAutoModeration ?? this.enableAutoModeration,
-      enableEmailNotifications: enableEmailNotifications ?? this.enableEmailNotifications,
-      enableSmsNotifications: enableSmsNotifications ?? this.enableSmsNotifications,
+      enableEmailNotifications:
+          enableEmailNotifications ?? this.enableEmailNotifications,
+      enableSmsNotifications:
+          enableSmsNotifications ?? this.enableSmsNotifications,
       maxFileSize: maxFileSize ?? this.maxFileSize,
       allowedFileTypes: allowedFileTypes ?? this.allowedFileTypes,
       paymentSettings: paymentSettings ?? this.paymentSettings,

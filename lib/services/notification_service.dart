@@ -12,7 +12,7 @@ class NotificationService {
   factory NotificationService() => _instance;
   NotificationService._internal();
 
-  final FlutterLocalNotificationsPlugin _localNotifications = 
+  final FlutterLocalNotificationsPlugin _localNotifications =
       FlutterLocalNotificationsPlugin();
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -26,13 +26,13 @@ class NotificationService {
     try {
       // Инициализация локальных уведомлений
       await _initializeLocalNotifications();
-      
+
       // Инициализация Firebase Messaging
       await _initializeFirebaseMessaging();
-      
+
       // Запрос разрешений
       await _requestPermissions();
-      
+
       _isInitialized = true;
       debugPrint('NotificationService initialized successfully');
     } catch (e) {
@@ -44,7 +44,7 @@ class NotificationService {
   Future<void> _initializeLocalNotifications() async {
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
-    
+
     const DarwinInitializationSettings iosSettings =
         DarwinInitializationSettings(
       requestAlertPermission: true,
@@ -67,10 +67,10 @@ class NotificationService {
   Future<void> _initializeFirebaseMessaging() async {
     // Обработка сообщений в фоне
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-    
+
     // Обработка сообщений в foreground
     FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
-    
+
     // Обработка нажатий на уведомления
     FirebaseMessaging.onMessageOpenedApp.listen(_handleNotificationTap);
   }
@@ -101,7 +101,7 @@ class NotificationService {
   /// Обработчик сообщений в foreground
   void _handleForegroundMessage(RemoteMessage message) {
     debugPrint('Foreground message received: ${message.messageId}');
-    
+
     // Показываем локальное уведомление
     _showLocalNotification(
       title: message.notification?.title ?? 'Event Marketplace',
@@ -119,11 +119,11 @@ class NotificationService {
   /// Обработка данных уведомления
   void _handleNotificationPayload(String? payload) {
     if (payload == null) return;
-    
+
     try {
       final data = jsonDecode(payload);
       final type = data['type'] as String?;
-      
+
       switch (type) {
         case 'review':
           _handleReviewNotification(data);
@@ -150,7 +150,7 @@ class NotificationService {
     // final specialistId = data['specialistId'] as String?;
     final customerName = data['customerName'] as String?;
     final rating = data['rating'] as int?;
-    
+
     debugPrint('Review notification: $customerName rated $rating stars');
     // Здесь можно добавить навигацию к отзыву
   }
@@ -159,7 +159,7 @@ class NotificationService {
   void _handleBookingNotification(Map<String, dynamic> data) {
     final bookingId = data['bookingId'] as String?;
     final status = data['status'] as String?;
-    
+
     debugPrint('Booking notification: $bookingId status changed to $status');
     // Здесь можно добавить навигацию к бронированию
   }
@@ -168,7 +168,7 @@ class NotificationService {
   void _handlePaymentNotification(Map<String, dynamic> data) {
     final paymentId = data['paymentId'] as String?;
     final amount = data['amount'] as double?;
-    
+
     debugPrint('Payment notification: $paymentId amount $amount');
     // Здесь можно добавить навигацию к платежу
   }
@@ -177,7 +177,7 @@ class NotificationService {
   void _handleReminderNotification(Map<String, dynamic> data) {
     // final eventId = data['eventId'] as String?;
     final eventName = data['eventName'] as String?;
-    
+
     debugPrint('Reminder notification: $eventName');
     // Здесь можно добавить навигацию к событию
   }
@@ -228,13 +228,11 @@ class NotificationService {
   }) async {
     try {
       // Получаем FCM токен специалиста
-      final specialistDoc = await _firestore
-          .collection('users')
-          .doc(specialistId)
-          .get();
-      
+      final specialistDoc =
+          await _firestore.collection('users').doc(specialistId).get();
+
       if (!specialistDoc.exists) return;
-      
+
       final fcmToken = specialistDoc.data()?['fcmToken'] as String?;
       if (fcmToken == null) return;
 
@@ -269,8 +267,10 @@ class NotificationService {
       await _scheduleLocalNotification(
         id: bookingId.hashCode,
         title: 'Напоминание об оплате',
-        body: 'Не забудьте оплатить бронирование "$eventName" на сумму ${amount.toStringAsFixed(0)} ₽',
-        scheduledDate: dueDate.subtract(const Duration(hours: 24)), // За 24 часа
+        body:
+            'Не забудьте оплатить бронирование "$eventName" на сумму ${amount.toStringAsFixed(0)} ₽',
+        scheduledDate:
+            dueDate.subtract(const Duration(hours: 24)), // За 24 часа
         payload: jsonEncode({
           'type': 'reminder',
           'bookingId': bookingId,

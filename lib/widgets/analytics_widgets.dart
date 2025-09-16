@@ -50,7 +50,10 @@ class KPIWidget extends StatelessWidget {
                   kpi.unit,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.7),
                   ),
                 ),
               ],
@@ -65,7 +68,10 @@ class KPIWidget extends StatelessWidget {
                   'Цель: ${kpi.target.toStringAsFixed(0)} ${kpi.unit}',
                   style: TextStyle(
                     fontSize: 12,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.7),
                   ),
                 ),
                 _buildChangeIndicator(context, kpi.percentageChange),
@@ -110,7 +116,9 @@ class KPIWidget extends StatelessWidget {
       value: percentage / 100,
       backgroundColor: Colors.grey.withOpacity(0.3),
       valueColor: AlwaysStoppedAnimation<Color>(
-        percentage >= 100 ? Colors.green : Theme.of(context).colorScheme.primary,
+        percentage >= 100
+            ? Colors.green
+            : Theme.of(context).colorScheme.primary,
       ),
     );
   }
@@ -160,7 +168,9 @@ class MetricWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final change = previousValue != null ? ((value - previousValue!) / previousValue!) * 100 : 0.0;
+    final change = previousValue != null
+        ? ((value - previousValue!) / previousValue!) * 100
+        : 0.0;
     final isPositive = change >= 0;
 
     return Card(
@@ -208,7 +218,8 @@ class MetricWidget extends StatelessWidget {
   }
 
   /// Построить индикатор изменения
-  Widget _buildChangeIndicator(BuildContext context, double change, bool isPositive) {
+  Widget _buildChangeIndicator(
+      BuildContext context, double change, bool isPositive) {
     final color = isPositive ? Colors.green : Colors.red;
     final icon = isPositive ? Icons.arrow_upward : Icons.arrow_downward;
 
@@ -251,8 +262,8 @@ class PeriodStatisticsWidget extends StatelessWidget {
             Text(
               'Статистика за ${_getPeriodName(statistics.period)}',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             Text(
@@ -368,7 +379,8 @@ class ReportWidget extends StatelessWidget {
                 report.description,
                 style: TextStyle(
                   fontSize: 14,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                 ),
               ),
               const SizedBox(height: 12),
@@ -379,14 +391,20 @@ class ReportWidget extends StatelessWidget {
                     '${_formatDate(report.startDate)} - ${_formatDate(report.endDate)}',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6),
                     ),
                   ),
                   Text(
                     _formatDate(report.createdAt),
                     style: TextStyle(
                       fontSize: 12,
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6),
                     ),
                   ),
                 ],
@@ -498,7 +516,8 @@ class DashboardWidget extends StatelessWidget {
                 dashboard.description,
                 style: TextStyle(
                   fontSize: 14,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                 ),
               ),
               const SizedBox(height: 12),
@@ -509,14 +528,20 @@ class DashboardWidget extends StatelessWidget {
                     '${dashboard.widgets.length} виджетов',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6),
                     ),
                   ),
                   Text(
                     _formatDate(dashboard.updatedAt),
                     style: TextStyle(
                       fontSize: 12,
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.6),
                     ),
                   ),
                 ],
@@ -536,7 +561,8 @@ class DashboardWidget extends StatelessWidget {
 
 /// Виджет формы отчета
 class ReportFormWidget extends ConsumerStatefulWidget {
-  final Function(ReportType type, AnalyticsPeriod period, DateTime date)? onSubmit;
+  final Function(ReportType type, AnalyticsPeriod period, DateTime date)?
+      onSubmit;
 
   const ReportFormWidget({
     super.key,
@@ -562,11 +588,11 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
             Text(
               'Создать отчет',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
-            
+
             // Тип отчета
             const Text(
               'Тип отчета',
@@ -577,7 +603,8 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
               value: formState.selectedType,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
               items: ReportType.values.map((type) {
                 return DropdownMenuItem(
@@ -592,7 +619,7 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
               },
             ),
             const SizedBox(height: 16),
-            
+
             // Период
             const Text(
               'Период',
@@ -603,7 +630,8 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
               value: formState.selectedPeriod,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
               items: AnalyticsPeriod.values.map((period) {
                 return DropdownMenuItem(
@@ -618,7 +646,7 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
               },
             ),
             const SizedBox(height: 16),
-            
+
             // Дата
             const Text(
               'Дата',
@@ -628,7 +656,8 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
             InkWell(
               onTap: () => _selectDate(context),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
                 decoration: BoxDecoration(
                   border: Border.all(color: Colors.grey),
                   borderRadius: BorderRadius.circular(4),
@@ -643,7 +672,7 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Ошибка
             if (formState.errorMessage != null) ...[
               Container(
@@ -668,14 +697,13 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
               ),
               const SizedBox(height: 16),
             ],
-            
+
             // Кнопка создания
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed: formState.isGenerating
-                    ? null
-                    : () => _createReport(),
+                onPressed:
+                    formState.isGenerating ? null : () => _createReport(),
                 child: formState.isGenerating
                     ? const SizedBox(
                         width: 16,

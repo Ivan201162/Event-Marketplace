@@ -39,14 +39,14 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
           children: [
             // Заголовок с информацией о пользователе
             _buildHeader(),
-            
+
             const SizedBox(height: 12),
-            
+
             // Рейтинг
             _buildRating(),
-            
+
             const SizedBox(height: 12),
-            
+
             // Комментарий
             if (widget.review.comment.isNotEmpty) ...[
               Text(
@@ -55,29 +55,29 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
               ),
               const SizedBox(height: 12),
             ],
-            
+
             // Медиа
             if (widget.review.media.isNotEmpty) ...[
               _buildMediaGrid(),
               const SizedBox(height: 12),
             ],
-            
+
             // Теги
             if (widget.review.tags.isNotEmpty) ...[
               _buildTags(),
               const SizedBox(height: 12),
             ],
-            
+
             // Детальная статистика
             _buildDetailedStats(),
-            
+
             const SizedBox(height: 12),
-            
+
             // Действия
             _buildActions(),
-            
+
             const SizedBox(height: 8),
-            
+
             // Информация о дате
             _buildDateInfo(),
           ],
@@ -96,7 +96,7 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
               : null,
           child: widget.review.customerPhotoUrl.isEmpty
               ? Text(
-                  widget.review.customerName.isNotEmpty 
+                  widget.review.customerName.isNotEmpty
                       ? widget.review.customerName[0].toUpperCase()
                       : '?',
                   style: const TextStyle(fontSize: 16),
@@ -397,9 +397,9 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
             ],
           ),
         ),
-        
+
         const SizedBox(width: 16),
-        
+
         // Просмотры
         Row(
           children: [
@@ -418,9 +418,9 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
             ),
           ],
         ),
-        
+
         const Spacer(),
-        
+
         // Полезность
         if (widget.review.stats.helpfulnessScore > 0)
           Row(
@@ -522,7 +522,7 @@ class _ReviewExtendedWidgetState extends State<ReviewExtendedWidget> {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня';
     } else if (difference.inDays == 1) {
@@ -621,11 +621,11 @@ class _MediaViewerScreenState extends State<MediaViewerScreen> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const CircularProgressIndicator();
           }
-          
+
           if (snapshot.hasError) {
             return const Text('Ошибка загрузки видео');
           }
-          
+
           final controller = snapshot.data!;
           return AspectRatio(
             aspectRatio: controller.value.aspectRatio,

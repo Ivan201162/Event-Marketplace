@@ -33,9 +33,9 @@ class ThemeSettingsScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Основной цвет
             _buildSection(
               title: 'Основной цвет',
@@ -48,37 +48,40 @@ class ThemeSettingsScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Дополнительные настройки
             _buildSection(
               title: 'Дополнительные настройки',
               children: [
                 _buildSwitchTile(
                   title: 'Использовать системную тему',
-                  subtitle: 'Автоматически переключаться между светлой и темной темой',
+                  subtitle:
+                      'Автоматически переключаться между светлой и темной темой',
                   value: themeSettings.useSystemTheme,
                   onChanged: (value) {
-                    ref.read(themeSettingsProvider.notifier).setUseSystemTheme(value);
+                    ref
+                        .read(themeSettingsProvider.notifier)
+                        .setUseSystemTheme(value);
                   },
                 ),
-                
                 const SizedBox(height: 8),
-                
                 _buildSwitchTile(
                   title: 'Material Design 3',
                   subtitle: 'Использовать новую версию Material Design',
                   value: themeSettings.useMaterial3,
                   onChanged: (value) {
-                    ref.read(themeSettingsProvider.notifier).setUseMaterial3(value);
+                    ref
+                        .read(themeSettingsProvider.notifier)
+                        .setUseMaterial3(value);
                   },
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Предварительный просмотр
             _buildSection(
               title: 'Предварительный просмотр',
@@ -86,9 +89,9 @@ class ThemeSettingsScreen extends ConsumerWidget {
                 _buildThemePreview(context),
               ],
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Кнопки действий
             _buildActionButtons(context, ref),
           ],
@@ -136,9 +139,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
             icon: Icons.light_mode,
             isSelected: currentMode == ThemeMode.light,
           ),
-          
           const Divider(height: 1),
-          
           _buildThemeModeOption(
             context: context,
             ref: ref,
@@ -148,9 +149,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
             icon: Icons.dark_mode,
             isSelected: currentMode == ThemeMode.dark,
           ),
-          
           const Divider(height: 1),
-          
           _buildThemeModeOption(
             context: context,
             ref: ref,
@@ -179,7 +178,8 @@ class ThemeSettingsScreen extends ConsumerWidget {
       leading: Icon(icon),
       title: Text(title),
       subtitle: Text(subtitle),
-      trailing: isSelected ? const Icon(Icons.check, color: Colors.green) : null,
+      trailing:
+          isSelected ? const Icon(Icons.check, color: Colors.green) : null,
       selected: isSelected,
       onTap: () {
         ref.read(themeProvider.notifier).setTheme(mode);
@@ -208,7 +208,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Предустановленные цвета
             Wrap(
               spacing: 12,
@@ -217,7 +217,9 @@ class ThemeSettingsScreen extends ConsumerWidget {
                 final isSelected = color.value == currentColor.value;
                 return GestureDetector(
                   onTap: () {
-                    ref.read(themeSettingsProvider.notifier).setPrimaryColor(color);
+                    ref
+                        .read(themeSettingsProvider.notifier)
+                        .setPrimaryColor(color);
                   },
                   child: Container(
                     width: 48,
@@ -250,9 +252,9 @@ class ThemeSettingsScreen extends ConsumerWidget {
                 );
               }).toList(),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Текущий цвет
             Container(
               padding: const EdgeInsets.all(12),
@@ -321,7 +323,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Пример AppBar
             Container(
               height: 56,
@@ -339,9 +341,9 @@ class ThemeSettingsScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             // Пример карточки
             Container(
               padding: const EdgeInsets.all(12),
@@ -366,15 +368,18 @@ class ThemeSettingsScreen extends ConsumerWidget {
                   Text(
                     'Описание карточки',
                     style: TextStyle(
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.7),
                     ),
                   ),
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             // Пример кнопки
             ElevatedButton(
               onPressed: () {},
@@ -402,9 +407,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
             ),
           ),
         ),
-        
         const SizedBox(height: 12),
-        
         SizedBox(
           width: double.infinity,
           child: OutlinedButton.icon(
@@ -423,7 +426,8 @@ class ThemeSettingsScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Сбросить настройки'),
-        content: const Text('Вы уверены, что хотите сбросить все настройки темы к умолчанию?'),
+        content: const Text(
+            'Вы уверены, что хотите сбросить все настройки темы к умолчанию?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -432,11 +436,13 @@ class ThemeSettingsScreen extends ConsumerWidget {
           ElevatedButton(
             onPressed: () {
               ref.read(themeProvider.notifier).setTheme(ThemeMode.system);
-              ref.read(themeSettingsProvider.notifier).setPrimaryColor(Colors.deepPurple);
+              ref
+                  .read(themeSettingsProvider.notifier)
+                  .setPrimaryColor(Colors.deepPurple);
               ref.read(themeSettingsProvider.notifier).setUseSystemTheme(true);
               ref.read(themeSettingsProvider.notifier).setUseMaterial3(true);
               Navigator.pop(context);
-              
+
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(
                   content: Text('Настройки сброшены к умолчанию'),
@@ -454,7 +460,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
   void _exportTheme(BuildContext context, WidgetRef ref) {
     final themeSettings = ref.read(themeSettingsProvider);
     final themeMode = ref.read(themeProvider);
-    
+
     // TODO: Реализовать экспорт настроек
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
@@ -478,5 +484,3 @@ class ThemeSettingsScreen extends ConsumerWidget {
     return 'Пользовательский';
   }
 }
-
-

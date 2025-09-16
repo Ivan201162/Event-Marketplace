@@ -37,16 +37,16 @@ class ThemeSwitch extends ConsumerWidget {
             children: [
               Icon(
                 Icons.light_mode,
-                color: themeMode == ThemeMode.light 
-                    ? context.colorScheme.primary 
+                color: themeMode == ThemeMode.light
+                    ? context.colorScheme.primary
                     : null,
               ),
               const SizedBox(width: 12),
               Text(
                 'Светлая тема',
                 style: TextStyle(
-                  color: themeMode == ThemeMode.light 
-                      ? context.colorScheme.primary 
+                  color: themeMode == ThemeMode.light
+                      ? context.colorScheme.primary
                       : null,
                 ),
               ),
@@ -59,16 +59,16 @@ class ThemeSwitch extends ConsumerWidget {
             children: [
               Icon(
                 Icons.dark_mode,
-                color: themeMode == ThemeMode.dark 
-                    ? context.colorScheme.primary 
+                color: themeMode == ThemeMode.dark
+                    ? context.colorScheme.primary
                     : null,
               ),
               const SizedBox(width: 12),
               Text(
                 'Тёмная тема',
                 style: TextStyle(
-                  color: themeMode == ThemeMode.dark 
-                      ? context.colorScheme.primary 
+                  color: themeMode == ThemeMode.dark
+                      ? context.colorScheme.primary
                       : null,
                 ),
               ),
@@ -81,16 +81,16 @@ class ThemeSwitch extends ConsumerWidget {
             children: [
               Icon(
                 Icons.brightness_auto,
-                color: themeMode == ThemeMode.system 
-                    ? context.colorScheme.primary 
+                color: themeMode == ThemeMode.system
+                    ? context.colorScheme.primary
                     : null,
               ),
               const SizedBox(width: 12),
               Text(
                 'Системная тема',
                 style: TextStyle(
-                  color: themeMode == ThemeMode.system 
-                      ? context.colorScheme.primary 
+                  color: themeMode == ThemeMode.system
+                      ? context.colorScheme.primary
                       : null,
                 ),
               ),

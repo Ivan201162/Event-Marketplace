@@ -24,19 +24,21 @@ class LocalizationMainScreen extends ConsumerWidget {
                 icon: Icons.language,
                 title: 'Настройки языка',
                 subtitle: 'Выбор языка и дополнительные настройки',
-                onTap: () => _navigateToScreen(context, const LocalizationSettingsScreen()),
+                onTap: () => _navigateToScreen(
+                    context, const LocalizationSettingsScreen()),
               ),
               _buildSettingsTile(
                 icon: Icons.translate,
                 title: 'Управление переводами',
                 subtitle: 'Редактирование и управление переводами',
-                onTap: () => _navigateToScreen(context, const TranslationManagementScreen()),
+                onTap: () => _navigateToScreen(
+                    context, const TranslationManagementScreen()),
               ),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Статистика
           _buildSection(
             title: 'Статистика локализации',
@@ -44,9 +46,9 @@ class LocalizationMainScreen extends ConsumerWidget {
               _buildStatsCard(),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Быстрые действия
           _buildSection(
             title: 'Быстрые действия',
@@ -81,9 +83,9 @@ class LocalizationMainScreen extends ConsumerWidget {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Информация
           _buildSection(
             title: 'Информация',
@@ -216,12 +218,12 @@ class LocalizationMainScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Статистика по языкам
             Consumer(
               builder: (context, ref, child) {
                 final allStatsAsync = ref.watch(allLocalizationStatsProvider);
-                
+
                 return allStatsAsync.when(
                   data: (stats) {
                     if (stats.isEmpty) {
@@ -229,7 +231,7 @@ class LocalizationMainScreen extends ConsumerWidget {
                         child: Text('Нет данных о статистике'),
                       );
                     }
-                    
+
                     return Column(
                       children: stats.map((stat) {
                         return Container(
@@ -260,26 +262,29 @@ class LocalizationMainScreen extends ConsumerWidget {
                                   ),
                                 ),
                               ),
-                              
+
                               const SizedBox(width: 12),
-                              
+
                               // Информация
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
                                           '${stat.completionPercentage.toStringAsFixed(1)}%',
                                           style: TextStyle(
                                             fontSize: 16,
                                             fontWeight: FontWeight.bold,
-                                            color: stat.completionPercentage >= 80 
-                                                ? Colors.green 
-                                                : stat.completionPercentage >= 50 
-                                                    ? Colors.orange 
+                                            color: stat.completionPercentage >=
+                                                    80
+                                                ? Colors.green
+                                                : stat.completionPercentage >=
+                                                        50
+                                                    ? Colors.orange
                                                     : Colors.red,
                                           ),
                                         ),
@@ -297,10 +302,10 @@ class LocalizationMainScreen extends ConsumerWidget {
                                       value: stat.completionPercentage / 100,
                                       backgroundColor: Colors.grey[300],
                                       valueColor: AlwaysStoppedAnimation<Color>(
-                                        stat.completionPercentage >= 80 
-                                            ? Colors.green 
-                                            : stat.completionPercentage >= 50 
-                                                ? Colors.orange 
+                                        stat.completionPercentage >= 80
+                                            ? Colors.green
+                                            : stat.completionPercentage >= 50
+                                                ? Colors.orange
                                                 : Colors.red,
                                       ),
                                     ),
@@ -343,14 +348,11 @@ class LocalizationMainScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
-            
             const Text(
               'Приложение поддерживает множественные языки и позволяет пользователям выбирать предпочитаемый язык интерфейса.',
               style: TextStyle(fontSize: 14),
             ),
-            
             const SizedBox(height: 12),
-            
             const Text(
               'Поддерживаемые языки:',
               style: TextStyle(
@@ -358,13 +360,12 @@ class LocalizationMainScreen extends ConsumerWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            
             const SizedBox(height: 8),
-            
             Consumer(
               builder: (context, ref, child) {
-                final supportedLanguages = ref.watch(supportedLanguagesProvider);
-                
+                final supportedLanguages =
+                    ref.watch(supportedLanguagesProvider);
+
                 return Wrap(
                   spacing: 8,
                   runSpacing: 4,
@@ -381,9 +382,7 @@ class LocalizationMainScreen extends ConsumerWidget {
                 );
               },
             ),
-            
             const SizedBox(height: 16),
-            
             const Text(
               'Функции:',
               style: TextStyle(
@@ -391,9 +390,7 @@ class LocalizationMainScreen extends ConsumerWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            
             const SizedBox(height: 8),
-            
             const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -422,7 +419,8 @@ class LocalizationMainScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Экспорт переводов'),
-        content: const Text('Функция экспорта переводов будет доступна в следующих обновлениях приложения.'),
+        content: const Text(
+            'Функция экспорта переводов будет доступна в следующих обновлениях приложения.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -438,7 +436,8 @@ class LocalizationMainScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Импорт переводов'),
-        content: const Text('Функция импорта переводов будет доступна в следующих обновлениях приложения.'),
+        content: const Text(
+            'Функция импорта переводов будет доступна в следующих обновлениях приложения.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -454,7 +453,8 @@ class LocalizationMainScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Очистить кэш'),
-        content: const Text('Вы уверены, что хотите очистить кэш локализации? Это может временно замедлить работу приложения.'),
+        content: const Text(
+            'Вы уверены, что хотите очистить кэш локализации? Это может временно замедлить работу приложения.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

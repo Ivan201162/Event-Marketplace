@@ -26,7 +26,7 @@ class ChatsScreen extends ConsumerWidget {
         itemCount: 5, // Заглушка
         itemBuilder: (context, index) {
           final isUnread = index < 2; // Первые два сообщения непрочитанные
-          
+
           return Card(
             margin: const EdgeInsets.only(bottom: 8),
             child: ListTile(
@@ -63,7 +63,8 @@ class ChatsScreen extends ConsumerWidget {
                   Text(
                     "Последнее сообщение от пользователя ${index + 1}...",
                     style: TextStyle(
-                      fontWeight: isUnread ? FontWeight.w500 : FontWeight.normal,
+                      fontWeight:
+                          isUnread ? FontWeight.w500 : FontWeight.normal,
                     ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -80,7 +81,8 @@ class ChatsScreen extends ConsumerWidget {
               ),
               trailing: isUnread
                   ? Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: Theme.of(context).colorScheme.primary,
                         borderRadius: BorderRadius.circular(12),
@@ -99,7 +101,8 @@ class ChatsScreen extends ConsumerWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => ChatDetailScreen(userName: "Пользователь ${index + 1}"),
+                    builder: (context) =>
+                        ChatDetailScreen(userName: "Пользователь ${index + 1}"),
                   ),
                 );
               },
@@ -142,14 +145,16 @@ class ChatDetailScreen extends StatelessWidget {
               itemCount: 10, // Заглушка
               itemBuilder: (context, index) {
                 final isMe = index % 2 == 0;
-                
+
                 return Align(
-                  alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                  alignment:
+                      isMe ? Alignment.centerRight : Alignment.centerLeft,
                   child: Container(
                     margin: const EdgeInsets.only(bottom: 8),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
                     decoration: BoxDecoration(
-                      color: isMe 
+                      color: isMe
                           ? Theme.of(context).colorScheme.primary
                           : Colors.grey[200],
                       borderRadius: BorderRadius.circular(20),
@@ -165,7 +170,7 @@ class ChatDetailScreen extends StatelessWidget {
               },
             ),
           ),
-          
+
           // Поле ввода
           Container(
             padding: const EdgeInsets.all(16),

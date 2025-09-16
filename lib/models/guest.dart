@@ -44,7 +44,7 @@ class Guest {
 
   factory Guest.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return Guest(
       id: doc.id,
       eventId: data['eventId'] ?? '',
@@ -65,8 +65,9 @@ class Guest {
       invitationCode: data['invitationCode'],
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       greetings: (data['greetings'] as List<dynamic>?)
-          ?.map((e) => GuestGreeting.fromMap(e))
-          .toList() ?? [],
+              ?.map((e) => GuestGreeting.fromMap(e))
+              .toList() ??
+          [],
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
@@ -82,10 +83,14 @@ class Guest {
       'guestPhone': guestPhone,
       'guestPhotoUrl': guestPhotoUrl,
       'status': status.name,
-      'registeredAt': registeredAt != null ? Timestamp.fromDate(registeredAt!) : null,
-      'confirmedAt': confirmedAt != null ? Timestamp.fromDate(confirmedAt!) : null,
-      'checkedInAt': checkedInAt != null ? Timestamp.fromDate(checkedInAt!) : null,
-      'checkedOutAt': checkedOutAt != null ? Timestamp.fromDate(checkedOutAt!) : null,
+      'registeredAt':
+          registeredAt != null ? Timestamp.fromDate(registeredAt!) : null,
+      'confirmedAt':
+          confirmedAt != null ? Timestamp.fromDate(confirmedAt!) : null,
+      'checkedInAt':
+          checkedInAt != null ? Timestamp.fromDate(checkedInAt!) : null,
+      'checkedOutAt':
+          checkedOutAt != null ? Timestamp.fromDate(checkedOutAt!) : null,
       'qrCode': qrCode,
       'invitationCode': invitationCode,
       'metadata': metadata,
@@ -333,7 +338,7 @@ class GuestEvent {
 
   factory GuestEvent.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return GuestEvent(
       id: doc.id,
       title: data['title'] ?? '',

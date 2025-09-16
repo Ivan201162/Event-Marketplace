@@ -43,26 +43,26 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
           ),
         ),
         const SizedBox(height: 16),
-        
+
         // Типы оплаты
         _buildPaymentTypeOptions(),
-        
+
         const SizedBox(height: 16),
-        
+
         // Дополнительные настройки
         if (_selectedType == PaymentType.advance) ...[
           _buildAdvanceSettings(),
         ] else if (_selectedType == PaymentType.installment) ...[
           _buildInstallmentSettings(),
         ],
-        
+
         const SizedBox(height: 16),
-        
+
         // Сводка
         _buildPaymentSummary(),
-        
+
         const SizedBox(height: 16),
-        
+
         // Кнопка подтверждения
         SizedBox(
           width: double.infinity,
@@ -86,7 +86,6 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
           amount: widget.totalAmount,
         ),
         const SizedBox(height: 8),
-        
         _buildPaymentTypeOption(
           type: PaymentType.advance,
           title: 'Предоплата',
@@ -95,7 +94,6 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
           amount: _calculateAdvanceAmount(),
         ),
         const SizedBox(height: 8),
-        
         _buildPaymentTypeOption(
           type: PaymentType.installment,
           title: 'Рассрочка',
@@ -104,7 +102,6 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
           amount: _calculateInstallmentAmount(),
         ),
         const SizedBox(height: 8),
-        
         _buildPaymentTypeOption(
           type: PaymentType.partial,
           title: 'Частичная оплата',
@@ -124,7 +121,7 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
     required double amount,
   }) {
     final isSelected = _selectedType == type;
-    
+
     return GestureDetector(
       onTap: () {
         setState(() {
@@ -134,13 +131,12 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isSelected 
+          color: isSelected
               ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
               : Colors.grey[50],
           border: Border.all(
-            color: isSelected 
-                ? Theme.of(context).primaryColor
-                : Colors.grey[300]!,
+            color:
+                isSelected ? Theme.of(context).primaryColor : Colors.grey[300]!,
             width: isSelected ? 2 : 1,
           ),
           borderRadius: BorderRadius.circular(12),
@@ -150,7 +146,7 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
             Container(
               padding: const EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: isSelected 
+                color: isSelected
                     ? Theme.of(context).primaryColor
                     : Colors.grey[300],
                 shape: BoxShape.circle,
@@ -171,7 +167,7 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
-                      color: isSelected 
+                      color: isSelected
                           ? Theme.of(context).primaryColor
                           : Colors.black87,
                     ),
@@ -191,7 +187,7 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: isSelected 
+                color: isSelected
                     ? Theme.of(context).primaryColor
                     : Colors.black87,
               ),
@@ -221,14 +217,14 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
             ),
           ),
           const SizedBox(height: 12),
-          
+
           // Проценты предоплаты
           const Text(
             'Размер предоплаты:',
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),
-          
+
           Wrap(
             spacing: 8,
             children: widget.settings.availablePercentages.map((percentage) {
@@ -240,14 +236,15 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: isSelected 
+                    color: isSelected
                         ? Theme.of(context).primaryColor
                         : Colors.white,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: isSelected 
+                      color: isSelected
                           ? Theme.of(context).primaryColor
                           : Colors.grey[300]!,
                     ),
@@ -263,7 +260,7 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
               );
             }).toList(),
           ),
-          
+
           if (widget.settings.allowCustomAmount) ...[
             const SizedBox(height: 12),
             TextField(
@@ -279,7 +276,8 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
                 final amount = double.tryParse(value);
                 if (amount != null && amount > 0) {
                   setState(() {
-                    _selectedAdvancePercentage = (amount / widget.totalAmount) * 100;
+                    _selectedAdvancePercentage =
+                        (amount / widget.totalAmount) * 100;
                   });
                 }
               },
@@ -309,14 +307,14 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
             ),
           ),
           const SizedBox(height: 12),
-          
+
           // Количество взносов
           const Text(
             'Количество взносов:',
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
           const SizedBox(height: 8),
-          
+
           Wrap(
             spacing: 8,
             children: List.generate(widget.settings.maxInstallments, (index) {
@@ -329,14 +327,15 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
                   });
                 },
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: isSelected 
+                    color: isSelected
                         ? Theme.of(context).primaryColor
                         : Colors.white,
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: isSelected 
+                      color: isSelected
                           ? Theme.of(context).primaryColor
                           : Colors.grey[300]!,
                     ),
@@ -375,7 +374,6 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
             ),
           ),
           const SizedBox(height: 12),
-          
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -386,7 +384,6 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
               ),
             ],
           ),
-          
           if (_selectedType != PaymentType.full) ...[
             const SizedBox(height: 8),
             Row(
@@ -399,7 +396,6 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
                 ),
               ],
             ),
-            
             const SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -445,13 +441,14 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
   void _confirmSelection() {
     double? advancePercentage;
     int? installments;
-    
+
     if (_selectedType == PaymentType.advance) {
       advancePercentage = _selectedAdvancePercentage;
     } else if (_selectedType == PaymentType.installment) {
       installments = _selectedInstallments;
     }
-    
-    widget.onPaymentTypeSelected(_selectedType, advancePercentage, installments);
+
+    widget.onPaymentTypeSelected(
+        _selectedType, advancePercentage, installments);
   }
 }

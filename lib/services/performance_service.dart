@@ -12,20 +12,20 @@ class PerformanceService {
 
   final LoggerService _logger = LoggerService();
   final MonitoringService _monitoring = MonitoringService();
-  
+
   final Map<String, Timer> _debounceTimers = {};
   final Map<String, Timer> _throttleTimers = {};
   final Map<String, bool> _throttleFlags = {};
-  
+
   // Кэш для часто используемых данных
   final Map<String, dynamic> _cache = {};
   final Map<String, DateTime> _cacheTimestamps = {};
   final Duration _cacheExpiration = Duration(minutes: 5);
-  
+
   // Очередь для тяжелых операций
   final Queue<Future<void> Function()> _heavyOperationsQueue = Queue();
   bool _isProcessingQueue = false;
-  
+
   // Настройки производительности
   int _maxConcurrentOperations = 3;
   int _currentOperations = 0;
@@ -39,7 +39,8 @@ class PerformanceService {
   }
 
   /// Дебаунс функция - выполняется только после паузы в вызовах
-  void debounce(String key, VoidCallback callback, {Duration delay = const Duration(milliseconds: 300)}) {
+  void debounce(String key, VoidCallback callback,
+      {Duration delay = const Duration(milliseconds: 300)}) {
     _debounceTimers[key]?.cancel();
     _debounceTimers[key] = Timer(delay, () {
       callback();
@@ -48,12 +49,13 @@ class PerformanceService {
   }
 
   /// Троттлинг функции - выполняется не чаще указанного интервала
-  void throttle(String key, VoidCallback callback, {Duration interval = const Duration(milliseconds: 100)}) {
+  void throttle(String key, VoidCallback callback,
+      {Duration interval = const Duration(milliseconds: 100)}) {
     if (_throttleFlags[key] == true) return;
-    
+
     _throttleFlags[key] = true;
     callback();
-    
+
     _throttleTimers[key]?.cancel();
     _throttleTimers[key] = Timer(interval, () {
       _throttleFlags[key] = false;
@@ -62,10 +64,11 @@ class PerformanceService {
   }
 
   /// Кэширование результата функции
-  Future<T> cache<T>(String key, Future<T> Function() computation, {Duration? expiration}) async {
+  Future<T> cache<T>(String key, Future<T> Function() computation,
+      {Duration? expiration}) async {
     final now = DateTime.now();
     final exp = expiration ?? _cacheExpiration;
-    
+
     // Проверяем кэш
     if (_cache.containsKey(key) && _cacheTimestamps.containsKey(key)) {
       final cacheTime = _cacheTimestamps[key]!;
@@ -78,13 +81,13 @@ class PerformanceService {
         _cacheTimestamps.remove(key);
       }
     }
-    
+
     // Вычисляем и кэшируем результат
     _logger.debug('Cache miss for key: $key', tag: 'PERFORMANCE');
     final result = await computation();
     _cache[key] = result;
     _cacheTimestamps[key] = now;
-    
+
     return result;
   }
 
@@ -111,7 +114,8 @@ class PerformanceService {
   }
 
   /// Выполнение операции с ограничением количества одновременных операций
-  Future<T> executeWithLimit<T>(Future<T> Function() operation, {String? operationName}) async {
+  Future<T> executeWithLimit<T>(Future<T> Function() operation,
+      {String? operationName}) async {
     if (_currentOperations >= _maxConcurrentOperations) {
       // Добавляем в очередь
       final completer = Completer<T>();
@@ -125,10 +129,11 @@ class PerformanceService {
       });
       return completer.future;
     }
-    
+
     _currentOperations++;
-    final name = operationName ?? 'operation_${DateTime.now().millisecondsSinceEpoch}';
-    
+    final name =
+        operationName ?? 'operation_${DateTime.now().millisecondsSinceEpoch}';
+
     try {
       _monitoring.startOperation(name);
       final result = await operation();
@@ -150,7 +155,7 @@ class PerformanceService {
   Future<T> executeInIsolate<T>(T Function() computation) async {
     final name = 'isolate_${DateTime.now().millisecondsSinceEpoch}';
     _monitoring.startOperation(name);
-    
+
     try {
       final result = await compute(computation, null);
       _monitoring.endOperation(name);
@@ -162,7 +167,8 @@ class PerformanceService {
   }
 
   /// Оптимизация изображений
-  Future<Uint8List> optimizeImage(Uint8List imageData, {int? maxWidth, int? maxHeight, int quality = 85}) async {
+  Future<Uint8List> optimizeImage(Uint8List imageData,
+      {int? maxWidth, int? maxHeight, int quality = 85}) async {
     return await executeInIsolate(() {
       // Здесь должна быть логика оптимизации изображений
       // Для примера возвращаем исходные данные
@@ -177,7 +183,7 @@ class PerformanceService {
     int initialOffset = 0,
   }) async {
     final key = 'lazy_load_${T.toString()}_${initialOffset}_$limit';
-    
+
     return await cache(key, () async {
       return await loader(initialOffset, limit);
     });
@@ -193,7 +199,8 @@ class PerformanceService {
   /// Оптимизация списков
   List<T> optimizeList<T>(List<T> list, {int? maxItems}) {
     if (maxItems != null && list.length > maxItems) {
-      _logger.debug('Optimized list from ${list.length} to $maxItems items', tag: 'PERFORMANCE');
+      _logger.debug('Optimized list from ${list.length} to $maxItems items',
+          tag: 'PERFORMANCE');
       return list.take(maxItems).toList();
     }
     return list;
@@ -210,14 +217,14 @@ class PerformanceService {
   /// Оптимизация памяти
   void optimizeMemory() {
     _logger.info('Starting memory optimization', tag: 'PERFORMANCE');
-    
+
     // Очищаем старый кэш
     _cleanupExpiredCache();
-    
+
     // Очищаем завершенные таймеры
     _debounceTimers.removeWhere((key, timer) => !timer.isActive);
     _throttleTimers.removeWhere((key, timer) => !timer.isActive);
-    
+
     // Принудительная сборка мусора (если доступна)
     if (kDebugMode) {
       // В debug режиме можно принудительно вызвать сборку мусора
@@ -252,19 +259,22 @@ class PerformanceService {
   }) {
     if (maxConcurrentOperations != null) {
       _maxConcurrentOperations = maxConcurrentOperations;
-      _logger.info('Set max concurrent operations to $maxConcurrentOperations', tag: 'PERFORMANCE');
+      _logger.info('Set max concurrent operations to $maxConcurrentOperations',
+          tag: 'PERFORMANCE');
     }
-    
+
     if (cacheExpiration != null) {
       _cacheExpiration = cacheExpiration;
-      _logger.info('Set cache expiration to ${cacheExpiration.inMinutes} minutes', tag: 'PERFORMANCE');
+      _logger.info(
+          'Set cache expiration to ${cacheExpiration.inMinutes} minutes',
+          tag: 'PERFORMANCE');
     }
   }
 
   /// Очистка ресурсов
   void dispose() {
     _logger.info('Disposing performance service', tag: 'PERFORMANCE');
-    
+
     // Отменяем все таймеры
     for (final timer in _debounceTimers.values) {
       timer.cancel();
@@ -272,7 +282,7 @@ class PerformanceService {
     for (final timer in _throttleTimers.values) {
       timer.cancel();
     }
-    
+
     _debounceTimers.clear();
     _throttleTimers.clear();
     _throttleFlags.clear();
@@ -299,29 +309,30 @@ class PerformanceService {
   void _cleanupExpiredCache() {
     final now = DateTime.now();
     final expiredKeys = <String>[];
-    
+
     for (final entry in _cacheTimestamps.entries) {
       if (now.difference(entry.value) > _cacheExpiration) {
         expiredKeys.add(entry.key);
       }
     }
-    
+
     for (final key in expiredKeys) {
       _cache.remove(key);
       _cacheTimestamps.remove(key);
     }
-    
+
     if (expiredKeys.isNotEmpty) {
-      _logger.debug('Cleaned up ${expiredKeys.length} expired cache entries', tag: 'PERFORMANCE');
+      _logger.debug('Cleaned up ${expiredKeys.length} expired cache entries',
+          tag: 'PERFORMANCE');
     }
   }
 
   void _processHeavyOperationsQueue() {
     if (_isProcessingQueue || _heavyOperationsQueue.isEmpty) return;
-    
+
     _isProcessingQueue = true;
     final operation = _heavyOperationsQueue.removeFirst();
-    
+
     operation().then((_) {
       _isProcessingQueue = false;
     }).catchError((e) {
@@ -331,11 +342,12 @@ class PerformanceService {
   }
 
   void _processOperationQueue() {
-    if (_operationQueue.isEmpty || _currentOperations >= _maxConcurrentOperations) return;
-    
+    if (_operationQueue.isEmpty ||
+        _currentOperations >= _maxConcurrentOperations) return;
+
     final operation = _operationQueue.removeFirst();
     _currentOperations++;
-    
+
     operation().then((_) {
       _currentOperations--;
       _processOperationQueue();
@@ -357,7 +369,8 @@ class PerformanceService {
 extension PerformanceFutureExtension<T> on Future<T> {
   /// Выполнить с ограничением количества одновременных операций
   Future<T> withConcurrencyLimit({String? operationName}) {
-    return PerformanceService().executeWithLimit(() => this, operationName: operationName);
+    return PerformanceService()
+        .executeWithLimit(() => this, operationName: operationName);
   }
 
   /// Выполнить в изоляте
@@ -386,5 +399,3 @@ extension PerformanceStringExtension on String {
     return PerformanceService().optimizeString(this, maxLength: maxLength);
   }
 }
-
-

@@ -28,7 +28,8 @@ class FAQWidget extends StatelessWidget {
               Row(
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.blue.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
@@ -76,9 +77,9 @@ class FAQWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Вопрос
               Text(
                 faqItem.question,
@@ -89,9 +90,9 @@ class FAQWidget extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Ответ
               Text(
                 faqItem.answer,
@@ -102,9 +103,9 @@ class FAQWidget extends StatelessWidget {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Теги
               if (faqItem.tags.isNotEmpty) ...[
                 Wrap(
@@ -112,7 +113,8 @@ class FAQWidget extends StatelessWidget {
                   runSpacing: 4,
                   children: faqItem.tags.take(3).map((tag) {
                     return Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: Colors.grey[200],
                         borderRadius: BorderRadius.circular(8),
@@ -129,7 +131,7 @@ class FAQWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
               ],
-              
+
               // Дата обновления
               Text(
                 'Обновлено: ${_formatDate(faqItem.updatedAt)}',
@@ -148,7 +150,7 @@ class FAQWidget extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня';
     } else if (difference.inDays == 1) {
@@ -298,9 +300,9 @@ class FAQGridTile extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Вопрос
               Text(
                 faqItem.question,
@@ -311,9 +313,9 @@ class FAQGridTile extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               const SizedBox(height: 4),
-              
+
               // Ответ
               Text(
                 faqItem.answer,
@@ -324,9 +326,9 @@ class FAQGridTile extends StatelessWidget {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               const Spacer(),
-              
+
               // Категория
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),

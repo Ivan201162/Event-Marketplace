@@ -25,13 +25,19 @@ class AdaptiveContainer extends StatelessWidget {
     final isDesktop = screenWidth > 1200;
 
     // Определяем максимальную ширину контента
-    double contentMaxWidth = maxWidth ?? (isDesktop ? 1200 : isTablet ? 800 : double.infinity);
+    double contentMaxWidth = maxWidth ??
+        (isDesktop
+            ? 1200
+            : isTablet
+                ? 800
+                : double.infinity);
 
     // Определяем отступы
-    EdgeInsets contentPadding = padding ?? EdgeInsets.symmetric(
-      horizontal: isTablet ? 32 : 16,
-      vertical: isTablet ? 24 : 16,
-    );
+    EdgeInsets contentPadding = padding ??
+        EdgeInsets.symmetric(
+          horizontal: isTablet ? 32 : 16,
+          vertical: isTablet ? 24 : 16,
+        );
 
     Widget content = Container(
       padding: contentPadding,
@@ -255,13 +261,14 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: AdaptiveText(
         title,
         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-          fontWeight: FontWeight.bold,
-        ),
+              fontWeight: FontWeight.bold,
+            ),
       ),
       actions: actions,
       leading: leading,
       centerTitle: centerTitle,
-      backgroundColor: backgroundColor ?? Theme.of(context).colorScheme.inversePrimary,
+      backgroundColor:
+          backgroundColor ?? Theme.of(context).colorScheme.inversePrimary,
       foregroundColor: foregroundColor,
       elevation: elevation ?? (isTablet ? 2 : 1),
       systemOverlayStyle: SystemUiOverlayStyle.dark,
@@ -352,8 +359,8 @@ class AdaptiveDialog extends StatelessWidget {
       title: AdaptiveText(
         title,
         style: Theme.of(context).textTheme.titleLarge?.copyWith(
-          fontWeight: FontWeight.bold,
-        ),
+              fontWeight: FontWeight.bold,
+            ),
       ),
       content: dialogContent,
       actions: actions,
@@ -387,7 +394,7 @@ class AdaptiveBottomSheet extends StatelessWidget {
     final isTablet = screenWidth > 600;
 
     Widget content = child;
-    
+
     if (title != null || actions != null) {
       content = Column(
         mainAxisSize: MainAxisSize.min,
@@ -398,8 +405,8 @@ class AdaptiveBottomSheet extends StatelessWidget {
               child: AdaptiveText(
                 title!,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -459,8 +466,8 @@ class AdaptiveLoadingIndicator extends StatelessWidget {
             AdaptiveText(
               message!,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey[600],
-              ),
+                    color: Colors.grey[600],
+                  ),
               textAlign: TextAlign.center,
             ),
           ],
@@ -501,8 +508,8 @@ class AdaptiveErrorMessage extends StatelessWidget {
           AdaptiveText(
             message,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              color: Colors.grey[600],
-            ),
+                  color: Colors.grey[600],
+                ),
             textAlign: TextAlign.center,
           ),
           if (onRetry != null) ...[

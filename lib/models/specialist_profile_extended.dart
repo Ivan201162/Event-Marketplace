@@ -149,7 +149,7 @@ class SpecialistProfileExtended {
 
   factory SpecialistProfileExtended.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return SpecialistProfileExtended(
       id: doc.id,
       userId: data['userId'] as String,
@@ -160,11 +160,12 @@ class SpecialistProfileExtended {
       bio: data['bio'] as String?,
       location: data['location'] as String?,
       categories: (data['categories'] as List?)
-          ?.map((cat) => SpecialistCategory.values.firstWhere(
-                (category) => category.name == cat,
-                orElse: () => SpecialistCategory.photographer,
-              ))
-          .toList() ?? [],
+              ?.map((cat) => SpecialistCategory.values.firstWhere(
+                    (category) => category.name == cat,
+                    orElse: () => SpecialistCategory.photographer,
+                  ))
+              .toList() ??
+          [],
       experienceYears: data['experienceYears'] as int? ?? 0,
       hourlyRate: (data['hourlyRate'] as num?)?.toDouble() ?? 0.0,
       rating: (data['rating'] as num?)?.toDouble() ?? 0.0,
@@ -176,11 +177,13 @@ class SpecialistProfileExtended {
       portfolio: data['portfolio'] as String?,
       socialLinks: Map<String, String>.from(data['socialLinks'] as Map? ?? {}),
       languages: List<String>.from(data['languages'] as List? ?? []),
-      specializations: List<String>.from(data['specializations'] as List? ?? []),
+      specializations:
+          List<String>.from(data['specializations'] as List? ?? []),
       equipment: List<String>.from(data['equipment'] as List? ?? []),
       insurance: data['insurance'] as bool? ?? false,
       licenses: List<String>.from(data['licenses'] as List? ?? []),
-      availability: Map<String, dynamic>.from(data['availability'] as Map? ?? {}),
+      availability:
+          Map<String, dynamic>.from(data['availability'] as Map? ?? {}),
       pricing: Map<String, dynamic>.from(data['pricing'] as Map? ?? {}),
       policies: Map<String, dynamic>.from(data['policies'] as Map? ?? {}),
       gallery: List<String>.from(data['gallery'] as List? ?? []),
@@ -188,24 +191,30 @@ class SpecialistProfileExtended {
       bookings: data['bookings'] as List? ?? [],
       earnings: Map<String, dynamic>.from(data['earnings'] as Map? ?? {}),
       performance: Map<String, dynamic>.from(data['performance'] as Map? ?? {}),
-      verification: Map<String, dynamic>.from(data['verification'] as Map? ?? {}),
+      verification:
+          Map<String, dynamic>.from(data['verification'] as Map? ?? {}),
       badges: data['badges'] as List? ?? [],
       achievements: data['achievements'] as List? ?? [],
       analytics: Map<String, dynamic>.from(data['analytics'] as Map? ?? {}),
       settings: Map<String, dynamic>.from(data['settings'] as Map? ?? {}),
-      notifications: Map<String, dynamic>.from(data['notifications'] as Map? ?? {}),
+      notifications:
+          Map<String, dynamic>.from(data['notifications'] as Map? ?? {}),
       preferences: Map<String, dynamic>.from(data['preferences'] as Map? ?? {}),
       metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
       faqItems: (data['faqItems'] as List?)
-          ?.map((faq) => FAQItem.fromMap(faq as Map<String, dynamic>))
-          .toList() ?? [],
+              ?.map((faq) => FAQItem.fromMap(faq as Map<String, dynamic>))
+              .toList() ??
+          [],
       portfolioVideos: (data['portfolioVideos'] as List?)
-          ?.map((video) => PortfolioVideo.fromMap(video as Map<String, dynamic>))
-          .toList() ?? [],
+              ?.map((video) =>
+                  PortfolioVideo.fromMap(video as Map<String, dynamic>))
+              .toList() ??
+          [],
       certifications: List<String>.from(data['certifications'] as List? ?? []),
       awards: List<String>.from(data['awards'] as List? ?? []),
       testimonials: List<String>.from(data['testimonials'] as List? ?? []),
-      additionalInfo: Map<String, dynamic>.from(data['additionalInfo'] as Map? ?? {}),
+      additionalInfo:
+          Map<String, dynamic>.from(data['additionalInfo'] as Map? ?? {}),
       lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
     );
   }

@@ -83,7 +83,7 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
           padding: const EdgeInsets.all(16),
           child: BadgeStatsWidget(userId: userId),
         ),
-        
+
         // Последние бейджи
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -93,8 +93,8 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
               Text(
                 'Последние бейджи',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               const SizedBox(height: 16),
               BadgeCollectionWidget(
@@ -105,7 +105,7 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
             ],
           ),
         ),
-        
+
         // Все бейджи
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -115,8 +115,8 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
               Text(
                 'Все бейджи',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               const SizedBox(height: 16),
               BadgeCollectionWidget(
@@ -139,7 +139,7 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
           padding: const EdgeInsets.all(16),
           child: _buildCategoryInfo(category),
         ),
-        
+
         // Бейджи категории
         Padding(
           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -168,7 +168,7 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
   /// Информация о категории бейджей
   Widget _buildCategoryInfo(models.BadgeCategory category) {
     final info = _getCategoryInfo(category);
-    
+
     return custom.AnimatedCard(
       child: Column(
         children: [
@@ -181,16 +181,17 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
           Text(
             info.title,
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 8),
           Text(
             info.description,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-            ),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -204,13 +205,15 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
       case models.BadgeCategory.specialist:
         return CategoryInfo(
           title: 'Бейджи специалиста',
-          description: 'Получайте бейджи за качественную работу и достижения в профессии',
+          description:
+              'Получайте бейджи за качественную работу и достижения в профессии',
           icon: Icons.person,
         );
       case models.BadgeCategory.customer:
         return CategoryInfo(
           title: 'Бейджи заказчика',
-          description: 'Зарабатывайте бейджи за активность и организацию мероприятий',
+          description:
+              'Зарабатывайте бейджи за активность и организацию мероприятий',
           icon: Icons.event,
         );
       case models.BadgeCategory.general:
@@ -260,7 +263,7 @@ class BadgeDetailScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: BadgeInfoWidget(badge: badge),
           ),
-          
+
           // Дополнительная информация
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -279,8 +282,8 @@ class BadgeDetailScreen extends StatelessWidget {
           Text(
             'Дополнительная информация',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 16),
           _buildInfoRow(
@@ -306,7 +309,8 @@ class BadgeDetailScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoRow(BuildContext context, String label, String value, IconData icon) {
+  Widget _buildInfoRow(
+      BuildContext context, String label, String value, IconData icon) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
@@ -324,14 +328,17 @@ class BadgeDetailScreen extends StatelessWidget {
                 Text(
                   label,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                  ),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.7),
+                      ),
                 ),
                 Text(
                   value,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+                        fontWeight: FontWeight.w500,
+                      ),
                 ),
               ],
             ),

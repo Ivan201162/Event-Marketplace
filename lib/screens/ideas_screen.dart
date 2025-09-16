@@ -21,7 +21,7 @@ class IdeasScreen extends ConsumerStatefulWidget {
 
 class _IdeasScreenState extends ConsumerState<IdeasScreen> {
   final IdeaService _ideaService = IdeaService();
-  
+
   IdeaFilter _filter = const IdeaFilter();
   String _searchQuery = '';
   String _selectedCategory = '';
@@ -57,10 +57,10 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
         children: [
           // Категории
           _buildCategorySelector(),
-          
+
           // Статистика
           _buildStatsSection(),
-          
+
           // Список идей
           Expanded(
             child: _buildIdeasList(),
@@ -85,7 +85,7 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
         itemBuilder: (context, index) {
           final category = _categories[index];
           final isSelected = _selectedCategory == category;
-          
+
           return Container(
             margin: const EdgeInsets.only(right: 8),
             child: FilterChip(
@@ -167,7 +167,8 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon, Color color) {
+  Widget _buildStatItem(
+      String label, String value, IconData icon, Color color) {
     return Column(
       children: [
         Icon(icon, color: color, size: 20),
@@ -272,23 +273,25 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
 
   List<Idea> _filterIdeas(List<Idea> ideas) {
     if (_searchQuery.isEmpty) return ideas;
-    
+
     final query = _searchQuery.toLowerCase();
     return ideas.where((idea) {
       return idea.title.toLowerCase().contains(query) ||
-             idea.description.toLowerCase().contains(query) ||
-             idea.tags.any((tag) => tag.toLowerCase().contains(query));
+          idea.description.toLowerCase().contains(query) ||
+          idea.tags.any((tag) => tag.toLowerCase().contains(query));
     }).toList();
   }
 
   void _createIdea() {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       MaterialPageRoute(
         builder: (context) => CreateIdeaScreen(
           userId: widget.userId ?? 'demo_user_id',
         ),
       ),
-    ).then((result) {
+    )
+        .then((result) {
       if (result == true) {
         setState(() {});
       }
@@ -296,14 +299,16 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen> {
   }
 
   void _showIdeaDetail(Idea idea) {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       MaterialPageRoute(
         builder: (context) => IdeaDetailScreen(
           idea: idea,
           userId: widget.userId ?? 'demo_user_id',
         ),
       ),
-    ).then((result) {
+    )
+        .then((result) {
       if (result == true) {
         setState(() {});
       }
@@ -424,9 +429,9 @@ class _FilterDialogState extends State<_FilterDialog> {
               });
             },
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Сортировка
           DropdownButtonFormField<IdeaSortBy>(
             value: _filter.sortBy,
@@ -446,9 +451,9 @@ class _FilterDialogState extends State<_FilterDialog> {
               });
             },
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Порядок сортировки
           SwitchListTile(
             title: const Text('По возрастанию'),

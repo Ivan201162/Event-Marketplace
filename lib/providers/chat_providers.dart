@@ -16,19 +16,24 @@ final notificationServiceProvider = Provider<NotificationService>((ref) {
 });
 
 /// Провайдер чатов для пользователя
-final userChatsProvider = StreamProvider.family<List<Chat>, UserChatsParams>((ref, params) {
+final userChatsProvider =
+    StreamProvider.family<List<Chat>, UserChatsParams>((ref, params) {
   final chatService = ref.watch(chatServiceProvider);
-  return chatService.getChatsForUserStream(params.userId, isSpecialist: params.isSpecialist);
+  return chatService.getChatsForUserStream(params.userId,
+      isSpecialist: params.isSpecialist);
 });
 
 /// Провайдер сообщений чата
-final chatMessagesProvider = StreamProvider.family<List<ChatMessage>, String>((ref, chatId) {
+final chatMessagesProvider =
+    StreamProvider.family<List<ChatMessage>, String>((ref, chatId) {
   final chatService = ref.watch(chatServiceProvider);
   return chatService.getChatMessagesStream(chatId);
 });
 
 /// Провайдер уведомлений пользователя
-final userNotificationsProvider = StreamProvider.family<List<AppNotification>, UserNotificationsParams>((ref, params) {
+final userNotificationsProvider =
+    StreamProvider.family<List<AppNotification>, UserNotificationsParams>(
+        (ref, params) {
   final notificationService = ref.watch(notificationServiceProvider);
   return notificationService.getUserNotificationsStream(
     params.userId,
@@ -38,18 +43,21 @@ final userNotificationsProvider = StreamProvider.family<List<AppNotification>, U
 });
 
 /// Провайдер статистики уведомлений
-final notificationStatisticsProvider = FutureProvider.family<NotificationStatistics, String>((ref, userId) {
+final notificationStatisticsProvider =
+    FutureProvider.family<NotificationStatistics, String>((ref, userId) {
   final notificationService = ref.watch(notificationServiceProvider);
   return notificationService.getNotificationStatistics(userId);
 });
 
 /// Провайдер для управления состоянием чатов
-final chatStateProvider = StateNotifierProvider<ChatStateNotifier, ChatState>((ref) {
+final chatStateProvider =
+    StateNotifierProvider<ChatStateNotifier, ChatState>((ref) {
   return ChatStateNotifier(ref.read(chatServiceProvider));
 });
 
 /// Провайдер для управления состоянием уведомлений
-final notificationStateProvider = StateNotifierProvider<NotificationStateNotifier, NotificationState>((ref) {
+final notificationStateProvider =
+    StateNotifierProvider<NotificationStateNotifier, NotificationState>((ref) {
   return NotificationStateNotifier(ref.read(notificationServiceProvider));
 });
 
@@ -201,7 +209,8 @@ class ChatStateNotifier extends StateNotifier<ChatState> {
 class NotificationStateNotifier extends StateNotifier<NotificationState> {
   final NotificationService _notificationService;
 
-  NotificationStateNotifier(this._notificationService) : super(const NotificationState());
+  NotificationStateNotifier(this._notificationService)
+      : super(const NotificationState());
 
   /// Отметить уведомление как прочитанное
   Future<void> markAsRead(String notificationId) async {
@@ -307,7 +316,8 @@ class UserNotificationsParams {
 }
 
 /// Провайдер для управления формой сообщения
-final messageFormProvider = StateNotifierProvider<MessageFormNotifier, MessageFormState>((ref) {
+final messageFormProvider =
+    StateNotifierProvider<MessageFormNotifier, MessageFormState>((ref) {
   return MessageFormNotifier();
 });
 

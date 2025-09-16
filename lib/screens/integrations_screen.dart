@@ -15,7 +15,7 @@ class IntegrationsScreen extends ConsumerStatefulWidget {
 
 class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
   final IntegrationService _integrationService = IntegrationService();
-  
+
   IntegrationType? _selectedType;
   String _searchQuery = '';
 
@@ -39,10 +39,10 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
         children: [
           // Быстрые действия
           _buildQuickActions(),
-          
+
           // Типы интеграций
           _buildTypeSelector(),
-          
+
           // Список интеграций
           Expanded(
             child: _buildIntegrationsList(),
@@ -143,10 +143,10 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
               ),
             );
           }
-          
+
           final type = IntegrationType.values[index - 1];
           final isSelected = _selectedType == type;
-          
+
           return Container(
             margin: const EdgeInsets.only(right: 8),
             child: FilterChip(
@@ -239,7 +239,9 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
 
     // Фильтр по типу
     if (_selectedType != null) {
-      filtered = filtered.where((integration) => integration.type == _selectedType).toList();
+      filtered = filtered
+          .where((integration) => integration.type == _selectedType)
+          .toList();
     }
 
     // Фильтр по поисковому запросу
@@ -247,7 +249,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
       final query = _searchQuery.toLowerCase();
       filtered = filtered.where((integration) {
         return integration.name.toLowerCase().contains(query) ||
-               integration.description.toLowerCase().contains(query);
+            integration.description.toLowerCase().contains(query);
       }).toList();
     }
 
@@ -400,7 +402,7 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return const CircularProgressIndicator();
             }
-            
+
             final isConnected = snapshot.data ?? false;
             return Column(
               mainAxisSize: MainAxisSize.min,
@@ -412,7 +414,9 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
                 ),
                 const SizedBox(height: 16),
                 Text(
-                  isConnected ? 'Подключено к интернету' : 'Нет подключения к интернету',
+                  isConnected
+                      ? 'Подключено к интернету'
+                      : 'Нет подключения к интернету',
                   style: TextStyle(
                     color: isConnected ? Colors.green : Colors.red,
                     fontWeight: FontWeight.bold,

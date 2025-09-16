@@ -9,12 +9,14 @@ class LocationSettingsScreen extends ConsumerStatefulWidget {
   const LocationSettingsScreen({super.key});
 
   @override
-  ConsumerState<LocationSettingsScreen> createState() => _LocationSettingsScreenState();
+  ConsumerState<LocationSettingsScreen> createState() =>
+      _LocationSettingsScreenState();
 }
 
-class _LocationSettingsScreenState extends ConsumerState<LocationSettingsScreen> {
+class _LocationSettingsScreenState
+    extends ConsumerState<LocationSettingsScreen> {
   final IntegrationService _integrationService = IntegrationService();
-  
+
   bool _locationEnabled = false;
   bool _autoLocationEnabled = false;
   double _locationAccuracy = 100.0; // в метрах
@@ -32,19 +34,19 @@ class _LocationSettingsScreenState extends ConsumerState<LocationSettingsScreen>
           children: [
             // Основные настройки
             _buildMainSettings(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Точность
             _buildAccuracySettings(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Текущее местоположение
             _buildCurrentLocation(),
-            
+
             const SizedBox(height: 24),
-            
+
             // История местоположений
             _buildLocationHistory(),
           ],
@@ -68,11 +70,12 @@ class _LocationSettingsScreenState extends ConsumerState<LocationSettingsScreen>
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Включить геолокацию
             SwitchListTile(
               title: const Text('Включить геолокацию'),
-              subtitle: const Text('Разрешить приложению использовать ваше местоположение'),
+              subtitle: const Text(
+                  'Разрешить приложению использовать ваше местоположение'),
               value: _locationEnabled,
               onChanged: (value) {
                 setState(() {
@@ -83,19 +86,22 @@ class _LocationSettingsScreenState extends ConsumerState<LocationSettingsScreen>
                 }
               },
             ),
-            
+
             const Divider(),
-            
+
             // Автоматическое определение местоположения
             SwitchListTile(
               title: const Text('Автоматическое определение'),
-              subtitle: const Text('Автоматически определять местоположение при создании событий'),
+              subtitle: const Text(
+                  'Автоматически определять местоположение при создании событий'),
               value: _autoLocationEnabled,
-              onChanged: _locationEnabled ? (value) {
-                setState(() {
-                  _autoLocationEnabled = value;
-                });
-              } : null,
+              onChanged: _locationEnabled
+                  ? (value) {
+                      setState(() {
+                        _autoLocationEnabled = value;
+                      });
+                    }
+                  : null,
             ),
           ],
         ),
@@ -118,28 +124,26 @@ class _LocationSettingsScreenState extends ConsumerState<LocationSettingsScreen>
               ),
             ),
             const SizedBox(height: 16),
-            
             Text(
               'Точность: ${_locationAccuracy.toInt()} метров',
               style: const TextStyle(fontSize: 16),
             ),
             const SizedBox(height: 8),
-            
             Slider(
               value: _locationAccuracy,
               min: 10.0,
               max: 1000.0,
               divisions: 99,
               label: '${_locationAccuracy.toInt()} м',
-              onChanged: _locationEnabled ? (value) {
-                setState(() {
-                  _locationAccuracy = value;
-                });
-              } : null,
+              onChanged: _locationEnabled
+                  ? (value) {
+                      setState(() {
+                        _locationAccuracy = value;
+                      });
+                    }
+                  : null,
             ),
-            
             const SizedBox(height: 8),
-            
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -182,11 +186,10 @@ class _LocationSettingsScreenState extends ConsumerState<LocationSettingsScreen>
               ),
             ),
             const SizedBox(height: 16),
-            
             Consumer(
               builder: (context, ref, child) {
                 final locationAsync = ref.watch(currentLocationProvider);
-                
+
                 return locationAsync.when(
                   data: (location) {
                     if (location == null) {
@@ -214,7 +217,7 @@ class _LocationSettingsScreenState extends ConsumerState<LocationSettingsScreen>
                         ],
                       );
                     }
-                    
+
                     return Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
@@ -236,16 +239,14 @@ class _LocationSettingsScreenState extends ConsumerState<LocationSettingsScreen>
                           ],
                         ),
                         const SizedBox(height: 16),
-                        
                         _buildLocationInfo(location),
-                        
                         const SizedBox(height: 16),
-                        
                         Row(
                           children: [
                             Expanded(
                               child: OutlinedButton.icon(
-                                onPressed: () => _getAddressFromLocation(location),
+                                onPressed: () =>
+                                    _getAddressFromLocation(location),
                                 icon: const Icon(Icons.map),
                                 label: const Text('Показать на карте'),
                               ),
@@ -369,7 +370,7 @@ class _LocationSettingsScreenState extends ConsumerState<LocationSettingsScreen>
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // TODO: Реализовать отображение истории местоположений
             const Center(
               child: Text(
@@ -449,7 +450,7 @@ class _LocationSettingsScreenState extends ConsumerState<LocationSettingsScreen>
         location.latitude,
         location.longitude,
       );
-      
+
       if (address != null) {
         showDialog(
           context: context,
@@ -459,14 +460,10 @@ class _LocationSettingsScreenState extends ConsumerState<LocationSettingsScreen>
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (address.street != null)
-                  Text('Улица: ${address.street}'),
-                if (address.city != null)
-                  Text('Город: ${address.city}'),
-                if (address.state != null)
-                  Text('Регион: ${address.state}'),
-                if (address.country != null)
-                  Text('Страна: ${address.country}'),
+                if (address.street != null) Text('Улица: ${address.street}'),
+                if (address.city != null) Text('Город: ${address.city}'),
+                if (address.state != null) Text('Регион: ${address.state}'),
+                if (address.country != null) Text('Страна: ${address.country}'),
                 if (address.postalCode != null)
                   Text('Почтовый индекс: ${address.postalCode}'),
                 if (address.formattedAddress != null) ...[
@@ -510,7 +507,8 @@ class _LocationSettingsScreenState extends ConsumerState<LocationSettingsScreen>
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Очистить историю'),
-        content: const Text('Вы уверены, что хотите очистить историю местоположений?'),
+        content: const Text(
+            'Вы уверены, что хотите очистить историю местоположений?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

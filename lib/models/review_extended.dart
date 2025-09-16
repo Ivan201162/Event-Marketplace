@@ -46,7 +46,7 @@ class ReviewExtended {
 
   factory ReviewExtended.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return ReviewExtended(
       id: doc.id,
       specialistId: data['specialistId'] ?? '',
@@ -57,11 +57,13 @@ class ReviewExtended {
       rating: data['rating'] ?? 0,
       comment: data['comment'] ?? '',
       media: (data['media'] as List<dynamic>?)
-          ?.map((e) => ReviewMedia.fromMap(e))
-          .toList() ?? [],
+              ?.map((e) => ReviewMedia.fromMap(e))
+              .toList() ??
+          [],
       likes: (data['likes'] as List<dynamic>?)
-          ?.map((e) => ReviewLike.fromMap(e))
-          .toList() ?? [],
+              ?.map((e) => ReviewLike.fromMap(e))
+              .toList() ??
+          [],
       tags: List<String>.from(data['tags'] ?? []),
       stats: ReviewStats.fromMap(data['stats'] ?? {}),
       isVerified: data['isVerified'] ?? false,
@@ -154,10 +156,12 @@ class ReviewExtended {
   int get mediaCount => media.length;
 
   /// Получить фото
-  List<ReviewMedia> get photos => media.where((m) => m.type == MediaType.photo).toList();
+  List<ReviewMedia> get photos =>
+      media.where((m) => m.type == MediaType.photo).toList();
 
   /// Получить видео
-  List<ReviewMedia> get videos => media.where((m) => m.type == MediaType.video).toList();
+  List<ReviewMedia> get videos =>
+      media.where((m) => m.type == MediaType.video).toList();
 }
 
 /// Медиа файл в отзыве
@@ -193,7 +197,9 @@ class ReviewMedia {
       ),
       fileName: map['fileName'] ?? '',
       fileSize: map['fileSize'] ?? 0,
-      duration: map['duration'] != null ? Duration(milliseconds: map['duration']) : null,
+      duration: map['duration'] != null
+          ? Duration(milliseconds: map['duration'])
+          : null,
       metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
     );
   }

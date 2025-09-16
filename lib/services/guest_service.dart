@@ -33,11 +33,12 @@ class GuestService {
   }) async {
     try {
       final eventRef = _firestore.collection('guest_events').doc();
-      
+
       // Генерируем QR код и ссылку для приглашения
       final qrCode = await _generateQRCode(eventRef.id);
-      final invitationLink = 'https://eventmarketplace.app/guest/${eventRef.id}';
-      
+      final invitationLink =
+          'https://eventmarketplace.app/guest/${eventRef.id}';
+
       final event = GuestEvent(
         id: eventRef.id,
         title: title,
@@ -70,7 +71,8 @@ class GuestService {
   /// Получить событие для гостей
   Future<GuestEvent?> getGuestEvent(String eventId) async {
     try {
-      final doc = await _firestore.collection('guest_events').doc(eventId).get();
+      final doc =
+          await _firestore.collection('guest_events').doc(eventId).get();
       if (doc.exists) {
         return GuestEvent.fromDocument(doc);
       }
@@ -89,9 +91,7 @@ class GuestService {
         .orderBy('startTime', descending: false)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => GuestEvent.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map((doc) => GuestEvent.fromDocument(doc)).toList();
     });
   }
 
@@ -104,9 +104,7 @@ class GuestService {
         .orderBy('startTime', descending: false)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => GuestEvent.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map((doc) => GuestEvent.fromDocument(doc)).toList();
     });
   }
 
@@ -137,7 +135,7 @@ class GuestService {
       }
 
       final guestRef = _firestore.collection('guests').doc();
-      
+
       // Генерируем QR код для гостя
       final qrCode = await _generateGuestQRCode(guestRef.id);
       final invitationCode = _generateInvitationCode();
@@ -172,52 +170,61 @@ class GuestService {
 
   /// Получить гостей события
   Stream<List<Guest>> getEventGuests(String eventId, GuestFilter filter) {
-    Query query = _firestore
-        .collection('guests')
-        .where('eventId', isEqualTo: eventId);
+    Query query =
+        _firestore.collection('guests').where('eventId', isEqualTo: eventId);
 
     // Применяем фильтры
     if (filter.statuses != null && filter.statuses!.isNotEmpty) {
-      query = query.where('status', whereIn: filter.statuses!.map((s) => s.name).toList());
+      query = query.where('status',
+          whereIn: filter.statuses!.map((s) => s.name).toList());
     }
 
     if (filter.startDate != null) {
-      query = query.where('registeredAt', isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!));
+      query = query.where('registeredAt',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!));
     }
 
     if (filter.endDate != null) {
-      query = query.where('registeredAt', isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
+      query = query.where('registeredAt',
+          isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
     }
 
     // Сортировка по времени регистрации
     query = query.orderBy('registeredAt', descending: true);
 
     return query.snapshots().map((snapshot) {
-      var guests = snapshot.docs
-          .map((doc) => Guest.fromDocument(doc))
-          .toList();
+      var guests = snapshot.docs.map((doc) => Guest.fromDocument(doc)).toList();
 
       // Применяем фильтры, которые нельзя применить в Firestore
       if (filter.searchQuery != null && filter.searchQuery!.isNotEmpty) {
         final query = filter.searchQuery!.toLowerCase();
-        guests = guests.where((guest) => 
-            guest.guestName.toLowerCase().contains(query) ||
-            guest.guestEmail.toLowerCase().contains(query)).toList();
+        guests = guests
+            .where((guest) =>
+                guest.guestName.toLowerCase().contains(query) ||
+                guest.guestEmail.toLowerCase().contains(query))
+            .toList();
       }
 
       if (filter.hasGreetings != null) {
-        guests = guests.where((guest) => 
-            filter.hasGreetings! ? guest.greetings.isNotEmpty : guest.greetings.isEmpty).toList();
+        guests = guests
+            .where((guest) => filter.hasGreetings!
+                ? guest.greetings.isNotEmpty
+                : guest.greetings.isEmpty)
+            .toList();
       }
 
       if (filter.isCheckedIn != null) {
-        guests = guests.where((guest) => 
-            filter.isCheckedIn! ? guest.isCheckedIn : !guest.isCheckedIn).toList();
+        guests = guests
+            .where((guest) =>
+                filter.isCheckedIn! ? guest.isCheckedIn : !guest.isCheckedIn)
+            .toList();
       }
 
       if (filter.isCheckedOut != null) {
-        guests = guests.where((guest) => 
-            filter.isCheckedOut! ? guest.isCheckedOut : !guest.isCheckedOut).toList();
+        guests = guests
+            .where((guest) =>
+                filter.isCheckedOut! ? guest.isCheckedOut : !guest.isCheckedOut)
+            .toList();
       }
 
       return guests;
@@ -329,7 +336,7 @@ class GuestService {
   }) async {
     try {
       final greetingRef = _firestore.collection('guest_greetings').doc();
-      
+
       final greeting = GuestGreeting(
         id: greetingRef.id,
         guestId: guestId,
@@ -374,9 +381,10 @@ class GuestService {
   /// Загрузить фото для поздравления
   Future<String?> uploadGreetingPhoto(XFile imageFile) async {
     try {
-      final fileName = 'greeting_photo_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final fileName =
+          'greeting_photo_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final ref = _storage.ref().child('guest_greetings/$fileName');
-      
+
       final uploadTask = ref.putFile(File(imageFile.path));
       final snapshot = await uploadTask;
       final downloadUrl = await snapshot.ref.getDownloadURL();
@@ -391,9 +399,10 @@ class GuestService {
   /// Загрузить видео для поздравления
   Future<String?> uploadGreetingVideo(XFile videoFile) async {
     try {
-      final fileName = 'greeting_video_${DateTime.now().millisecondsSinceEpoch}.mp4';
+      final fileName =
+          'greeting_video_${DateTime.now().millisecondsSinceEpoch}.mp4';
       final ref = _storage.ref().child('guest_greetings/$fileName');
-      
+
       final uploadTask = ref.putFile(File(videoFile.path));
       final snapshot = await uploadTask;
       final downloadUrl = await snapshot.ref.getDownloadURL();
@@ -487,9 +496,8 @@ class GuestService {
           .where('eventId', isEqualTo: eventId)
           .get();
 
-      final guests = snapshot.docs
-          .map((doc) => Guest.fromDocument(doc))
-          .toList();
+      final guests =
+          snapshot.docs.map((doc) => Guest.fromDocument(doc)).toList();
 
       return _calculateGuestStats(guests);
     } catch (e) {
@@ -527,28 +535,37 @@ class GuestService {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     final random = DateTime.now().millisecondsSinceEpoch;
     final code = StringBuffer();
-    
+
     for (int i = 0; i < 6; i++) {
       code.write(chars[random % chars.length]);
     }
-    
+
     return code.toString();
   }
 
   /// Подсчитать статистику гостей
   GuestStats _calculateGuestStats(List<Guest> guests) {
     final totalGuests = guests.length;
-    final invitedGuests = guests.where((g) => g.status == GuestStatus.invited).length;
-    final registeredGuests = guests.where((g) => g.status == GuestStatus.registered).length;
-    final confirmedGuests = guests.where((g) => g.status == GuestStatus.confirmed).length;
-    final checkedInGuests = guests.where((g) => g.status == GuestStatus.checkedIn).length;
-    final checkedOutGuests = guests.where((g) => g.status == GuestStatus.checkedOut).length;
-    final cancelledGuests = guests.where((g) => g.status == GuestStatus.cancelled).length;
-    
-    final totalGreetings = guests.fold<int>(0, (sum, guest) => sum + guest.greetingsCount);
-    
-    final attendanceRate = totalGuests > 0 ? checkedInGuests / totalGuests : 0.0;
-    final confirmationRate = totalGuests > 0 ? confirmedGuests / totalGuests : 0.0;
+    final invitedGuests =
+        guests.where((g) => g.status == GuestStatus.invited).length;
+    final registeredGuests =
+        guests.where((g) => g.status == GuestStatus.registered).length;
+    final confirmedGuests =
+        guests.where((g) => g.status == GuestStatus.confirmed).length;
+    final checkedInGuests =
+        guests.where((g) => g.status == GuestStatus.checkedIn).length;
+    final checkedOutGuests =
+        guests.where((g) => g.status == GuestStatus.checkedOut).length;
+    final cancelledGuests =
+        guests.where((g) => g.status == GuestStatus.cancelled).length;
+
+    final totalGreetings =
+        guests.fold<int>(0, (sum, guest) => sum + guest.greetingsCount);
+
+    final attendanceRate =
+        totalGuests > 0 ? checkedInGuests / totalGuests : 0.0;
+    final confirmationRate =
+        totalGuests > 0 ? confirmedGuests / totalGuests : 0.0;
 
     return GuestStats(
       totalGuests: totalGuests,

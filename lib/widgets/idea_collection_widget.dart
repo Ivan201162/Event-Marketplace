@@ -42,7 +42,8 @@ class IdeaCollectionWidget extends StatelessWidget {
                   ),
                   if (collection.isPublic)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
                       decoration: BoxDecoration(
                         color: Colors.green.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
@@ -72,9 +73,9 @@ class IdeaCollectionWidget extends StatelessWidget {
                     ),
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Описание
               if (collection.description.isNotEmpty) ...[
                 Text(
@@ -88,7 +89,7 @@ class IdeaCollectionWidget extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
               ],
-              
+
               // Статистика
               Row(
                 children: [
@@ -115,9 +116,9 @@ class IdeaCollectionWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Действия
               Row(
                 children: [
@@ -154,7 +155,7 @@ class IdeaCollectionWidget extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня';
     } else if (difference.inDays == 1) {
@@ -295,7 +296,7 @@ class IdeaCollectionListTile extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня';
     } else if (difference.inDays == 1) {
@@ -359,9 +360,9 @@ class IdeaCollectionGridTile extends StatelessWidget {
                     ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Название
               Text(
                 collection.name,
@@ -372,9 +373,9 @@ class IdeaCollectionGridTile extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Описание
               if (collection.description.isNotEmpty) ...[
                 Text(
@@ -388,9 +389,9 @@ class IdeaCollectionGridTile extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
               ],
-              
+
               const Spacer(),
-              
+
               // Статистика и действия
               Row(
                 children: [
@@ -441,7 +442,8 @@ class IdeaCollectionGridTile extends StatelessWidget {
                         value: 'delete',
                         child: ListTile(
                           leading: Icon(Icons.delete, color: Colors.red),
-                          title: Text('Удалить', style: TextStyle(color: Colors.red)),
+                          title: Text('Удалить',
+                              style: TextStyle(color: Colors.red)),
                         ),
                       ),
                     ],

@@ -98,8 +98,8 @@ class DashboardScreen extends StatelessWidget {
                   Text(
                     'Добро пожаловать в Event Marketplace!',
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                   const SizedBox(height: 12),
                   Text(
@@ -114,8 +114,8 @@ class DashboardScreen extends StatelessWidget {
           Text(
             'Популярные категории',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 16),
           GridView.count(
@@ -271,7 +271,8 @@ class _SearchScreenState extends State<SearchScreen> {
                         _selectedCategory = category;
                       });
                     },
-                    selectedColor: Theme.of(context).primaryColor.withOpacity(0.2),
+                    selectedColor:
+                        Theme.of(context).primaryColor.withOpacity(0.2),
                     checkmarkColor: Theme.of(context).primaryColor,
                   ),
                 );
@@ -294,7 +295,8 @@ class _SearchScreenState extends State<SearchScreen> {
                       ),
                     ),
                     title: Text('Специалист ${index + 1}'),
-                    subtitle: Text('Категория: ${_categories[index % _categories.length]}'),
+                    subtitle: Text(
+                        'Категория: ${_categories[index % _categories.length]}'),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -338,8 +340,8 @@ class BookingsScreen extends StatelessWidget {
           Text(
             'Мои бронирования',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 20),
           Expanded(
@@ -347,8 +349,9 @@ class BookingsScreen extends StatelessWidget {
               itemCount: 5,
               itemBuilder: (context, index) {
                 final status = index % 2 == 0 ? 'Подтверждено' : 'Ожидает';
-                final statusColor = index % 2 == 0 ? Colors.green : Colors.orange;
-                
+                final statusColor =
+                    index % 2 == 0 ? Colors.green : Colors.orange;
+
                 return Card(
                   margin: const EdgeInsets.only(bottom: 16),
                   child: Padding(
@@ -387,7 +390,8 @@ class BookingsScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 8),
                         Text('Специалист: Фотограф ${index + 1}'),
-                        Text('Дата: ${DateTime.now().add(Duration(days: index + 1)).toString().split(' ')[0]}'),
+                        Text(
+                            'Дата: ${DateTime.now().add(Duration(days: index + 1)).toString().split(' ')[0]}'),
                         Text('Время: ${9 + index}:00 - ${12 + index}:00'),
                         const SizedBox(height: 12),
                         Row(
@@ -396,7 +400,8 @@ class BookingsScreen extends StatelessWidget {
                             TextButton(
                               onPressed: () {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Детали бронирования')),
+                                  const SnackBar(
+                                      content: Text('Детали бронирования')),
                                 );
                               },
                               child: const Text('Подробнее'),
@@ -405,7 +410,8 @@ class BookingsScreen extends StatelessWidget {
                             ElevatedButton(
                               onPressed: () {
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Действие выполнено')),
+                                  const SnackBar(
+                                      content: Text('Действие выполнено')),
                                 );
                               },
                               child: const Text('Действие'),
@@ -443,15 +449,15 @@ class ProfileScreen extends StatelessWidget {
           Text(
             'Пользователь',
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 8),
           Text(
             'user@example.com',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: Colors.grey[600],
-            ),
+                  color: Colors.grey[600],
+                ),
           ),
           const SizedBox(height: 30),
           Expanded(

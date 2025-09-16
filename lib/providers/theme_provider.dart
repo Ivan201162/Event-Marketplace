@@ -74,7 +74,7 @@ final lightThemeProvider = Provider<ThemeData>((ref) {
 /// Создаёт тему данных с использованием FlexColorScheme
 ThemeData _getThemeData(ThemeMode themeMode) {
   final isDark = themeMode == ThemeMode.dark;
-  
+
   return FlexThemeData.light(
     scheme: FlexScheme.material,
     surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
@@ -115,19 +115,19 @@ ThemeData _getThemeData(ThemeMode themeMode) {
 extension ThemeExtension on BuildContext {
   /// Получает текущую тему
   ThemeData get theme => Theme.of(this);
-  
+
   /// Получает цветовую схему
   ColorScheme get colorScheme => theme.colorScheme;
-  
+
   /// Проверяет, используется ли тёмная тема
   bool get isDarkMode => theme.brightness == Brightness.dark;
-  
+
   /// Получает цвет акцента
   Color get accentColor => colorScheme.primary;
-  
+
   /// Получает цвет поверхности
   Color get surfaceColor => colorScheme.surface;
-  
+
   /// Получает цвет фона
   Color get backgroundColor => colorScheme.surface;
 }

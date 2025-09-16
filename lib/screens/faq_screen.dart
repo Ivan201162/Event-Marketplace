@@ -33,7 +33,7 @@ class _FAQScreenState extends ConsumerState<FAQScreen> {
         children: [
           // Категории
           _buildCategorySelector(),
-          
+
           // Список FAQ
           Expanded(
             child: _buildFAQList(),
@@ -67,10 +67,10 @@ class _FAQScreenState extends ConsumerState<FAQScreen> {
               ),
             );
           }
-          
+
           final category = SupportCategory.values[index - 1];
           final isSelected = _selectedCategory == category;
-          
+
           return Container(
             margin: const EdgeInsets.only(right: 8),
             child: FilterChip(
@@ -160,12 +160,12 @@ class _FAQScreenState extends ConsumerState<FAQScreen> {
 
   List<FAQItem> _filterFAQItems(List<FAQItem> items) {
     if (_searchQuery.isEmpty) return items;
-    
+
     final query = _searchQuery.toLowerCase();
     return items.where((item) {
       return item.question.toLowerCase().contains(query) ||
-             item.answer.toLowerCase().contains(query) ||
-             item.tags.any((tag) => tag.toLowerCase().contains(query));
+          item.answer.toLowerCase().contains(query) ||
+          item.tags.any((tag) => tag.toLowerCase().contains(query));
     }).toList();
   }
 
@@ -294,9 +294,9 @@ class FAQDetailScreen extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Вопрос
             Text(
               faqItem.question,
@@ -305,9 +305,9 @@ class FAQDetailScreen extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Ответ
             Text(
               faqItem.answer,
@@ -316,9 +316,9 @@ class FAQDetailScreen extends StatelessWidget {
                 height: 1.6,
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Теги
             if (faqItem.tags.isNotEmpty) ...[
               const Text(
@@ -334,7 +334,8 @@ class FAQDetailScreen extends StatelessWidget {
                 runSpacing: 8,
                 children: faqItem.tags.map((tag) {
                   return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
                       borderRadius: BorderRadius.circular(12),
@@ -351,7 +352,7 @@ class FAQDetailScreen extends StatelessWidget {
               ),
               const SizedBox(height: 24),
             ],
-            
+
             // Статистика
             Container(
               padding: const EdgeInsets.all(16),
@@ -386,9 +387,9 @@ class FAQDetailScreen extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Действия
             Row(
               children: [

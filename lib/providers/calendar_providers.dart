@@ -8,25 +8,30 @@ final calendarServiceProvider = Provider<CalendarService>((ref) {
 });
 
 /// Провайдер расписания специалиста
-final specialistScheduleProvider = StreamProvider.family<SpecialistSchedule?, String>((ref, specialistId) {
+final specialistScheduleProvider =
+    StreamProvider.family<SpecialistSchedule?, String>((ref, specialistId) {
   final calendarService = ref.watch(calendarServiceProvider);
   return calendarService.getSpecialistScheduleStream(specialistId);
 });
 
 /// Провайдер доступности даты
-final dateAvailabilityProvider = FutureProvider.family<bool, DateAvailabilityParams>((ref, params) {
+final dateAvailabilityProvider =
+    FutureProvider.family<bool, DateAvailabilityParams>((ref, params) {
   final calendarService = ref.watch(calendarServiceProvider);
   return calendarService.isDateAvailable(params.specialistId, params.date);
 });
 
 /// Провайдер доступности времени
-final dateTimeAvailabilityProvider = FutureProvider.family<bool, DateTimeAvailabilityParams>((ref, params) {
+final dateTimeAvailabilityProvider =
+    FutureProvider.family<bool, DateTimeAvailabilityParams>((ref, params) {
   final calendarService = ref.watch(calendarServiceProvider);
-  return calendarService.isDateTimeAvailable(params.specialistId, params.dateTime);
+  return calendarService.isDateTimeAvailable(
+      params.specialistId, params.dateTime);
 });
 
 /// Провайдер доступных дат в диапазоне
-final availableDatesProvider = FutureProvider.family<List<DateTime>, AvailableDatesParams>((ref, params) {
+final availableDatesProvider =
+    FutureProvider.family<List<DateTime>, AvailableDatesParams>((ref, params) {
   final calendarService = ref.watch(calendarServiceProvider);
   return calendarService.getAvailableDates(
     params.specialistId,
@@ -36,7 +41,9 @@ final availableDatesProvider = FutureProvider.family<List<DateTime>, AvailableDa
 });
 
 /// Провайдер доступных временных слотов
-final availableTimeSlotsProvider = FutureProvider.family<List<DateTime>, AvailableTimeSlotsParams>((ref, params) {
+final availableTimeSlotsProvider =
+    FutureProvider.family<List<DateTime>, AvailableTimeSlotsParams>(
+        (ref, params) {
   final calendarService = ref.watch(calendarServiceProvider);
   return calendarService.getAvailableTimeSlots(
     params.specialistId,
@@ -46,7 +53,9 @@ final availableTimeSlotsProvider = FutureProvider.family<List<DateTime>, Availab
 });
 
 /// Провайдер событий на дату
-final eventsForDateProvider = FutureProvider.family<List<ScheduleEvent>, EventsForDateParams>((ref, params) {
+final eventsForDateProvider =
+    FutureProvider.family<List<ScheduleEvent>, EventsForDateParams>(
+        (ref, params) {
   final calendarService = ref.watch(calendarServiceProvider);
   return calendarService.getEventsForDate(params.specialistId, params.date);
 });
@@ -58,7 +67,8 @@ final allSchedulesProvider = StreamProvider<List<SpecialistSchedule>>((ref) {
 });
 
 /// Провайдер для управления состоянием календаря
-final calendarStateProvider = StateNotifierProvider<CalendarStateNotifier, CalendarState>((ref) {
+final calendarStateProvider =
+    StateNotifierProvider<CalendarStateNotifier, CalendarState>((ref) {
   return CalendarStateNotifier(ref.read(calendarServiceProvider));
 });
 
@@ -100,7 +110,8 @@ class CalendarState {
       selectedSpecialistId: selectedSpecialistId ?? this.selectedSpecialistId,
       availableDates: availableDates ?? this.availableDates,
       availableTimeSlots: availableTimeSlots ?? this.availableTimeSlots,
-      eventsForSelectedDate: eventsForSelectedDate ?? this.eventsForSelectedDate,
+      eventsForSelectedDate:
+          eventsForSelectedDate ?? this.eventsForSelectedDate,
       isLoading: isLoading ?? this.isLoading,
       errorMessage: errorMessage,
     );
@@ -299,7 +310,8 @@ class AvailableDatesParams {
   }
 
   @override
-  int get hashCode => specialistId.hashCode ^ startDate.hashCode ^ endDate.hashCode;
+  int get hashCode =>
+      specialistId.hashCode ^ startDate.hashCode ^ endDate.hashCode;
 }
 
 /// Параметры для получения доступных временных слотов
@@ -324,7 +336,8 @@ class AvailableTimeSlotsParams {
   }
 
   @override
-  int get hashCode => specialistId.hashCode ^ date.hashCode ^ slotDuration.hashCode;
+  int get hashCode =>
+      specialistId.hashCode ^ date.hashCode ^ slotDuration.hashCode;
 }
 
 /// Параметры для получения событий на дату

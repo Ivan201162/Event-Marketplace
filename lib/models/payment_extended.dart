@@ -38,7 +38,7 @@ class PaymentExtended {
 
   factory PaymentExtended.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return PaymentExtended(
       id: doc.id,
       bookingId: data['bookingId'] ?? '',
@@ -56,8 +56,9 @@ class PaymentExtended {
         orElse: () => PaymentType.full,
       ),
       installments: (data['installments'] as List<dynamic>?)
-          ?.map((e) => PaymentInstallment.fromMap(e))
-          .toList() ?? [],
+              ?.map((e) => PaymentInstallment.fromMap(e))
+              .toList() ??
+          [],
       receiptPdfUrl: data['receiptPdfUrl'],
       invoicePdfUrl: data['invoicePdfUrl'],
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
@@ -128,25 +129,27 @@ class PaymentExtended {
   /// Проверить, есть ли просроченные платежи
   bool get hasOverduePayments {
     final now = DateTime.now();
-    return installments.any((installment) => 
-        installment.dueDate.isBefore(now) && installment.status != PaymentStatus.completed);
+    return installments.any((installment) =>
+        installment.dueDate.isBefore(now) &&
+        installment.status != PaymentStatus.completed);
   }
 
   /// Получить следующий платеж к оплате
   PaymentInstallment? get nextPayment {
     final now = DateTime.now();
     final pendingInstallments = installments
-        .where((installment) => 
-            installment.dueDate.isAfter(now) && 
+        .where((installment) =>
+            installment.dueDate.isAfter(now) &&
             installment.status == PaymentStatus.pending)
         .toList()
-        ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
-    
+      ..sort((a, b) => a.dueDate.compareTo(b.dueDate));
+
     return pendingInstallments.isNotEmpty ? pendingInstallments.first : null;
   }
 
   /// Получить процент оплаты
-  double get paymentProgress => totalAmount > 0 ? (paidAmount / totalAmount) * 100 : 0;
+  double get paymentProgress =>
+      totalAmount > 0 ? (paidAmount / totalAmount) * 100 : 0;
 }
 
 /// Статус платежа
@@ -161,10 +164,10 @@ enum PaymentStatus {
 
 /// Тип платежа
 enum PaymentType {
-  full,        // Полная оплата
-  partial,     // Частичная оплата
+  full, // Полная оплата
+  partial, // Частичная оплата
   installment, // Рассрочка
-  advance,     // Предоплата
+  advance, // Предоплата
 }
 
 /// Платеж в рассрочку
@@ -241,7 +244,8 @@ class PaymentInstallment {
   }
 
   /// Проверить, просрочен ли платеж
-  bool get isOverdue => dueDate.isBefore(DateTime.now()) && status != PaymentStatus.completed;
+  bool get isOverdue =>
+      dueDate.isBefore(DateTime.now()) && status != PaymentStatus.completed;
 }
 
 /// Настройки предоплаты
@@ -264,7 +268,8 @@ class AdvancePaymentSettings {
 
   factory AdvancePaymentSettings.fromMap(Map<String, dynamic> map) {
     return AdvancePaymentSettings(
-      availablePercentages: List<double>.from(map['availablePercentages'] ?? [10.0, 30.0, 50.0]),
+      availablePercentages:
+          List<double>.from(map['availablePercentages'] ?? [10.0, 30.0, 50.0]),
       minAdvanceAmount: (map['minAdvanceAmount'] ?? 1000.0).toDouble(),
       maxAdvanceAmount: (map['maxAdvanceAmount'] ?? 100000.0).toDouble(),
       allowCustomAmount: map['allowCustomAmount'] ?? true,
@@ -339,10 +344,10 @@ class PaymentDocument {
 
 /// Тип документа
 enum DocumentType {
-  receipt,    // Квитанция
-  invoice,    // Счёт
-  contract,   // Договор
-  report,     // Отчёт
+  receipt, // Квитанция
+  invoice, // Счёт
+  contract, // Договор
+  report, // Отчёт
 }
 
 /// Статистика платежей
@@ -387,8 +392,10 @@ class PaymentStats {
   }
 
   /// Получить процент успешных платежей
-  double get successRate => totalPayments > 0 ? (completedPayments / totalPayments) * 100 : 0;
+  double get successRate =>
+      totalPayments > 0 ? (completedPayments / totalPayments) * 100 : 0;
 
   /// Получить процент оплаты
-  double get paymentRate => totalAmount > 0 ? (paidAmount / totalAmount) * 100 : 0;
+  double get paymentRate =>
+      totalAmount > 0 ? (paidAmount / totalAmount) * 100 : 0;
 }

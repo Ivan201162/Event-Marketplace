@@ -40,7 +40,8 @@ class SupportTicketWidget extends StatelessWidget {
                   ),
                   const SizedBox(width: 8),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: ticket.statusColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
@@ -59,9 +60,9 @@ class SupportTicketWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Описание
               Text(
                 ticket.description,
@@ -72,9 +73,9 @@ class SupportTicketWidget extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Категория и приоритет
               Row(
                 children: [
@@ -110,9 +111,9 @@ class SupportTicketWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Дата и сообщения
               Row(
                 children: [
@@ -157,7 +158,7 @@ class SupportTicketWidget extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня';
     } else if (difference.inDays == 1) {
@@ -188,12 +189,16 @@ class SupportTicketListTile extends StatelessWidget {
         width: 50,
         height: 50,
         decoration: BoxDecoration(
-          color: ticket.categoryIcon == Icons.help_outline ? Colors.blue.withOpacity(0.1) : Colors.green.withOpacity(0.1),
+          color: ticket.categoryIcon == Icons.help_outline
+              ? Colors.blue.withOpacity(0.1)
+              : Colors.green.withOpacity(0.1),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Icon(
           ticket.categoryIcon,
-          color: ticket.categoryIcon == Icons.help_outline ? Colors.blue : Colors.green,
+          color: ticket.categoryIcon == Icons.help_outline
+              ? Colors.blue
+              : Colors.green,
           size: 24,
         ),
       ),
@@ -284,7 +289,7 @@ class SupportTicketListTile extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня';
     } else if (difference.inDays == 1) {
@@ -325,11 +330,14 @@ class SupportTicketGridTile extends StatelessWidget {
                   Icon(
                     ticket.categoryIcon,
                     size: 20,
-                    color: ticket.categoryIcon == Icons.help_outline ? Colors.blue : Colors.green,
+                    color: ticket.categoryIcon == Icons.help_outline
+                        ? Colors.blue
+                        : Colors.green,
                   ),
                   const Spacer(),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                     decoration: BoxDecoration(
                       color: ticket.statusColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(8),
@@ -345,9 +353,9 @@ class SupportTicketGridTile extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Тема
               Text(
                 ticket.subject,
@@ -358,9 +366,9 @@ class SupportTicketGridTile extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               const SizedBox(height: 4),
-              
+
               // Описание
               Text(
                 ticket.description,
@@ -371,9 +379,9 @@ class SupportTicketGridTile extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               const Spacer(),
-              
+
               // Приоритет и дата
               Row(
                 children: [
@@ -413,7 +421,7 @@ class SupportTicketGridTile extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня';
     } else if (difference.inDays == 1) {

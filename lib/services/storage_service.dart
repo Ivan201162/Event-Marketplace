@@ -19,10 +19,10 @@ class StorageService {
       // Получаем расширение файла
       final fileExtension = path.extension(imageFile.path);
       final fileName = 'profile_${user.uid}$fileExtension';
-      
+
       // Создаем ссылку на файл в Storage
       final ref = _storage.ref().child('profile_images').child(fileName);
-      
+
       // Загружаем файл
       final uploadTask = ref.putFile(
         imageFile,
@@ -37,10 +37,10 @@ class StorageService {
 
       // Ждем завершения загрузки
       final snapshot = await uploadTask;
-      
+
       // Получаем URL загруженного файла
       final downloadURL = await snapshot.ref.getDownloadURL();
-      
+
       return downloadURL;
     } catch (e) {
       throw Exception('Ошибка загрузки изображения: $e');
@@ -67,10 +67,11 @@ class StorageService {
 
     try {
       final fileExtension = path.extension(imageFile.path);
-      final fileName = 'event_${eventId}_${DateTime.now().millisecondsSinceEpoch}$fileExtension';
-      
+      final fileName =
+          'event_${eventId}_${DateTime.now().millisecondsSinceEpoch}$fileExtension';
+
       final ref = _storage.ref().child('event_images').child(fileName);
-      
+
       final uploadTask = ref.putFile(
         imageFile,
         SettableMetadata(
@@ -85,7 +86,7 @@ class StorageService {
 
       final snapshot = await uploadTask;
       final downloadURL = await snapshot.ref.getDownloadURL();
-      
+
       return downloadURL;
     } catch (e) {
       throw Exception('Ошибка загрузки изображения события: $e');
@@ -93,14 +94,15 @@ class StorageService {
   }
 
   /// Загрузить несколько изображений события
-  Future<List<String>> uploadEventImages(List<File> imageFiles, String eventId) async {
+  Future<List<String>> uploadEventImages(
+      List<File> imageFiles, String eventId) async {
     final List<String> urls = [];
-    
+
     for (int i = 0; i < imageFiles.length; i++) {
       final url = await uploadEventImage(imageFiles[i], '${eventId}_$i');
       urls.add(url);
     }
-    
+
     return urls;
   }
 

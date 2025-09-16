@@ -73,7 +73,8 @@ class VideoCardWidget extends StatelessWidget {
                           children: [
                             Icon(
                               video.isPublic ? Icons.lock : Icons.public,
-                              color: video.isPublic ? Colors.grey : Colors.green,
+                              color:
+                                  video.isPublic ? Colors.grey : Colors.green,
                             ),
                             const SizedBox(width: 8),
                             Text(video.isPublic ? 'Скрыть' : 'Опубликовать'),
@@ -96,7 +97,8 @@ class VideoCardWidget extends StatelessWidget {
                           children: [
                             Icon(Icons.delete, color: Colors.red),
                             SizedBox(width: 8),
-                            Text('Удалить', style: TextStyle(color: Colors.red)),
+                            Text('Удалить',
+                                style: TextStyle(color: Colors.red)),
                           ],
                         ),
                       ),
@@ -104,9 +106,9 @@ class VideoCardWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Превью видео
               Container(
                 height: 120,
@@ -139,7 +141,7 @@ class VideoCardWidget extends StatelessWidget {
                           ),
                         ),
                       ),
-                      
+
                       // Иконка воспроизведения
                       const Center(
                         child: Icon(
@@ -148,13 +150,14 @@ class VideoCardWidget extends StatelessWidget {
                           color: Colors.white,
                         ),
                       ),
-                      
+
                       // Длительность
                       Positioned(
                         bottom: 8,
                         right: 8,
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: Colors.black54,
                             borderRadius: BorderRadius.circular(4),
@@ -173,9 +176,9 @@ class VideoCardWidget extends StatelessWidget {
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Описание
               Text(
                 video.description,
@@ -183,9 +186,9 @@ class VideoCardWidget extends StatelessWidget {
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Платформа и теги
               Row(
                 children: [
@@ -213,9 +216,9 @@ class VideoCardWidget extends StatelessWidget {
                   ],
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Информация о просмотрах и дате
               Row(
                 children: [
@@ -284,7 +287,7 @@ class VideoCardWidget extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня';
     } else if (difference.inDays == 1) {

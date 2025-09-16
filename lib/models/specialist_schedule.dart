@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Типы событий в расписании
 enum ScheduleEventType {
-  booking,     // Бронирование
+  booking, // Бронирование
   unavailable, // Недоступность
-  vacation,    // Отпуск
+  vacation, // Отпуск
   maintenance, // Техническое обслуживание
 }
 
@@ -89,8 +89,8 @@ class SpecialistSchedule {
     this.events = const [],
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) : createdAt = createdAt ?? DateTime.now(),
-       updatedAt = updatedAt ?? DateTime.now();
+  })  : createdAt = createdAt ?? DateTime.now(),
+        updatedAt = updatedAt ?? DateTime.now();
 
   Map<String, dynamic> toMap() {
     return {
@@ -106,16 +106,18 @@ class SpecialistSchedule {
     return SpecialistSchedule(
       specialistId: map['specialistId'] ?? '',
       busyDates: (map['busyDates'] as List<dynamic>?)
-          ?.map((d) => (d as Timestamp).toDate())
-          .toList() ?? [],
+              ?.map((d) => (d as Timestamp).toDate())
+              .toList() ??
+          [],
       events: (map['events'] as List<dynamic>?)
-          ?.map((e) => ScheduleEvent.fromMap(e as Map<String, dynamic>))
-          .toList() ?? [],
-      createdAt: map['createdAt'] != null 
-          ? (map['createdAt'] as Timestamp).toDate() 
+              ?.map((e) => ScheduleEvent.fromMap(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      createdAt: map['createdAt'] != null
+          ? (map['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
-      updatedAt: map['updatedAt'] != null 
-          ? (map['updatedAt'] as Timestamp).toDate() 
+      updatedAt: map['updatedAt'] != null
+          ? (map['updatedAt'] as Timestamp).toDate()
           : DateTime.now(),
     );
   }
@@ -129,28 +131,26 @@ class SpecialistSchedule {
   /// Проверяет, занята ли дата
   bool isDateBusy(DateTime date) {
     // Проверяем в busyDates
-    final isInBusyDates = busyDates.any((busyDate) => 
-      busyDate.year == date.year &&
-      busyDate.month == date.month &&
-      busyDate.day == date.day
-    );
-    
+    final isInBusyDates = busyDates.any((busyDate) =>
+        busyDate.year == date.year &&
+        busyDate.month == date.month &&
+        busyDate.day == date.day);
+
     // Проверяем в событиях
-    final isInEvents = events.any((event) => 
-      event.startTime.year == date.year &&
-      event.startTime.month == date.month &&
-      event.startTime.day == date.day
-    );
-    
+    final isInEvents = events.any((event) =>
+        event.startTime.year == date.year &&
+        event.startTime.month == date.month &&
+        event.startTime.day == date.day);
+
     return isInBusyDates || isInEvents;
   }
 
   /// Проверяет, доступна ли дата и время
   bool isDateTimeAvailable(DateTime dateTime) {
-    return events.every((event) => 
-      !(dateTime.isAfter(event.startTime) && dateTime.isBefore(event.endTime)) &&
-      !dateTime.isAtSameMomentAs(event.startTime)
-    );
+    return events.every((event) =>
+        !(dateTime.isAfter(event.startTime) &&
+            dateTime.isBefore(event.endTime)) &&
+        !dateTime.isAtSameMomentAs(event.startTime));
   }
 
   /// Добавляет занятую дату
@@ -167,11 +167,11 @@ class SpecialistSchedule {
 
   /// Удаляет занятую дату
   SpecialistSchedule removeBusyDate(DateTime date) {
-    final newBusyDates = busyDates.where((busyDate) => 
-      !(busyDate.year == date.year &&
-        busyDate.month == date.month &&
-        busyDate.day == date.day)
-    ).toList();
+    final newBusyDates = busyDates
+        .where((busyDate) => !(busyDate.year == date.year &&
+            busyDate.month == date.month &&
+            busyDate.day == date.day))
+        .toList();
     return copyWith(
       busyDates: newBusyDates,
       updatedAt: DateTime.now(),
@@ -199,11 +199,12 @@ class SpecialistSchedule {
 
   /// Получает события на определенную дату
   List<ScheduleEvent> getEventsForDate(DateTime date) {
-    return events.where((event) => 
-      event.startTime.year == date.year &&
-      event.startTime.month == date.month &&
-      event.startTime.day == date.day
-    ).toList();
+    return events
+        .where((event) =>
+            event.startTime.year == date.year &&
+            event.startTime.month == date.month &&
+            event.startTime.day == date.day)
+        .toList();
   }
 
   /// Получает доступные даты в диапазоне
@@ -214,7 +215,8 @@ class SpecialistSchedule {
 
     while (currentDate.isBefore(end) || currentDate.isAtSameMomentAs(end)) {
       if (!isDateBusy(currentDate)) {
-        availableDates.add(DateTime(currentDate.year, currentDate.month, currentDate.day));
+        availableDates.add(
+            DateTime(currentDate.year, currentDate.month, currentDate.day));
       }
       currentDate = currentDate.add(const Duration(days: 1));
     }
@@ -223,11 +225,12 @@ class SpecialistSchedule {
   }
 
   /// Получает доступные временные слоты на дату
-  List<DateTime> getAvailableTimeSlots(DateTime date, {Duration slotDuration = const Duration(hours: 1)}) {
+  List<DateTime> getAvailableTimeSlots(DateTime date,
+      {Duration slotDuration = const Duration(hours: 1)}) {
     final availableSlots = <DateTime>[];
     final startOfDay = DateTime(date.year, date.month, date.day, 9); // 9:00
     final endOfDay = DateTime(date.year, date.month, date.day, 18); // 18:00
-    
+
     var currentTime = startOfDay;
     while (currentTime.isBefore(endOfDay)) {
       if (isDateTimeAvailable(currentTime)) {
@@ -235,7 +238,7 @@ class SpecialistSchedule {
       }
       currentTime = currentTime.add(slotDuration);
     }
-    
+
     return availableSlots;
   }
 

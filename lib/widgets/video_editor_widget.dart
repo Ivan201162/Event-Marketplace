@@ -66,7 +66,9 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
         child: Column(
           children: [
             AppBar(
-              title: Text(widget.existingVideo == null ? 'Новое видео' : 'Редактировать видео'),
+              title: Text(widget.existingVideo == null
+                  ? 'Новое видео'
+                  : 'Редактировать видео'),
               actions: [
                 TextButton(
                   onPressed: _isSaving ? null : _saveVideo,
@@ -97,7 +99,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
                       textCapitalization: TextCapitalization.sentences,
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Описание
                     TextField(
                       controller: _descriptionController,
@@ -111,7 +113,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
                       textCapitalization: TextCapitalization.sentences,
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // URL и платформа
                     Row(
                       children: [
@@ -135,9 +137,13 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
                               border: OutlineInputBorder(),
                             ),
                             items: const [
-                              DropdownMenuItem(value: 'youtube', child: Text('YouTube')),
-                              DropdownMenuItem(value: 'vimeo', child: Text('Vimeo')),
-                              DropdownMenuItem(value: 'direct', child: Text('Прямая загрузка')),
+                              DropdownMenuItem(
+                                  value: 'youtube', child: Text('YouTube')),
+                              DropdownMenuItem(
+                                  value: 'vimeo', child: Text('Vimeo')),
+                              DropdownMenuItem(
+                                  value: 'direct',
+                                  child: Text('Прямая загрузка')),
                             ],
                             onChanged: (value) {
                               setState(() {
@@ -149,7 +155,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Превью и длительность
                     Row(
                       children: [
@@ -178,11 +184,11 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Теги
                     _buildTagsSection(),
                     const SizedBox(height: 16),
-                    
+
                     // Настройки
                     _buildSettingsSection(),
                   ],
@@ -204,7 +210,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
-        
+
         // Поле ввода тегов
         Row(
           children: [
@@ -226,19 +232,21 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
           ],
         ),
         const SizedBox(height: 8),
-        
+
         // Список тегов
         if (_tags.isNotEmpty)
           Wrap(
             spacing: 4,
             runSpacing: 4,
-            children: _tags.map((tag) => Chip(
-              label: Text(tag),
-              deleteIcon: const Icon(Icons.close, size: 16),
-              onDeleted: () => _removeTag(tag),
-            )).toList(),
+            children: _tags
+                .map((tag) => Chip(
+                      label: Text(tag),
+                      deleteIcon: const Icon(Icons.close, size: 16),
+                      onDeleted: () => _removeTag(tag),
+                    ))
+                .toList(),
           ),
-        
+
         // Предложенные теги
         _buildSuggestedTags(),
       ],
@@ -247,11 +255,23 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
 
   Widget _buildSuggestedTags() {
     final suggestedTags = [
-      'портфолио', 'работа', 'мероприятие', 'свадьба', 'корпоратив',
-      'фотосессия', 'видеосъёмка', 'дрон', 'аэросъёмка', 'таймлапс',
-      'интервью', 'репортаж', 'документальный', 'реклама', 'презентация'
+      'портфолио',
+      'работа',
+      'мероприятие',
+      'свадьба',
+      'корпоратив',
+      'фотосессия',
+      'видеосъёмка',
+      'дрон',
+      'аэросъёмка',
+      'таймлапс',
+      'интервью',
+      'репортаж',
+      'документальный',
+      'реклама',
+      'презентация'
     ];
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -264,12 +284,14 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
         Wrap(
           spacing: 4,
           runSpacing: 4,
-          children: suggestedTags.map((tag) => ActionChip(
-            label: Text(tag, style: const TextStyle(fontSize: 12)),
-            onPressed: () => _addTag(tag),
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            visualDensity: VisualDensity.compact,
-          )).toList(),
+          children: suggestedTags
+              .map((tag) => ActionChip(
+                    label: Text(tag, style: const TextStyle(fontSize: 12)),
+                    onPressed: () => _addTag(tag),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                  ))
+              .toList(),
         ),
       ],
     );
@@ -284,7 +306,6 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
-        
         SwitchListTile(
           title: const Text('Публичное видео'),
           subtitle: const Text('Клиенты смогут видеть это видео'),
@@ -321,7 +342,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
     final url = _urlController.text.trim();
     final thumbnailUrl = _thumbnailUrlController.text.trim();
     final duration = _durationController.text.trim();
-    
+
     if (title.isEmpty || description.isEmpty || url.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Заполните обязательные поля')),
@@ -335,7 +356,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
 
     try {
       final service = ref.read(specialistProfileExtendedServiceProvider);
-      
+
       if (widget.existingVideo != null) {
         // Обновляем существующее видео
         final updatedVideo = widget.existingVideo!.copyWith(
@@ -348,7 +369,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
           tags: _tags,
           isPublic: _isPublic,
         );
-        
+
         await service.updatePortfolioVideo(widget.specialistId, updatedVideo);
       } else {
         // Создаём новое видео
@@ -367,14 +388,12 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
 
       Navigator.pop(context);
       widget.onVideoSaved();
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            widget.existingVideo == null 
-                ? 'Видео добавлено' 
-                : 'Видео обновлено'
-          ),
+          content: Text(widget.existingVideo == null
+              ? 'Видео добавлено'
+              : 'Видео обновлено'),
         ),
       );
     } catch (e) {

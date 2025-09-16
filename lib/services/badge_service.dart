@@ -17,9 +17,7 @@ class BadgeService {
           .orderBy('earnedAt', descending: true)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => Badge.fromDocument(doc))
-          .toList();
+      return querySnapshot.docs.map((doc) => Badge.fromDocument(doc)).toList();
     } catch (e) {
       print('Error getting user badges: $e');
       return [];
@@ -27,11 +25,12 @@ class BadgeService {
   }
 
   /// Проверить и выдать бейджи после создания бронирования
-  Future<void> checkBookingBadges(String customerId, String specialistId) async {
+  Future<void> checkBookingBadges(
+      String customerId, String specialistId) async {
     try {
       // Проверяем бейджи для заказчика
       await _checkCustomerBookingBadges(customerId);
-      
+
       // Проверяем бейджи для специалиста
       await _checkSpecialistBookingBadges(specialistId);
     } catch (e) {
@@ -40,11 +39,12 @@ class BadgeService {
   }
 
   /// Проверить и выдать бейджи после создания отзыва
-  Future<void> checkReviewBadges(String customerId, String specialistId, int rating) async {
+  Future<void> checkReviewBadges(
+      String customerId, String specialistId, int rating) async {
     try {
       // Проверяем бейджи для заказчика
       await _checkCustomerReviewBadges(customerId);
-      
+
       // Проверяем бейджи для специалиста
       await _checkSpecialistReviewBadges(specialistId, rating);
     } catch (e) {
@@ -75,10 +75,10 @@ class BadgeService {
     final recentBookings = bookingsSnapshot.docs
         .map((doc) => Booking.fromDocument(doc))
         .where((booking) {
-          final daysUntilEvent = booking.eventDate.difference(DateTime.now()).inDays;
-          return daysUntilEvent >= 30;
-        })
-        .length;
+      final daysUntilEvent =
+          booking.eventDate.difference(DateTime.now()).inDays;
+      return daysUntilEvent >= 30;
+    }).length;
 
     if (recentBookings >= 3) {
       await _awardBadge(customerId, BadgeType.earlyBird);
@@ -135,7 +135,8 @@ class BadgeService {
   }
 
   /// Проверить бейджи специалиста после отзыва
-  Future<void> _checkSpecialistReviewBadges(String specialistId, int rating) async {
+  Future<void> _checkSpecialistReviewBadges(
+      String specialistId, int rating) async {
     // Получаем средний рейтинг специалиста
     final reviewsSnapshot = await _db
         .collection('reviews')
@@ -156,11 +157,11 @@ class BadgeService {
     }
 
     // Проверяем бейдж "Мастер качества"
-    final excellentReviews = reviewsSnapshot.docs
-        .where((doc) => doc.data()['rating'] == 5)
-        .length;
+    final excellentReviews =
+        reviewsSnapshot.docs.where((doc) => doc.data()['rating'] == 5).length;
 
-    if (excellentReviews >= reviewsSnapshot.docs.length * 0.9 && reviewsSnapshot.docs.length >= 20) {
+    if (excellentReviews >= reviewsSnapshot.docs.length * 0.9 &&
+        reviewsSnapshot.docs.length >= 20) {
       await _awardBadge(specialistId, BadgeType.qualityMaster);
     }
 
@@ -179,13 +180,15 @@ class BadgeService {
         .get();
 
     final customerBookings = <String, int>{};
-    
+
     for (final doc in bookingsSnapshot.docs) {
       final customerId = doc.data()['customerId'] as String;
       customerBookings[customerId] = (customerBookings[customerId] ?? 0) + 1;
     }
 
-    return customerBookings.values.where((bookingCount) => bookingCount > 1).length;
+    return customerBookings.values
+        .where((bookingCount) => bookingCount > 1)
+        .length;
   }
 
   /// Выдать бейдж пользователю
@@ -218,7 +221,7 @@ class BadgeService {
       );
 
       await _db.collection('badges').add(badge.toMap());
-      
+
       print('Badge awarded: ${badgeType.name} to user $userId');
     } catch (e) {
       print('Error awarding badge: $e');
@@ -229,7 +232,7 @@ class BadgeService {
   Future<BadgeStats> getBadgeStats(String userId) async {
     try {
       final badges = await getUserBadges(userId);
-      
+
       return BadgeStats(
         totalBadges: badges.length,
         specialistBadges: badges.byCategory(BadgeCategory.specialist).length,
@@ -244,15 +247,14 @@ class BadgeService {
   }
 
   /// Получить топ пользователей по бейджам
-  Future<List<BadgeLeaderboardEntry>> getBadgeLeaderboard({int limit = 10}) async {
+  Future<List<BadgeLeaderboardEntry>> getBadgeLeaderboard(
+      {int limit = 10}) async {
     try {
       // Получаем всех пользователей с бейджами
-      final badgesSnapshot = await _db
-          .collection('badges')
-          .get();
+      final badgesSnapshot = await _db.collection('badges').get();
 
       final userBadgeCounts = <String, int>{};
-      
+
       for (final doc in badgesSnapshot.docs) {
         final userId = doc.data()['userId'] as String;
         userBadgeCounts[userId] = (userBadgeCounts[userId] ?? 0) + 1;
@@ -264,7 +266,7 @@ class BadgeService {
 
       // Получаем информацию о пользователях
       final leaderboard = <BadgeLeaderboardEntry>[];
-      
+
       for (final entry in sortedUsers.take(limit)) {
         try {
           final userDoc = await _db.collection('users').doc(entry.key).get();

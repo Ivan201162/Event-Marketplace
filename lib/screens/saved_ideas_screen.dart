@@ -20,7 +20,7 @@ class SavedIdeasScreen extends ConsumerStatefulWidget {
 
 class _SavedIdeasScreenState extends ConsumerState<SavedIdeasScreen> {
   final IdeaService _ideaService = IdeaService();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,14 +120,16 @@ class _SavedIdeasScreenState extends ConsumerState<SavedIdeasScreen> {
   }
 
   void _showIdeaDetail(Idea idea) {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       MaterialPageRoute(
         builder: (context) => IdeaDetailScreen(
           idea: idea,
           userId: widget.userId,
         ),
       ),
-    ).then((result) {
+    )
+        .then((result) {
       if (result == true) {
         setState(() {});
       }
@@ -206,7 +208,7 @@ class MyIdeasScreen extends ConsumerStatefulWidget {
 
 class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen> {
   final IdeaService _ideaService = IdeaService();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -308,14 +310,16 @@ class _MyIdeasScreenState extends ConsumerState<MyIdeasScreen> {
   }
 
   void _showIdeaDetail(Idea idea) {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       MaterialPageRoute(
         builder: (context) => IdeaDetailScreen(
           idea: idea,
           userId: widget.userId,
         ),
       ),
-    ).then((result) {
+    )
+        .then((result) {
       if (result == true) {
         setState(() {});
       }

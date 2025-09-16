@@ -14,13 +14,15 @@ final allSpecialistsProvider = StreamProvider<List<Specialist>>((ref) {
 });
 
 /// Провайдер специалиста по ID
-final specialistProvider = StreamProvider.family<Specialist?, String>((ref, specialistId) {
+final specialistProvider =
+    StreamProvider.family<Specialist?, String>((ref, specialistId) {
   final specialistService = ref.watch(specialistServiceProvider);
   return specialistService.getSpecialistStream(specialistId);
 });
 
 /// Провайдер специалиста по ID пользователя
-final specialistByUserIdProvider = StreamProvider.family<Specialist?, String>((ref, userId) {
+final specialistByUserIdProvider =
+    StreamProvider.family<Specialist?, String>((ref, userId) {
   final specialistService = ref.watch(specialistServiceProvider);
   return specialistService.getSpecialistByUserIdStream(userId);
 });
@@ -32,7 +34,9 @@ final topSpecialistsProvider = FutureProvider<List<Specialist>>((ref) {
 });
 
 /// Провайдер специалистов по категории
-final specialistsByCategoryProvider = FutureProvider.family<List<Specialist>, SpecialistCategory>((ref, category) {
+final specialistsByCategoryProvider =
+    FutureProvider.family<List<Specialist>, SpecialistCategory>(
+        (ref, category) {
   final specialistService = ref.watch(specialistServiceProvider);
   return specialistService.getSpecialistsByCategory(category);
 });
@@ -46,38 +50,45 @@ final specialistFiltersProvider = StateProvider<SpecialistFilters>((ref) {
 final searchResultsProvider = StreamProvider<List<Specialist>>((ref) {
   final specialistService = ref.watch(specialistServiceProvider);
   final filters = ref.watch(specialistFiltersProvider);
-  
+
   return specialistService.searchSpecialistsStream(filters);
 });
 
 /// Провайдер доступности специалиста на дату
-final specialistAvailabilityProvider = FutureProvider.family<bool, SpecialistAvailabilityParams>((ref, params) {
+final specialistAvailabilityProvider =
+    FutureProvider.family<bool, SpecialistAvailabilityParams>((ref, params) {
   final specialistService = ref.watch(specialistServiceProvider);
-  return specialistService.isSpecialistAvailableOnDate(params.specialistId, params.date);
+  return specialistService.isSpecialistAvailableOnDate(
+      params.specialistId, params.date);
 });
 
 /// Провайдер доступных временных слотов специалиста
-final specialistTimeSlotsProvider = FutureProvider.family<List<DateTime>, SpecialistTimeSlotsParams>((ref, params) {
+final specialistTimeSlotsProvider =
+    FutureProvider.family<List<DateTime>, SpecialistTimeSlotsParams>(
+        (ref, params) {
   final specialistService = ref.watch(specialistServiceProvider);
   return specialistService.getAvailableTimeSlots(
-    params.specialistId, 
+    params.specialistId,
     params.date,
     slotDuration: params.slotDuration,
   );
 });
 
 /// Провайдер состояния поиска
-final searchStateProvider = StateNotifierProvider<SearchStateNotifier, SearchState>((ref) {
+final searchStateProvider =
+    StateNotifierProvider<SearchStateNotifier, SearchState>((ref) {
   return SearchStateNotifier();
 });
 
 /// Провайдер избранных специалистов
-final favoriteSpecialistsProvider = StateNotifierProvider<FavoriteSpecialistsNotifier, List<String>>((ref) {
+final favoriteSpecialistsProvider =
+    StateNotifierProvider<FavoriteSpecialistsNotifier, List<String>>((ref) {
   return FavoriteSpecialistsNotifier();
 });
 
 /// Провайдер истории поиска
-final searchHistoryProvider = StateNotifierProvider<SearchHistoryNotifier, List<String>>((ref) {
+final searchHistoryProvider =
+    StateNotifierProvider<SearchHistoryNotifier, List<String>>((ref) {
   return SearchHistoryNotifier();
 });
 
@@ -125,7 +136,8 @@ class SpecialistTimeSlotsParams {
           slotDuration == other.slotDuration;
 
   @override
-  int get hashCode => specialistId.hashCode ^ date.hashCode ^ slotDuration.hashCode;
+  int get hashCode =>
+      specialistId.hashCode ^ date.hashCode ^ slotDuration.hashCode;
 }
 
 /// Состояние поиска
@@ -246,13 +258,15 @@ class SearchHistoryNotifier extends StateNotifier<List<String>> {
   /// Добавить запрос в историю
   void addToHistory(String query) {
     if (query.trim().isEmpty) return;
-    
+
     // Удаляем дубликаты
-    state = state.where((item) => item.toLowerCase() != query.toLowerCase()).toList();
-    
+    state = state
+        .where((item) => item.toLowerCase() != query.toLowerCase())
+        .toList();
+
     // Добавляем в начало
     state = [query, ...state];
-    
+
     // Ограничиваем количество записей
     if (state.length > 10) {
       state = state.take(10).toList();
@@ -273,49 +287,54 @@ class SearchHistoryNotifier extends StateNotifier<List<String>> {
 /// Провайдер для получения специалистов с учетом избранного
 final specialistsWithFavoritesProvider = Provider<List<Specialist>>((ref) {
   final specialists = ref.watch(searchResultsProvider).when(
-    data: (specialists) => specialists,
-    loading: () => <Specialist>[],
-    error: (_, __) => <Specialist>[],
-  );
-  
+        data: (specialists) => specialists,
+        loading: () => <Specialist>[],
+        error: (_, __) => <Specialist>[],
+      );
+
   final favorites = ref.watch(favoriteSpecialistsProvider);
-  
+
   // Сортируем: сначала избранные, потом остальные
   final sortedSpecialists = List<Specialist>.from(specialists);
   sortedSpecialists.sort((a, b) {
     final aIsFavorite = favorites.contains(a.id);
     final bIsFavorite = favorites.contains(b.id);
-    
+
     if (aIsFavorite && !bIsFavorite) return -1;
     if (!aIsFavorite && bIsFavorite) return 1;
-    
+
     // Если оба в избранном или оба не в избранном, сортируем по рейтингу
     return b.rating.compareTo(a.rating);
   });
-  
+
   return sortedSpecialists;
 });
 
 /// Провайдер для статистики поиска
 final searchStatsProvider = Provider<SearchStats>((ref) {
   final specialists = ref.watch(searchResultsProvider).when(
-    data: (specialists) => specialists,
-    loading: () => <Specialist>[],
-    error: (_, __) => <Specialist>[],
-  );
-  
+        data: (specialists) => specialists,
+        loading: () => <Specialist>[],
+        error: (_, __) => <Specialist>[],
+      );
+
   final filters = ref.watch(specialistFiltersProvider);
-  
+
   return SearchStats(
     totalResults: specialists.length,
     verifiedCount: specialists.where((s) => s.isVerified).length,
-    averageRating: specialists.isNotEmpty 
-        ? specialists.map((s) => s.rating).reduce((a, b) => a + b) / specialists.length 
+    averageRating: specialists.isNotEmpty
+        ? specialists.map((s) => s.rating).reduce((a, b) => a + b) /
+            specialists.length
         : 0.0,
-    priceRange: specialists.isNotEmpty 
+    priceRange: specialists.isNotEmpty
         ? PriceRange(
-            min: specialists.map((s) => s.hourlyRate).reduce((a, b) => a < b ? a : b),
-            max: specialists.map((s) => s.hourlyRate).reduce((a, b) => a > b ? a : b),
+            min: specialists
+                .map((s) => s.hourlyRate)
+                .reduce((a, b) => a < b ? a : b),
+            max: specialists
+                .map((s) => s.hourlyRate)
+                .reduce((a, b) => a > b ? a : b),
           )
         : const PriceRange(min: 0, max: 0),
     categoryDistribution: _getCategoryDistribution(specialists),
@@ -361,12 +380,14 @@ class PriceRange {
 }
 
 /// Получить распределение по категориям
-Map<SpecialistCategory, int> _getCategoryDistribution(List<Specialist> specialists) {
+Map<SpecialistCategory, int> _getCategoryDistribution(
+    List<Specialist> specialists) {
   final distribution = <SpecialistCategory, int>{};
-  
+
   for (final specialist in specialists) {
-    distribution[specialist.category] = (distribution[specialist.category] ?? 0) + 1;
+    distribution[specialist.category] =
+        (distribution[specialist.category] ?? 0) + 1;
   }
-  
+
   return distribution;
 }

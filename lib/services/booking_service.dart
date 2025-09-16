@@ -12,19 +12,22 @@ class BookingService {
   Future<String> createBooking(Booking booking) async {
     try {
       // Проверяем, есть ли свободные места
-      final eventDoc = await _firestore.collection('events').doc(booking.eventId).get();
+      final eventDoc =
+          await _firestore.collection('events').doc(booking.eventId).get();
       if (!eventDoc.exists) {
         throw Exception('Событие не найдено');
       }
 
       final event = Event.fromDocument(eventDoc);
-      if (event.currentParticipants + booking.participantsCount > event.maxParticipants) {
+      if (event.currentParticipants + booking.participantsCount >
+          event.maxParticipants) {
         throw Exception('Недостаточно свободных мест');
       }
 
       // Создаем бронирование
-      final docRef = await _firestore.collection('bookings').add(booking.toMap());
-      
+      final docRef =
+          await _firestore.collection('bookings').add(booking.toMap());
+
       // Обновляем количество участников в событии
       await _firestore.collection('events').doc(booking.eventId).update({
         'currentParticipants': FieldValue.increment(booking.participantsCount),
@@ -52,9 +55,8 @@ class BookingService {
         .where('userId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Booking.fromDocument(doc))
-            .toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Booking.fromDocument(doc)).toList());
   }
 
   /// Получить бронирования для события
@@ -64,9 +66,8 @@ class BookingService {
         .where('eventId', isEqualTo: eventId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Booking.fromDocument(doc))
-            .toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Booking.fromDocument(doc)).toList());
   }
 
   /// Получить бронирование по ID
@@ -83,7 +84,8 @@ class BookingService {
   }
 
   /// Обновить статус бронирования
-  Future<void> updateBookingStatus(String bookingId, BookingStatus status) async {
+  Future<void> updateBookingStatus(
+      String bookingId, BookingStatus status) async {
     try {
       final booking = await getBookingById(bookingId);
       if (booking == null) {
@@ -96,9 +98,11 @@ class BookingService {
       });
 
       // Если бронирование отменяется, уменьшаем количество участников
-      if (status == BookingStatus.cancelled && booking.status != BookingStatus.cancelled) {
+      if (status == BookingStatus.cancelled &&
+          booking.status != BookingStatus.cancelled) {
         await _firestore.collection('events').doc(booking.eventId).update({
-          'currentParticipants': FieldValue.increment(-booking.participantsCount),
+          'currentParticipants':
+              FieldValue.increment(-booking.participantsCount),
           'updatedAt': FieldValue.serverTimestamp(),
         });
 
@@ -140,7 +144,8 @@ class BookingService {
       // Если бронирование не отменено, уменьшаем количество участников
       if (booking.status != BookingStatus.cancelled) {
         await _firestore.collection('events').doc(booking.eventId).update({
-          'currentParticipants': FieldValue.increment(-booking.participantsCount),
+          'currentParticipants':
+              FieldValue.increment(-booking.participantsCount),
           'updatedAt': FieldValue.serverTimestamp(),
         });
       }
@@ -158,8 +163,7 @@ class BookingService {
           .collection('bookings')
           .where('userId', isEqualTo: userId)
           .where('eventId', isEqualTo: eventId)
-          .where('status', whereIn: ['pending', 'confirmed'])
-          .get();
+          .where('status', whereIn: ['pending', 'confirmed']).get();
 
       return snapshot.docs.isNotEmpty;
     } catch (e) {
@@ -184,7 +188,7 @@ class BookingService {
       for (final doc in snapshot.docs) {
         final booking = Booking.fromDocument(doc);
         total++;
-        
+
         switch (booking.status) {
           case BookingStatus.pending:
             pending++;
@@ -232,7 +236,7 @@ class BookingService {
         final booking = Booking.fromDocument(doc);
         total++;
         totalParticipants += booking.participantsCount;
-        
+
         switch (booking.status) {
           case BookingStatus.pending:
             pending++;

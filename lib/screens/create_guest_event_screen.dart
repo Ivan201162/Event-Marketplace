@@ -13,18 +13,20 @@ class CreateGuestEventScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<CreateGuestEventScreen> createState() => _CreateGuestEventScreenState();
+  ConsumerState<CreateGuestEventScreen> createState() =>
+      _CreateGuestEventScreenState();
 }
 
-class _CreateGuestEventScreenState extends ConsumerState<CreateGuestEventScreen> {
+class _CreateGuestEventScreenState
+    extends ConsumerState<CreateGuestEventScreen> {
   final _formKey = GlobalKey<FormState>();
   final _titleController = TextEditingController();
   final _descriptionController = TextEditingController();
   final _locationController = TextEditingController();
   final _maxGuestsController = TextEditingController();
-  
+
   final GuestService _guestService = GuestService();
-  
+
   DateTime _startTime = DateTime.now();
   DateTime _endTime = DateTime.now().add(const Duration(hours: 2));
   bool _isPublic = true;
@@ -55,19 +57,19 @@ class _CreateGuestEventScreenState extends ConsumerState<CreateGuestEventScreen>
             children: [
               // Основная информация
               _buildBasicInfoSection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Время
               _buildTimeSection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Настройки
               _buildSettingsSection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Кнопка создания
               SizedBox(
                 width: double.infinity,
@@ -100,7 +102,7 @@ class _CreateGuestEventScreenState extends ConsumerState<CreateGuestEventScreen>
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Название события
             TextFormField(
               controller: _titleController,
@@ -116,9 +118,9 @@ class _CreateGuestEventScreenState extends ConsumerState<CreateGuestEventScreen>
                 return null;
               },
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Описание
             TextFormField(
               controller: _descriptionController,
@@ -129,9 +131,9 @@ class _CreateGuestEventScreenState extends ConsumerState<CreateGuestEventScreen>
               ),
               maxLines: 3,
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Место
             TextFormField(
               controller: _locationController,
@@ -147,9 +149,9 @@ class _CreateGuestEventScreenState extends ConsumerState<CreateGuestEventScreen>
                 return null;
               },
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Максимальное количество гостей
             TextFormField(
               controller: _maxGuestsController,
@@ -191,7 +193,7 @@ class _CreateGuestEventScreenState extends ConsumerState<CreateGuestEventScreen>
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Дата и время начала
             ListTile(
               leading: const Icon(Icons.access_time),
@@ -199,7 +201,7 @@ class _CreateGuestEventScreenState extends ConsumerState<CreateGuestEventScreen>
               subtitle: Text(_formatDateTime(_startTime)),
               onTap: _selectStartTime,
             ),
-            
+
             // Дата и время окончания
             ListTile(
               leading: const Icon(Icons.access_time),
@@ -228,7 +230,7 @@ class _CreateGuestEventScreenState extends ConsumerState<CreateGuestEventScreen>
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Публичное событие
             SwitchListTile(
               title: const Text('Публичное событие'),
@@ -240,11 +242,12 @@ class _CreateGuestEventScreenState extends ConsumerState<CreateGuestEventScreen>
                 });
               },
             ),
-            
+
             // Разрешить поздравления
             SwitchListTile(
               title: const Text('Разрешить поздравления'),
-              subtitle: const Text('Гости смогут загружать поздравления и фото'),
+              subtitle:
+                  const Text('Гости смогут загружать поздравления и фото'),
               value: _allowGreetings,
               onChanged: (value) {
                 setState(() {
@@ -252,9 +255,9 @@ class _CreateGuestEventScreenState extends ConsumerState<CreateGuestEventScreen>
                 });
               },
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Информация о возможностях
             Container(
               padding: const EdgeInsets.all(12),
@@ -322,7 +325,7 @@ class _CreateGuestEventScreenState extends ConsumerState<CreateGuestEventScreen>
             time.hour,
             time.minute,
           );
-          
+
           // Автоматически обновляем время окончания
           if (_endTime.isBefore(_startTime)) {
             _endTime = _startTime.add(const Duration(hours: 2));

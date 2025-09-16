@@ -11,16 +11,18 @@ class CreateSupportTicketScreen extends ConsumerStatefulWidget {
   const CreateSupportTicketScreen({super.key});
 
   @override
-  ConsumerState<CreateSupportTicketScreen> createState() => _CreateSupportTicketScreenState();
+  ConsumerState<CreateSupportTicketScreen> createState() =>
+      _CreateSupportTicketScreenState();
 }
 
-class _CreateSupportTicketScreenState extends ConsumerState<CreateSupportTicketScreen> {
+class _CreateSupportTicketScreenState
+    extends ConsumerState<CreateSupportTicketScreen> {
   final _formKey = GlobalKey<FormState>();
   final _subjectController = TextEditingController();
   final _descriptionController = TextEditingController();
-  
+
   final SupportService _supportService = SupportService();
-  
+
   SupportCategory _selectedCategory = SupportCategory.general;
   SupportPriority _selectedPriority = SupportPriority.medium;
   List<File> _attachments = [];
@@ -54,19 +56,19 @@ class _CreateSupportTicketScreenState extends ConsumerState<CreateSupportTicketS
             children: [
               // Основная информация
               _buildBasicInfoSection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Категория и приоритет
               _buildCategoryAndPrioritySection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Вложения
               _buildAttachmentsSection(),
-              
+
               const SizedBox(height: 24),
-              
+
               // Кнопка отправки
               SizedBox(
                 width: double.infinity,
@@ -99,7 +101,7 @@ class _CreateSupportTicketScreenState extends ConsumerState<CreateSupportTicketS
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Тема
             TextFormField(
               controller: _subjectController,
@@ -115,9 +117,9 @@ class _CreateSupportTicketScreenState extends ConsumerState<CreateSupportTicketS
                 return null;
               },
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Описание
             TextFormField(
               controller: _descriptionController,
@@ -155,7 +157,7 @@ class _CreateSupportTicketScreenState extends ConsumerState<CreateSupportTicketS
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Категория
             DropdownButtonFormField<SupportCategory>(
               value: _selectedCategory,
@@ -181,9 +183,9 @@ class _CreateSupportTicketScreenState extends ConsumerState<CreateSupportTicketS
                 });
               },
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Приоритет
             DropdownButtonFormField<SupportPriority>(
               value: _selectedPriority,
@@ -248,7 +250,7 @@ class _CreateSupportTicketScreenState extends ConsumerState<CreateSupportTicketS
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Кнопка добавления файлов
             if (_attachments.length < 5)
               OutlinedButton.icon(
@@ -256,9 +258,9 @@ class _CreateSupportTicketScreenState extends ConsumerState<CreateSupportTicketS
                 icon: const Icon(Icons.attach_file),
                 label: const Text('Добавить файлы'),
               ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Список вложений
             if (_attachments.isNotEmpty) ...[
               const Text(
@@ -316,9 +318,9 @@ class _CreateSupportTicketScreenState extends ConsumerState<CreateSupportTicketS
                 );
               }).toList(),
             ],
-            
+
             const SizedBox(height: 8),
-            
+
             // Информация о поддерживаемых форматах
             Text(
               'Поддерживаемые форматы: изображения, документы (до 10 МБ)',
@@ -338,7 +340,16 @@ class _CreateSupportTicketScreenState extends ConsumerState<CreateSupportTicketS
       final result = await FilePicker.platform.pickFiles(
         allowMultiple: true,
         type: FileType.custom,
-        allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'pdf', 'doc', 'docx', 'txt'],
+        allowedExtensions: [
+          'jpg',
+          'jpeg',
+          'png',
+          'gif',
+          'pdf',
+          'doc',
+          'docx',
+          'txt'
+        ],
       );
 
       if (result != null) {

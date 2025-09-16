@@ -55,7 +55,9 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
         child: Column(
           children: [
             AppBar(
-              title: Text(widget.existingNote == null ? 'Новая заметка' : 'Редактировать заметку'),
+              title: Text(widget.existingNote == null
+                  ? 'Новая заметка'
+                  : 'Редактировать заметку'),
               actions: [
                 TextButton(
                   onPressed: _isSaving ? null : _saveNote,
@@ -86,7 +88,7 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
                       textCapitalization: TextCapitalization.sentences,
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Содержимое
                     TextField(
                       controller: _contentController,
@@ -100,11 +102,11 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
                       textCapitalization: TextCapitalization.sentences,
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Теги
                     _buildTagsSection(),
                     const SizedBox(height: 16),
-                    
+
                     // Настройки
                     _buildSettingsSection(),
                   ],
@@ -126,7 +128,7 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
-        
+
         // Поле ввода тегов
         Row(
           children: [
@@ -148,19 +150,21 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
           ],
         ),
         const SizedBox(height: 8),
-        
+
         // Список тегов
         if (_tags.isNotEmpty)
           Wrap(
             spacing: 4,
             runSpacing: 4,
-            children: _tags.map((tag) => Chip(
-              label: Text(tag),
-              deleteIcon: const Icon(Icons.close, size: 16),
-              onDeleted: () => _removeTag(tag),
-            )).toList(),
+            children: _tags
+                .map((tag) => Chip(
+                      label: Text(tag),
+                      deleteIcon: const Icon(Icons.close, size: 16),
+                      onDeleted: () => _removeTag(tag),
+                    ))
+                .toList(),
           ),
-        
+
         // Предложенные теги
         _buildSuggestedTags(),
       ],
@@ -169,10 +173,20 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
 
   Widget _buildSuggestedTags() {
     final suggestedTags = [
-      'важно', 'идея', 'бюджет', 'дата', 'место', 'гости',
-      'декор', 'еда', 'музыка', 'фото', 'видео', 'подарки'
+      'важно',
+      'идея',
+      'бюджет',
+      'дата',
+      'место',
+      'гости',
+      'декор',
+      'еда',
+      'музыка',
+      'фото',
+      'видео',
+      'подарки'
     ];
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -185,12 +199,14 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
         Wrap(
           spacing: 4,
           runSpacing: 4,
-          children: suggestedTags.map((tag) => ActionChip(
-            label: Text(tag, style: const TextStyle(fontSize: 12)),
-            onPressed: () => _addTag(tag),
-            materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-            visualDensity: VisualDensity.compact,
-          )).toList(),
+          children: suggestedTags
+              .map((tag) => ActionChip(
+                    label: Text(tag, style: const TextStyle(fontSize: 12)),
+                    onPressed: () => _addTag(tag),
+                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    visualDensity: VisualDensity.compact,
+                  ))
+              .toList(),
         ),
       ],
     );
@@ -205,10 +221,10 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
-        
         SwitchListTile(
           title: const Text('Закрепить заметку'),
-          subtitle: const Text('Закреплённые заметки отображаются вверху списка'),
+          subtitle:
+              const Text('Закреплённые заметки отображаются вверху списка'),
           value: _isPinned,
           onChanged: (value) {
             setState(() {
@@ -239,7 +255,7 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
   void _saveNote() async {
     final title = _titleController.text.trim();
     final content = _contentController.text.trim();
-    
+
     if (title.isEmpty || content.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Заполните заголовок и содержимое')),
@@ -253,7 +269,7 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
 
     try {
       final service = ref.read(customerProfileExtendedServiceProvider);
-      
+
       if (widget.existingNote != null) {
         // Обновляем существующую заметку
         final updatedNote = widget.existingNote!.copyWith(
@@ -262,7 +278,7 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
           tags: _tags,
           isPinned: _isPinned,
         );
-        
+
         await service.updateNote(widget.userId, updatedNote);
       } else {
         // Создаём новую заметку
@@ -277,14 +293,12 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
 
       Navigator.pop(context);
       widget.onNoteSaved();
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(
-            widget.existingNote == null 
-                ? 'Заметка создана' 
-                : 'Заметка обновлена'
-          ),
+          content: Text(widget.existingNote == null
+              ? 'Заметка создана'
+              : 'Заметка обновлена'),
         ),
       );
     } catch (e) {

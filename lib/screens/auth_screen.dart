@@ -19,27 +19,27 @@ class AuthScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: 60),
-              
+
               // Логотип и заголовок
               _buildHeader(context),
-              
+
               const SizedBox(height: 48),
-              
+
               // Форма входа/регистрации
               _buildAuthForm(context, ref, formState),
-              
+
               const SizedBox(height: 24),
-              
+
               // Кнопка входа через Google
               _buildGoogleSignInButton(context, ref),
               const SizedBox(height: 16),
-              
+
               // Кнопка входа как гость
               if (!formState.isSignUpMode) ...[
                 _buildGuestButton(context, ref),
                 const SizedBox(height: 16),
               ],
-              
+
               // Дополнительные действия
               _buildAdditionalActions(context, ref, formState),
             ],
@@ -70,16 +70,16 @@ class AuthScreen extends ConsumerWidget {
         Text(
           'Event Marketplace',
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: Theme.of(context).colorScheme.primary,
-          ),
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).colorScheme.primary,
+              ),
         ),
         const SizedBox(height: 8),
         Text(
           'Найдите идеального специалиста для вашего мероприятия',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-          ),
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              ),
           textAlign: TextAlign.center,
         ),
       ],
@@ -87,7 +87,8 @@ class AuthScreen extends ConsumerWidget {
   }
 
   /// Построение формы аутентификации
-  Widget _buildAuthForm(BuildContext context, WidgetRef ref, LoginFormState formState) {
+  Widget _buildAuthForm(
+      BuildContext context, WidgetRef ref, LoginFormState formState) {
     return Card(
       elevation: 4,
       child: Padding(
@@ -99,13 +100,13 @@ class AuthScreen extends ConsumerWidget {
             Text(
               formState.isSignUpMode ? 'Регистрация' : 'Вход',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
               textAlign: TextAlign.center,
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Поля формы
             if (formState.isSignUpMode) ...[
               _buildDisplayNameField(context, ref),
@@ -113,27 +114,27 @@ class AuthScreen extends ConsumerWidget {
               _buildRoleSelector(context, ref),
               const SizedBox(height: 16),
             ],
-            
+
             _buildEmailField(context, ref, formState),
             const SizedBox(height: 16),
             _buildPasswordField(context, ref, formState),
-            
+
             const SizedBox(height: 24),
-            
+
             // Кнопка отправки
             _buildSubmitButton(context, ref, formState),
-            
+
             // Ошибка
             if (formState.errorMessage != null) ...[
               const SizedBox(height: 16),
               _buildErrorMessage(context, formState.errorMessage!),
             ],
-            
+
             // Разделитель
             const SizedBox(height: 24),
             _buildDivider(context),
             const SizedBox(height: 24),
-            
+
             // Кнопки социальных сетей
             _buildSocialButtons(context, ref, formState),
           ],
@@ -163,7 +164,7 @@ class AuthScreen extends ConsumerWidget {
     return Consumer(
       builder: (context, ref, child) {
         final selectedRole = ref.watch(selectedRoleProvider);
-        
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -209,7 +210,8 @@ class AuthScreen extends ConsumerWidget {
   }
 
   /// Поле для email
-  Widget _buildEmailField(BuildContext context, WidgetRef ref, LoginFormState formState) {
+  Widget _buildEmailField(
+      BuildContext context, WidgetRef ref, LoginFormState formState) {
     return TextFormField(
       keyboardType: TextInputType.emailAddress,
       decoration: const InputDecoration(
@@ -218,12 +220,14 @@ class AuthScreen extends ConsumerWidget {
         prefixIcon: Icon(Icons.email),
         border: OutlineInputBorder(),
       ),
-      onChanged: (value) => ref.read(loginFormProvider.notifier).updateEmail(value),
+      onChanged: (value) =>
+          ref.read(loginFormProvider.notifier).updateEmail(value),
     );
   }
 
   /// Поле для пароля
-  Widget _buildPasswordField(BuildContext context, WidgetRef ref, LoginFormState formState) {
+  Widget _buildPasswordField(
+      BuildContext context, WidgetRef ref, LoginFormState formState) {
     return TextFormField(
       obscureText: true,
       decoration: const InputDecoration(
@@ -232,20 +236,24 @@ class AuthScreen extends ConsumerWidget {
         prefixIcon: Icon(Icons.lock),
         border: OutlineInputBorder(),
       ),
-      onChanged: (value) => ref.read(loginFormProvider.notifier).updatePassword(value),
+      onChanged: (value) =>
+          ref.read(loginFormProvider.notifier).updatePassword(value),
     );
   }
 
   /// Кнопка отправки
-  Widget _buildSubmitButton(BuildContext context, WidgetRef ref, LoginFormState formState) {
+  Widget _buildSubmitButton(
+      BuildContext context, WidgetRef ref, LoginFormState formState) {
     return ElevatedButton(
-      onPressed: formState.isLoading ? null : () {
-        if (formState.isSignUpMode) {
-          _handleSignUp(context, ref);
-        } else {
-          ref.read(loginFormProvider.notifier).signIn();
-        }
-      },
+      onPressed: formState.isLoading
+          ? null
+          : () {
+              if (formState.isSignUpMode) {
+                _handleSignUp(context, ref);
+              } else {
+                ref.read(loginFormProvider.notifier).signIn();
+              }
+            },
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.symmetric(vertical: 16),
         shape: RoundedRectangleBorder(
@@ -281,19 +289,21 @@ class AuthScreen extends ConsumerWidget {
   }
 
   /// Дополнительные действия
-  Widget _buildAdditionalActions(BuildContext context, WidgetRef ref, LoginFormState formState) {
+  Widget _buildAdditionalActions(
+      BuildContext context, WidgetRef ref, LoginFormState formState) {
     return Column(
       children: [
         // Переключение режима
         TextButton(
-          onPressed: () => ref.read(loginFormProvider.notifier).toggleSignUpMode(),
+          onPressed: () =>
+              ref.read(loginFormProvider.notifier).toggleSignUpMode(),
           child: Text(
             formState.isSignUpMode
                 ? 'Уже есть аккаунт? Войти'
                 : 'Нет аккаунта? Зарегистрироваться',
           ),
         ),
-        
+
         // Сброс пароля
         if (!formState.isSignUpMode) ...[
           TextButton(
@@ -308,11 +318,11 @@ class AuthScreen extends ConsumerWidget {
   /// Сообщение об ошибке
   Widget _buildErrorMessage(BuildContext context, String message) {
     final isSuccess = message.contains('отправлено');
-    
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: isSuccess 
+        color: isSuccess
             ? Colors.green.withOpacity(0.1)
             : Colors.red.withOpacity(0.1),
         borderRadius: BorderRadius.circular(8),
@@ -347,18 +357,18 @@ class AuthScreen extends ConsumerWidget {
   void _handleSignUp(BuildContext context, WidgetRef ref) {
     final displayName = ref.read(displayNameProvider);
     final role = ref.read(selectedRoleProvider);
-    
+
     if (displayName.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Введите имя')),
       );
       return;
     }
-    
+
     ref.read(loginFormProvider.notifier).signUp(
-      displayName: displayName,
-      role: role,
-    );
+          displayName: displayName,
+          role: role,
+        );
   }
 
   /// Показать диалог сброса пароля
@@ -407,20 +417,24 @@ class AuthScreen extends ConsumerWidget {
   }
 
   /// Кнопки социальных сетей
-  Widget _buildSocialButtons(BuildContext context, WidgetRef ref, LoginFormState formState) {
+  Widget _buildSocialButtons(
+      BuildContext context, WidgetRef ref, LoginFormState formState) {
     return Column(
       children: [
         // Кнопка Google
         SizedBox(
           width: double.infinity,
           child: OutlinedButton.icon(
-            onPressed: formState.isLoading ? null : () => _handleGoogleSignIn(context, ref),
+            onPressed: formState.isLoading
+                ? null
+                : () => _handleGoogleSignIn(context, ref),
             icon: Container(
               width: 20,
               height: 20,
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: NetworkImage('https://developers.google.com/identity/images/g-logo.png'),
+                  image: NetworkImage(
+                      'https://developers.google.com/identity/images/g-logo.png'),
                   fit: BoxFit.contain,
                 ),
               ),
@@ -434,14 +448,16 @@ class AuthScreen extends ConsumerWidget {
             ),
           ),
         ),
-        
+
         const SizedBox(height: 12),
-        
+
         // Кнопка ВКонтакте
         SizedBox(
           width: double.infinity,
           child: OutlinedButton.icon(
-            onPressed: formState.isLoading ? null : () => _handleVKSignIn(context, ref),
+            onPressed: formState.isLoading
+                ? null
+                : () => _handleVKSignIn(context, ref),
             icon: Container(
               width: 20,
               height: 20,
@@ -478,7 +494,7 @@ class AuthScreen extends ConsumerWidget {
     try {
       final role = ref.read(selectedRoleProvider);
       final authService = ref.read(authServiceProvider);
-      
+
       final user = await authService.signInWithGoogle(role: role);
       if (user != null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -513,13 +529,12 @@ class AuthScreen extends ConsumerWidget {
     );
   }
 
-
   /// Обработка входа через ВКонтакте
   Future<void> _handleVKSignIn(BuildContext context, WidgetRef ref) async {
     try {
       final role = ref.read(selectedRoleProvider);
       final authService = ref.read(authServiceProvider);
-      
+
       final user = await authService.signInWithVK(role: role);
       if (user != null) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -542,7 +557,8 @@ class AuthScreen extends ConsumerWidget {
 
 /// Провайдеры для локального состояния формы
 final displayNameProvider = StateProvider<String>((ref) => '');
-final selectedRoleProvider = StateProvider<UserRole>((ref) => UserRole.customer);
+final selectedRoleProvider =
+    StateProvider<UserRole>((ref) => UserRole.customer);
 
 /// Расширение для LoginFormNotifier
 extension LoginFormNotifierExtension on LoginFormNotifier {

@@ -4,14 +4,14 @@ import 'specialist.dart';
 
 /// Типы рекомендаций
 enum RecommendationType {
-  similarSpecialists,    // Похожие специалисты
-  popularInCategory,     // Популярные в категории
-  recentlyViewed,        // Недавно просмотренные
-  basedOnHistory,        // На основе истории
-  trending,              // Трендовые
-  nearby,                // Рядом с вами
-  priceRange,            // В ценовом диапазоне
-  availability,          // Доступные сейчас
+  similarSpecialists, // Похожие специалисты
+  popularInCategory, // Популярные в категории
+  recentlyViewed, // Недавно просмотренные
+  basedOnHistory, // На основе истории
+  trending, // Трендовые
+  nearby, // Рядом с вами
+  priceRange, // В ценовом диапазоне
+  availability, // Доступные сейчас
 }
 
 /// Модель рекомендации
@@ -41,7 +41,7 @@ class Recommendation {
   /// Создаёт рекомендацию из документа Firestore
   factory Recommendation.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return Recommendation(
       id: doc.id,
       userId: data['userId'] as String,
@@ -232,7 +232,7 @@ extension RecommendationListExtension on List<Recommendation> {
   List<Recommendation> get valid => where((rec) => rec.isValid).toList();
 
   /// Получает рекомендации, отсортированные по релевантности
-  List<Recommendation> get sortedByScore => 
+  List<Recommendation> get sortedByScore =>
       toList()..sort((a, b) => b.score.compareTo(a.score));
 
   /// Группирует рекомендации по типу
@@ -251,14 +251,15 @@ extension RecommendationListExtension on List<Recommendation> {
 }
 
 /// Расширение для работы с рекомендациями специалистов
-extension SpecialistRecommendationListExtension on List<SpecialistRecommendation> {
+extension SpecialistRecommendationListExtension
+    on List<SpecialistRecommendation> {
   /// Получает рекомендации по типу
   List<SpecialistRecommendation> byType(RecommendationType type) {
     return where((rec) => rec.recommendation.type == type).toList();
   }
 
   /// Получает рекомендации, отсортированные по релевантности
-  List<SpecialistRecommendation> get sortedByRelevance => 
+  List<SpecialistRecommendation> get sortedByRelevance =>
       toList()..sort((a, b) => b.relevanceScore.compareTo(a.relevanceScore));
 
   /// Получает топ рекомендации
@@ -270,7 +271,8 @@ extension SpecialistRecommendationListExtension on List<SpecialistRecommendation
   Map<RecommendationType, List<SpecialistRecommendation>> get groupedByType {
     final Map<RecommendationType, List<SpecialistRecommendation>> grouped = {};
     for (final recommendation in this) {
-      grouped.putIfAbsent(recommendation.recommendation.type, () => [])
+      grouped
+          .putIfAbsent(recommendation.recommendation.type, () => [])
           .add(recommendation);
     }
     return grouped;

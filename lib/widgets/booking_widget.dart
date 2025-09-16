@@ -61,34 +61,34 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Информация о специалисте
             _buildSpecialistInfo(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Выбор даты
             _buildDateSelection(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Выбор времени
             if (_selectedDate != null) _buildTimeSelection(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Выбор продолжительности
             _buildDurationSelection(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Дополнительные заметки
             _buildNotesSection(),
-            
+
             const Spacer(),
-            
+
             // Кнопки
             _buildActionButtons(),
           ],
@@ -111,7 +111,9 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
             radius: 24,
             backgroundColor: Theme.of(context).colorScheme.primary,
             child: Text(
-              widget.specialist.name.isNotEmpty ? widget.specialist.name[0].toUpperCase() : '?',
+              widget.specialist.name.isNotEmpty
+                  ? widget.specialist.name[0].toUpperCase()
+                  : '?',
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -186,11 +188,14 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
                         : 'Выберите дату',
                     style: TextStyle(
                       fontSize: 16,
-                      color: _selectedDate != null ? Colors.black : Colors.grey[600],
+                      color: _selectedDate != null
+                          ? Colors.black
+                          : Colors.grey[600],
                     ),
                   ),
                 ),
-                Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
+                Icon(Icons.arrow_forward_ios,
+                    size: 16, color: Colors.grey[400]),
               ],
             ),
           ),
@@ -231,11 +236,14 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
                         : 'Выберите время',
                     style: TextStyle(
                       fontSize: 16,
-                      color: _selectedTime != null ? Colors.black : Colors.grey[600],
+                      color: _selectedTime != null
+                          ? Colors.black
+                          : Colors.grey[600],
                     ),
                   ),
                 ),
-                Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
+                Icon(Icons.arrow_forward_ios,
+                    size: 16, color: Colors.grey[400]),
               ],
             ),
           ),
@@ -260,7 +268,9 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
         Row(
           children: [
             IconButton(
-              onPressed: _selectedHours > 1 ? () => setState(() => _selectedHours--) : null,
+              onPressed: _selectedHours > 1
+                  ? () => setState(() => _selectedHours--)
+                  : null,
               icon: const Icon(Icons.remove),
             ),
             Expanded(
@@ -274,7 +284,9 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
               ),
             ),
             IconButton(
-              onPressed: _selectedHours < 12 ? () => setState(() => _selectedHours++) : null,
+              onPressed: _selectedHours < 12
+                  ? () => setState(() => _selectedHours++)
+                  : null,
               icon: const Icon(Icons.add),
             ),
           ],
@@ -352,9 +364,9 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
             ],
           ),
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Кнопки
         Row(
           children: [
@@ -396,8 +408,8 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
               Text(
                 'Выберите дату',
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               const SizedBox(height: 16),
               Expanded(
@@ -436,11 +448,11 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
   Future<void> _selectTime() async {
     final time = await showTimePicker(
       context: context,
-      initialTime: _selectedTime != null 
+      initialTime: _selectedTime != null
           ? TimeOfDay.fromDateTime(_selectedTime!)
           : const TimeOfDay(hour: 10, minute: 0),
     );
-    
+
     if (time != null) {
       setState(() {
         _selectedTime = DateTime(
@@ -485,13 +497,14 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
 
       // Определяем время окончания
       final endTime = _selectedTime!.add(Duration(hours: _selectedHours));
-      
+
       // Проверяем конфликты бронирования
-      final hasConflict = await ref.read(firestoreServiceProvider).hasBookingConflict(
-        widget.specialist.id,
-        _selectedTime!,
-        endTime,
-      );
+      final hasConflict =
+          await ref.read(firestoreServiceProvider).hasBookingConflict(
+                widget.specialist.id,
+                _selectedTime!,
+                endTime,
+              );
 
       if (hasConflict) {
         Navigator.of(context).pop(); // Закрываем индикатор загрузки
@@ -507,21 +520,26 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
       // Создаем бронирование
       final booking = Booking(
         id: 'booking_${DateTime.now().millisecondsSinceEpoch}',
-        customerId: 'current_user_id', // TODO: Получить ID текущего пользователя
+        customerId:
+            'current_user_id', // TODO: Получить ID текущего пользователя
         specialistId: widget.specialist.id,
         eventDate: _selectedTime!,
         endDate: endTime,
         status: 'pending',
-        prepayment: widget.specialist.hourlyRate * _selectedHours * 0.3, // 30% предоплата
+        prepayment: widget.specialist.hourlyRate *
+            _selectedHours *
+            0.3, // 30% предоплата
         totalPrice: widget.specialist.hourlyRate * _selectedHours,
       );
 
       // Сохраняем бронирование с интеграцией календаря
-      await ref.read(firestoreServiceProvider).addOrUpdateBookingWithCalendar(booking);
+      await ref
+          .read(firestoreServiceProvider)
+          .addOrUpdateBookingWithCalendar(booking);
 
       Navigator.of(context).pop(); // Закрываем индикатор загрузки
       Navigator.of(context).pop(); // Закрываем диалог бронирования
-      
+
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Бронирование ${widget.specialist.name} создано'),
@@ -599,16 +617,17 @@ class TimeSlotsWidget extends ConsumerWidget {
               spacing: 8,
               runSpacing: 8,
               children: timeSlots.map((timeSlot) {
-                final isSelected = selectedTime != null && 
-                    selectedTime!.hour == timeSlot.hour && 
+                final isSelected = selectedTime != null &&
+                    selectedTime!.hour == timeSlot.hour &&
                     selectedTime!.minute == timeSlot.minute;
-                
+
                 return GestureDetector(
                   onTap: () => onTimeSelected(timeSlot),
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     decoration: BoxDecoration(
-                      color: isSelected 
+                      color: isSelected
                           ? Theme.of(context).colorScheme.primary
                           : Colors.grey[200],
                       borderRadius: BorderRadius.circular(20),

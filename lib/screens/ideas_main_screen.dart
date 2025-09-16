@@ -26,7 +26,7 @@ class IdeasMainScreen extends ConsumerStatefulWidget {
 
 class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
   final IdeaService _ideaService = IdeaService();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,13 +47,13 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
         children: [
           // Быстрые действия
           _buildQuickActions(),
-          
+
           // Топ идеи недели
           _buildTopIdeasSection(),
-          
+
           // Категории
           _buildCategoriesSection(),
-          
+
           // Последние идеи
           Expanded(
             child: _buildRecentIdeasSection(),

@@ -35,14 +35,14 @@ class AdminPanelScreen extends ConsumerWidget {
               children: [
                 // Статистика
                 _buildStatsSection(context, ref),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Управление событиями
                 _buildEventsManagementSection(context, ref),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Управление пользователями
                 _buildUsersManagementSection(context, ref),
               ],
@@ -121,7 +121,8 @@ class AdminPanelScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+  Widget _buildStatCard(
+      String title, String value, IconData icon, Color color) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -276,21 +277,21 @@ class AdminPanelScreen extends ConsumerWidget {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     }
-                    
+
                     if (snapshot.hasError) {
                       return Center(
                         child: Text('Ошибка: ${snapshot.error}'),
                       );
                     }
-                    
+
                     final events = snapshot.data ?? [];
-                    
+
                     if (events.isEmpty) {
                       return const Center(
                         child: Text('События не найдены'),
                       );
                     }
-                    
+
                     return ListView.builder(
                       itemCount: events.length,
                       itemBuilder: (context, index) {
@@ -300,7 +301,8 @@ class AdminPanelScreen extends ConsumerWidget {
                           child: ListTile(
                             leading: Icon(event.categoryIcon),
                             title: Text(event.title),
-                            subtitle: Text('${event.organizerName} • ${event.formattedDate}'),
+                            subtitle: Text(
+                                '${event.organizerName} • ${event.formattedDate}'),
                             trailing: PopupMenuButton<String>(
                               onSelected: (value) {
                                 switch (value) {
@@ -308,7 +310,8 @@ class AdminPanelScreen extends ConsumerWidget {
                                     _showDeleteEventDialog(context, ref, event);
                                     break;
                                   case 'block_organizer':
-                                    _showBlockUserDialog(context, ref, event.organizerId);
+                                    _showBlockUserDialog(
+                                        context, ref, event.organizerId);
                                     break;
                                 }
                               },
@@ -349,12 +352,14 @@ class AdminPanelScreen extends ConsumerWidget {
     );
   }
 
-  void _showDeleteEventDialog(BuildContext context, WidgetRef ref, Event event) {
+  void _showDeleteEventDialog(
+      BuildContext context, WidgetRef ref, Event event) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить событие'),
-        content: Text('Вы уверены, что хотите удалить событие "${event.title}"?'),
+        content:
+            Text('Вы уверены, что хотите удалить событие "${event.title}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -392,12 +397,14 @@ class AdminPanelScreen extends ConsumerWidget {
     );
   }
 
-  void _showBlockUserDialog(BuildContext context, WidgetRef ref, String userId) {
+  void _showBlockUserDialog(
+      BuildContext context, WidgetRef ref, String userId) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Заблокировать пользователя'),
-        content: const Text('Вы уверены, что хотите заблокировать этого пользователя?'),
+        content: const Text(
+            'Вы уверены, что хотите заблокировать этого пользователя?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

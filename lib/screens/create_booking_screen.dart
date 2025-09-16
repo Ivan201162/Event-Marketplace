@@ -15,7 +15,8 @@ class CreateBookingScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<CreateBookingScreen> createState() => _CreateBookingScreenState();
+  ConsumerState<CreateBookingScreen> createState() =>
+      _CreateBookingScreenState();
 }
 
 class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
@@ -72,32 +73,32 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
                 children: [
                   // Информация о событии
                   _buildEventInfo(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Количество участников
                   _buildParticipantsSection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Контактная информация
                   _buildContactInfoSection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Заметки
                   _buildNotesSection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Итоговая стоимость
                   _buildTotalPriceSection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Кнопка бронирования
                   _buildBookingButton(createBookingState),
-                  
+
                   // Ошибка
                   if (createBookingState.errorMessage != null) ...[
                     const SizedBox(height: 16),
@@ -164,16 +165,17 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
                     children: [
                       Text(
                         widget.event.title,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         widget.event.categoryName,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                       ),
                     ],
                   ),
@@ -243,7 +245,7 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
 
   Widget _buildParticipantsSection() {
     final createBookingState = ref.watch(createBookingProvider);
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -263,14 +265,17 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
                 IconButton(
                   onPressed: createBookingState.participantsCount > 1
                       ? () {
-                          ref.read(createBookingProvider.notifier)
-                              .updateParticipantsCount(createBookingState.participantsCount - 1);
+                          ref
+                              .read(createBookingProvider.notifier)
+                              .updateParticipantsCount(
+                                  createBookingState.participantsCount - 1);
                         }
                       : null,
                   icon: const Icon(Icons.remove),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   decoration: BoxDecoration(
                     border: Border.all(color: Colors.grey),
                     borderRadius: BorderRadius.circular(8),
@@ -284,10 +289,13 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
                   ),
                 ),
                 IconButton(
-                  onPressed: createBookingState.participantsCount < widget.event.availableSpots
+                  onPressed: createBookingState.participantsCount <
+                          widget.event.availableSpots
                       ? () {
-                          ref.read(createBookingProvider.notifier)
-                              .updateParticipantsCount(createBookingState.participantsCount + 1);
+                          ref
+                              .read(createBookingProvider.notifier)
+                              .updateParticipantsCount(
+                                  createBookingState.participantsCount + 1);
                         }
                       : null,
                   icon: const Icon(Icons.add),
@@ -396,8 +404,9 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
 
   Widget _buildTotalPriceSection() {
     final createBookingState = ref.watch(createBookingProvider);
-    final totalPrice = widget.event.price * createBookingState.participantsCount;
-    
+    final totalPrice =
+        widget.event.price * createBookingState.participantsCount;
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -415,9 +424,12 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text('${createBookingState.participantsCount} × ${widget.event.formattedPrice}'),
                 Text(
-                  totalPrice == 0 ? 'Бесплатно' : '${totalPrice.toStringAsFixed(0)} ₽',
+                    '${createBookingState.participantsCount} × ${widget.event.formattedPrice}'),
+                Text(
+                  totalPrice == 0
+                      ? 'Бесплатно'
+                      : '${totalPrice.toStringAsFixed(0)} ₽',
                   style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.bold,

@@ -36,7 +36,7 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
       duration: const Duration(milliseconds: 2000),
       vsync: this,
     );
-    
+
     _waveformAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
@@ -59,12 +59,12 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
     return Container(
       padding: const EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-        color: widget.isOwnMessage 
+        color: widget.isOwnMessage
             ? Theme.of(context).primaryColor.withOpacity(0.1)
             : Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: widget.isOwnMessage 
+          color: widget.isOwnMessage
               ? Theme.of(context).primaryColor.withOpacity(0.3)
               : Colors.grey.withOpacity(0.3),
         ),
@@ -78,7 +78,7 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
               Icon(
                 Icons.mic,
                 size: 16,
-                color: widget.isOwnMessage 
+                color: widget.isOwnMessage
                     ? Theme.of(context).primaryColor
                     : Colors.grey[600],
               ),
@@ -88,7 +88,7 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.w500,
-                  color: widget.isOwnMessage 
+                  color: widget.isOwnMessage
                       ? Theme.of(context).primaryColor
                       : Colors.grey[600],
                 ),
@@ -104,7 +104,7 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
             ],
           ),
           const SizedBox(height: 8),
-          
+
           // Контролы воспроизведения
           Row(
             children: [
@@ -115,7 +115,7 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: widget.isOwnMessage 
+                    color: widget.isOwnMessage
                         ? Theme.of(context).primaryColor
                         : Colors.grey[600],
                     shape: BoxShape.circle,
@@ -126,7 +126,8 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
                           height: 16,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
-                            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
                           ),
                         )
                       : Icon(
@@ -137,7 +138,7 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
                 ),
               ),
               const SizedBox(width: 12),
-              
+
               // Waveform и прогресс
               Expanded(
                 child: Column(
@@ -175,17 +176,15 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
   }
 
   Widget _buildProgressBar() {
-    final progress = _totalDuration.inMilliseconds > 0 
-        ? _currentPosition.inMilliseconds / _totalDuration.inMilliseconds 
+    final progress = _totalDuration.inMilliseconds > 0
+        ? _currentPosition.inMilliseconds / _totalDuration.inMilliseconds
         : 0.0;
 
     return LinearProgressIndicator(
       value: progress,
       backgroundColor: Colors.grey[300],
       valueColor: AlwaysStoppedAnimation<Color>(
-        widget.isOwnMessage 
-            ? Theme.of(context).primaryColor
-            : Colors.grey[600],
+        widget.isOwnMessage ? Theme.of(context).primaryColor : Colors.grey[600],
       ),
     );
   }
@@ -276,16 +275,14 @@ class WaveformPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = isOwnMessage 
+      ..color = isOwnMessage
           ? Colors.blue.withOpacity(0.7)
           : Colors.grey.withOpacity(0.7)
       ..strokeWidth = 2.0
       ..strokeCap = StrokeCap.round;
 
     final activePaint = Paint()
-      ..color = isOwnMessage 
-          ? Colors.blue
-          : Colors.grey[600]!
+      ..color = isOwnMessage ? Colors.blue : Colors.grey[600]!
       ..strokeWidth = 2.0
       ..strokeCap = StrokeCap.round;
 
@@ -300,7 +297,7 @@ class WaveformPainter extends CustomPainter {
       final y = (size.height - height) / 2;
 
       final currentPaint = i < activeBarCount ? activePaint : paint;
-      
+
       canvas.drawLine(
         Offset(x, y),
         Offset(x, y + height),
@@ -312,7 +309,7 @@ class WaveformPainter extends CustomPainter {
   @override
   bool shouldRepaint(WaveformPainter oldDelegate) {
     return oldDelegate.progress != progress ||
-           oldDelegate.isPlaying != isPlaying ||
-           oldDelegate.isOwnMessage != isOwnMessage;
+        oldDelegate.isPlaying != isPlaying ||
+        oldDelegate.isOwnMessage != isOwnMessage;
   }
 }

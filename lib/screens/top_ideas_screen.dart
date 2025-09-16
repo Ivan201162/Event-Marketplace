@@ -20,7 +20,7 @@ class TopIdeasScreen extends ConsumerStatefulWidget {
 
 class _TopIdeasScreenState extends ConsumerState<TopIdeasScreen> {
   final IdeaService _ideaService = IdeaService();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -158,12 +158,13 @@ class IdeaCategoriesScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<IdeaCategoriesScreen> createState() => _IdeaCategoriesScreenState();
+  ConsumerState<IdeaCategoriesScreen> createState() =>
+      _IdeaCategoriesScreenState();
 }
 
 class _IdeaCategoriesScreenState extends ConsumerState<IdeaCategoriesScreen> {
   final IdeaService _ideaService = IdeaService();
-  
+
   final List<String> _categories = [
     'Декор',
     'Еда',
@@ -294,7 +295,7 @@ class IdeaSearchScreen extends ConsumerStatefulWidget {
 class _IdeaSearchScreenState extends ConsumerState<IdeaSearchScreen> {
   final IdeaService _ideaService = IdeaService();
   final _searchController = TextEditingController();
-  
+
   String _searchQuery = '';
   List<Idea> _searchResults = [];
   bool _isSearching = false;

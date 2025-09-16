@@ -68,8 +68,11 @@ class NoteCardWidget extends StatelessWidget {
                         child: Row(
                           children: [
                             Icon(
-                              note.isPinned ? Icons.push_pin_outlined : Icons.push_pin,
-                              color: note.isPinned ? Colors.grey : Colors.orange,
+                              note.isPinned
+                                  ? Icons.push_pin_outlined
+                                  : Icons.push_pin,
+                              color:
+                                  note.isPinned ? Colors.grey : Colors.orange,
                             ),
                             const SizedBox(width: 8),
                             Text(note.isPinned ? 'Открепить' : 'Закрепить'),
@@ -92,7 +95,8 @@ class NoteCardWidget extends StatelessWidget {
                           children: [
                             Icon(Icons.delete, color: Colors.red),
                             SizedBox(width: 8),
-                            Text('Удалить', style: TextStyle(color: Colors.red)),
+                            Text('Удалить',
+                                style: TextStyle(color: Colors.red)),
                           ],
                         ),
                       ),
@@ -100,9 +104,9 @@ class NoteCardWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Содержимое заметки
               Text(
                 note.content,
@@ -110,21 +114,25 @@ class NoteCardWidget extends StatelessWidget {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               // Теги
               if (note.tags.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 Wrap(
                   spacing: 4,
                   runSpacing: 4,
-                  children: note.tags.take(3).map((tag) => Chip(
-                    label: Text(
-                      tag,
-                      style: const TextStyle(fontSize: 12),
-                    ),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity.compact,
-                  )).toList(),
+                  children: note.tags
+                      .take(3)
+                      .map((tag) => Chip(
+                            label: Text(
+                              tag,
+                              style: const TextStyle(fontSize: 12),
+                            ),
+                            materialTapTargetSize:
+                                MaterialTapTargetSize.shrinkWrap,
+                            visualDensity: VisualDensity.compact,
+                          ))
+                      .toList(),
                 ),
                 if (note.tags.length > 3)
                   Text(
@@ -136,9 +144,9 @@ class NoteCardWidget extends StatelessWidget {
                     ),
                   ),
               ],
-              
+
               const SizedBox(height: 8),
-              
+
               // Информация о дате и связанных объектах
               Row(
                 children: [
@@ -155,7 +163,6 @@ class NoteCardWidget extends StatelessWidget {
                       color: Colors.grey[600],
                     ),
                   ),
-                  
                   if (note.eventId != null) ...[
                     const SizedBox(width: 16),
                     Icon(
@@ -172,7 +179,6 @@ class NoteCardWidget extends StatelessWidget {
                       ),
                     ),
                   ],
-                  
                   if (note.specialistId != null) ...[
                     const SizedBox(width: 16),
                     Icon(
@@ -201,7 +207,7 @@ class NoteCardWidget extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня';
     } else if (difference.inDays == 1) {

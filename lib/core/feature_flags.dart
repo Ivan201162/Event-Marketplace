@@ -1,0 +1,125 @@
+/// Система фичефлагов для безопасного включения/отключения функций
+class FeatureFlags {
+  // Карты и геолокация
+  static const bool mapsEnabled = false;
+  static const bool geolocationEnabled = false;
+
+  // Платежи
+  static const bool paymentsEnabled = false;
+  static const bool subscriptionPaymentsEnabled = false;
+
+  // Продвинутые функции
+  static const bool analyticsEnabled = true;
+  static const bool pushNotificationsEnabled = true;
+  static const bool fileUploadEnabled = true;
+  static const bool chatAttachmentsEnabled = true;
+
+  // Админские функции
+  static const bool adminPanelEnabled = true;
+  static const bool userModerationEnabled = false;
+
+  // Экспорт и шаринг
+  static const bool calendarExportEnabled = true;
+  static const bool shareEnabled = true;
+
+  // Подписки
+  static const bool subscriptionsEnabled = false;
+
+  // Социальные функции
+  static const bool socialLoginEnabled = true;
+  static const bool vkLoginEnabled = false;
+
+  // Отладка
+  static const bool debugMode = true;
+  static const bool verboseLogging = false;
+
+  /// Проверить, включена ли функция
+  static bool isEnabled(String feature) {
+    switch (feature) {
+      case 'maps':
+        return mapsEnabled;
+      case 'geolocation':
+        return geolocationEnabled;
+      case 'payments':
+        return paymentsEnabled;
+      case 'subscription_payments':
+        return subscriptionPaymentsEnabled;
+      case 'analytics':
+        return analyticsEnabled;
+      case 'push_notifications':
+        return pushNotificationsEnabled;
+      case 'file_upload':
+        return fileUploadEnabled;
+      case 'chat_attachments':
+        return chatAttachmentsEnabled;
+      case 'admin_panel':
+        return adminPanelEnabled;
+      case 'user_moderation':
+        return userModerationEnabled;
+      case 'calendar_export':
+        return calendarExportEnabled;
+      case 'share':
+        return shareEnabled;
+      case 'subscriptions':
+        return subscriptionsEnabled;
+      case 'social_login':
+        return socialLoginEnabled;
+      case 'vk_login':
+        return vkLoginEnabled;
+      case 'debug':
+        return debugMode;
+      case 'verbose_logging':
+        return verboseLogging;
+      default:
+        return false;
+    }
+  }
+
+  /// Получить все включенные функции
+  static List<String> getEnabledFeatures() {
+    final features = <String>[];
+
+    if (mapsEnabled) features.add('maps');
+    if (geolocationEnabled) features.add('geolocation');
+    if (paymentsEnabled) features.add('payments');
+    if (subscriptionPaymentsEnabled) features.add('subscription_payments');
+    if (analyticsEnabled) features.add('analytics');
+    if (pushNotificationsEnabled) features.add('push_notifications');
+    if (fileUploadEnabled) features.add('file_upload');
+    if (chatAttachmentsEnabled) features.add('chat_attachments');
+    if (adminPanelEnabled) features.add('admin_panel');
+    if (userModerationEnabled) features.add('user_moderation');
+    if (calendarExportEnabled) features.add('calendar_export');
+    if (shareEnabled) features.add('share');
+    if (subscriptionsEnabled) features.add('subscriptions');
+    if (socialLoginEnabled) features.add('social_login');
+    if (vkLoginEnabled) features.add('vk_login');
+    if (debugMode) features.add('debug');
+    if (verboseLogging) features.add('verbose_logging');
+
+    return features;
+  }
+
+  /// Получить статус всех функций
+  static Map<String, bool> getAllFlags() {
+    return {
+      'maps': mapsEnabled,
+      'geolocation': geolocationEnabled,
+      'payments': paymentsEnabled,
+      'subscription_payments': subscriptionPaymentsEnabled,
+      'analytics': analyticsEnabled,
+      'push_notifications': pushNotificationsEnabled,
+      'file_upload': fileUploadEnabled,
+      'chat_attachments': chatAttachmentsEnabled,
+      'admin_panel': adminPanelEnabled,
+      'user_moderation': userModerationEnabled,
+      'calendar_export': calendarExportEnabled,
+      'share': shareEnabled,
+      'subscriptions': subscriptionsEnabled,
+      'social_login': socialLoginEnabled,
+      'vk_login': vkLoginEnabled,
+      'debug': debugMode,
+      'verbose_logging': verboseLogging,
+    };
+  }
+}

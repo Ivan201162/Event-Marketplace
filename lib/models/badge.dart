@@ -3,31 +3,31 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 /// Типы бейджей
 enum BadgeType {
   // Бейджи для специалистов
-  firstBooking,        // Первое бронирование
-  tenBookings,         // 10 успешных заказов
-  fiftyBookings,       // 50 успешных заказов
-  hundredBookings,     // 100 успешных заказов
-  fiveStarRating,      // Рейтинг 5.0
-  topRated,            // Топ-рейтинг
-  quickResponder,      // Быстрый ответ
-  popularSpecialist,   // Популярный специалист
-  qualityMaster,       // Мастер качества
-  customerFavorite,    // Любимец клиентов
-  
+  firstBooking, // Первое бронирование
+  tenBookings, // 10 успешных заказов
+  fiftyBookings, // 50 успешных заказов
+  hundredBookings, // 100 успешных заказов
+  fiveStarRating, // Рейтинг 5.0
+  topRated, // Топ-рейтинг
+  quickResponder, // Быстрый ответ
+  popularSpecialist, // Популярный специалист
+  qualityMaster, // Мастер качества
+  customerFavorite, // Любимец клиентов
+
   // Бейджи для заказчиков
-  firstEvent,          // Первое мероприятие
-  regularCustomer,     // Постоянный клиент
-  eventOrganizer,      // Организатор мероприятий
-  reviewWriter,        // Активный рецензент
-  earlyBird,           // Ранняя пташка (бронирование за месяц)
-  loyalCustomer,       // Лояльный клиент
-  socialButterfly,     // Социальная бабочка (много мероприятий)
-  trendsetter,         // Трендсеттер (популярные категории)
-  
+  firstEvent, // Первое мероприятие
+  regularCustomer, // Постоянный клиент
+  eventOrganizer, // Организатор мероприятий
+  reviewWriter, // Активный рецензент
+  earlyBird, // Ранняя пташка (бронирование за месяц)
+  loyalCustomer, // Лояльный клиент
+  socialButterfly, // Социальная бабочка (много мероприятий)
+  trendsetter, // Трендсеттер (популярные категории)
+
   // Общие бейджи
-  earlyAdopter,        // Ранний пользователь
-  communityHelper,     // Помощник сообщества
-  feedbackProvider,    // Поставщик обратной связи
+  earlyAdopter, // Ранний пользователь
+  communityHelper, // Помощник сообщества
+  feedbackProvider, // Поставщик обратной связи
 }
 
 /// Модель бейджа
@@ -59,7 +59,7 @@ class Badge {
   /// Создаёт бейдж из документа Firestore
   factory Badge.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return Badge(
       id: doc.id,
       userId: data['userId'] as String,
@@ -220,7 +220,7 @@ extension BadgeTypeExtension on BadgeType {
           color: '#E91E63',
           category: BadgeCategory.specialist,
         );
-      
+
       // Бейджи для заказчиков
       case BadgeType.firstEvent:
         return BadgeInfo(
@@ -286,7 +286,7 @@ extension BadgeTypeExtension on BadgeType {
           color: '#4CAF50',
           category: BadgeCategory.customer,
         );
-      
+
       // Общие бейджи
       case BadgeType.earlyAdopter:
         return BadgeInfo(
@@ -348,7 +348,7 @@ extension BadgeListExtension on List<Badge> {
   }
 
   /// Получает последние бейджи
-  List<Badge> get recent => 
+  List<Badge> get recent =>
       toList()..sort((a, b) => b.earnedAt.compareTo(a.earnedAt));
 
   /// Получает видимые бейджи

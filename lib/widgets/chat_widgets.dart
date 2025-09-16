@@ -120,7 +120,7 @@ class ChatListItem extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              
+
               // Информация о чате
               Expanded(
                 child: Column(
@@ -133,7 +133,8 @@ class ChatListItem extends StatelessWidget {
                           'Пользователь $otherUserId',
                           style: TextStyle(
                             fontSize: 16,
-                            fontWeight: hasUnread ? FontWeight.bold : FontWeight.normal,
+                            fontWeight:
+                                hasUnread ? FontWeight.bold : FontWeight.normal,
                           ),
                         ),
                         if (chat.lastMessage != null)
@@ -141,7 +142,10 @@ class ChatListItem extends StatelessWidget {
                             _formatTime(chat.lastMessage!.createdAt),
                             style: TextStyle(
                               fontSize: 12,
-                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.6),
                             ),
                           ),
                       ],
@@ -155,8 +159,13 @@ class ChatListItem extends StatelessWidget {
                               _getMessagePreview(chat.lastMessage!),
                               style: TextStyle(
                                 fontSize: 14,
-                                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                                fontWeight: hasUnread ? FontWeight.w500 : FontWeight.normal,
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withOpacity(0.7),
+                                fontWeight: hasUnread
+                                    ? FontWeight.w500
+                                    : FontWeight.normal,
                               ),
                               maxLines: 1,
                               overflow: TextOverflow.ellipsis,
@@ -165,7 +174,8 @@ class ChatListItem extends StatelessWidget {
                           if (hasUnread) ...[
                             const SizedBox(width: 8),
                             Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 2),
                               decoration: BoxDecoration(
                                 color: Theme.of(context).colorScheme.primary,
                                 borderRadius: BorderRadius.circular(10),
@@ -187,7 +197,10 @@ class ChatListItem extends StatelessWidget {
                         'Нет сообщений',
                         style: TextStyle(
                           fontSize: 14,
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.5),
                           fontStyle: FontStyle.italic,
                         ),
                       ),
@@ -328,7 +341,8 @@ class MessageBubble extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       child: Row(
-        mainAxisAlignment: isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isCurrentUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!isCurrentUser) ...[
             CircleAvatar(
@@ -353,12 +367,19 @@ class MessageBubble extends StatelessWidget {
                     ? Theme.of(context).colorScheme.primary
                     : Theme.of(context).colorScheme.surface,
                 borderRadius: BorderRadius.circular(20).copyWith(
-                  bottomLeft: isCurrentUser ? const Radius.circular(20) : const Radius.circular(4),
-                  bottomRight: isCurrentUser ? const Radius.circular(4) : const Radius.circular(20),
+                  bottomLeft: isCurrentUser
+                      ? const Radius.circular(20)
+                      : const Radius.circular(4),
+                  bottomRight: isCurrentUser
+                      ? const Radius.circular(4)
+                      : const Radius.circular(20),
                 ),
                 border: !isCurrentUser
                     ? Border.all(
-                        color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .outline
+                            .withOpacity(0.2),
                       )
                     : null,
               ),
@@ -390,7 +411,9 @@ class MessageBubble extends StatelessWidget {
                   Text(
                     message.content,
                     style: TextStyle(
-                      color: isCurrentUser ? Colors.white : Theme.of(context).colorScheme.onSurface,
+                      color: isCurrentUser
+                          ? Colors.white
+                          : Theme.of(context).colorScheme.onSurface,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -403,7 +426,10 @@ class MessageBubble extends StatelessWidget {
                           fontSize: 11,
                           color: isCurrentUser
                               ? Colors.white.withOpacity(0.7)
-                              : Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.5),
                         ),
                       ),
                       if (isCurrentUser) ...[
@@ -466,7 +492,7 @@ class MessageBubble extends StatelessWidget {
   /// Получить цвет статуса
   Color _getStatusColor(MessageStatus status, bool isCurrentUser) {
     if (!isCurrentUser) return Colors.transparent;
-    
+
     switch (status) {
       case MessageStatus.sent:
         return Colors.white.withOpacity(0.7);
@@ -505,7 +531,7 @@ class MessageInputWidget extends ConsumerStatefulWidget {
 class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-  
+
   // Вложения
   List<File> _attachments = [];
   bool _showAttachmentOptions = false;
@@ -521,7 +547,7 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
   Future<void> _pickImages() async {
     final ImagePicker picker = ImagePicker();
     final List<XFile> images = await picker.pickMultiImage();
-    
+
     if (images.isNotEmpty) {
       setState(() {
         _attachments.addAll(images.map((image) => File(image.path)));
@@ -533,7 +559,7 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
   Future<void> _pickVideo() async {
     final ImagePicker picker = ImagePicker();
     final XFile? video = await picker.pickVideo(source: ImageSource.gallery);
-    
+
     if (video != null) {
       setState(() {
         _attachments.add(File(video.path));
@@ -580,15 +606,18 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
   /// Отправка в WhatsApp
   Future<void> _sendToWhatsApp() async {
     if (_attachments.isEmpty) return;
-    
-    final phoneNumber = widget.receiverId; // Предполагаем, что receiverId - это номер телефона
+
+    final phoneNumber =
+        widget.receiverId; // Предполагаем, что receiverId - это номер телефона
     if (phoneNumber == null) return;
-    
-    final message = _controller.text.isNotEmpty ? _controller.text : 'Файлы для мероприятия';
+
+    final message = _controller.text.isNotEmpty
+        ? _controller.text
+        : 'Файлы для мероприятия';
     final encodedMessage = Uri.encodeComponent(message);
-    
+
     final whatsappUrl = 'https://wa.me/$phoneNumber?text=$encodedMessage';
-    
+
     if (await canLaunchUrl(Uri.parse(whatsappUrl))) {
       await launchUrl(Uri.parse(whatsappUrl));
     } else {
@@ -603,15 +632,18 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
   /// Отправка в Telegram
   Future<void> _sendToTelegram() async {
     if (_attachments.isEmpty) return;
-    
-    final username = widget.receiverId; // Предполагаем, что receiverId - это username
+
+    final username =
+        widget.receiverId; // Предполагаем, что receiverId - это username
     if (username == null) return;
-    
-    final message = _controller.text.isNotEmpty ? _controller.text : 'Файлы для мероприятия';
+
+    final message = _controller.text.isNotEmpty
+        ? _controller.text
+        : 'Файлы для мероприятия';
     final encodedMessage = Uri.encodeComponent(message);
-    
+
     final telegramUrl = 'https://t.me/$username?text=$encodedMessage';
-    
+
     if (await canLaunchUrl(Uri.parse(telegramUrl))) {
       await launchUrl(Uri.parse(telegramUrl));
     } else {
@@ -631,7 +663,7 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
       children: [
         // Вложения
         if (_attachments.isNotEmpty) _buildAttachmentsPreview(),
-        
+
         // Поле ввода сообщения
         Container(
           padding: const EdgeInsets.all(16),
@@ -647,7 +679,7 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
             children: [
               // Опции вложений
               if (_showAttachmentOptions) _buildAttachmentOptions(),
-              
+
               Row(
                 children: [
                   // Кнопка вложений
@@ -662,7 +694,7 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
                       color: _showAttachmentOptions ? Colors.red : null,
                     ),
                   ),
-                  
+
                   // Поле ввода
                   Expanded(
                     child: TextField(
@@ -680,21 +712,26 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
                       ),
                       maxLines: null,
                       onChanged: (value) {
-                        ref.read(messageFormProvider.notifier).updateContent(value);
+                        ref
+                            .read(messageFormProvider.notifier)
+                            .updateContent(value);
                       },
                       onSubmitted: (value) {
-                        if (value.trim().isNotEmpty || _attachments.isNotEmpty) {
+                        if (value.trim().isNotEmpty ||
+                            _attachments.isNotEmpty) {
                           _sendMessage();
                         }
                       },
                     ),
                   ),
-                  
+
                   const SizedBox(width: 8),
-                  
+
                   // Кнопка отправки
                   FloatingActionButton.small(
-                    onPressed: formState.isSending || (_controller.text.trim().isEmpty && _attachments.isEmpty)
+                    onPressed: formState.isSending ||
+                            (_controller.text.trim().isEmpty &&
+                                _attachments.isEmpty)
                         ? null
                         : _sendMessage,
                     child: formState.isSending
@@ -723,12 +760,12 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
 
     try {
       await ref.read(chatStateProvider.notifier).sendMessage(
-        chatId: widget.chatId,
-        senderId: widget.senderId,
-        content: content,
-        receiverId: widget.receiverId,
-        attachments: _attachments.map((file) => file.path).toList(),
-      );
+            chatId: widget.chatId,
+            senderId: widget.senderId,
+            content: content,
+            receiverId: widget.receiverId,
+            attachments: _attachments.map((file) => file.path).toList(),
+          );
 
       _controller.clear();
       setState(() {
@@ -833,11 +870,11 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
           Text(
             'Прикрепить файлы:',
             style: Theme.of(context).textTheme.titleSmall?.copyWith(
-              fontWeight: FontWeight.w600,
-            ),
+                  fontWeight: FontWeight.w600,
+                ),
           ),
           const SizedBox(height: 12),
-          
+
           // Кнопки типов файлов
           Row(
             children: [
@@ -866,16 +903,16 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Кнопки мессенджеров
           if (_attachments.isNotEmpty) ...[
             Text(
               'Отправить через мессенджер:',
               style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                fontWeight: FontWeight.w600,
-              ),
+                    fontWeight: FontWeight.w600,
+                  ),
             ),
             const SizedBox(height: 8),
             Row(
@@ -1014,7 +1051,8 @@ class NotificationWidget extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: _getPriorityColor(notification.priority).withOpacity(0.1),
+                  color:
+                      _getPriorityColor(notification.priority).withOpacity(0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Center(
@@ -1025,7 +1063,7 @@ class NotificationWidget extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              
+
               // Содержимое уведомления
               Expanded(
                 child: Column(
@@ -1039,7 +1077,9 @@ class NotificationWidget extends StatelessWidget {
                             notification.title,
                             style: TextStyle(
                               fontSize: 16,
-                              fontWeight: notification.isUnread ? FontWeight.bold : FontWeight.normal,
+                              fontWeight: notification.isUnread
+                                  ? FontWeight.bold
+                                  : FontWeight.normal,
                             ),
                           ),
                         ),
@@ -1047,7 +1087,10 @@ class NotificationWidget extends StatelessWidget {
                           _formatTime(notification.createdAt),
                           style: TextStyle(
                             fontSize: 12,
-                            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.6),
                           ),
                         ),
                       ],
@@ -1057,7 +1100,10 @@ class NotificationWidget extends StatelessWidget {
                       notification.body,
                       style: TextStyle(
                         fontSize: 14,
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.7),
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
@@ -1065,7 +1111,7 @@ class NotificationWidget extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               // Индикатор непрочитанного
               if (notification.isUnread)
                 Container(

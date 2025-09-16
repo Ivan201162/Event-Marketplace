@@ -17,7 +17,8 @@ class SpecialistFAQScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<SpecialistFAQScreen> createState() => _SpecialistFAQScreenState();
+  ConsumerState<SpecialistFAQScreen> createState() =>
+      _SpecialistFAQScreenState();
 }
 
 class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
@@ -41,7 +42,8 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
   @override
   Widget build(BuildContext context) {
     final faqAsync = ref.watch(specialistFAQProvider(widget.specialistId));
-    final statsAsync = ref.watch(specialistProfileStatsProvider(widget.specialistId));
+    final statsAsync =
+        ref.watch(specialistProfileStatsProvider(widget.specialistId));
     // final faqFilters = ref.watch(faqFiltersProvider);
 
     return Scaffold(
@@ -74,7 +76,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
             loading: () => const LinearProgressIndicator(),
             error: (error, stack) => const SizedBox.shrink(),
           ),
-          
+
           // Контент по вкладкам
           Expanded(
             child: TabBarView(
@@ -103,8 +105,10 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildStatItem('Всего вопросов', stats.totalFAQItems, Icons.help_outline),
-            _buildStatItem('Опубликованных', stats.publishedFAQItems, Icons.public),
+            _buildStatItem(
+                'Всего вопросов', stats.totalFAQItems, Icons.help_outline),
+            _buildStatItem(
+                'Опубликованных', stats.publishedFAQItems, Icons.public),
             _buildStatItem('Категорий', _getCategoriesCount(), Icons.category),
           ],
         ),
@@ -171,11 +175,12 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
 
   Widget _buildPublishedFAQTab() {
     final faqAsync = ref.watch(specialistFAQProvider(widget.specialistId));
-    
+
     return faqAsync.when(
       data: (faqItems) {
-        final publishedItems = faqItems.where((item) => item.isPublished).toList();
-        
+        final publishedItems =
+            faqItems.where((item) => item.isPublished).toList();
+
         if (publishedItems.isEmpty) {
           return _buildEmptyState(
             'Нет опубликованных вопросов',
@@ -206,12 +211,13 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
 
   Widget _buildCategoriesTab() {
     final faqAsync = ref.watch(specialistFAQProvider(widget.specialistId));
-    
+
     return faqAsync.when(
       data: (faqItems) {
-        final categories = faqItems.map((item) => item.category).toSet().toList();
+        final categories =
+            faqItems.map((item) => item.category).toSet().toList();
         categories.sort();
-        
+
         if (categories.isEmpty) {
           return _buildEmptyState(
             'Нет категорий',
@@ -235,8 +241,9 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
   }
 
   Widget _buildCategoryCard(String category) {
-    final faqByCategoryAsync = ref.watch(specialistFAQByCategoryProvider((widget.specialistId, category)));
-    
+    final faqByCategoryAsync = ref.watch(
+        specialistFAQByCategoryProvider((widget.specialistId, category)));
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       child: ListTile(
@@ -285,7 +292,8 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
           Text('Ошибка: $error'),
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: () => ref.refresh(specialistFAQProvider(widget.specialistId)),
+            onPressed: () =>
+                ref.refresh(specialistFAQProvider(widget.specialistId)),
             child: const Text('Повторить'),
           ),
         ],
@@ -391,13 +399,15 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
                       Row(
                         children: [
                           Chip(
-                            label: Text(_getCategoryDisplayName(faqItem.category)),
+                            label:
+                                Text(_getCategoryDisplayName(faqItem.category)),
                             backgroundColor: Colors.blue[100],
                           ),
                           const SizedBox(width: 8),
                           Text(
                             'Порядок: ${faqItem.order}',
-                            style: const TextStyle(color: Colors.grey, fontSize: 12),
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 12),
                           ),
                         ],
                       ),
@@ -406,13 +416,15 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
                         children: [
                           Text(
                             'Создано: ${_formatDate(faqItem.createdAt)}',
-                            style: const TextStyle(color: Colors.grey, fontSize: 12),
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 12),
                           ),
                           if (faqItem.updatedAt != faqItem.createdAt) ...[
                             const SizedBox(width: 16),
                             Text(
                               'Обновлено: ${_formatDate(faqItem.updatedAt)}',
-                              style: const TextStyle(color: Colors.grey, fontSize: 12),
+                              style: const TextStyle(
+                                  color: Colors.grey, fontSize: 12),
                             ),
                           ],
                         ],
@@ -456,7 +468,8 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
-              final service = ref.read(specialistProfileExtendedServiceProvider);
+              final service =
+                  ref.read(specialistProfileExtendedServiceProvider);
               await service.removeFAQItem(widget.specialistId, faqItem.id);
               ref.refresh(specialistFAQProvider(widget.specialistId));
               ref.refresh(specialistProfileStatsProvider(widget.specialistId));
@@ -547,7 +560,8 @@ class FAQByCategoryScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final faqAsync = ref.watch(specialistFAQByCategoryProvider((specialistId, category)));
+    final faqAsync =
+        ref.watch(specialistFAQByCategoryProvider((specialistId, category)));
 
     return Scaffold(
       appBar: AppBar(
@@ -607,7 +621,8 @@ class FAQByCategoryScreen extends ConsumerWidget {
     // TODO: Показать детали FAQ
   }
 
-  void _showEditFAQDialog(BuildContext context, WidgetRef ref, FAQItem faqItem) {
+  void _showEditFAQDialog(
+      BuildContext context, WidgetRef ref, FAQItem faqItem) {
     // TODO: Редактировать FAQ
   }
 
@@ -633,7 +648,8 @@ class FAQSearchResultsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final faqAsync = ref.watch(specialistFAQSearchProvider((specialistId, query)));
+    final faqAsync =
+        ref.watch(specialistFAQSearchProvider((specialistId, query)));
 
     return Scaffold(
       appBar: AppBar(
@@ -674,7 +690,8 @@ class FAQSearchResultsScreen extends ConsumerWidget {
     // TODO: Показать детали FAQ
   }
 
-  void _showEditFAQDialog(BuildContext context, WidgetRef ref, FAQItem faqItem) {
+  void _showEditFAQDialog(
+      BuildContext context, WidgetRef ref, FAQItem faqItem) {
     // TODO: Редактировать FAQ
   }
 

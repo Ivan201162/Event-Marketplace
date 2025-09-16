@@ -26,21 +26,21 @@ class SpecialistReviewsWidget extends ConsumerWidget {
           Text(
             'Отзывы',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Статистика отзывов
           statisticsAsync.when(
             data: (statistics) => _buildReviewStatistics(statistics),
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (error, stack) => _buildErrorWidget(error),
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Список отзывов
           reviewsAsync.when(
             data: (reviews) => _buildReviewsList(reviews),
@@ -78,7 +78,9 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                   Row(
                     children: List.generate(5, (index) {
                       return Icon(
-                        index < statistics.averageRating ? Icons.star : Icons.star_border,
+                        index < statistics.averageRating
+                            ? Icons.star
+                            : Icons.star_border,
                         color: Colors.amber,
                         size: 20,
                       );
@@ -93,9 +95,9 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(width: 24),
-              
+
               // Распределение рейтингов
               Expanded(
                 child: Column(
@@ -103,10 +105,10 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                   children: List.generate(5, (index) {
                     final rating = 5 - index;
                     final count = 0; // TODO: Implement ratingCounts
-                    final percentage = statistics.totalReviews > 0 
-                        ? (count / statistics.totalReviews * 100) 
+                    final percentage = statistics.totalReviews > 0
+                        ? (count / statistics.totalReviews * 100)
                         : 0.0;
-                    
+
                     return Padding(
                       padding: const EdgeInsets.only(bottom: 4),
                       child: Row(
@@ -122,7 +124,8 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                             child: LinearProgressIndicator(
                               value: percentage / 100,
                               backgroundColor: Colors.grey[300],
-                              valueColor: AlwaysStoppedAnimation<Color>(Colors.amber),
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.amber),
                             ),
                           ),
                           const SizedBox(width: 8),
@@ -168,9 +171,9 @@ class SpecialistReviewsWidget extends ConsumerWidget {
             ),
           ],
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Список отзывов
         ListView.builder(
           shrinkWrap: true,
@@ -212,9 +215,9 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(width: 12),
-                
+
                 // Информация о клиенте
                 Expanded(
                   child: Column(
@@ -234,7 +237,9 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                           Row(
                             children: List.generate(5, (index) {
                               return Icon(
-                                index < review.rating ? Icons.star : Icons.star_border,
+                                index < review.rating
+                                    ? Icons.star
+                                    : Icons.star_border,
                                 color: Colors.amber,
                                 size: 14,
                               );
@@ -253,7 +258,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                     ],
                   ),
                 ),
-                
+
                 // Дата
                 Text(
                   _formatDate(review.createdAt),
@@ -264,9 +269,9 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             // Заголовок отзыва
             if (review.title != null) ...[
               Text(
@@ -278,7 +283,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
               ),
               const SizedBox(height: 8),
             ],
-            
+
             // Комментарий
             if (review.comment != null) ...[
               Text(
@@ -291,15 +296,17 @@ class SpecialistReviewsWidget extends ConsumerWidget {
               ),
               const SizedBox(height: 12),
             ],
-            
+
             // Теги
-            if (false) ...[ // TODO: Implement tags
+            if (false) ...[
+              // TODO: Implement tags
               Wrap(
                 spacing: 6,
                 runSpacing: 4,
                 children: [].map((tag) {
                   return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.blue.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
@@ -391,7 +398,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня';
     } else if (difference.inDays == 1) {
@@ -436,7 +443,7 @@ class DetailedRatingWidget extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 16),
-          
+
           _buildRatingItem('Качество', 0.0), // TODO: Implement detailed ratings
           _buildRatingItem('Общение', 0.0),
           _buildRatingItem('Пунктуальность', 0.0),

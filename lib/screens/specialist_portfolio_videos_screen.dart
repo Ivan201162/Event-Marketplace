@@ -17,10 +17,12 @@ class SpecialistPortfolioVideosScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<SpecialistPortfolioVideosScreen> createState() => _SpecialistPortfolioVideosScreenState();
+  ConsumerState<SpecialistPortfolioVideosScreen> createState() =>
+      _SpecialistPortfolioVideosScreenState();
 }
 
-class _SpecialistPortfolioVideosScreenState extends ConsumerState<SpecialistPortfolioVideosScreen>
+class _SpecialistPortfolioVideosScreenState
+    extends ConsumerState<SpecialistPortfolioVideosScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
@@ -40,8 +42,10 @@ class _SpecialistPortfolioVideosScreenState extends ConsumerState<SpecialistPort
 
   @override
   Widget build(BuildContext context) {
-    final videosAsync = ref.watch(specialistPortfolioVideosProvider(widget.specialistId));
-    final statsAsync = ref.watch(specialistProfileStatsProvider(widget.specialistId));
+    final videosAsync =
+        ref.watch(specialistPortfolioVideosProvider(widget.specialistId));
+    final statsAsync =
+        ref.watch(specialistProfileStatsProvider(widget.specialistId));
     final videoFilters = ref.watch(videoFiltersProvider);
 
     return Scaffold(
@@ -74,7 +78,7 @@ class _SpecialistPortfolioVideosScreenState extends ConsumerState<SpecialistPort
             loading: () => const LinearProgressIndicator(),
             error: (error, stack) => const SizedBox.shrink(),
           ),
-          
+
           // Контент по вкладкам
           Expanded(
             child: TabBarView(
@@ -103,7 +107,8 @@ class _SpecialistPortfolioVideosScreenState extends ConsumerState<SpecialistPort
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildStatItem('Всего видео', stats.totalVideos, Icons.video_library),
+            _buildStatItem(
+                'Всего видео', stats.totalVideos, Icons.video_library),
             _buildStatItem('Публичных', stats.publicVideos, Icons.public),
             _buildStatItem('Платформ', _getPlatformsCount(), Icons.platform),
           ],
@@ -166,8 +171,9 @@ class _SpecialistPortfolioVideosScreenState extends ConsumerState<SpecialistPort
   }
 
   Widget _buildPublicVideosTab() {
-    final publicVideosAsync = ref.watch(specialistPublicVideosProvider(widget.specialistId));
-    
+    final publicVideosAsync =
+        ref.watch(specialistPublicVideosProvider(widget.specialistId));
+
     return publicVideosAsync.when(
       data: (videos) {
         if (videos.isEmpty) {
@@ -199,13 +205,15 @@ class _SpecialistPortfolioVideosScreenState extends ConsumerState<SpecialistPort
   }
 
   Widget _buildPlatformsTab() {
-    final videosAsync = ref.watch(specialistPortfolioVideosProvider(widget.specialistId));
-    
+    final videosAsync =
+        ref.watch(specialistPortfolioVideosProvider(widget.specialistId));
+
     return videosAsync.when(
       data: (videos) {
-        final platforms = videos.map((video) => video.platform).toSet().toList();
+        final platforms =
+            videos.map((video) => video.platform).toSet().toList();
         platforms.sort();
-        
+
         if (platforms.isEmpty) {
           return _buildEmptyState(
             'Нет видео',
@@ -229,12 +237,14 @@ class _SpecialistPortfolioVideosScreenState extends ConsumerState<SpecialistPort
   }
 
   Widget _buildPlatformCard(String platform) {
-    final videosAsync = ref.watch(specialistPortfolioVideosProvider(widget.specialistId));
-    
+    final videosAsync =
+        ref.watch(specialistPortfolioVideosProvider(widget.specialistId));
+
     return videosAsync.when(
       data: (videos) {
-        final platformVideos = videos.where((video) => video.platform == platform).toList();
-        
+        final platformVideos =
+            videos.where((video) => video.platform == platform).toList();
+
         return Card(
           margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
           child: ListTile(
@@ -293,7 +303,8 @@ class _SpecialistPortfolioVideosScreenState extends ConsumerState<SpecialistPort
           Text('Ошибка: $error'),
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: () => ref.refresh(specialistPortfolioVideosProvider(widget.specialistId)),
+            onPressed: () => ref.refresh(
+                specialistPortfolioVideosProvider(widget.specialistId)),
             child: const Text('Повторить'),
           ),
         ],
@@ -404,7 +415,8 @@ class _SpecialistPortfolioVideosScreenState extends ConsumerState<SpecialistPort
                           child: Image.network(
                             video.thumbnailUrl,
                             fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) => const Icon(
+                            errorBuilder: (context, error, stackTrace) =>
+                                const Icon(
                               Icons.video_library,
                               size: 64,
                               color: Colors.grey,
@@ -413,49 +425,55 @@ class _SpecialistPortfolioVideosScreenState extends ConsumerState<SpecialistPort
                         ),
                       ),
                       const SizedBox(height: 16),
-                      
+
                       Text(
                         video.description,
                         style: const TextStyle(fontSize: 16),
                       ),
                       const SizedBox(height: 16),
-                      
+
                       Row(
                         children: [
                           Chip(
-                            label: Text(_getPlatformDisplayName(video.platform)),
+                            label:
+                                Text(_getPlatformDisplayName(video.platform)),
                             backgroundColor: _getPlatformColor(video.platform),
                           ),
                           const SizedBox(width: 8),
                           Text(
                             'Длительность: ${video.duration}',
-                            style: const TextStyle(color: Colors.grey, fontSize: 12),
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 12),
                           ),
                         ],
                       ),
                       const SizedBox(height: 8),
-                      
+
                       if (video.tags.isNotEmpty) ...[
                         Wrap(
                           spacing: 4,
-                          children: video.tags.map((tag) => Chip(
-                            label: Text(tag),
-                            labelStyle: const TextStyle(fontSize: 12),
-                          )).toList(),
+                          children: video.tags
+                              .map((tag) => Chip(
+                                    label: Text(tag),
+                                    labelStyle: const TextStyle(fontSize: 12),
+                                  ))
+                              .toList(),
                         ),
                         const SizedBox(height: 16),
                       ],
-                      
+
                       Row(
                         children: [
                           Text(
                             'Загружено: ${_formatDate(video.uploadedAt)}',
-                            style: const TextStyle(color: Colors.grey, fontSize: 12),
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 12),
                           ),
                           const SizedBox(width: 16),
                           Text(
                             'Просмотров: ${video.viewCount}',
-                            style: const TextStyle(color: Colors.grey, fontSize: 12),
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 12),
                           ),
                         ],
                       ),
@@ -498,9 +516,11 @@ class _SpecialistPortfolioVideosScreenState extends ConsumerState<SpecialistPort
           ElevatedButton(
             onPressed: () async {
               Navigator.pop(context);
-              final service = ref.read(specialistProfileExtendedServiceProvider);
+              final service =
+                  ref.read(specialistProfileExtendedServiceProvider);
               await service.removePortfolioVideo(widget.specialistId, video.id);
-              ref.refresh(specialistPortfolioVideosProvider(widget.specialistId));
+              ref.refresh(
+                  specialistPortfolioVideosProvider(widget.specialistId));
               ref.refresh(specialistProfileStatsProvider(widget.specialistId));
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -544,7 +564,8 @@ class _SpecialistPortfolioVideosScreenState extends ConsumerState<SpecialistPort
   }
 
   int _getPlatformsCount() {
-    final videosAsync = ref.read(specialistPortfolioVideosProvider(widget.specialistId));
+    final videosAsync =
+        ref.read(specialistPortfolioVideosProvider(widget.specialistId));
     return videosAsync.when(
       data: (videos) => videos.map((video) => video.platform).toSet().length,
       loading: () => 0,
@@ -609,7 +630,8 @@ class VideosByPlatformScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final videosAsync = ref.watch(specialistPortfolioVideosProvider(specialistId));
+    final videosAsync =
+        ref.watch(specialistPortfolioVideosProvider(specialistId));
 
     return Scaffold(
       appBar: AppBar(
@@ -617,8 +639,9 @@ class VideosByPlatformScreen extends ConsumerWidget {
       ),
       body: videosAsync.when(
         data: (videos) {
-          final platformVideos = videos.where((video) => video.platform == platform).toList();
-          
+          final platformVideos =
+              videos.where((video) => video.platform == platform).toList();
+
           if (platformVideos.isEmpty) {
             return const Center(
               child: Text('Нет видео на этой платформе'),
@@ -665,7 +688,8 @@ class VideosByPlatformScreen extends ConsumerWidget {
     // TODO: Показать детали видео
   }
 
-  void _showEditVideoDialog(BuildContext context, WidgetRef ref, PortfolioVideo video) {
+  void _showEditVideoDialog(
+      BuildContext context, WidgetRef ref, PortfolioVideo video) {
     // TODO: Редактировать видео
   }
 
@@ -673,7 +697,8 @@ class VideosByPlatformScreen extends ConsumerWidget {
     // TODO: Удалить видео
   }
 
-  void _togglePublish(BuildContext context, WidgetRef ref, PortfolioVideo video) {
+  void _togglePublish(
+      BuildContext context, WidgetRef ref, PortfolioVideo video) {
     // TODO: Переключить публикацию
   }
 }
@@ -691,7 +716,8 @@ class VideoSearchResultsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final videosAsync = ref.watch(specialistVideoSearchProvider((specialistId, query)));
+    final videosAsync =
+        ref.watch(specialistVideoSearchProvider((specialistId, query)));
 
     return Scaffold(
       appBar: AppBar(
@@ -732,7 +758,8 @@ class VideoSearchResultsScreen extends ConsumerWidget {
     // TODO: Показать детали видео
   }
 
-  void _showEditVideoDialog(BuildContext context, WidgetRef ref, PortfolioVideo video) {
+  void _showEditVideoDialog(
+      BuildContext context, WidgetRef ref, PortfolioVideo video) {
     // TODO: Редактировать видео
   }
 
@@ -740,7 +767,8 @@ class VideoSearchResultsScreen extends ConsumerWidget {
     // TODO: Удалить видео
   }
 
-  void _togglePublish(BuildContext context, WidgetRef ref, PortfolioVideo video) {
+  void _togglePublish(
+      BuildContext context, WidgetRef ref, PortfolioVideo video) {
     // TODO: Переключить публикацию
   }
 }

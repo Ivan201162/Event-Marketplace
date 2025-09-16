@@ -44,15 +44,15 @@ class AnalyticsChartWidget extends StatelessWidget {
               ),
             ],
             const SizedBox(height: 16),
-            
+
             // График
             SizedBox(
               height: _getChartHeight(),
               child: _buildChart(),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Легенда
             if (type == ChartType.pie) _buildLegend(),
           ],
@@ -109,8 +109,10 @@ class AnalyticsChartWidget extends StatelessWidget {
               },
             ),
           ),
-          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         ),
         borderData: FlBorderData(show: true),
         lineBarsData: [
@@ -170,8 +172,10 @@ class AnalyticsChartWidget extends StatelessWidget {
               },
             ),
           ),
-          topTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
-          rightTitles: const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          topTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
+          rightTitles:
+              const AxisTitles(sideTitles: SideTitles(showTitles: false)),
         ),
         borderData: FlBorderData(show: true),
         barGroups: data.asMap().entries.map((entry) {
@@ -182,7 +186,8 @@ class AnalyticsChartWidget extends StatelessWidget {
                 toY: entry.value.value,
                 color: entry.value.color ?? Theme.of(context).primaryColor,
                 width: 20,
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(4)),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(4)),
               ),
             ],
           );
@@ -199,7 +204,7 @@ class AnalyticsChartWidget extends StatelessWidget {
     }
 
     final total = data.fold(0.0, (sum, item) => sum + item.value);
-    
+
     return PieChart(
       PieChartData(
         sections: data.map((item) {
@@ -304,7 +309,7 @@ class AnalyticsStatsWidget extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Основные показатели
             Row(
               children: [
@@ -327,9 +332,9 @@ class AnalyticsStatsWidget extends StatelessWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             Row(
               children: [
                 Expanded(
@@ -352,9 +357,9 @@ class AnalyticsStatsWidget extends StatelessWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Рост
             if (stats.monthlyData.length >= 2) ...[
               Row(
@@ -383,7 +388,8 @@ class AnalyticsStatsWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildStatCard(String title, double value, Color color, IconData icon, {bool isCount = false}) {
+  Widget _buildStatCard(String title, double value, Color color, IconData icon,
+      {bool isCount = false}) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -410,7 +416,7 @@ class AnalyticsStatsWidget extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            isCount 
+            isCount
                 ? value.toInt().toString()
                 : '${value.toStringAsFixed(0)} ₽',
             style: TextStyle(
@@ -427,7 +433,7 @@ class AnalyticsStatsWidget extends StatelessWidget {
   Widget _buildGrowthCard(String title, double percentage, IconData icon) {
     final isPositive = percentage >= 0;
     final color = isPositive ? Colors.green : Colors.red;
-    
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -505,7 +511,6 @@ class BudgetGoalsWidget extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 16),
-            
             if (goals.isEmpty)
               const Center(
                 child: Text('Нет активных целей'),
@@ -558,7 +563,7 @@ class BudgetGoalsWidget extends StatelessWidget {
               ),
             ],
           ),
-          
+
           if (goal.description != null) ...[
             const SizedBox(height: 4),
             Text(
@@ -569,9 +574,9 @@ class BudgetGoalsWidget extends StatelessWidget {
               ),
             ),
           ],
-          
+
           const SizedBox(height: 12),
-          
+
           // Прогресс
           Row(
             children: [
@@ -591,7 +596,9 @@ class BudgetGoalsWidget extends StatelessWidget {
                       value: goal.progressPercentage / 100,
                       backgroundColor: Colors.grey[300],
                       valueColor: AlwaysStoppedAnimation<Color>(
-                        goal.isAchieved ? Colors.green : Theme.of(context).primaryColor,
+                        goal.isAchieved
+                            ? Colors.green
+                            : Theme.of(context).primaryColor,
                       ),
                     ),
                   ],
@@ -608,9 +615,9 @@ class BudgetGoalsWidget extends StatelessWidget {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           Text(
             'Цель до: ${_formatDate(goal.targetDate)}',
             style: TextStyle(

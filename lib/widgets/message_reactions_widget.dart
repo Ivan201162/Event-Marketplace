@@ -19,10 +19,12 @@ class MessageReactionsWidget extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<MessageReactionsWidget> createState() => _MessageReactionsWidgetState();
+  ConsumerState<MessageReactionsWidget> createState() =>
+      _MessageReactionsWidgetState();
 }
 
-class _MessageReactionsWidgetState extends ConsumerState<MessageReactionsWidget> {
+class _MessageReactionsWidgetState
+    extends ConsumerState<MessageReactionsWidget> {
   final MessageReactionService _reactionService = MessageReactionService();
   bool _showEmojiPicker = false;
 
@@ -36,10 +38,10 @@ class _MessageReactionsWidgetState extends ConsumerState<MessageReactionsWidget>
           _buildReactionsList(),
           const SizedBox(height: 8),
         ],
-        
+
         // Кнопка добавления реакции
         _buildAddReactionButton(),
-        
+
         // Эмодзи пикер
         if (_showEmojiPicker) ...[
           const SizedBox(height: 8),
@@ -63,19 +65,20 @@ class _MessageReactionsWidgetState extends ConsumerState<MessageReactionsWidget>
         final emoji = entry.key;
         final reactions = entry.value;
         final count = reactions.length;
-        final hasCurrentUserReaction = reactions.any((r) => r.userId == widget.currentUserId);
+        final hasCurrentUserReaction =
+            reactions.any((r) => r.userId == widget.currentUserId);
 
         return GestureDetector(
           onTap: () => _toggleReaction(emoji),
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: hasCurrentUserReaction 
+              color: hasCurrentUserReaction
                   ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
                   : Colors.grey.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: hasCurrentUserReaction 
+                color: hasCurrentUserReaction
                     ? Theme.of(context).primaryColor.withValues(alpha: 0.3)
                     : Colors.grey.withValues(alpha: 0.3),
               ),
@@ -94,7 +97,7 @@ class _MessageReactionsWidgetState extends ConsumerState<MessageReactionsWidget>
                     style: TextStyle(
                       fontSize: 12,
                       fontWeight: FontWeight.w500,
-                      color: hasCurrentUserReaction 
+                      color: hasCurrentUserReaction
                           ? Theme.of(context).primaryColor
                           : Colors.grey[600],
                     ),
@@ -148,7 +151,7 @@ class _MessageReactionsWidgetState extends ConsumerState<MessageReactionsWidget>
 
   Widget _buildEmojiPicker() {
     final emojisByCategory = _reactionService.getEmojisByCategory();
-    
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -173,9 +176,9 @@ class _MessageReactionsWidgetState extends ConsumerState<MessageReactionsWidget>
             'Популярные',
             _reactionService.getPopularEmojis().take(12).toList(),
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           // Категории эмодзи
           ...emojisByCategory.entries.map((entry) {
             return Column(
@@ -282,7 +285,7 @@ class ReactionDetailsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final emojiReactions = reactions.where((r) => r.emoji == emoji).toList();
-    
+
     return Dialog(
       child: Container(
         constraints: const BoxConstraints(maxWidth: 300, maxHeight: 400),
@@ -315,7 +318,7 @@ class ReactionDetailsWidget extends StatelessWidget {
                     leading: CircleAvatar(
                       backgroundColor: Colors.grey[300],
                       child: Text(
-                        reaction.userName.isNotEmpty 
+                        reaction.userName.isNotEmpty
                             ? reaction.userName[0].toUpperCase()
                             : '?',
                         style: const TextStyle(
@@ -346,7 +349,7 @@ class ReactionDetailsWidget extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня в ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
     } else if (difference.inDays == 1) {

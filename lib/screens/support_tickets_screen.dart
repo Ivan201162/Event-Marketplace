@@ -11,12 +11,13 @@ class SupportTicketsScreen extends ConsumerStatefulWidget {
   const SupportTicketsScreen({super.key});
 
   @override
-  ConsumerState<SupportTicketsScreen> createState() => _SupportTicketsScreenState();
+  ConsumerState<SupportTicketsScreen> createState() =>
+      _SupportTicketsScreenState();
 }
 
 class _SupportTicketsScreenState extends ConsumerState<SupportTicketsScreen> {
   final SupportService _supportService = SupportService();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,7 +34,7 @@ class _SupportTicketsScreenState extends ConsumerState<SupportTicketsScreen> {
         children: [
           // Быстрые действия
           _buildQuickActions(),
-          
+
           // Список тикетов
           Expanded(
             child: _buildTicketsList(),
@@ -116,7 +117,8 @@ class _SupportTicketsScreenState extends ConsumerState<SupportTicketsScreen> {
 
   Widget _buildTicketsList() {
     return StreamBuilder<List<SupportTicket>>(
-      stream: _supportService.getUserTickets('demo_user_id'), // TODO: Получить из контекста
+      stream: _supportService
+          .getUserTickets('demo_user_id'), // TODO: Получить из контекста
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -189,11 +191,13 @@ class _SupportTicketsScreenState extends ConsumerState<SupportTicketsScreen> {
   }
 
   void _createTicket() {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       MaterialPageRoute(
         builder: (context) => const CreateSupportTicketScreen(),
       ),
-    ).then((result) {
+    )
+        .then((result) {
       if (result == true) {
         setState(() {});
       }
@@ -201,13 +205,15 @@ class _SupportTicketsScreenState extends ConsumerState<SupportTicketsScreen> {
   }
 
   void _showTicketDetail(SupportTicket ticket) {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       MaterialPageRoute(
         builder: (context) => SupportTicketDetailScreen(
           ticket: ticket,
         ),
       ),
-    ).then((result) {
+    )
+        .then((result) {
       if (result == true) {
         setState(() {});
       }
@@ -239,13 +245,15 @@ class SupportTicketDetailScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<SupportTicketDetailScreen> createState() => _SupportTicketDetailScreenState();
+  ConsumerState<SupportTicketDetailScreen> createState() =>
+      _SupportTicketDetailScreenState();
 }
 
-class _SupportTicketDetailScreenState extends ConsumerState<SupportTicketDetailScreen> {
+class _SupportTicketDetailScreenState
+    extends ConsumerState<SupportTicketDetailScreen> {
   final SupportService _supportService = SupportService();
   final _messageController = TextEditingController();
-  
+
   @override
   void dispose() {
     _messageController.dispose();
@@ -276,12 +284,12 @@ class _SupportTicketDetailScreenState extends ConsumerState<SupportTicketDetailS
         children: [
           // Информация о тикете
           _buildTicketInfo(),
-          
+
           // Сообщения
           Expanded(
             child: _buildMessagesList(),
           ),
-          
+
           // Поле ввода сообщения
           _buildMessageInput(),
         ],
@@ -333,9 +341,9 @@ class _SupportTicketDetailScreenState extends ConsumerState<SupportTicketDetailS
               ),
             ],
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           // Категория и приоритет
           Row(
             children: [
@@ -371,9 +379,9 @@ class _SupportTicketDetailScreenState extends ConsumerState<SupportTicketDetailS
               ),
             ],
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           // Дата создания
           Text(
             'Создан: ${_formatDate(widget.ticket.createdAt)}',
@@ -422,17 +430,19 @@ class _SupportTicketDetailScreenState extends ConsumerState<SupportTicketDetailS
 
   Widget _buildMessageBubble(SupportMessage message) {
     final isFromSupport = message.isFromSupport;
-    
+
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       child: Row(
-        mainAxisAlignment: isFromSupport ? MainAxisAlignment.start : MainAxisAlignment.end,
+        mainAxisAlignment:
+            isFromSupport ? MainAxisAlignment.start : MainAxisAlignment.end,
         children: [
           if (isFromSupport) ...[
             CircleAvatar(
               radius: 16,
               backgroundColor: Colors.blue,
-              child: const Icon(Icons.support_agent, color: Colors.white, size: 16),
+              child: const Icon(Icons.support_agent,
+                  color: Colors.white, size: 16),
             ),
             const SizedBox(width: 8),
           ],
@@ -502,7 +512,8 @@ class _SupportTicketDetailScreenState extends ConsumerState<SupportTicketDetailS
               decoration: const InputDecoration(
                 hintText: 'Введите сообщение...',
                 border: OutlineInputBorder(),
-                contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                contentPadding:
+                    EdgeInsets.symmetric(horizontal: 16, vertical: 12),
               ),
               maxLines: null,
             ),
@@ -565,7 +576,8 @@ class _SupportTicketDetailScreenState extends ConsumerState<SupportTicketDetailS
           ElevatedButton(
             onPressed: () {
               Navigator.pop(context);
-              _supportService.updateTicketStatus(widget.ticket.id, SupportStatus.closed);
+              _supportService.updateTicketStatus(
+                  widget.ticket.id, SupportStatus.closed);
               Navigator.pop(context, true);
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -579,7 +591,7 @@ class _SupportTicketDetailScreenState extends ConsumerState<SupportTicketDetailS
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inMinutes < 1) {
       return 'только что';
     } else if (difference.inMinutes < 60) {

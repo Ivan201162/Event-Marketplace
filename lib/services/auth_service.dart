@@ -24,7 +24,8 @@ class AuthService {
     if (firebaseUser == null) return null;
 
     try {
-      final doc = await _firestore.collection('users').doc(firebaseUser.uid).get();
+      final doc =
+          await _firestore.collection('users').doc(firebaseUser.uid).get();
       if (doc.exists) {
         return AppUser.fromDocument(doc);
       }
@@ -39,9 +40,10 @@ class AuthService {
   Stream<AppUser?> get currentUserStream {
     return authStateChanges.asyncMap((firebaseUser) async {
       if (firebaseUser == null) return null;
-      
+
       try {
-        final doc = await _firestore.collection('users').doc(firebaseUser.uid).get();
+        final doc =
+            await _firestore.collection('users').doc(firebaseUser.uid).get();
         if (doc.exists) {
           return AppUser.fromDocument(doc);
         }
@@ -81,7 +83,10 @@ class AuthService {
         role: role,
       );
 
-      await _firestore.collection('users').doc(firebaseUser.uid).set(appUser.toMap());
+      await _firestore
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .set(appUser.toMap());
 
       return appUser;
     } on FirebaseAuthException catch (e) {
@@ -123,7 +128,7 @@ class AuthService {
       // Создаем анонимного пользователя
       final credential = await _auth.signInAnonymously();
       final firebaseUser = credential.user;
-      
+
       if (firebaseUser == null) return null;
 
       // Создаем гостевого пользователя в Firestore
@@ -134,7 +139,10 @@ class AuthService {
         role: UserRole.guest,
       );
 
-      await _firestore.collection('users').doc(firebaseUser.uid).set(guestUser.toMap());
+      await _firestore
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .set(guestUser.toMap());
 
       return guestUser;
     } catch (e) {
@@ -150,7 +158,8 @@ class AuthService {
         return null; // Пользователь отменил вход
       }
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -158,12 +167,13 @@ class AuthService {
 
       final userCredential = await _auth.signInWithCredential(credential);
       final firebaseUser = userCredential.user;
-      
+
       if (firebaseUser == null) return null;
 
       // Проверяем, существует ли пользователь в Firestore
-      final userDoc = await _firestore.collection('users').doc(firebaseUser.uid).get();
-      
+      final userDoc =
+          await _firestore.collection('users').doc(firebaseUser.uid).get();
+
       if (!userDoc.exists) {
         // Создаем нового пользователя
         final appUser = AppUser.fromFirebaseUser(
@@ -175,8 +185,11 @@ class AuthService {
           socialProvider: 'google',
           socialId: googleUser.id,
         );
-        
-        await _firestore.collection('users').doc(firebaseUser.uid).set(appUser.toMap());
+
+        await _firestore
+            .collection('users')
+            .doc(firebaseUser.uid)
+            .set(appUser.toMap());
         return appUser;
       } else {
         // Обновляем время последнего входа
@@ -194,12 +207,12 @@ class AuthService {
       // TODO: Реализовать VK OAuth
       // Это требует дополнительной настройки VK SDK
       // Пока возвращаем заглушку
-      throw Exception('VK Sign-In пока не реализован. Требуется настройка VK SDK.');
+      throw Exception(
+          'VK Sign-In пока не реализован. Требуется настройка VK SDK.');
     } catch (e) {
       throw Exception('Ошибка входа через VK: $e');
     }
   }
-
 
   /// Сброс пароля
   Future<void> resetPassword(String email) async {
@@ -238,7 +251,10 @@ class AuthService {
 
       if (updateData.isNotEmpty) {
         updateData['updatedAt'] = FieldValue.serverTimestamp();
-        await _firestore.collection('users').doc(firebaseUser.uid).update(updateData);
+        await _firestore
+            .collection('users')
+            .doc(firebaseUser.uid)
+            .update(updateData);
       }
     } catch (e) {
       throw Exception('Ошибка обновления профиля: $e');
@@ -256,7 +272,7 @@ class AuthService {
 
     try {
       String? photoURL;
-      
+
       // Загружаем изображение, если оно выбрано
       if (imageFile != null) {
         photoURL = await _storageService.uploadProfileImage(imageFile);
@@ -281,7 +297,7 @@ class AuthService {
     try {
       // Удаляем данные из Firestore
       await _firestore.collection('users').doc(firebaseUser.uid).delete();
-      
+
       // Удаляем аккаунт Firebase Auth
       await firebaseUser.delete();
     } catch (e) {
@@ -308,7 +324,8 @@ class AuthService {
       if (googleUser == null) return null;
 
       // Получаем данные аутентификации
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       // Создаем новый credential
       final credential = GoogleAuthProvider.credential(
@@ -337,7 +354,10 @@ class AuthService {
         role: role,
       );
 
-      await _firestore.collection('users').doc(firebaseUser.uid).set(appUser.toMap());
+      await _firestore
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .set(appUser.toMap());
       return appUser;
     } catch (e) {
       throw Exception('Ошибка входа через Google: $e');

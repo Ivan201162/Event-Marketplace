@@ -40,8 +40,8 @@ class EventIdea {
     this.budget,
     this.season,
     this.venue,
-  }) : createdAt = createdAt ?? DateTime.now(),
-       updatedAt = updatedAt ?? DateTime.now();
+  })  : createdAt = createdAt ?? DateTime.now(),
+        updatedAt = updatedAt ?? DateTime.now();
 
   /// Преобразование в Map для Firestore
   Map<String, dynamic> toMap() {
@@ -78,8 +78,12 @@ class EventIdea {
       videoUrls: List<String>.from(data['videoUrls'] ?? []),
       authorId: data['authorId'],
       authorName: data['authorName'],
-      createdAt: data['createdAt'] != null ? (data['createdAt'] as Timestamp).toDate() : DateTime.now(),
-      updatedAt: data['updatedAt'] != null ? (data['updatedAt'] as Timestamp).toDate() : DateTime.now(),
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] as Timestamp).toDate()
+          : DateTime.now(),
       tags: List<String>.from(data['tags'] ?? []),
       likesCount: data['likesCount'] ?? 0,
       savesCount: data['savesCount'] ?? 0,

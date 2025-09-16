@@ -10,37 +10,45 @@ final profileServiceProvider = Provider<ProfileService>((ref) {
 });
 
 /// Провайдер профиля заказчика
-final customerProfileProvider = FutureProvider.family<CustomerProfile?, String>((ref, userId) {
+final customerProfileProvider =
+    FutureProvider.family<CustomerProfile?, String>((ref, userId) {
   final profileService = ref.watch(profileServiceProvider);
   return profileService.getCustomerProfile(userId);
 });
 
 /// Провайдер профиля специалиста
-final specialistProfileProvider = FutureProvider.family<SpecialistProfile?, String>((ref, userId) {
+final specialistProfileProvider =
+    FutureProvider.family<SpecialistProfile?, String>((ref, userId) {
   final profileService = ref.watch(profileServiceProvider);
   return profileService.getSpecialistProfile(userId);
 });
 
 /// Провайдер профиля текущего пользователя
-final currentUserProfileProvider = FutureProvider.family<dynamic, (String, UserRole)>((ref, params) {
+final currentUserProfileProvider =
+    FutureProvider.family<dynamic, (String, UserRole)>((ref, params) {
   final profileService = ref.watch(profileServiceProvider);
   return profileService.getUserProfile(params.$1, params.$2);
 });
 
 /// Провайдер специалистов по категории
-final specialistsByCategoryProvider = FutureProvider.family<List<SpecialistProfile>, SpecialistCategory>((ref, category) {
+final specialistsByCategoryProvider =
+    FutureProvider.family<List<SpecialistProfile>, SpecialistCategory>(
+        (ref, category) {
   final profileService = ref.watch(profileServiceProvider);
   return profileService.getSpecialistsByCategory(category);
 });
 
 /// Провайдер топ специалистов
-final topSpecialistsProvider = FutureProvider.family<List<SpecialistProfile>, int>((ref, limit) {
+final topSpecialistsProvider =
+    FutureProvider.family<List<SpecialistProfile>, int>((ref, limit) {
   final profileService = ref.watch(profileServiceProvider);
   return profileService.getTopSpecialists(limit: limit);
 });
 
 /// Провайдер поиска специалистов
-final searchSpecialistsProvider = FutureProvider.family<List<SpecialistProfile>, SearchSpecialistsParams>((ref, params) {
+final searchSpecialistsProvider =
+    FutureProvider.family<List<SpecialistProfile>, SearchSpecialistsParams>(
+        (ref, params) {
   final profileService = ref.watch(profileServiceProvider);
   return profileService.searchSpecialists(
     query: params.query,
@@ -52,7 +60,9 @@ final searchSpecialistsProvider = FutureProvider.family<List<SpecialistProfile>,
 });
 
 /// Провайдер статистики профиля
-final profileStatsProvider = FutureProvider.family<Map<String, dynamic>, (String, UserRole)>((ref, params) {
+final profileStatsProvider =
+    FutureProvider.family<Map<String, dynamic>, (String, UserRole)>(
+        (ref, params) {
   final profileService = ref.watch(profileServiceProvider);
   return profileService.getProfileStats(params.$1, params.$2);
 });
@@ -91,7 +101,8 @@ class SearchSpecialistsParams {
 }
 
 /// Провайдер для управления состоянием редактирования профиля заказчика
-final customerProfileEditProvider = StateNotifierProvider<CustomerProfileEditNotifier, CustomerProfileEditState>((ref) {
+final customerProfileEditProvider = StateNotifierProvider<
+    CustomerProfileEditNotifier, CustomerProfileEditState>((ref) {
   return CustomerProfileEditNotifier(ref.read(profileServiceProvider));
 });
 
@@ -125,10 +136,12 @@ class CustomerProfileEditState {
 }
 
 /// Нотификатор для редактирования профиля заказчика
-class CustomerProfileEditNotifier extends StateNotifier<CustomerProfileEditState> {
+class CustomerProfileEditNotifier
+    extends StateNotifier<CustomerProfileEditState> {
   final ProfileService _profileService;
 
-  CustomerProfileEditNotifier(this._profileService) : super(const CustomerProfileEditState());
+  CustomerProfileEditNotifier(this._profileService)
+      : super(const CustomerProfileEditState());
 
   /// Загрузить профиль
   Future<void> loadProfile(String userId) async {
@@ -209,7 +222,8 @@ class CustomerProfileEditNotifier extends StateNotifier<CustomerProfileEditState
 }
 
 /// Провайдер для управления состоянием редактирования профиля специалиста
-final specialistProfileEditProvider = StateNotifierProvider<SpecialistProfileEditNotifier, SpecialistProfileEditState>((ref) {
+final specialistProfileEditProvider = StateNotifierProvider<
+    SpecialistProfileEditNotifier, SpecialistProfileEditState>((ref) {
   return SpecialistProfileEditNotifier(ref.read(profileServiceProvider));
 });
 
@@ -243,10 +257,12 @@ class SpecialistProfileEditState {
 }
 
 /// Нотификатор для редактирования профиля специалиста
-class SpecialistProfileEditNotifier extends StateNotifier<SpecialistProfileEditState> {
+class SpecialistProfileEditNotifier
+    extends StateNotifier<SpecialistProfileEditState> {
   final ProfileService _profileService;
 
-  SpecialistProfileEditNotifier(this._profileService) : super(const SpecialistProfileEditState());
+  SpecialistProfileEditNotifier(this._profileService)
+      : super(const SpecialistProfileEditState());
 
   /// Загрузить профиль
   Future<void> loadProfile(String userId) async {
@@ -306,7 +322,8 @@ class SpecialistProfileEditNotifier extends StateNotifier<SpecialistProfileEditS
   void addPortfolioItem(PortfolioItem item) {
     if (state.profile == null) return;
 
-    final updatedPortfolio = List<PortfolioItem>.from(state.profile!.portfolio)..add(item);
+    final updatedPortfolio = List<PortfolioItem>.from(state.profile!.portfolio)
+      ..add(item);
     final updatedProfile = state.profile!.copyWith(
       portfolio: updatedPortfolio,
       updatedAt: DateTime.now(),
@@ -322,7 +339,8 @@ class SpecialistProfileEditNotifier extends StateNotifier<SpecialistProfileEditS
   void removePortfolioItem(String itemId) {
     if (state.profile == null) return;
 
-    final updatedPortfolio = state.profile!.portfolio.where((item) => item.id != itemId).toList();
+    final updatedPortfolio =
+        state.profile!.portfolio.where((item) => item.id != itemId).toList();
     final updatedProfile = state.profile!.copyWith(
       portfolio: updatedPortfolio,
       updatedAt: DateTime.now(),

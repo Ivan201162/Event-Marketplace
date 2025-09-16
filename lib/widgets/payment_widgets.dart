@@ -44,9 +44,9 @@ class PaymentCard extends ConsumerWidget {
                   _buildStatusChip(payment.status),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Сумма
               Row(
                 children: [
@@ -65,40 +65,49 @@ class PaymentCard extends ConsumerWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Описание
               if (payment.description != null) ...[
                 Text(
                   payment.description!,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.7),
                   ),
                 ),
                 const SizedBox(height: 8),
               ],
-              
+
               // Информация о датах
               Row(
                 children: [
                   Icon(
                     Icons.schedule,
                     size: 16,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.7),
                   ),
                   const SizedBox(width: 8),
                   Text(
                     'Создан: ${_formatDate(payment.createdAt)}',
                     style: TextStyle(
                       fontSize: 12,
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.7),
                     ),
                   ),
                 ],
               ),
-              
+
               if (payment.completedAt != null) ...[
                 const SizedBox(height: 4),
                 Row(
@@ -119,7 +128,7 @@ class PaymentCard extends ConsumerWidget {
                   ],
                 ),
               ],
-              
+
               // Действия
               if (showActions && payment.isPending) ...[
                 const SizedBox(height: 12),
@@ -136,7 +145,7 @@ class PaymentCard extends ConsumerWidget {
   Widget _buildStatusChip(PaymentStatus status) {
     Color color;
     IconData icon;
-    
+
     switch (status) {
       case PaymentStatus.pending:
         color = Colors.orange;
@@ -163,7 +172,7 @@ class PaymentCard extends ConsumerWidget {
         icon = Icons.undo;
         break;
     }
-    
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
@@ -243,7 +252,9 @@ class PaymentCard extends ConsumerWidget {
             onPressed: () async {
               Navigator.of(context).pop();
               try {
-                await ref.read(paymentStateProvider.notifier).cancelPayment(payment.id);
+                await ref
+                    .read(paymentStateProvider.notifier)
+                    .cancelPayment(payment.id);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Платеж отменен')),
@@ -315,7 +326,8 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Сумма к оплате: ${widget.payment.amount.toStringAsFixed(0)} ${widget.payment.currency}'),
+          Text(
+              'Сумма к оплате: ${widget.payment.amount.toStringAsFixed(0)} ${widget.payment.currency}'),
           const SizedBox(height: 16),
           const Text('Выберите способ оплаты:'),
           const SizedBox(height: 12),
@@ -405,9 +417,9 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
 
     try {
       await ref.read(paymentStateProvider.notifier).processPayment(
-        widget.payment.id,
-        _selectedPaymentMethod,
-      );
+            widget.payment.id,
+            _selectedPaymentMethod,
+          );
 
       if (mounted) {
         Navigator.of(context).pop();
@@ -442,8 +454,8 @@ class PaymentStatisticsWidget extends ConsumerWidget {
             Text(
               'Статистика платежей',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             Row(
@@ -591,8 +603,8 @@ class PaymentCalculationWidget extends ConsumerWidget {
             Text(
               'Расчет платежей',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 12),
             Text(

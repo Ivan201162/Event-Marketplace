@@ -6,7 +6,8 @@ import '../services/idea_service.dart';
 final ideaServiceProvider = Provider<IdeaService>((ref) => IdeaService());
 
 /// Провайдер для получения идей с фильтром
-final ideasProvider = StreamProvider.family<List<Idea>, IdeaFilter>((ref, filter) {
+final ideasProvider =
+    StreamProvider.family<List<Idea>, IdeaFilter>((ref, filter) {
   return ref.watch(ideaServiceProvider).getIdeas(filter);
 });
 
@@ -16,12 +17,14 @@ final ideaProvider = FutureProvider.family<Idea?, String>((ref, ideaId) {
 });
 
 /// Провайдер для получения идей пользователя
-final userIdeasProvider = StreamProvider.family<List<Idea>, String>((ref, userId) {
+final userIdeasProvider =
+    StreamProvider.family<List<Idea>, String>((ref, userId) {
   return ref.watch(ideaServiceProvider).getUserIdeas(userId);
 });
 
 /// Провайдер для получения сохраненных идей пользователя
-final savedIdeasProvider = StreamProvider.family<List<Idea>, String>((ref, userId) {
+final savedIdeasProvider =
+    StreamProvider.family<List<Idea>, String>((ref, userId) {
   return ref.watch(ideaServiceProvider).getSavedIdeas(userId);
 });
 
@@ -31,12 +34,14 @@ final topIdeasProvider = StreamProvider<List<Idea>>((ref) {
 });
 
 /// Провайдер для получения комментариев идеи
-final ideaCommentsProvider = StreamProvider.family<List<IdeaComment>, String>((ref, ideaId) {
+final ideaCommentsProvider =
+    StreamProvider.family<List<IdeaComment>, String>((ref, ideaId) {
   return ref.watch(ideaServiceProvider).getIdeaComments(ideaId);
 });
 
 /// Провайдер для получения коллекций пользователя
-final userCollectionsProvider = StreamProvider.family<List<IdeaCollection>, String>((ref, userId) {
+final userCollectionsProvider =
+    StreamProvider.family<List<IdeaCollection>, String>((ref, userId) {
   return ref.watch(ideaServiceProvider).getUserCollections(userId);
 });
 

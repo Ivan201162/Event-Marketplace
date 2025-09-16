@@ -34,7 +34,8 @@ void main() {
       );
     });
 
-    testWidgets('should display specialist information', (WidgetTester tester) async {
+    testWidgets('should display specialist information',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -74,7 +75,8 @@ void main() {
       expect(find.text('Дополнительные пожелания'), findsOneWidget);
     });
 
-    testWidgets('should display date and time selection', (WidgetTester tester) async {
+    testWidgets('should display date and time selection',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -91,7 +93,8 @@ void main() {
       expect(find.text('Продолжительность'), findsOneWidget);
     });
 
-    testWidgets('should display price calculation', (WidgetTester tester) async {
+    testWidgets('should display price calculation',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -147,7 +150,8 @@ void main() {
       expect(find.text('Создать заявку'), findsOneWidget);
     });
 
-    testWidgets('should allow entering event name', (WidgetTester tester) async {
+    testWidgets('should allow entering event name',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -167,7 +171,8 @@ void main() {
       expect(find.text('Test Event'), findsOneWidget);
     });
 
-    testWidgets('should allow entering event description', (WidgetTester tester) async {
+    testWidgets('should allow entering event description',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -188,7 +193,8 @@ void main() {
       expect(find.text('Test description'), findsOneWidget);
     });
 
-    testWidgets('should allow entering event location', (WidgetTester tester) async {
+    testWidgets('should allow entering event location',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -209,7 +215,8 @@ void main() {
       expect(find.text('Test Location'), findsOneWidget);
     });
 
-    testWidgets('should allow entering contact phone', (WidgetTester tester) async {
+    testWidgets('should allow entering contact phone',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -230,7 +237,8 @@ void main() {
       expect(find.text('+7 (999) 123-45-67'), findsOneWidget);
     });
 
-    testWidgets('should allow entering contact email', (WidgetTester tester) async {
+    testWidgets('should allow entering contact email',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -251,7 +259,8 @@ void main() {
       expect(find.text('test@example.com'), findsOneWidget);
     });
 
-    testWidgets('should allow entering special requests', (WidgetTester tester) async {
+    testWidgets('should allow entering special requests',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -272,7 +281,8 @@ void main() {
       expect(find.text('Special requests'), findsOneWidget);
     });
 
-    testWidgets('should show loading state initially', (WidgetTester tester) async {
+    testWidgets('should show loading state initially',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -286,7 +296,8 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('should show error state when specialist not found', (WidgetTester tester) async {
+    testWidgets('should show error state when specialist not found',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -304,5 +315,3 @@ void main() {
     });
   });
 }
-
-

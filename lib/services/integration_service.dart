@@ -23,9 +23,7 @@ class IntegrationService {
         .orderBy('name')
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => Integration.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map((doc) => Integration.fromDocument(doc)).toList();
     });
   }
 
@@ -43,10 +41,11 @@ class IntegrationService {
   }
 
   /// Подключить интеграцию
-  Future<bool> connectIntegration(String integrationId, String userId, Map<String, dynamic> settings) async {
+  Future<bool> connectIntegration(String integrationId, String userId,
+      Map<String, dynamic> settings) async {
     try {
       final docRef = _firestore.collection('user_integrations').doc();
-      
+
       final integrationSettings = IntegrationSettings(
         integrationId: integrationId,
         userId: userId,
@@ -69,7 +68,7 @@ class IntegrationService {
       return true;
     } catch (e) {
       print('Ошибка подключения интеграции: $e');
-      
+
       // Создаем событие ошибки
       await _createIntegrationEvent(
         integrationId: integrationId,
@@ -78,13 +77,14 @@ class IntegrationService {
         status: IntegrationEventStatus.failed,
         errorMessage: e.toString(),
       );
-      
+
       return false;
     }
   }
 
   /// Отключить интеграцию
-  Future<bool> disconnectIntegration(String integrationId, String userId) async {
+  Future<bool> disconnectIntegration(
+      String integrationId, String userId) async {
     try {
       final query = await _firestore
           .collection('user_integrations')
@@ -107,7 +107,7 @@ class IntegrationService {
       return true;
     } catch (e) {
       print('Ошибка отключения интеграции: $e');
-      
+
       // Создаем событие ошибки
       await _createIntegrationEvent(
         integrationId: integrationId,
@@ -116,13 +116,14 @@ class IntegrationService {
         status: IntegrationEventStatus.failed,
         errorMessage: e.toString(),
       );
-      
+
       return false;
     }
   }
 
   /// Обновить настройки интеграции
-  Future<bool> updateIntegrationSettings(String integrationId, String userId, Map<String, dynamic> settings) async {
+  Future<bool> updateIntegrationSettings(String integrationId, String userId,
+      Map<String, dynamic> settings) async {
     try {
       final query = await _firestore
           .collection('user_integrations')
@@ -180,10 +181,12 @@ class IntegrationService {
   }
 
   /// Получить адрес по координатам
-  Future<AddressData?> getAddressFromCoordinates(double latitude, double longitude) async {
+  Future<AddressData?> getAddressFromCoordinates(
+      double latitude, double longitude) async {
     try {
-      List<Placemark> placemarks = await placemarkFromCoordinates(latitude, longitude);
-      
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(latitude, longitude);
+
       if (placemarks.isNotEmpty) {
         final placemark = placemarks.first;
         return AddressData(
@@ -192,10 +195,11 @@ class IntegrationService {
           state: placemark.administrativeArea,
           country: placemark.country,
           postalCode: placemark.postalCode,
-          formattedAddress: '${placemark.street}, ${placemark.locality}, ${placemark.country}',
+          formattedAddress:
+              '${placemark.street}, ${placemark.locality}, ${placemark.country}',
         );
       }
-      
+
       return null;
     } catch (e) {
       print('Ошибка получения адреса: $e');
@@ -207,7 +211,7 @@ class IntegrationService {
   Future<LocationData?> getCoordinatesFromAddress(String address) async {
     try {
       List<Location> locations = await locationFromAddress(address);
-      
+
       if (locations.isNotEmpty) {
         final location = locations.first;
         return LocationData(
@@ -216,7 +220,7 @@ class IntegrationService {
           timestamp: DateTime.now(),
         );
       }
-      
+
       return null;
     } catch (e) {
       print('Ошибка получения координат: $e');
@@ -315,7 +319,7 @@ class IntegrationService {
   Future<bool> makePhoneCall(String phoneNumber) async {
     try {
       final Uri phoneUri = Uri(scheme: 'tel', path: phoneNumber);
-      
+
       if (await canLaunchUrl(phoneUri)) {
         await launchUrl(phoneUri);
         return true;
@@ -357,7 +361,7 @@ class IntegrationService {
   }) async {
     try {
       final eventRef = _firestore.collection('integration_events').doc();
-      
+
       final event = IntegrationEvent(
         id: eventRef.id,
         integrationId: integrationId,
@@ -378,7 +382,8 @@ class IntegrationService {
   /// Кодировать параметры запроса
   String? _encodeQueryParameters(Map<String, String> params) {
     return params.entries
-        .map((e) => '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .map((e) =>
+            '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
         .join('&');
   }
 
@@ -421,7 +426,7 @@ class IntegrationService {
       return true;
     } catch (e) {
       print('Ошибка синхронизации интеграции: $e');
-      
+
       // Создаем событие ошибки
       await _createIntegrationEvent(
         integrationId: integrationId,
@@ -430,7 +435,7 @@ class IntegrationService {
         status: IntegrationEventStatus.failed,
         errorMessage: e.toString(),
       );
-      
+
       return false;
     }
   }
@@ -445,17 +450,20 @@ class IntegrationService {
 
       final totalEvents = events.docs.length;
       final successfulEvents = events.docs
-          .where((doc) => doc.data()['status'] == IntegrationEventStatus.success.name)
+          .where((doc) =>
+              doc.data()['status'] == IntegrationEventStatus.success.name)
           .length;
       final failedEvents = events.docs
-          .where((doc) => doc.data()['status'] == IntegrationEventStatus.failed.name)
+          .where((doc) =>
+              doc.data()['status'] == IntegrationEventStatus.failed.name)
           .length;
 
       return {
         'totalEvents': totalEvents,
         'successfulEvents': successfulEvents,
         'failedEvents': failedEvents,
-        'successRate': totalEvents > 0 ? (successfulEvents / totalEvents * 100) : 0.0,
+        'successRate':
+            totalEvents > 0 ? (successfulEvents / totalEvents * 100) : 0.0,
       };
     } catch (e) {
       print('Ошибка получения статистики интеграций: $e');

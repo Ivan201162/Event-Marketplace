@@ -31,7 +31,7 @@ class SupportService {
   }) async {
     try {
       final ticketRef = _firestore.collection('support_tickets').doc();
-      
+
       // Загружаем вложения
       List<String> attachmentUrls = [];
       if (attachments != null) {
@@ -104,7 +104,8 @@ class SupportService {
   /// Получить тикет по ID
   Future<SupportTicket?> getTicket(String ticketId) async {
     try {
-      final doc = await _firestore.collection('support_tickets').doc(ticketId).get();
+      final doc =
+          await _firestore.collection('support_tickets').doc(ticketId).get();
       if (doc.exists) {
         return SupportTicket.fromDocument(doc);
       }
@@ -118,7 +119,10 @@ class SupportService {
   /// Обновить тикет
   Future<bool> updateTicket(SupportTicket ticket) async {
     try {
-      await _firestore.collection('support_tickets').doc(ticket.id).update(ticket.toMap());
+      await _firestore
+          .collection('support_tickets')
+          .doc(ticket.id)
+          .update(ticket.toMap());
       return true;
     } catch (e) {
       print('Ошибка обновления тикета: $e');
@@ -138,7 +142,7 @@ class SupportService {
   }) async {
     try {
       final messageRef = _firestore.collection('support_messages').doc();
-      
+
       // Загружаем вложения
       List<String> attachmentUrls = [];
       if (attachments != null) {
@@ -222,7 +226,8 @@ class SupportService {
   }
 
   /// Назначить тикет агенту поддержки
-  Future<bool> assignTicket(String ticketId, String agentId, String agentName) async {
+  Future<bool> assignTicket(
+      String ticketId, String agentId, String agentName) async {
     try {
       final ticket = await getTicket(ticketId);
       if (ticket == null) return false;
@@ -243,9 +248,8 @@ class SupportService {
 
   /// Получить FAQ
   Stream<List<FAQItem>> getFAQ({SupportCategory? category}) {
-    Query query = _firestore
-        .collection('faq')
-        .where('isPublished', isEqualTo: true);
+    Query query =
+        _firestore.collection('faq').where('isPublished', isEqualTo: true);
 
     if (category != null) {
       query = query.where('category', isEqualTo: category.name);
@@ -255,9 +259,7 @@ class SupportService {
         .orderBy('viewsCount', descending: true)
         .snapshots()
         .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => FAQItem.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map((doc) => FAQItem.fromDocument(doc)).toList();
     });
   }
 
@@ -282,7 +284,7 @@ class SupportService {
   }) async {
     try {
       final faqRef = _firestore.collection('faq').doc();
-      
+
       final faq = FAQItem(
         id: faqRef.id,
         question: question,
@@ -305,7 +307,8 @@ class SupportService {
   Future<SupportStats> getSupportStats() async {
     try {
       final snapshot = await _firestore.collection('support_tickets').get();
-      final tickets = snapshot.docs.map((doc) => SupportTicket.fromDocument(doc)).toList();
+      final tickets =
+          snapshot.docs.map((doc) => SupportTicket.fromDocument(doc)).toList();
 
       return _calculateSupportStats(tickets);
     } catch (e) {
@@ -317,7 +320,8 @@ class SupportService {
   /// Загрузить вложение
   Future<String?> _uploadAttachment(File file, String ticketId) async {
     try {
-      String fileName = 'support_attachments/$ticketId/${_uuid.v4()}_${file.path.split('/').last}';
+      String fileName =
+          'support_attachments/$ticketId/${_uuid.v4()}_${file.path.split('/').last}';
       UploadTask uploadTask = _storage.ref().child(fileName).putFile(file);
       TaskSnapshot snapshot = await uploadTask;
       return await snapshot.ref.getDownloadURL();
@@ -331,7 +335,7 @@ class SupportService {
   Future<Map<String, dynamic>> _getDeviceInfo() async {
     try {
       final deviceInfo = <String, dynamic>{};
-      
+
       if (Platform.isAndroid) {
         final androidInfo = await _deviceInfo.androidInfo;
         deviceInfo['platform'] = 'Android';
@@ -363,7 +367,7 @@ class SupportService {
     try {
       // TODO: Настроить SMTP сервер
       // final smtpServer = SmtpServer('smtp.gmail.com', username: 'support@example.com', password: 'password');
-      
+
       // final message = Message()
       //   ..from = Address('support@example.com', 'Event Marketplace Support')
       //   ..recipients.add(ticket.userEmail)
@@ -377,11 +381,12 @@ class SupportService {
   }
 
   /// Отправить уведомление о новом сообщении
-  Future<void> _sendMessageNotificationEmail(String ticketId, SupportMessage message) async {
+  Future<void> _sendMessageNotificationEmail(
+      String ticketId, SupportMessage message) async {
     try {
       // TODO: Настроить SMTP сервер
       // final smtpServer = SmtpServer('smtp.gmail.com', username: 'support@example.com', password: 'password');
-      
+
       // final message = Message()
       //   ..from = Address('support@example.com', 'Event Marketplace Support')
       //   ..recipients.add(message.authorEmail)
@@ -397,31 +402,40 @@ class SupportService {
   /// Подсчитать статистику поддержки
   SupportStats _calculateSupportStats(List<SupportTicket> tickets) {
     final totalTickets = tickets.length;
-    final openTickets = tickets.where((t) => t.status == SupportStatus.open).length;
-    final inProgressTickets = tickets.where((t) => t.status == SupportStatus.inProgress).length;
-    final resolvedTickets = tickets.where((t) => t.status == SupportStatus.resolved).length;
-    final closedTickets = tickets.where((t) => t.status == SupportStatus.closed).length;
+    final openTickets =
+        tickets.where((t) => t.status == SupportStatus.open).length;
+    final inProgressTickets =
+        tickets.where((t) => t.status == SupportStatus.inProgress).length;
+    final resolvedTickets =
+        tickets.where((t) => t.status == SupportStatus.resolved).length;
+    final closedTickets =
+        tickets.where((t) => t.status == SupportStatus.closed).length;
 
     // Среднее время решения
     double averageResolutionTime = 0.0;
-    final resolvedTicketsWithTime = tickets.where((t) => t.resolvedAt != null).toList();
+    final resolvedTicketsWithTime =
+        tickets.where((t) => t.resolvedAt != null).toList();
     if (resolvedTicketsWithTime.isNotEmpty) {
-      final totalResolutionTime = resolvedTicketsWithTime.fold<int>(0, (sum, ticket) {
+      final totalResolutionTime =
+          resolvedTicketsWithTime.fold<int>(0, (sum, ticket) {
         return sum + ticket.resolvedAt!.difference(ticket.createdAt).inHours;
       });
-      averageResolutionTime = totalResolutionTime / resolvedTicketsWithTime.length;
+      averageResolutionTime =
+          totalResolutionTime / resolvedTicketsWithTime.length;
     }
 
     // Статистика по категориям
     final ticketsByCategory = <SupportCategory, int>{};
     for (final ticket in tickets) {
-      ticketsByCategory[ticket.category] = (ticketsByCategory[ticket.category] ?? 0) + 1;
+      ticketsByCategory[ticket.category] =
+          (ticketsByCategory[ticket.category] ?? 0) + 1;
     }
 
     // Статистика по приоритетам
     final ticketsByPriority = <SupportPriority, int>{};
     for (final ticket in tickets) {
-      ticketsByPriority[ticket.priority] = (ticketsByPriority[ticket.priority] ?? 0) + 1;
+      ticketsByPriority[ticket.priority] =
+          (ticketsByPriority[ticket.priority] ?? 0) + 1;
     }
 
     // Топ проблемы
@@ -469,7 +483,8 @@ class SupportService {
   }
 
   /// HTML для уведомления о новом сообщении
-  String _buildMessageNotificationEmailHtml(String ticketId, SupportMessage message) {
+  String _buildMessageNotificationEmailHtml(
+      String ticketId, SupportMessage message) {
     return '''
     <html>
       <body>

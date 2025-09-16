@@ -35,30 +35,30 @@ class SettingsPage extends ConsumerWidget {
               children: [
                 // Профиль пользователя
                 _buildProfileSection(context, user),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Настройки уведомлений
                 _buildNotificationsSection(context),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Настройки языка
                 _buildLanguageSection(context),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Админ-панель (только для администраторов)
                 if (user.isAdmin) ...[
                   _buildAdminSection(context),
                   const SizedBox(height: 24),
                 ],
-                
+
                 // Дополнительные настройки
                 _buildAdditionalSettingsSection(context),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Выход
                 _buildLogoutSection(context, ref),
               ],
@@ -123,9 +123,13 @@ class SettingsPage extends ConsumerWidget {
                       ),
                       const SizedBox(height: 4),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -171,7 +175,8 @@ class SettingsPage extends ConsumerWidget {
                 // TODO: Сохранить настройку
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Push-уведомления ${value ? 'включены' : 'отключены'}'),
+                    content: Text(
+                        'Push-уведомления ${value ? 'включены' : 'отключены'}'),
                   ),
                 );
               },
@@ -185,7 +190,8 @@ class SettingsPage extends ConsumerWidget {
                 // TODO: Сохранить настройку
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Email-уведомления ${value ? 'включены' : 'отключены'}'),
+                    content: Text(
+                        'Email-уведомления ${value ? 'включены' : 'отключены'}'),
                   ),
                 );
               },
@@ -193,13 +199,15 @@ class SettingsPage extends ConsumerWidget {
             const Divider(),
             SwitchListTile(
               title: const Text('Уведомления о бронированиях'),
-              subtitle: const Text('Получать уведомления о новых бронированиях'),
+              subtitle:
+                  const Text('Получать уведомления о новых бронированиях'),
               value: true, // TODO: Получить из настроек пользователя
               onChanged: (value) {
                 // TODO: Сохранить настройку
                 ScaffoldMessenger.of(context).showSnackBar(
                   SnackBar(
-                    content: Text('Уведомления о бронированиях ${value ? 'включены' : 'отключены'}'),
+                    content: Text(
+                        'Уведомления о бронированиях ${value ? 'включены' : 'отключены'}'),
                   ),
                 );
               },
@@ -276,7 +284,8 @@ class SettingsPage extends ConsumerWidget {
             ),
             const SizedBox(height: 16),
             ListTile(
-              leading: const Icon(Icons.admin_panel_settings, color: Colors.orange),
+              leading:
+                  const Icon(Icons.admin_panel_settings, color: Colors.orange),
               title: const Text('Админ-панель'),
               subtitle: const Text('Управление событиями и пользователями'),
               trailing: const Icon(Icons.arrow_forward_ios),

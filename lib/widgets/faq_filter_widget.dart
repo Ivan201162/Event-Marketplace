@@ -27,7 +27,8 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
   @override
   void initState() {
     super.initState();
-    _searchController = TextEditingController(text: widget.currentFilters.searchQuery ?? '');
+    _searchController =
+        TextEditingController(text: widget.currentFilters.searchQuery ?? '');
     _selectedCategories = List.from(widget.currentFilters.selectedCategories);
     _showPublishedOnly = widget.currentFilters.showPublishedOnly;
     _showByDate = widget.currentFilters.showByDate;
@@ -78,11 +79,12 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Опубликованные вопросы
                     SwitchListTile(
                       title: const Text('Только опубликованные вопросы'),
-                      subtitle: const Text('Показать только вопросы, доступные клиентам'),
+                      subtitle: const Text(
+                          'Показать только вопросы, доступные клиентам'),
                       value: _showPublishedOnly,
                       onChanged: (value) {
                         setState(() {
@@ -90,13 +92,14 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
                         });
                       },
                     ),
-                    
+
                     const Divider(),
-                    
+
                     // Фильтр по дате
                     SwitchListTile(
                       title: const Text('Фильтр по дате'),
-                      subtitle: const Text('Показать вопросы за определённый период'),
+                      subtitle:
+                          const Text('Показать вопросы за определённый период'),
                       value: _showByDate,
                       onChanged: (value) {
                         setState(() {
@@ -104,7 +107,7 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
                         });
                       },
                     ),
-                    
+
                     if (_showByDate) ...[
                       const SizedBox(height: 8),
                       Row(
@@ -112,7 +115,7 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
                           Expanded(
                             child: ListTile(
                               title: const Text('От'),
-                              subtitle: Text(_fromDate != null 
+                              subtitle: Text(_fromDate != null
                                   ? '${_fromDate!.day}.${_fromDate!.month}.${_fromDate!.year}'
                                   : 'Не выбрано'),
                               trailing: const Icon(Icons.calendar_today),
@@ -122,7 +125,7 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
                           Expanded(
                             child: ListTile(
                               title: const Text('До'),
-                              subtitle: Text(_toDate != null 
+                              subtitle: Text(_toDate != null
                                   ? '${_toDate!.day}.${_toDate!.month}.${_toDate!.year}'
                                   : 'Не выбрано'),
                               trailing: const Icon(Icons.calendar_today),
@@ -132,13 +135,14 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
                         ],
                       ),
                     ],
-                    
+
                     const Divider(),
-                    
+
                     // Категории
                     const Text(
                       'Категории',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
                     _buildCategoryFilters(),
@@ -161,7 +165,7 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
       ('equipment', 'Оборудование'),
       ('cancellation', 'Отмена и возврат'),
     ];
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -173,21 +177,22 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
         Wrap(
           spacing: 4,
           runSpacing: 4,
-          children: categories.map((category) => FilterChip(
-            label: Text(category.$2),
-            selected: _selectedCategories.contains(category.$1),
-            onSelected: (selected) {
-              setState(() {
-                if (selected) {
-                  _selectedCategories.add(category.$1);
-                } else {
-                  _selectedCategories.remove(category.$1);
-                }
-              });
-            },
-          )).toList(),
+          children: categories
+              .map((category) => FilterChip(
+                    label: Text(category.$2),
+                    selected: _selectedCategories.contains(category.$1),
+                    onSelected: (selected) {
+                      setState(() {
+                        if (selected) {
+                          _selectedCategories.add(category.$1);
+                        } else {
+                          _selectedCategories.remove(category.$1);
+                        }
+                      });
+                    },
+                  ))
+              .toList(),
         ),
-        
         if (_selectedCategories.isNotEmpty) ...[
           const SizedBox(height: 8),
           const Text(
@@ -199,10 +204,12 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
             spacing: 4,
             runSpacing: 4,
             children: _selectedCategories.map((category) {
-              final displayName = categories.firstWhere(
-                (c) => c.$1 == category,
-                orElse: () => (category, category),
-              ).$2;
+              final displayName = categories
+                  .firstWhere(
+                    (c) => c.$1 == category,
+                    orElse: () => (category, category),
+                  )
+                  .$2;
               return Chip(
                 label: Text(displayName),
                 deleteIcon: const Icon(Icons.close, size: 16),
@@ -226,7 +233,7 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
     );
-    
+
     if (date != null) {
       setState(() {
         _fromDate = date;
@@ -245,7 +252,7 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
       firstDate: _fromDate ?? DateTime(2020),
       lastDate: DateTime.now(),
     );
-    
+
     if (date != null) {
       setState(() {
         _toDate = date;
@@ -266,8 +273,8 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
 
   void _applyFilters() {
     final filters = FAQFilters(
-      searchQuery: _searchController.text.trim().isEmpty 
-          ? null 
+      searchQuery: _searchController.text.trim().isEmpty
+          ? null
           : _searchController.text.trim(),
       selectedCategories: _selectedCategories,
       showPublishedOnly: _showPublishedOnly,
@@ -275,7 +282,7 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
       fromDate: _fromDate,
       toDate: _toDate,
     );
-    
+
     widget.onFiltersChanged(filters);
     Navigator.pop(context);
   }

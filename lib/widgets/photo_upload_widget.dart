@@ -68,13 +68,13 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
                     // Выбор изображения
                     _buildImageSelector(),
                     const SizedBox(height: 16),
-                    
+
                     // Превью изображения
                     if (_selectedImage != null) ...[
                       _buildImagePreview(),
                       const SizedBox(height: 16),
                     ],
-                    
+
                     // Подпись
                     TextField(
                       controller: _captionController,
@@ -85,15 +85,16 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
                       maxLines: 3,
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Теги
                     _buildTagsSection(),
                     const SizedBox(height: 16),
-                    
+
                     // Публичность
                     SwitchListTile(
                       title: const Text('Публичное фото'),
-                      subtitle: const Text('Другие пользователи смогут видеть это фото'),
+                      subtitle: const Text(
+                          'Другие пользователи смогут видеть это фото'),
                       value: _isPublic,
                       onChanged: (value) {
                         setState(() {
@@ -128,7 +129,8 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
               ? const Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.add_photo_alternate, size: 48, color: Colors.grey),
+                    Icon(Icons.add_photo_alternate,
+                        size: 48, color: Colors.grey),
                     SizedBox(height: 8),
                     Text(
                       'Нажмите для выбора фото',
@@ -179,7 +181,7 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
           style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: 8),
-        
+
         // Поле ввода тегов
         Row(
           children: [
@@ -201,17 +203,19 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
           ],
         ),
         const SizedBox(height: 8),
-        
+
         // Список тегов
         if (_tags.isNotEmpty)
           Wrap(
             spacing: 4,
             runSpacing: 4,
-            children: _tags.map((tag) => Chip(
-              label: Text(tag),
-              deleteIcon: const Icon(Icons.close, size: 16),
-              onDeleted: () => _removeTag(tag),
-            )).toList(),
+            children: _tags
+                .map((tag) => Chip(
+                      label: Text(tag),
+                      deleteIcon: const Icon(Icons.close, size: 16),
+                      onDeleted: () => _removeTag(tag),
+                    ))
+                .toList(),
           ),
       ],
     );
@@ -225,7 +229,7 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
         maxHeight: 1920,
         imageQuality: 85,
       );
-      
+
       if (image != null) {
         setState(() {
           _selectedImage = File(image.path);
@@ -263,12 +267,12 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
 
     try {
       final service = ref.read(customerProfileExtendedServiceProvider);
-      
+
       final photo = await service.addInspirationPhoto(
         userId: widget.userId,
         imageFile: _selectedImage!,
-        caption: _captionController.text.trim().isEmpty 
-            ? null 
+        caption: _captionController.text.trim().isEmpty
+            ? null
             : _captionController.text.trim(),
         tags: _tags,
         isPublic: _isPublic,

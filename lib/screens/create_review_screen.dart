@@ -22,7 +22,7 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
   final _formKey = GlobalKey<FormState>();
   final _commentController = TextEditingController();
   final ReviewService _reviewService = ReviewService();
-  
+
   int _rating = 5;
   bool _isLoading = false;
   String? _errorMessage;
@@ -59,22 +59,22 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
                 children: [
                   // Информация о событии
                   _buildEventInfo(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Рейтинг
                   _buildRatingSection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Комментарий
                   _buildCommentSection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Кнопка отправки
                   _buildSubmitButton(),
-                  
+
                   // Ошибка
                   if (_errorMessage != null) ...[
                     const SizedBox(height: 16),
@@ -141,16 +141,17 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
                     children: [
                       Text(
                         widget.event.title,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         widget.event.categoryName,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                       ),
                     ],
                   ),
@@ -339,7 +340,8 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
           comment: _commentController.text.trim(),
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
-          isVerified: true, // Подтвержден, так как пользователь участвовал в мероприятии
+          isVerified:
+              true, // Подтвержден, так как пользователь участвовал в мероприятии
         );
 
         await _reviewService.createReview(review);

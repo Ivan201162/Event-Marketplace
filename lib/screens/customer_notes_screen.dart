@@ -17,7 +17,8 @@ class CustomerNotesScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<CustomerNotesScreen> createState() => _CustomerNotesScreenState();
+  ConsumerState<CustomerNotesScreen> createState() =>
+      _CustomerNotesScreenState();
 }
 
 class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
@@ -74,7 +75,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
             loading: () => const LinearProgressIndicator(),
             error: (error, stack) => const SizedBox.shrink(),
           ),
-          
+
           // Контент по вкладкам
           Expanded(
             child: TabBarView(
@@ -171,7 +172,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
 
   Widget _buildPinnedNotesTab() {
     final pinnedNotesAsync = ref.watch(pinnedNotesProvider(widget.userId));
-    
+
     return pinnedNotesAsync.when(
       data: (notes) {
         if (notes.isEmpty) {
@@ -204,7 +205,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
 
   Widget _buildTagsTab() {
     final tagsAsync = ref.watch(userTagsProvider(widget.userId));
-    
+
     return tagsAsync.when(
       data: (tags) {
         if (tags.isEmpty) {
@@ -231,7 +232,7 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
 
   Widget _buildTagCard(String tag) {
     final notesByTagAsync = ref.watch(notesByTagProvider((widget.userId, tag)));
-    
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       child: ListTile(
@@ -357,7 +358,9 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
                 title: Text(note.title),
                 actions: [
                   IconButton(
-                    icon: Icon(note.isPinned ? Icons.push_pin : Icons.push_pin_outlined),
+                    icon: Icon(note.isPinned
+                        ? Icons.push_pin
+                        : Icons.push_pin_outlined),
                     onPressed: () {
                       Navigator.pop(context);
                       _togglePin(note);
@@ -386,10 +389,12 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
                         const SizedBox(height: 16),
                         Wrap(
                           spacing: 4,
-                          children: note.tags.map((tag) => Chip(
-                            label: Text(tag),
-                            labelStyle: const TextStyle(fontSize: 12),
-                          )).toList(),
+                          children: note.tags
+                              .map((tag) => Chip(
+                                    label: Text(tag),
+                                    labelStyle: const TextStyle(fontSize: 12),
+                                  ))
+                              .toList(),
                         ),
                       ],
                       const SizedBox(height: 16),
@@ -397,13 +402,15 @@ class _CustomerNotesScreenState extends ConsumerState<CustomerNotesScreen>
                         children: [
                           Text(
                             'Создано: ${_formatDate(note.createdAt)}',
-                            style: const TextStyle(color: Colors.grey, fontSize: 12),
+                            style: const TextStyle(
+                                color: Colors.grey, fontSize: 12),
                           ),
                           if (note.updatedAt != note.createdAt) ...[
                             const SizedBox(width: 16),
                             Text(
                               'Обновлено: ${_formatDate(note.updatedAt)}',
-                              style: const TextStyle(color: Colors.grey, fontSize: 12),
+                              style: const TextStyle(
+                                  color: Colors.grey, fontSize: 12),
                             ),
                           ],
                         ],
@@ -551,7 +558,8 @@ class NotesByTagScreen extends ConsumerWidget {
     // TODO: Показать детали заметки
   }
 
-  void _showEditNoteDialog(BuildContext context, WidgetRef ref, CustomerNote note) {
+  void _showEditNoteDialog(
+      BuildContext context, WidgetRef ref, CustomerNote note) {
     // TODO: Редактировать заметку
   }
 
@@ -618,7 +626,8 @@ class NoteSearchResultsScreen extends ConsumerWidget {
     // TODO: Показать детали заметки
   }
 
-  void _showEditNoteDialog(BuildContext context, WidgetRef ref, CustomerNote note) {
+  void _showEditNoteDialog(
+      BuildContext context, WidgetRef ref, CustomerNote note) {
     // TODO: Редактировать заметку
   }
 

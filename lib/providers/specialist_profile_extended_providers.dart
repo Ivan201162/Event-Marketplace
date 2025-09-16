@@ -3,75 +3,97 @@ import '../models/specialist_profile_extended.dart';
 import '../services/specialist_profile_extended_service.dart';
 
 /// Провайдер сервиса расширенного профиля специалиста
-final specialistProfileExtendedServiceProvider = Provider<SpecialistProfileExtendedService>((ref) {
+final specialistProfileExtendedServiceProvider =
+    Provider<SpecialistProfileExtendedService>((ref) {
   return SpecialistProfileExtendedService();
 });
 
 /// Провайдер расширенного профиля специалиста
-final specialistProfileExtendedProvider = FutureProvider.family<SpecialistProfileExtended?, String>((ref, specialistId) async {
+final specialistProfileExtendedProvider =
+    FutureProvider.family<SpecialistProfileExtended?, String>(
+        (ref, specialistId) async {
   final service = ref.read(specialistProfileExtendedServiceProvider);
   return await service.getExtendedProfile(specialistId);
 });
 
 /// Провайдер FAQ специалиста
-final specialistFAQProvider = FutureProvider.family<List<FAQItem>, String>((ref, specialistId) async {
-  final profile = await ref.read(specialistProfileExtendedProvider(specialistId).future);
+final specialistFAQProvider =
+    FutureProvider.family<List<FAQItem>, String>((ref, specialistId) async {
+  final profile =
+      await ref.read(specialistProfileExtendedProvider(specialistId).future);
   return profile?.faqItems ?? [];
 });
 
 /// Провайдер портфолио видео специалиста
-final specialistPortfolioVideosProvider = FutureProvider.family<List<PortfolioVideo>, String>((ref, specialistId) async {
-  final profile = await ref.read(specialistProfileExtendedProvider(specialistId).future);
+final specialistPortfolioVideosProvider =
+    FutureProvider.family<List<PortfolioVideo>, String>(
+        (ref, specialistId) async {
+  final profile =
+      await ref.read(specialistProfileExtendedProvider(specialistId).future);
   return profile?.portfolioVideos ?? [];
 });
 
 /// Провайдер сертификатов специалиста
-final specialistCertificationsProvider = FutureProvider.family<List<String>, String>((ref, specialistId) async {
-  final profile = await ref.read(specialistProfileExtendedProvider(specialistId).future);
+final specialistCertificationsProvider =
+    FutureProvider.family<List<String>, String>((ref, specialistId) async {
+  final profile =
+      await ref.read(specialistProfileExtendedProvider(specialistId).future);
   return profile?.certifications ?? [];
 });
 
 /// Провайдер наград специалиста
-final specialistAwardsProvider = FutureProvider.family<List<String>, String>((ref, specialistId) async {
-  final profile = await ref.read(specialistProfileExtendedProvider(specialistId).future);
+final specialistAwardsProvider =
+    FutureProvider.family<List<String>, String>((ref, specialistId) async {
+  final profile =
+      await ref.read(specialistProfileExtendedProvider(specialistId).future);
   return profile?.awards ?? [];
 });
 
 /// Провайдер отзывов специалиста
-final specialistTestimonialsProvider = FutureProvider.family<List<String>, String>((ref, specialistId) async {
-  final profile = await ref.read(specialistProfileExtendedProvider(specialistId).future);
+final specialistTestimonialsProvider =
+    FutureProvider.family<List<String>, String>((ref, specialistId) async {
+  final profile =
+      await ref.read(specialistProfileExtendedProvider(specialistId).future);
   return profile?.testimonials ?? [];
 });
 
 /// Провайдер FAQ по категории
-final specialistFAQByCategoryProvider = FutureProvider.family<List<FAQItem>, (String, String)>((ref, params) async {
+final specialistFAQByCategoryProvider =
+    FutureProvider.family<List<FAQItem>, (String, String)>((ref, params) async {
   final (specialistId, category) = params;
   final service = ref.read(specialistProfileExtendedServiceProvider);
   return await service.getFAQByCategory(specialistId, category);
 });
 
 /// Провайдер публичных видео
-final specialistPublicVideosProvider = FutureProvider.family<List<PortfolioVideo>, String>((ref, specialistId) async {
+final specialistPublicVideosProvider =
+    FutureProvider.family<List<PortfolioVideo>, String>(
+        (ref, specialistId) async {
   final service = ref.read(specialistProfileExtendedServiceProvider);
   return await service.getPublicVideos(specialistId);
 });
 
 /// Провайдер поиска по FAQ
-final specialistFAQSearchProvider = FutureProvider.family<List<FAQItem>, (String, String)>((ref, params) async {
+final specialistFAQSearchProvider =
+    FutureProvider.family<List<FAQItem>, (String, String)>((ref, params) async {
   final (specialistId, query) = params;
   final service = ref.read(specialistProfileExtendedServiceProvider);
   return await service.searchFAQ(specialistId, query);
 });
 
 /// Провайдер поиска по видео
-final specialistVideoSearchProvider = FutureProvider.family<List<PortfolioVideo>, (String, String)>((ref, params) async {
+final specialistVideoSearchProvider =
+    FutureProvider.family<List<PortfolioVideo>, (String, String)>(
+        (ref, params) async {
   final (specialistId, query) = params;
   final service = ref.read(specialistProfileExtendedServiceProvider);
   return await service.searchVideos(specialistId, query);
 });
 
 /// Провайдер статистики профиля специалиста
-final specialistProfileStatsProvider = FutureProvider.family<SpecialistProfileStats, String>((ref, specialistId) async {
+final specialistProfileStatsProvider =
+    FutureProvider.family<SpecialistProfileStats, String>(
+        (ref, specialistId) async {
   final service = ref.read(specialistProfileExtendedServiceProvider);
   return await service.getProfileStats(specialistId);
 });
@@ -83,16 +105,20 @@ final videoUploadStateProvider = StateProvider<Map<String, bool>>((ref) => {});
 final faqCreationStateProvider = StateProvider<Map<String, bool>>((ref) => {});
 
 /// Провайдер для управления состоянием поиска
-final specialistSearchStateProvider = StateProvider<Map<String, String>>((ref) => {});
+final specialistSearchStateProvider =
+    StateProvider<Map<String, String>>((ref) => {});
 
 /// Провайдер для управления выбранными категориями FAQ
-final selectedFAQCategoriesProvider = StateProvider<Set<String>>((ref) => Set<String>());
+final selectedFAQCategoriesProvider =
+    StateProvider<Set<String>>((ref) => Set<String>());
 
 /// Провайдер для управления фильтрами FAQ
-final faqFiltersProvider = StateProvider<FAQFilters>((ref) => const FAQFilters());
+final faqFiltersProvider =
+    StateProvider<FAQFilters>((ref) => const FAQFilters());
 
 /// Провайдер для управления фильтрами видео
-final videoFiltersProvider = StateProvider<VideoFilters>((ref) => const VideoFilters());
+final videoFiltersProvider =
+    StateProvider<VideoFilters>((ref) => const VideoFilters());
 
 /// Фильтры для FAQ
 class FAQFilters {

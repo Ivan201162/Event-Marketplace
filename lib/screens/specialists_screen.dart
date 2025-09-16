@@ -16,7 +16,7 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
   late TabController _tabController;
   final TextEditingController _searchController = TextEditingController();
   String _searchQuery = '';
-  
+
   // Фильтры
   SpecialistCategory? _selectedCategory;
   ExperienceLevel? _selectedExperience;
@@ -62,7 +62,7 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
         children: [
           // Поиск
           _buildSearchBar(),
-          
+
           // Контент
           Expanded(
             child: TabBarView(
@@ -164,7 +164,7 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
 
   Widget _buildRecommendedTab() {
     final currentUser = ref.watch(currentUserProvider).value;
-    
+
     if (currentUser == null) {
       return const Center(
         child: Column(
@@ -207,8 +207,8 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
             Text(
               category.displayName,
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
               textAlign: TextAlign.center,
             ),
           ],
@@ -262,7 +262,9 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
                 radius: 30,
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 child: Text(
-                  specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
+                  specialist.name.isNotEmpty
+                      ? specialist.name[0].toUpperCase()
+                      : '?',
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -271,7 +273,7 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
                 ),
               ),
               const SizedBox(width: 16),
-              
+
               // Информация
               Expanded(
                 child: Column(
@@ -287,58 +289,64 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
                         Expanded(
                           child: Text(
                             specialist.name,
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
                         ),
                         if (specialist.isVerified)
-                          const Icon(Icons.verified, color: Colors.blue, size: 16),
+                          const Icon(Icons.verified,
+                              color: Colors.blue, size: 16),
                       ],
                     ),
                     const SizedBox(height: 4),
-                    
                     Text(
                       specialist.category.displayName,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.w600,
-                      ),
+                            color: Theme.of(context).colorScheme.primary,
+                            fontWeight: FontWeight.w600,
+                          ),
                     ),
                     const SizedBox(height: 4),
-                    
                     Text(
                       specialist.experienceLevel.displayName,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                            color: Colors.grey[600],
+                          ),
                     ),
                     const SizedBox(height: 8),
-                    
                     Row(
                       children: [
                         Icon(Icons.star, size: 16, color: Colors.amber[600]),
                         const SizedBox(width: 4),
                         Text(
                           specialist.rating.toStringAsFixed(1),
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
                         ),
                         const SizedBox(width: 4),
                         Text(
                           '(${specialist.reviewCount})',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Colors.grey[600],
+                                  ),
                         ),
                         const Spacer(),
                         Text(
                           '${specialist.hourlyRate.toStringAsFixed(0)} ₽/час',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                         ),
                       ],
                     ),
@@ -360,21 +368,31 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
       final searchLower = _searchQuery.toLowerCase();
       filtered = filtered.where((specialist) {
         return specialist.name.toLowerCase().contains(searchLower) ||
-               specialist.description?.toLowerCase().contains(searchLower) == true ||
-               specialist.category.displayName.toLowerCase().contains(searchLower) ||
-               specialist.subcategories.any((sub) => sub.toLowerCase().contains(searchLower));
+            specialist.description?.toLowerCase().contains(searchLower) ==
+                true ||
+            specialist.category.displayName
+                .toLowerCase()
+                .contains(searchLower) ||
+            specialist.subcategories
+                .any((sub) => sub.toLowerCase().contains(searchLower));
       }).toList();
     }
 
     // Фильтры
     if (_selectedCategory != null) {
-      filtered = filtered.where((specialist) => specialist.category == _selectedCategory).toList();
+      filtered = filtered
+          .where((specialist) => specialist.category == _selectedCategory)
+          .toList();
     }
     if (_selectedExperience != null) {
-      filtered = filtered.where((specialist) => specialist.experienceLevel == _selectedExperience).toList();
+      filtered = filtered
+          .where(
+              (specialist) => specialist.experienceLevel == _selectedExperience)
+          .toList();
     }
     filtered = filtered.where((specialist) {
-      return specialist.hourlyRate >= _minPrice && specialist.hourlyRate <= _maxPrice;
+      return specialist.hourlyRate >= _minPrice &&
+          specialist.hourlyRate <= _maxPrice;
     }).toList();
 
     return filtered;
@@ -428,7 +446,7 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
                 },
               ),
               const SizedBox(height: 16),
-              
+
               // Уровень опыта
               DropdownButtonFormField<ExperienceLevel>(
                 value: _selectedExperience,
@@ -446,9 +464,10 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
                 },
               ),
               const SizedBox(height: 16),
-              
+
               // Ценовой диапазон
-              Text('Цена: ${_minPrice.toStringAsFixed(0)} - ${_maxPrice.toStringAsFixed(0)} ₽/час'),
+              Text(
+                  'Цена: ${_minPrice.toStringAsFixed(0)} - ${_maxPrice.toStringAsFixed(0)} ₽/час'),
               RangeSlider(
                 values: RangeValues(_minPrice, _maxPrice),
                 min: 0,
@@ -550,7 +569,8 @@ class SpecialistsByCategoryScreen extends ConsumerWidget {
         onTap: () {
           Navigator.of(context).push(
             MaterialPageRoute(
-              builder: (context) => SpecialistDetailsScreen(specialist: specialist),
+              builder: (context) =>
+                  SpecialistDetailsScreen(specialist: specialist),
             ),
           );
         },
@@ -562,7 +582,9 @@ class SpecialistsByCategoryScreen extends ConsumerWidget {
                 radius: 30,
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 child: Text(
-                  specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
+                  specialist.name.isNotEmpty
+                      ? specialist.name[0].toUpperCase()
+                      : '?',
                   style: const TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
@@ -580,21 +602,25 @@ class SpecialistsByCategoryScreen extends ConsumerWidget {
                         Expanded(
                           child: Text(
                             specialist.name,
-                            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleMedium
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
                         ),
                         if (specialist.isVerified)
-                          const Icon(Icons.verified, color: Colors.blue, size: 16),
+                          const Icon(Icons.verified,
+                              color: Colors.blue, size: 16),
                       ],
                     ),
                     const SizedBox(height: 4),
                     Text(
                       specialist.experienceLevel.displayName,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey[600],
-                      ),
+                            color: Colors.grey[600],
+                          ),
                     ),
                     const SizedBox(height: 8),
                     Row(
@@ -603,24 +629,29 @@ class SpecialistsByCategoryScreen extends ConsumerWidget {
                         const SizedBox(width: 4),
                         Text(
                           specialist.rating.toStringAsFixed(1),
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                  ),
                         ),
                         const SizedBox(width: 4),
                         Text(
                           '(${specialist.reviewCount})',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
+                          style:
+                              Theme.of(context).textTheme.bodySmall?.copyWith(
+                                    color: Colors.grey[600],
+                                  ),
                         ),
                         const Spacer(),
                         Text(
                           '${specialist.hourlyRate.toStringAsFixed(0)} ₽/час',
-                          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
                         ),
                       ],
                     ),
@@ -675,9 +706,12 @@ class SpecialistDetailsScreen extends ConsumerWidget {
                       children: [
                         CircleAvatar(
                           radius: 40,
-                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primary,
                           child: Text(
-                            specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
+                            specialist.name.isNotEmpty
+                                ? specialist.name[0].toUpperCase()
+                                : '?',
                             style: const TextStyle(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
@@ -694,40 +728,55 @@ class SpecialistDetailsScreen extends ConsumerWidget {
                                 children: [
                                   Text(
                                     specialist.name,
-                                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                   ),
                                   if (specialist.isVerified) ...[
                                     const SizedBox(width: 8),
-                                    const Icon(Icons.verified, color: Colors.blue),
+                                    const Icon(Icons.verified,
+                                        color: Colors.blue),
                                   ],
                                 ],
                               ),
                               const SizedBox(height: 4),
                               Text(
                                 '${specialist.category.icon} ${specialist.category.displayName}',
-                                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: Theme.of(context).colorScheme.primary,
-                                ),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                    ),
                               ),
                               const SizedBox(height: 8),
                               Row(
                                 children: [
-                                  Icon(Icons.star, size: 20, color: Colors.amber[600]),
+                                  Icon(Icons.star,
+                                      size: 20, color: Colors.amber[600]),
                                   const SizedBox(width: 4),
                                   Text(
                                     specialist.rating.toStringAsFixed(1),
-                                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
                                     '(${specialist.reviewCount} отзывов)',
-                                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                      color: Colors.grey[600],
-                                    ),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          color: Colors.grey[600],
+                                        ),
                                   ),
                                 ],
                               ),
@@ -737,14 +786,15 @@ class SpecialistDetailsScreen extends ConsumerWidget {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Описание
                     if (specialist.description != null) ...[
                       Text(
                         'О себе:',
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -753,7 +803,7 @@ class SpecialistDetailsScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 16),
                     ],
-                    
+
                     // Информация о ценах и опыте
                     Row(
                       children: [
@@ -780,9 +830,9 @@ class SpecialistDetailsScreen extends ConsumerWidget {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Кнопка бронирования
             SizedBox(
               width: double.infinity,
@@ -790,7 +840,8 @@ class SpecialistDetailsScreen extends ConsumerWidget {
                 onPressed: () {
                   // TODO: Реализовать бронирование
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Бронирование будет реализовано позже')),
+                    const SnackBar(
+                        content: Text('Бронирование будет реализовано позже')),
                   );
                 },
                 icon: const Icon(Icons.calendar_today),
@@ -806,7 +857,8 @@ class SpecialistDetailsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildInfoCard(BuildContext context, String title, String value, IconData icon) {
+  Widget _buildInfoCard(
+      BuildContext context, String title, String value, IconData icon) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -823,15 +875,15 @@ class SpecialistDetailsScreen extends ConsumerWidget {
           Text(
             title,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Colors.grey[600],
-            ),
+                  color: Colors.grey[600],
+                ),
           ),
           const SizedBox(height: 4),
           Text(
             value,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
         ],
       ),

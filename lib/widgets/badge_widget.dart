@@ -191,11 +191,11 @@ class BadgeCollectionWidget extends ConsumerWidget {
     return badgesAsync.when(
       data: (badges) {
         var filteredBadges = badges.visible;
-        
+
         if (category != null) {
           filteredBadges = filteredBadges.byCategory(category!);
         }
-        
+
         if (limit != null) {
           filteredBadges = filteredBadges.take(limit!).toList();
         }
@@ -232,23 +232,27 @@ class BadgeCollectionWidget extends ConsumerWidget {
     return Wrap(
       spacing: 12,
       runSpacing: 12,
-      children: badges.map((badge) => BadgeWidget(
-        badge: badge,
-        size: 50,
-        onTap: () => _showBadgeDetails(context, badge),
-      )).toList(),
+      children: badges
+          .map((badge) => BadgeWidget(
+                badge: badge,
+                size: 50,
+                onTap: () => _showBadgeDetails(context, badge),
+              ))
+          .toList(),
     );
   }
 
   Widget _buildListLayout(BuildContext context, List<Badge> badges) {
     return Column(
-      children: badges.map((badge) => Padding(
-        padding: const EdgeInsets.only(bottom: 8),
-        child: BadgeInfoWidget(
-          badge: badge,
-          isCompact: true,
-        ),
-      )).toList(),
+      children: badges
+          .map((badge) => Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: BadgeInfoWidget(
+                  badge: badge,
+                  isCompact: true,
+                ),
+              ))
+          .toList(),
     );
   }
 
@@ -310,7 +314,7 @@ class BadgeCollectionWidget extends ConsumerWidget {
 
   String _getTitle() {
     if (category == null) return 'Бейджи';
-    
+
     switch (category!) {
       case BadgeCategory.specialist:
         return 'Бейджи специалиста';
@@ -372,9 +376,12 @@ class BadgeStatsWidget extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildStatItem(context, 'Всего', stats.totalBadges, Icons.emoji_events),
-              _buildStatItem(context, 'Специалист', stats.specialistBadges, Icons.person),
-              _buildStatItem(context, 'Заказчик', stats.customerBadges, Icons.event),
+              _buildStatItem(
+                  context, 'Всего', stats.totalBadges, Icons.emoji_events),
+              _buildStatItem(
+                  context, 'Специалист', stats.specialistBadges, Icons.person),
+              _buildStatItem(
+                  context, 'Заказчик', stats.customerBadges, Icons.event),
               _buildStatItem(context, 'Общие', stats.generalBadges, Icons.star),
             ],
           ),
@@ -383,7 +390,8 @@ class BadgeStatsWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatItem(BuildContext context, String label, int count, IconData icon) {
+  Widget _buildStatItem(
+      BuildContext context, String label, int count, IconData icon) {
     return Column(
       children: [
         Icon(
@@ -441,7 +449,8 @@ class BadgeLeaderboardWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildLeaderboard(BuildContext context, List<BadgeLeaderboardEntry> leaderboard) {
+  Widget _buildLeaderboard(
+      BuildContext context, List<BadgeLeaderboardEntry> leaderboard) {
     if (leaderboard.isEmpty) {
       return _buildEmptyState(context);
     }
@@ -467,7 +476,8 @@ class BadgeLeaderboardWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildLeaderboardItem(BuildContext context, int position, BadgeLeaderboardEntry user) {
+  Widget _buildLeaderboardItem(
+      BuildContext context, int position, BadgeLeaderboardEntry user) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
@@ -492,10 +502,9 @@ class BadgeLeaderboardWidget extends ConsumerWidget {
           const SizedBox(width: 12),
           CircleAvatar(
             radius: 20,
-            backgroundImage: user.userAvatar != null 
-                ? NetworkImage(user.userAvatar!) 
-                : null,
-            child: user.userAvatar == null 
+            backgroundImage:
+                user.userAvatar != null ? NetworkImage(user.userAvatar!) : null,
+            child: user.userAvatar == null
                 ? Text(user.userName[0].toUpperCase())
                 : null,
           ),

@@ -5,7 +5,8 @@ import 'package:event_marketplace_app/screens/home_screen.dart';
 
 void main() {
   group('HomeScreen', () {
-    testWidgets('should display home screen title', (WidgetTester tester) async {
+    testWidgets('should display home screen title',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -34,10 +35,12 @@ void main() {
       await tester.pumpAndSettle();
 
       // Assert
-      expect(find.text('Добро пожаловать в Event Marketplace!'), findsOneWidget);
+      expect(
+          find.text('Добро пожаловать в Event Marketplace!'), findsOneWidget);
     });
 
-    testWidgets('should display featured specialists section', (WidgetTester tester) async {
+    testWidgets('should display featured specialists section',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -53,7 +56,8 @@ void main() {
       expect(find.text('Рекомендуемые специалисты'), findsOneWidget);
     });
 
-    testWidgets('should display recent bookings section', (WidgetTester tester) async {
+    testWidgets('should display recent bookings section',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -69,7 +73,8 @@ void main() {
       expect(find.text('Последние заявки'), findsOneWidget);
     });
 
-    testWidgets('should display quick actions section', (WidgetTester tester) async {
+    testWidgets('should display quick actions section',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -101,7 +106,8 @@ void main() {
       expect(find.text('Поиск специалистов'), findsOneWidget);
     });
 
-    testWidgets('should display my bookings button', (WidgetTester tester) async {
+    testWidgets('should display my bookings button',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -149,7 +155,8 @@ void main() {
       expect(find.text('Платежи'), findsOneWidget);
     });
 
-    testWidgets('should display notifications button', (WidgetTester tester) async {
+    testWidgets('should display notifications button',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -326,5 +333,3 @@ void main() {
     });
   });
 }
-
-

@@ -31,7 +31,7 @@ class IdeaWidget extends StatelessWidget {
           children: [
             // Изображения
             if (idea.images.isNotEmpty) _buildImages(),
-            
+
             // Основная информация
             Padding(
               padding: const EdgeInsets.all(16),
@@ -54,7 +54,8 @@ class IdeaWidget extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
                         decoration: BoxDecoration(
                           color: idea.categoryColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
@@ -84,9 +85,9 @@ class IdeaWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 8),
-                  
+
                   // Описание
                   Text(
                     idea.description,
@@ -97,9 +98,9 @@ class IdeaWidget extends StatelessWidget {
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
                   ),
-                  
+
                   const SizedBox(height: 12),
-                  
+
                   // Теги
                   if (idea.tags.isNotEmpty) ...[
                     Wrap(
@@ -107,7 +108,8 @@ class IdeaWidget extends StatelessWidget {
                       runSpacing: 4,
                       children: idea.tags.take(3).map((tag) {
                         return Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: Colors.grey[200],
                             borderRadius: BorderRadius.circular(8),
@@ -124,7 +126,7 @@ class IdeaWidget extends StatelessWidget {
                     ),
                     const SizedBox(height: 12),
                   ],
-                  
+
                   // Автор и дата
                   Row(
                     children: [
@@ -135,7 +137,7 @@ class IdeaWidget extends StatelessWidget {
                             : null,
                         child: idea.authorPhotoUrl == null
                             ? Text(
-                                idea.authorName.isNotEmpty 
+                                idea.authorName.isNotEmpty
                                     ? idea.authorName[0].toUpperCase()
                                     : '?',
                                 style: const TextStyle(fontSize: 10),
@@ -161,9 +163,9 @@ class IdeaWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 12),
-                  
+
                   // Действия
                   _buildActions(),
                 ],
@@ -227,9 +229,9 @@ class IdeaWidget extends StatelessWidget {
             ],
           ),
         ),
-        
+
         const SizedBox(width: 16),
-        
+
         // Просмотры
         Row(
           children: [
@@ -248,9 +250,9 @@ class IdeaWidget extends StatelessWidget {
             ),
           ],
         ),
-        
+
         const SizedBox(width: 16),
-        
+
         // Сохранения
         GestureDetector(
           onTap: onSave,
@@ -272,9 +274,9 @@ class IdeaWidget extends StatelessWidget {
             ],
           ),
         ),
-        
+
         const Spacer(),
-        
+
         // Комментарии
         Row(
           children: [
@@ -293,9 +295,9 @@ class IdeaWidget extends StatelessWidget {
             ),
           ],
         ),
-        
+
         const SizedBox(width: 8),
-        
+
         // Шаринг
         GestureDetector(
           onTap: onShare,
@@ -312,7 +314,7 @@ class IdeaWidget extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня';
     } else if (difference.inDays == 1) {
@@ -475,7 +477,7 @@ class IdeaListTile extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня';
     } else if (difference.inDays == 1) {
@@ -543,7 +545,7 @@ class IdeaGridTile extends StatelessWidget {
                       ),
                     ),
             ),
-            
+
             // Информация
             Expanded(
               flex: 2,
@@ -562,12 +564,13 @@ class IdeaGridTile extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    
+
                     const SizedBox(height: 4),
-                    
+
                     // Категория
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: idea.categoryColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),
@@ -581,9 +584,9 @@ class IdeaGridTile extends StatelessWidget {
                         ),
                       ),
                     ),
-                    
+
                     const Spacer(),
-                    
+
                     // Действия
                     Row(
                       children: [
@@ -592,7 +595,9 @@ class IdeaGridTile extends StatelessWidget {
                           child: Icon(
                             Icons.favorite,
                             size: 16,
-                            color: idea.likesCount > 0 ? Colors.red : Colors.grey[600],
+                            color: idea.likesCount > 0
+                                ? Colors.red
+                                : Colors.grey[600],
                           ),
                         ),
                         const SizedBox(width: 4),
@@ -606,7 +611,9 @@ class IdeaGridTile extends StatelessWidget {
                           child: Icon(
                             Icons.bookmark,
                             size: 16,
-                            color: idea.savesCount > 0 ? Colors.blue : Colors.grey[600],
+                            color: idea.savesCount > 0
+                                ? Colors.blue
+                                : Colors.grey[600],
                           ),
                         ),
                         const SizedBox(width: 4),

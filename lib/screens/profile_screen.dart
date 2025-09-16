@@ -42,7 +42,7 @@ class ProfileScreen extends ConsumerWidget {
           if (user == null) {
             return const Center(child: Text('Пользователь не найден'));
           }
-          
+
           return SingleChildScrollView(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -50,15 +50,15 @@ class ProfileScreen extends ConsumerWidget {
               children: [
                 // Информация о пользователе
                 _buildUserInfoCard(context, user),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Профиль пользователя
                 if (userRole != null)
                   _buildUserProfileCard(context, ref, user, userRole),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Настройки
                 _buildSettingsCard(context, ref, user),
               ],
@@ -81,7 +81,8 @@ class ProfileScreen extends ConsumerWidget {
   }
 
   /// Построение карточки профиля пользователя
-  Widget _buildUserProfileCard(BuildContext context, WidgetRef ref, AppUser user, UserRole role) {
+  Widget _buildUserProfileCard(
+      BuildContext context, WidgetRef ref, AppUser user, UserRole role) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -94,21 +95,23 @@ class ProfileScreen extends ConsumerWidget {
                 Text(
                   'Профиль ${role == UserRole.customer ? 'заказчика' : 'специалиста'}',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 ElevatedButton.icon(
                   onPressed: () {
                     if (role == UserRole.customer) {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const CustomerProfileEditScreen(),
+                          builder: (context) =>
+                              const CustomerProfileEditScreen(),
                         ),
                       );
                     } else if (role == UserRole.specialist) {
                       Navigator.of(context).push(
                         MaterialPageRoute(
-                          builder: (context) => const SpecialistProfileEditScreen(),
+                          builder: (context) =>
+                              const SpecialistProfileEditScreen(),
                         ),
                       );
                     }
@@ -119,7 +122,7 @@ class ProfileScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Отображение профиля в зависимости от роли
             if (role == UserRole.customer)
               _buildCustomerProfilePreview(context, ref, user)
@@ -132,36 +135,53 @@ class ProfileScreen extends ConsumerWidget {
   }
 
   /// Предварительный просмотр профиля заказчика
-  Widget _buildCustomerProfilePreview(BuildContext context, WidgetRef ref, AppUser user) {
+  Widget _buildCustomerProfilePreview(
+      BuildContext context, WidgetRef ref, AppUser user) {
     final profileAsync = ref.watch(customerProfileProvider(user.id));
-    
+
     return profileAsync.when(
       data: (profile) {
         if (profile == null) {
-          return const Text('Профиль не создан. Нажмите "Редактировать" для создания.');
+          return const Text(
+              'Профиль не создан. Нажмите "Редактировать" для создания.');
         }
-        
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (profile.bio != null) ...[
-              Text('О себе:', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
+              Text('О себе:',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.w500)),
               Text(profile.bio!),
               const SizedBox(height: 8),
             ],
             if (profile.maritalStatus != null) ...[
-              Text('Семейное положение:', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
+              Text('Семейное положение:',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.w500)),
               Text(profile.maritalStatusDisplayName),
               const SizedBox(height: 8),
             ],
             if (profile.interests.isNotEmpty) ...[
-              Text('Интересы:', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
+              Text('Интересы:',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.w500)),
               Wrap(
                 spacing: 4,
-                children: profile.interests.map((interest) => Chip(
-                  label: Text(interest),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                )).toList(),
+                children: profile.interests
+                    .map((interest) => Chip(
+                          label: Text(interest),
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                        ))
+                    .toList(),
               ),
             ],
           ],
@@ -173,46 +193,70 @@ class ProfileScreen extends ConsumerWidget {
   }
 
   /// Предварительный просмотр профиля специалиста
-  Widget _buildSpecialistProfilePreview(BuildContext context, WidgetRef ref, AppUser user) {
+  Widget _buildSpecialistProfilePreview(
+      BuildContext context, WidgetRef ref, AppUser user) {
     final profileAsync = ref.watch(specialistProfileProvider(user.id));
-    
+
     return profileAsync.when(
       data: (profile) {
         if (profile == null) {
-          return const Text('Профиль не создан. Нажмите "Редактировать" для создания.');
+          return const Text(
+              'Профиль не создан. Нажмите "Редактировать" для создания.');
         }
-        
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (profile.bio != null) ...[
-              Text('О себе:', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
+              Text('О себе:',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.w500)),
               Text(profile.bio!),
               const SizedBox(height: 8),
             ],
             if (profile.categories.isNotEmpty) ...[
-              Text('Категории:', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
+              Text('Категории:',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(fontWeight: FontWeight.w500)),
               Wrap(
                 spacing: 4,
-                children: profile.categoryDisplayNames.map((category) => Chip(
-                  label: Text(category),
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                )).toList(),
+                children: profile.categoryDisplayNames
+                    .map((category) => Chip(
+                          label: Text(category),
+                          materialTapTargetSize:
+                              MaterialTapTargetSize.shrinkWrap,
+                        ))
+                    .toList(),
               ),
               const SizedBox(height: 8),
             ],
             Row(
               children: [
-                Text('Опыт: ', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
+                Text('Опыт: ',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.w500)),
                 Text('${profile.experienceYears} лет'),
                 const SizedBox(width: 16),
-                Text('Рейтинг: ', style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
+                Text('Рейтинг: ',
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyMedium
+                        ?.copyWith(fontWeight: FontWeight.w500)),
                 Text('${profile.rating.toStringAsFixed(1)} ⭐'),
               ],
             ),
             const SizedBox(height: 8),
-            Text('Почасовая ставка: ${profile.hourlyRate.toStringAsFixed(0)} ₽', 
-                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w500)),
+            Text('Почасовая ставка: ${profile.hourlyRate.toStringAsFixed(0)} ₽',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(fontWeight: FontWeight.w500)),
           ],
         );
       },
@@ -235,8 +279,8 @@ class ProfileScreen extends ConsumerWidget {
                 CircleAvatar(
                   radius: 30,
                   backgroundColor: Theme.of(context).colorScheme.primary,
-                  backgroundImage: user.photoURL != null 
-                      ? NetworkImage(user.photoURL!) 
+                  backgroundImage: user.photoURL != null
+                      ? NetworkImage(user.photoURL!)
                       : null,
                   child: user.photoURL == null
                       ? Text(
@@ -255,20 +299,25 @@ class ProfileScreen extends ConsumerWidget {
                     children: [
                       Text(
                         user.displayNameOrEmail,
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         user.email,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                        ),
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .onSurface
+                                  .withOpacity(0.7),
+                            ),
                       ),
                       const SizedBox(height: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 4),
                         decoration: BoxDecoration(
                           color: _getRoleColor(user.role).withOpacity(0.1),
                           borderRadius: BorderRadius.circular(12),
@@ -315,8 +364,8 @@ class ProfileScreen extends ConsumerWidget {
             Text(
               'Настройки',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             ListTile(
@@ -383,7 +432,8 @@ class ProfileScreen extends ConsumerWidget {
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => InspirationPhotosScreen(userId: user.id),
+                    builder: (context) =>
+                        InspirationPhotosScreen(userId: user.id),
                   ),
                 ),
               ),
@@ -405,7 +455,8 @@ class ProfileScreen extends ConsumerWidget {
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => SpecialistFAQScreen(specialistId: user.id),
+                    builder: (context) =>
+                        SpecialistFAQScreen(specialistId: user.id),
                   ),
                 ),
               ),
@@ -415,7 +466,8 @@ class ProfileScreen extends ConsumerWidget {
                 trailing: const Icon(Icons.arrow_forward_ios, size: 16),
                 onTap: () => Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => SpecialistPortfolioVideosScreen(specialistId: user.id),
+                    builder: (context) =>
+                        SpecialistPortfolioVideosScreen(specialistId: user.id),
                   ),
                 ),
               ),
@@ -429,7 +481,8 @@ class ProfileScreen extends ConsumerWidget {
               ),
             ListTile(
               leading: const Icon(Icons.delete, color: Colors.red),
-              title: const Text('Удалить аккаунт', style: TextStyle(color: Colors.red)),
+              title: const Text('Удалить аккаунт',
+                  style: TextStyle(color: Colors.red)),
               trailing: const Icon(Icons.arrow_forward_ios, size: 16),
               onTap: () => _showDeleteAccountDialog(context, ref),
             ),
@@ -451,15 +504,18 @@ class ProfileScreen extends ConsumerWidget {
             Text(
               'Тестовые данные',
               style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 8),
             Text(
               'Для разработки и тестирования',
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-              ),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.7),
+                  ),
             ),
             const SizedBox(height: 16),
             ElevatedButton.icon(
@@ -468,7 +524,8 @@ class ProfileScreen extends ConsumerWidget {
                   await ref.read(firestoreServiceProvider).addTestBookings();
                   if (context.mounted) {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Тестовые заявки добавлены')),
+                      const SnackBar(
+                          content: Text('Тестовые заявки добавлены')),
                     );
                   }
                 } catch (e) {
@@ -559,7 +616,8 @@ class ProfileScreen extends ConsumerWidget {
   }
 
   /// Показать диалог редактирования профиля
-  void _showEditProfileDialog(BuildContext context, WidgetRef ref, AppUser user) {
+  void _showEditProfileDialog(
+      BuildContext context, WidgetRef ref, AppUser user) {
     // TODO: Реализовать редактирование профиля
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Функция в разработке')),

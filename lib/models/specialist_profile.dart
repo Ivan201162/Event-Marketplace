@@ -2,21 +2,21 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Категории специалистов
 enum SpecialistCategory {
-  host,           // Ведущий
-  photographer,   // Фотограф
-  animator,       // Аниматор
-  dj,            // Диджей
-  decorator,     // Оформитель
-  catering,      // Кейтеринг
-  cleaning,      // Клининг
-  equipment,     // Аренда свет/звук
-  clothing,      // Платья/костюмы
-  fireShow,      // Фаер-шоу
-  fireworks,     // Салюты
-  lightShow,     // Световые шоу
-  florist,       // Флорист
-  coverBand,     // Кавер-группа
-  teamBuilding,  // Тимбилдинг
+  host, // Ведущий
+  photographer, // Фотограф
+  animator, // Аниматор
+  dj, // Диджей
+  decorator, // Оформитель
+  catering, // Кейтеринг
+  cleaning, // Клининг
+  equipment, // Аренда свет/звук
+  clothing, // Платья/костюмы
+  fireShow, // Фаер-шоу
+  fireworks, // Салюты
+  lightShow, // Световые шоу
+  florist, // Флорист
+  coverBand, // Кавер-группа
+  teamBuilding, // Тимбилдинг
 }
 
 /// Портфолио элемент
@@ -44,8 +44,8 @@ class PortfolioItem {
       url: data['url'] ?? '',
       title: data['title'],
       description: data['description'],
-      createdAt: data['createdAt'] != null 
-          ? (data['createdAt'] as Timestamp).toDate() 
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
     );
   }
@@ -112,29 +112,31 @@ class SpecialistProfile {
       photoURL: data['photoURL'],
       bio: data['bio'],
       categories: (data['categories'] as List<dynamic>?)
-          ?.map((e) => _parseCategory(e.toString()))
-          .where((e) => e != null)
-          .cast<SpecialistCategory>()
-          .toList() ?? [],
+              ?.map((e) => _parseCategory(e.toString()))
+              .where((e) => e != null)
+              .cast<SpecialistCategory>()
+              .toList() ??
+          [],
       experienceYears: data['experienceYears'] ?? 0,
       hourlyRate: (data['hourlyRate'] ?? 0.0).toDouble(),
       phoneNumber: data['phoneNumber'],
       location: data['location'],
       socialLinks: Map<String, String>.from(data['socialLinks'] ?? {}),
       portfolio: (data['portfolio'] as List<dynamic>?)
-          ?.map((e) => PortfolioItem.fromMap(Map<String, dynamic>.from(e)))
-          .toList() ?? [],
+              ?.map((e) => PortfolioItem.fromMap(Map<String, dynamic>.from(e)))
+              .toList() ??
+          [],
       services: List<String>.from(data['services'] ?? []),
       workingHours: data['workingHours'],
       preferences: data['preferences'],
       rating: (data['rating'] ?? 0.0).toDouble(),
       reviewCount: data['reviewCount'] ?? 0,
       isVerified: data['isVerified'] ?? false,
-      createdAt: data['createdAt'] != null 
-          ? (data['createdAt'] as Timestamp).toDate() 
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
-      updatedAt: data['updatedAt'] != null 
-          ? (data['updatedAt'] as Timestamp).toDate() 
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] as Timestamp).toDate()
           : DateTime.now(),
     );
   }

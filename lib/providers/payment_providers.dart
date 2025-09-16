@@ -9,31 +9,38 @@ final paymentServiceProvider = Provider<PaymentService>((ref) {
 });
 
 /// Провайдер платежей по заявке
-final paymentsByBookingProvider = StreamProvider.family<List<Payment>, String>((ref, bookingId) {
+final paymentsByBookingProvider =
+    StreamProvider.family<List<Payment>, String>((ref, bookingId) {
   final paymentService = ref.watch(paymentServiceProvider);
   return paymentService.getPaymentsByBookingStream(bookingId);
 });
 
 /// Провайдер платежей по клиенту
-final paymentsByCustomerProvider = StreamProvider.family<List<Payment>, String>((ref, customerId) {
+final paymentsByCustomerProvider =
+    StreamProvider.family<List<Payment>, String>((ref, customerId) {
   final paymentService = ref.watch(paymentServiceProvider);
   return paymentService.getPaymentsByCustomerStream(customerId);
 });
 
 /// Провайдер платежей по специалисту
-final paymentsBySpecialistProvider = StreamProvider.family<List<Payment>, String>((ref, specialistId) {
+final paymentsBySpecialistProvider =
+    StreamProvider.family<List<Payment>, String>((ref, specialistId) {
   final paymentService = ref.watch(paymentServiceProvider);
   return paymentService.getPaymentsBySpecialistStream(specialistId);
 });
 
 /// Провайдер статистики платежей
-final paymentStatisticsProvider = FutureProvider.family<PaymentStatistics, PaymentStatisticsParams>((ref, params) {
+final paymentStatisticsProvider =
+    FutureProvider.family<PaymentStatistics, PaymentStatisticsParams>(
+        (ref, params) {
   final paymentService = ref.watch(paymentServiceProvider);
-  return paymentService.getPaymentStatistics(params.userId, isSpecialist: params.isSpecialist);
+  return paymentService.getPaymentStatistics(params.userId,
+      isSpecialist: params.isSpecialist);
 });
 
 /// Провайдер для управления состоянием платежей
-final paymentStateProvider = StateNotifierProvider<PaymentStateNotifier, PaymentState>((ref) {
+final paymentStateProvider =
+    StateNotifierProvider<PaymentStateNotifier, PaymentState>((ref) {
   return PaymentStateNotifier(ref.read(paymentServiceProvider));
 });
 
@@ -175,7 +182,8 @@ class PaymentStatisticsParams {
 }
 
 /// Провайдер для управления формой платежа
-final paymentFormProvider = StateNotifierProvider<PaymentFormNotifier, PaymentFormState>((ref) {
+final paymentFormProvider =
+    StateNotifierProvider<PaymentFormNotifier, PaymentFormState>((ref) {
   return PaymentFormNotifier();
 });
 
@@ -200,7 +208,8 @@ class PaymentFormState {
     Map<String, dynamic>? formData,
   }) {
     return PaymentFormState(
-      selectedPaymentMethod: selectedPaymentMethod ?? this.selectedPaymentMethod,
+      selectedPaymentMethod:
+          selectedPaymentMethod ?? this.selectedPaymentMethod,
       isProcessing: isProcessing ?? this.isProcessing,
       errorMessage: errorMessage,
       formData: formData ?? this.formData,
@@ -254,17 +263,23 @@ class PaymentFormNotifier extends StateNotifier<PaymentFormState> {
 }
 
 /// Провайдер для конфигурации платежей
-final paymentConfigurationProvider = Provider.family<PaymentConfiguration, OrganizationType>((ref, organizationType) {
+final paymentConfigurationProvider =
+    Provider.family<PaymentConfiguration, OrganizationType>(
+        (ref, organizationType) {
   return PaymentConfiguration.getDefault(organizationType);
 });
 
 /// Провайдер для расчета платежей
-final paymentCalculationProvider = Provider.family<PaymentCalculation, PaymentCalculationParams>((ref, params) {
-  final config = ref.watch(paymentConfigurationProvider(params.organizationType));
-  
+final paymentCalculationProvider =
+    Provider.family<PaymentCalculation, PaymentCalculationParams>(
+        (ref, params) {
+  final config =
+      ref.watch(paymentConfigurationProvider(params.organizationType));
+
   final advanceAmount = config.calculateAdvanceAmount(params.totalAmount);
-  final finalAmount = config.calculateFinalAmount(params.totalAmount, advanceAmount);
-  
+  final finalAmount =
+      config.calculateFinalAmount(params.totalAmount, advanceAmount);
+
   return PaymentCalculation(
     totalAmount: params.totalAmount,
     advanceAmount: advanceAmount,

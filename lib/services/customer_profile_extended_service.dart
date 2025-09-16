@@ -43,8 +43,9 @@ class CustomerProfileExtendedService {
         return null;
       }
 
-      final baseProfile = CustomerProfile.fromDocument(baseProfileDoc.docs.first);
-      
+      final baseProfile =
+          CustomerProfile.fromDocument(baseProfileDoc.docs.first);
+
       // Создаём расширенный профиль
       final extendedProfile = CustomerProfileExtended(
         id: '',
@@ -68,8 +69,10 @@ class CustomerProfileExtendedService {
         lastUpdated: DateTime.now(),
       );
 
-      final docRef = await _db.collection('customer_profiles_extended').add(extendedProfile.toMap());
-      
+      final docRef = await _db
+          .collection('customer_profiles_extended')
+          .add(extendedProfile.toMap());
+
       return extendedProfile.copyWith(id: docRef.id);
     } catch (e) {
       print('Error creating extended profile: $e');
@@ -99,9 +102,10 @@ class CustomerProfileExtendedService {
   }) async {
     try {
       // Загружаем изображение в Firebase Storage
-      final fileName = 'inspiration_${DateTime.now().millisecondsSinceEpoch}.jpg';
+      final fileName =
+          'inspiration_${DateTime.now().millisecondsSinceEpoch}.jpg';
       final ref = _storage.ref().child('inspiration_photos/$userId/$fileName');
-      
+
       final uploadTask = await ref.putFile(imageFile);
       final downloadUrl = await uploadTask.ref.getDownloadURL();
 
@@ -122,9 +126,9 @@ class CustomerProfileExtendedService {
       // Добавляем фото к профилю
       final updatedPhotos = [...profile.inspirationPhotos, photo];
       final updatedProfile = profile.copyWith(inspirationPhotos: updatedPhotos);
-      
+
       await updateExtendedProfile(updatedProfile);
-      
+
       return photo;
     } catch (e) {
       print('Error adding inspiration photo: $e');
@@ -156,7 +160,7 @@ class CustomerProfileExtendedService {
       final updatedPhotos = profile.inspirationPhotos
           .where((photo) => photo.id != photoId)
           .toList();
-      
+
       final updatedProfile = profile.copyWith(inspirationPhotos: updatedPhotos);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
@@ -192,9 +196,9 @@ class CustomerProfileExtendedService {
 
       final updatedNotes = [...profile.notes, note];
       final updatedProfile = profile.copyWith(notes: updatedNotes);
-      
+
       await updateExtendedProfile(updatedProfile);
-      
+
       return note;
     } catch (e) {
       print('Error adding note: $e');
@@ -209,7 +213,7 @@ class CustomerProfileExtendedService {
       if (profile == null) return;
 
       final updatedNotes = profile.notes.map((note) {
-        return note.id == updatedNote.id 
+        return note.id == updatedNote.id
             ? updatedNote.copyWith(updatedAt: DateTime.now())
             : note;
       }).toList();
@@ -227,9 +231,8 @@ class CustomerProfileExtendedService {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return;
 
-      final updatedNotes = profile.notes
-          .where((note) => note.id != noteId)
-          .toList();
+      final updatedNotes =
+          profile.notes.where((note) => note.id != noteId).toList();
 
       final updatedProfile = profile.copyWith(notes: updatedNotes);
       await updateExtendedProfile(updatedProfile);
@@ -247,8 +250,9 @@ class CustomerProfileExtendedService {
       if (profile.favoriteSpecialists.contains(specialistId)) return;
 
       final updatedFavorites = [...profile.favoriteSpecialists, specialistId];
-      final updatedProfile = profile.copyWith(favoriteSpecialists: updatedFavorites);
-      
+      final updatedProfile =
+          profile.copyWith(favoriteSpecialists: updatedFavorites);
+
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
       print('Error adding to favorites: $e');
@@ -265,7 +269,8 @@ class CustomerProfileExtendedService {
           .where((id) => id != specialistId)
           .toList();
 
-      final updatedProfile = profile.copyWith(favoriteSpecialists: updatedFavorites);
+      final updatedProfile =
+          profile.copyWith(favoriteSpecialists: updatedFavorites);
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
       print('Error removing from favorites: $e');
@@ -282,7 +287,7 @@ class CustomerProfileExtendedService {
 
       final updatedSavedEvents = [...profile.savedEvents, eventId];
       final updatedProfile = profile.copyWith(savedEvents: updatedSavedEvents);
-      
+
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
       print('Error saving event: $e');
@@ -295,9 +300,8 @@ class CustomerProfileExtendedService {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return;
 
-      final updatedSavedEvents = profile.savedEvents
-          .where((id) => id != eventId)
-          .toList();
+      final updatedSavedEvents =
+          profile.savedEvents.where((id) => id != eventId).toList();
 
       final updatedProfile = profile.copyWith(savedEvents: updatedSavedEvents);
       await updateExtendedProfile(updatedProfile);
@@ -307,7 +311,8 @@ class CustomerProfileExtendedService {
   }
 
   /// Обновить предпочтения
-  Future<void> updatePreferences(String userId, CustomerPreferences preferences) async {
+  Future<void> updatePreferences(
+      String userId, CustomerPreferences preferences) async {
     try {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return;
@@ -333,7 +338,8 @@ class CustomerProfileExtendedService {
   }
 
   /// Получить фото по тегу
-  Future<List<InspirationPhoto>> getPhotosByTag(String userId, String tag) async {
+  Future<List<InspirationPhoto>> getPhotosByTag(
+      String userId, String tag) async {
     try {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return [];
@@ -354,8 +360,8 @@ class CustomerProfileExtendedService {
       final lowercaseQuery = query.toLowerCase();
       return profile.notes.where((note) {
         return note.title.toLowerCase().contains(lowercaseQuery) ||
-               note.content.toLowerCase().contains(lowercaseQuery) ||
-               note.tags.any((tag) => tag.toLowerCase().contains(lowercaseQuery));
+            note.content.toLowerCase().contains(lowercaseQuery) ||
+            note.tags.any((tag) => tag.toLowerCase().contains(lowercaseQuery));
       }).toList();
     } catch (e) {
       print('Error searching notes: $e');
@@ -364,15 +370,17 @@ class CustomerProfileExtendedService {
   }
 
   /// Поиск по фото
-  Future<List<InspirationPhoto>> searchPhotos(String userId, String query) async {
+  Future<List<InspirationPhoto>> searchPhotos(
+      String userId, String query) async {
     try {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return [];
 
       final lowercaseQuery = query.toLowerCase();
       return profile.inspirationPhotos.where((photo) {
-        return (photo.caption?.toLowerCase().contains(lowercaseQuery) ?? false) ||
-               photo.tags.any((tag) => tag.toLowerCase().contains(lowercaseQuery));
+        return (photo.caption?.toLowerCase().contains(lowercaseQuery) ??
+                false) ||
+            photo.tags.any((tag) => tag.toLowerCase().contains(lowercaseQuery));
       }).toList();
     } catch (e) {
       print('Error searching photos: $e');

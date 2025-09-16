@@ -18,7 +18,7 @@ class CalendarService {
     try {
       final eventRef = _firestore.collection('calendar_events').doc();
       final eventWithId = event.copyWith(id: eventRef.id);
-      
+
       await eventRef.set(eventWithId.toMap());
       return eventRef.id;
     } catch (e) {
@@ -28,7 +28,8 @@ class CalendarService {
   }
 
   /// Получить события пользователя
-  Stream<List<CalendarEvent>> getUserEvents(String userId, CalendarFilter filter) {
+  Stream<List<CalendarEvent>> getUserEvents(
+      String userId, CalendarFilter filter) {
     Query query = _firestore.collection('calendar_events');
 
     // Фильтр по пользователю
@@ -36,19 +37,23 @@ class CalendarService {
 
     // Применяем фильтры
     if (filter.startDate != null) {
-      query = query.where('startTime', isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!));
+      query = query.where('startTime',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!));
     }
-    
+
     if (filter.endDate != null) {
-      query = query.where('startTime', isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
+      query = query.where('startTime',
+          isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
     }
 
     if (filter.statuses != null && filter.statuses!.isNotEmpty) {
-      query = query.where('status', whereIn: filter.statuses!.map((s) => s.name).toList());
+      query = query.where('status',
+          whereIn: filter.statuses!.map((s) => s.name).toList());
     }
 
     if (filter.types != null && filter.types!.isNotEmpty) {
-      query = query.where('type', whereIn: filter.types!.map((t) => t.name).toList());
+      query = query.where('type',
+          whereIn: filter.types!.map((t) => t.name).toList());
     }
 
     if (filter.specialistId != null) {
@@ -63,17 +68,18 @@ class CalendarService {
     query = query.orderBy('startTime', descending: false);
 
     return query.snapshots().map((snapshot) {
-      var events = snapshot.docs
-          .map((doc) => CalendarEvent.fromDocument(doc))
-          .toList();
+      var events =
+          snapshot.docs.map((doc) => CalendarEvent.fromDocument(doc)).toList();
 
       // Применяем фильтры, которые нельзя применить в Firestore
       if (filter.searchQuery != null && filter.searchQuery!.isNotEmpty) {
         final query = filter.searchQuery!.toLowerCase();
-        events = events.where((event) => 
-            event.title.toLowerCase().contains(query) ||
-            event.description.toLowerCase().contains(query) ||
-            event.location.toLowerCase().contains(query)).toList();
+        events = events
+            .where((event) =>
+                event.title.toLowerCase().contains(query) ||
+                event.description.toLowerCase().contains(query) ||
+                event.location.toLowerCase().contains(query))
+            .toList();
       }
 
       return events;
@@ -81,7 +87,8 @@ class CalendarService {
   }
 
   /// Получить события специалиста
-  Stream<List<CalendarEvent>> getSpecialistEvents(String specialistId, CalendarFilter filter) {
+  Stream<List<CalendarEvent>> getSpecialistEvents(
+      String specialistId, CalendarFilter filter) {
     Query query = _firestore.collection('calendar_events');
 
     // Фильтр по специалисту
@@ -89,19 +96,23 @@ class CalendarService {
 
     // Применяем остальные фильтры аналогично getUserEvents
     if (filter.startDate != null) {
-      query = query.where('startTime', isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!));
+      query = query.where('startTime',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!));
     }
-    
+
     if (filter.endDate != null) {
-      query = query.where('startTime', isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
+      query = query.where('startTime',
+          isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
     }
 
     if (filter.statuses != null && filter.statuses!.isNotEmpty) {
-      query = query.where('status', whereIn: filter.statuses!.map((s) => s.name).toList());
+      query = query.where('status',
+          whereIn: filter.statuses!.map((s) => s.name).toList());
     }
 
     if (filter.types != null && filter.types!.isNotEmpty) {
-      query = query.where('type', whereIn: filter.types!.map((t) => t.name).toList());
+      query = query.where('type',
+          whereIn: filter.types!.map((t) => t.name).toList());
     }
 
     if (filter.customerId != null) {
@@ -115,16 +126,17 @@ class CalendarService {
     query = query.orderBy('startTime', descending: false);
 
     return query.snapshots().map((snapshot) {
-      var events = snapshot.docs
-          .map((doc) => CalendarEvent.fromDocument(doc))
-          .toList();
+      var events =
+          snapshot.docs.map((doc) => CalendarEvent.fromDocument(doc)).toList();
 
       if (filter.searchQuery != null && filter.searchQuery!.isNotEmpty) {
         final query = filter.searchQuery!.toLowerCase();
-        events = events.where((event) => 
-            event.title.toLowerCase().contains(query) ||
-            event.description.toLowerCase().contains(query) ||
-            event.location.toLowerCase().contains(query)).toList();
+        events = events
+            .where((event) =>
+                event.title.toLowerCase().contains(query) ||
+                event.description.toLowerCase().contains(query) ||
+                event.location.toLowerCase().contains(query))
+            .toList();
       }
 
       return events;
@@ -134,7 +146,10 @@ class CalendarService {
   /// Обновить событие
   Future<bool> updateEvent(CalendarEvent event) async {
     try {
-      await _firestore.collection('calendar_events').doc(event.id).update(event.toMap());
+      await _firestore
+          .collection('calendar_events')
+          .doc(event.id)
+          .update(event.toMap());
       return true;
     } catch (e) {
       print('Ошибка обновления события: $e');
@@ -157,7 +172,7 @@ class CalendarService {
   Future<String?> exportToICS(List<CalendarEvent> events) async {
     try {
       final calendar = IcsCalendar();
-      
+
       for (final event in events) {
         final icsEvent = IcsEvent(
           uid: event.id,
@@ -168,7 +183,7 @@ class CalendarService {
           location: event.location,
           status: _getICSStatus(event.status),
         );
-        
+
         calendar.addEvent(icsEvent);
       }
 
@@ -189,9 +204,10 @@ class CalendarService {
         final tempDir = Directory.systemTemp;
         final file = File('${tempDir.path}/events.ics');
         await file.writeAsString(icsContent);
-        
+
         // Делимся файлом
-        await Share.shareXFiles([XFile(file.path)], text: 'Календарные события');
+        await Share.shareXFiles([XFile(file.path)],
+            text: 'Календарные события');
       }
     } catch (e) {
       print('Ошибка шаринга событий: $e');
@@ -201,17 +217,26 @@ class CalendarService {
   /// Открыть в Google Calendar
   Future<void> openInGoogleCalendar(CalendarEvent event) async {
     try {
-      final startTime = event.startTime.toUtc().toIso8601String().replaceAll(':', '').split('.')[0] + 'Z';
-      final endTime = event.endTime.toUtc().toIso8601String().replaceAll(':', '').split('.')[0] + 'Z';
-      
+      final startTime = event.startTime
+              .toUtc()
+              .toIso8601String()
+              .replaceAll(':', '')
+              .split('.')[0] +
+          'Z';
+      final endTime = event.endTime
+              .toUtc()
+              .toIso8601String()
+              .replaceAll(':', '')
+              .split('.')[0] +
+          'Z';
+
       final url = Uri.parse(
-        'https://calendar.google.com/calendar/render?action=TEMPLATE'
-        '&text=${Uri.encodeComponent(event.title)}'
-        '&dates=$startTime/$endTime'
-        '&details=${Uri.encodeComponent(event.description)}'
-        '&location=${Uri.encodeComponent(event.location)}'
-      );
-      
+          'https://calendar.google.com/calendar/render?action=TEMPLATE'
+          '&text=${Uri.encodeComponent(event.title)}'
+          '&dates=$startTime/$endTime'
+          '&details=${Uri.encodeComponent(event.description)}'
+          '&location=${Uri.encodeComponent(event.location)}');
+
       if (await canLaunchUrl(url)) {
         await launchUrl(url, mode: LaunchMode.externalApplication);
       }
@@ -225,16 +250,15 @@ class CalendarService {
     try {
       final startTime = event.startTime.toUtc().toIso8601String();
       final endTime = event.endTime.toUtc().toIso8601String();
-      
-      final url = Uri.parse(
-        'https://outlook.live.com/calendar/0/deeplink/compose?'
-        'subject=${Uri.encodeComponent(event.title)}'
-        '&startdt=$startTime'
-        '&enddt=$endTime'
-        '&body=${Uri.encodeComponent(event.description)}'
-        '&location=${Uri.encodeComponent(event.location)}'
-      );
-      
+
+      final url =
+          Uri.parse('https://outlook.live.com/calendar/0/deeplink/compose?'
+              'subject=${Uri.encodeComponent(event.title)}'
+              '&startdt=$startTime'
+              '&enddt=$endTime'
+              '&body=${Uri.encodeComponent(event.description)}'
+              '&location=${Uri.encodeComponent(event.location)}');
+
       if (await canLaunchUrl(url)) {
         await launchUrl(url, mode: LaunchMode.externalApplication);
       }
@@ -256,7 +280,8 @@ class CalendarService {
   }
 
   /// Синхронизировать с Outlook Calendar
-  Future<bool> syncWithOutlookCalendar(String userId, String accessToken) async {
+  Future<bool> syncWithOutlookCalendar(
+      String userId, String accessToken) async {
     try {
       // TODO: Реализовать синхронизацию с Outlook Calendar API
       print('Синхронизация с Outlook Calendar для пользователя: $userId');
@@ -275,9 +300,8 @@ class CalendarService {
           .where('customerId', isEqualTo: userId)
           .get();
 
-      final events = snapshot.docs
-          .map((doc) => CalendarEvent.fromDocument(doc))
-          .toList();
+      final events =
+          snapshot.docs.map((doc) => CalendarEvent.fromDocument(doc)).toList();
 
       return _calculateStats(events);
     } catch (e) {
@@ -357,7 +381,8 @@ class CalendarService {
   Stream<List<CalendarEvent>> getTomorrowEvents(String userId) {
     final tomorrow = DateTime.now().add(const Duration(days: 1));
     final startOfDay = DateTime(tomorrow.year, tomorrow.month, tomorrow.day);
-    final endOfDay = DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 23, 59, 59);
+    final endOfDay =
+        DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 23, 59, 59);
 
     final filter = CalendarFilter(
       startDate: startOfDay,
@@ -412,8 +437,10 @@ class CalendarService {
 
   CalendarStats _calculateStats(List<CalendarEvent> events) {
     final totalEvents = events.length;
-    final completedEvents = events.where((e) => e.status == EventStatus.completed).length;
-    final cancelledEvents = events.where((e) => e.status == EventStatus.cancelled).length;
+    final completedEvents =
+        events.where((e) => e.status == EventStatus.completed).length;
+    final cancelledEvents =
+        events.where((e) => e.status == EventStatus.cancelled).length;
     final upcomingEvents = events.where((e) => e.isFuture).length;
 
     double totalDuration = 0;
@@ -423,16 +450,18 @@ class CalendarService {
 
     for (final event in events) {
       totalDuration += event.duration.inMinutes;
-      
+
       eventsByType[event.type] = (eventsByType[event.type] ?? 0) + 1;
       eventsByStatus[event.status] = (eventsByStatus[event.status] ?? 0) + 1;
-      
-      final day = DateTime(event.startTime.year, event.startTime.month, event.startTime.day);
+
+      final day = DateTime(
+          event.startTime.year, event.startTime.month, event.startTime.day);
       dayEventCounts[day] = (dayEventCounts[day] ?? 0) + 1;
     }
 
-    final averageEventDuration = totalEvents > 0 ? totalDuration / totalEvents : 0.0;
-    
+    final averageEventDuration =
+        totalEvents > 0 ? totalDuration / totalEvents : 0.0;
+
     final sortedDays = dayEventCounts.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
     final busiestDays = sortedDays.take(5).map((e) => e.key).toList();

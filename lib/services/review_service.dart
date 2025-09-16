@@ -14,11 +14,11 @@ class ReviewService {
           .collection('bookings')
           .where('userId', isEqualTo: review.userId)
           .where('eventId', isEqualTo: review.eventId)
-          .where('status', whereIn: ['confirmed', 'completed'])
-          .get();
+          .where('status', whereIn: ['confirmed', 'completed']).get();
 
       if (bookingSnapshot.docs.isEmpty) {
-        throw Exception('Вы не можете оставить отзыв, так как не участвовали в этом мероприятии');
+        throw Exception(
+            'Вы не можете оставить отзыв, так как не участвовали в этом мероприятии');
       }
 
       // Проверяем, не оставлял ли пользователь уже отзыв
@@ -34,7 +34,7 @@ class ReviewService {
 
       // Создаем отзыв
       final docRef = await _firestore.collection('reviews').add(review.toMap());
-      
+
       // Обновляем средний рейтинг мероприятия
       await _updateEventRating(review.eventId);
 
@@ -51,9 +51,8 @@ class ReviewService {
         .where('eventId', isEqualTo: eventId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Review.fromDocument(doc))
-            .toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Review.fromDocument(doc)).toList());
   }
 
   /// Получить отзывы пользователя
@@ -63,9 +62,8 @@ class ReviewService {
         .where('userId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Review.fromDocument(doc))
-            .toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Review.fromDocument(doc)).toList());
   }
 
   /// Получить отзыв по ID
@@ -84,8 +82,11 @@ class ReviewService {
   /// Обновить отзыв
   Future<void> updateReview(String reviewId, Review review) async {
     try {
-      await _firestore.collection('reviews').doc(reviewId).update(review.toMap());
-      
+      await _firestore
+          .collection('reviews')
+          .doc(reviewId)
+          .update(review.toMap());
+
       // Обновляем средний рейтинг мероприятия
       await _updateEventRating(review.eventId);
     } catch (e) {
@@ -102,7 +103,7 @@ class ReviewService {
       }
 
       await _firestore.collection('reviews').doc(reviewId).delete();
-      
+
       // Обновляем средний рейтинг мероприятия
       await _updateEventRating(review.eventId);
     } catch (e) {
@@ -134,7 +135,8 @@ class ReviewService {
         final review = Review.fromDocument(doc);
         totalReviews++;
         totalRating += review.rating;
-        ratingDistribution[review.rating] = (ratingDistribution[review.rating] ?? 0) + 1;
+        ratingDistribution[review.rating] =
+            (ratingDistribution[review.rating] ?? 0) + 1;
       }
 
       return {
@@ -155,8 +157,7 @@ class ReviewService {
           .collection('bookings')
           .where('userId', isEqualTo: userId)
           .where('eventId', isEqualTo: eventId)
-          .where('status', whereIn: ['confirmed', 'completed'])
-          .get();
+          .where('status', whereIn: ['confirmed', 'completed']).get();
 
       if (bookingSnapshot.docs.isEmpty) {
         return false;
@@ -179,7 +180,7 @@ class ReviewService {
   Future<void> _updateEventRating(String eventId) async {
     try {
       final stats = await getEventReviewStats(eventId);
-      
+
       await _firestore.collection('events').doc(eventId).update({
         'averageRating': stats['averageRating'],
         'totalReviews': stats['totalReviews'],

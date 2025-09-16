@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Роли пользователей в системе
 enum UserRole {
-  customer,    // Заказчик
-  specialist,  // Исполнитель/специалист
-  guest,       // Гость
-  admin,       // Администратор
+  customer, // Заказчик
+  specialist, // Исполнитель/специалист
+  guest, // Гость
+  admin, // Администратор
 }
 
 /// Модель пользователя
@@ -45,11 +45,11 @@ class AppUser {
       displayName: data['displayName'],
       photoURL: data['photoURL'],
       role: _parseUserRole(data['role']),
-      createdAt: data['createdAt'] != null 
-          ? (data['createdAt'] as Timestamp).toDate() 
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
-      lastLoginAt: data['lastLoginAt'] != null 
-          ? (data['lastLoginAt'] as Timestamp).toDate() 
+      lastLoginAt: data['lastLoginAt'] != null
+          ? (data['lastLoginAt'] as Timestamp).toDate()
           : null,
       isActive: data['isActive'] ?? true,
       socialProvider: data['socialProvider'],
@@ -89,7 +89,8 @@ class AppUser {
       'photoURL': photoURL,
       'role': role.name,
       'createdAt': Timestamp.fromDate(createdAt),
-      'lastLoginAt': lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
+      'lastLoginAt':
+          lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
       'isActive': isActive,
       'socialProvider': socialProvider,
       'socialId': socialId,
@@ -158,7 +159,7 @@ class AppUser {
   /// Парсинг роли из строки
   static UserRole _parseUserRole(dynamic roleData) {
     if (roleData == null) return UserRole.customer;
-    
+
     final roleString = roleData.toString().toLowerCase();
     switch (roleString) {
       case 'specialist':

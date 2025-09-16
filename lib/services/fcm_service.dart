@@ -11,7 +11,8 @@ class FCMService {
   FCMService._internal();
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
+  final FlutterLocalNotificationsPlugin _localNotifications =
+      FlutterLocalNotificationsPlugin();
 
   String? _fcmToken;
   bool _isInitialized = false;
@@ -73,7 +74,8 @@ class FCMService {
       );
 
       await _localNotifications
-          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
           ?.createNotificationChannel(channel);
     }
   }
@@ -96,7 +98,8 @@ class FCMService {
     // Запрос разрешений для локальных уведомлений
     if (Platform.isAndroid) {
       await _localNotifications
-          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
           ?.requestNotificationsPermission();
     }
   }
@@ -106,13 +109,13 @@ class FCMService {
     try {
       _fcmToken = await _firebaseMessaging.getToken();
       print('FCM Token: $_fcmToken');
-      
+
       // Сохранение токена в SharedPreferences
       if (_fcmToken != null) {
         final prefs = await SharedPreferences.getInstance();
         await prefs.setString('fcm_token', _fcmToken!);
       }
-      
+
       return _fcmToken;
     } catch (e) {
       print('Error getting FCM token: $e');
@@ -135,7 +138,7 @@ class FCMService {
   /// Обработка сообщений в foreground
   Future<void> _handleForegroundMessage(RemoteMessage message) async {
     print('Received foreground message: ${message.messageId}');
-    
+
     // Показать локальное уведомление
     await _showLocalNotification(message);
   }
@@ -148,7 +151,8 @@ class FCMService {
 
   /// Обработка сообщений при запуске приложения из уведомления
   Future<void> _handleInitialMessage() async {
-    RemoteMessage? initialMessage = await _firebaseMessaging.getInitialMessage();
+    RemoteMessage? initialMessage =
+        await _firebaseMessaging.getInitialMessage();
     if (initialMessage != null) {
       print('App launched from notification: ${initialMessage.messageId}');
       _handleNotificationTap(initialMessage);
@@ -169,7 +173,8 @@ class FCMService {
           android: AndroidNotificationDetails(
             'high_importance_channel',
             'High Importance Notifications',
-            channelDescription: 'This channel is used for important notifications.',
+            channelDescription:
+                'This channel is used for important notifications.',
             importance: Importance.high,
             priority: Priority.high,
             icon: '@mipmap/ic_launcher',
@@ -188,7 +193,7 @@ class FCMService {
   /// Обработка нажатия на уведомление
   void _handleNotificationTap(RemoteMessage message) {
     final data = message.data;
-    
+
     // Обработка различных типов уведомлений
     if (data.containsKey('type')) {
       switch (data['type']) {
@@ -302,7 +307,8 @@ class FCMService {
         android: AndroidNotificationDetails(
           'high_importance_channel',
           'High Importance Notifications',
-          channelDescription: 'This channel is used for important notifications.',
+          channelDescription:
+              'This channel is used for important notifications.',
           importance: Importance.high,
           priority: Priority.high,
           icon: '@mipmap/ic_launcher',
@@ -334,7 +340,8 @@ class FCMService {
         android: AndroidNotificationDetails(
           'scheduled_channel',
           'Scheduled Notifications',
-          channelDescription: 'This channel is used for scheduled notifications.',
+          channelDescription:
+              'This channel is used for scheduled notifications.',
           importance: Importance.high,
           priority: Priority.high,
           icon: '@mipmap/ic_launcher',
@@ -346,7 +353,8 @@ class FCMService {
         ),
       ),
       payload: payload,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
     );
   }
 
@@ -399,7 +407,8 @@ class FCMService {
     required String title,
     required String body,
     required String bookingId,
-    required String type, // 'booking_created', 'booking_confirmed', 'booking_rejected', 'booking_cancelled'
+    required String
+        type, // 'booking_created', 'booking_confirmed', 'booking_rejected', 'booking_cancelled'
   }) async {
     try {
       // В реальном приложении здесь был бы HTTP запрос к FCM API

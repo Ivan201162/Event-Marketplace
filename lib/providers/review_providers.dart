@@ -8,25 +8,29 @@ final reviewServiceProvider = Provider<ReviewService>((ref) {
 });
 
 /// Провайдер отзывов по специалисту
-final reviewsBySpecialistProvider = FutureProvider.family<List<Review>, String>((ref, specialistId) {
+final reviewsBySpecialistProvider =
+    FutureProvider.family<List<Review>, String>((ref, specialistId) {
   final reviewService = ref.watch(reviewServiceProvider);
   return reviewService.getReviewsBySpecialist(specialistId);
 });
 
 /// Провайдер отзывов по заказчику
-final reviewsByCustomerProvider = FutureProvider.family<List<Review>, String>((ref, customerId) {
+final reviewsByCustomerProvider =
+    FutureProvider.family<List<Review>, String>((ref, customerId) {
   final reviewService = ref.watch(reviewServiceProvider);
   return reviewService.getReviewsByCustomer(customerId);
 });
 
 /// Провайдер отзыва по бронированию
-final reviewByBookingProvider = FutureProvider.family<Review?, String>((ref, bookingId) {
+final reviewByBookingProvider =
+    FutureProvider.family<Review?, String>((ref, bookingId) {
   final reviewService = ref.watch(reviewServiceProvider);
   return reviewService.getReviewByBooking(bookingId);
 });
 
 /// Провайдер статистики отзывов специалиста
-final reviewStatsProvider = FutureProvider.family<ReviewStats, String>((ref, specialistId) {
+final reviewStatsProvider =
+    FutureProvider.family<ReviewStats, String>((ref, specialistId) {
   final reviewService = ref.watch(reviewServiceProvider);
   return reviewService.getReviewStats(specialistId);
 });
@@ -50,9 +54,11 @@ final topReviewsProvider = FutureProvider<List<Review>>((ref) {
 });
 
 /// Провайдер проверки возможности оставить отзыв
-final canUserReviewProvider = FutureProvider.family<bool, ReviewCheckParams>((ref, params) {
+final canUserReviewProvider =
+    FutureProvider.family<bool, ReviewCheckParams>((ref, params) {
   final reviewService = ref.watch(reviewServiceProvider);
-  return reviewService.canUserReview(params.customerId, params.specialistId, params.bookingId);
+  return reviewService.canUserReview(
+      params.customerId, params.specialistId, params.bookingId);
 });
 
 /// Параметры для проверки возможности оставить отзыв
@@ -77,5 +83,6 @@ class ReviewCheckParams {
   }
 
   @override
-  int get hashCode => customerId.hashCode ^ specialistId.hashCode ^ bookingId.hashCode;
+  int get hashCode =>
+      customerId.hashCode ^ specialistId.hashCode ^ bookingId.hashCode;
 }

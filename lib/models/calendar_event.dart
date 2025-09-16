@@ -50,7 +50,7 @@ class CalendarEvent {
 
   factory CalendarEvent.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return CalendarEvent(
       id: doc.id,
       title: data['title'] ?? '',
@@ -200,7 +200,7 @@ class CalendarEvent {
     if (color != null) {
       return Color(int.parse(color!.replaceFirst('#', '0xff')));
     }
-    
+
     switch (status) {
       case EventStatus.scheduled:
         return Colors.blue;
@@ -382,7 +382,8 @@ class CalendarSync {
       providerId: map['providerId'] ?? '',
       accessToken: map['accessToken'] ?? '',
       refreshToken: map['refreshToken'] ?? '',
-      tokenExpiry: (map['tokenExpiry'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      tokenExpiry:
+          (map['tokenExpiry'] as Timestamp?)?.toDate() ?? DateTime.now(),
       isActive: map['isActive'] ?? false,
       lastSync: (map['lastSync'] as Timestamp?)?.toDate() ?? DateTime.now(),
       settings: Map<String, dynamic>.from(map['settings'] ?? {}),

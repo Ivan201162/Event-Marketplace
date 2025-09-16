@@ -13,12 +13,14 @@ final securitySettingsProvider = StateProvider<SecuritySettings?>((ref) {
 });
 
 /// Провайдер аудита безопасности
-final securityAuditLogsProvider = StreamProvider.family<List<SecurityAuditLog>, String>((ref, userId) {
+final securityAuditLogsProvider =
+    StreamProvider.family<List<SecurityAuditLog>, String>((ref, userId) {
   return ref.watch(securityServiceProvider).getSecurityAuditLogs(userId);
 });
 
 /// Провайдер устройств пользователя
-final userDevicesProvider = StreamProvider.family<List<SecurityDevice>, String>((ref, userId) {
+final userDevicesProvider =
+    StreamProvider.family<List<SecurityDevice>, String>((ref, userId) {
   return ref.watch(securityServiceProvider).getUserDevices(userId);
 });
 
@@ -38,8 +40,11 @@ final hasPinCodeProvider = FutureProvider<bool>((ref) {
 });
 
 /// Провайдер для аутентификации по биометрии
-final biometricAuthProvider = FutureProvider.family<bool, String>((ref, reason) {
-  return ref.watch(securityServiceProvider).authenticateWithBiometrics(reason: reason);
+final biometricAuthProvider =
+    FutureProvider.family<bool, String>((ref, reason) {
+  return ref
+      .watch(securityServiceProvider)
+      .authenticateWithBiometrics(reason: reason);
 });
 
 /// Провайдер для проверки PIN-кода
@@ -63,12 +68,14 @@ final encryptDataProvider = FutureProvider.family<String, String>((ref, data) {
 });
 
 /// Провайдер для расшифровки данных
-final decryptDataProvider = FutureProvider.family<String, String>((ref, encryptedData) {
+final decryptDataProvider =
+    FutureProvider.family<String, String>((ref, encryptedData) {
   return ref.watch(securityServiceProvider).decryptData(encryptedData);
 });
 
 /// Провайдер для безопасного сохранения
-final secureStoreProvider = FutureProvider.family<void, Map<String, String>>((ref, data) {
+final secureStoreProvider =
+    FutureProvider.family<void, Map<String, String>>((ref, data) {
   final service = ref.watch(securityServiceProvider);
   return Future.wait(
     data.entries.map((entry) => service.secureStore(entry.key, entry.value)),
@@ -86,47 +93,54 @@ final secureDeleteProvider = FutureProvider.family<void, String>((ref, key) {
 });
 
 /// Провайдер для получения настроек безопасности
-final getSecuritySettingsProvider = FutureProvider.family<SecuritySettings?, String>((ref, userId) {
+final getSecuritySettingsProvider =
+    FutureProvider.family<SecuritySettings?, String>((ref, userId) {
   return ref.watch(securityServiceProvider).getSecuritySettings(userId);
 });
 
 /// Провайдер для обновления настроек безопасности
-final updateSecuritySettingsProvider = FutureProvider.family<bool, SecuritySettings>((ref, settings) {
+final updateSecuritySettingsProvider =
+    FutureProvider.family<bool, SecuritySettings>((ref, settings) {
   return ref.watch(securityServiceProvider).updateSecuritySettings(settings);
 });
 
 /// Провайдер для блокировки устройства
-final blockDeviceProvider = FutureProvider.family<bool, Map<String, String>>((ref, data) {
+final blockDeviceProvider =
+    FutureProvider.family<bool, Map<String, String>>((ref, data) {
   final service = ref.watch(securityServiceProvider);
   return service.blockDevice(data['deviceId']!, data['userId']!);
 });
 
 /// Провайдер для разблокировки устройства
-final unblockDeviceProvider = FutureProvider.family<bool, Map<String, String>>((ref, data) {
+final unblockDeviceProvider =
+    FutureProvider.family<bool, Map<String, String>>((ref, data) {
   final service = ref.watch(securityServiceProvider);
   return service.unblockDevice(data['deviceId']!, data['userId']!);
 });
 
 /// Провайдер для доверия устройству
-final trustDeviceProvider = FutureProvider.family<bool, Map<String, String>>((ref, data) {
+final trustDeviceProvider =
+    FutureProvider.family<bool, Map<String, String>>((ref, data) {
   final service = ref.watch(securityServiceProvider);
   return service.trustDevice(data['deviceId']!, data['userId']!);
 });
 
 /// Провайдер для проверки силы пароля
-final passwordStrengthProvider = Provider<SecurityPasswordStrength Function(String)>((ref) {
+final passwordStrengthProvider =
+    Provider<SecurityPasswordStrength Function(String)>((ref) {
   final service = ref.watch(securityServiceProvider);
   return (String password) => service.checkPasswordStrength(password);
 });
 
 /// Провайдер для генерации безопасного пароля
-final generatePasswordProvider = Provider<String Function({
-  int length,
-  bool includeUppercase,
-  bool includeLowercase,
-  bool includeNumbers,
-  bool includeSymbols,
-})>((ref) {
+final generatePasswordProvider = Provider<
+    String Function({
+      int length,
+      bool includeUppercase,
+      bool includeLowercase,
+      bool includeNumbers,
+      bool includeSymbols,
+    })>((ref) {
   final service = ref.watch(securityServiceProvider);
   return ({
     int length = 12,
@@ -134,13 +148,14 @@ final generatePasswordProvider = Provider<String Function({
     bool includeLowercase = true,
     bool includeNumbers = true,
     bool includeSymbols = true,
-  }) => service.generateSecurePassword(
-    length: length,
-    includeUppercase: includeUppercase,
-    includeLowercase: includeLowercase,
-    includeNumbers: includeNumbers,
-    includeSymbols: includeSymbols,
-  );
+  }) =>
+      service.generateSecurePassword(
+        length: length,
+        includeUppercase: includeUppercase,
+        includeLowercase: includeLowercase,
+        includeNumbers: includeNumbers,
+        includeSymbols: includeSymbols,
+      );
 });
 
 /// Провайдер для очистки всех безопасных данных
@@ -168,13 +183,15 @@ final securityStatsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
 });
 
 /// Провайдер для получения рекомендаций по безопасности
-final securityRecommendationsProvider = FutureProvider<List<SecurityRecommendation>>((ref) async {
+final securityRecommendationsProvider =
+    FutureProvider<List<SecurityRecommendation>>((ref) async {
   // TODO: Реализовать получение рекомендаций по безопасности
   return [
     SecurityRecommendation(
       id: '1',
       title: 'Включить биометрическую аутентификацию',
-      description: 'Используйте отпечаток пальца или Face ID для быстрого и безопасного входа',
+      description:
+          'Используйте отпечаток пальца или Face ID для быстрого и безопасного входа',
       priority: SecurityRecommendationPriority.high,
       action: 'Включить',
       isCompleted: false,
@@ -190,7 +207,8 @@ final securityRecommendationsProvider = FutureProvider<List<SecurityRecommendati
     SecurityRecommendation(
       id: '3',
       title: 'Включить двухфакторную аутентификацию',
-      description: 'Защитите свой аккаунт с помощью двухфакторной аутентификации',
+      description:
+          'Защитите свой аккаунт с помощью двухфакторной аутентификации',
       priority: SecurityRecommendationPriority.high,
       action: 'Включить',
       isCompleted: false,

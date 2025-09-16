@@ -40,9 +40,11 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final scheduleAsync = ref.watch(specialistScheduleProvider(widget.specialistId));
+    final scheduleAsync =
+        ref.watch(specialistScheduleProvider(widget.specialistId));
     final busyDatesAsync = ref.watch(busyDatesProvider(widget.specialistId));
-    final busyDateRangesAsync = ref.watch(busyDateRangesProvider(widget.specialistId));
+    final busyDateRangesAsync =
+        ref.watch(busyDateRangesProvider(widget.specialistId));
     final calendarState = ref.watch(calendarStateProvider);
 
     return Column(
@@ -113,16 +115,18 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                   );
                   return;
                 }
-                
+
                 if (!isSameDay(_selectedDay, selectedDay)) {
                   setState(() {
                     _selectedDay = selectedDay;
                     _focusedDay = focusedDay;
                   });
-                  
+
                   // Обновляем состояние календаря
-                  ref.read(calendarStateProvider.notifier).selectDate(selectedDay);
-                  
+                  ref
+                      .read(calendarStateProvider.notifier)
+                      .selectDate(selectedDay);
+
                   // Вызываем callback
                   widget.onDateSelected?.call(selectedDay);
                 }
@@ -140,7 +144,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
               calendarBuilders: CalendarBuilders(
                 markerBuilder: (context, day, events) {
                   if (events.isEmpty) return null;
-                  
+
                   return Positioned(
                     right: 1,
                     bottom: 1,
@@ -154,7 +158,10 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                       text,
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.7),
                       ),
                     ),
                   );
@@ -162,18 +169,19 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                 // Кастомный билдер для дней
                 defaultBuilder: (context, day, focusedDay) {
                   final isBusy = _isDateBusy(day, busyDatesAsync);
-                  final isPast = day.isBefore(DateTime.now().subtract(const Duration(days: 1)));
-                  
+                  final isPast = day.isBefore(
+                      DateTime.now().subtract(const Duration(days: 1)));
+
                   return Container(
                     margin: const EdgeInsets.all(4.0),
                     decoration: BoxDecoration(
-                      color: isBusy 
+                      color: isBusy
                           ? Colors.red.withOpacity(0.3)
-                          : isPast 
+                          : isPast
                               ? Colors.grey.withOpacity(0.2)
                               : null,
                       shape: BoxShape.circle,
-                      border: isBusy 
+                      border: isBusy
                           ? Border.all(color: Colors.red, width: 2)
                           : null,
                     ),
@@ -181,9 +189,9 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                       child: Text(
                         '${day.day}',
                         style: TextStyle(
-                          color: isBusy 
+                          color: isBusy
                               ? Colors.red
-                              : isPast 
+                              : isPast
                                   ? Colors.grey
                                   : null,
                           fontWeight: isBusy ? FontWeight.bold : null,
@@ -196,15 +204,15 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
             ),
           ),
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // События на выбранную дату
         if (widget.showEvents && _selectedDay != null) ...[
           _buildEventsForSelectedDay(scheduleAsync),
           const SizedBox(height: 16),
         ],
-        
+
         // Временные слоты
         if (widget.showTimeSlots && _selectedDay != null) ...[
           _buildTimeSlotsForSelectedDay(),
@@ -214,7 +222,8 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
   }
 
   /// Получить события для дня
-  List<ScheduleEvent> _getEventsForDay(DateTime day, AsyncValue<SpecialistSchedule?> scheduleAsync) {
+  List<ScheduleEvent> _getEventsForDay(
+      DateTime day, AsyncValue<SpecialistSchedule?> scheduleAsync) {
     return scheduleAsync.when(
       data: (schedule) {
         if (schedule == null) return [];
@@ -228,7 +237,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
   /// Построить маркер события
   Widget _buildEventMarker(List<ScheduleEvent> events) {
     if (events.isEmpty) return const SizedBox.shrink();
-    
+
     return Container(
       width: 16,
       height: 16,
@@ -274,15 +283,16 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
   }
 
   /// Построить события на выбранную дату
-  Widget _buildEventsForSelectedDay(AsyncValue<SpecialistSchedule?> scheduleAsync) {
+  Widget _buildEventsForSelectedDay(
+      AsyncValue<SpecialistSchedule?> scheduleAsync) {
     return scheduleAsync.when(
       data: (schedule) {
         if (schedule == null || _selectedDay == null) {
           return const SizedBox.shrink();
         }
-        
+
         final events = schedule.getEventsForDate(_selectedDay!);
-        
+
         if (events.isEmpty) {
           return Card(
             child: Padding(
@@ -304,7 +314,7 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
             ),
           );
         }
-        
+
         return Card(
           child: Padding(
             padding: const EdgeInsets.all(16),
@@ -314,8 +324,8 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                 Text(
                   'События на ${_formatDate(_selectedDay!)}',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 const SizedBox(height: 12),
                 ...events.map((event) => _buildEventItem(event)),
@@ -389,7 +399,10 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                     event.description!,
                     style: TextStyle(
                       fontSize: 12,
-                      color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.7),
                     ),
                   ),
                 ],
@@ -398,7 +411,10 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                   '${_formatTime(event.startTime)} - ${_formatTime(event.endTime)}',
                   style: TextStyle(
                     fontSize: 12,
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.7),
                   ),
                 ),
               ],
@@ -444,14 +460,16 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                 Text(
                   'Доступные временные слоты',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 const SizedBox(height: 12),
                 Wrap(
                   spacing: 8,
                   runSpacing: 8,
-                  children: timeSlots.map((slot) => _buildTimeSlotChip(slot)).toList(),
+                  children: timeSlots
+                      .map((slot) => _buildTimeSlotChip(slot))
+                      .toList(),
                 ),
               ],
             ),
@@ -516,11 +534,10 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
   bool _isDateBusy(DateTime date, AsyncValue<List<DateTime>> busyDatesAsync) {
     return busyDatesAsync.when(
       data: (busyDates) {
-        return busyDates.any((busyDate) => 
-          busyDate.year == date.year &&
-          busyDate.month == date.month &&
-          busyDate.day == date.day
-        );
+        return busyDates.any((busyDate) =>
+            busyDate.year == date.year &&
+            busyDate.month == date.month &&
+            busyDate.day == date.day);
       },
       loading: () => false,
       error: (_, __) => false,

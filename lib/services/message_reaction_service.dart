@@ -3,7 +3,8 @@ import '../models/chat_message_extended.dart';
 
 /// Сервис для работы с реакциями на сообщения
 class MessageReactionService {
-  static final MessageReactionService _instance = MessageReactionService._internal();
+  static final MessageReactionService _instance =
+      MessageReactionService._internal();
   factory MessageReactionService() => _instance;
   MessageReactionService._internal();
 
@@ -18,19 +19,20 @@ class MessageReactionService {
   }) async {
     try {
       final messageRef = _firestore.collection('chat_messages').doc(messageId);
-      
+
       // Проверяем, есть ли уже реакция от этого пользователя с этим эмодзи
       final messageDoc = await messageRef.get();
       if (!messageDoc.exists) return false;
 
       final messageData = messageDoc.data()!;
       final reactions = (messageData['reactions'] as List<dynamic>?)
-          ?.map((e) => MessageReaction.fromMap(e))
-          .toList() ?? [];
+              ?.map((e) => MessageReaction.fromMap(e))
+              .toList() ??
+          [];
 
       // Удаляем существующую реакцию от этого пользователя с этим эмодзи
-      reactions.removeWhere((reaction) => 
-          reaction.userId == userId && reaction.emoji == emoji);
+      reactions.removeWhere(
+          (reaction) => reaction.userId == userId && reaction.emoji == emoji);
 
       // Добавляем новую реакцию
       final newReaction = MessageReaction(
@@ -63,18 +65,19 @@ class MessageReactionService {
   }) async {
     try {
       final messageRef = _firestore.collection('chat_messages').doc(messageId);
-      
+
       final messageDoc = await messageRef.get();
       if (!messageDoc.exists) return false;
 
       final messageData = messageDoc.data()!;
       final reactions = (messageData['reactions'] as List<dynamic>?)
-          ?.map((e) => MessageReaction.fromMap(e))
-          .toList() ?? [];
+              ?.map((e) => MessageReaction.fromMap(e))
+              .toList() ??
+          [];
 
       // Удаляем реакцию
-      reactions.removeWhere((reaction) => 
-          reaction.userId == userId && reaction.emoji == emoji);
+      reactions.removeWhere(
+          (reaction) => reaction.userId == userId && reaction.emoji == emoji);
 
       // Обновляем сообщение
       await messageRef.update({
@@ -97,18 +100,19 @@ class MessageReactionService {
   }) async {
     try {
       final messageRef = _firestore.collection('chat_messages').doc(messageId);
-      
+
       final messageDoc = await messageRef.get();
       if (!messageDoc.exists) return false;
 
       final messageData = messageDoc.data()!;
       final reactions = (messageData['reactions'] as List<dynamic>?)
-          ?.map((e) => MessageReaction.fromMap(e))
-          .toList() ?? [];
+              ?.map((e) => MessageReaction.fromMap(e))
+              .toList() ??
+          [];
 
       // Проверяем, есть ли уже реакция от этого пользователя с этим эмодзи
-      final existingReactionIndex = reactions.indexWhere((reaction) => 
-          reaction.userId == userId && reaction.emoji == emoji);
+      final existingReactionIndex = reactions.indexWhere(
+          (reaction) => reaction.userId == userId && reaction.emoji == emoji);
 
       if (existingReactionIndex != -1) {
         // Удаляем существующую реакцию
@@ -140,13 +144,15 @@ class MessageReactionService {
   /// Получить все реакции сообщения
   Future<List<MessageReaction>> getMessageReactions(String messageId) async {
     try {
-      final messageDoc = await _firestore.collection('chat_messages').doc(messageId).get();
+      final messageDoc =
+          await _firestore.collection('chat_messages').doc(messageId).get();
       if (!messageDoc.exists) return [];
 
       final messageData = messageDoc.data()!;
       final reactions = (messageData['reactions'] as List<dynamic>?)
-          ?.map((e) => MessageReaction.fromMap(e))
-          .toList() ?? [];
+              ?.map((e) => MessageReaction.fromMap(e))
+              .toList() ??
+          [];
 
       return reactions;
     } catch (e) {
@@ -168,11 +174,13 @@ class MessageReactionService {
       for (final doc in messagesQuery.docs) {
         final messageData = doc.data();
         final reactions = (messageData['reactions'] as List<dynamic>?)
-            ?.map((e) => MessageReaction.fromMap(e))
-            .toList() ?? [];
+                ?.map((e) => MessageReaction.fromMap(e))
+                .toList() ??
+            [];
 
         for (final reaction in reactions) {
-          reactionStats[reaction.emoji] = (reactionStats[reaction.emoji] ?? 0) + 1;
+          reactionStats[reaction.emoji] =
+              (reactionStats[reaction.emoji] ?? 0) + 1;
         }
       }
 
@@ -186,21 +194,21 @@ class MessageReactionService {
   /// Получить топ эмодзи для пользователя
   Future<Map<String, int>> getUserReactionStats(String userId) async {
     try {
-      final messagesQuery = await _firestore
-          .collection('chat_messages')
-          .get();
+      final messagesQuery = await _firestore.collection('chat_messages').get();
 
       final userReactionStats = <String, int>{};
 
       for (final doc in messagesQuery.docs) {
         final messageData = doc.data();
         final reactions = (messageData['reactions'] as List<dynamic>?)
-            ?.map((e) => MessageReaction.fromMap(e))
-            .toList() ?? [];
+                ?.map((e) => MessageReaction.fromMap(e))
+                .toList() ??
+            [];
 
         for (final reaction in reactions) {
           if (reaction.userId == userId) {
-            userReactionStats[reaction.emoji] = (userReactionStats[reaction.emoji] ?? 0) + 1;
+            userReactionStats[reaction.emoji] =
+                (userReactionStats[reaction.emoji] ?? 0) + 1;
           }
         }
       }
@@ -215,19 +223,75 @@ class MessageReactionService {
   /// Получить популярные эмодзи
   List<String> getPopularEmojis() {
     return [
-      '👍', '👎', '❤️', '😂', '😮', '😢', '😡', '🎉',
-      '👏', '🔥', '💯', '✨', '🎯', '🚀', '💪', '🙌',
-      '😍', '🤔', '😴', '🤯', '🥳', '😎', '🤝', '💡',
+      '👍',
+      '👎',
+      '❤️',
+      '😂',
+      '😮',
+      '😢',
+      '😡',
+      '🎉',
+      '👏',
+      '🔥',
+      '💯',
+      '✨',
+      '🎯',
+      '🚀',
+      '💪',
+      '🙌',
+      '😍',
+      '🤔',
+      '😴',
+      '🤯',
+      '🥳',
+      '😎',
+      '🤝',
+      '💡',
     ];
   }
 
   /// Получить эмодзи по категориям
   Map<String, List<String>> getEmojisByCategory() {
     return {
-      'Позитивные': ['👍', '❤️', '😂', '🎉', '👏', '🔥', '💯', '✨', '🎯', '🚀', '💪', '🙌', '😍', '🥳', '😎', '🤝', '💡'],
+      'Позитивные': [
+        '👍',
+        '❤️',
+        '😂',
+        '🎉',
+        '👏',
+        '🔥',
+        '💯',
+        '✨',
+        '🎯',
+        '🚀',
+        '💪',
+        '🙌',
+        '😍',
+        '🥳',
+        '😎',
+        '🤝',
+        '💡'
+      ],
       'Негативные': ['👎', '😢', '😡', '😴'],
       'Удивление': ['😮', '🤔', '🤯'],
-      'Другие': ['🎊', '🎈', '🎁', '🏆', '⭐', '🌟', '💫', '🌈', '🦄', '🐱', '🐶', '🦋', '🌸', '🌺', '🌻', '🌹'],
+      'Другие': [
+        '🎊',
+        '🎈',
+        '🎁',
+        '🏆',
+        '⭐',
+        '🌟',
+        '💫',
+        '🌈',
+        '🦄',
+        '🐱',
+        '🐶',
+        '🦋',
+        '🌸',
+        '🌺',
+        '🌻',
+        '🌹'
+      ],
     };
   }
 }

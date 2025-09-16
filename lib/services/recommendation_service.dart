@@ -62,9 +62,8 @@ class RecommendationService {
       }
 
       final snapshot = await query.get();
-      final recommendations = snapshot.docs
-          .map((doc) => Recommendation.fromDocument(doc))
-          .toList();
+      final recommendations =
+          snapshot.docs.map((doc) => Recommendation.fromDocument(doc)).toList();
 
       // Получаем данные специалистов
       final specialistRecommendations = <SpecialistRecommendation>[];
@@ -74,7 +73,7 @@ class RecommendationService {
               .collection('specialists')
               .doc(recommendation.specialistId)
               .get();
-          
+
           if (specialistDoc.exists) {
             final specialist = Specialist.fromDocument(specialistDoc);
             specialistRecommendations.add(
@@ -122,9 +121,10 @@ class RecommendationService {
         userId,
         user,
         limit: (limit * 0.3).round(),
-        excludeIds: excludeIds + recommendations
-            .map((rec) => rec.recommendation.specialistId)
-            .toList(),
+        excludeIds: excludeIds +
+            recommendations
+                .map((rec) => rec.recommendation.specialistId)
+                .toList(),
       );
       recommendations.addAll(similarRecommendations);
 
@@ -133,9 +133,10 @@ class RecommendationService {
         userId,
         user,
         limit: (limit * 0.2).round(),
-        excludeIds: excludeIds + recommendations
-            .map((rec) => rec.recommendation.specialistId)
-            .toList(),
+        excludeIds: excludeIds +
+            recommendations
+                .map((rec) => rec.recommendation.specialistId)
+                .toList(),
       );
       recommendations.addAll(popularRecommendations);
 
@@ -144,9 +145,10 @@ class RecommendationService {
         userId,
         user,
         limit: (limit * 0.1).round(),
-        excludeIds: excludeIds + recommendations
-            .map((rec) => rec.recommendation.specialistId)
-            .toList(),
+        excludeIds: excludeIds +
+            recommendations
+                .map((rec) => rec.recommendation.specialistId)
+                .toList(),
       );
       recommendations.addAll(locationRecommendations);
 
@@ -298,29 +300,28 @@ class RecommendationService {
       return popularSpecialists.docs
           .where((doc) => !excludeIds.contains(doc.id))
           .map((doc) {
-            final specialist = Specialist.fromDocument(doc);
-            final recommendation = Recommendation(
-              id: '',
-              userId: userId,
-              specialistId: specialist.id,
-              type: RecommendationType.popularInCategory,
-              score: specialist.rating * 0.8 + (specialist.reviewCount / 100) * 0.2,
-              reason: 'Популярный в категории ${specialist.categoryDisplayName}',
-              metadata: {
-                'category': popularCategory.name,
-                'rating': specialist.rating,
-                'reviewCount': specialist.reviewCount,
-              },
-              createdAt: DateTime.now(),
-              expiresAt: DateTime.now().add(const Duration(days: 7)),
-            );
+        final specialist = Specialist.fromDocument(doc);
+        final recommendation = Recommendation(
+          id: '',
+          userId: userId,
+          specialistId: specialist.id,
+          type: RecommendationType.popularInCategory,
+          score: specialist.rating * 0.8 + (specialist.reviewCount / 100) * 0.2,
+          reason: 'Популярный в категории ${specialist.categoryDisplayName}',
+          metadata: {
+            'category': popularCategory.name,
+            'rating': specialist.rating,
+            'reviewCount': specialist.reviewCount,
+          },
+          createdAt: DateTime.now(),
+          expiresAt: DateTime.now().add(const Duration(days: 7)),
+        );
 
-            return SpecialistRecommendation.create(
-              recommendation: recommendation,
-              specialist: specialist,
-            );
-          })
-          .toList();
+        return SpecialistRecommendation.create(
+          recommendation: recommendation,
+          specialist: specialist,
+        );
+      }).toList();
     } catch (e) {
       print('Error getting popular in category recommendations: $e');
       return [];
@@ -352,28 +353,27 @@ class RecommendationService {
       return nearbySpecialists.docs
           .where((doc) => !excludeIds.contains(doc.id))
           .map((doc) {
-            final specialist = Specialist.fromDocument(doc);
-            final recommendation = Recommendation(
-              id: '',
-              userId: userId,
-              specialistId: specialist.id,
-              type: RecommendationType.nearby,
-              score: specialist.rating * 0.9 + 0.1, // Бонус за близость
-              reason: 'Работает в вашем городе',
-              metadata: {
-                'location': userLocation,
-                'rating': specialist.rating,
-              },
-              createdAt: DateTime.now(),
-              expiresAt: DateTime.now().add(const Duration(days: 7)),
-            );
+        final specialist = Specialist.fromDocument(doc);
+        final recommendation = Recommendation(
+          id: '',
+          userId: userId,
+          specialistId: specialist.id,
+          type: RecommendationType.nearby,
+          score: specialist.rating * 0.9 + 0.1, // Бонус за близость
+          reason: 'Работает в вашем городе',
+          metadata: {
+            'location': userLocation,
+            'rating': specialist.rating,
+          },
+          createdAt: DateTime.now(),
+          expiresAt: DateTime.now().add(const Duration(days: 7)),
+        );
 
-            return SpecialistRecommendation.create(
-              recommendation: recommendation,
-              specialist: specialist,
-            );
-          })
-          .toList();
+        return SpecialistRecommendation.create(
+          recommendation: recommendation,
+          specialist: specialist,
+        );
+      }).toList();
     } catch (e) {
       print('Error getting location-based recommendations: $e');
       return [];
@@ -399,17 +399,18 @@ class RecommendationService {
             .get();
 
         if (specialistDoc.exists) {
-        final specialist = Specialist.fromDocument(specialistDoc);
-        
-        // Анализируем категории
-        final category = specialist.category.name;
-        final categories = preferences['categories'] as Map<String, int>;
-        categories[category] = (categories[category] ?? 0) + 1;
+          final specialist = Specialist.fromDocument(specialistDoc);
+
+          // Анализируем категории
+          final category = specialist.category.name;
+          final categories = preferences['categories'] as Map<String, int>;
+          categories[category] = (categories[category] ?? 0) + 1;
 
           // Анализируем ценовой диапазон
           final priceRange = (specialist.hourlyRate / 1000).floor() * 1000;
           final priceRanges = preferences['priceRange'] as Map<double, int>;
-          priceRanges[priceRange.toDouble()] = (priceRanges[priceRange.toDouble()] ?? 0) + 1;
+          priceRanges[priceRange.toDouble()] =
+              (priceRanges[priceRange.toDouble()] ?? 0) + 1;
 
           // Анализируем рейтинги
           final ratingRange = (specialist.rating / 0.5).floor() * 0.5;
@@ -435,9 +436,8 @@ class RecommendationService {
       final categories = preferences['categories'] as Map<String, int>;
       if (categories.isEmpty) return [];
 
-      final popularCategory = categories.entries
-          .reduce((a, b) => a.value > b.value ? a : b)
-          .key;
+      final popularCategory =
+          categories.entries.reduce((a, b) => a.value > b.value ? a : b).key;
 
       // Получаем предпочтительный ценовой диапазон
       final priceRanges = preferences['priceRange'] as Map<double, int>;
@@ -545,7 +545,8 @@ class RecommendationService {
   }
 
   /// Вычислить оценку на основе истории
-  double _calculateHistoryScore(Specialist specialist, Map<String, dynamic> preferences) {
+  double _calculateHistoryScore(
+      Specialist specialist, Map<String, dynamic> preferences) {
     double score = specialist.rating * 0.4;
 
     // Бонус за популярную категорию
@@ -557,10 +558,9 @@ class RecommendationService {
     // Бонус за подходящий ценовой диапазон
     final priceRanges = preferences['priceRange'] as Map<double, int>;
     if (priceRanges.isNotEmpty) {
-      final popularPriceRange = priceRanges.entries
-          .reduce((a, b) => a.value > b.value ? a : b)
-          .key;
-      
+      final popularPriceRange =
+          priceRanges.entries.reduce((a, b) => a.value > b.value ? a : b).key;
+
       final priceDiff = (specialist.hourlyRate - popularPriceRange).abs();
       if (priceDiff <= popularPriceRange * 0.3) {
         score += 0.3;
@@ -571,7 +571,8 @@ class RecommendationService {
   }
 
   /// Вычислить оценку схожести
-  double _calculateSimilarityScore(Specialist specialist1, Specialist specialist2) {
+  double _calculateSimilarityScore(
+      Specialist specialist1, Specialist specialist2) {
     double score = 0.0;
 
     // Схожесть категории
@@ -601,15 +602,16 @@ class RecommendationService {
   }
 
   /// Сохранить рекомендации
-  Future<void> _saveRecommendations(List<SpecialistRecommendation> recommendations) async {
+  Future<void> _saveRecommendations(
+      List<SpecialistRecommendation> recommendations) async {
     try {
       final batch = _db.batch();
-      
+
       for (final recommendation in recommendations) {
         final docRef = _db.collection('recommendations').doc();
         batch.set(docRef, recommendation.recommendation.toMap());
       }
-      
+
       await batch.commit();
     } catch (e) {
       print('Error saving recommendations: $e');

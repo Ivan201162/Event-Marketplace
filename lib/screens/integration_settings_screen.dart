@@ -26,31 +26,35 @@ class IntegrationSettingsScreen extends ConsumerWidget {
                 icon: Icons.extension,
                 title: 'Все интеграции',
                 subtitle: 'Управление всеми доступными интеграциями',
-                onTap: () => _navigateToScreen(context, const IntegrationsScreen()),
+                onTap: () =>
+                    _navigateToScreen(context, const IntegrationsScreen()),
               ),
               _buildSettingsTile(
                 icon: Icons.location_on,
                 title: 'Геолокация',
                 subtitle: 'Настройки определения местоположения',
-                onTap: () => _navigateToScreen(context, const LocationSettingsScreen()),
+                onTap: () =>
+                    _navigateToScreen(context, const LocationSettingsScreen()),
               ),
               _buildSettingsTile(
                 icon: Icons.share,
                 title: 'Шаринг',
                 subtitle: 'Настройки совместного использования контента',
-                onTap: () => _navigateToScreen(context, const SharingSettingsScreen()),
+                onTap: () =>
+                    _navigateToScreen(context, const SharingSettingsScreen()),
               ),
               _buildSettingsTile(
                 icon: Icons.wifi,
                 title: 'Подключение',
                 subtitle: 'Настройки сетевого подключения',
-                onTap: () => _navigateToScreen(context, const ConnectionSettingsScreen()),
+                onTap: () => _navigateToScreen(
+                    context, const ConnectionSettingsScreen()),
               ),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Дополнительные интеграции
           _buildSection(
             title: 'Дополнительные интеграции',
@@ -93,9 +97,9 @@ class IntegrationSettingsScreen extends ConsumerWidget {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Социальные сети
           _buildSection(
             title: 'Социальные сети',
@@ -126,9 +130,9 @@ class IntegrationSettingsScreen extends ConsumerWidget {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Помощь и поддержка
           _buildSection(
             title: 'Помощь и поддержка',
@@ -231,7 +235,8 @@ class IntegrationSettingsScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Скоро будет доступно'),
-        content: Text('Функция "$feature" будет доступна в следующих обновлениях приложения.'),
+        content: Text(
+            'Функция "$feature" будет доступна в следующих обновлениях приложения.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

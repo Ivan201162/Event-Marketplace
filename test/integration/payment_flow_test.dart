@@ -6,7 +6,8 @@ import 'package:event_marketplace_app/models/payment.dart';
 
 void main() {
   group('Payment Flow Integration Tests', () {
-    testWidgets('should complete full payment flow from booking to completion', (WidgetTester tester) async {
+    testWidgets('should complete full payment flow from booking to completion',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -34,7 +35,8 @@ void main() {
         await tester.pumpAndSettle();
 
         // Act 5: Fill payment form
-        await tester.enterText(find.byType(TextFormField).first, '1234 5678 9012 3456');
+        await tester.enterText(
+            find.byType(TextFormField).first, '1234 5678 9012 3456');
         await tester.enterText(find.byType(TextFormField).at(1), '12/25');
         await tester.enterText(find.byType(TextFormField).at(2), '123');
 
@@ -47,7 +49,8 @@ void main() {
       }
     });
 
-    testWidgets('should handle payment failure flow', (WidgetTester tester) async {
+    testWidgets('should handle payment failure flow',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -72,7 +75,8 @@ void main() {
         await tester.pumpAndSettle();
 
         // Act 4: Fill payment form with invalid data
-        await tester.enterText(find.byType(TextFormField).first, '0000 0000 0000 0000');
+        await tester.enterText(
+            find.byType(TextFormField).first, '0000 0000 0000 0000');
         await tester.enterText(find.byType(TextFormField).at(1), '12/25');
         await tester.enterText(find.byType(TextFormField).at(2), '123');
 
@@ -85,7 +89,8 @@ void main() {
       }
     });
 
-    testWidgets('should handle payment refund flow', (WidgetTester tester) async {
+    testWidgets('should handle payment refund flow',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -118,7 +123,8 @@ void main() {
       }
     });
 
-    testWidgets('should handle payment statistics flow', (WidgetTester tester) async {
+    testWidgets('should handle payment statistics flow',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -143,7 +149,8 @@ void main() {
       expect(find.text('Средний платеж'), findsOneWidget);
     });
 
-    testWidgets('should handle payment history flow', (WidgetTester tester) async {
+    testWidgets('should handle payment history flow',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -165,7 +172,8 @@ void main() {
       expect(find.text('История платежей'), findsOneWidget);
     });
 
-    testWidgets('should handle payment filters flow', (WidgetTester tester) async {
+    testWidgets('should handle payment filters flow',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -191,7 +199,8 @@ void main() {
       expect(find.text('Платежи'), findsOneWidget);
     });
 
-    testWidgets('should handle payment search flow', (WidgetTester tester) async {
+    testWidgets('should handle payment search flow',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -213,7 +222,8 @@ void main() {
       expect(find.text('Платежи'), findsOneWidget);
     });
 
-    testWidgets('should handle payment export flow', (WidgetTester tester) async {
+    testWidgets('should handle payment export flow',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -235,7 +245,8 @@ void main() {
       expect(find.text('Экспорт платежей'), findsOneWidget);
     });
 
-    testWidgets('should handle payment notification flow', (WidgetTester tester) async {
+    testWidgets('should handle payment notification flow',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -260,7 +271,8 @@ void main() {
       }
     });
 
-    testWidgets('should handle payment settings flow', (WidgetTester tester) async {
+    testWidgets('should handle payment settings flow',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -283,5 +295,3 @@ void main() {
     });
   });
 }
-
-

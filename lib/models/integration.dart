@@ -36,7 +36,7 @@ class Integration {
 
   factory Integration.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return Integration(
       id: doc.id,
       name: data['name'] ?? '',
@@ -232,7 +232,7 @@ class IntegrationSettings {
 
   factory IntegrationSettings.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return IntegrationSettings(
       integrationId: data['integrationId'] ?? '',
       userId: data['userId'] ?? '',
@@ -299,7 +299,7 @@ class IntegrationEvent {
 
   factory IntegrationEvent.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return IntegrationEvent(
       id: doc.id,
       integrationId: data['integrationId'] ?? '',

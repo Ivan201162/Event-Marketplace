@@ -2,10 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Семейное положение
 enum MaritalStatus {
-  single,      // Холост/не замужем
-  married,     // Женат/замужем
-  divorced,    // Разведен/разведена
-  widowed,     // Вдовец/вдова
+  single, // Холост/не замужем
+  married, // Женат/замужем
+  divorced, // Разведен/разведена
+  widowed, // Вдовец/вдова
   inRelationship, // В отношениях
 }
 
@@ -49,22 +49,22 @@ class CustomerProfile {
       photoURL: data['photoURL'],
       bio: data['bio'],
       maritalStatus: _parseMaritalStatus(data['maritalStatus']),
-      weddingDate: data['weddingDate'] != null 
-          ? (data['weddingDate'] as Timestamp).toDate() 
+      weddingDate: data['weddingDate'] != null
+          ? (data['weddingDate'] as Timestamp).toDate()
           : null,
-      anniversaryDate: data['anniversaryDate'] != null 
-          ? (data['anniversaryDate'] as Timestamp).toDate() 
+      anniversaryDate: data['anniversaryDate'] != null
+          ? (data['anniversaryDate'] as Timestamp).toDate()
           : null,
       phoneNumber: data['phoneNumber'],
       location: data['location'],
       interests: List<String>.from(data['interests'] ?? []),
       eventTypes: List<String>.from(data['eventTypes'] ?? []),
       preferences: data['preferences'],
-      createdAt: data['createdAt'] != null 
-          ? (data['createdAt'] as Timestamp).toDate() 
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
-      updatedAt: data['updatedAt'] != null 
-          ? (data['updatedAt'] as Timestamp).toDate() 
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] as Timestamp).toDate()
           : DateTime.now(),
     );
   }
@@ -75,8 +75,10 @@ class CustomerProfile {
       'photoURL': photoURL,
       'bio': bio,
       'maritalStatus': maritalStatus?.name,
-      'weddingDate': weddingDate != null ? Timestamp.fromDate(weddingDate!) : null,
-      'anniversaryDate': anniversaryDate != null ? Timestamp.fromDate(anniversaryDate!) : null,
+      'weddingDate':
+          weddingDate != null ? Timestamp.fromDate(weddingDate!) : null,
+      'anniversaryDate':
+          anniversaryDate != null ? Timestamp.fromDate(anniversaryDate!) : null,
       'phoneNumber': phoneNumber,
       'location': location,
       'interests': interests,
@@ -145,39 +147,43 @@ class CustomerProfile {
   DateTime? get nextImportantDate {
     final now = DateTime.now();
     final currentYear = now.year;
-    
+
     DateTime? nextDate;
-    
+
     if (weddingDate != null) {
-      final weddingThisYear = DateTime(currentYear, weddingDate!.month, weddingDate!.day);
+      final weddingThisYear =
+          DateTime(currentYear, weddingDate!.month, weddingDate!.day);
       if (weddingThisYear.isAfter(now)) {
         nextDate = weddingThisYear;
       } else {
-        nextDate = DateTime(currentYear + 1, weddingDate!.month, weddingDate!.day);
+        nextDate =
+            DateTime(currentYear + 1, weddingDate!.month, weddingDate!.day);
       }
     }
-    
+
     if (anniversaryDate != null) {
-      final anniversaryThisYear = DateTime(currentYear, anniversaryDate!.month, anniversaryDate!.day);
+      final anniversaryThisYear =
+          DateTime(currentYear, anniversaryDate!.month, anniversaryDate!.day);
       if (anniversaryThisYear.isAfter(now)) {
         if (nextDate == null || anniversaryThisYear.isBefore(nextDate)) {
           nextDate = anniversaryThisYear;
         }
       } else {
-        final nextAnniversary = DateTime(currentYear + 1, anniversaryDate!.month, anniversaryDate!.day);
+        final nextAnniversary = DateTime(
+            currentYear + 1, anniversaryDate!.month, anniversaryDate!.day);
         if (nextDate == null || nextAnniversary.isBefore(nextDate)) {
           nextDate = nextAnniversary;
         }
       }
     }
-    
+
     return nextDate;
   }
 
   /// Парсинг семейного положения из строки
   static MaritalStatus? _parseMaritalStatus(dynamic statusData) {
     if (statusData == null) return null;
-    
+
     final statusString = statusData.toString().toLowerCase();
     switch (statusString) {
       case 'single':

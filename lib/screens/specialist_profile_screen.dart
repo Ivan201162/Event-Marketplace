@@ -16,10 +16,12 @@ class SpecialistProfileScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<SpecialistProfileScreen> createState() => _SpecialistProfileScreenState();
+  ConsumerState<SpecialistProfileScreen> createState() =>
+      _SpecialistProfileScreenState();
 }
 
-class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScreen>
+class _SpecialistProfileScreenState
+    extends ConsumerState<SpecialistProfileScreen>
     with SingleTickerProviderStateMixin {
   late TabController _tabController;
   bool _isFavorite = false;
@@ -40,7 +42,7 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
   Widget build(BuildContext context) {
     final specialistAsync = ref.watch(specialistProvider(widget.specialistId));
     final favorites = ref.watch(favoriteSpecialistsProvider);
-    
+
     _isFavorite = favorites.contains(widget.specialistId);
 
     return Scaffold(
@@ -71,7 +73,8 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
               Text('Ошибка загрузки: $error'),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () => ref.refresh(specialistProvider(widget.specialistId)),
+                onPressed: () =>
+                    ref.refresh(specialistProvider(widget.specialistId)),
                 child: const Text('Повторить'),
               ),
             ],
@@ -124,7 +127,7 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
                   ),
                 ),
               ),
-              
+
               // Градиентный оверлей
               Container(
                 decoration: BoxDecoration(
@@ -138,7 +141,7 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
                   ),
                 ),
               ),
-              
+
               // Контент
               Positioned(
                 bottom: 16,
@@ -153,7 +156,9 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
                           radius: 30,
                           backgroundColor: Colors.white,
                           child: Text(
-                            specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
+                            specialist.name.isNotEmpty
+                                ? specialist.name[0].toUpperCase()
+                                : '?',
                             style: TextStyle(
                               color: Theme.of(context).colorScheme.primary,
                               fontWeight: FontWeight.bold,
@@ -187,15 +192,21 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
                         ),
                         IconButton(
                           icon: Icon(
-                            _isFavorite ? Icons.favorite : Icons.favorite_border,
+                            _isFavorite
+                                ? Icons.favorite
+                                : Icons.favorite_border,
                             color: _isFavorite ? Colors.red : Colors.white,
                             size: 28,
                           ),
                           onPressed: () {
                             if (_isFavorite) {
-                              ref.read(favoriteSpecialistsProvider.notifier).removeFromFavorites(specialist.id);
+                              ref
+                                  .read(favoriteSpecialistsProvider.notifier)
+                                  .removeFromFavorites(specialist.id);
                             } else {
-                              ref.read(favoriteSpecialistsProvider.notifier).addToFavorites(specialist.id);
+                              ref
+                                  .read(favoriteSpecialistsProvider.notifier)
+                                  .addToFavorites(specialist.id);
                             }
                           },
                         ),
@@ -253,16 +264,16 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
           children: [
             // Статистика
             _buildStatsRow(specialist),
-            
+
             const SizedBox(height: 16),
-            
+
             // Описание
             if (specialist.description != null) ...[
               Text(
                 'О специалисте',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               const SizedBox(height: 8),
               Text(
@@ -275,14 +286,14 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
               ),
               const SizedBox(height: 16),
             ],
-            
+
             // Подкатегории
             if (specialist.subcategories.isNotEmpty) ...[
               Text(
                 'Услуги',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
               const SizedBox(height: 8),
               Wrap(
@@ -290,9 +301,13 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
                 runSpacing: 8,
                 children: specialist.subcategories.map((subcategory) {
                   return Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .primary
+                          .withOpacity(0.1),
                       borderRadius: BorderRadius.circular(16),
                     ),
                     child: Text(
@@ -308,7 +323,7 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
               ),
               const SizedBox(height: 16),
             ],
-            
+
             // Контактная информация
             _buildContactInfo(specialist),
           ],
@@ -331,7 +346,7 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
           ),
         ),
         const SizedBox(width: 12),
-        
+
         // Отзывы
         Expanded(
           child: _buildStatCard(
@@ -342,7 +357,7 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
           ),
         ),
         const SizedBox(width: 12),
-        
+
         // Опыт
         Expanded(
           child: _buildStatCard(
@@ -353,7 +368,7 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
           ),
         ),
         const SizedBox(width: 12),
-        
+
         // Цена
         Expanded(
           child: _buildStatCard(
@@ -420,29 +435,32 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
           Text(
             'Контактная информация',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 12),
-          
+
           // Области обслуживания
           if (specialist.serviceAreas.isNotEmpty) ...[
-            _buildInfoRow(Icons.location_on, 'Области обслуживания', specialist.serviceAreas.join(', ')),
+            _buildInfoRow(Icons.location_on, 'Области обслуживания',
+                specialist.serviceAreas.join(', ')),
             const SizedBox(height: 8),
           ],
-          
+
           // Языки
           if (specialist.languages.isNotEmpty) ...[
-            _buildInfoRow(Icons.language, 'Языки', specialist.languages.join(', ')),
+            _buildInfoRow(
+                Icons.language, 'Языки', specialist.languages.join(', ')),
             const SizedBox(height: 8),
           ],
-          
+
           // Оборудование
           if (specialist.equipment.isNotEmpty) ...[
-            _buildInfoRow(Icons.build, 'Оборудование', specialist.equipment.join(', ')),
+            _buildInfoRow(
+                Icons.build, 'Оборудование', specialist.equipment.join(', ')),
             const SizedBox(height: 8),
           ],
-          
+
           // Статус верификации
           _buildInfoRow(
             specialist.isVerified ? Icons.verified : Icons.pending,
@@ -506,7 +524,7 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
             ],
           ),
         ),
-        
+
         // TabBarView
         Expanded(
           child: TabBarView(
@@ -519,7 +537,7 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
             ],
           ),
         ),
-        
+
         // Кнопка бронирования
         Container(
           padding: const EdgeInsets.all(16),
@@ -561,13 +579,16 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
                 ),
                 const SizedBox(width: 16),
                 ElevatedButton.icon(
-                  onPressed: specialist.isAvailable ? () => _showBookingDialog(specialist) : null,
+                  onPressed: specialist.isAvailable
+                      ? () => _showBookingDialog(specialist)
+                      : null,
                   icon: const Icon(Icons.calendar_today),
                   label: const Text('Забронировать'),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Theme.of(context).colorScheme.primary,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 24, vertical: 12),
                   ),
                 ),
               ],
@@ -588,16 +609,18 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
           Text(
             'Доступность',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 16),
-          
+
           // Статус доступности
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: specialist.isAvailable ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+              color: specialist.isAvailable
+                  ? Colors.green.withOpacity(0.1)
+                  : Colors.red.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: specialist.isAvailable ? Colors.green : Colors.red,
@@ -616,15 +639,19 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        specialist.isAvailable ? 'Доступен для бронирования' : 'Временно недоступен',
+                        specialist.isAvailable
+                            ? 'Доступен для бронирования'
+                            : 'Временно недоступен',
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          color: specialist.isAvailable ? Colors.green[700] : Colors.red[700],
+                          color: specialist.isAvailable
+                              ? Colors.green[700]
+                              : Colors.red[700],
                         ),
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        specialist.isAvailable 
+                        specialist.isAvailable
                             ? 'Специалист принимает новые заявки'
                             : 'Специалист временно не принимает заявки',
                         style: TextStyle(
@@ -638,9 +665,9 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
               ],
             ),
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Календарь (заглушка)
           Container(
             padding: const EdgeInsets.all(16),
@@ -686,45 +713,45 @@ class _SpecialistProfileScreenState extends ConsumerState<SpecialistProfileScree
           Text(
             'Способы связи',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 16),
-          
+
           // Кнопки связи
           _buildContactButton(
             icon: Icons.message,
             label: 'Написать сообщение',
             onTap: () => _sendMessage(specialist),
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           _buildContactButton(
             icon: Icons.phone,
             label: 'Позвонить',
             onTap: () => _makeCall(specialist),
           ),
-          
+
           const SizedBox(height: 12),
-          
+
           _buildContactButton(
             icon: Icons.email,
             label: 'Отправить email',
             onTap: () => _sendEmail(specialist),
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Социальные сети (заглушка)
           Text(
             'Социальные сети',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 16),
-          
+
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(

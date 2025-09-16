@@ -38,7 +38,7 @@ class SecuritySettings {
 
   factory SecuritySettings.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return SecuritySettings(
       userId: data['userId'] ?? '',
       biometricAuth: data['biometricAuth'] ?? false,
@@ -51,8 +51,12 @@ class SecuritySettings {
       auditLogging: data['auditLogging'] ?? true,
       allowedDevices: List<String>.from(data['allowedDevices'] ?? []),
       blockedDevices: List<String>.from(data['blockedDevices'] ?? []),
-      lastPasswordChange: (data['lastPasswordChange'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      lastSecurityUpdate: (data['lastSecurityUpdate'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      lastPasswordChange:
+          (data['lastPasswordChange'] as Timestamp?)?.toDate() ??
+              DateTime.now(),
+      lastSecurityUpdate:
+          (data['lastSecurityUpdate'] as Timestamp?)?.toDate() ??
+              DateTime.now(),
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
@@ -143,7 +147,7 @@ class SecurityAuditLog {
 
   factory SecurityAuditLog.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return SecurityAuditLog(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -155,7 +159,7 @@ class SecurityAuditLog {
       ipAddress: data['ipAddress'],
       userAgent: data['userAgent'],
       deviceId: data['deviceId'],
-      metadata: data['metadata'] != null 
+      metadata: data['metadata'] != null
           ? Map<String, dynamic>.from(data['metadata'])
           : null,
       severity: SecurityEventSeverity.values.firstWhere(
@@ -267,7 +271,7 @@ class SecurityDevice {
 
   factory SecurityDevice.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return SecurityDevice(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -372,7 +376,7 @@ class PinCode {
       createdAt: DateTime.fromMillisecondsSinceEpoch(map['createdAt'] ?? 0),
       updatedAt: DateTime.fromMillisecondsSinceEpoch(map['updatedAt'] ?? 0),
       attempts: map['attempts'] ?? 0,
-      lockedUntil: map['lockedUntil'] != null 
+      lockedUntil: map['lockedUntil'] != null
           ? DateTime.fromMillisecondsSinceEpoch(map['lockedUntil'])
           : null,
     );

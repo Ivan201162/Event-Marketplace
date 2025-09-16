@@ -8,7 +8,8 @@ final notificationServiceProvider = Provider<NotificationService>((ref) {
 });
 
 /// Провайдер для списка уведомлений пользователя
-final userNotificationsProvider = StreamProvider<List<app_notification.Notification>>((ref) {
+final userNotificationsProvider =
+    StreamProvider<List<app_notification.Notification>>((ref) {
   // Здесь будет логика получения уведомлений из Firestore
   // Пока возвращаем пустой список
   return Stream.value([]);
@@ -17,12 +18,12 @@ final userNotificationsProvider = StreamProvider<List<app_notification.Notificat
 /// Провайдер для количества непрочитанных уведомлений
 final unreadNotificationsCountProvider = StreamProvider<int>((ref) {
   return ref.watch(userNotificationsProvider).when(
-    data: (notifications) => Stream.value(
-      notifications.where((n) => !n.isRead).length,
-    ),
-    loading: () => Stream.value(0),
-    error: (_, __) => Stream.value(0),
-  );
+        data: (notifications) => Stream.value(
+          notifications.where((n) => !n.isRead).length,
+        ),
+        loading: () => Stream.value(0),
+        error: (_, __) => Stream.value(0),
+      );
 });
 
 /// Провайдер для FCM токена
@@ -32,7 +33,9 @@ final fcmTokenProvider = FutureProvider<String?>((ref) async {
 });
 
 /// Провайдер для управления настройками уведомлений
-final notificationSettingsProvider = StateNotifierProvider<NotificationSettingsNotifier, NotificationSettings>((ref) {
+final notificationSettingsProvider =
+    StateNotifierProvider<NotificationSettingsNotifier, NotificationSettings>(
+        (ref) {
   return NotificationSettingsNotifier();
 });
 
@@ -66,8 +69,10 @@ class NotificationSettings {
       reviewNotifications: reviewNotifications ?? this.reviewNotifications,
       bookingNotifications: bookingNotifications ?? this.bookingNotifications,
       paymentNotifications: paymentNotifications ?? this.paymentNotifications,
-      reminderNotifications: reminderNotifications ?? this.reminderNotifications,
-      marketingNotifications: marketingNotifications ?? this.marketingNotifications,
+      reminderNotifications:
+          reminderNotifications ?? this.reminderNotifications,
+      marketingNotifications:
+          marketingNotifications ?? this.marketingNotifications,
       reminderHoursBefore: reminderHoursBefore ?? this.reminderHoursBefore,
     );
   }

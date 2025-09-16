@@ -16,7 +16,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final currentUser = ref.watch(currentUserProvider);
-    
+
     return currentUser.when(
       data: (user) {
         if (user == null) {
@@ -26,7 +26,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             ),
           );
         }
-        
+
         return _buildProfileContent(context, user);
       },
       loading: () => const Scaffold(
@@ -58,19 +58,19 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const SizedBox(height: 20),
-            
+
             // Аватар пользователя
             CircleAvatar(
               radius: 60,
               backgroundColor: Theme.of(context).primaryColor,
-              backgroundImage: appUser.photoURL != null 
+              backgroundImage: appUser.photoURL != null
                   ? NetworkImage(appUser.photoURL!)
                   : null,
               child: appUser.photoURL == null
                   ? Text(
                       (appUser.displayName?.isNotEmpty ?? false)
                           ? appUser.displayName![0].toUpperCase()
-                          : appUser.email.isNotEmpty 
+                          : appUser.email.isNotEmpty
                               ? appUser.email[0].toUpperCase()
                               : '?',
                       style: const TextStyle(
@@ -81,29 +81,29 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     )
                   : null,
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Имя пользователя
             Text(
               appUser.displayNameOrEmail,
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             // Email
             Text(
               appUser.email,
               style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: Colors.grey[600],
-              ),
+                    color: Colors.grey[600],
+                  ),
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             // Роль пользователя
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -122,9 +122,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 30),
-            
+
             // Кнопка редактирования профиля
             SizedBox(
               width: double.infinity,
@@ -137,9 +137,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Информация о регистрации
             Card(
               child: Padding(
@@ -150,8 +150,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     Text(
                       'Информация о профиле',
                       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     const SizedBox(height: 12),
                     _buildInfoRow(

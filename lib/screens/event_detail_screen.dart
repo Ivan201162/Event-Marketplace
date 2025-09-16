@@ -24,8 +24,9 @@ class EventDetailScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUser = ref.watch(currentUserProvider);
     final isOwner = currentUser.whenOrNull(
-      data: (user) => user?.id == event.organizerId,
-    ) ?? false;
+          data: (user) => user?.id == event.organizerId,
+        ) ??
+        false;
 
     return Scaffold(
       appBar: AppBar(
@@ -39,12 +40,14 @@ class EventDetailScreen extends ConsumerWidget {
               return currentUser.when(
                 data: (user) {
                   if (user == null) return const SizedBox.shrink();
-                  
+
                   return FutureBuilder<bool>(
-                    future: ref.read(isFavoriteProvider((userId: user.id, eventId: event.id)).future),
+                    future: ref.read(
+                        isFavoriteProvider((userId: user.id, eventId: event.id))
+                            .future),
                     builder: (context, snapshot) {
                       final isFavorite = snapshot.data ?? false;
-                      
+
                       return IconButton(
                         icon: Icon(
                           isFavorite ? Icons.favorite : Icons.favorite_border,
@@ -52,19 +55,25 @@ class EventDetailScreen extends ConsumerWidget {
                         ),
                         onPressed: () async {
                           try {
-                            final favoritesService = ref.read(favoritesServiceProvider);
+                            final favoritesService =
+                                ref.read(favoritesServiceProvider);
                             if (isFavorite) {
-                              await favoritesService.removeFromFavorites(user.id, event.id);
+                              await favoritesService.removeFromFavorites(
+                                  user.id, event.id);
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Удалено из избранного')),
+                                const SnackBar(
+                                    content: Text('Удалено из избранного')),
                               );
                             } else {
-                              await favoritesService.addToFavorites(user.id, event.id);
+                              await favoritesService.addToFavorites(
+                                  user.id, event.id);
                               ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text('Добавлено в избранное')),
+                                const SnackBar(
+                                    content: Text('Добавлено в избранное')),
                               );
                             }
-                            ref.invalidate(isFavoriteProvider((userId: user.id, eventId: event.id)));
+                            ref.invalidate(isFavoriteProvider(
+                                (userId: user.id, eventId: event.id)));
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Ошибка: $e')),
@@ -129,41 +138,41 @@ class EventDetailScreen extends ConsumerWidget {
           children: [
             // Заголовок и статус
             _buildHeaderSection(context),
-            
+
             const SizedBox(height: 24),
-            
+
             // Основная информация
             _buildBasicInfoSection(context),
-            
+
             const SizedBox(height: 24),
-            
+
             // Дата и время
             _buildDateTimeSection(context),
-            
+
             const SizedBox(height: 24),
-            
+
             // Место проведения
             _buildLocationSection(context),
-            
+
             const SizedBox(height: 24),
-            
+
             // Цена и участники
             _buildPriceAndParticipantsSection(context),
-            
+
             const SizedBox(height: 24),
-            
+
             // Дополнительная информация
             if (event.contactInfo != null || event.requirements != null)
               _buildAdditionalInfoSection(context),
-            
+
             if (event.contactInfo != null || event.requirements != null)
               const SizedBox(height: 24),
-            
+
             // Рейтинг и отзывы
             _buildReviewsSection(context, ref),
-            
+
             const SizedBox(height: 24),
-            
+
             // Кнопки действий
             _buildActionButtons(context, ref, isOwner),
           ],
@@ -193,22 +202,24 @@ class EventDetailScreen extends ConsumerWidget {
                     children: [
                       Text(
                         event.title,
-                        style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                        style:
+                            Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                       ),
                       const SizedBox(height: 4),
                       Text(
                         event.categoryName,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                              color: Theme.of(context).colorScheme.primary,
+                            ),
                       ),
                     ],
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
                     color: event.statusColor.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -504,7 +515,8 @@ class EventDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildActionButtons(BuildContext context, WidgetRef ref, bool isOwner) {
+  Widget _buildActionButtons(
+      BuildContext context, WidgetRef ref, bool isOwner) {
     return Column(
       children: [
         if (isOwner) ...[
@@ -570,9 +582,11 @@ class EventDetailScreen extends ConsumerWidget {
           ),
         ] else ...[
           // Кнопки для участника
-          if (event.status == EventStatus.active && event.hasAvailableSpots) ...[
+          if (event.status == EventStatus.active &&
+              event.hasAvailableSpots) ...[
             _buildBookingButton(context, ref),
-          ] else if (event.status == EventStatus.active && !event.hasAvailableSpots) ...[
+          ] else if (event.status == EventStatus.active &&
+              !event.hasAvailableSpots) ...[
             Container(
               width: double.infinity,
               padding: const EdgeInsets.symmetric(vertical: 16),
@@ -601,7 +615,8 @@ class EventDetailScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Завершить мероприятие'),
-        content: const Text('Вы уверены, что хотите завершить это мероприятие?'),
+        content:
+            const Text('Вы уверены, что хотите завершить это мероприятие?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -612,7 +627,8 @@ class EventDetailScreen extends ConsumerWidget {
               Navigator.pop(context);
               try {
                 final eventService = ref.read(eventServiceProvider);
-                await eventService.updateEventStatus(event.id, EventStatus.completed);
+                await eventService.updateEventStatus(
+                    event.id, EventStatus.completed);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Мероприятие завершено')),
@@ -649,7 +665,8 @@ class EventDetailScreen extends ConsumerWidget {
               Navigator.pop(context);
               try {
                 final eventService = ref.read(eventServiceProvider);
-                await eventService.updateEventStatus(event.id, EventStatus.cancelled);
+                await eventService.updateEventStatus(
+                    event.id, EventStatus.cancelled);
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Мероприятие отменено')),
@@ -676,7 +693,8 @@ class EventDetailScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Удалить мероприятие'),
-        content: const Text('Вы уверены, что хотите удалить это мероприятие? Это действие нельзя будет отменить.'),
+        content: const Text(
+            'Вы уверены, что хотите удалить это мероприятие? Это действие нельзя будет отменить.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -713,7 +731,7 @@ class EventDetailScreen extends ConsumerWidget {
   /// Построить секцию рейтинга и отзывов
   Widget _buildReviewsSection(BuildContext context, WidgetRef ref) {
     final reviewService = ReviewService();
-    
+
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -739,7 +757,7 @@ class EventDetailScreen extends ConsumerWidget {
               ],
             ),
             const SizedBox(height: 16),
-            
+
             // Средний рейтинг
             FutureBuilder<Map<String, dynamic>>(
               future: reviewService.getEventReviewStats(event.id),
@@ -747,22 +765,23 @@ class EventDetailScreen extends ConsumerWidget {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 }
-                
+
                 if (snapshot.hasError) {
                   return Text('Ошибка загрузки рейтинга: ${snapshot.error}');
                 }
-                
+
                 final stats = snapshot.data ?? {};
-                final averageRating = (stats['averageRating'] as num?)?.toDouble() ?? 0.0;
+                final averageRating =
+                    (stats['averageRating'] as num?)?.toDouble() ?? 0.0;
                 final totalReviews = stats['totalReviews'] as int? ?? 0;
-                
+
                 if (totalReviews == 0) {
                   return const Text(
                     'Пока нет отзывов',
                     style: TextStyle(color: Colors.grey),
                   );
                 }
-                
+
                 return Column(
                   children: [
                     Row(
@@ -771,7 +790,9 @@ class EventDetailScreen extends ConsumerWidget {
                         Row(
                           children: List.generate(5, (index) {
                             return Icon(
-                              index < averageRating ? Icons.star : Icons.star_border,
+                              index < averageRating
+                                  ? Icons.star
+                                  : Icons.star_border,
                               size: 24,
                               color: Colors.amber,
                             );
@@ -793,22 +814,24 @@ class EventDetailScreen extends ConsumerWidget {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Последние отзывы
                     StreamBuilder<List<Review>>(
                       stream: reviewService.getEventReviews(event.id),
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
                         }
-                        
+
                         final reviews = snapshot.data ?? [];
                         final recentReviews = reviews.take(2).toList();
-                        
+
                         if (recentReviews.isEmpty) {
                           return const SizedBox.shrink();
                         }
-                        
+
                         return Column(
                           children: recentReviews.map((review) {
                             return _buildReviewItem(review);
@@ -864,7 +887,9 @@ class EventDetailScreen extends ConsumerWidget {
                         Row(
                           children: List.generate(5, (index) {
                             return Icon(
-                              index < review.rating ? Icons.star : Icons.star_border,
+                              index < review.rating
+                                  ? Icons.star
+                                  : Icons.star_border,
                               size: 16,
                               color: Colors.amber,
                             );
@@ -885,7 +910,8 @@ class EventDetailScreen extends ConsumerWidget {
               ),
               if (review.isVerified)
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
                     color: Colors.green[100],
                     borderRadius: BorderRadius.circular(4),
@@ -956,15 +982,15 @@ class EventDetailScreen extends ConsumerWidget {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     }
-                    
+
                     final reviews = snapshot.data ?? [];
-                    
+
                     if (reviews.isEmpty) {
                       return const Center(
                         child: Text('Пока нет отзывов'),
                       );
                     }
-                    
+
                     return ListView.builder(
                       controller: scrollController,
                       itemCount: reviews.length,
@@ -986,7 +1012,7 @@ class EventDetailScreen extends ConsumerWidget {
   /// Построить кнопку бронирования
   Widget _buildBookingButton(BuildContext context, WidgetRef ref) {
     final currentUser = ref.watch(currentUserProvider);
-    
+
     return currentUser.when(
       data: (user) {
         if (user == null) {
@@ -1010,7 +1036,9 @@ class EventDetailScreen extends ConsumerWidget {
         }
 
         return FutureBuilder<bool>(
-          future: ref.read(hasUserBookedEventProvider((userId: user.id, eventId: event.id)).future),
+          future: ref.read(
+              hasUserBookedEventProvider((userId: user.id, eventId: event.id))
+                  .future),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Container(
@@ -1021,7 +1049,7 @@ class EventDetailScreen extends ConsumerWidget {
             }
 
             final hasBooked = snapshot.data ?? false;
-            
+
             if (hasBooked) {
               return Container(
                 width: double.infinity,
@@ -1055,7 +1083,8 @@ class EventDetailScreen extends ConsumerWidget {
                   ).then((result) {
                     if (result == true) {
                       // Обновляем данные после создания бронирования
-                      ref.invalidate(hasUserBookedEventProvider((userId: user.id, eventId: event.id)));
+                      ref.invalidate(hasUserBookedEventProvider(
+                          (userId: user.id, eventId: event.id)));
                     }
                   });
                 },

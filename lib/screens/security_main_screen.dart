@@ -24,19 +24,21 @@ class SecurityMainScreen extends ConsumerWidget {
                 icon: Icons.security,
                 title: 'Настройки безопасности',
                 subtitle: 'Управление аутентификацией и шифрованием',
-                onTap: () => _navigateToScreen(context, const SecuritySettingsScreen()),
+                onTap: () =>
+                    _navigateToScreen(context, const SecuritySettingsScreen()),
               ),
               _buildSettingsTile(
                 icon: Icons.security,
                 title: 'Аудит безопасности',
                 subtitle: 'Просмотр событий безопасности',
-                onTap: () => _navigateToScreen(context, const SecurityAuditScreen()),
+                onTap: () =>
+                    _navigateToScreen(context, const SecurityAuditScreen()),
               ),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Быстрые действия
           _buildSection(
             title: 'Быстрые действия',
@@ -71,9 +73,9 @@ class SecurityMainScreen extends ConsumerWidget {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Статистика безопасности
           _buildSection(
             title: 'Статистика безопасности',
@@ -81,9 +83,9 @@ class SecurityMainScreen extends ConsumerWidget {
               _buildSecurityStatsCard(),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Рекомендации
           _buildSection(
             title: 'Рекомендации по безопасности',
@@ -91,9 +93,9 @@ class SecurityMainScreen extends ConsumerWidget {
               _buildRecommendationsCard(),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Информация
           _buildSection(
             title: 'Информация',
@@ -226,7 +228,7 @@ class SecurityMainScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Статистика по типам событий
             Row(
               children: [
@@ -256,9 +258,9 @@ class SecurityMainScreen extends ConsumerWidget {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Уровень безопасности
             Container(
               padding: const EdgeInsets.all(12),
@@ -296,7 +298,8 @@ class SecurityMainScreen extends ConsumerWidget {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: Colors.green,
                       borderRadius: BorderRadius.circular(12),
@@ -375,32 +378,35 @@ class SecurityMainScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Рекомендации
             _buildRecommendationItem(
               icon: Icons.fingerprint,
               title: 'Включить биометрическую аутентификацию',
-              description: 'Используйте отпечаток пальца или Face ID для быстрого и безопасного входа',
+              description:
+                  'Используйте отпечаток пальца или Face ID для быстрого и безопасного входа',
               action: 'Включить',
               onAction: () => _setupBiometricAuth(context),
             ),
-            
+
             const Divider(),
-            
+
             _buildRecommendationItem(
               icon: Icons.pin,
               title: 'Установить PIN-код',
-              description: 'Добавьте дополнительный уровень защиты с помощью PIN-кода',
+              description:
+                  'Добавьте дополнительный уровень защиты с помощью PIN-кода',
               action: 'Установить',
               onAction: () => _setupPinCode(context),
             ),
-            
+
             const Divider(),
-            
+
             _buildRecommendationItem(
               icon: Icons.lock,
               title: 'Включить двухфакторную аутентификацию',
-              description: 'Защитите свой аккаунт с помощью двухфакторной аутентификации',
+              description:
+                  'Защитите свой аккаунт с помощью двухфакторной аутентификации',
               action: 'Включить',
               onAction: () => _setupTwoFactorAuth(context),
             ),
@@ -434,9 +440,7 @@ class SecurityMainScreen extends ConsumerWidget {
               size: 20,
             ),
           ),
-          
           const SizedBox(width: 12),
-          
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -459,9 +463,7 @@ class SecurityMainScreen extends ConsumerWidget {
               ],
             ),
           ),
-          
           const SizedBox(width: 8),
-          
           TextButton(
             onPressed: onAction,
             child: Text(action),
@@ -486,14 +488,11 @@ class SecurityMainScreen extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
-            
             const Text(
               'Приложение использует современные методы защиты для обеспечения безопасности ваших данных:',
               style: TextStyle(fontSize: 14),
             ),
-            
             const SizedBox(height: 12),
-            
             const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -505,9 +504,7 @@ class SecurityMainScreen extends ConsumerWidget {
                 Text('• Автоматическая блокировка приложения'),
               ],
             ),
-            
             const SizedBox(height: 16),
-            
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
@@ -551,7 +548,8 @@ class SecurityMainScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Биометрическая аутентификация'),
-        content: const Text('Перейти к настройкам биометрической аутентификации?'),
+        content:
+            const Text('Перейти к настройкам биометрической аутентификации?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -597,7 +595,8 @@ class SecurityMainScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Двухфакторная аутентификация'),
-        content: const Text('Функция двухфакторной аутентификации будет доступна в следующих обновлениях.'),
+        content: const Text(
+            'Функция двухфакторной аутентификации будет доступна в следующих обновлениях.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -613,7 +612,8 @@ class SecurityMainScreen extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Управление устройствами'),
-        content: const Text('Функция управления устройствами будет доступна в следующих обновлениях.'),
+        content: const Text(
+            'Функция управления устройствами будет доступна в следующих обновлениях.'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

@@ -9,12 +9,13 @@ class SecurityAuditScreen extends ConsumerStatefulWidget {
   const SecurityAuditScreen({super.key});
 
   @override
-  ConsumerState<SecurityAuditScreen> createState() => _SecurityAuditScreenState();
+  ConsumerState<SecurityAuditScreen> createState() =>
+      _SecurityAuditScreenState();
 }
 
 class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
   final SecurityService _securityService = SecurityService();
-  
+
   SecurityEventType? _selectedEventType;
   SecurityEventSeverity? _selectedSeverity;
   String _searchQuery = '';
@@ -39,7 +40,7 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
         children: [
           // Фильтры
           _buildFilters(),
-          
+
           // Список событий
           Expanded(
             child: _buildEventsList(),
@@ -67,9 +68,9 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
               });
             },
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Фильтры
           Row(
             children: [
@@ -100,9 +101,9 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
                   },
                 ),
               ),
-              
+
               const SizedBox(width: 16),
-              
+
               // Серьезность
               Expanded(
                 child: DropdownButtonFormField<SecurityEventSeverity?>(
@@ -140,14 +141,15 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
   Widget _buildEventsList() {
     return Consumer(
       builder: (context, ref, child) {
-        final currentUser = await ref.watch(authServiceProvider).getCurrentUser();
-        
+        final currentUser =
+            await ref.watch(authServiceProvider).getCurrentUser();
+
         if (currentUser == null) {
           return const Center(
             child: Text('Пользователь не авторизован'),
           );
         }
-        
+
         return StreamBuilder<List<SecurityAuditLog>>(
           stream: _securityService.getSecurityAuditLogs(currentUser.uid),
           builder: (context, snapshot) {
@@ -243,9 +245,9 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
                 size: 16,
               ),
             ),
-            
+
             const SizedBox(width: 12),
-            
+
             // Описание
             Expanded(
               child: Column(
@@ -271,7 +273,7 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
                 ],
               ),
             ),
-            
+
             // Индикатор серьезности
             Container(
               width: 8,
@@ -290,19 +292,20 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Основная информация
-                _buildInfoRow('Тип события', _getEventTypeText(event.eventType)),
+                _buildInfoRow(
+                    'Тип события', _getEventTypeText(event.eventType)),
                 _buildInfoRow('Серьезность', _getSeverityText(event.severity)),
                 _buildInfoRow('Время', _formatDateTime(event.timestamp)),
-                
+
                 if (event.ipAddress != null)
                   _buildInfoRow('IP адрес', event.ipAddress!),
-                
+
                 if (event.deviceId != null)
                   _buildInfoRow('ID устройства', event.deviceId!),
-                
+
                 if (event.userAgent != null)
                   _buildInfoRow('User Agent', event.userAgent!),
-                
+
                 // Метаданные
                 if (event.metadata != null && event.metadata!.isNotEmpty) ...[
                   const SizedBox(height: 16),
@@ -370,17 +373,21 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
 
   List<SecurityAuditLog> _filterEvents(List<SecurityAuditLog> events) {
     var filtered = events;
-    
+
     // Фильтр по типу события
     if (_selectedEventType != null) {
-      filtered = filtered.where((event) => event.eventType == _selectedEventType).toList();
+      filtered = filtered
+          .where((event) => event.eventType == _selectedEventType)
+          .toList();
     }
-    
+
     // Фильтр по серьезности
     if (_selectedSeverity != null) {
-      filtered = filtered.where((event) => event.severity == _selectedSeverity).toList();
+      filtered = filtered
+          .where((event) => event.severity == _selectedSeverity)
+          .toList();
     }
-    
+
     // Фильтр по поисковому запросу
     if (_searchQuery.isNotEmpty) {
       final query = _searchQuery.toLowerCase();
@@ -388,7 +395,7 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
         return event.description.toLowerCase().contains(query);
       }).toList();
     }
-    
+
     return filtered;
   }
 

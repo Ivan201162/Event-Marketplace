@@ -20,10 +20,12 @@ class InspirationPhotosScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<InspirationPhotosScreen> createState() => _InspirationPhotosScreenState();
+  ConsumerState<InspirationPhotosScreen> createState() =>
+      _InspirationPhotosScreenState();
 }
 
-class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScreen>
+class _InspirationPhotosScreenState
+    extends ConsumerState<InspirationPhotosScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   // final ImagePicker _imagePicker = ImagePicker();
@@ -78,7 +80,7 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
             loading: () => const LinearProgressIndicator(),
             error: (error, stack) => const SizedBox.shrink(),
           ),
-          
+
           // Контент по вкладкам
           Expanded(
             child: TabBarView(
@@ -107,7 +109,8 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            _buildStatItem('Всего фото', stats.totalPhotos, Icons.photo_library),
+            _buildStatItem(
+                'Всего фото', stats.totalPhotos, Icons.photo_library),
             _buildStatItem('Публичных', stats.publicPhotos, Icons.public),
             _buildStatItem('Тегов', stats.totalTags, Icons.tag),
           ],
@@ -159,7 +162,7 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
 
   Widget _buildPublicPhotosTab() {
     final publicPhotosAsync = ref.watch(publicPhotosProvider(widget.userId));
-    
+
     return publicPhotosAsync.when(
       data: (photos) {
         if (photos.isEmpty) {
@@ -184,7 +187,7 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
 
   Widget _buildTagsTab() {
     final tagsAsync = ref.watch(userTagsProvider(widget.userId));
-    
+
     return tagsAsync.when(
       data: (tags) {
         if (tags.isEmpty) {
@@ -210,8 +213,9 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
   }
 
   Widget _buildTagCard(String tag) {
-    final photosByTagAsync = ref.watch(photosByTagProvider((widget.userId, tag)));
-    
+    final photosByTagAsync =
+        ref.watch(photosByTagProvider((widget.userId, tag)));
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
       child: ListTile(
@@ -260,7 +264,8 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
           Text('Ошибка: $error'),
           const SizedBox(height: 16),
           ElevatedButton(
-            onPressed: () => ref.refresh(inspirationPhotosProvider(widget.userId)),
+            onPressed: () =>
+                ref.refresh(inspirationPhotosProvider(widget.userId)),
             child: const Text('Повторить'),
           ),
         ],
@@ -350,17 +355,20 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
                   if (photo.caption != null) ...[
                     Text(
                       photo.caption!,
-                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style: const TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
                   ],
                   if (photo.tags.isNotEmpty) ...[
                     Wrap(
                       spacing: 4,
-                      children: photo.tags.map((tag) => Chip(
-                        label: Text(tag),
-                        labelStyle: const TextStyle(fontSize: 12),
-                      )).toList(),
+                      children: photo.tags
+                          .map((tag) => Chip(
+                                label: Text(tag),
+                                labelStyle: const TextStyle(fontSize: 12),
+                              ))
+                          .toList(),
                     ),
                     const SizedBox(height: 8),
                   ],
@@ -381,7 +389,8 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
                       const Spacer(),
                       Text(
                         _formatDate(photo.uploadedAt),
-                        style: const TextStyle(color: Colors.grey, fontSize: 12),
+                        style:
+                            const TextStyle(color: Colors.grey, fontSize: 12),
                       ),
                     ],
                   ),
@@ -397,7 +406,9 @@ class _InspirationPhotosScreenState extends ConsumerState<InspirationPhotosScree
   void _showEditPhotoDialog(InspirationPhoto photo) {
     // TODO: Реализовать редактирование фото
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Редактирование фото будет добавлено в следующей версии')),
+      const SnackBar(
+          content:
+              Text('Редактирование фото будет добавлено в следующей версии')),
     );
   }
 
@@ -507,7 +518,8 @@ class PhotosByTagScreen extends ConsumerWidget {
     // TODO: Редактировать фото
   }
 
-  void _deletePhoto(BuildContext context, WidgetRef ref, InspirationPhoto photo) {
+  void _deletePhoto(
+      BuildContext context, WidgetRef ref, InspirationPhoto photo) {
     // TODO: Удалить фото
   }
 }
@@ -562,7 +574,8 @@ class PhotoSearchResultsScreen extends ConsumerWidget {
     // TODO: Редактировать фото
   }
 
-  void _deletePhoto(BuildContext context, WidgetRef ref, InspirationPhoto photo) {
+  void _deletePhoto(
+      BuildContext context, WidgetRef ref, InspirationPhoto photo) {
     // TODO: Удалить фото
   }
 }

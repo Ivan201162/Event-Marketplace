@@ -3,95 +3,123 @@ import '../models/customer_profile_extended.dart';
 import '../services/customer_profile_extended_service.dart';
 
 /// Провайдер сервиса расширенного профиля
-final customerProfileExtendedServiceProvider = Provider<CustomerProfileExtendedService>((ref) {
+final customerProfileExtendedServiceProvider =
+    Provider<CustomerProfileExtendedService>((ref) {
   return CustomerProfileExtendedService();
 });
 
 /// Провайдер расширенного профиля заказчика
-final customerProfileExtendedProvider = FutureProvider.family<CustomerProfileExtended?, String>((ref, userId) async {
+final customerProfileExtendedProvider =
+    FutureProvider.family<CustomerProfileExtended?, String>(
+        (ref, userId) async {
   final service = ref.read(customerProfileExtendedServiceProvider);
   return await service.getExtendedProfile(userId);
 });
 
 /// Провайдер заметок заказчика
-final customerNotesProvider = FutureProvider.family<List<CustomerNote>, String>((ref, userId) async {
-  final profile = await ref.read(customerProfileExtendedProvider(userId).future);
+final customerNotesProvider =
+    FutureProvider.family<List<CustomerNote>, String>((ref, userId) async {
+  final profile =
+      await ref.read(customerProfileExtendedProvider(userId).future);
   return profile?.notes ?? [];
 });
 
 /// Провайдер фото для вдохновения
-final inspirationPhotosProvider = FutureProvider.family<List<InspirationPhoto>, String>((ref, userId) async {
-  final profile = await ref.read(customerProfileExtendedProvider(userId).future);
+final inspirationPhotosProvider =
+    FutureProvider.family<List<InspirationPhoto>, String>((ref, userId) async {
+  final profile =
+      await ref.read(customerProfileExtendedProvider(userId).future);
   return profile?.inspirationPhotos ?? [];
 });
 
 /// Провайдер избранных специалистов
-final favoriteSpecialistsProvider = FutureProvider.family<List<String>, String>((ref, userId) async {
-  final profile = await ref.read(customerProfileExtendedProvider(userId).future);
+final favoriteSpecialistsProvider =
+    FutureProvider.family<List<String>, String>((ref, userId) async {
+  final profile =
+      await ref.read(customerProfileExtendedProvider(userId).future);
   return profile?.favoriteSpecialists ?? [];
 });
 
 /// Провайдер сохранённых событий
-final savedEventsProvider = FutureProvider.family<List<String>, String>((ref, userId) async {
-  final profile = await ref.read(customerProfileExtendedProvider(userId).future);
+final savedEventsProvider =
+    FutureProvider.family<List<String>, String>((ref, userId) async {
+  final profile =
+      await ref.read(customerProfileExtendedProvider(userId).future);
   return profile?.savedEvents ?? [];
 });
 
 /// Провайдер заметок по тегу
-final notesByTagProvider = FutureProvider.family<List<CustomerNote>, (String, String)>((ref, params) async {
+final notesByTagProvider =
+    FutureProvider.family<List<CustomerNote>, (String, String)>(
+        (ref, params) async {
   final (userId, tag) = params;
   final service = ref.read(customerProfileExtendedServiceProvider);
   return await service.getNotesByTag(userId, tag);
 });
 
 /// Провайдер фото по тегу
-final photosByTagProvider = FutureProvider.family<List<InspirationPhoto>, (String, String)>((ref, params) async {
+final photosByTagProvider =
+    FutureProvider.family<List<InspirationPhoto>, (String, String)>(
+        (ref, params) async {
   final (userId, tag) = params;
   final service = ref.read(customerProfileExtendedServiceProvider);
   return await service.getPhotosByTag(userId, tag);
 });
 
 /// Провайдер поиска по заметкам
-final searchNotesProvider = FutureProvider.family<List<CustomerNote>, (String, String)>((ref, params) async {
+final searchNotesProvider =
+    FutureProvider.family<List<CustomerNote>, (String, String)>(
+        (ref, params) async {
   final (userId, query) = params;
   final service = ref.read(customerProfileExtendedServiceProvider);
   return await service.searchNotes(userId, query);
 });
 
 /// Провайдер поиска по фото
-final searchPhotosProvider = FutureProvider.family<List<InspirationPhoto>, (String, String)>((ref, params) async {
+final searchPhotosProvider =
+    FutureProvider.family<List<InspirationPhoto>, (String, String)>(
+        (ref, params) async {
   final (userId, query) = params;
   final service = ref.read(customerProfileExtendedServiceProvider);
   return await service.searchPhotos(userId, query);
 });
 
 /// Провайдер статистики профиля
-final customerProfileStatsProvider = FutureProvider.family<CustomerProfileStats, String>((ref, userId) async {
+final customerProfileStatsProvider =
+    FutureProvider.family<CustomerProfileStats, String>((ref, userId) async {
   final service = ref.read(customerProfileExtendedServiceProvider);
   return await service.getProfileStats(userId);
 });
 
 /// Провайдер всех тегов пользователя
-final userTagsProvider = FutureProvider.family<List<String>, String>((ref, userId) async {
-  final profile = await ref.read(customerProfileExtendedProvider(userId).future);
+final userTagsProvider =
+    FutureProvider.family<List<String>, String>((ref, userId) async {
+  final profile =
+      await ref.read(customerProfileExtendedProvider(userId).future);
   return profile?.allTags ?? [];
 });
 
 /// Провайдер закреплённых заметок
-final pinnedNotesProvider = FutureProvider.family<List<CustomerNote>, String>((ref, userId) async {
-  final profile = await ref.read(customerProfileExtendedProvider(userId).future);
+final pinnedNotesProvider =
+    FutureProvider.family<List<CustomerNote>, String>((ref, userId) async {
+  final profile =
+      await ref.read(customerProfileExtendedProvider(userId).future);
   return profile?.pinnedNotes ?? [];
 });
 
 /// Провайдер публичных фото
-final publicPhotosProvider = FutureProvider.family<List<InspirationPhoto>, String>((ref, userId) async {
-  final profile = await ref.read(customerProfileExtendedProvider(userId).future);
+final publicPhotosProvider =
+    FutureProvider.family<List<InspirationPhoto>, String>((ref, userId) async {
+  final profile =
+      await ref.read(customerProfileExtendedProvider(userId).future);
   return profile?.publicPhotos ?? [];
 });
 
 /// Провайдер предпочтений пользователя
-final customerPreferencesProvider = FutureProvider.family<CustomerPreferences?, String>((ref, userId) async {
-  final profile = await ref.read(customerProfileExtendedProvider(userId).future);
+final customerPreferencesProvider =
+    FutureProvider.family<CustomerPreferences?, String>((ref, userId) async {
+  final profile =
+      await ref.read(customerProfileExtendedProvider(userId).future);
   return profile?.preferences;
 });
 
@@ -108,10 +136,12 @@ final searchStateProvider = StateProvider<Map<String, String>>((ref) => {});
 final selectedTagsProvider = StateProvider<Set<String>>((ref) => Set<String>());
 
 /// Провайдер для управления фильтрами заметок
-final noteFiltersProvider = StateProvider<NoteFilters>((ref) => const NoteFilters());
+final noteFiltersProvider =
+    StateProvider<NoteFilters>((ref) => const NoteFilters());
 
 /// Провайдер для управления фильтрами фото
-final photoFiltersProvider = StateProvider<PhotoFilters>((ref) => const PhotoFilters());
+final photoFiltersProvider =
+    StateProvider<PhotoFilters>((ref) => const PhotoFilters());
 
 /// Фильтры для заметок
 class NoteFilters {

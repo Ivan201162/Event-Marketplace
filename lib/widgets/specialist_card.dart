@@ -20,7 +20,8 @@ class SpecialistCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isFavorite = ref.watch(favoriteSpecialistsProvider).contains(specialist.id);
+    final isFavorite =
+        ref.watch(favoriteSpecialistsProvider).contains(specialist.id);
 
     return Card(
       elevation: 2,
@@ -34,9 +35,9 @@ class SpecialistCard extends ConsumerWidget {
             children: [
               // Заголовок с именем и статусом
               _buildHeader(context, ref, isFavorite),
-              
+
               const SizedBox(height: 12),
-              
+
               // Описание
               if (specialist.description != null) ...[
                 Text(
@@ -50,22 +51,22 @@ class SpecialistCard extends ConsumerWidget {
                 ),
                 const SizedBox(height: 12),
               ],
-              
+
               // Категория и подкатегории
               _buildCategorySection(),
-              
+
               const SizedBox(height: 12),
-              
+
               // Рейтинг и опыт
               _buildRatingAndExperience(),
-              
+
               const SizedBox(height: 12),
-              
+
               // Цена и доступность
               _buildPriceAndAvailability(),
-              
+
               const SizedBox(height: 12),
-              
+
               // Действия
               if (showActions) _buildActions(context, ref, isFavorite),
             ],
@@ -92,9 +93,9 @@ class SpecialistCard extends ConsumerWidget {
             ),
           ),
         ),
-        
+
         const SizedBox(width: 12),
-        
+
         // Имя и статус
         Expanded(
           child: Column(
@@ -113,7 +114,8 @@ class SpecialistCard extends ConsumerWidget {
                   ),
                   if (specialist.isVerified)
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: Colors.blue,
                         borderRadius: BorderRadius.circular(4),
@@ -139,10 +141,12 @@ class SpecialistCard extends ConsumerWidget {
                       color: Colors.grey[600],
                     ),
                   ),
-                  if (specialist.experienceLevel != ExperienceLevel.beginner) ...[
+                  if (specialist.experienceLevel !=
+                      ExperienceLevel.beginner) ...[
                     const SizedBox(width: 8),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       decoration: BoxDecoration(
                         color: Colors.orange.withOpacity(0.2),
                         borderRadius: BorderRadius.circular(4),
@@ -162,7 +166,7 @@ class SpecialistCard extends ConsumerWidget {
             ],
           ),
         ),
-        
+
         // Кнопка избранного
         IconButton(
           icon: Icon(
@@ -171,9 +175,13 @@ class SpecialistCard extends ConsumerWidget {
           ),
           onPressed: () {
             if (isFavorite) {
-              ref.read(favoriteSpecialistsProvider.notifier).removeFromFavorites(specialist.id);
+              ref
+                  .read(favoriteSpecialistsProvider.notifier)
+                  .removeFromFavorites(specialist.id);
             } else {
-              ref.read(favoriteSpecialistsProvider.notifier).addToFavorites(specialist.id);
+              ref
+                  .read(favoriteSpecialistsProvider.notifier)
+                  .addToFavorites(specialist.id);
             }
           },
         ),
@@ -237,7 +245,7 @@ class SpecialistCard extends ConsumerWidget {
           ),
           const SizedBox(width: 16),
         ],
-        
+
         // Опыт
         Row(
           children: [
@@ -277,13 +285,15 @@ class SpecialistCard extends ConsumerWidget {
             ],
           ),
         ),
-        
+
         // Доступность
         if (showAvailability) ...[
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: specialist.isAvailable ? Colors.green.withOpacity(0.1) : Colors.red.withOpacity(0.1),
+              color: specialist.isAvailable
+                  ? Colors.green.withOpacity(0.1)
+                  : Colors.red.withOpacity(0.1),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Row(
@@ -299,7 +309,9 @@ class SpecialistCard extends ConsumerWidget {
                   specialist.isAvailable ? 'Доступен' : 'Занят',
                   style: TextStyle(
                     fontSize: 12,
-                    color: specialist.isAvailable ? Colors.green[700] : Colors.red[700],
+                    color: specialist.isAvailable
+                        ? Colors.green[700]
+                        : Colors.red[700],
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -318,7 +330,9 @@ class SpecialistCard extends ConsumerWidget {
         // Кнопка "Забронировать"
         Expanded(
           child: ElevatedButton.icon(
-            onPressed: specialist.isAvailable ? () => _showBookingDialog(context) : null,
+            onPressed: specialist.isAvailable
+                ? () => _showBookingDialog(context)
+                : null,
             icon: const Icon(Icons.calendar_today, size: 16),
             label: const Text('Забронировать'),
             style: ElevatedButton.styleFrom(
@@ -327,9 +341,9 @@ class SpecialistCard extends ConsumerWidget {
             ),
           ),
         ),
-        
+
         const SizedBox(width: 12),
-        
+
         // Кнопка "Подробнее"
         OutlinedButton.icon(
           onPressed: onTap,
@@ -370,7 +384,8 @@ class SpecialistCard extends ConsumerWidget {
               Navigator.of(context).pop();
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                  content: Text('Бронирование ${specialist.name} будет реализовано в следующем шаге'),
+                  content: Text(
+                      'Бронирование ${specialist.name} будет реализовано в следующем шаге'),
                 ),
               );
             },
@@ -395,7 +410,8 @@ class CompactSpecialistCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isFavorite = ref.watch(favoriteSpecialistsProvider).contains(specialist.id);
+    final isFavorite =
+        ref.watch(favoriteSpecialistsProvider).contains(specialist.id);
 
     return Card(
       elevation: 1,
@@ -411,7 +427,9 @@ class CompactSpecialistCard extends ConsumerWidget {
                 radius: 20,
                 backgroundColor: Theme.of(context).colorScheme.primary,
                 child: Text(
-                  specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
+                  specialist.name.isNotEmpty
+                      ? specialist.name[0].toUpperCase()
+                      : '?',
                   style: const TextStyle(
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
@@ -419,9 +437,9 @@ class CompactSpecialistCard extends ConsumerWidget {
                   ),
                 ),
               ),
-              
+
               const SizedBox(width: 12),
-              
+
               // Информация
               Expanded(
                 child: Column(
@@ -439,7 +457,8 @@ class CompactSpecialistCard extends ConsumerWidget {
                           ),
                         ),
                         if (specialist.isVerified)
-                          const Icon(Icons.verified, color: Colors.blue, size: 16),
+                          const Icon(Icons.verified,
+                              color: Colors.blue, size: 16),
                       ],
                     ),
                     const SizedBox(height: 2),
@@ -475,7 +494,7 @@ class CompactSpecialistCard extends ConsumerWidget {
                   ],
                 ),
               ),
-              
+
               // Кнопка избранного
               IconButton(
                 icon: Icon(
@@ -485,9 +504,13 @@ class CompactSpecialistCard extends ConsumerWidget {
                 ),
                 onPressed: () {
                   if (isFavorite) {
-                    ref.read(favoriteSpecialistsProvider.notifier).removeFromFavorites(specialist.id);
+                    ref
+                        .read(favoriteSpecialistsProvider.notifier)
+                        .removeFromFavorites(specialist.id);
                   } else {
-                    ref.read(favoriteSpecialistsProvider.notifier).addToFavorites(specialist.id);
+                    ref
+                        .read(favoriteSpecialistsProvider.notifier)
+                        .addToFavorites(specialist.id);
                   }
                 },
               ),

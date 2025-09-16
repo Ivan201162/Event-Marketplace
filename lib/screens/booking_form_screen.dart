@@ -84,7 +84,8 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
               Text('Ошибка загрузки: $error'),
               const SizedBox(height: 16),
               ElevatedButton(
-                onPressed: () => ref.refresh(specialistProvider(widget.specialistId)),
+                onPressed: () =>
+                    ref.refresh(specialistProvider(widget.specialistId)),
                 child: const Text('Повторить'),
               ),
             ],
@@ -102,7 +103,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
         children: [
           // Информация о специалисте
           _buildSpecialistInfo(specialist),
-          
+
           // Форма
           Expanded(
             child: SingleChildScrollView(
@@ -112,32 +113,32 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                 children: [
                   // Основная информация о мероприятии
                   _buildEventInfoSection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Дата и время
                   _buildDateTimeSection(specialist),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Контактная информация
                   _buildContactInfoSection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Дополнительные пожелания
                   _buildSpecialRequestsSection(),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Расчет стоимости
                   _buildPriceCalculation(specialist),
-                  
+
                   const SizedBox(height: 24),
-                  
+
                   // Кнопка создания заявки
                   _buildSubmitButton(specialist),
-                  
+
                   const SizedBox(height: 24),
                 ],
               ),
@@ -166,7 +167,9 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
             radius: 24,
             backgroundColor: Theme.of(context).colorScheme.primary,
             child: Text(
-              specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
+              specialist.name.isNotEmpty
+                  ? specialist.name[0].toUpperCase()
+                  : '?',
               style: const TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
@@ -217,11 +220,11 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
         Text(
           'Информация о мероприятии',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 16),
-        
+
         // Название мероприятия
         TextFormField(
           controller: _eventNameController,
@@ -237,9 +240,9 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
             return null;
           },
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Описание мероприятия
         TextFormField(
           controller: _eventDescriptionController,
@@ -250,9 +253,9 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
           ),
           maxLines: 3,
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Место проведения
         TextFormField(
           controller: _eventLocationController,
@@ -280,11 +283,11 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
         Text(
           'Дата и время',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 16),
-        
+
         // Выбор даты
         InkWell(
           onTap: _selectDate,
@@ -305,18 +308,21 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                         : 'Выберите дату *',
                     style: TextStyle(
                       fontSize: 16,
-                      color: _selectedDate != null ? Colors.black : Colors.grey[600],
+                      color: _selectedDate != null
+                          ? Colors.black
+                          : Colors.grey[600],
                     ),
                   ),
                 ),
-                Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
+                Icon(Icons.arrow_forward_ios,
+                    size: 16, color: Colors.grey[400]),
               ],
             ),
           ),
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Выбор времени начала
         if (_selectedDate != null) ...[
           InkWell(
@@ -338,23 +344,26 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                           : 'Время начала *',
                       style: TextStyle(
                         fontSize: 16,
-                        color: _selectedStartTime != null ? Colors.black : Colors.grey[600],
+                        color: _selectedStartTime != null
+                            ? Colors.black
+                            : Colors.grey[600],
                       ),
                     ),
                   ),
-                  Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
+                  Icon(Icons.arrow_forward_ios,
+                      size: 16, color: Colors.grey[400]),
                 ],
               ),
             ),
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Продолжительность
           _buildDurationSelector(specialist),
-          
+
           const SizedBox(height: 16),
-          
+
           // Время окончания
           if (_selectedStartTime != null)
             Container(
@@ -398,7 +407,9 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
         Row(
           children: [
             IconButton(
-              onPressed: _selectedDuration > 1 ? () => setState(() => _selectedDuration--) : null,
+              onPressed: _selectedDuration > 1
+                  ? () => setState(() => _selectedDuration--)
+                  : null,
               icon: const Icon(Icons.remove),
             ),
             Expanded(
@@ -412,7 +423,9 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
               ),
             ),
             IconButton(
-              onPressed: _selectedDuration < 12 ? () => setState(() => _selectedDuration++) : null,
+              onPressed: _selectedDuration < 12
+                  ? () => setState(() => _selectedDuration++)
+                  : null,
               icon: const Icon(Icons.add),
             ),
           ],
@@ -438,11 +451,11 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
         Text(
           'Контактная информация',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 16),
-        
+
         // Телефон
         TextFormField(
           controller: _contactPhoneController,
@@ -459,9 +472,9 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
             return null;
           },
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Email
         TextFormField(
           controller: _contactEmailController,
@@ -473,7 +486,8 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
           keyboardType: TextInputType.emailAddress,
           validator: (value) {
             if (value != null && value.isNotEmpty) {
-              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
+              if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                  .hasMatch(value)) {
                 return 'Введите корректный email';
               }
             }
@@ -492,11 +506,10 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
         Text(
           'Дополнительные пожелания',
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 16),
-        
         TextFormField(
           controller: _specialRequestsController,
           decoration: const InputDecoration(
@@ -529,17 +542,16 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
           Text(
             'Расчет стоимости',
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
+                  fontWeight: FontWeight.bold,
+                ),
           ),
           const SizedBox(height: 16),
-          
-          _buildPriceRow('Стоимость за $_selectedDuration ${_getHoursText(_selectedDuration)}', basePrice.toStringAsFixed(0)),
+          _buildPriceRow(
+              'Стоимость за $_selectedDuration ${_getHoursText(_selectedDuration)}',
+              basePrice.toStringAsFixed(0)),
           _buildPriceRow('Предоплата (30%)', prepayment.toStringAsFixed(0)),
           _buildPriceRow('Доплата (70%)', finalPayment.toStringAsFixed(0)),
-          
           const Divider(),
-          
           _buildPriceRow(
             'Итого',
             basePrice.toStringAsFixed(0),
@@ -616,7 +628,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
-    
+
     if (date != null) {
       setState(() {
         _selectedDate = date;
@@ -629,11 +641,11 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
   Future<void> _selectStartTime() async {
     final time = await showTimePicker(
       context: context,
-      initialTime: _selectedStartTime != null 
+      initialTime: _selectedStartTime != null
           ? TimeOfDay.fromDateTime(_selectedStartTime!)
           : const TimeOfDay(hour: 10, minute: 0),
     );
-    
+
     if (time != null) {
       setState(() {
         _selectedStartTime = DateTime(
@@ -650,7 +662,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
   /// Получить время окончания
   String _getEndTime() {
     if (_selectedStartTime == null) return '';
-    
+
     final endTime = _selectedStartTime!.add(Duration(hours: _selectedDuration));
     return '${endTime.hour.toString().padLeft(2, '0')}:${endTime.minute.toString().padLeft(2, '0')}';
   }
@@ -708,7 +720,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
             backgroundColor: Colors.green,
           ),
         );
-        
+
         // Вернуться на предыдущий экран
         Navigator.of(context).pop();
       }

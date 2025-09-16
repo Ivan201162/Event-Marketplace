@@ -60,7 +60,7 @@ class PhotoGridWidget extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Индикатор публичности
           if (photo.isPublic)
             Positioned(
@@ -79,7 +79,7 @@ class PhotoGridWidget extends StatelessWidget {
                 ),
               ),
             ),
-          
+
           // Теги (если есть)
           if (photo.tags.isNotEmpty)
             Positioned(
@@ -104,7 +104,7 @@ class PhotoGridWidget extends StatelessWidget {
                 ),
               ),
             ),
-          
+
           // Меню действий
           Positioned(
             top: 8,

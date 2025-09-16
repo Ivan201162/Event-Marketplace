@@ -5,7 +5,8 @@ import 'package:event_marketplace_app/screens/search_screen.dart';
 
 void main() {
   group('SearchScreen', () {
-    testWidgets('should display search input field', (WidgetTester tester) async {
+    testWidgets('should display search input field',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -38,7 +39,8 @@ void main() {
       expect(find.byIcon(Icons.filter_list), findsOneWidget);
     });
 
-    testWidgets('should display empty state when no search results', (WidgetTester tester) async {
+    testWidgets('should display empty state when no search results',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -55,7 +57,8 @@ void main() {
       expect(find.text('Введите запрос для поиска'), findsOneWidget);
     });
 
-    testWidgets('should display loading state when searching', (WidgetTester tester) async {
+    testWidgets('should display loading state when searching',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -75,7 +78,8 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('should display search results when available', (WidgetTester tester) async {
+    testWidgets('should display search results when available',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -91,7 +95,8 @@ void main() {
       expect(find.text('Поиск специалистов'), findsOneWidget);
     });
 
-    testWidgets('should show filter dialog when filter button tapped', (WidgetTester tester) async {
+    testWidgets('should show filter dialog when filter button tapped',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -115,7 +120,8 @@ void main() {
       expect(find.text('Цена'), findsOneWidget);
     });
 
-    testWidgets('should allow entering search query', (WidgetTester tester) async {
+    testWidgets('should allow entering search query',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -135,7 +141,8 @@ void main() {
       expect(find.text('photographer'), findsOneWidget);
     });
 
-    testWidgets('should clear search when clear button tapped', (WidgetTester tester) async {
+    testWidgets('should clear search when clear button tapped',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -161,7 +168,8 @@ void main() {
       expect(find.text('test'), findsNothing);
     });
 
-    testWidgets('should display search history when available', (WidgetTester tester) async {
+    testWidgets('should display search history when available',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -177,7 +185,8 @@ void main() {
       expect(find.text('Поиск специалистов'), findsOneWidget);
     });
 
-    testWidgets('should display popular searches when available', (WidgetTester tester) async {
+    testWidgets('should display popular searches when available',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -193,7 +202,8 @@ void main() {
       expect(find.text('Поиск специалистов'), findsOneWidget);
     });
 
-    testWidgets('should display search suggestions when typing', (WidgetTester tester) async {
+    testWidgets('should display search suggestions when typing',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -213,7 +223,8 @@ void main() {
       expect(find.text('ph'), findsOneWidget);
     });
 
-    testWidgets('should display search results count', (WidgetTester tester) async {
+    testWidgets('should display search results count',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -229,7 +240,8 @@ void main() {
       expect(find.text('Поиск специалистов'), findsOneWidget);
     });
 
-    testWidgets('should display search error when error occurs', (WidgetTester tester) async {
+    testWidgets('should display search error when error occurs',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -245,7 +257,8 @@ void main() {
       expect(find.text('Поиск специалистов'), findsOneWidget);
     });
 
-    testWidgets('should display search filters when applied', (WidgetTester tester) async {
+    testWidgets('should display search filters when applied',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -261,7 +274,8 @@ void main() {
       expect(find.text('Поиск специалистов'), findsOneWidget);
     });
 
-    testWidgets('should display search sort options', (WidgetTester tester) async {
+    testWidgets('should display search sort options',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -277,7 +291,8 @@ void main() {
       expect(find.text('Поиск специалистов'), findsOneWidget);
     });
 
-    testWidgets('should display search pagination when needed', (WidgetTester tester) async {
+    testWidgets('should display search pagination when needed',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -293,7 +308,8 @@ void main() {
       expect(find.text('Поиск специалистов'), findsOneWidget);
     });
 
-    testWidgets('should display search loading more when loading more results', (WidgetTester tester) async {
+    testWidgets('should display search loading more when loading more results',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -309,7 +325,8 @@ void main() {
       expect(find.text('Поиск специалистов'), findsOneWidget);
     });
 
-    testWidgets('should display search no more results when no more results', (WidgetTester tester) async {
+    testWidgets('should display search no more results when no more results',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -325,7 +342,8 @@ void main() {
       expect(find.text('Поиск специалистов'), findsOneWidget);
     });
 
-    testWidgets('should display search retry button when error occurs', (WidgetTester tester) async {
+    testWidgets('should display search retry button when error occurs',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -341,7 +359,8 @@ void main() {
       expect(find.text('Поиск специалистов'), findsOneWidget);
     });
 
-    testWidgets('should display search refresh button', (WidgetTester tester) async {
+    testWidgets('should display search refresh button',
+        (WidgetTester tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -358,5 +377,3 @@ void main() {
     });
   });
 }
-
-

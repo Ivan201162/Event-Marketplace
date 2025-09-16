@@ -7,7 +7,8 @@ import 'package:event_marketplace_app/models/booking.dart';
 
 void main() {
   group('Booking Flow Integration Tests', () {
-    testWidgets('should complete full booking flow from search to confirmation', (WidgetTester tester) async {
+    testWidgets('should complete full booking flow from search to confirmation',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -39,12 +40,18 @@ void main() {
         await tester.pumpAndSettle();
 
         // Act 6: Fill booking form
-        await tester.enterText(find.byType(TextFormField).first, 'Wedding Photography');
-        await tester.enterText(find.byType(TextFormField).at(1), 'Beautiful wedding ceremony');
-        await tester.enterText(find.byType(TextFormField).at(2), 'Moscow, Russia');
-        await tester.enterText(find.byType(TextFormField).at(3), '+7 (999) 123-45-67');
-        await tester.enterText(find.byType(TextFormField).at(4), 'test@example.com');
-        await tester.enterText(find.byType(TextFormField).last, 'Special requests');
+        await tester.enterText(
+            find.byType(TextFormField).first, 'Wedding Photography');
+        await tester.enterText(
+            find.byType(TextFormField).at(1), 'Beautiful wedding ceremony');
+        await tester.enterText(
+            find.byType(TextFormField).at(2), 'Moscow, Russia');
+        await tester.enterText(
+            find.byType(TextFormField).at(3), '+7 (999) 123-45-67');
+        await tester.enterText(
+            find.byType(TextFormField).at(4), 'test@example.com');
+        await tester.enterText(
+            find.byType(TextFormField).last, 'Special requests');
 
         // Act 7: Select date and time
         await tester.tap(find.text('Выберите дату'));
@@ -59,7 +66,8 @@ void main() {
       }
     });
 
-    testWidgets('should handle booking confirmation flow', (WidgetTester tester) async {
+    testWidgets('should handle booking confirmation flow',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -92,7 +100,8 @@ void main() {
       }
     });
 
-    testWidgets('should handle booking rejection flow', (WidgetTester tester) async {
+    testWidgets('should handle booking rejection flow',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -125,7 +134,8 @@ void main() {
       }
     });
 
-    testWidgets('should handle booking cancellation flow', (WidgetTester tester) async {
+    testWidgets('should handle booking cancellation flow',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -183,7 +193,8 @@ void main() {
         await tester.pumpAndSettle();
 
         // Act 4: Fill payment form
-        await tester.enterText(find.byType(TextFormField).first, '1234 5678 9012 3456');
+        await tester.enterText(
+            find.byType(TextFormField).first, '1234 5678 9012 3456');
         await tester.enterText(find.byType(TextFormField).at(1), '12/25');
         await tester.enterText(find.byType(TextFormField).at(2), '123');
 
@@ -196,7 +207,8 @@ void main() {
       }
     });
 
-    testWidgets('should handle review submission flow', (WidgetTester tester) async {
+    testWidgets('should handle review submission flow',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -215,8 +227,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Act 3: Fill review form
-      await tester.enterText(find.byType(TextFormField).first, 'Great service!');
-      await tester.enterText(find.byType(TextFormField).at(1), 'Excellent photographer, very professional');
+      await tester.enterText(
+          find.byType(TextFormField).first, 'Great service!');
+      await tester.enterText(find.byType(TextFormField).at(1),
+          'Excellent photographer, very professional');
 
       // Act 4: Submit review
       await tester.tap(find.text('Отправить отзыв'));
@@ -323,5 +337,3 @@ void main() {
     });
   });
 }
-
-

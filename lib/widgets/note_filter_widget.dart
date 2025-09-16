@@ -29,7 +29,8 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
   @override
   void initState() {
     super.initState();
-    _searchController = TextEditingController(text: widget.currentFilters.searchQuery ?? '');
+    _searchController =
+        TextEditingController(text: widget.currentFilters.searchQuery ?? '');
     _selectedTags = List.from(widget.currentFilters.selectedTags);
     _showPinnedOnly = widget.currentFilters.showPinnedOnly;
     _showByDate = widget.currentFilters.showByDate;
@@ -82,7 +83,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
+
                     // Закреплённые заметки
                     SwitchListTile(
                       title: const Text('Только закреплённые заметки'),
@@ -94,13 +95,14 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
                         });
                       },
                     ),
-                    
+
                     const Divider(),
-                    
+
                     // Фильтр по дате
                     SwitchListTile(
                       title: const Text('Фильтр по дате'),
-                      subtitle: const Text('Показать заметки за определённый период'),
+                      subtitle:
+                          const Text('Показать заметки за определённый период'),
                       value: _showByDate,
                       onChanged: (value) {
                         setState(() {
@@ -108,7 +110,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
                         });
                       },
                     ),
-                    
+
                     if (_showByDate) ...[
                       const SizedBox(height: 8),
                       Row(
@@ -116,7 +118,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
                           Expanded(
                             child: ListTile(
                               title: const Text('От'),
-                              subtitle: Text(_fromDate != null 
+                              subtitle: Text(_fromDate != null
                                   ? '${_fromDate!.day}.${_fromDate!.month}.${_fromDate!.year}'
                                   : 'Не выбрано'),
                               trailing: const Icon(Icons.calendar_today),
@@ -126,7 +128,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
                           Expanded(
                             child: ListTile(
                               title: const Text('До'),
-                              subtitle: Text(_toDate != null 
+                              subtitle: Text(_toDate != null
                                   ? '${_toDate!.day}.${_toDate!.month}.${_toDate!.year}'
                                   : 'Не выбрано'),
                               trailing: const Icon(Icons.calendar_today),
@@ -136,21 +138,23 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
                         ],
                       ),
                     ],
-                    
+
                     const Divider(),
-                    
+
                     // Связь с событиями и специалистами
                     const Text(
                       'Связь с объектами',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
-                    
+
                     ListTile(
                       leading: const Icon(Icons.event),
                       title: const Text('Связанные с событием'),
-                      subtitle: Text(_eventId != null ? 'ID: $_eventId' : 'Все заметки'),
-                      trailing: _eventId != null 
+                      subtitle: Text(
+                          _eventId != null ? 'ID: $_eventId' : 'Все заметки'),
+                      trailing: _eventId != null
                           ? IconButton(
                               icon: const Icon(Icons.clear),
                               onPressed: () {
@@ -162,12 +166,14 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
                           : const Icon(Icons.arrow_forward_ios),
                       onTap: _selectEvent,
                     ),
-                    
+
                     ListTile(
                       leading: const Icon(Icons.person),
                       title: const Text('Связанные со специалистом'),
-                      subtitle: Text(_specialistId != null ? 'ID: $_specialistId' : 'Все заметки'),
-                      trailing: _specialistId != null 
+                      subtitle: Text(_specialistId != null
+                          ? 'ID: $_specialistId'
+                          : 'Все заметки'),
+                      trailing: _specialistId != null
                           ? IconButton(
                               icon: const Icon(Icons.clear),
                               onPressed: () {
@@ -179,13 +185,14 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
                           : const Icon(Icons.arrow_forward_ios),
                       onTap: _selectSpecialist,
                     ),
-                    
+
                     const Divider(),
-                    
+
                     // Теги
                     const Text(
                       'Теги',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 8),
                     _buildTagFilters(),
@@ -202,12 +209,28 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
   Widget _buildTagFilters() {
     // Предустановленные теги для фильтрации
     final commonTags = [
-      'важно', 'идея', 'бюджет', 'дата', 'место', 'гости',
-      'декор', 'еда', 'музыка', 'фото', 'видео', 'подарки',
-      'планирование', 'список', 'напоминание', 'контакт',
-      'договор', 'оплата', 'отзыв', 'рекомендация'
+      'важно',
+      'идея',
+      'бюджет',
+      'дата',
+      'место',
+      'гости',
+      'декор',
+      'еда',
+      'музыка',
+      'фото',
+      'видео',
+      'подарки',
+      'планирование',
+      'список',
+      'напоминание',
+      'контакт',
+      'договор',
+      'оплата',
+      'отзыв',
+      'рекомендация'
     ];
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -219,21 +242,22 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
         Wrap(
           spacing: 4,
           runSpacing: 4,
-          children: commonTags.map((tag) => FilterChip(
-            label: Text(tag),
-            selected: _selectedTags.contains(tag),
-            onSelected: (selected) {
-              setState(() {
-                if (selected) {
-                  _selectedTags.add(tag);
-                } else {
-                  _selectedTags.remove(tag);
-                }
-              });
-            },
-          )).toList(),
+          children: commonTags
+              .map((tag) => FilterChip(
+                    label: Text(tag),
+                    selected: _selectedTags.contains(tag),
+                    onSelected: (selected) {
+                      setState(() {
+                        if (selected) {
+                          _selectedTags.add(tag);
+                        } else {
+                          _selectedTags.remove(tag);
+                        }
+                      });
+                    },
+                  ))
+              .toList(),
         ),
-        
         if (_selectedTags.isNotEmpty) ...[
           const SizedBox(height: 8),
           const Text(
@@ -244,15 +268,17 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
           Wrap(
             spacing: 4,
             runSpacing: 4,
-            children: _selectedTags.map((tag) => Chip(
-              label: Text(tag),
-              deleteIcon: const Icon(Icons.close, size: 16),
-              onDeleted: () {
-                setState(() {
-                  _selectedTags.remove(tag);
-                });
-              },
-            )).toList(),
+            children: _selectedTags
+                .map((tag) => Chip(
+                      label: Text(tag),
+                      deleteIcon: const Icon(Icons.close, size: 16),
+                      onDeleted: () {
+                        setState(() {
+                          _selectedTags.remove(tag);
+                        });
+                      },
+                    ))
+                .toList(),
           ),
         ],
       ],
@@ -266,7 +292,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
     );
-    
+
     if (date != null) {
       setState(() {
         _fromDate = date;
@@ -285,7 +311,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
       firstDate: _fromDate ?? DateTime(2020),
       lastDate: DateTime.now(),
     );
-    
+
     if (date != null) {
       setState(() {
         _toDate = date;
@@ -296,14 +322,16 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
   void _selectEvent() {
     // TODO: Реализовать выбор события из списка
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Выбор события будет добавлен в следующей версии')),
+      const SnackBar(
+          content: Text('Выбор события будет добавлен в следующей версии')),
     );
   }
 
   void _selectSpecialist() {
     // TODO: Реализовать выбор специалиста из списка
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Выбор специалиста будет добавлен в следующей версии')),
+      const SnackBar(
+          content: Text('Выбор специалиста будет добавлен в следующей версии')),
     );
   }
 
@@ -322,8 +350,8 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
 
   void _applyFilters() {
     final filters = NoteFilters(
-      searchQuery: _searchController.text.trim().isEmpty 
-          ? null 
+      searchQuery: _searchController.text.trim().isEmpty
+          ? null
           : _searchController.text.trim(),
       selectedTags: _selectedTags,
       showPinnedOnly: _showPinnedOnly,
@@ -333,7 +361,7 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
       eventId: _eventId,
       specialistId: _specialistId,
     );
-    
+
     widget.onFiltersChanged(filters);
     Navigator.pop(context);
   }

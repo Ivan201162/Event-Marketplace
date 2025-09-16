@@ -23,7 +23,11 @@ class SpecialistService {
 
   /// Поток специалиста по ID
   Stream<Specialist?> getSpecialistStream(String specialistId) {
-    return _db.collection('specialists').doc(specialistId).snapshots().map((doc) {
+    return _db
+        .collection('specialists')
+        .doc(specialistId)
+        .snapshots()
+        .map((doc) {
       if (doc.exists) {
         return Specialist.fromDocument(doc);
       }
@@ -98,7 +102,8 @@ class SpecialistService {
   }
 
   /// Поиск специалистов с фильтрами
-  Future<List<Specialist>> searchSpecialists(SpecialistFilters filters, {int limit = 50}) async {
+  Future<List<Specialist>> searchSpecialists(SpecialistFilters filters,
+      {int limit = 50}) async {
     try {
       Query query = _db.collection('specialists');
 
@@ -119,12 +124,14 @@ class SpecialistService {
 
       // Фильтр по минимальному рейтингу
       if (filters.minRating != null) {
-        query = query.where('rating', isGreaterThanOrEqualTo: filters.minRating);
+        query =
+            query.where('rating', isGreaterThanOrEqualTo: filters.minRating);
       }
 
       // Фильтр по максимальной ставке
       if (filters.maxHourlyRate != null) {
-        query = query.where('hourlyRate', isLessThanOrEqualTo: filters.maxHourlyRate);
+        query = query.where('hourlyRate',
+            isLessThanOrEqualTo: filters.maxHourlyRate);
       }
 
       // Сортировка
@@ -133,13 +140,16 @@ class SpecialistService {
           query = query.orderBy('rating', descending: !filters.sortAscending);
           break;
         case 'price':
-          query = query.orderBy('hourlyRate', descending: !filters.sortAscending);
+          query =
+              query.orderBy('hourlyRate', descending: !filters.sortAscending);
           break;
         case 'experience':
-          query = query.orderBy('yearsOfExperience', descending: !filters.sortAscending);
+          query = query.orderBy('yearsOfExperience',
+              descending: !filters.sortAscending);
           break;
         case 'reviews':
-          query = query.orderBy('reviewCount', descending: !filters.sortAscending);
+          query =
+              query.orderBy('reviewCount', descending: !filters.sortAscending);
           break;
         default:
           query = query.orderBy('rating', descending: true);
@@ -163,7 +173,8 @@ class SpecialistService {
   }
 
   /// Поток поиска специалистов с фильтрами
-  Stream<List<Specialist>> searchSpecialistsStream(SpecialistFilters filters, {int limit = 50}) {
+  Stream<List<Specialist>> searchSpecialistsStream(SpecialistFilters filters,
+      {int limit = 50}) {
     Query query = _db.collection('specialists');
 
     // Фильтр по доступности
@@ -188,7 +199,8 @@ class SpecialistService {
 
     // Фильтр по максимальной ставке
     if (filters.maxHourlyRate != null) {
-      query = query.where('hourlyRate', isLessThanOrEqualTo: filters.maxHourlyRate);
+      query =
+          query.where('hourlyRate', isLessThanOrEqualTo: filters.maxHourlyRate);
     }
 
     // Сортировка
@@ -200,10 +212,12 @@ class SpecialistService {
         query = query.orderBy('hourlyRate', descending: !filters.sortAscending);
         break;
       case 'experience':
-        query = query.orderBy('experienceYears', descending: !filters.sortAscending);
+        query = query.orderBy('experienceYears',
+            descending: !filters.sortAscending);
         break;
       case 'reviews':
-        query = query.orderBy('reviewCount', descending: !filters.sortAscending);
+        query =
+            query.orderBy('reviewCount', descending: !filters.sortAscending);
         break;
       default:
         query = query.orderBy('rating', descending: true);
@@ -224,15 +238,18 @@ class SpecialistService {
   }
 
   /// Применить фильтры на клиенте
-  List<Specialist> _applyClientSideFilters(List<Specialist> specialists, SpecialistFilters filters) {
+  List<Specialist> _applyClientSideFilters(
+      List<Specialist> specialists, SpecialistFilters filters) {
     return specialists.where((specialist) {
       // Поиск по тексту
       if (filters.searchQuery != null && filters.searchQuery!.isNotEmpty) {
         final query = filters.searchQuery!.toLowerCase();
         final matchesName = specialist.name.toLowerCase().contains(query);
-        final matchesDescription = specialist.description?.toLowerCase().contains(query) ?? false;
-        final matchesSubcategories = specialist.subcategories.any((sub) => sub.toLowerCase().contains(query));
-        
+        final matchesDescription =
+            specialist.description?.toLowerCase().contains(query) ?? false;
+        final matchesSubcategories = specialist.subcategories
+            .any((sub) => sub.toLowerCase().contains(query));
+
         if (!matchesName && !matchesDescription && !matchesSubcategories) {
           return false;
         }
@@ -240,8 +257,8 @@ class SpecialistService {
 
       // Фильтр по подкатегориям
       if (filters.subcategories != null && filters.subcategories!.isNotEmpty) {
-        final hasMatchingSubcategory = specialist.subcategories.any((sub) => 
-            filters.subcategories!.contains(sub));
+        final hasMatchingSubcategory = specialist.subcategories
+            .any((sub) => filters.subcategories!.contains(sub));
         if (!hasMatchingSubcategory) {
           return false;
         }
@@ -255,9 +272,11 @@ class SpecialistService {
           ExperienceLevel.advanced,
           ExperienceLevel.expert,
         ];
-        final specialistLevelIndex = experienceLevels.indexOf(specialist.experienceLevel);
-        final minLevelIndex = experienceLevels.indexOf(filters.minExperienceLevel!);
-        
+        final specialistLevelIndex =
+            experienceLevels.indexOf(specialist.experienceLevel);
+        final minLevelIndex =
+            experienceLevels.indexOf(filters.minExperienceLevel!);
+
         if (specialistLevelIndex < minLevelIndex) {
           return false;
         }
@@ -265,8 +284,8 @@ class SpecialistService {
 
       // Фильтр по областям обслуживания
       if (filters.serviceAreas != null && filters.serviceAreas!.isNotEmpty) {
-        final hasMatchingArea = specialist.serviceAreas.any((area) => 
-            filters.serviceAreas!.contains(area));
+        final hasMatchingArea = specialist.serviceAreas
+            .any((area) => filters.serviceAreas!.contains(area));
         if (!hasMatchingArea) {
           return false;
         }
@@ -274,8 +293,8 @@ class SpecialistService {
 
       // Фильтр по языкам
       if (filters.languages != null && filters.languages!.isNotEmpty) {
-        final hasMatchingLanguage = specialist.languages.any((lang) => 
-            filters.languages!.contains(lang));
+        final hasMatchingLanguage = specialist.languages
+            .any((lang) => filters.languages!.contains(lang));
         if (!hasMatchingLanguage) {
           return false;
         }
@@ -293,7 +312,8 @@ class SpecialistService {
   }
 
   /// Получить специалистов по категории
-  Future<List<Specialist>> getSpecialistsByCategory(SpecialistCategory category, {int limit = 20}) async {
+  Future<List<Specialist>> getSpecialistsByCategory(SpecialistCategory category,
+      {int limit = 20}) async {
     try {
       final querySnapshot = await _db
           .collection('specialists')
@@ -379,7 +399,10 @@ class SpecialistService {
         updatedAt: DateTime.now(),
       );
 
-      await _db.collection('specialists').doc(specialist.id).set(specialist.toMap());
+      await _db
+          .collection('specialists')
+          .doc(specialist.id)
+          .set(specialist.toMap());
       return specialist;
     } catch (e) {
       print('Ошибка создания специалиста: $e');
@@ -388,7 +411,8 @@ class SpecialistService {
   }
 
   /// Обновить профиль специалиста
-  Future<void> updateSpecialist(String specialistId, Map<String, dynamic> updates) async {
+  Future<void> updateSpecialist(
+      String specialistId, Map<String, dynamic> updates) async {
     try {
       updates['updatedAt'] = Timestamp.fromDate(DateTime.now());
       await _db.collection('specialists').doc(specialistId).update(updates);
@@ -399,7 +423,8 @@ class SpecialistService {
   }
 
   /// Обновить рейтинг специалиста
-  Future<void> updateSpecialistRating(String specialistId, double newRating, int newReviewCount) async {
+  Future<void> updateSpecialistRating(
+      String specialistId, double newRating, int newReviewCount) async {
     try {
       await _db.collection('specialists').doc(specialistId).update({
         'rating': newRating,
@@ -413,7 +438,8 @@ class SpecialistService {
   }
 
   /// Проверить доступность специалиста на дату
-  Future<bool> isSpecialistAvailableOnDate(String specialistId, DateTime date) async {
+  Future<bool> isSpecialistAvailableOnDate(
+      String specialistId, DateTime date) async {
     try {
       return await _calendarService.isDateAvailable(specialistId, date);
     } catch (e) {
@@ -423,7 +449,8 @@ class SpecialistService {
   }
 
   /// Проверить доступность специалиста на дату и время
-  Future<bool> isSpecialistAvailableOnDateTime(String specialistId, DateTime dateTime) async {
+  Future<bool> isSpecialistAvailableOnDateTime(
+      String specialistId, DateTime dateTime) async {
     try {
       return await _calendarService.isDateTimeAvailable(specialistId, dateTime);
     } catch (e) {
@@ -433,9 +460,12 @@ class SpecialistService {
   }
 
   /// Получить доступные временные слоты специалиста
-  Future<List<DateTime>> getAvailableTimeSlots(String specialistId, DateTime date, {Duration slotDuration = const Duration(hours: 1)}) async {
+  Future<List<DateTime>> getAvailableTimeSlots(
+      String specialistId, DateTime date,
+      {Duration slotDuration = const Duration(hours: 1)}) async {
     try {
-      return await _calendarService.getAvailableTimeSlots(specialistId, date, slotDuration: slotDuration);
+      return await _calendarService.getAvailableTimeSlots(specialistId, date,
+          slotDuration: slotDuration);
     } catch (e) {
       print('Ошибка получения временных слотов: $e');
       return [];
@@ -449,9 +479,14 @@ class SpecialistService {
         {
           'userId': 'user_1',
           'name': 'Александр Петров',
-          'description': 'Профессиональный фотограф с 5-летним опытом. Специализируюсь на свадебной и портретной фотографии.',
+          'description':
+              'Профессиональный фотограф с 5-летним опытом. Специализируюсь на свадебной и портретной фотографии.',
           'category': 'photographer',
-          'subcategories': ['свадебная фотография', 'портретная съемка', 'корпоративные мероприятия'],
+          'subcategories': [
+            'свадебная фотография',
+            'портретная съемка',
+            'корпоративные мероприятия'
+          ],
           'experienceLevel': 'advanced',
           'yearsOfExperience': 5,
           'hourlyRate': 3000.0,
@@ -459,8 +494,15 @@ class SpecialistService {
           'maxBookingHours': 12.0,
           'serviceAreas': ['Москва', 'Московская область'],
           'languages': ['Русский', 'Английский'],
-          'equipment': ['Canon EOS R5', 'Canon 24-70mm f/2.8', 'Студийное освещение'],
-          'portfolio': ['https://example.com/portfolio1', 'https://example.com/portfolio2'],
+          'equipment': [
+            'Canon EOS R5',
+            'Canon 24-70mm f/2.8',
+            'Студийное освещение'
+          ],
+          'portfolio': [
+            'https://example.com/portfolio1',
+            'https://example.com/portfolio2'
+          ],
           'isAvailable': true,
           'isVerified': true,
           'rating': 4.8,
@@ -469,9 +511,14 @@ class SpecialistService {
         {
           'userId': 'user_2',
           'name': 'Мария Сидорова',
-          'description': 'Опытный DJ с обширной музыкальной коллекцией. Работаю на свадьбах, корпоративах и частных вечеринках.',
+          'description':
+              'Опытный DJ с обширной музыкальной коллекцией. Работаю на свадьбах, корпоративах и частных вечеринках.',
           'category': 'dj',
-          'subcategories': ['свадебные торжества', 'корпоративные мероприятия', 'частные вечеринки'],
+          'subcategories': [
+            'свадебные торжества',
+            'корпоративные мероприятия',
+            'частные вечеринки'
+          ],
           'experienceLevel': 'expert',
           'yearsOfExperience': 8,
           'hourlyRate': 2500.0,
@@ -479,7 +526,11 @@ class SpecialistService {
           'maxBookingHours': 8.0,
           'serviceAreas': ['Москва', 'Санкт-Петербург'],
           'languages': ['Русский', 'Английский', 'Французский'],
-          'equipment': ['Pioneer DJM-900NXS2', 'Pioneer CDJ-2000NXS2', 'JBL EON615'],
+          'equipment': [
+            'Pioneer DJM-900NXS2',
+            'Pioneer CDJ-2000NXS2',
+            'JBL EON615'
+          ],
           'portfolio': ['https://example.com/dj-portfolio'],
           'isAvailable': true,
           'isVerified': true,
@@ -489,9 +540,14 @@ class SpecialistService {
         {
           'userId': 'user_3',
           'name': 'Дмитрий Козлов',
-          'description': 'Ведущий мероприятий с харизмой и чувством юмора. Создаю незабываемую атмосферу на любом празднике.',
+          'description':
+              'Ведущий мероприятий с харизмой и чувством юмора. Создаю незабываемую атмосферу на любом празднике.',
           'category': 'host',
-          'subcategories': ['свадебные торжества', 'дни рождения', 'корпоративные мероприятия'],
+          'subcategories': [
+            'свадебные торжества',
+            'дни рождения',
+            'корпоративные мероприятия'
+          ],
           'experienceLevel': 'advanced',
           'yearsOfExperience': 6,
           'hourlyRate': 4000.0,
@@ -509,9 +565,14 @@ class SpecialistService {
         {
           'userId': 'user_4',
           'name': 'Анна Волкова',
-          'description': 'Декоратор с художественным образованием. Создаю уникальные интерьеры для любых мероприятий.',
+          'description':
+              'Декоратор с художественным образованием. Создаю уникальные интерьеры для любых мероприятий.',
           'category': 'decorator',
-          'subcategories': ['свадебное оформление', 'корпоративные мероприятия', 'детские праздники'],
+          'subcategories': [
+            'свадебное оформление',
+            'корпоративные мероприятия',
+            'детские праздники'
+          ],
           'experienceLevel': 'intermediate',
           'yearsOfExperience': 3,
           'hourlyRate': 2000.0,
@@ -529,9 +590,14 @@ class SpecialistService {
         {
           'userId': 'user_5',
           'name': 'Сергей Морозов',
-          'description': 'Видеограф с современным оборудованием. Создаю качественные видеоролики для любых мероприятий.',
+          'description':
+              'Видеограф с современным оборудованием. Создаю качественные видеоролики для любых мероприятий.',
           'category': 'videographer',
-          'subcategories': ['свадебная видеосъемка', 'корпоративные видео', 'рекламные ролики'],
+          'subcategories': [
+            'свадебная видеосъемка',
+            'корпоративные видео',
+            'рекламные ролики'
+          ],
           'experienceLevel': 'advanced',
           'yearsOfExperience': 4,
           'hourlyRate': 3500.0,
@@ -554,14 +620,22 @@ class SpecialistService {
           userId: specialistData['userId'] as String,
           name: specialistData['name'] as String,
           description: specialistData['description'] as String?,
-          category: SpecialistCategory.values.firstWhere((e) => e.name == specialistData['category']),
-          subcategories: List<String>.from(specialistData['subcategories'] as List),
-          experienceLevel: ExperienceLevel.values.firstWhere((e) => e.name == specialistData['experienceLevel']),
+          category: SpecialistCategory.values
+              .firstWhere((e) => e.name == specialistData['category']),
+          subcategories:
+              List<String>.from(specialistData['subcategories'] as List),
+          experienceLevel: ExperienceLevel.values
+              .firstWhere((e) => e.name == specialistData['experienceLevel']),
           yearsOfExperience: specialistData['yearsOfExperience'] as int,
           hourlyRate: (specialistData['hourlyRate'] as num).toDouble(),
-          minBookingHours: specialistData['minBookingHours'] != null ? (specialistData['minBookingHours'] as num).toDouble() : null,
-          maxBookingHours: specialistData['maxBookingHours'] != null ? (specialistData['maxBookingHours'] as num).toDouble() : null,
-          serviceAreas: List<String>.from(specialistData['serviceAreas'] as List),
+          minBookingHours: specialistData['minBookingHours'] != null
+              ? (specialistData['minBookingHours'] as num).toDouble()
+              : null,
+          maxBookingHours: specialistData['maxBookingHours'] != null
+              ? (specialistData['maxBookingHours'] as num).toDouble()
+              : null,
+          serviceAreas:
+              List<String>.from(specialistData['serviceAreas'] as List),
           languages: List<String>.from(specialistData['languages'] as List),
           equipment: List<String>.from(specialistData['equipment'] as List),
           portfolio: List<String>.from(specialistData['portfolio'] as List),
@@ -573,7 +647,10 @@ class SpecialistService {
           updatedAt: DateTime.now(),
         );
 
-        await _db.collection('specialists').doc(specialist.id).set(specialist.toMap());
+        await _db
+            .collection('specialists')
+            .doc(specialist.id)
+            .set(specialist.toMap());
       }
 
       print('Тестовые специалисты добавлены');

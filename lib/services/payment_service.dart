@@ -82,9 +82,8 @@ class PaymentService {
         .where('bookingId', isEqualTo: bookingId)
         .orderBy('createdAt', descending: false)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Payment.fromDocument(doc))
-            .toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Payment.fromDocument(doc)).toList());
   }
 
   /// Получить платежи по клиенту
@@ -94,9 +93,8 @@ class PaymentService {
         .where('customerId', isEqualTo: customerId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Payment.fromDocument(doc))
-            .toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Payment.fromDocument(doc)).toList());
   }
 
   /// Получить платежи по специалисту
@@ -106,9 +104,8 @@ class PaymentService {
         .where('specialistId', isEqualTo: specialistId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => Payment.fromDocument(doc))
-            .toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Payment.fromDocument(doc)).toList());
   }
 
   /// Обновить статус платежа
@@ -176,7 +173,8 @@ class PaymentService {
             type: PaymentType.advance,
             amount: advanceAmount,
             organizationType: organizationType,
-            description: 'Авансовый платеж (${config.advancePercentage.toInt()}%)',
+            description:
+                'Авансовый платеж (${config.advancePercentage.toInt()}%)',
             metadata: {
               'advancePercentage': config.advancePercentage,
               'totalAmount': booking.totalPrice,
@@ -188,8 +186,9 @@ class PaymentService {
 
       // Создаем финальный платеж
       final advanceAmount = config.calculateAdvanceAmount(booking.totalPrice);
-      final finalAmount = config.calculateFinalAmount(booking.totalPrice, advanceAmount);
-      
+      final finalAmount =
+          config.calculateFinalAmount(booking.totalPrice, advanceAmount);
+
       if (finalAmount > 0) {
         final finalPayment = await createPayment(
           bookingId: booking.id,
@@ -298,14 +297,16 @@ class PaymentService {
   }
 
   /// Получить статистику платежей
-  Future<PaymentStatistics> getPaymentStatistics(String userId, {bool isSpecialist = false}) async {
+  Future<PaymentStatistics> getPaymentStatistics(String userId,
+      {bool isSpecialist = false}) async {
     try {
       final query = isSpecialist
           ? _db.collection('payments').where('specialistId', isEqualTo: userId)
           : _db.collection('payments').where('customerId', isEqualTo: userId);
 
       final snapshot = await query.get();
-      final payments = snapshot.docs.map((doc) => Payment.fromDocument(doc)).toList();
+      final payments =
+          snapshot.docs.map((doc) => Payment.fromDocument(doc)).toList();
 
       double totalAmount = 0;
       double completedAmount = 0;
@@ -316,7 +317,7 @@ class PaymentService {
 
       for (final payment in payments) {
         totalAmount += payment.amount;
-        
+
         switch (payment.status) {
           case PaymentStatus.completed:
             completedAmount += payment.amount;

@@ -17,13 +17,14 @@ class ReviewsExtendedScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<ReviewsExtendedScreen> createState() => _ReviewsExtendedScreenState();
+  ConsumerState<ReviewsExtendedScreen> createState() =>
+      _ReviewsExtendedScreenState();
 }
 
 class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
   final ReviewExtendedService _reviewService = ReviewExtendedService();
   final TextEditingController _searchController = TextEditingController();
-  
+
   ReviewFilter _filter = const ReviewFilter();
   String _searchQuery = '';
   bool _showCreateButton = true;
@@ -81,14 +82,15 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
               },
             ),
           ),
-          
+
           // Статистика
           _buildStatsSection(),
-          
+
           // Список отзывов
           Expanded(
             child: StreamBuilder<List<ReviewExtended>>(
-              stream: _reviewService.getSpecialistReviews(widget.specialistId, _filter),
+              stream: _reviewService.getSpecialistReviews(
+                  widget.specialistId, _filter),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -197,9 +199,9 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
                       ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Распределение рейтингов
                   if (stats.ratingDistribution.isNotEmpty) ...[
                     const Text(
@@ -211,7 +213,8 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
                     ),
                     const SizedBox(height: 8),
                     ...stats.ratingDistribution.entries.map((entry) {
-                      final percentage = (entry.value / stats.totalReviews) * 100;
+                      final percentage =
+                          (entry.value / stats.totalReviews) * 100;
                       return Padding(
                         padding: const EdgeInsets.only(bottom: 4),
                         child: Row(
@@ -234,7 +237,7 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
                       );
                     }).toList(),
                   ],
-                  
+
                   // Топ теги
                   if (stats.topTags.isNotEmpty) ...[
                     const SizedBox(height: 16),
@@ -252,7 +255,8 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
                       children: stats.topTags.map((tag) {
                         return Chip(
                           label: Text(tag),
-                          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+                          backgroundColor:
+                              Theme.of(context).primaryColor.withOpacity(0.1),
                         );
                       }).toList(),
                     ),
@@ -266,7 +270,8 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
     );
   }
 
-  Widget _buildStatItem(String label, String value, IconData icon, Color color) {
+  Widget _buildStatItem(
+      String label, String value, IconData icon, Color color) {
     return Column(
       children: [
         Icon(icon, color: color, size: 24),
@@ -320,12 +325,12 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
 
   List<ReviewExtended> _filterReviews(List<ReviewExtended> reviews) {
     if (_searchQuery.isEmpty) return reviews;
-    
+
     final query = _searchQuery.toLowerCase();
     return reviews.where((review) {
       return review.comment.toLowerCase().contains(query) ||
-             review.customerName.toLowerCase().contains(query) ||
-             review.tags.any((tag) => tag.toLowerCase().contains(query));
+          review.customerName.toLowerCase().contains(query) ||
+          review.tags.any((tag) => tag.toLowerCase().contains(query));
     }).toList();
   }
 
@@ -347,14 +352,16 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
   }
 
   void _showCreateReviewDialog() {
-    Navigator.of(context).push(
+    Navigator.of(context)
+        .push(
       MaterialPageRoute(
         builder: (context) => CreateReviewExtendedScreen(
           specialistId: widget.specialistId,
           bookingId: 'demo_booking_id', // TODO: Получить из контекста
         ),
       ),
-    ).then((result) {
+    )
+        .then((result) {
       if (result == true) {
         setState(() {});
       }
@@ -486,9 +493,9 @@ class _FilterDialogState extends State<_FilterDialog> {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Медиа
           CheckboxListTile(
             title: const Text('Только с медиа'),
@@ -499,7 +506,7 @@ class _FilterDialogState extends State<_FilterDialog> {
               });
             },
           ),
-          
+
           // Верифицированные
           CheckboxListTile(
             title: const Text('Только верифицированные'),
@@ -510,9 +517,9 @@ class _FilterDialogState extends State<_FilterDialog> {
               });
             },
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Сортировка
           DropdownButtonFormField<ReviewSortBy>(
             value: _filter.sortBy,

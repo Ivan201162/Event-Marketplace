@@ -54,7 +54,7 @@ class Idea {
 
   factory Idea.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return Idea(
       id: doc.id,
       title: data['title'] ?? '',
@@ -79,11 +79,13 @@ class Idea {
       likedBy: List<String>.from(data['likedBy'] ?? []),
       savedBy: List<String>.from(data['savedBy'] ?? []),
       images: (data['images'] as List<dynamic>?)
-          ?.map((e) => IdeaImage.fromMap(e))
-          .toList() ?? [],
+              ?.map((e) => IdeaImage.fromMap(e))
+              .toList() ??
+          [],
       comments: (data['comments'] as List<dynamic>?)
-          ?.map((e) => IdeaComment.fromMap(e))
-          .toList() ?? [],
+              ?.map((e) => IdeaComment.fromMap(e))
+              .toList() ??
+          [],
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       isPublic: data['isPublic'] ?? true,
       isFeatured: data['isFeatured'] ?? false,
@@ -563,7 +565,7 @@ class IdeaCollection {
 
   factory IdeaCollection.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    
+
     return IdeaCollection(
       id: doc.id,
       name: data['name'] ?? '',

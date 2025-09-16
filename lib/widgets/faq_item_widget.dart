@@ -72,10 +72,14 @@ class FAQItemWidget extends StatelessWidget {
                           children: [
                             Icon(
                               faqItem.isPublished ? Icons.lock : Icons.public,
-                              color: faqItem.isPublished ? Colors.grey : Colors.green,
+                              color: faqItem.isPublished
+                                  ? Colors.grey
+                                  : Colors.green,
                             ),
                             const SizedBox(width: 8),
-                            Text(faqItem.isPublished ? 'Скрыть' : 'Опубликовать'),
+                            Text(faqItem.isPublished
+                                ? 'Скрыть'
+                                : 'Опубликовать'),
                           ],
                         ),
                       ),
@@ -95,7 +99,8 @@ class FAQItemWidget extends StatelessWidget {
                           children: [
                             Icon(Icons.delete, color: Colors.red),
                             SizedBox(width: 8),
-                            Text('Удалить', style: TextStyle(color: Colors.red)),
+                            Text('Удалить',
+                                style: TextStyle(color: Colors.red)),
                           ],
                         ),
                       ),
@@ -103,9 +108,9 @@ class FAQItemWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Ответ
               Text(
                 faqItem.answer,
@@ -113,9 +118,9 @@ class FAQItemWidget extends StatelessWidget {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Категория и порядок
               Row(
                 children: [
@@ -138,9 +143,9 @@ class FAQItemWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Информация о дате
               Row(
                 children: [
@@ -207,7 +212,7 @@ class FAQItemWidget extends StatelessWidget {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date);
-    
+
     if (difference.inDays == 0) {
       return 'Сегодня';
     } else if (difference.inDays == 1) {

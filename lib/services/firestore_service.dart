@@ -52,7 +52,8 @@ class FirestoreService {
   }
 
   // Обновить платежный статус / аванс
-  Future<void> updatePaymentStatus(String bookingId, {required bool prepaymentPaid, required String paymentStatus}) async {
+  Future<void> updatePaymentStatus(String bookingId,
+      {required bool prepaymentPaid, required String paymentStatus}) async {
     await _db.collection('bookings').doc(bookingId).update({
       'prepaymentPaid': prepaymentPaid,
       'paymentStatus': paymentStatus,
@@ -66,7 +67,7 @@ class FirestoreService {
         .where('specialistId', isEqualTo: specialistId)
         .orderBy('eventDate', descending: false)
         .get();
-    
+
     return qs.docs.map((doc) => Booking.fromDocument(doc)).toList();
   }
 
@@ -77,7 +78,7 @@ class FirestoreService {
         .where('customerId', isEqualTo: customerId)
         .orderBy('eventDate', descending: false)
         .get();
-    
+
     return qs.docs.map((doc) => Booking.fromDocument(doc)).toList();
   }
 
@@ -88,24 +89,29 @@ class FirestoreService {
         .where('specialistId', isEqualTo: specialistId)
         .where('status', isEqualTo: 'confirmed')
         .get();
-    return qs.docs.map((d) => (d.data()['eventDate'] as Timestamp).toDate()).toList();
+    return qs.docs
+        .map((d) => (d.data()['eventDate'] as Timestamp).toDate())
+        .toList();
   }
 
   // Получить занятые даты с временными интервалами
-  Future<List<Map<String, dynamic>>> getBusyDateRanges(String specialistId) async {
+  Future<List<Map<String, dynamic>>> getBusyDateRanges(
+      String specialistId) async {
     final qs = await _db
         .collection('bookings')
         .where('specialistId', isEqualTo: specialistId)
         .where('status', isEqualTo: 'confirmed')
         .get();
-    
+
     return qs.docs.map((d) {
       final data = d.data();
       return {
         'bookingId': d.id,
         'startTime': (data['eventDate'] as Timestamp).toDate(),
-        'endTime': (data['endDate'] as Timestamp?)?.toDate() ?? 
-                   (data['eventDate'] as Timestamp).toDate().add(const Duration(hours: 2)),
+        'endTime': (data['endDate'] as Timestamp?)?.toDate() ??
+            (data['eventDate'] as Timestamp)
+                .toDate()
+                .add(const Duration(hours: 2)),
         'customerId': data['customerId'],
         'title': data['title'] ?? 'Бронирование',
       };
@@ -113,27 +119,29 @@ class FirestoreService {
   }
 
   // Проверить конфликты бронирования
-  Future<bool> hasBookingConflict(String specialistId, DateTime startTime, DateTime endTime, {String? excludeBookingId}) async {
+  Future<bool> hasBookingConflict(
+      String specialistId, DateTime startTime, DateTime endTime,
+      {String? excludeBookingId}) async {
     final qs = await _db
         .collection('bookings')
         .where('specialistId', isEqualTo: specialistId)
         .where('status', isEqualTo: 'confirmed')
         .get();
-    
+
     for (final doc in qs.docs) {
       if (excludeBookingId != null && doc.id == excludeBookingId) continue;
-      
+
       final data = doc.data();
       final existingStart = (data['eventDate'] as Timestamp).toDate();
-      final existingEnd = (data['endDate'] as Timestamp?)?.toDate() ?? 
-                         existingStart.add(const Duration(hours: 2));
-      
+      final existingEnd = (data['endDate'] as Timestamp?)?.toDate() ??
+          existingStart.add(const Duration(hours: 2));
+
       // Проверяем пересечение временных интервалов
       if (startTime.isBefore(existingEnd) && endTime.isAfter(existingStart)) {
         return true; // Есть конфликт
       }
     }
-    
+
     return false; // Конфликтов нет
   }
 
@@ -161,7 +169,7 @@ class FirestoreService {
 
     await _db.collection('bookings').doc(b1.id).set(b1.toMap());
     await _db.collection('bookings').doc(b2.id).set(b2.toMap());
-    
+
     // Добавляем события в календарь
     await _calendarService.createBookingEvent(
       specialistId: b1.specialistId,
@@ -171,7 +179,7 @@ class FirestoreService {
       endTime: b1.eventDate.add(const Duration(hours: 2)),
       description: 'Тестовое бронирование 1',
     );
-    
+
     await _calendarService.createBookingEvent(
       specialistId: b2.specialistId,
       bookingId: b2.id,
@@ -186,33 +194,36 @@ class FirestoreService {
   Future<void> addOrUpdateBookingWithCalendar(Booking booking) async {
     try {
       // Определяем время окончания события
-      final endTime = booking.endDate ?? booking.eventDate.add(const Duration(hours: 2));
-      
+      final endTime =
+          booking.endDate ?? booking.eventDate.add(const Duration(hours: 2));
+
       // Проверяем конфликты бронирования
       final hasConflict = await hasBookingConflict(
-        booking.specialistId, 
-        booking.eventDate, 
+        booking.specialistId,
+        booking.eventDate,
         endTime,
-        excludeBookingId: booking.id, // Исключаем текущее бронирование при обновлении
+        excludeBookingId:
+            booking.id, // Исключаем текущее бронирование при обновлении
       );
-      
+
       if (hasConflict) {
         throw Exception('Выбранное время уже занято другим бронированием');
       }
-      
+
       // Проверяем доступность через календарный сервис
       final isAvailable = await _calendarService.isDateTimeAvailable(
         booking.specialistId,
         booking.eventDate,
       );
-      
+
       if (!isAvailable) {
-        throw Exception('Выбранная дата и время недоступны в расписании специалиста');
+        throw Exception(
+            'Выбранная дата и время недоступны в расписании специалиста');
       }
-      
+
       // Сохраняем заявку
       await addOrUpdateBooking(booking);
-      
+
       // Если заявка подтверждена, добавляем событие в календарь
       if (booking.status == 'confirmed') {
         await _calendarService.createBookingEvent(
@@ -231,19 +242,20 @@ class FirestoreService {
   }
 
   // Обновить статус заявки с интеграцией календаря и уведомлений
-  Future<void> updateBookingStatusWithCalendar(String bookingId, String status) async {
+  Future<void> updateBookingStatusWithCalendar(
+      String bookingId, String status) async {
     try {
       // Получаем заявку
       final bookingDoc = await _db.collection('bookings').doc(bookingId).get();
       if (!bookingDoc.exists) {
         throw Exception('Заявка не найдена');
       }
-      
+
       final booking = Booking.fromDocument(bookingDoc);
-      
+
       // Обновляем статус
       await updateBookingStatus(bookingId, status);
-      
+
       // Управляем событием в календаре
       if (status == 'confirmed') {
         // Добавляем событие в календарь
@@ -257,7 +269,8 @@ class FirestoreService {
         );
       } else if (status == 'rejected' || status == 'cancelled') {
         // Удаляем событие из календаря
-        await _calendarService.removeBookingEvent(booking.specialistId, booking.id);
+        await _calendarService.removeBookingEvent(
+            booking.specialistId, booking.id);
       }
 
       // Отправляем уведомления
@@ -269,7 +282,8 @@ class FirestoreService {
   }
 
   // Проверить доступность даты для специалиста
-  Future<bool> isSpecialistAvailable(String specialistId, DateTime dateTime) async {
+  Future<bool> isSpecialistAvailable(
+      String specialistId, DateTime dateTime) async {
     return await _calendarService.isDateTimeAvailable(specialistId, dateTime);
   }
 
@@ -295,7 +309,8 @@ class FirestoreService {
   }
 
   // Отправить уведомления о статусе заявки
-  Future<void> _sendBookingStatusNotifications(Booking booking, String status) async {
+  Future<void> _sendBookingStatusNotifications(
+      Booking booking, String status) async {
     try {
       NotificationType notificationType;
       String title;
@@ -305,17 +320,20 @@ class FirestoreService {
         case 'confirmed':
           notificationType = NotificationType.booking_confirmed;
           title = 'Заявка подтверждена!';
-          body = 'Ваша заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} подтверждена';
+          body =
+              'Ваша заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} подтверждена';
           break;
         case 'rejected':
           notificationType = NotificationType.booking_rejected;
           title = 'Заявка отклонена';
-          body = 'К сожалению, ваша заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} отклонена';
+          body =
+              'К сожалению, ваша заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} отклонена';
           break;
         case 'cancelled':
           notificationType = NotificationType.booking_cancelled;
           title = 'Заявка отменена';
-          body = 'Заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} была отменена';
+          body =
+              'Заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} была отменена';
           break;
         default:
           return; // Не отправляем уведомления для других статусов
@@ -357,7 +375,8 @@ class FirestoreService {
         await _sendPushNotification(
           userId: booking.specialistId,
           title: 'Заявка отменена клиентом',
-          body: 'Клиент отменил заявку на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year}',
+          body:
+              'Клиент отменил заявку на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year}',
           data: {
             'type': 'booking_cancelled',
             'bookingId': booking.id,
@@ -370,10 +389,11 @@ class FirestoreService {
   }
 
   // Отправить уведомления о статусе платежа
-  Future<void> _sendPaymentStatusNotifications(String paymentId, String status, String customerId, String specialistId) async {
+  Future<void> _sendPaymentStatusNotifications(String paymentId, String status,
+      String customerId, String specialistId) async {
     try {
       NotificationType notificationType;
-      
+
       switch (status) {
         case 'completed':
           notificationType = NotificationType.payment_completed;

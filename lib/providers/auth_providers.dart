@@ -23,9 +23,10 @@ final currentUserProvider = StreamProvider<AppUser?>((ref) {
 /// Провайдер состояния аутентификации
 final authStateProvider = Provider<AuthState>((ref) {
   final userAsync = ref.watch(currentUserProvider);
-  
+
   return userAsync.when(
-    data: (user) => user != null ? AuthState.authenticated : AuthState.unauthenticated,
+    data: (user) =>
+        user != null ? AuthState.authenticated : AuthState.unauthenticated,
     loading: () => AuthState.loading,
     error: (_, __) => AuthState.error,
   );
@@ -77,14 +78,15 @@ final hasAuthErrorProvider = Provider<bool>((ref) {
 
 /// Состояния аутентификации
 enum AuthState {
-  loading,        // Загрузка
-  authenticated,  // Авторизован
+  loading, // Загрузка
+  authenticated, // Авторизован
   unauthenticated, // Не авторизован
-  error,          // Ошибка
+  error, // Ошибка
 }
 
 /// Провайдер для управления состоянием формы входа
-final loginFormProvider = StateNotifierProvider<LoginFormNotifier, LoginFormState>((ref) {
+final loginFormProvider =
+    StateNotifierProvider<LoginFormNotifier, LoginFormState>((ref) {
   return LoginFormNotifier(ref.read(authServiceProvider));
 });
 

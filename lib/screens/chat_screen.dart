@@ -16,7 +16,8 @@ class ChatScreen extends ConsumerStatefulWidget {
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
 }
 
-class _ChatScreenState extends ConsumerState<ChatScreen> with SingleTickerProviderStateMixin {
+class _ChatScreenState extends ConsumerState<ChatScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -115,14 +116,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with SingleTickerProvid
               ),
               const SizedBox(width: 12),
               IconButton(
-                onPressed: () => _showCreateChatDialog(context, userId, isSpecialist),
+                onPressed: () =>
+                    _showCreateChatDialog(context, userId, isSpecialist),
                 icon: const Icon(Icons.add),
                 tooltip: 'Создать чат',
               ),
             ],
           ),
         ),
-        
+
         // Список чатов
         Expanded(
           child: ChatListWidget(
@@ -137,7 +139,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with SingleTickerProvid
 
   /// Вкладка уведомлений
   Widget _buildNotificationsTab(String userId) {
-    final notificationsAsync = ref.watch(userNotificationsProvider(UserNotificationsParams(
+    final notificationsAsync =
+        ref.watch(userNotificationsProvider(UserNotificationsParams(
       userId: userId,
       limit: 100,
     )));
@@ -188,7 +191,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with SingleTickerProvid
                 ],
               ),
             ),
-            
+
             // Список уведомлений
             Expanded(
               child: ListView.builder(
@@ -222,8 +225,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with SingleTickerProvid
 
   /// Открыть чат
   void _openChat(BuildContext context, Chat chat, String currentUserId) {
-    final otherUserId = chat.specialistId == currentUserId ? chat.customerId : chat.specialistId;
-    
+    final otherUserId = chat.specialistId == currentUserId
+        ? chat.customerId
+        : chat.specialistId;
+
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ChatDetailScreen(
@@ -236,7 +241,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with SingleTickerProvid
   }
 
   /// Показать диалог создания чата
-  void _showCreateChatDialog(BuildContext context, String userId, bool isSpecialist) {
+  void _showCreateChatDialog(
+      BuildContext context, String userId, bool isSpecialist) {
     final otherUserIdController = TextEditingController();
     final bookingIdController = TextEditingController();
 
@@ -272,8 +278,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with SingleTickerProvid
           ElevatedButton(
             onPressed: () async {
               final otherUserId = otherUserIdController.text.trim();
-              final bookingId = bookingIdController.text.trim().isEmpty 
-                  ? null 
+              final bookingId = bookingIdController.text.trim().isEmpty
+                  ? null
                   : bookingIdController.text.trim();
 
               if (otherUserId.isEmpty) {
@@ -284,11 +290,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with SingleTickerProvid
               }
 
               try {
-                final chat = await ref.read(chatStateProvider.notifier).createChat(
-                  customerId: isSpecialist ? otherUserId : userId,
-                  specialistId: isSpecialist ? userId : otherUserId,
-                  bookingId: bookingId,
-                );
+                final chat =
+                    await ref.read(chatStateProvider.notifier).createChat(
+                          customerId: isSpecialist ? otherUserId : userId,
+                          specialistId: isSpecialist ? userId : otherUserId,
+                          bookingId: bookingId,
+                        );
 
                 if (context.mounted && chat != null) {
                   Navigator.of(context).pop();
@@ -351,7 +358,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with SingleTickerProvid
   }
 
   /// Обработать нажатие на уведомление
-  void _handleNotificationTap(BuildContext context, AppNotification notification) {
+  void _handleNotificationTap(
+      BuildContext context, AppNotification notification) {
     // Отмечаем как прочитанное
     ref.read(notificationStateProvider.notifier).markAsRead(notification.id);
 
@@ -366,7 +374,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> with SingleTickerProvid
 
   /// Скрыть уведомление
   void _dismissNotification(String notificationId) {
-    ref.read(notificationStateProvider.notifier).archiveNotification(notificationId);
+    ref
+        .read(notificationStateProvider.notifier)
+        .archiveNotification(notificationId);
   }
 }
 
@@ -394,9 +404,9 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
     // Отмечаем сообщения как прочитанные при открытии чата
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(chatStateProvider.notifier).markMessagesAsRead(
-        widget.chat.id,
-        widget.currentUserId,
-      );
+            widget.chat.id,
+            widget.currentUserId,
+          );
     });
   }
 
@@ -425,7 +435,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
               otherUserId: widget.otherUserId,
             ),
           ),
-          
+
           // Ввод сообщения
           MessageInputWidget(
             chatId: widget.chat.id,

@@ -42,7 +42,8 @@ class LocalizationService {
   }
 
   /// Получить все доступные локализации
-  List<LocalizationModel> get availableLocalizations => _localizations.values.toList();
+  List<LocalizationModel> get availableLocalizations =>
+      _localizations.values.toList();
 
   /// Получить все поддерживаемые языки
   List<SupportedLanguage> get supportedLanguages => SupportedLanguage.values;
@@ -52,7 +53,7 @@ class LocalizationService {
     try {
       final prefs = await SharedPreferences.getInstance();
       final settingsJson = prefs.getString(_settingsKey);
-      
+
       if (settingsJson != null) {
         final settingsMap = jsonDecode(settingsJson) as Map<String, dynamic>;
         _settings = LocalizationSettings.fromMap(settingsMap);
@@ -87,14 +88,15 @@ class LocalizationService {
     try {
       // Загружаем русскую локализацию
       _localizations['ru'] = await _loadLocalization('ru');
-      
+
       // Загружаем английскую локализацию
       _localizations['en'] = await _loadLocalization('en');
-      
+
       // Загружаем другие языки по мере необходимости
       for (final language in SupportedLanguage.values) {
         if (!_localizations.containsKey(language.languageCode)) {
-          _localizations[language.languageCode] = await _loadLocalization(language.languageCode);
+          _localizations[language.languageCode] =
+              await _loadLocalization(language.languageCode);
         }
       }
     } catch (e) {
@@ -112,7 +114,7 @@ class LocalizationService {
 
       // Загружаем переводы из JSON файлов
       final translations = await _loadTranslations(languageCode);
-      
+
       return LocalizationModel(
         languageCode: language.languageCode,
         countryCode: language.countryCode,
@@ -182,7 +184,7 @@ class LocalizationService {
       'yes': 'Да',
       'no': 'Нет',
       'ok': 'ОК',
-      
+
       // Навигация
       'home': 'Главная',
       'events': 'События',
@@ -195,7 +197,7 @@ class LocalizationService {
       'analytics': 'Аналитика',
       'support': 'Поддержка',
       'integrations': 'Интеграции',
-      
+
       // События
       'create_event': 'Создать событие',
       'event_title': 'Название события',
@@ -206,7 +208,7 @@ class LocalizationService {
       'event_price': 'Цена',
       'event_category': 'Категория',
       'event_image': 'Изображение события',
-      
+
       // Профиль
       'profile_name': 'Имя',
       'profile_email': 'Email',
@@ -217,7 +219,7 @@ class LocalizationService {
       'profile_reviews': 'Отзывы',
       'profile_events': 'События',
       'profile_bookings': 'Бронирования',
-      
+
       // Настройки
       'language': 'Язык',
       'theme': 'Тема',
@@ -227,14 +229,14 @@ class LocalizationService {
       'about': 'О приложении',
       'version': 'Версия',
       'logout': 'Выйти',
-      
+
       // Уведомления
       'push_notifications': 'Push уведомления',
       'email_notifications': 'Email уведомления',
       'sms_notifications': 'SMS уведомления',
       'notification_sound': 'Звук уведомлений',
       'notification_vibration': 'Вибрация',
-      
+
       // Ошибки
       'error_network': 'Ошибка сети',
       'error_server': 'Ошибка сервера',
@@ -243,7 +245,7 @@ class LocalizationService {
       'error_location': 'Ошибка определения местоположения',
       'error_camera': 'Ошибка камеры',
       'error_gallery': 'Ошибка галереи',
-      
+
       // Успех
       'success_saved': 'Сохранено',
       'success_deleted': 'Удалено',
@@ -278,7 +280,7 @@ class LocalizationService {
       'yes': 'Yes',
       'no': 'No',
       'ok': 'OK',
-      
+
       // Навигация
       'home': 'Home',
       'events': 'Events',
@@ -291,7 +293,7 @@ class LocalizationService {
       'analytics': 'Analytics',
       'support': 'Support',
       'integrations': 'Integrations',
-      
+
       // События
       'create_event': 'Create Event',
       'event_title': 'Event Title',
@@ -302,7 +304,7 @@ class LocalizationService {
       'event_price': 'Price',
       'event_category': 'Category',
       'event_image': 'Event Image',
-      
+
       // Профиль
       'profile_name': 'Name',
       'profile_email': 'Email',
@@ -313,7 +315,7 @@ class LocalizationService {
       'profile_reviews': 'Reviews',
       'profile_events': 'Events',
       'profile_bookings': 'Bookings',
-      
+
       // Настройки
       'language': 'Language',
       'theme': 'Theme',
@@ -323,14 +325,14 @@ class LocalizationService {
       'about': 'About',
       'version': 'Version',
       'logout': 'Logout',
-      
+
       // Уведомления
       'push_notifications': 'Push Notifications',
       'email_notifications': 'Email Notifications',
       'sms_notifications': 'SMS Notifications',
       'notification_sound': 'Notification Sound',
       'notification_vibration': 'Vibration',
-      
+
       // Ошибки
       'error_network': 'Network Error',
       'error_server': 'Server Error',
@@ -339,7 +341,7 @@ class LocalizationService {
       'error_location': 'Location Error',
       'error_camera': 'Camera Error',
       'error_gallery': 'Gallery Error',
-      
+
       // Успех
       'success_saved': 'Saved',
       'success_deleted': 'Deleted',
@@ -515,7 +517,8 @@ class LocalizationService {
           .where((value) => value.isNotEmpty)
           .length;
       final missingKeys = totalKeys - translatedKeys;
-      final completionPercentage = totalKeys > 0 ? (translatedKeys / totalKeys) * 100 : 0.0;
+      final completionPercentage =
+          totalKeys > 0 ? (translatedKeys / totalKeys) * 100 : 0.0;
 
       return LocalizationStats(
         language: languageCode,
@@ -541,12 +544,12 @@ class LocalizationService {
   /// Получить все статистики локализации
   Future<List<LocalizationStats>> getAllLocalizationStats() async {
     final stats = <LocalizationStats>[];
-    
+
     for (final languageCode in _localizations.keys) {
       final stat = await getLocalizationStats(languageCode);
       stats.add(stat);
     }
-    
+
     return stats;
   }
 
@@ -580,7 +583,8 @@ class LocalizationService {
   }
 
   /// Импортировать переводы
-  Future<void> importTranslations(String languageCode, Map<String, String> translations) async {
+  Future<void> importTranslations(
+      String languageCode, Map<String, String> translations) async {
     try {
       final language = SupportedLanguage.values.firstWhere(
         (lang) => lang.languageCode == languageCode,
@@ -597,7 +601,7 @@ class LocalizationService {
       );
 
       _localizations[languageCode] = localization;
-      
+
       if (languageCode == currentLanguage) {
         _currentLocalization = localization;
       }

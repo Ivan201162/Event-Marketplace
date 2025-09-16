@@ -7,7 +7,14 @@ import 'package:event_marketplace_app/models/specialist.dart';
 
 import 'specialist_service_test.mocks.dart';
 
-@GenerateMocks([FirebaseFirestore, CollectionReference, DocumentReference, DocumentSnapshot, QuerySnapshot, QueryDocumentSnapshot])
+@GenerateMocks([
+  FirebaseFirestore,
+  CollectionReference,
+  DocumentReference,
+  DocumentSnapshot,
+  QuerySnapshot,
+  QueryDocumentSnapshot
+])
 void main() {
   group('SpecialistService', () {
     late SpecialistService specialistService;
@@ -28,7 +35,8 @@ void main() {
         const specialistId = 'specialist_1';
         final mockDocumentSnapshot = MockDocumentSnapshot();
 
-        when(mockFirestore.collection('specialists')).thenReturn(mockCollection);
+        when(mockFirestore.collection('specialists'))
+            .thenReturn(mockCollection);
         when(mockCollection.doc(specialistId)).thenReturn(mockDocument);
         when(mockDocument.get()).thenAnswer((_) async => mockDocumentSnapshot);
         when(mockDocumentSnapshot.exists).thenReturn(true);
@@ -71,7 +79,8 @@ void main() {
         const specialistId = 'nonexistent_specialist';
         final mockDocumentSnapshot = MockDocumentSnapshot();
 
-        when(mockFirestore.collection('specialists')).thenReturn(mockCollection);
+        when(mockFirestore.collection('specialists'))
+            .thenReturn(mockCollection);
         when(mockCollection.doc(specialistId)).thenReturn(mockDocument);
         when(mockDocument.get()).thenAnswer((_) async => mockDocumentSnapshot);
         when(mockDocumentSnapshot.exists).thenReturn(false);
@@ -90,9 +99,12 @@ void main() {
         final mockQuerySnapshot = MockQuerySnapshot();
         final mockQueryDocumentSnapshot = MockQueryDocumentSnapshot();
 
-        when(mockFirestore.collection('specialists')).thenReturn(mockCollection);
-        when(mockCollection.where('isAvailable', isEqualTo: true)).thenReturn(mockCollection);
-        when(mockCollection.orderBy('rating', descending: true)).thenReturn(mockCollection);
+        when(mockFirestore.collection('specialists'))
+            .thenReturn(mockCollection);
+        when(mockCollection.where('isAvailable', isEqualTo: true))
+            .thenReturn(mockCollection);
+        when(mockCollection.orderBy('rating', descending: true))
+            .thenReturn(mockCollection);
         when(mockCollection.limit(50)).thenReturn(mockCollection);
         when(mockCollection.get()).thenAnswer((_) async => mockQuerySnapshot);
         when(mockQuerySnapshot.docs).thenReturn([mockQueryDocumentSnapshot]);
@@ -133,9 +145,12 @@ void main() {
         // Arrange
         final mockQuerySnapshot = MockQuerySnapshot();
 
-        when(mockFirestore.collection('specialists')).thenReturn(mockCollection);
-        when(mockCollection.where('isAvailable', isEqualTo: true)).thenReturn(mockCollection);
-        when(mockCollection.orderBy('rating', descending: true)).thenReturn(mockCollection);
+        when(mockFirestore.collection('specialists'))
+            .thenReturn(mockCollection);
+        when(mockCollection.where('isAvailable', isEqualTo: true))
+            .thenReturn(mockCollection);
+        when(mockCollection.orderBy('rating', descending: true))
+            .thenReturn(mockCollection);
         when(mockCollection.limit(50)).thenReturn(mockCollection);
         when(mockCollection.get()).thenAnswer((_) async => mockQuerySnapshot);
         when(mockQuerySnapshot.docs).thenReturn([]);
@@ -159,10 +174,14 @@ void main() {
         final mockQuerySnapshot = MockQuerySnapshot();
         final mockQueryDocumentSnapshot = MockQueryDocumentSnapshot();
 
-        when(mockFirestore.collection('specialists')).thenReturn(mockCollection);
-        when(mockCollection.where('isAvailable', isEqualTo: true)).thenReturn(mockCollection);
-        when(mockCollection.where('category', isEqualTo: 'photographer')).thenReturn(mockCollection);
-        when(mockCollection.orderBy('rating', descending: true)).thenReturn(mockCollection);
+        when(mockFirestore.collection('specialists'))
+            .thenReturn(mockCollection);
+        when(mockCollection.where('isAvailable', isEqualTo: true))
+            .thenReturn(mockCollection);
+        when(mockCollection.where('category', isEqualTo: 'photographer'))
+            .thenReturn(mockCollection);
+        when(mockCollection.orderBy('rating', descending: true))
+            .thenReturn(mockCollection);
         when(mockCollection.limit(50)).thenReturn(mockCollection);
         when(mockCollection.get()).thenAnswer((_) async => mockQuerySnapshot);
         when(mockQuerySnapshot.docs).thenReturn([mockQueryDocumentSnapshot]);
@@ -208,10 +227,14 @@ void main() {
         final mockQuerySnapshot = MockQuerySnapshot();
         final mockQueryDocumentSnapshot = MockQueryDocumentSnapshot();
 
-        when(mockFirestore.collection('specialists')).thenReturn(mockCollection);
-        when(mockCollection.where('isAvailable', isEqualTo: true)).thenReturn(mockCollection);
-        when(mockCollection.where('hourlyRate', isLessThanOrEqualTo: 2000.0)).thenReturn(mockCollection);
-        when(mockCollection.orderBy('rating', descending: true)).thenReturn(mockCollection);
+        when(mockFirestore.collection('specialists'))
+            .thenReturn(mockCollection);
+        when(mockCollection.where('isAvailable', isEqualTo: true))
+            .thenReturn(mockCollection);
+        when(mockCollection.where('hourlyRate', isLessThanOrEqualTo: 2000.0))
+            .thenReturn(mockCollection);
+        when(mockCollection.orderBy('rating', descending: true))
+            .thenReturn(mockCollection);
         when(mockCollection.limit(50)).thenReturn(mockCollection);
         when(mockCollection.get()).thenAnswer((_) async => mockQuerySnapshot);
         when(mockQuerySnapshot.docs).thenReturn([mockQueryDocumentSnapshot]);
@@ -252,7 +275,8 @@ void main() {
     group('createSpecialist', () {
       test('should create specialist successfully', () async {
         // Arrange
-        when(mockFirestore.collection('specialists')).thenReturn(mockCollection);
+        when(mockFirestore.collection('specialists'))
+            .thenReturn(mockCollection);
         when(mockCollection.doc(any)).thenReturn(mockDocument);
         when(mockDocument.set(any)).thenAnswer((_) async => {});
 
@@ -275,7 +299,8 @@ void main() {
 
       test('should handle error when creating specialist', () async {
         // Arrange
-        when(mockFirestore.collection('specialists')).thenReturn(mockCollection);
+        when(mockFirestore.collection('specialists'))
+            .thenReturn(mockCollection);
         when(mockCollection.doc(any)).thenReturn(mockDocument);
         when(mockDocument.set(any)).thenThrow(Exception('Firestore error'));
 
@@ -299,12 +324,14 @@ void main() {
         const newRating = 4.9;
         const newReviewCount = 50;
 
-        when(mockFirestore.collection('specialists')).thenReturn(mockCollection);
+        when(mockFirestore.collection('specialists'))
+            .thenReturn(mockCollection);
         when(mockCollection.doc(specialistId)).thenReturn(mockDocument);
         when(mockDocument.update(any)).thenAnswer((_) async => {});
 
         // Act
-        await specialistService.updateSpecialistRating(specialistId, newRating, newReviewCount);
+        await specialistService.updateSpecialistRating(
+            specialistId, newRating, newReviewCount);
 
         // Assert
         verify(mockCollection.doc(specialistId)).called(1);
@@ -313,5 +340,3 @@ void main() {
     });
   });
 }
-
-

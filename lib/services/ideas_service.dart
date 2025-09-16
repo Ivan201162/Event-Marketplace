@@ -44,7 +44,9 @@ class IdeasService {
     }
 
     final querySnapshot = await query.get();
-    return querySnapshot.docs.map((doc) => EventIdea.fromDocument(doc)).toList();
+    return querySnapshot.docs
+        .map((doc) => EventIdea.fromDocument(doc))
+        .toList();
   }
 
   /// Получить идеи по автору
@@ -55,7 +57,9 @@ class IdeasService {
         .orderBy('createdAt', descending: true)
         .get();
 
-    return querySnapshot.docs.map((doc) => EventIdea.fromDocument(doc)).toList();
+    return querySnapshot.docs
+        .map((doc) => EventIdea.fromDocument(doc))
+        .toList();
   }
 
   /// Получить сохраненные идеи пользователя
@@ -71,7 +75,9 @@ class IdeasService {
         .where(FieldPath.documentId, whereIn: savedIdeaIds)
         .get();
 
-    return querySnapshot.docs.map((doc) => EventIdea.fromDocument(doc)).toList();
+    return querySnapshot.docs
+        .map((doc) => EventIdea.fromDocument(doc))
+        .toList();
   }
 
   /// Создать новую идею
@@ -93,7 +99,7 @@ class IdeasService {
   /// Лайкнуть идею
   Future<void> likeIdea(String ideaId, String userId) async {
     final batch = _db.batch();
-    
+
     // Добавить лайк в коллекцию лайков
     final likeRef = _db
         .collection('event_ideas')
@@ -117,7 +123,7 @@ class IdeasService {
   /// Убрать лайк с идеи
   Future<void> unlikeIdea(String ideaId, String userId) async {
     final batch = _db.batch();
-    
+
     // Удалить лайк из коллекции лайков
     final likeRef = _db
         .collection('event_ideas')
@@ -138,7 +144,7 @@ class IdeasService {
   /// Сохранить идею
   Future<void> saveIdea(String ideaId, String userId) async {
     final batch = _db.batch();
-    
+
     // Добавить в сохраненные идеи пользователя
     final userRef = _db.collection('users').doc(userId);
     batch.update(userRef, {
@@ -157,7 +163,7 @@ class IdeasService {
   /// Убрать из сохраненных
   Future<void> unsaveIdea(String ideaId, String userId) async {
     final batch = _db.batch();
-    
+
     // Удалить из сохраненных идей пользователя
     final userRef = _db.collection('users').doc(userId);
     batch.update(userRef, {
@@ -181,7 +187,7 @@ class IdeasService {
         .collection('likes')
         .doc(userId)
         .get();
-    
+
     return likeDoc.exists;
   }
 
@@ -203,14 +209,15 @@ class IdeasService {
         .where('isPublic', isEqualTo: true)
         .get();
 
-    final ideas = querySnapshot.docs.map((doc) => EventIdea.fromDocument(doc)).toList();
-    
+    final ideas =
+        querySnapshot.docs.map((doc) => EventIdea.fromDocument(doc)).toList();
+
     // Фильтруем на клиенте
     final searchLower = searchText.toLowerCase();
     return ideas.where((idea) {
       return idea.title.toLowerCase().contains(searchLower) ||
-             idea.description.toLowerCase().contains(searchLower) ||
-             idea.tags.any((tag) => tag.toLowerCase().contains(searchLower));
+          idea.description.toLowerCase().contains(searchLower) ||
+          idea.tags.any((tag) => tag.toLowerCase().contains(searchLower));
     }).toList();
   }
 
@@ -224,7 +231,9 @@ class IdeasService {
         .limit(limit)
         .get();
 
-    return querySnapshot.docs.map((doc) => EventIdea.fromDocument(doc)).toList();
+    return querySnapshot.docs
+        .map((doc) => EventIdea.fromDocument(doc))
+        .toList();
   }
 
   /// Получить последние идеи
@@ -236,6 +245,8 @@ class IdeasService {
         .limit(limit)
         .get();
 
-    return querySnapshot.docs.map((doc) => EventIdea.fromDocument(doc)).toList();
+    return querySnapshot.docs
+        .map((doc) => EventIdea.fromDocument(doc))
+        .toList();
   }
 }

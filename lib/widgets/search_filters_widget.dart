@@ -62,24 +62,24 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
             ),
           ],
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Категория
         _buildCategoryFilter(),
-        
+
         const SizedBox(height: 16),
-        
+
         // Подкатегории
         _buildSubcategoriesFilter(),
-        
+
         const SizedBox(height: 16),
-        
+
         // Уровень опыта
         _buildExperienceFilter(),
-        
+
         const SizedBox(height: 16),
-        
+
         // Цена и рейтинг
         Row(
           children: [
@@ -88,29 +88,29 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
             Expanded(child: _buildRatingFilter()),
           ],
         ),
-        
+
         const SizedBox(height: 16),
-        
+
         // Области обслуживания
         _buildServiceAreasFilter(),
-        
+
         const SizedBox(height: 16),
-        
+
         // Языки
         _buildLanguagesFilter(),
-        
+
         const SizedBox(height: 16),
-        
+
         // Дополнительные фильтры
         _buildAdditionalFilters(),
-        
+
         const SizedBox(height: 16),
-        
+
         // Фильтр по дате
         _buildDateFilter(),
-        
+
         const SizedBox(height: 16),
-        
+
         // Сортировка
         _buildSortFilter(),
       ],
@@ -163,7 +163,7 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
   /// Построить фильтр подкатегорий
   Widget _buildSubcategoriesFilter() {
     final subcategories = _getAvailableSubcategories();
-    
+
     if (subcategories.isEmpty) return const SizedBox.shrink();
 
     return Column(
@@ -181,20 +181,24 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
           spacing: 8,
           runSpacing: 8,
           children: subcategories.map((subcategory) {
-            final isSelected = _filters.subcategories?.contains(subcategory) ?? false;
+            final isSelected =
+                _filters.subcategories?.contains(subcategory) ?? false;
             return FilterChip(
               label: Text(subcategory),
               selected: isSelected,
               onSelected: (selected) {
                 setState(() {
-                  final currentSubcategories = List<String>.from(_filters.subcategories ?? []);
+                  final currentSubcategories =
+                      List<String>.from(_filters.subcategories ?? []);
                   if (selected) {
                     currentSubcategories.add(subcategory);
                   } else {
                     currentSubcategories.remove(subcategory);
                   }
                   _filters = _filters.copyWith(
-                    subcategories: currentSubcategories.isEmpty ? null : currentSubcategories,
+                    subcategories: currentSubcategories.isEmpty
+                        ? null
+                        : currentSubcategories,
                   );
                 });
                 widget.onFiltersChanged(_filters);
@@ -318,7 +322,7 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
   /// Построить фильтр областей обслуживания
   Widget _buildServiceAreasFilter() {
     final serviceAreas = _getAvailableServiceAreas();
-    
+
     if (serviceAreas.isEmpty) return const SizedBox.shrink();
 
     return Column(
@@ -342,7 +346,8 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
               selected: isSelected,
               onSelected: (selected) {
                 setState(() {
-                  final currentAreas = List<String>.from(_filters.serviceAreas ?? []);
+                  final currentAreas =
+                      List<String>.from(_filters.serviceAreas ?? []);
                   if (selected) {
                     currentAreas.add(area);
                   } else {
@@ -364,7 +369,7 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
   /// Построить фильтр языков
   Widget _buildLanguagesFilter() {
     final languages = _getAvailableLanguages();
-    
+
     if (languages.isEmpty) return const SizedBox.shrink();
 
     return Column(
@@ -388,14 +393,16 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
               selected: isSelected,
               onSelected: (selected) {
                 setState(() {
-                  final currentLanguages = List<String>.from(_filters.languages ?? []);
+                  final currentLanguages =
+                      List<String>.from(_filters.languages ?? []);
                   if (selected) {
                     currentLanguages.add(language);
                   } else {
                     currentLanguages.remove(language);
                   }
                   _filters = _filters.copyWith(
-                    languages: currentLanguages.isEmpty ? null : currentLanguages,
+                    languages:
+                        currentLanguages.isEmpty ? null : currentLanguages,
                   );
                 });
                 widget.onFiltersChanged(_filters);
@@ -474,12 +481,14 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
                 value: _filters.sortBy,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                 ),
                 items: const [
                   DropdownMenuItem(value: 'rating', child: Text('По рейтингу')),
                   DropdownMenuItem(value: 'price', child: Text('По цене')),
-                  DropdownMenuItem(value: 'experience', child: Text('По опыту')),
+                  DropdownMenuItem(
+                      value: 'experience', child: Text('По опыту')),
                   DropdownMenuItem(value: 'reviews', child: Text('По отзывам')),
                 ],
                 onChanged: (value) {
@@ -493,11 +502,14 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
             const SizedBox(width: 12),
             IconButton(
               icon: Icon(
-                _filters.sortAscending ? Icons.arrow_upward : Icons.arrow_downward,
+                _filters.sortAscending
+                    ? Icons.arrow_upward
+                    : Icons.arrow_downward,
               ),
               onPressed: () {
                 setState(() {
-                  _filters = _filters.copyWith(sortAscending: !_filters.sortAscending);
+                  _filters =
+                      _filters.copyWith(sortAscending: !_filters.sortAscending);
                 });
                 widget.onFiltersChanged(_filters);
               },
@@ -577,7 +589,9 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
                         ? '${_filters.availableDate!.day}.${_filters.availableDate!.month}.${_filters.availableDate!.year}'
                         : 'Выберите дату',
                     style: TextStyle(
-                      color: _filters.availableDate != null ? Colors.black : Colors.grey[600],
+                      color: _filters.availableDate != null
+                          ? Colors.black
+                          : Colors.grey[600],
                     ),
                   ),
                 ),
@@ -607,7 +621,7 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
       firstDate: DateTime.now(),
       lastDate: DateTime.now().add(const Duration(days: 365)),
     );
-    
+
     if (date != null) {
       setState(() {
         _filters = _filters.copyWith(availableDate: date);

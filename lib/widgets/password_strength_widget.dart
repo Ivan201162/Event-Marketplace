@@ -55,15 +55,15 @@ class _PasswordStrengthWidgetState extends State<PasswordStrengthWidget> {
       children: [
         // Индикатор силы пароля
         _buildStrengthIndicator(),
-        
+
         const SizedBox(height: 8),
-        
+
         // Процентное значение
         _buildPercentageIndicator(),
-        
+
         if (widget.showRecommendations && _strength!.issues.isNotEmpty) ...[
           const SizedBox(height: 12),
-          
+
           // Рекомендации
           _buildRecommendations(),
         ],
@@ -93,9 +93,9 @@ class _PasswordStrengthWidgetState extends State<PasswordStrengthWidget> {
             ),
           ),
         ),
-        
+
         const SizedBox(width: 8),
-        
+
         // Текст уровня
         Text(
           _getStrengthText(_strength!.level),
@@ -166,28 +166,28 @@ class _PasswordStrengthWidgetState extends State<PasswordStrengthWidget> {
           ),
           const SizedBox(height: 8),
           ..._strength!.issues.map((issue) => Padding(
-            padding: const EdgeInsets.only(bottom: 4),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Icon(
-                  Icons.circle,
-                  size: 4,
-                  color: Colors.orange[700],
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    issue,
-                    style: TextStyle(
-                      fontSize: 11,
+                padding: const EdgeInsets.only(bottom: 4),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.circle,
+                      size: 4,
                       color: Colors.orange[700],
                     ),
-                  ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        issue,
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.orange[700],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          )),
+              )),
         ],
       ),
     );
@@ -232,18 +232,19 @@ class PasswordGeneratorWidget extends StatefulWidget {
   });
 
   @override
-  State<PasswordGeneratorWidget> createState() => _PasswordGeneratorWidgetState();
+  State<PasswordGeneratorWidget> createState() =>
+      _PasswordGeneratorWidgetState();
 }
 
 class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
   final SecurityService _securityService = SecurityService();
-  
+
   int _length = 12;
   bool _includeUppercase = true;
   bool _includeLowercase = true;
   bool _includeNumbers = true;
   bool _includeSymbols = true;
-  
+
   String _generatedPassword = '';
 
   @override
@@ -284,9 +285,9 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Сгенерированный пароль
             Container(
               width: double.infinity,
@@ -319,9 +320,9 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
                 ],
               ),
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Настройки генерации
             const Text(
               'Настройки:',
@@ -330,9 +331,9 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             // Длина пароля
             Row(
               children: [
@@ -355,7 +356,7 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
                 Text('$_length'),
               ],
             ),
-            
+
             // Опции
             CheckboxListTile(
               title: const Text('Заглавные буквы (A-Z)'),
@@ -368,7 +369,7 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
               },
               dense: true,
             ),
-            
+
             CheckboxListTile(
               title: const Text('Строчные буквы (a-z)'),
               value: _includeLowercase,
@@ -380,7 +381,7 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
               },
               dense: true,
             ),
-            
+
             CheckboxListTile(
               title: const Text('Цифры (0-9)'),
               value: _includeNumbers,
@@ -392,7 +393,7 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
               },
               dense: true,
             ),
-            
+
             CheckboxListTile(
               title: const Text('Специальные символы (!@#...)'),
               value: _includeSymbols,
@@ -404,9 +405,9 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
               },
               dense: true,
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Кнопка генерации
             SizedBox(
               width: double.infinity,

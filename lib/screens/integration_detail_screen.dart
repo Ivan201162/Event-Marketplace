@@ -14,12 +14,14 @@ class IntegrationDetailScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<IntegrationDetailScreen> createState() => _IntegrationDetailScreenState();
+  ConsumerState<IntegrationDetailScreen> createState() =>
+      _IntegrationDetailScreenState();
 }
 
-class _IntegrationDetailScreenState extends ConsumerState<IntegrationDetailScreen> {
+class _IntegrationDetailScreenState
+    extends ConsumerState<IntegrationDetailScreen> {
   final IntegrationService _integrationService = IntegrationService();
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,24 +41,24 @@ class _IntegrationDetailScreenState extends ConsumerState<IntegrationDetailScree
           children: [
             // Основная информация
             _buildMainInfo(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Описание
             _buildDescription(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Разрешения
             _buildPermissions(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Настройки
             _buildSettings(),
-            
+
             const SizedBox(height: 24),
-            
+
             // Действия
             _buildActions(),
           ],
@@ -88,9 +90,9 @@ class _IntegrationDetailScreenState extends ConsumerState<IntegrationDetailScree
                     size: 32,
                   ),
                 ),
-                
+
                 const SizedBox(width: 16),
-                
+
                 // Информация
                 Expanded(
                   child: Column(
@@ -105,12 +107,15 @@ class _IntegrationDetailScreenState extends ConsumerState<IntegrationDetailScree
                       ),
                       const SizedBox(height: 8),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
-                          color: widget.integration.statusColor.withOpacity(0.1),
+                          color:
+                              widget.integration.statusColor.withOpacity(0.1),
                           borderRadius: BorderRadius.circular(16),
                           border: Border.all(
-                            color: widget.integration.statusColor.withOpacity(0.3),
+                            color:
+                                widget.integration.statusColor.withOpacity(0.3),
                           ),
                         ),
                         child: Text(
@@ -127,9 +132,9 @@ class _IntegrationDetailScreenState extends ConsumerState<IntegrationDetailScree
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Тип
             Row(
               children: [
@@ -261,7 +266,7 @@ class _IntegrationDetailScreenState extends ConsumerState<IntegrationDetailScree
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Включить/выключить
             SwitchListTile(
               title: const Text('Включить интеграцию'),
@@ -274,7 +279,7 @@ class _IntegrationDetailScreenState extends ConsumerState<IntegrationDetailScree
                 );
               },
             ),
-            
+
             // Дополнительные настройки
             if (widget.integration.config.isNotEmpty) ...[
               const Divider(),
@@ -321,7 +326,7 @@ class _IntegrationDetailScreenState extends ConsumerState<IntegrationDetailScree
               ),
             ),
             const SizedBox(height: 16),
-            
+
             // Подключить/отключить
             SizedBox(
               width: double.infinity,
@@ -338,16 +343,17 @@ class _IntegrationDetailScreenState extends ConsumerState<IntegrationDetailScree
                       : 'Подключить',
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: widget.integration.status == IntegrationStatus.connected
-                      ? Colors.red
-                      : Colors.green,
+                  backgroundColor:
+                      widget.integration.status == IntegrationStatus.connected
+                          ? Colors.red
+                          : Colors.green,
                   foregroundColor: Colors.white,
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             // Синхронизировать
             if (widget.integration.status == IntegrationStatus.connected) ...[
               SizedBox(
@@ -360,7 +366,7 @@ class _IntegrationDetailScreenState extends ConsumerState<IntegrationDetailScree
               ),
               const SizedBox(height: 12),
             ],
-            
+
             // Открыть сайт
             if (widget.integration.websiteUrl != null) ...[
               SizedBox(
@@ -373,7 +379,7 @@ class _IntegrationDetailScreenState extends ConsumerState<IntegrationDetailScree
               ),
               const SizedBox(height: 12),
             ],
-            
+
             // Документация
             if (widget.integration.documentationUrl != null) ...[
               SizedBox(
@@ -510,7 +516,8 @@ class _IntegrationDetailScreenState extends ConsumerState<IntegrationDetailScree
 
   Future<void> _openWebsite() async {
     if (widget.integration.websiteUrl != null) {
-      final success = await _integrationService.openUrl(widget.integration.websiteUrl!);
+      final success =
+          await _integrationService.openUrl(widget.integration.websiteUrl!);
       if (!success) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -524,7 +531,8 @@ class _IntegrationDetailScreenState extends ConsumerState<IntegrationDetailScree
 
   Future<void> _openDocumentation() async {
     if (widget.integration.documentationUrl != null) {
-      final success = await _integrationService.openUrl(widget.integration.documentationUrl!);
+      final success = await _integrationService
+          .openUrl(widget.integration.documentationUrl!);
       if (!success) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

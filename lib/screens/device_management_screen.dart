@@ -9,10 +9,12 @@ class DeviceManagementScreen extends ConsumerStatefulWidget {
   const DeviceManagementScreen({super.key});
 
   @override
-  ConsumerState<DeviceManagementScreen> createState() => _DeviceManagementScreenState();
+  ConsumerState<DeviceManagementScreen> createState() =>
+      _DeviceManagementScreenState();
 }
 
-class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen> {
+class _DeviceManagementScreenState
+    extends ConsumerState<DeviceManagementScreen> {
   final SecurityService _securityService = SecurityService();
 
   @override
@@ -30,13 +32,13 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
       body: Consumer(
         builder: (context, ref, child) {
           final currentUser = ref.watch(authServiceProvider).currentUser;
-          
+
           if (currentUser == null) {
             return const Center(
               child: Text('Пользователь не авторизован'),
             );
           }
-          
+
           return StreamBuilder<List<SecurityDevice>>(
             stream: _securityService.getUserDevices(currentUser.uid),
             builder: (context, snapshot) {
@@ -73,9 +75,9 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
                 children: [
                   // Текущее устройство
                   _buildCurrentDeviceCard(),
-                  
+
                   const SizedBox(height: 16),
-                  
+
                   // Список устройств
                   _buildDevicesList(devices),
                 ],
@@ -153,7 +155,8 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: Colors.green,
                     borderRadius: BorderRadius.circular(12),
@@ -169,9 +172,7 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
                 ),
               ],
             ),
-            
             const SizedBox(height: 12),
-            
             Row(
               children: [
                 Expanded(
@@ -208,7 +209,6 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
           ),
         ),
         const SizedBox(height: 12),
-        
         ...devices.map((device) => _buildDeviceCard(device)),
       ],
     );
@@ -254,9 +254,9 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
                 _buildDeviceStatusChip(device),
               ],
             ),
-            
+
             const SizedBox(height: 12),
-            
+
             Row(
               children: [
                 Expanded(
@@ -275,9 +275,9 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 8),
-            
+
             Row(
               children: [
                 Expanded(
@@ -296,7 +296,7 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
                 ),
               ],
             ),
-            
+
             if (device.lastIpAddress != null) ...[
               const SizedBox(height: 8),
               _buildDeviceInfoItem(
@@ -305,9 +305,9 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
                 value: device.lastIpAddress!,
               ),
             ],
-            
+
             const SizedBox(height: 12),
-            
+
             // Действия
             Row(
               children: [
@@ -319,9 +319,7 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
                       label: const Text('Доверять'),
                     ),
                   ),
-                
                 if (!device.isTrusted) const SizedBox(width: 8),
-                
                 if (!device.isBlocked)
                   Expanded(
                     child: OutlinedButton.icon(
@@ -334,7 +332,6 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
                       ),
                     ),
                   ),
-                
                 if (device.isBlocked)
                   Expanded(
                     child: OutlinedButton.icon(
@@ -480,7 +477,7 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
   String _formatDateTime(DateTime dateTime) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
-    
+
     if (difference.inDays > 0) {
       return '${difference.inDays} дн. назад';
     } else if (difference.inHours > 0) {
@@ -496,7 +493,8 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
     try {
       final currentUser = await ref.read(authServiceProvider).getCurrentUser();
       if (currentUser != null) {
-        final success = await _securityService.trustDevice(device.id, currentUser.uid);
+        final success =
+            await _securityService.trustDevice(device.id, currentUser.uid);
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -528,7 +526,8 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Заблокировать устройство'),
-        content: Text('Вы уверены, что хотите заблокировать устройство "${device.deviceName}"?'),
+        content: Text(
+            'Вы уверены, что хотите заблокировать устройство "${device.deviceName}"?'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -545,9 +544,11 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
 
     if (confirmed == true) {
       try {
-        final currentUser = await ref.read(authServiceProvider).getCurrentUser();
+        final currentUser =
+            await ref.read(authServiceProvider).getCurrentUser();
         if (currentUser != null) {
-          final success = await _securityService.blockDevice(device.id, currentUser.uid);
+          final success =
+              await _securityService.blockDevice(device.id, currentUser.uid);
           if (success) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -579,7 +580,8 @@ class _DeviceManagementScreenState extends ConsumerState<DeviceManagementScreen>
     try {
       final currentUser = await ref.read(authServiceProvider).getCurrentUser();
       if (currentUser != null) {
-        final success = await _securityService.unblockDevice(device.id, currentUser.uid);
+        final success =
+            await _securityService.unblockDevice(device.id, currentUser.uid);
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
