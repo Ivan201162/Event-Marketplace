@@ -265,9 +265,9 @@ class _SpecialistServicesScreenState
               ),
             ],
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Цены
           Container(
             padding: const EdgeInsets.all(12),
@@ -302,9 +302,9 @@ class _SpecialistServicesScreenState
               ],
             ),
           ),
-          
+
           const SizedBox(height: 8),
-          
+
           // Детали ценообразования
           if (service.pricingDetails.isNotEmpty) ...[
             ResponsiveText(
@@ -313,12 +313,12 @@ class _SpecialistServicesScreenState
             ),
             const SizedBox(height: 4),
             ...service.pricingDetails.entries.map((entry) => Padding(
-              padding: const EdgeInsets.only(left: 16, bottom: 2),
-              child: ResponsiveText(
-                '${entry.key}: ${entry.value}',
-                isSubtitle: true,
-              ),
-            )),
+                  padding: const EdgeInsets.only(left: 16, bottom: 2),
+                  child: ResponsiveText(
+                    '${entry.key}: ${entry.value}',
+                    isSubtitle: true,
+                  ),
+                )),
           ],
         ],
       ),
