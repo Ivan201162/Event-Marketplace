@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/user_role_provider.dart';
 import '../widgets/role_switcher.dart';
 import '../widgets/recommendations_section.dart';
+import '../widgets/enhanced_page_transition.dart';
 import '../models/user.dart';
 import '../core/app_theme.dart';
 
@@ -177,35 +178,25 @@ class HomeScreen extends ConsumerWidget {
                     mainAxisSpacing: 16,
                     childAspectRatio: 1.2,
                     children: [
-                      _buildModernQuickActionCard(
-                        context,
-                        icon: Icons.search_rounded,
-                        title: "Найти специалиста",
-                        subtitle: "Поиск по категориям",
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
-                        ),
-                        onTap: () {
+                      AnimatedButton(
+                        onPressed: () {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Поиск специалистов")),
                           );
                         },
-                      ),
-                      _buildModernQuickActionCard(
-                        context,
-                        icon: userRole == UserRole.customer
-                            ? Icons.book_online_rounded
-                            : Icons.assignment_rounded,
-                        title: userRole == UserRole.customer
-                            ? "Мои заявки"
-                            : "Заявки клиентов",
-                        subtitle: userRole == UserRole.customer
-                            ? "Просмотр заявок"
-                            : "Управление заявками",
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF10B981), Color(0xFF059669)],
+                        child: _buildModernQuickActionCard(
+                          context,
+                          icon: Icons.search_rounded,
+                          title: "Найти специалиста",
+                          subtitle: "Поиск по категориям",
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
+                          ),
+                          onTap: () {},
                         ),
-                        onTap: () {
+                      ),
+                      AnimatedButton(
+                        onPressed: () {
                           ScaffoldMessenger.of(context).showSnackBar(
                             SnackBar(
                                 content: Text(userRole == UserRole.customer
@@ -213,34 +204,56 @@ class HomeScreen extends ConsumerWidget {
                                     : "Заявки клиентов")),
                           );
                         },
-                      ),
-                      _buildModernQuickActionCard(
-                        context,
-                        icon: Icons.calendar_today_rounded,
-                        title: "Календарь",
-                        subtitle: "Расписание событий",
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
+                        child: _buildModernQuickActionCard(
+                          context,
+                          icon: userRole == UserRole.customer
+                              ? Icons.book_online_rounded
+                              : Icons.assignment_rounded,
+                          title: userRole == UserRole.customer
+                              ? "Мои заявки"
+                              : "Заявки клиентов",
+                          subtitle: userRole == UserRole.customer
+                              ? "Просмотр заявок"
+                              : "Управление заявками",
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF10B981), Color(0xFF059669)],
+                          ),
+                          onTap: () {},
                         ),
-                        onTap: () {
+                      ),
+                      AnimatedButton(
+                        onPressed: () {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Календарь событий")),
                           );
                         },
-                      ),
-                      _buildModernQuickActionCard(
-                        context,
-                        icon: Icons.chat_bubble_outline_rounded,
-                        title: "Сообщения",
-                        subtitle: "Общение с клиентами",
-                        gradient: const LinearGradient(
-                          colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
+                        child: _buildModernQuickActionCard(
+                          context,
+                          icon: Icons.calendar_today_rounded,
+                          title: "Календарь",
+                          subtitle: "Расписание событий",
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
+                          ),
+                          onTap: () {},
                         ),
-                        onTap: () {
+                      ),
+                      AnimatedButton(
+                        onPressed: () {
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Сообщения")),
                           );
                         },
+                        child: _buildModernQuickActionCard(
+                          context,
+                          icon: Icons.chat_bubble_outline_rounded,
+                          title: "Сообщения",
+                          subtitle: "Общение с клиентами",
+                          gradient: const LinearGradient(
+                            colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
+                          ),
+                          onTap: () {},
+                        ),
                       ),
                     ],
                   ),
@@ -249,47 +262,60 @@ class HomeScreen extends ConsumerWidget {
                 const SizedBox(height: 32),
 
                 // Статистика
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Text(
-                    "Статистика",
-                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
+                AnimatedContent(
+                  delay: const Duration(milliseconds: 200),
+                  type: AnimationType.slideUp,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Text(
+                      "Статистика",
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
 
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.05),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _buildModernStatItem(context, "Активных заявок", "0",
-                              Icons.assignment_rounded, BrandColors.primary),
-                          _buildModernStatItem(
-                              context,
-                              "Завершенных",
-                              "0",
-                              Icons.check_circle_rounded,
-                              BrandColors.secondary),
-                          _buildModernStatItem(context, "В ожидании", "0",
-                              Icons.schedule_rounded, BrandColors.accent),
+                AnimatedContent(
+                  delay: const Duration(milliseconds: 400),
+                  type: AnimationType.scale,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
+                          ),
                         ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            _buildModernStatItem(
+                                context,
+                                "Активных заявок",
+                                "0",
+                                Icons.assignment_rounded,
+                                BrandColors.primary),
+                            _buildModernStatItem(
+                                context,
+                                "Завершенных",
+                                "0",
+                                Icons.check_circle_rounded,
+                                BrandColors.secondary),
+                            _buildModernStatItem(context, "В ожидании", "0",
+                                Icons.schedule_rounded, BrandColors.accent),
+                          ],
+                        ),
                       ),
                     ),
                   ),
