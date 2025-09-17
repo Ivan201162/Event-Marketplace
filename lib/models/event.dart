@@ -25,6 +25,7 @@ class Event {
   final bool isPublic;
   final String? contactInfo;
   final String? requirements;
+  final int? participantsCount;
 
   const Event({
     required this.id,
@@ -49,6 +50,7 @@ class Event {
     this.isPublic = true,
     this.contactInfo,
     this.requirements,
+    this.participantsCount,
   });
 
   /// Создать событие из документа Firestore
@@ -84,6 +86,7 @@ class Event {
       isPublic: data['isPublic'] ?? true,
       contactInfo: data['contactInfo'],
       requirements: data['requirements'],
+      participantsCount: data['participantsCount'],
     );
   }
 
@@ -111,6 +114,7 @@ class Event {
       'isPublic': isPublic,
       'contactInfo': contactInfo,
       'requirements': requirements,
+      'participantsCount': participantsCount,
     };
   }
 
@@ -138,6 +142,7 @@ class Event {
     bool? isPublic,
     String? contactInfo,
     String? requirements,
+    int? participantsCount,
   }) {
     return Event(
       id: id ?? this.id,
@@ -162,6 +167,7 @@ class Event {
       isPublic: isPublic ?? this.isPublic,
       contactInfo: contactInfo ?? this.contactInfo,
       requirements: requirements ?? this.requirements,
+      participantsCount: participantsCount ?? this.participantsCount,
     );
   }
 

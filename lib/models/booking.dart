@@ -39,6 +39,20 @@ class Booking {
   final String? customerPhone;
   final String? customerEmail;
   final String? description;
+  final String? eventName;
+  final String? eventDescription;
+  final String? eventLocation;
+  final Duration? duration;
+  final String? specialRequests;
+  final String? organizerId;
+  final String? specialistId;
+  final String? customerId;
+  final String? currency;
+  final DateTime? updatedAt;
+  final DateTime? dueDate;
+  final bool? isPrepayment;
+  final bool? isFinalPayment;
+  final bool? prepaymentPaid;
 
   const Booking({
     required this.id,
@@ -104,6 +118,19 @@ class Booking {
       customerPhone: data['customerPhone'],
       customerEmail: data['customerEmail'],
       description: data['description'],
+      eventName: data['eventName'],
+      eventDescription: data['eventDescription'],
+      eventLocation: data['eventLocation'],
+      duration:
+          data['duration'] != null ? Duration(seconds: data['duration']) : null,
+      specialRequests: data['specialRequests'],
+      currency: data['currency'],
+      dueDate: data['dueDate'] != null
+          ? (data['dueDate'] as Timestamp).toDate()
+          : null,
+      isPrepayment: data['isPrepayment'],
+      isFinalPayment: data['isFinalPayment'],
+      prepaymentPaid: data['prepaymentPaid'],
     );
   }
 
@@ -135,6 +162,16 @@ class Booking {
       'customerPhone': customerPhone,
       'customerEmail': customerEmail,
       'description': description,
+      'eventName': eventName,
+      'eventDescription': eventDescription,
+      'eventLocation': eventLocation,
+      'duration': duration?.inSeconds,
+      'specialRequests': specialRequests,
+      'currency': currency,
+      'dueDate': dueDate != null ? Timestamp.fromDate(dueDate!) : null,
+      'isPrepayment': isPrepayment,
+      'isFinalPayment': isFinalPayment,
+      'prepaymentPaid': prepaymentPaid,
     };
   }
 

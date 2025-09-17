@@ -105,6 +105,9 @@ class Review {
   final String? responseAuthorId; // ID автора ответа
   final DateTime? responseDate; // Дата ответа
   final Map<String, dynamic>? metadata; // Дополнительные данные
+  final String? eventId;
+  final String? specialistId;
+  final DetailedRating? detailedRating;
 
   const Review({
     required this.id,
@@ -130,6 +133,9 @@ class Review {
     this.responseAuthorId,
     this.responseDate,
     this.metadata,
+    this.eventId,
+    this.specialistId,
+    this.detailedRating,
   });
 
   /// Создать отзыв из документа Firestore
@@ -170,6 +176,11 @@ class Review {
           ? (data['responseDate'] as Timestamp).toDate()
           : null,
       metadata: data['metadata'],
+      eventId: data['eventId'],
+      specialistId: data['specialistId'],
+      detailedRating: data['detailedRating'] != null
+          ? DetailedRating.fromMap(data['detailedRating'])
+          : null,
     );
   }
 
@@ -199,6 +210,9 @@ class Review {
       'responseDate':
           responseDate != null ? Timestamp.fromDate(responseDate!) : null,
       'metadata': metadata,
+      'eventId': eventId,
+      'specialistId': specialistId,
+      'detailedRating': detailedRating?.toMap(),
     };
   }
 
@@ -227,6 +241,9 @@ class Review {
     String? responseAuthorId,
     DateTime? responseDate,
     Map<String, dynamic>? metadata,
+    String? eventId,
+    String? specialistId,
+    DetailedRating? detailedRating,
   }) {
     return Review(
       id: id ?? this.id,
@@ -252,6 +269,9 @@ class Review {
       responseAuthorId: responseAuthorId ?? this.responseAuthorId,
       responseDate: responseDate ?? this.responseDate,
       metadata: metadata ?? this.metadata,
+      eventId: eventId ?? this.eventId,
+      specialistId: specialistId ?? this.specialistId,
+      detailedRating: detailedRating ?? this.detailedRating,
     );
   }
 
