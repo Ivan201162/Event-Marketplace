@@ -1,442 +1,578 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/auth_providers.dart';
-import '../providers/event_providers.dart';
-import '../models/user.dart';
-import '../models/event.dart';
-import '../services/event_service.dart';
-import '../services/auth_service.dart';
+import '../models/admin_user.dart';
+import '../services/admin_service.dart';
+import '../widgets/responsive_layout.dart';
+import '../core/responsive_utils.dart';
 
 /// Экран админ-панели
-class AdminPanelScreen extends ConsumerWidget {
+class AdminPanelScreen extends ConsumerStatefulWidget {
   const AdminPanelScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final currentUser = ref.watch(currentUserProvider);
+  ConsumerState<AdminPanelScreen> createState() => _AdminPanelScreenState();
+}
 
+class _AdminPanelScreenState extends ConsumerState<AdminPanelScreen> {
+  int _selectedIndex = 0;
+  final AdminService _adminService = AdminService();
+
+  @override
+  Widget build(BuildContext context) {
+    return ResponsiveLayout(
+      mobile: _buildMobileLayout(context),
+      tablet: _buildTabletLayout(context),
+      desktop: _buildDesktopLayout(context),
+      largeDesktop: _buildLargeDesktopLayout(context),
+    );
+  }
+
+  Widget _buildMobileLayout(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Админ-панель'),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
       ),
-      body: currentUser.when(
-        data: (user) {
-          if (user == null || !user.isAdmin) {
-            return const Center(
-              child: Text('Доступ запрещен'),
-            );
-          }
+      body: _buildContent(),
+      bottomNavigationBar: BottomNavigationBar(
+        currentIndex: _selectedIndex,
+        onTap: (index) => setState(() => _selectedIndex = index),
+        type: BottomNavigationBarType.fixed,
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(Icons.dashboard),
+            label: 'Панель',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.people),
+            label: 'Пользователи',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.report),
+            label: 'Жалобы',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.settings),
+            label: 'Настройки',
+          ),
+        ],
+      ),
+    );
+  }
 
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Статистика
-                _buildStatsSection(context, ref),
-
-                const SizedBox(height: 24),
-
-                // Управление событиями
-                _buildEventsManagementSection(context, ref),
-
-                const SizedBox(height: 24),
-
-                // Управление пользователями
-                _buildUsersManagementSection(context, ref),
-              ],
+  Widget _buildTabletLayout(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Админ-панель'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: ResponsiveContainer(
+        child: Row(
+          children: [
+            SizedBox(
+              width: 200,
+              child: _buildSidebar(),
             ),
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Text('Ошибка: $error'),
+            const SizedBox(width: 16),
+            Expanded(
+              child: _buildContent(),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Widget _buildStatsSection(BuildContext context, WidgetRef ref) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildDesktopLayout(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Админ-панель'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: ResponsiveContainer(
+        child: Row(
           children: [
-            const Text(
-              'Статистика',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+            SizedBox(
+              width: 250,
+              child: _buildSidebar(),
             ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildStatCard(
-                    'Всего событий',
-                    '0', // TODO: Получить реальную статистику
-                    Icons.event,
-                    Colors.blue,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildStatCard(
-                    'Активных событий',
-                    '0', // TODO: Получить реальную статистику
-                    Icons.event_available,
-                    Colors.green,
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: _buildStatCard(
-                    'Всего пользователей',
-                    '0', // TODO: Получить реальную статистику
-                    Icons.people,
-                    Colors.orange,
-                  ),
-                ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: _buildStatCard(
-                    'Заблокированных',
-                    '0', // TODO: Получить реальную статистику
-                    Icons.block,
-                    Colors.red,
-                  ),
-                ),
-              ],
+            const SizedBox(width: 24),
+            Expanded(
+              child: _buildContent(),
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildLargeDesktopLayout(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Админ-панель'),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      ),
+      body: ResponsiveContainer(
+        child: Row(
+          children: [
+            SizedBox(
+              width: 300,
+              child: _buildSidebar(),
+            ),
+            const SizedBox(width: 32),
+            Expanded(
+              child: _buildContent(),
+            ),
+            const SizedBox(width: 32),
+            SizedBox(
+              width: 300,
+              child: _buildRightPanel(),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSidebar() {
+    return ResponsiveCard(
+      child: Column(
+        children: [
+          const SizedBox(height: 16),
+          ResponsiveText(
+            'Админ-панель',
+            isTitle: true,
+          ),
+          const SizedBox(height: 24),
+          _buildSidebarItem(0, Icons.dashboard, 'Панель управления'),
+          _buildSidebarItem(1, Icons.people, 'Пользователи'),
+          _buildSidebarItem(2, Icons.report, 'Жалобы'),
+          _buildSidebarItem(3, Icons.settings, 'Настройки'),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSidebarItem(int index, IconData icon, String title) {
+    final isSelected = _selectedIndex == index;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        leading: Icon(
+          icon,
+          color: isSelected ? Theme.of(context).primaryColor : Colors.grey[600],
+        ),
+        title: ResponsiveText(
+          title,
+          style: TextStyle(
+            color:
+                isSelected ? Theme.of(context).primaryColor : Colors.grey[600],
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+        selected: isSelected,
+        onTap: () => setState(() => _selectedIndex = index),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(8),
+        ),
+        selectedTileColor: Theme.of(context).primaryColor.withOpacity(0.1),
+      ),
+    );
+  }
+
+  Widget _buildContent() {
+    switch (_selectedIndex) {
+      case 0:
+        return _buildDashboard();
+      case 1:
+        return _buildUsersManagement();
+      case 2:
+        return _buildReportsManagement();
+      case 3:
+        return _buildSettings();
+      default:
+        return _buildDashboard();
+    }
+  }
+
+  Widget _buildDashboard() {
+    return ResponsiveCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ResponsiveText(
+            'Панель управления',
+            isTitle: true,
+          ),
+          const SizedBox(height: 24),
+
+          // Статистика
+          FutureBuilder<Map<String, int>>(
+            future: _adminService.getUserStats(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+
+              if (snapshot.hasError) {
+                return Text('Ошибка: ${snapshot.error}');
+              }
+
+              final stats = snapshot.data ?? {};
+              return ResponsiveGrid(
+                children: [
+                  _buildStatCard('Всего пользователей',
+                      '${stats['total'] ?? 0}', Icons.people, Colors.blue),
+                  _buildStatCard('Активных', '${stats['active'] ?? 0}',
+                      Icons.check_circle, Colors.green),
+                  _buildStatCard('Заблокированных',
+                      '${stats['suspended'] ?? 0}', Icons.block, Colors.red),
+                  _buildStatCard('На рассмотрении', '${stats['pending'] ?? 0}',
+                      Icons.schedule, Colors.orange),
+                ],
+              );
+            },
+          ),
+        ],
       ),
     );
   }
 
   Widget _buildStatCard(
       String title, String value, IconData icon, Color color) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
-      ),
+    return ResponsiveCard(
       child: Column(
         children: [
-          Icon(icon, color: color, size: 32),
+          Icon(icon, size: 32, color: color),
           const SizedBox(height: 8),
-          Text(
+          ResponsiveText(
             value,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
+            isTitle: true,
+            style: TextStyle(color: color),
           ),
           const SizedBox(height: 4),
-          Text(
+          ResponsiveText(
             title,
-            style: const TextStyle(fontSize: 12),
-            textAlign: TextAlign.center,
+            isSubtitle: true,
           ),
         ],
       ),
     );
   }
 
-  Widget _buildEventsManagementSection(BuildContext context, WidgetRef ref) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Управление событиями',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            ListTile(
-              leading: const Icon(Icons.event),
-              title: const Text('Все события'),
-              subtitle: const Text('Просмотр и управление всеми событиями'),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                _showAllEventsDialog(context, ref);
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.report_problem),
-              title: const Text('События на модерации'),
-              subtitle: const Text('События, требующие проверки'),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                // TODO: Реализовать модерацию событий
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Функция в разработке')),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildUsersManagementSection(BuildContext context, WidgetRef ref) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Управление пользователями',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            ListTile(
-              leading: const Icon(Icons.people),
-              title: const Text('Все пользователи'),
-              subtitle: const Text('Просмотр и управление пользователями'),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                // TODO: Реализовать управление пользователями
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Функция в разработке')),
-                );
-              },
-            ),
-            const Divider(),
-            ListTile(
-              leading: const Icon(Icons.block),
-              title: const Text('Заблокированные пользователи'),
-              subtitle: const Text('Управление заблокированными аккаунтами'),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () {
-                // TODO: Реализовать управление заблокированными пользователями
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Функция в разработке')),
-                );
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void _showAllEventsDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
-      context: context,
-      builder: (context) => Dialog(
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.9,
-          height: MediaQuery.of(context).size.height * 0.8,
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildUsersManagement() {
+    return ResponsiveCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  const Text(
-                    'Все события',
-                    style: TextStyle(
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.close),
-                  ),
-                ],
+              ResponsiveText(
+                'Управление пользователями',
+                isTitle: true,
               ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: StreamBuilder<List<Event>>(
-                  stream: ref.read(eventServiceProvider).getAllEvents(),
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Ошибка: ${snapshot.error}'),
-                      );
-                    }
-
-                    final events = snapshot.data ?? [];
-
-                    if (events.isEmpty) {
-                      return const Center(
-                        child: Text('События не найдены'),
-                      );
-                    }
-
-                    return ListView.builder(
-                      itemCount: events.length,
-                      itemBuilder: (context, index) {
-                        final event = events[index];
-                        return Card(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          child: ListTile(
-                            leading: Icon(event.categoryIcon),
-                            title: Text(event.title),
-                            subtitle: Text(
-                                '${event.organizerName} • ${event.formattedDate}'),
-                            trailing: PopupMenuButton<String>(
-                              onSelected: (value) {
-                                switch (value) {
-                                  case 'delete':
-                                    _showDeleteEventDialog(context, ref, event);
-                                    break;
-                                  case 'block_organizer':
-                                    _showBlockUserDialog(
-                                        context, ref, event.organizerId);
-                                    break;
-                                }
-                              },
-                              itemBuilder: (context) => [
-                                const PopupMenuItem(
-                                  value: 'delete',
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.delete, color: Colors.red),
-                                      SizedBox(width: 8),
-                                      Text('Удалить событие'),
-                                    ],
-                                  ),
-                                ),
-                                const PopupMenuItem(
-                                  value: 'block_organizer',
-                                  child: Row(
-                                    children: [
-                                      Icon(Icons.block, color: Colors.orange),
-                                      SizedBox(width: 8),
-                                      Text('Заблокировать организатора'),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                ),
+              const Spacer(),
+              ElevatedButton.icon(
+                onPressed: () {
+                  // TODO: Реализовать поиск пользователей
+                },
+                icon: const Icon(Icons.search),
+                label: const Text('Поиск'),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
+          const SizedBox(height: 24),
 
-  void _showDeleteEventDialog(
-      BuildContext context, WidgetRef ref, Event event) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Удалить событие'),
-        content:
-            Text('Вы уверены, что хотите удалить событие "${event.title}"?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              try {
-                await ref.read(eventServiceProvider).deleteEvent(event.id);
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Событие удалено'),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
+          // Список пользователей
+          Expanded(
+            child: FutureBuilder<List<ManagedUser>>(
+              future: _adminService.getUsers(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
                 }
-              } catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Ошибка: $e'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
+
+                if (snapshot.hasError) {
+                  return Text('Ошибка: ${snapshot.error}');
                 }
-              }
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Удалить'),
+
+                final users = snapshot.data ?? [];
+                return ListView.builder(
+                  itemCount: users.length,
+                  itemBuilder: (context, index) {
+                    final user = users[index];
+                    return _buildUserCard(user);
+                  },
+                );
+              },
+            ),
           ),
         ],
       ),
     );
   }
 
-  void _showBlockUserDialog(
-      BuildContext context, WidgetRef ref, String userId) {
+  Widget _buildUserCard(ManagedUser user) {
+    return ResponsiveCard(
+      child: Row(
+        children: [
+          CircleAvatar(
+            backgroundImage: user.profileImageUrl != null
+                ? NetworkImage(user.profileImageUrl!)
+                : null,
+            child: user.profileImageUrl == null
+                ? Text(user.firstName[0].toUpperCase())
+                : null,
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ResponsiveText(
+                  user.fullName,
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                ResponsiveText(
+                  user.email,
+                  isSubtitle: true,
+                ),
+                const SizedBox(height: 4),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Color(user.statusColor).withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(12),
+                    border: Border.all(color: Color(user.statusColor)),
+                  ),
+                  child: ResponsiveText(
+                    user.statusDescription,
+                    style: TextStyle(
+                      color: Color(user.statusColor),
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          PopupMenuButton<String>(
+            onSelected: (value) => _handleUserAction(value, user),
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'view',
+                child: Text('Просмотр'),
+              ),
+              const PopupMenuItem(
+                value: 'ban',
+                child: Text('Заблокировать'),
+              ),
+              const PopupMenuItem(
+                value: 'unban',
+                child: Text('Разблокировать'),
+              ),
+              const PopupMenuItem(
+                value: 'verify',
+                child: Text('Верифицировать'),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildReportsManagement() {
+    return ResponsiveCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ResponsiveText(
+            'Управление жалобами',
+            isTitle: true,
+          ),
+          const SizedBox(height: 24),
+          const Center(
+            child: Text('Функция в разработке'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSettings() {
+    return ResponsiveCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ResponsiveText(
+            'Настройки админ-панели',
+            isTitle: true,
+          ),
+          const SizedBox(height: 24),
+          const Center(
+            child: Text('Функция в разработке'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildRightPanel() {
+    return ResponsiveCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ResponsiveText(
+            'Быстрые действия',
+            isTitle: true,
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton.icon(
+            onPressed: () {
+              // TODO: Реализовать массовые действия
+            },
+            icon: const Icon(Icons.block),
+            label: const Text('Массовая блокировка'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton.icon(
+            onPressed: () {
+              // TODO: Реализовать экспорт данных
+            },
+            icon: const Icon(Icons.download),
+            label: const Text('Экспорт данных'),
+          ),
+          const SizedBox(height: 8),
+          ElevatedButton.icon(
+            onPressed: () {
+              // TODO: Реализовать резервное копирование
+            },
+            icon: const Icon(Icons.backup),
+            label: const Text('Резервное копирование'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _handleUserAction(String action, ManagedUser user) {
+    switch (action) {
+      case 'view':
+        _showUserDetails(user);
+        break;
+      case 'ban':
+        _showBanDialog(user);
+        break;
+      case 'unban':
+        _unbanUser(user);
+        break;
+      case 'verify':
+        _verifyUser(user);
+        break;
+    }
+  }
+
+  void _showUserDetails(ManagedUser user) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Заблокировать пользователя'),
-        content: const Text(
-            'Вы уверены, что хотите заблокировать этого пользователя?'),
+        title: Text(user.fullName),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Email: ${user.email}'),
+            Text('Статус: ${user.statusDescription}'),
+            Text('Создан: ${user.createdAt.toString()}'),
+            if (user.lastLoginAt != null)
+              Text('Последний вход: ${user.lastLoginAt.toString()}'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Закрыть'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showBanDialog(ManagedUser user) {
+    final reasonController = TextEditingController();
+
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Заблокировать ${user.fullName}'),
+        content: TextField(
+          controller: reasonController,
+          decoration: const InputDecoration(
+            labelText: 'Причина блокировки',
+            border: OutlineInputBorder(),
+          ),
+          maxLines: 3,
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Отмена'),
           ),
           ElevatedButton(
-            onPressed: () async {
+            onPressed: () {
+              _banUser(user, reasonController.text);
               Navigator.pop(context);
-              try {
-                // TODO: Реализовать блокировку пользователя
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                    content: Text('Пользователь заблокирован'),
-                    backgroundColor: Colors.green,
-                  ),
-                );
-              } catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Ошибка: $e'),
-                      backgroundColor: Colors.red,
-                    ),
-                  );
-                }
-              }
             },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
             child: const Text('Заблокировать'),
           ),
         ],
       ),
+    );
+  }
+
+  void _banUser(ManagedUser user, String reason) async {
+    try {
+      await _adminService.banUser(user.id, reason);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Пользователь ${user.fullName} заблокирован')),
+      );
+      setState(() {});
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ошибка: $e')),
+      );
+    }
+  }
+
+  void _unbanUser(ManagedUser user) async {
+    try {
+      await _adminService.unbanUser(user.id);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Пользователь ${user.fullName} разблокирован')),
+      );
+      setState(() {});
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Ошибка: $e')),
+      );
+    }
+  }
+
+  void _verifyUser(ManagedUser user) {
+    // TODO: Реализовать верификацию пользователя
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Пользователь ${user.fullName} верифицирован')),
     );
   }
 }

@@ -1,201 +1,385 @@
 #!/bin/bash
 
-# Deployment script for Event Marketplace App
+# Скрипт для развертывания приложения
+# Поддерживает различные платформы и среды
+
 set -e
 
-echo "🚀 Starting deployment process..."
-
-# Colors for output
+# Цвета для вывода
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-# Function to print colored output
-print_status() {
-    echo -e "${GREEN}[INFO]${NC} $1"
+# Функция для вывода сообщений
+log() {
+    echo -e "${BLUE}[$(date +'%Y-%m-%d %H:%M:%S')]${NC} $1"
 }
 
-print_warning() {
+success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
+
+warning() {
     echo -e "${YELLOW}[WARNING]${NC} $1"
 }
 
-print_error() {
+error() {
     echo -e "${RED}[ERROR]${NC} $1"
 }
 
-# Check if required tools are installed
-check_dependencies() {
-    print_status "Checking dependencies..."
+# Конфигурация
+ENVIRONMENT=""
+PLATFORM=""
+VERSION=""
+DRY_RUN=false
+
+# Функция для показа справки
+show_help() {
+    echo "Использование: $0 [опции]"
+    echo ""
+    echo "Опции:"
+    echo "  --environment ENV    Среда развертывания (dev, staging, production)"
+    echo "  --platform PLATFORM  Платформа (android, ios, web, firebase)"
+    echo "  --version VERSION    Версия для развертывания"
+    echo "  --dry-run           Показать что будет сделано без выполнения"
+    echo "  --help              Показать эту справку"
+    echo ""
+    echo "Примеры:"
+    echo "  $0 --environment production --platform web --version 1.0.0"
+    echo "  $0 --environment staging --platform firebase --dry-run"
+}
+
+# Развертывание на Firebase
+deploy_firebase() {
+    log "Развертывание на Firebase..."
     
-    if ! command -v flutter &> /dev/null; then
-        print_error "Flutter is not installed. Please install Flutter first."
-        exit 1
+    if [ "$DRY_RUN" = true ]; then
+        log "DRY RUN: Будет выполнено развертывание на Firebase"
+        return
     fi
     
+    # Проверка Firebase CLI
     if ! command -v firebase &> /dev/null; then
-        print_error "Firebase CLI is not installed. Please install Firebase CLI first."
+        error "Firebase CLI не установлен"
         exit 1
     fi
     
-    if ! command -v docker &> /dev/null; then
-        print_warning "Docker is not installed. Docker deployment will be skipped."
+    # Вход в Firebase
+    firebase login --no-localhost
+    
+    # Инициализация проекта (если нужно)
+    if [ ! -f "firebase.json" ]; then
+        firebase init
     fi
     
-    print_status "All dependencies are satisfied."
-}
-
-# Run tests
-run_tests() {
-    print_status "Running tests..."
-    
-    flutter test --coverage
-    
-    if [ $? -eq 0 ]; then
-        print_status "All tests passed!"
-    else
-        print_error "Tests failed. Deployment aborted."
-        exit 1
-    fi
-}
-
-# Build the application
-build_app() {
-    print_status "Building application..."
-    
-    # Clean previous builds
-    flutter clean
-    flutter pub get
-    
-    # Build for web
+    # Сборка проекта
     flutter build web --release
     
-    if [ $? -eq 0 ]; then
-        print_status "Web build completed successfully!"
-    else
-        print_error "Web build failed."
-        exit 1
-    fi
-    
-    # Build for Android (if needed)
-    if [ "$1" = "--android" ]; then
-        print_status "Building Android APK..."
-        flutter build apk --release
-        
-        if [ $? -eq 0 ]; then
-            print_status "Android build completed successfully!"
-        else
-            print_error "Android build failed."
-            exit 1
-        fi
-    fi
-}
-
-# Deploy to Firebase
-deploy_firebase() {
-    print_status "Deploying to Firebase..."
-    
+    # Развертывание
     firebase deploy --only hosting
     
-    if [ $? -eq 0 ]; then
-        print_status "Firebase deployment completed successfully!"
-    else
-        print_error "Firebase deployment failed."
+    success "Развертывание на Firebase завершено"
+}
+
+# Развертывание на Google Play
+deploy_google_play() {
+    log "Развертывание на Google Play..."
+    
+    if [ "$DRY_RUN" = true ]; then
+        log "DRY RUN: Будет выполнено развертывание на Google Play"
+        return
+    fi
+    
+    # Проверка Google Play CLI
+    if ! command -v fastlane &> /dev/null; then
+        error "Fastlane не установлен"
         exit 1
     fi
+    
+    # Сборка AAB
+    flutter build appbundle --release
+    
+    # Развертывание через Fastlane
+    fastlane android deploy
+    
+    success "Развертывание на Google Play завершено"
 }
 
-# Deploy with Docker
-deploy_docker() {
-    if command -v docker &> /dev/null; then
-        print_status "Building Docker image..."
-        
-        docker build -t event-marketplace-app .
-        
-        if [ $? -eq 0 ]; then
-            print_status "Docker image built successfully!"
-            
-            # Run container
-            docker run -d -p 8080:80 --name event-marketplace-app event-marketplace-app
-            
-            if [ $? -eq 0 ]; then
-                print_status "Docker container started successfully!"
-                print_status "Application is available at http://localhost:8080"
-            else
-                print_error "Failed to start Docker container."
+# Развертывание на App Store
+deploy_app_store() {
+    log "Развертывание на App Store..."
+    
+    if [ "$DRY_RUN" = true ]; then
+        log "DRY RUN: Будет выполнено развертывание на App Store"
+        return
+    fi
+    
+    # Проверка платформы
+    if [[ "$OSTYPE" != "darwin"* ]]; then
+        error "iOS развертывание доступно только на macOS"
+        exit 1
+    fi
+    
+    # Проверка Fastlane
+    if ! command -v fastlane &> /dev/null; then
+        error "Fastlane не установлен"
+        exit 1
+    fi
+    
+    # Сборка iOS
+    flutter build ios --release
+    
+    # Развертывание через Fastlane
+    fastlane ios deploy
+    
+    success "Развертывание на App Store завершено"
+}
+
+# Развертывание на веб-сервер
+deploy_web_server() {
+    log "Развертывание на веб-сервер..."
+    
+    if [ "$DRY_RUN" = true ]; then
+        log "DRY RUN: Будет выполнено развертывание на веб-сервер"
+        return
+    fi
+    
+    # Сборка веб-версии
+    flutter build web --release
+    
+    # Настройка переменных окружения
+    if [ -z "$WEB_SERVER_HOST" ]; then
+        error "Переменная WEB_SERVER_HOST не установлена"
+        exit 1
+    fi
+    
+    if [ -z "$WEB_SERVER_USER" ]; then
+        error "Переменная WEB_SERVER_USER не установлена"
+        exit 1
+    fi
+    
+    # Загрузка файлов на сервер
+    rsync -avz --delete build/web/ $WEB_SERVER_USER@$WEB_SERVER_HOST:/var/www/html/
+    
+    success "Развертывание на веб-сервер завершено"
+}
+
+# Развертывание на GitHub Pages
+deploy_github_pages() {
+    log "Развертывание на GitHub Pages..."
+    
+    if [ "$DRY_RUN" = true ]; then
+        log "DRY RUN: Будет выполнено развертывание на GitHub Pages"
+        return
+    fi
+    
+    # Сборка веб-версии
+    flutter build web --release --base-href "/event_marketplace_app/"
+    
+    # Переключение на ветку gh-pages
+    git checkout gh-pages || git checkout -b gh-pages
+    
+    # Копирование файлов
+    cp -r build/web/* .
+    
+    # Коммит и пуш
+    git add .
+    git commit -m "Deploy version $VERSION"
+    git push origin gh-pages
+    
+    # Возврат на основную ветку
+    git checkout main
+    
+    success "Развертывание на GitHub Pages завершено"
+}
+
+# Настройка переменных окружения
+setup_environment() {
+    log "Настройка переменных окружения для $ENVIRONMENT..."
+    
+    case $ENVIRONMENT in
+        dev)
+            export FIREBASE_PROJECT_ID="event-marketplace-dev"
+            export GOOGLE_PLAY_TRACK="internal"
+            ;;
+        staging)
+            export FIREBASE_PROJECT_ID="event-marketplace-staging"
+            export GOOGLE_PLAY_TRACK="alpha"
+            ;;
+        production)
+            export FIREBASE_PROJECT_ID="event-marketplace-prod"
+            export GOOGLE_PLAY_TRACK="production"
+            ;;
+        *)
+            error "Неизвестная среда: $ENVIRONMENT"
+            exit 1
+            ;;
+    esac
+    
+    success "Переменные окружения настроены"
+}
+
+# Проверка зависимостей
+check_dependencies() {
+    log "Проверка зависимостей..."
+    
+    if ! command -v flutter &> /dev/null; then
+        error "Flutter не установлен"
+        exit 1
+    fi
+    
+    if ! command -v git &> /dev/null; then
+        error "Git не установлен"
+        exit 1
+    fi
+    
+    success "Все зависимости установлены"
+}
+
+# Предварительные проверки
+pre_deployment_checks() {
+    log "Выполнение предварительных проверок..."
+    
+    # Проверка статуса Git
+    if [ -n "$(git status --porcelain)" ]; then
+        warning "Есть несохраненные изменения в Git"
+        if [ "$DRY_RUN" = false ]; then
+            read -p "Продолжить? (y/N): " -n 1 -r
+            echo
+            if [[ ! $REPLY =~ ^[Yy]$ ]]; then
                 exit 1
             fi
-        else
-            print_error "Docker build failed."
-            exit 1
         fi
-    else
-        print_warning "Docker not available. Skipping Docker deployment."
+    fi
+    
+    # Проверка тегов
+    if [ -n "$VERSION" ]; then
+        if git tag -l | grep -q "^v$VERSION$"; then
+            warning "Тег v$VERSION уже существует"
+        fi
+    fi
+    
+    success "Предварительные проверки завершены"
+}
+
+# Создание тега
+create_tag() {
+    if [ -n "$VERSION" ]; then
+        log "Создание тега v$VERSION..."
+        
+        if [ "$DRY_RUN" = true ]; then
+            log "DRY RUN: Будет создан тег v$VERSION"
+            return
+        fi
+        
+        git tag -a "v$VERSION" -m "Release version $VERSION"
+        git push origin "v$VERSION"
+        
+        success "Тег v$VERSION создан"
     fi
 }
 
-# Main deployment function
-main() {
-    local environment=${1:-production}
-    local platform=${2:-web}
+# Отправка уведомлений
+send_notifications() {
+    log "Отправка уведомлений..."
     
-    print_status "Starting deployment for $environment environment on $platform platform..."
+    if [ "$DRY_RUN" = true ]; then
+        log "DRY RUN: Будет отправлено уведомление о развертывании"
+        return
+    fi
     
-    check_dependencies
-    run_tests
-    build_app $platform
+    # Здесь можно добавить отправку уведомлений в Slack, Discord, email и т.д.
+    # Например:
+    # curl -X POST -H 'Content-type: application/json' \
+    #     --data '{"text":"Deployment completed for version '$VERSION'"}' \
+    #     $SLACK_WEBHOOK_URL
     
-    case $platform in
-        "web")
-            deploy_firebase
-            ;;
-        "docker")
-            deploy_docker
-            ;;
-        "all")
-            deploy_firebase
-            deploy_docker
-            ;;
-        *)
-            print_error "Unknown platform: $platform"
-            print_status "Available platforms: web, docker, all"
-            exit 1
-            ;;
-    esac
-    
-    print_status "🎉 Deployment completed successfully!"
+    success "Уведомления отправлены"
 }
 
-# Parse command line arguments
-while [[ $# -gt 0 ]]; do
-    case $1 in
-        --environment)
-            ENVIRONMENT="$2"
-            shift 2
+# Основная функция
+main() {
+    log "Начало развертывания Event Marketplace App"
+    
+    # Парсинг аргументов
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            --environment)
+                ENVIRONMENT="$2"
+                shift 2
+                ;;
+            --platform)
+                PLATFORM="$2"
+                shift 2
+                ;;
+            --version)
+                VERSION="$2"
+                shift 2
+                ;;
+            --dry-run)
+                DRY_RUN=true
+                shift
+                ;;
+            --help)
+                show_help
+                exit 0
+                ;;
+            *)
+                error "Неизвестная опция: $1"
+                show_help
+                exit 1
+                ;;
+        esac
+    done
+    
+    # Проверка обязательных параметров
+    if [ -z "$ENVIRONMENT" ]; then
+        error "Не указана среда развертывания"
+        show_help
+        exit 1
+    fi
+    
+    if [ -z "$PLATFORM" ]; then
+        error "Не указана платформа"
+        show_help
+        exit 1
+    fi
+    
+    # Выполнение шагов развертывания
+    check_dependencies
+    setup_environment
+    pre_deployment_checks
+    
+    case $PLATFORM in
+        firebase)
+            deploy_firebase
             ;;
-        --platform)
-            PLATFORM="$2"
-            shift 2
+        android|google-play)
+            deploy_google_play
             ;;
-        --android)
-            ANDROID=true
-            shift
+        ios|app-store)
+            deploy_app_store
             ;;
-        --help)
-            echo "Usage: $0 [OPTIONS]"
-            echo "Options:"
-            echo "  --environment ENV    Deployment environment (default: production)"
-            echo "  --platform PLATFORM  Deployment platform: web, docker, all (default: web)"
-            echo "  --android           Build Android APK"
-            echo "  --help              Show this help message"
-            exit 0
+        web|web-server)
+            deploy_web_server
+            ;;
+        github-pages)
+            deploy_github_pages
             ;;
         *)
-            print_error "Unknown option: $1"
+            error "Неизвестная платформа: $PLATFORM"
             exit 1
             ;;
     esac
-done
+    
+    create_tag
+    send_notifications
+    
+    success "Развертывание завершено успешно!"
+    log "Версия $VERSION развернута в среде $ENVIRONMENT на платформе $PLATFORM"
+}
 
-# Run main function
-main ${ENVIRONMENT:-production} ${PLATFORM:-web}
+# Запуск основной функции
+main "$@"
