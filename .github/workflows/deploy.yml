@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
@@ -64,7 +64,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
@@ -93,7 +93,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
@@ -124,7 +124,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
@@ -152,7 +152,7 @@ jobs:
     if: github.ref == 'refs/heads/develop'
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
@@ -178,7 +178,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Run security scan
       uses: securecodewarrior/github-action-add-sarif@v1
@@ -190,7 +190,7 @@ jobs:
     if: github.ref == 'refs/heads/main'
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@v5
 
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
