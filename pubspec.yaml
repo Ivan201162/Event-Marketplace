@@ -19,7 +19,7 @@ dependencies:
   firebase_storage: ^13.0.1
   flutter_local_notifications: ^19.4.2
   flutter_riverpod: ^3.0.0
-  go_router: ^14.2.7
+  go_router: ^16.2.1
   google_sign_in: ^7.1.1
   # vk_login: ^1.0.0  # Temporarily disabled due to dependency conflicts
   http: ^1.1.0
