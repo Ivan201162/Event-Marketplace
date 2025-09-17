@@ -260,7 +260,7 @@ class ResponsiveCard extends StatelessWidget {
             ? [shadow!]
             : [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: effectiveElevation * 2,
                   offset: Offset(0, effectiveElevation),
                 ),
