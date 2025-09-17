@@ -69,7 +69,7 @@ dependencies:
   # Integrations (added for step 16)
   google_maps_flutter: ^2.5.0
   geolocator: ^10.1.1
-  geocoding: ^2.2.2
+  geocoding: ^4.0.0
   connectivity_plus: ^5.0.2
   # Security (added for step 18)
   crypto: ^3.0.3
