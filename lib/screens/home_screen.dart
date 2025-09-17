@@ -4,8 +4,10 @@ import '../providers/user_role_provider.dart';
 import '../widgets/role_switcher.dart';
 import '../widgets/recommendations_section.dart';
 import '../widgets/enhanced_page_transition.dart';
-import '../models/user.dart';
+import '../widgets/responsive_layout.dart';
 import '../core/app_theme.dart';
+import '../core/responsive_utils.dart';
+import '../models/user.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -15,6 +17,16 @@ class HomeScreen extends ConsumerWidget {
     final userRole = ref.watch(userRoleProvider);
     final roleString = userRole == UserRole.customer ? "Клиент" : "Специалист";
 
+    return ResponsiveLayout(
+      mobile: _buildMobileLayout(context, userRole, roleString),
+      tablet: _buildTabletLayout(context, userRole, roleString),
+      desktop: _buildDesktopLayout(context, userRole, roleString),
+      largeDesktop: _buildLargeDesktopLayout(context, userRole, roleString),
+    );
+  }
+
+  Widget _buildMobileLayout(
+      BuildContext context, UserRole userRole, String roleString) {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
@@ -331,6 +343,478 @@ class HomeScreen extends ConsumerWidget {
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildTabletLayout(
+      BuildContext context, UserRole userRole, String roleString) {
+    return Scaffold(
+      body: ResponsiveContainer(
+        child: CustomScrollView(
+          slivers: [
+            // Адаптивный AppBar для планшета
+            SliverAppBar(
+              expandedHeight: 140,
+              floating: false,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                title: const Text(
+                  "Event Marketplace",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                background: Container(
+                  decoration: const BoxDecoration(
+                    gradient: BrandColors.primaryGradient,
+                  ),
+                ),
+              ),
+            ),
+            // Основной контент для планшета
+            SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  // Приветственная карточка
+                  _buildWelcomeCard(context, userRole, roleString),
+                  const SizedBox(height: 24),
+                  // Быстрые действия в сетке 2x2
+                  _buildQuickActionsGrid(context, userRole, 2),
+                  const SizedBox(height: 32),
+                  // Статистика
+                  _buildStatsSection(context),
+                  const SizedBox(height: 32),
+                  // Секция рекомендаций
+                  const RecommendationsSection(),
+                  const SizedBox(height: 100),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDesktopLayout(
+      BuildContext context, UserRole userRole, String roleString) {
+    return Scaffold(
+      body: ResponsiveContainer(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Левая панель с быстрыми действиями
+            SizedBox(
+              width: 300,
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  _buildWelcomeCard(context, userRole, roleString),
+                  const SizedBox(height: 24),
+                  _buildQuickActionsList(context, userRole),
+                ],
+              ),
+            ),
+            const SizedBox(width: 24),
+            // Основной контент
+            Expanded(
+              child: CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    expandedHeight: 160,
+                    floating: false,
+                    pinned: true,
+                    flexibleSpace: FlexibleSpaceBar(
+                      title: const Text(
+                        "Event Marketplace",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      background: Container(
+                        decoration: const BoxDecoration(
+                          gradient: BrandColors.primaryGradient,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        _buildStatsSection(context),
+                        const SizedBox(height: 32),
+                        const RecommendationsSection(),
+                        const SizedBox(height: 100),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLargeDesktopLayout(
+      BuildContext context, UserRole userRole, String roleString) {
+    return Scaffold(
+      body: ResponsiveContainer(
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Левая панель
+            SizedBox(
+              width: 350,
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  _buildWelcomeCard(context, userRole, roleString),
+                  const SizedBox(height: 24),
+                  _buildQuickActionsList(context, userRole),
+                ],
+              ),
+            ),
+            const SizedBox(width: 32),
+            // Основной контент
+            Expanded(
+              child: CustomScrollView(
+                slivers: [
+                  SliverAppBar(
+                    expandedHeight: 180,
+                    floating: false,
+                    pinned: true,
+                    flexibleSpace: FlexibleSpaceBar(
+                      title: const Text(
+                        "Event Marketplace",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      background: Container(
+                        decoration: const BoxDecoration(
+                          gradient: BrandColors.primaryGradient,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SliverToBoxAdapter(
+                    child: Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        _buildStatsSection(context),
+                        const SizedBox(height: 32),
+                        const RecommendationsSection(),
+                        const SizedBox(height: 100),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 32),
+            // Правая панель с дополнительной информацией
+            SizedBox(
+              width: 300,
+              child: Column(
+                children: [
+                  const SizedBox(height: 20),
+                  _buildInfoPanel(context),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildWelcomeCard(
+      BuildContext context, UserRole userRole, String roleString) {
+    return ResponsiveCard(
+      child: Row(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: BrandColors.secondary.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Icon(
+              userRole == UserRole.customer
+                  ? Icons.person_outline
+                  : Icons.work_outline,
+              size: 32,
+              color: BrandColors.secondary,
+            ),
+          ),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ResponsiveText(
+                  "Добро пожаловать!",
+                  isTitle: true,
+                ),
+                const SizedBox(height: 4),
+                ResponsiveText(
+                  "Вы вошли как $roleString",
+                  isSubtitle: true,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickActionsGrid(
+      BuildContext context, UserRole userRole, int crossAxisCount) {
+    return ResponsiveGrid(
+      crossAxisCount: crossAxisCount,
+      children: [
+        _buildQuickActionCard(
+            context,
+            userRole,
+            "Найти специалиста",
+            "Поиск по категориям",
+            Icons.search_rounded,
+            const LinearGradient(
+                colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)])),
+        _buildQuickActionCard(
+            context,
+            userRole,
+            userRole == UserRole.customer ? "Мои заявки" : "Заявки клиентов",
+            userRole == UserRole.customer
+                ? "Просмотр заявок"
+                : "Управление заявками",
+            userRole == UserRole.customer
+                ? Icons.book_online_rounded
+                : Icons.assignment_rounded,
+            const LinearGradient(
+                colors: [Color(0xFF10B981), Color(0xFF059669)])),
+        _buildQuickActionCard(
+            context,
+            userRole,
+            "Календарь",
+            "Расписание событий",
+            Icons.calendar_today_rounded,
+            const LinearGradient(
+                colors: [Color(0xFFF59E0B), Color(0xFFD97706)])),
+        _buildQuickActionCard(
+            context,
+            userRole,
+            "Сообщения",
+            "Общение с клиентами",
+            Icons.chat_bubble_outline_rounded,
+            const LinearGradient(
+                colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)])),
+      ],
+    );
+  }
+
+  Widget _buildQuickActionsList(BuildContext context, UserRole userRole) {
+    return ResponsiveCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ResponsiveText(
+            "Быстрые действия",
+            isTitle: true,
+          ),
+          const SizedBox(height: 16),
+          _buildQuickActionItem(
+              context,
+              userRole,
+              "Найти специалиста",
+              Icons.search_rounded,
+              const LinearGradient(
+                  colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)])),
+          _buildQuickActionItem(
+              context,
+              userRole,
+              userRole == UserRole.customer ? "Мои заявки" : "Заявки клиентов",
+              userRole == UserRole.customer
+                  ? Icons.book_online_rounded
+                  : Icons.assignment_rounded,
+              const LinearGradient(
+                  colors: [Color(0xFF10B981), Color(0xFF059669)])),
+          _buildQuickActionItem(
+              context,
+              userRole,
+              "Календарь",
+              Icons.calendar_today_rounded,
+              const LinearGradient(
+                  colors: [Color(0xFFF59E0B), Color(0xFFD97706)])),
+          _buildQuickActionItem(
+              context,
+              userRole,
+              "Сообщения",
+              Icons.chat_bubble_outline_rounded,
+              const LinearGradient(
+                  colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)])),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickActionItem(BuildContext context, UserRole userRole,
+      String title, IconData icon, LinearGradient gradient) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: AnimatedButton(
+        onPressed: () {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(title)),
+          );
+        },
+        child: Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            gradient: gradient,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, color: Colors.white, size: 24),
+              const SizedBox(width: 12),
+              Expanded(
+                child: ResponsiveText(
+                  title,
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w500),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatsSection(BuildContext context) {
+    return ResponsiveCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ResponsiveText(
+            "Статистика",
+            isTitle: true,
+          ),
+          const SizedBox(height: 16),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildStatItem(context, "Активных заявок", "0",
+                  Icons.assignment_rounded, BrandColors.primary),
+              _buildStatItem(context, "Завершенных", "0",
+                  Icons.check_circle_rounded, BrandColors.secondary),
+              _buildStatItem(context, "В ожидании", "0", Icons.schedule_rounded,
+                  BrandColors.accent),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoPanel(BuildContext context) {
+    return ResponsiveCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ResponsiveText(
+            "Информация",
+            isTitle: true,
+          ),
+          const SizedBox(height: 16),
+          _buildInfoItem("Версия приложения", "1.0.0"),
+          _buildInfoItem("Последнее обновление", "Сегодня"),
+          _buildInfoItem("Активных пользователей", "1,234"),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildInfoItem(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          ResponsiveText(label, isSubtitle: true),
+          ResponsiveText(value,
+              style: const TextStyle(fontWeight: FontWeight.w500)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildQuickActionCard(BuildContext context, UserRole userRole,
+      String title, String subtitle, IconData icon, LinearGradient gradient) {
+    return AnimatedButton(
+      onPressed: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(title)),
+        );
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: gradient,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: gradient.colors.first.withOpacity(0.3),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(icon, color: Colors.white, size: 28),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ResponsiveText(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  ResponsiveText(
+                    subtitle,
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.8),
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
