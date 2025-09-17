@@ -1,142 +1,298 @@
-import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import '../models/specialist_schedule.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/specialist_schedule.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
 
+/// Сервис для управления календарем занятости специалистов
 class SpecialistScheduleService {
-  static const String _schedulesKey = 'specialist_schedules';
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  // Получить расписание специалиста
-  Future<SpecialistSchedule?> getSpecialistSchedule(String specialistId) async {
-    final schedules = await getAllSchedules();
+  /// Получить расписание специалиста
+  Future<SpecialistSchedule> getSpecialistSchedule({
+    required String specialistId,
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    if (!FeatureFlags.specialistScheduleEnabled) {
+      throw Exception('Календарь занятости специалистов отключен');
+    }
+
     try {
-      return schedules
-          .firstWhere((schedule) => schedule.specialistId == specialistId);
-    } catch (e) {
-      return null;
-    }
-  }
+      // Получаем бронирования специалиста
+      final bookings =
+          await _getSpecialistBookings(specialistId, startDate, endDate);
 
-  // Получить все расписания
-  Future<List<SpecialistSchedule>> getAllSchedules() async {
-    final prefs = await SharedPreferences.getInstance();
-    final schedulesJson = prefs.getStringList(_schedulesKey) ?? [];
+      // Получаем рабочие часы специалиста
+      final workingHours = await _getSpecialistWorkingHours(specialistId);
 
-    if (schedulesJson.isEmpty) {
-      // Добавляем тестовые данные при первом запуске
-      await _addTestData();
-      return await getAllSchedules();
-    }
+      // Получаем исключения (отпуска, больничные и т.д.)
+      final exceptions =
+          await _getSpecialistExceptions(specialistId, startDate, endDate);
 
-    return schedulesJson
-        .map((json) => SpecialistSchedule.fromMap(jsonDecode(json)))
-        .toList();
-  }
-
-  // Сохранить расписание специалиста
-  Future<void> saveSpecialistSchedule(SpecialistSchedule schedule) async {
-    final schedules = await getAllSchedules();
-
-    // Удаляем старое расписание если существует
-    schedules.removeWhere((s) => s.specialistId == schedule.specialistId);
-
-    // Добавляем новое
-    schedules.add(schedule);
-
-    await _saveSchedules(schedules);
-  }
-
-  // Добавить занятую дату
-  Future<void> addBusyDate(String specialistId, DateTime date) async {
-    final schedule = await getSpecialistSchedule(specialistId);
-    if (schedule != null) {
-      final updatedSchedule = schedule.addBusyDate(date);
-      await saveSpecialistSchedule(updatedSchedule);
-    } else {
-      // Создаем новое расписание если его нет
-      final newSchedule = SpecialistSchedule(
+      return SpecialistSchedule(
         specialistId: specialistId,
-        busyDates: [date],
+        startDate: startDate,
+        endDate: endDate,
+        bookings: bookings,
+        workingHours: workingHours,
+        exceptions: exceptions,
+        availability: _calculateAvailability(
+          startDate: startDate,
+          endDate: endDate,
+          bookings: bookings,
+          workingHours: workingHours,
+          exceptions: exceptions,
+        ),
       );
-      await saveSpecialistSchedule(newSchedule);
+    } catch (e) {
+      throw Exception('Ошибка получения расписания специалиста: $e');
     }
   }
 
-  // Удалить занятую дату
-  Future<void> removeBusyDate(String specialistId, DateTime date) async {
-    final schedule = await getSpecialistSchedule(specialistId);
-    if (schedule != null) {
-      final updatedSchedule = schedule.removeBusyDate(date);
-      await saveSpecialistSchedule(updatedSchedule);
-    }
-  }
+  /// Проверить доступность специалиста
+  Future<bool> isSpecialistAvailable({
+    required String specialistId,
+    required DateTime startTime,
+    required DateTime endTime,
+  }) async {
+    try {
+      // Получаем расписание на период
+      final schedule = await getSpecialistSchedule(
+        specialistId: specialistId,
+        startDate: startTime,
+        endDate: endTime,
+      );
 
-  // Проверить, доступна ли дата
-  Future<bool> isDateAvailable(String specialistId, DateTime date) async {
-    final schedule = await getSpecialistSchedule(specialistId);
-    if (schedule == null) return true; // Если расписания нет, дата доступна
-    return !schedule.isDateBusy(date);
-  }
-
-  // Получить доступные даты в диапазоне
-  Future<List<DateTime>> getAvailableDates(
-      String specialistId, DateTime startDate, DateTime endDate) async {
-    final schedule = await getSpecialistSchedule(specialistId);
-    if (schedule == null) {
-      // Если расписания нет, все даты доступны
-      final availableDates = <DateTime>[];
-      var currentDate =
-          DateTime(startDate.year, startDate.month, startDate.day);
-      final end = DateTime(endDate.year, endDate.month, endDate.day);
-
-      while (currentDate.isBefore(end) || currentDate.isAtSameMomentAs(end)) {
-        availableDates.add(
-            DateTime(currentDate.year, currentDate.month, currentDate.day));
-        currentDate = currentDate.add(const Duration(days: 1));
+      // Проверяем пересечения с существующими бронированиями
+      for (final booking in schedule.bookings) {
+        if (_isTimeOverlapping(
+          start1: startTime,
+          end1: endTime,
+          start2: booking.eventDate,
+          end2: booking.endDate ??
+              booking.eventDate.add(const Duration(hours: 2)),
+        )) {
+          return false;
+        }
       }
-      return availableDates;
+
+      // Проверяем рабочие часы
+      final dayOfWeek = startTime.weekday;
+      final workingHours = schedule.workingHours[dayOfWeek];
+      if (workingHours == null || !workingHours.isWorking) {
+        return false;
+      }
+
+      final startHour = startTime.hour + startTime.minute / 60.0;
+      final endHour = endTime.hour + endTime.minute / 60.0;
+
+      if (startHour < workingHours.startHour ||
+          endHour > workingHours.endHour) {
+        return false;
+      }
+
+      // Проверяем исключения
+      for (final exception in schedule.exceptions) {
+        if (_isTimeOverlapping(
+          start1: startTime,
+          end1: endTime,
+          start2: exception.startDate,
+          end2: exception.endDate,
+        )) {
+          return false;
+        }
+      }
+
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Заблокировать время в расписании
+  Future<void> blockTime({
+    required String specialistId,
+    required DateTime startTime,
+    required DateTime endTime,
+    required String reason,
+    String? description,
+  }) async {
+    try {
+      final exception = ScheduleException(
+        id: '',
+        specialistId: specialistId,
+        type: ScheduleExceptionType.blocked,
+        startDate: startTime,
+        endDate: endTime,
+        reason: reason,
+        description: description,
+        createdAt: DateTime.now(),
+      );
+
+      await _firestore.collection('schedule_exceptions').add(exception.toMap());
+    } catch (e) {
+      throw Exception('Ошибка блокировки времени: $e');
+    }
+  }
+
+  /// Установить рабочие часы
+  Future<void> setWorkingHours({
+    required String specialistId,
+    required Map<int, WorkingHours> workingHours,
+  }) async {
+    try {
+      await _firestore
+          .collection('specialist_working_hours')
+          .doc(specialistId)
+          .set({
+        'specialistId': specialistId,
+        'workingHours': workingHours
+            .map((key, value) => MapEntry(key.toString(), value.toMap())),
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      });
+    } catch (e) {
+      throw Exception('Ошибка установки рабочих часов: $e');
+    }
+  }
+
+  // Приватные методы
+
+  Future<List<Booking>> _getSpecialistBookings(
+      String specialistId, DateTime startDate, DateTime endDate) async {
+    try {
+      final snapshot = await _firestore
+          .collection('bookings')
+          .where('specialistId', isEqualTo: specialistId)
+          .where('eventDate', isGreaterThanOrEqualTo: startDate)
+          .where('eventDate', isLessThanOrEqualTo: endDate)
+          .where('status',
+              whereIn: ['confirmed', 'paid', 'advance_paid']).get();
+
+      return snapshot.docs.map((doc) => Booking.fromDocument(doc)).toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Future<Map<int, WorkingHours>> _getSpecialistWorkingHours(
+      String specialistId) async {
+    try {
+      final doc = await _firestore
+          .collection('specialist_working_hours')
+          .doc(specialistId)
+          .get();
+      if (doc.exists) {
+        final data = doc.data()!;
+        final workingHoursData = data['workingHours'] as Map<String, dynamic>;
+
+        return workingHoursData.map((key, value) => MapEntry(
+              int.parse(key),
+              WorkingHours.fromMap(Map<String, dynamic>.from(value)),
+            ));
+      }
+
+      // Возвращаем стандартные рабочие часы (пн-пт 9:00-18:00)
+      return _getDefaultWorkingHours();
+    } catch (e) {
+      return _getDefaultWorkingHours();
+    }
+  }
+
+  Future<List<ScheduleException>> _getSpecialistExceptions(
+      String specialistId, DateTime startDate, DateTime endDate) async {
+    try {
+      final snapshot = await _firestore
+          .collection('schedule_exceptions')
+          .where('specialistId', isEqualTo: specialistId)
+          .where('startDate', isGreaterThanOrEqualTo: startDate)
+          .where('endDate', isLessThanOrEqualTo: endDate)
+          .get();
+
+      return snapshot.docs
+          .map((doc) => ScheduleException.fromDocument(doc))
+          .toList();
+    } catch (e) {
+      return [];
+    }
+  }
+
+  Map<int, WorkingHours> _getDefaultWorkingHours() {
+    return {
+      1: WorkingHours(
+          isWorking: true, startHour: 9.0, endHour: 18.0), // Понедельник
+      2: WorkingHours(
+          isWorking: true, startHour: 9.0, endHour: 18.0), // Вторник
+      3: WorkingHours(isWorking: true, startHour: 9.0, endHour: 18.0), // Среда
+      4: WorkingHours(
+          isWorking: true, startHour: 9.0, endHour: 18.0), // Четверг
+      5: WorkingHours(
+          isWorking: true, startHour: 9.0, endHour: 18.0), // Пятница
+      6: WorkingHours(
+          isWorking: false, startHour: 0.0, endHour: 0.0), // Суббота
+      7: WorkingHours(
+          isWorking: false, startHour: 0.0, endHour: 0.0), // Воскресенье
+    };
+  }
+
+  bool _isTimeOverlapping({
+    required DateTime start1,
+    required DateTime end1,
+    required DateTime start2,
+    required DateTime end2,
+  }) {
+    return start1.isBefore(end2) && end1.isAfter(start2);
+  }
+
+  Map<DateTime, AvailabilityStatus> _calculateAvailability({
+    required DateTime startDate,
+    required DateTime endDate,
+    required List<Booking> bookings,
+    required Map<int, WorkingHours> workingHours,
+    required List<ScheduleException> exceptions,
+  }) {
+    final availability = <DateTime, AvailabilityStatus>{};
+    final currentDate = startDate;
+
+    while (currentDate.isBefore(endDate)) {
+      final dayOfWeek = currentDate.weekday;
+      final workingHoursForDay = workingHours[dayOfWeek];
+
+      if (workingHoursForDay == null || !workingHoursForDay.isWorking) {
+        availability[currentDate] = AvailabilityStatus.unavailable;
+      } else {
+        // Проверяем исключения
+        bool hasException = false;
+        for (final exception in exceptions) {
+          if (currentDate.isAfter(
+                  exception.startDate.subtract(const Duration(days: 1))) &&
+              currentDate
+                  .isBefore(exception.endDate.add(const Duration(days: 1)))) {
+            availability[currentDate] = AvailabilityStatus.blocked;
+            hasException = true;
+            break;
+          }
+        }
+
+        if (!hasException) {
+          // Проверяем бронирования
+          final dayBookings = bookings
+              .where((b) =>
+                  b.eventDate.year == currentDate.year &&
+                  b.eventDate.month == currentDate.month &&
+                  b.eventDate.day == currentDate.day)
+              .toList();
+
+          if (dayBookings.isNotEmpty) {
+            availability[currentDate] = AvailabilityStatus.partiallyAvailable;
+          } else {
+            availability[currentDate] = AvailabilityStatus.available;
+          }
+        }
+      }
+
+      currentDate = currentDate.add(const Duration(days: 1));
     }
 
-    return schedule.getAvailableDates(startDate, endDate);
-  }
-
-  // Очистить все расписания (для тестирования)
-  Future<void> clearAllSchedules() async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_schedulesKey);
-  }
-
-  // Сохранить список расписаний
-  Future<void> _saveSchedules(List<SpecialistSchedule> schedules) async {
-    final prefs = await SharedPreferences.getInstance();
-    final schedulesJson =
-        schedules.map((schedule) => jsonEncode(schedule.toMap())).toList();
-    await prefs.setStringList(_schedulesKey, schedulesJson);
-  }
-
-  // Добавить тестовые данные
-  Future<void> _addTestData() async {
-    final testSchedules = [
-      SpecialistSchedule(
-        specialistId: 'specialist1',
-        busyDates: [
-          DateTime(2025, 9, 15),
-          DateTime(2025, 9, 16),
-          DateTime(2025, 9, 22),
-          DateTime(2025, 9, 23),
-        ],
-      ),
-      SpecialistSchedule(
-        specialistId: 'specialist2',
-        busyDates: [
-          DateTime(2025, 9, 18),
-          DateTime(2025, 9, 19),
-          DateTime(2025, 9, 25),
-        ],
-      ),
-    ];
-
-    for (final schedule in testSchedules) {
-      await saveSpecialistSchedule(schedule);
-    }
+    return availability;
   }
 }
