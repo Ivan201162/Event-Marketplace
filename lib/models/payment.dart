@@ -272,7 +272,8 @@ class Payment {
         return OrganizationType.commercial;
       case 'government':
         return OrganizationType.government;
-      case 'nonProfit':
+      case 'nonprofit':
+      case 'non_profit':
         return OrganizationType.nonProfit;
       case 'individual':
       default:

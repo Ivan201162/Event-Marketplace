@@ -9,7 +9,7 @@ final notificationServiceProvider = Provider<NotificationService>((ref) {
 
 /// Провайдер для списка уведомлений пользователя
 final userNotificationsProvider =
-    StreamProvider<List<app_notification.Notification>>((ref) {
+    StreamProvider<List<app_notification.AppNotification>>((ref) {
   // Здесь будет логика получения уведомлений из Firestore
   // Пока возвращаем пустой список
   return Stream.value([]);
@@ -155,6 +155,11 @@ class NotificationSettingsNotifier extends Notifier<NotificationSettings> {
   }
 }
 
+/// Провайдер для состояния уведомлений
+final notificationStateProvider = NotifierProvider<NotificationStateNotifier, NotificationState>(() {
+  return NotificationStateNotifier();
+});
+
 /// Провайдер для отправки уведомлений
 final sendNotificationProvider = Provider<SendNotificationNotifier>((ref) {
   return SendNotificationNotifier(ref.read(notificationServiceProvider));
@@ -216,5 +221,79 @@ class SendNotificationNotifier {
     required String chatId,
   }) async {
     // Здесь будет логика отправки уведомления о новом сообщении
+  }
+}
+
+/// Состояние уведомлений
+class NotificationState {
+  final List<app_notification.AppNotification> notifications;
+  final bool isLoading;
+  final String? error;
+
+  const NotificationState({
+    this.notifications = const [],
+    this.isLoading = false,
+    this.error,
+  });
+
+  NotificationState copyWith({
+    List<app_notification.AppNotification>? notifications,
+    bool? isLoading,
+    String? error,
+  }) {
+    return NotificationState(
+      notifications: notifications ?? this.notifications,
+      isLoading: isLoading ?? this.isLoading,
+      error: error ?? this.error,
+    );
+  }
+}
+
+/// Нотификатор для состояния уведомлений
+class NotificationStateNotifier extends Notifier<NotificationState> {
+  @override
+  NotificationState build() {
+    return const NotificationState();
+  }
+
+  /// Отметить уведомление как прочитанное
+  void markAsRead(String notificationId) {
+    final updatedNotifications = state.notifications.map((notification) {
+      if (notification.id == notificationId) {
+        return notification.copyWith(isRead: true);
+      }
+      return notification;
+    }).toList();
+
+    state = state.copyWith(notifications: updatedNotifications);
+  }
+
+  /// Отметить все уведомления как прочитанные
+  void markAllAsRead() {
+    final updatedNotifications = state.notifications
+        .map((notification) => notification.copyWith(isRead: true))
+        .toList();
+
+    state = state.copyWith(notifications: updatedNotifications);
+  }
+
+  /// Очистить все уведомления
+  void clearAll() {
+    state = state.copyWith(notifications: []);
+  }
+
+  /// Добавить уведомление
+  void addNotification(app_notification.AppNotification notification) {
+    final updatedNotifications = [notification, ...state.notifications];
+    state = state.copyWith(notifications: updatedNotifications);
+  }
+
+  /// Удалить уведомление
+  void removeNotification(String notificationId) {
+    final updatedNotifications = state.notifications
+        .where((notification) => notification.id != notificationId)
+        .toList();
+
+    state = state.copyWith(notifications: updatedNotifications);
   }
 }

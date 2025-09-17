@@ -576,7 +576,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
         return 'Коммерческая организация';
       case OrganizationType.government:
         return 'Государственное учреждение';
-      case OrganizationType.non_profit:
+      case OrganizationType.nonProfit:
         return 'Некоммерческая организация';
     }
   }

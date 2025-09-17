@@ -1,63 +1,65 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'media_type.dart';
 
-/// Модель сториса специалиста
+/// Модель истории
 class Story {
   final String id;
   final String specialistId;
   final String specialistName;
   final String? specialistPhotoUrl;
-  final StoryType type;
+  final String? content;
   final String mediaUrl;
-  final String? thumbnailUrl;
-  final String? caption;
-  final List<String> tags;
+  final MediaType mediaType;
   final DateTime createdAt;
   final DateTime expiresAt;
-  final int views;
+  final int viewsCount;
+  final List<String> viewedBy;
+  final bool isActive;
+  final String? thumbnailUrl;
   final int likes;
-  final List<String> viewers;
-  final Map<String, dynamic> metadata;
+  final List<String> likedBy;
 
   const Story({
     required this.id,
     required this.specialistId,
     required this.specialistName,
     this.specialistPhotoUrl,
-    required this.type,
+    this.content,
     required this.mediaUrl,
-    this.thumbnailUrl,
-    this.caption,
-    required this.tags,
+    required this.mediaType,
     required this.createdAt,
     required this.expiresAt,
-    required this.views,
-    required this.likes,
-    required this.viewers,
-    required this.metadata,
+    this.viewsCount = 0,
+    this.viewedBy = const [],
+    this.isActive = true,
+    this.thumbnailUrl,
+    this.likes = 0,
+    this.likedBy = const [],
   });
 
   /// Создать из документа Firestore
   factory Story.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
+
     return Story(
       id: doc.id,
-      specialistId: data['specialistId'] ?? '',
-      specialistName: data['specialistName'] ?? '',
-      specialistPhotoUrl: data['specialistPhotoUrl'],
-      type: StoryType.values.firstWhere(
-        (e) => e.name == data['type'],
-        orElse: () => StoryType.image,
+      specialistId: data['specialistId'] as String,
+      specialistName: data['specialistName'] as String,
+      specialistPhotoUrl: data['specialistPhotoUrl'] as String?,
+      content: data['content'] as String?,
+      mediaUrl: data['mediaUrl'] as String,
+      mediaType: MediaType.values.firstWhere(
+        (e) => e.name == data['mediaType'],
+        orElse: () => MediaType.image,
       ),
-      mediaUrl: data['mediaUrl'] ?? '',
-      thumbnailUrl: data['thumbnailUrl'],
-      caption: data['caption'],
-      tags: List<String>.from(data['tags'] ?? []),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       expiresAt: (data['expiresAt'] as Timestamp).toDate(),
-      views: data['views'] ?? 0,
+      viewsCount: data['viewsCount'] ?? 0,
+      viewedBy: List<String>.from(data['viewedBy'] ?? []),
+      isActive: data['isActive'] ?? true,
+      thumbnailUrl: data['thumbnailUrl'] as String?,
       likes: data['likes'] ?? 0,
-      viewers: List<String>.from(data['viewers'] ?? []),
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      likedBy: List<String>.from(data['likedBy'] ?? []),
     );
   }
 
@@ -67,67 +69,80 @@ class Story {
       'specialistId': specialistId,
       'specialistName': specialistName,
       'specialistPhotoUrl': specialistPhotoUrl,
-      'type': type.name,
+      'content': content,
       'mediaUrl': mediaUrl,
-      'thumbnailUrl': thumbnailUrl,
-      'caption': caption,
-      'tags': tags,
+      'mediaType': mediaType.name,
       'createdAt': Timestamp.fromDate(createdAt),
       'expiresAt': Timestamp.fromDate(expiresAt),
-      'views': views,
+      'viewsCount': viewsCount,
+      'viewedBy': viewedBy,
+      'isActive': isActive,
+      'thumbnailUrl': thumbnailUrl,
       'likes': likes,
-      'viewers': viewers,
-      'metadata': metadata,
+      'likedBy': likedBy,
     };
   }
 
-  /// Создать копию с изменениями
+  /// Создать копию с обновлёнными полями
   Story copyWith({
     String? id,
     String? specialistId,
     String? specialistName,
     String? specialistPhotoUrl,
-    StoryType? type,
+    String? content,
     String? mediaUrl,
-    String? thumbnailUrl,
-    String? caption,
-    List<String>? tags,
+    MediaType? mediaType,
     DateTime? createdAt,
     DateTime? expiresAt,
-    int? views,
+    int? viewsCount,
+    List<String>? viewedBy,
+    bool? isActive,
+    String? thumbnailUrl,
     int? likes,
-    List<String>? viewers,
-    Map<String, dynamic>? metadata,
+    List<String>? likedBy,
   }) {
     return Story(
       id: id ?? this.id,
       specialistId: specialistId ?? this.specialistId,
       specialistName: specialistName ?? this.specialistName,
       specialistPhotoUrl: specialistPhotoUrl ?? this.specialistPhotoUrl,
-      type: type ?? this.type,
+      content: content ?? this.content,
       mediaUrl: mediaUrl ?? this.mediaUrl,
-      thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-      caption: caption ?? this.caption,
-      tags: tags ?? this.tags,
+      mediaType: mediaType ?? this.mediaType,
       createdAt: createdAt ?? this.createdAt,
       expiresAt: expiresAt ?? this.expiresAt,
-      views: views ?? this.views,
+      viewsCount: viewsCount ?? this.viewsCount,
+      viewedBy: viewedBy ?? this.viewedBy,
+      isActive: isActive ?? this.isActive,
+      thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
       likes: likes ?? this.likes,
-      viewers: viewers ?? this.viewers,
-      metadata: metadata ?? this.metadata,
+      likedBy: likedBy ?? this.likedBy,
     );
   }
 
-  /// Проверить, истек ли срок действия сториса
+  /// Проверить, истекла ли история
   bool get isExpired => DateTime.now().isAfter(expiresAt);
 
-  /// Проверить, просмотрел ли пользователь сторис
-  bool isViewedBy(String userId) => viewers.contains(userId);
-}
+  /// Проверить, просмотрена ли история пользователем
+  bool isViewedBy(String userId) => viewedBy.contains(userId);
 
-/// Типы сторисов
-enum StoryType {
-  image,
-  video,
-  text,
+  /// Получить тип истории (для совместимости)
+  MediaType get type => mediaType;
+
+  /// Получить подпись (для совместимости)
+  String? get caption => content;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Story && other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  String toString() {
+    return 'Story(id: $id, specialistId: $specialistId, mediaType: $mediaType)';
+  }
 }

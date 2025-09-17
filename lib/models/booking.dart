@@ -45,11 +45,7 @@ class Booking {
   final String? eventLocation;
   final Duration? duration;
   final String? specialRequests;
-  final String? organizerId;
-  final String? specialistId;
-  final String? customerId;
   final String? currency;
-  final DateTime? updatedAt;
   final DateTime? dueDate;
   final bool? isPrepayment;
   final bool? isFinalPayment;
@@ -71,19 +67,29 @@ class Booking {
     required this.totalPrice,
     this.notes,
     required this.createdAt,
+    required this.updatedAt,
+    this.organizerId,
+    this.organizerName,
+    this.expiresAt,
+    this.customerId,
+    this.specialistId,
+    this.endDate,
+    this.prepayment,
     this.title,
     this.customerName,
     this.customerPhone,
     this.customerEmail,
     this.description,
-    required this.updatedAt,
-    this.organizerId,
-    this.expiresAt,
-    this.organizerName,
-    this.customerId,
-    this.specialistId,
-    this.endDate,
-    this.prepayment,
+    this.eventName,
+    this.eventDescription,
+    this.eventLocation,
+    this.duration,
+    this.specialRequests,
+    this.currency,
+    this.dueDate,
+    this.isPrepayment,
+    this.isFinalPayment,
+    this.prepaymentPaid,
     this.vkPlaylistUrl,
   });
 
@@ -213,6 +219,16 @@ class Booking {
     String? customerPhone,
     String? customerEmail,
     String? description,
+    String? eventName,
+    String? eventDescription,
+    String? eventLocation,
+    Duration? duration,
+    String? specialRequests,
+    String? currency,
+    DateTime? dueDate,
+    bool? isPrepayment,
+    bool? isFinalPayment,
+    bool? prepaymentPaid,
     String? vkPlaylistUrl,
   }) {
     return Booking(
@@ -233,6 +249,7 @@ class Booking {
       updatedAt: updatedAt ?? this.updatedAt,
       organizerId: organizerId ?? this.organizerId,
       organizerName: organizerName ?? this.organizerName,
+      expiresAt: this.expiresAt,
       customerId: customerId ?? this.customerId,
       specialistId: specialistId ?? this.specialistId,
       endDate: endDate ?? this.endDate,
@@ -242,6 +259,16 @@ class Booking {
       customerPhone: customerPhone ?? this.customerPhone,
       customerEmail: customerEmail ?? this.customerEmail,
       description: description ?? this.description,
+      eventName: eventName ?? this.eventName,
+      eventDescription: eventDescription ?? this.eventDescription,
+      eventLocation: eventLocation ?? this.eventLocation,
+      duration: duration ?? this.duration,
+      specialRequests: specialRequests ?? this.specialRequests,
+      currency: currency ?? this.currency,
+      dueDate: dueDate ?? this.dueDate,
+      isPrepayment: isPrepayment ?? this.isPrepayment,
+      isFinalPayment: isFinalPayment ?? this.isFinalPayment,
+      prepaymentPaid: prepaymentPaid ?? this.prepaymentPaid,
       vkPlaylistUrl: vkPlaylistUrl ?? this.vkPlaylistUrl,
     );
   }

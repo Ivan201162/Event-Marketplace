@@ -1,19 +1,15 @@
-import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:event_marketplace_app/services/recommendation_engine.dart';
 import 'package:event_marketplace_app/providers/auth_providers.dart';
 
-part 'recommendation_providers.g.dart';
-
 /// Провайдер движка рекомендаций
-@riverpod
-RecommendationEngine recommendationEngine(RecommendationEngineRef ref) {
+final recommendationEngineProvider = Provider<RecommendationEngine>((ref) {
   return RecommendationEngine();
-}
+});
 
 /// Провайдер рекомендаций для текущего пользователя
-@riverpod
-Future<List<Specialist>> userRecommendations(UserRecommendationsRef ref) async {
+final userRecommendationsProvider = FutureProvider<List<Specialist>>((ref) async {
   final authState = ref.watch(authStateProvider);
   final engine = ref.read(recommendationEngineProvider);
 
@@ -22,27 +18,33 @@ Future<List<Specialist>> userRecommendations(UserRecommendationsRef ref) async {
   }
 
   return engine.getRecommendations(userId: authState.user!.uid);
-}
+});
 
 /// Провайдер популярных специалистов
-@riverpod
-Future<List<Specialist>> popularSpecialists(PopularSpecialistsRef ref) async {
+final popularSpecialistsProvider = FutureProvider<List<Specialist>>((ref) async {
   final engine = ref.read(recommendationEngineProvider);
   return engine.getPopularSpecialists();
-}
+});
 
 /// Провайдер ближайших специалистов
-@riverpod
-Future<List<Specialist>> nearbySpecialists(
-  NearbySpecialistsRef ref, {
-  required double latitude,
-  required double longitude,
-  double radiusKm = 50,
-}) async {
+final nearbySpecialistsProvider = FutureProvider.family<List<Specialist>, NearbySpecialistsParams>((ref, params) async {
   final engine = ref.read(recommendationEngineProvider);
   return engine.getNearbySpecialists(
-    latitude: latitude,
-    longitude: longitude,
-    radiusKm: radiusKm,
+    latitude: params.latitude,
+    longitude: params.longitude,
+    radiusKm: params.radiusKm,
   );
+});
+
+/// Параметры для поиска ближайших специалистов
+class NearbySpecialistsParams {
+  final double latitude;
+  final double longitude;
+  final double radiusKm;
+
+  const NearbySpecialistsParams({
+    required this.latitude,
+    required this.longitude,
+    this.radiusKm = 50,
+  });
 }

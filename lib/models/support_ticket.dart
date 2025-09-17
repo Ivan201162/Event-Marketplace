@@ -256,6 +256,51 @@ enum SupportCategory {
   other,
 }
 
+/// Расширение для SupportCategory
+extension SupportCategoryExtension on SupportCategory {
+  String get categoryText {
+    switch (this) {
+      case SupportCategory.general:
+        return 'Общие вопросы';
+      case SupportCategory.technical:
+        return 'Техническая поддержка';
+      case SupportCategory.billing:
+        return 'Биллинг';
+      case SupportCategory.feature:
+        return 'Функции';
+      case SupportCategory.account:
+        return 'Аккаунт';
+      case SupportCategory.booking:
+        return 'Бронирование';
+      case SupportCategory.payment:
+        return 'Платежи';
+      case SupportCategory.other:
+        return 'Другое';
+    }
+  }
+
+  IconData get categoryIcon {
+    switch (this) {
+      case SupportCategory.general:
+        return Icons.help_outline;
+      case SupportCategory.technical:
+        return Icons.build;
+      case SupportCategory.billing:
+        return Icons.payment;
+      case SupportCategory.feature:
+        return Icons.lightbulb_outline;
+      case SupportCategory.account:
+        return Icons.person;
+      case SupportCategory.booking:
+        return Icons.calendar_today;
+      case SupportCategory.payment:
+        return Icons.credit_card;
+      case SupportCategory.other:
+        return Icons.more_horiz;
+    }
+  }
+}
+
 /// Приоритеты поддержки
 enum SupportPriority {
   low,

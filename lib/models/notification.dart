@@ -1,7 +1,25 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// Типы уведомлений
+enum NotificationType {
+  booking,
+  message,
+  payment,
+  review,
+  system,
+  promotion,
+}
+
+/// Приоритеты уведомлений
+enum NotificationPriority {
+  low,
+  normal,
+  high,
+  urgent,
+}
+
 /// Модель уведомления
-class Notification {
+class AppNotification {
   final String id;
   final String userId;
   final String type;
@@ -11,8 +29,9 @@ class Notification {
   final bool isRead;
   final DateTime createdAt;
   final DateTime? readAt;
+  final NotificationPriority priority;
 
-  const Notification({
+  const AppNotification({
     required this.id,
     required this.userId,
     required this.type,
@@ -22,13 +41,14 @@ class Notification {
     this.isRead = false,
     required this.createdAt,
     this.readAt,
+    this.priority = NotificationPriority.normal,
   });
 
   /// Создаёт уведомление из документа Firestore
-  factory Notification.fromDocument(DocumentSnapshot doc) {
+  factory AppNotification.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
 
-    return Notification(
+    return AppNotification(
       id: doc.id,
       userId: data['userId'] as String,
       type: data['type'] as String,
@@ -40,6 +60,10 @@ class Notification {
       readAt: data['readAt'] != null
           ? (data['readAt'] as Timestamp).toDate()
           : null,
+      priority: NotificationPriority.values.firstWhere(
+        (e) => e.name == data['priority'],
+        orElse: () => NotificationPriority.normal,
+      ),
     );
   }
 
@@ -54,11 +78,12 @@ class Notification {
       'isRead': isRead,
       'createdAt': Timestamp.fromDate(createdAt),
       'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
+      'priority': priority.name,
     };
   }
 
   /// Создаёт копию уведомления с обновлёнными полями
-  Notification copyWith({
+  AppNotification copyWith({
     String? id,
     String? userId,
     String? type,
@@ -68,8 +93,9 @@ class Notification {
     bool? isRead,
     DateTime? createdAt,
     DateTime? readAt,
+    NotificationPriority? priority,
   }) {
-    return Notification(
+    return AppNotification(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       type: type ?? this.type,
@@ -79,6 +105,7 @@ class Notification {
       isRead: isRead ?? this.isRead,
       createdAt: createdAt ?? this.createdAt,
       readAt: readAt ?? this.readAt,
+      priority: priority ?? this.priority,
     );
   }
 
@@ -138,34 +165,37 @@ class Notification {
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is Notification && other.id == id;
+    return other is AppNotification && other.id == id;
   }
 
   @override
   int get hashCode => id.hashCode;
 
+  /// Проверить, является ли уведомление непрочитанным
+  bool get isUnread => !isRead;
+
   @override
   String toString() {
-    return 'Notification(id: $id, type: $type, title: $title, isRead: $isRead)';
+    return 'AppNotification(id: $id, type: $type, title: $title, isRead: $isRead)';
   }
 }
 
 /// Расширение для работы с уведомлениями
-extension NotificationExtension on List<Notification> {
+extension NotificationExtension on List<AppNotification> {
   /// Получает непрочитанные уведомления
-  List<Notification> get unread => where((n) => !n.isRead).toList();
+  List<AppNotification> get unread => where((n) => !n.isRead).toList();
 
   /// Получает уведомления по типу
-  List<Notification> byType(String type) =>
+  List<AppNotification> byType(String type) =>
       where((n) => n.type == type).toList();
 
   /// Получает последние уведомления
-  List<Notification> get recent =>
+  List<AppNotification> get recent =>
       toList()..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
   /// Группирует уведомления по типу
-  Map<String, List<Notification>> get groupedByType {
-    final Map<String, List<Notification>> grouped = {};
+  Map<String, List<AppNotification>> get groupedByType {
+    final Map<String, List<AppNotification>> grouped = {};
     for (final notification in this) {
       grouped.putIfAbsent(notification.type, () => []).add(notification);
     }

@@ -80,6 +80,54 @@ enum ReviewStatus {
   hidden,
 }
 
+/// Детальный рейтинг
+class DetailedRating {
+  final double professionalism;
+  final double communication;
+  final double punctuality;
+  final double quality;
+  final double creativity;
+  final double value;
+
+  const DetailedRating({
+    required this.professionalism,
+    required this.communication,
+    required this.punctuality,
+    required this.quality,
+    required this.creativity,
+    required this.value,
+  });
+
+  /// Создать из Map
+  factory DetailedRating.fromMap(Map<String, dynamic> data) {
+    return DetailedRating(
+      professionalism: (data['professionalism'] ?? 0.0).toDouble(),
+      communication: (data['communication'] ?? 0.0).toDouble(),
+      punctuality: (data['punctuality'] ?? 0.0).toDouble(),
+      quality: (data['quality'] ?? 0.0).toDouble(),
+      creativity: (data['creativity'] ?? 0.0).toDouble(),
+      value: (data['value'] ?? 0.0).toDouble(),
+    );
+  }
+
+  /// Преобразовать в Map
+  Map<String, dynamic> toMap() {
+    return {
+      'professionalism': professionalism,
+      'communication': communication,
+      'punctuality': punctuality,
+      'quality': quality,
+      'creativity': creativity,
+      'value': value,
+    };
+  }
+
+  /// Получить средний рейтинг
+  double get averageRating {
+    return (professionalism + communication + punctuality + quality + creativity + value) / 6;
+  }
+}
+
 /// Модель отзыва
 class Review {
   final String id;

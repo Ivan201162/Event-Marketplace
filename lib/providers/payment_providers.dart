@@ -45,3 +45,64 @@ final paymentHistoryProvider =
 
   return await paymentGateway.getPaymentHistory(bookingId);
 });
+
+/// Провайдер для платежей специалиста
+final paymentsBySpecialistProvider = FutureProvider.family<List<PaymentInfo>, String>((ref, userId) async {
+  // TODO: Реализовать получение платежей специалиста
+  return [];
+});
+
+/// Провайдер для платежей клиента
+final paymentsByCustomerProvider = FutureProvider.family<List<PaymentInfo>, String>((ref, userId) async {
+  // TODO: Реализовать получение платежей клиента
+  return [];
+});
+
+/// Провайдер для статистики платежей
+final paymentStatisticsProvider = FutureProvider.family<PaymentStatistics, PaymentStatisticsParams>((ref, params) async {
+  // TODO: Реализовать получение статистики платежей
+  return PaymentStatistics(
+    totalCount: 0,
+    totalAmount: 0.0,
+    completedCount: 0,
+    completedAmount: 0.0,
+    pendingCount: 0,
+    pendingAmount: 0.0,
+    failedCount: 0,
+    completionRate: 0.0,
+  );
+});
+
+/// Параметры для статистики платежей
+class PaymentStatisticsParams {
+  final String userId;
+  final bool isSpecialist;
+
+  const PaymentStatisticsParams({
+    required this.userId,
+    required this.isSpecialist,
+  });
+}
+
+/// Статистика платежей
+class PaymentStatistics {
+  final int totalCount;
+  final double totalAmount;
+  final int completedCount;
+  final double completedAmount;
+  final int pendingCount;
+  final double pendingAmount;
+  final int failedCount;
+  final double completionRate;
+
+  const PaymentStatistics({
+    required this.totalCount,
+    required this.totalAmount,
+    required this.completedCount,
+    required this.completedAmount,
+    required this.pendingCount,
+    required this.pendingAmount,
+    required this.failedCount,
+    required this.completionRate,
+  });
+}

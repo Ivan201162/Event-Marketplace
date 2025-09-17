@@ -143,7 +143,7 @@ class AppRouter {
           name: 'eventDetail',
           builder: (context, state) {
             final eventId = state.pathParameters['id']!;
-            return EventDetailScreen(eventId: eventId);
+            return EventDetailScreen(event: null, eventId: eventId);
           },
         ),
 
@@ -258,7 +258,7 @@ class AppRouter {
               ),
               const SizedBox(height: 16),
               Text(
-                'Страница не найдена: ${state.location}',
+                'Страница не найдена: ${state.uri}',
                 style: const TextStyle(fontSize: 18),
                 textAlign: TextAlign.center,
               ),
@@ -310,7 +310,7 @@ class AppRouter {
 
   /// Получение текущего маршрута
   static String getCurrentRoute(BuildContext context) {
-    return GoRouterState.of(context).location;
+    return GoRouterState.of(context).uri.toString();
   }
 
   /// Проверка, является ли текущий маршрут активным

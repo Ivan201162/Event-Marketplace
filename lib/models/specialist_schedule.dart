@@ -20,6 +20,60 @@ class SpecialistSchedule {
     required this.exceptions,
     required this.availability,
   });
+
+  /// Создать из Map
+  factory SpecialistSchedule.fromMap(Map<String, dynamic> data) {
+    return SpecialistSchedule(
+      specialistId: data['specialistId'] ?? '',
+      startDate: data['startDate'] != null
+          ? (data['startDate'] as Timestamp).toDate()
+          : DateTime.now(),
+      endDate: data['endDate'] != null
+          ? (data['endDate'] as Timestamp).toDate()
+          : DateTime.now(),
+      bookings: (data['bookings'] as List<dynamic>?)
+              ?.map((e) => Booking.fromDocument(e as DocumentSnapshot))
+              .toList() ??
+          [],
+      workingHours: (data['workingHours'] as Map<String, dynamic>?)
+              ?.map((key, value) => MapEntry(
+                  int.parse(key),
+                  WorkingHours.fromMap(value as Map<String, dynamic>)))
+              .cast<int, WorkingHours>() ??
+          {},
+      exceptions: (data['exceptions'] as List<dynamic>?)
+              ?.map((e) => ScheduleException.fromMap(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      availability: (data['availability'] as Map<String, dynamic>?)
+              ?.map((key, value) => MapEntry(
+                  DateTime.parse(key),
+                  AvailabilityStatus.values.firstWhere(
+                    (status) => status.name == value,
+                    orElse: () => AvailabilityStatus.available,
+                  )))
+              .cast<DateTime, AvailabilityStatus>() ??
+          {},
+    );
+  }
+
+  /// Получить события для конкретной даты
+  List<ScheduleEvent> getEventsForDate(DateTime date) {
+    return bookings
+        .where((booking) =>
+            booking.eventDate.year == date.year &&
+            booking.eventDate.month == date.month &&
+            booking.eventDate.day == date.day)
+        .map((booking) => ScheduleEvent(
+              id: booking.id,
+              title: booking.eventTitle,
+              startTime: booking.eventDate,
+              endTime: booking.endDate ?? booking.eventDate.add(Duration(hours: 2)),
+              type: ScheduleEventType.booking,
+              bookingId: booking.id,
+            ))
+        .toList();
+  }
 }
 
 /// Рабочие часы
@@ -130,4 +184,66 @@ enum AvailabilityStatus {
   partiallyAvailable, // Частично занят
   unavailable, // Недоступен
   blocked, // Заблокирован
+}
+
+/// Типы событий в расписании
+enum ScheduleEventType {
+  booking, // Бронирование
+  unavailable, // Недоступен
+  vacation, // Отпуск
+  maintenance, // Техническое обслуживание
+}
+
+/// Событие в расписании
+class ScheduleEvent {
+  final String id;
+  final String title;
+  final DateTime startTime;
+  final DateTime endTime;
+  final ScheduleEventType type;
+  final String? bookingId;
+  final String? description;
+
+  const ScheduleEvent({
+    required this.id,
+    required this.title,
+    required this.startTime,
+    required this.endTime,
+    required this.type,
+    this.bookingId,
+    this.description,
+  });
+
+  /// Создать из Map
+  factory ScheduleEvent.fromMap(Map<String, dynamic> data) {
+    return ScheduleEvent(
+      id: data['id'] ?? '',
+      title: data['title'] ?? '',
+      startTime: data['startTime'] != null
+          ? (data['startTime'] as Timestamp).toDate()
+          : DateTime.now(),
+      endTime: data['endTime'] != null
+          ? (data['endTime'] as Timestamp).toDate()
+          : DateTime.now(),
+      type: ScheduleEventType.values.firstWhere(
+        (e) => e.name == data['type'],
+        orElse: () => ScheduleEventType.booking,
+      ),
+      bookingId: data['bookingId'],
+      description: data['description'],
+    );
+  }
+
+  /// Преобразовать в Map
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'title': title,
+      'startTime': Timestamp.fromDate(startTime),
+      'endTime': Timestamp.fromDate(endTime),
+      'type': type.name,
+      'bookingId': bookingId,
+      'description': description,
+    };
+  }
 }

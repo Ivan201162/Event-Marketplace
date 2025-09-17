@@ -9,9 +9,8 @@ final monitoringServiceProvider = Provider<MonitoringService>((ref) {
 
 /// Провайдер состояния мониторинга
 final monitoringStateProvider =
-    StateNotifierProvider<MonitoringStateNotifier, MonitoringState>((ref) {
-  final monitoringService = ref.watch(monitoringServiceProvider);
-  return MonitoringStateNotifier(monitoringService);
+    NotifierProvider<MonitoringStateNotifier, MonitoringState>(() {
+  return MonitoringStateNotifier();
 });
 
 /// Состояние мониторинга
@@ -52,22 +51,22 @@ class MonitoringState {
 }
 
 /// Нотификатор состояния мониторинга
-class MonitoringStateNotifier extends StateNotifier<MonitoringState> {
-  final MonitoringService _monitoringService;
-
-  MonitoringStateNotifier(this._monitoringService)
-      : super(const MonitoringState()) {
+class MonitoringStateNotifier extends Notifier<MonitoringState> {
+  @override
+  MonitoringState build() {
     _initialize();
+    return const MonitoringState();
   }
 
   /// Инициализация мониторинга
   Future<void> _initialize() async {
     try {
-      await _monitoringService.initialize();
+      final monitoringService = ref.read(monitoringServiceProvider);
+      await monitoringService.initialize();
 
       state = state.copyWith(
-        isInitialized: _monitoringService.isInitialized,
-        isEnabled: _monitoringService.isAvailable,
+        isInitialized: monitoringService.isInitialized,
+        isEnabled: monitoringService.isAvailable,
       );
     } catch (e) {
       state = state.copyWith(
@@ -86,7 +85,8 @@ class MonitoringStateNotifier extends StateNotifier<MonitoringState> {
     Map<String, dynamic>? customKeys,
   }) async {
     try {
-      await _monitoringService.recordError(
+      final monitoringService = ref.read(monitoringServiceProvider);
+      await monitoringService.recordError(
         error,
         stackTrace,
         reason: reason,
@@ -110,7 +110,8 @@ class MonitoringStateNotifier extends StateNotifier<MonitoringState> {
   Future<void> logUserAction(String action,
       {Map<String, dynamic>? parameters}) async {
     try {
-      await _monitoringService.logUserAction(action, parameters: parameters);
+      final monitoringService = ref.read(monitoringServiceProvider);
+      await monitoringService.logUserAction(action, parameters: parameters);
     } catch (e) {
       state = state.copyWith(
         lastError: e.toString(),
@@ -122,7 +123,8 @@ class MonitoringStateNotifier extends StateNotifier<MonitoringState> {
   /// Начало трассировки
   Future<void> startTrace(String traceName) async {
     try {
-      await _monitoringService.startTrace(traceName);
+      final monitoringService = ref.read(monitoringServiceProvider);
+      await monitoringService.startTrace(traceName);
 
       final updatedTraces = List<String>.from(state.activeTraces)
         ..add(traceName);
@@ -138,7 +140,8 @@ class MonitoringStateNotifier extends StateNotifier<MonitoringState> {
   /// Завершение трассировки
   Future<void> stopTrace(String traceName) async {
     try {
-      await _monitoringService.stopTrace(traceName);
+      final monitoringService = ref.read(monitoringServiceProvider);
+      await monitoringService.stopTrace(traceName);
 
       final updatedTraces = List<String>.from(state.activeTraces)
         ..remove(traceName);
@@ -154,7 +157,8 @@ class MonitoringStateNotifier extends StateNotifier<MonitoringState> {
   /// Обновление метрик
   Future<void> updateMetrics() async {
     try {
-      final metrics = await _monitoringService.getAppMetrics();
+      final monitoringService = ref.read(monitoringServiceProvider);
+      final metrics = await monitoringService.getAppMetrics();
       state = state.copyWith(metrics: metrics);
     } catch (e) {
       state = state.copyWith(
@@ -167,7 +171,8 @@ class MonitoringStateNotifier extends StateNotifier<MonitoringState> {
   /// Установка пользовательского ID
   Future<void> setUserId(String userId) async {
     try {
-      await _monitoringService.setUserId(userId);
+      final monitoringService = ref.read(monitoringServiceProvider);
+      await monitoringService.setUserId(userId);
     } catch (e) {
       state = state.copyWith(
         lastError: e.toString(),
@@ -179,7 +184,8 @@ class MonitoringStateNotifier extends StateNotifier<MonitoringState> {
   /// Очистка данных
   Future<void> clearData() async {
     try {
-      await _monitoringService.clearData();
+      final monitoringService = ref.read(monitoringServiceProvider);
+      await monitoringService.clearData();
 
       state = state.copyWith(
         metrics: {},

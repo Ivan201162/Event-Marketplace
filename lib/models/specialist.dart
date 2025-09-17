@@ -236,6 +236,8 @@ class Specialist {
   final DateTime updatedAt;
   final Map<String, dynamic>? metadata;
   final String? avatarUrl;
+  final String? avatar;
+  final String? specialization;
 
   const Specialist({
     required this.id,
@@ -263,7 +265,75 @@ class Specialist {
     required this.updatedAt,
     this.metadata,
     this.avatarUrl,
+    this.avatar,
+    this.specialization,
   });
+
+  /// Создать из Map
+  factory Specialist.fromMap(Map<String, dynamic> data) {
+    return Specialist(
+      id: data['id'] ?? '',
+      name: data['name'] ?? '',
+      // email: data['email'] ?? '', // Удалено, так как нет в конструкторе
+      phone: data['phone'] ?? '',
+      description: data['description'] ?? '',
+      categories: (data['categories'] as List<dynamic>?)
+              ?.map((e) => SpecialistCategory.values.firstWhere(
+                    (cat) => cat.name == e,
+                    orElse: () => SpecialistCategory.other,
+                  ))
+              .toList() ??
+          [],
+      experienceLevel: ExperienceLevel.values.firstWhere(
+        (e) => e.name == data['experienceLevel'],
+        orElse: () => ExperienceLevel.beginner,
+      ),
+      rating: (data['rating'] as num?)?.toDouble() ?? 0.0,
+      reviewCount: data['reviewCount'] ?? 0,
+      pricePerHour: (data['pricePerHour'] as num?)?.toDouble(),
+      minPrice: (data['minPrice'] as num?)?.toDouble(),
+      maxPrice: (data['maxPrice'] as num?)?.toDouble(),
+      location: data['location'] ?? '',
+      isAvailable: data['isAvailable'] ?? true,
+      isVerified: data['isVerified'] ?? false,
+      portfolioImages: List<String>.from(data['portfolioImages'] ?? []),
+      portfolioVideos: List<String>.from(data['portfolioVideos'] ?? []),
+      services: List<String>.from(data['services'] ?? []),
+      equipment: List<String>.from(data['equipment'] ?? []),
+      languages: List<String>.from(data['languages'] ?? []),
+      workingHours: Map<String, String>.from(data['workingHours'] ?? {}),
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      lastActiveAt: data['lastActiveAt'] != null
+          ? (data['lastActiveAt'] as Timestamp).toDate()
+          : null,
+      profileImageUrl: data['profileImageUrl'],
+      coverImageUrl: data['coverImageUrl'],
+      socialLinks: Map<String, String>.from(data['socialLinks'] ?? {}),
+      certifications: List<String>.from(data['certifications'] ?? []),
+      awards: List<String>.from(data['awards'] ?? []),
+      insurance: data['insurance'] ?? false,
+      travelRadius: data['travelRadius'] ?? 0,
+      responseTime: data['responseTime'] ?? 0,
+      completionRate: (data['completionRate'] as num?)?.toDouble() ?? 0.0,
+      cancellationRate: (data['cancellationRate'] as num?)?.toDouble() ?? 0.0,
+      averageResponseTime: data['averageResponseTime'] ?? 0,
+      totalBookings: data['totalBookings'] ?? 0,
+      totalEarnings: (data['totalEarnings'] as num?)?.toDouble() ?? 0.0,
+      isOnline: data['isOnline'] ?? false,
+      isPremium: data['isPremium'] ?? false,
+      premiumExpiresAt: data['premiumExpiresAt'] != null
+          ? (data['premiumExpiresAt'] as Timestamp).toDate()
+          : null,
+      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      avatar: data['avatar'],
+      specialization: data['specialization'],
+    );
+  }
 
   /// Создать из документа Firestore
   factory Specialist.fromDocument(DocumentSnapshot doc) {
@@ -298,6 +368,8 @@ class Specialist {
           : DateTime.now(),
       metadata: data['metadata'],
       avatarUrl: data['avatarUrl'],
+      avatar: data['avatar'],
+      specialization: data['specialization'],
     );
   }
 
@@ -328,6 +400,8 @@ class Specialist {
       'updatedAt': Timestamp.fromDate(updatedAt),
       'metadata': metadata,
       'avatarUrl': avatarUrl,
+      'avatar': avatar,
+      'specialization': specialization,
     };
   }
 
@@ -358,6 +432,8 @@ class Specialist {
     DateTime? updatedAt,
     Map<String, dynamic>? metadata,
     String? avatarUrl,
+    String? avatar,
+    String? specialization,
   }) {
     return Specialist(
       id: id ?? this.id,
@@ -385,6 +461,8 @@ class Specialist {
       updatedAt: updatedAt ?? this.updatedAt,
       metadata: metadata ?? this.metadata,
       avatarUrl: avatarUrl ?? this.avatarUrl,
+      avatar: avatar ?? this.avatar,
+      specialization: specialization ?? this.specialization,
     );
   }
 

@@ -1,22 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Модель поста в ленте новостей
+/// Модель поста в ленте
 class FeedPost {
   final String id;
   final String specialistId;
   final String specialistName;
   final String? specialistPhotoUrl;
   final String content;
-  final List<String> mediaUrls;
-  final List<String> tags;
-  final PostType type;
+  final List<String> images;
+  final List<String> videos;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final int likes;
-  final int comments;
-  final int shares;
+  final int likesCount;
+  final int commentsCount;
   final List<String> likedBy;
-  final Map<String, dynamic> metadata;
+  final bool isPinned;
+  final List<String> tags;
+  final int shares;
 
   const FeedPost({
     required this.id,
@@ -24,40 +24,38 @@ class FeedPost {
     required this.specialistName,
     this.specialistPhotoUrl,
     required this.content,
-    required this.mediaUrls,
-    required this.tags,
-    required this.type,
+    this.images = const [],
+    this.videos = const [],
     required this.createdAt,
     required this.updatedAt,
-    required this.likes,
-    required this.comments,
-    required this.shares,
-    required this.likedBy,
-    required this.metadata,
+    this.likesCount = 0,
+    this.commentsCount = 0,
+    this.likedBy = const [],
+    this.isPinned = false,
+    this.tags = const [],
+    this.shares = 0,
   });
 
   /// Создать из документа Firestore
   factory FeedPost.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
+
     return FeedPost(
       id: doc.id,
-      specialistId: data['specialistId'] ?? '',
-      specialistName: data['specialistName'] ?? '',
-      specialistPhotoUrl: data['specialistPhotoUrl'],
-      content: data['content'] ?? '',
-      mediaUrls: List<String>.from(data['mediaUrls'] ?? []),
-      tags: List<String>.from(data['tags'] ?? []),
-      type: PostType.values.firstWhere(
-        (e) => e.name == data['type'],
-        orElse: () => PostType.text,
-      ),
+      specialistId: data['specialistId'] as String,
+      specialistName: data['specialistName'] as String,
+      specialistPhotoUrl: data['specialistPhotoUrl'] as String?,
+      content: data['content'] as String,
+      images: List<String>.from(data['images'] ?? []),
+      videos: List<String>.from(data['videos'] ?? []),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      likes: data['likes'] ?? 0,
-      comments: data['comments'] ?? 0,
-      shares: data['shares'] ?? 0,
+      likesCount: data['likesCount'] ?? 0,
+      commentsCount: data['commentsCount'] ?? 0,
       likedBy: List<String>.from(data['likedBy'] ?? []),
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      isPinned: data['isPinned'] ?? false,
+      tags: List<String>.from(data['tags'] ?? []),
+      shares: data['shares'] ?? 0,
     );
   }
 
@@ -68,36 +66,36 @@ class FeedPost {
       'specialistName': specialistName,
       'specialistPhotoUrl': specialistPhotoUrl,
       'content': content,
-      'mediaUrls': mediaUrls,
-      'tags': tags,
-      'type': type.name,
+      'images': images,
+      'videos': videos,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
-      'likes': likes,
-      'comments': comments,
-      'shares': shares,
+      'likesCount': likesCount,
+      'commentsCount': commentsCount,
       'likedBy': likedBy,
-      'metadata': metadata,
+      'isPinned': isPinned,
+      'tags': tags,
+      'shares': shares,
     };
   }
 
-  /// Создать копию с изменениями
+  /// Создать копию с обновлёнными полями
   FeedPost copyWith({
     String? id,
     String? specialistId,
     String? specialistName,
     String? specialistPhotoUrl,
     String? content,
-    List<String>? mediaUrls,
-    List<String>? tags,
-    PostType? type,
+    List<String>? images,
+    List<String>? videos,
     DateTime? createdAt,
     DateTime? updatedAt,
-    int? likes,
-    int? comments,
-    int? shares,
+    int? likesCount,
+    int? commentsCount,
     List<String>? likedBy,
-    Map<String, dynamic>? metadata,
+    bool? isPinned,
+    List<String>? tags,
+    int? shares,
   }) {
     return FeedPost(
       id: id ?? this.id,
@@ -105,25 +103,48 @@ class FeedPost {
       specialistName: specialistName ?? this.specialistName,
       specialistPhotoUrl: specialistPhotoUrl ?? this.specialistPhotoUrl,
       content: content ?? this.content,
-      mediaUrls: mediaUrls ?? this.mediaUrls,
-      tags: tags ?? this.tags,
-      type: type ?? this.type,
+      images: images ?? this.images,
+      videos: videos ?? this.videos,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
-      likes: likes ?? this.likes,
-      comments: comments ?? this.comments,
-      shares: shares ?? this.shares,
+      likesCount: likesCount ?? this.likesCount,
+      commentsCount: commentsCount ?? this.commentsCount,
       likedBy: likedBy ?? this.likedBy,
-      metadata: metadata ?? this.metadata,
+      isPinned: isPinned ?? this.isPinned,
+      tags: tags ?? this.tags,
+      shares: shares ?? this.shares,
     );
   }
 
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is FeedPost && other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+
+  /// Получить все медиа URL
+  List<String> get mediaUrls => [...images, ...videos];
+
   /// Проверить, лайкнул ли пользователь пост
   bool isLikedBy(String userId) => likedBy.contains(userId);
+
+  /// Получить количество лайков
+  int get likes => likesCount;
+
+  /// Получить количество комментариев
+  int get comments => commentsCount;
+
+  @override
+  String toString() {
+    return 'FeedPost(id: $id, specialistId: $specialistId, content: $content)';
+  }
 }
 
 /// Модель комментария к посту
-class PostComment {
+class FeedComment {
   final String id;
   final String postId;
   final String userId;
@@ -132,12 +153,10 @@ class PostComment {
   final String content;
   final DateTime createdAt;
   final DateTime updatedAt;
-  final int likes;
+  final int likesCount;
   final List<String> likedBy;
-  final String? parentCommentId;
-  final List<String> replies;
 
-  const PostComment({
+  const FeedComment({
     required this.id,
     required this.postId,
     required this.userId,
@@ -146,28 +165,25 @@ class PostComment {
     required this.content,
     required this.createdAt,
     required this.updatedAt,
-    required this.likes,
-    required this.likedBy,
-    this.parentCommentId,
-    required this.replies,
+    this.likesCount = 0,
+    this.likedBy = const [],
   });
 
   /// Создать из документа Firestore
-  factory PostComment.fromDocument(DocumentSnapshot doc) {
+  factory FeedComment.fromDocument(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>;
-    return PostComment(
+
+    return FeedComment(
       id: doc.id,
-      postId: data['postId'] ?? '',
-      userId: data['userId'] ?? '',
-      userName: data['userName'] ?? '',
-      userPhotoUrl: data['userPhotoUrl'],
-      content: data['content'] ?? '',
+      postId: data['postId'] as String,
+      userId: data['userId'] as String,
+      userName: data['userName'] as String,
+      userPhotoUrl: data['userPhotoUrl'] as String?,
+      content: data['content'] as String,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      likes: data['likes'] ?? 0,
+      likesCount: data['likesCount'] ?? 0,
       likedBy: List<String>.from(data['likedBy'] ?? []),
-      parentCommentId: data['parentCommentId'],
-      replies: List<String>.from(data['replies'] ?? []),
     );
   }
 
@@ -181,23 +197,52 @@ class PostComment {
       'content': content,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
-      'likes': likes,
+      'likesCount': likesCount,
       'likedBy': likedBy,
-      'parentCommentId': parentCommentId,
-      'replies': replies,
     };
   }
 
+  /// Создать копию с обновлёнными полями
+  FeedComment copyWith({
+    String? id,
+    String? postId,
+    String? userId,
+    String? userName,
+    String? userPhotoUrl,
+    String? content,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    int? likesCount,
+    List<String>? likedBy,
+  }) {
+    return FeedComment(
+      id: id ?? this.id,
+      postId: postId ?? this.postId,
+      userId: userId ?? this.userId,
+      userName: userName ?? this.userName,
+      userPhotoUrl: userPhotoUrl ?? this.userPhotoUrl,
+      content: content ?? this.content,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      likesCount: likesCount ?? this.likesCount,
+      likedBy: likedBy ?? this.likedBy,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is FeedComment && other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+
   /// Проверить, лайкнул ли пользователь комментарий
   bool isLikedBy(String userId) => likedBy.contains(userId);
-}
 
-/// Типы постов
-enum PostType {
-  text,
-  image,
-  video,
-  event,
-  portfolio,
-  announcement,
+  @override
+  String toString() {
+    return 'FeedComment(id: $id, postId: $postId, userId: $userId)';
+  }
 }

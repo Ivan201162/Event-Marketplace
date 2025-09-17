@@ -1,351 +1,158 @@
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:event_marketplace_app/core/feature_flags.dart';
-import 'package:event_marketplace_app/models/story.dart';
-import 'package:uuid/uuid.dart';
+import '../models/story.dart';
 
-/// Сервис для работы со сторисами специалистов
+/// Сервис для работы с историями
 class StoryService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final FirebaseStorage _storage = FirebaseStorage.instance;
-  final Uuid _uuid = const Uuid();
 
-  /// Создать сторис
-  Future<Story> createStory({
-    required String specialistId,
-    required String specialistName,
-    String? specialistPhotoUrl,
-    required StoryType type,
-    required XFile mediaFile,
-    String? caption,
-    List<String>? tags,
-  }) async {
-    if (!FeatureFlags.storiesEnabled) {
-      throw Exception('Сторисы отключены');
-    }
+  /// Получить истории специалиста
+  Stream<List<Story>> getSpecialistStories(String specialistId) {
+    return _firestore
+        .collection('stories')
+        .where('specialistId', isEqualTo: specialistId)
+        .where('isActive', isEqualTo: true)
+        .where('expiresAt', isGreaterThan: Timestamp.fromDate(DateTime.now()))
+        .orderBy('expiresAt')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => Story.fromDocument(doc)).toList());
+  }
 
+  /// Получить все активные истории
+  Stream<List<Story>> getAllStories() {
+    return _firestore
+        .collection('stories')
+        .where('isActive', isEqualTo: true)
+        .where('expiresAt', isGreaterThan: Timestamp.fromDate(DateTime.now()))
+        .orderBy('expiresAt')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => Story.fromDocument(doc)).toList());
+  }
+
+  /// Создать историю
+  Future<String> createStory(Story story) async {
     try {
-      // Загружаем медиа файл
-      final mediaUrl = await _uploadMediaFile(mediaFile, specialistId);
-      String? thumbnailUrl;
-
-      // Создаем превью для видео
-      if (type == StoryType.video) {
-        thumbnailUrl = await _generateVideoThumbnail(mediaFile, specialistId);
-      }
-
-      final now = DateTime.now();
-      final expiresAt = now.add(const Duration(hours: 24));
-
-      final story = Story(
-        id: '',
-        specialistId: specialistId,
-        specialistName: specialistName,
-        specialistPhotoUrl: specialistPhotoUrl,
-        type: type,
-        mediaUrl: mediaUrl,
-        thumbnailUrl: thumbnailUrl,
-        caption: caption,
-        tags: tags ?? [],
-        createdAt: now,
-        expiresAt: expiresAt,
-        views: 0,
-        likes: 0,
-        viewers: [],
-        metadata: {},
-      );
-
       final docRef = await _firestore.collection('stories').add(story.toMap());
-
-      return story.copyWith(id: docRef.id);
+      return docRef.id;
     } catch (e) {
-      throw Exception('Ошибка создания сториса: $e');
+      throw Exception('Ошибка создания истории: $e');
     }
   }
 
-  /// Получить активные сторисы специалиста
-  Future<List<Story>> getSpecialistStories(String specialistId) async {
+  /// Обновить историю
+  Future<void> updateStory(Story story) async {
     try {
-      final now = DateTime.now();
-      final snapshot = await _firestore
-          .collection('stories')
-          .where('specialistId', isEqualTo: specialistId)
-          .where('expiresAt', isGreaterThan: now)
-          .orderBy('expiresAt')
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      return snapshot.docs.map((doc) => Story.fromDocument(doc)).toList();
+      await _firestore.collection('stories').doc(story.id).update(story.toMap());
     } catch (e) {
-      throw Exception('Ошибка получения сторисов: $e');
+      throw Exception('Ошибка обновления истории: $e');
     }
   }
 
-  /// Получить все активные сторисы
-  Future<List<Story>> getAllActiveStories() async {
-    try {
-      final now = DateTime.now();
-      final snapshot = await _firestore
-          .collection('stories')
-          .where('expiresAt', isGreaterThan: now)
-          .orderBy('expiresAt')
-          .orderBy('createdAt', descending: true)
-          .get();
-
-      return snapshot.docs.map((doc) => Story.fromDocument(doc)).toList();
-    } catch (e) {
-      throw Exception('Ошибка получения всех сторисов: $e');
-    }
-  }
-
-  /// Отметить сторис как просмотренный
-  Future<void> markStoryAsViewed({
-    required String storyId,
-    required String userId,
-  }) async {
-    try {
-      final storyDoc = _firestore.collection('stories').doc(storyId);
-
-      await _firestore.runTransaction((transaction) async {
-        final doc = await transaction.get(storyDoc);
-        if (!doc.exists) return;
-
-        final story = Story.fromDocument(doc);
-        if (story.viewers.contains(userId)) return;
-
-        final updatedViewers = List<String>.from(story.viewers)..add(userId);
-
-        transaction.update(storyDoc, {
-          'viewers': updatedViewers,
-          'views': FieldValue.increment(1),
-        });
-      });
-    } catch (e) {
-      throw Exception('Ошибка отметки просмотра: $e');
-    }
-  }
-
-  /// Лайкнуть сторис
-  Future<void> likeStory({
-    required String storyId,
-    required String userId,
-  }) async {
-    try {
-      final likeDoc = await _firestore
-          .collection('story_likes')
-          .where('storyId', isEqualTo: storyId)
-          .where('userId', isEqualTo: userId)
-          .limit(1)
-          .get();
-
-      if (likeDoc.docs.isNotEmpty) {
-        throw Exception('Вы уже лайкнули этот сторис');
-      }
-
-      // Сохраняем лайк
-      await _firestore.collection('story_likes').add({
-        'storyId': storyId,
-        'userId': userId,
-        'createdAt': Timestamp.fromDate(DateTime.now()),
-      });
-
-      // Увеличиваем счетчик лайков
-      await _firestore.collection('stories').doc(storyId).update({
-        'likes': FieldValue.increment(1),
-      });
-    } catch (e) {
-      throw Exception('Ошибка лайка сториса: $e');
-    }
-  }
-
-  /// Убрать лайк со сториса
-  Future<void> unlikeStory({
-    required String storyId,
-    required String userId,
-  }) async {
-    try {
-      // Находим лайк
-      final likeDoc = await _firestore
-          .collection('story_likes')
-          .where('storyId', isEqualTo: storyId)
-          .where('userId', isEqualTo: userId)
-          .limit(1)
-          .get();
-
-      if (likeDoc.docs.isEmpty) {
-        throw Exception('Вы не лайкали этот сторис');
-      }
-
-      // Удаляем лайк
-      await _firestore
-          .collection('story_likes')
-          .doc(likeDoc.docs.first.id)
-          .delete();
-
-      // Уменьшаем счетчик лайков
-      await _firestore.collection('stories').doc(storyId).update({
-        'likes': FieldValue.increment(-1),
-      });
-    } catch (e) {
-      throw Exception('Ошибка удаления лайка: $e');
-    }
-  }
-
-  /// Удалить сторис
+  /// Удалить историю
   Future<void> deleteStory(String storyId) async {
     try {
-      // Получаем информацию о сторисе
-      final storyDoc =
-          await _firestore.collection('stories').doc(storyId).get();
-      if (!storyDoc.exists) {
-        throw Exception('Сторис не найден');
-      }
-
-      final story = Story.fromDocument(storyDoc);
-
-      // Удаляем медиа файлы из Storage
-      await _deleteMediaFile(story.mediaUrl);
-      if (story.thumbnailUrl != null) {
-        await _deleteMediaFile(story.thumbnailUrl!);
-      }
-
-      // Удаляем лайки
-      final likesSnapshot = await _firestore
-          .collection('story_likes')
-          .where('storyId', isEqualTo: storyId)
-          .get();
-
-      for (final likeDoc in likesSnapshot.docs) {
-        await likeDoc.reference.delete();
-      }
-
-      // Удаляем сторис
-      await _firestore.collection('stories').doc(storyId).delete();
+      await _firestore.collection('stories').doc(storyId).update({
+        'isActive': false,
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      });
     } catch (e) {
-      throw Exception('Ошибка удаления сториса: $e');
+      throw Exception('Ошибка удаления истории: $e');
     }
   }
 
-  /// Очистить истекшие сторисы
+  /// Отметить историю как просмотренную
+  Future<void> markAsViewed(String storyId, String userId) async {
+    try {
+      final storyRef = _firestore.collection('stories').doc(storyId);
+      final storyDoc = await storyRef.get();
+      
+      if (!storyDoc.exists) {
+        throw Exception('История не найдена');
+      }
+
+      final storyData = storyDoc.data()!;
+      final viewedBy = List<String>.from(storyData['viewedBy'] ?? []);
+      
+      if (!viewedBy.contains(userId)) {
+        viewedBy.add(userId);
+        await storyRef.update({
+          'viewedBy': viewedBy,
+          'viewsCount': viewedBy.length,
+          'updatedAt': Timestamp.fromDate(DateTime.now()),
+        });
+      }
+    } catch (e) {
+      throw Exception('Ошибка отметки истории как просмотренной: $e');
+    }
+  }
+
+  /// Получить истории по подпискам
+  Stream<List<Story>> getStoriesBySubscriptions(List<String> specialistIds) {
+    if (specialistIds.isEmpty) {
+      return Stream.value([]);
+    }
+
+    return _firestore
+        .collection('stories')
+        .where('specialistId', whereIn: specialistIds)
+        .where('isActive', isEqualTo: true)
+        .where('expiresAt', isGreaterThan: Timestamp.fromDate(DateTime.now()))
+        .orderBy('expiresAt')
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => Story.fromDocument(doc)).toList());
+  }
+
+  /// Очистить истекшие истории
   Future<void> cleanupExpiredStories() async {
     try {
-      final now = DateTime.now();
-      final expiredStories = await _firestore
+      final querySnapshot = await _firestore
           .collection('stories')
-          .where('expiresAt', isLessThan: now)
+          .where('expiresAt', isLessThan: Timestamp.fromDate(DateTime.now()))
           .get();
 
-      for (final doc in expiredStories.docs) {
-        final story = Story.fromDocument(doc);
-
-        // Удаляем медиа файлы
-        await _deleteMediaFile(story.mediaUrl);
-        if (story.thumbnailUrl != null) {
-          await _deleteMediaFile(story.thumbnailUrl!);
-        }
-
-        // Удаляем лайки
-        final likesSnapshot = await _firestore
-            .collection('story_likes')
-            .where('storyId', isEqualTo: doc.id)
-            .get();
-
-        for (final likeDoc in likesSnapshot.docs) {
-          await likeDoc.reference.delete();
-        }
-
-        // Удаляем сторис
-        await doc.reference.delete();
+      final batch = _firestore.batch();
+      for (final doc in querySnapshot.docs) {
+        batch.update(doc.reference, {
+          'isActive': false,
+          'updatedAt': Timestamp.fromDate(DateTime.now()),
+        });
       }
+      await batch.commit();
     } catch (e) {
-      throw Exception('Ошибка очистки истекших сторисов: $e');
+      throw Exception('Ошибка очистки истекших историй: $e');
     }
   }
 
-  /// Получить статистику сторисов специалиста
-  Future<StoryStatistics> getSpecialistStoryStatistics(
-      String specialistId) async {
+  /// Получить статистику историй специалиста
+  Future<Map<String, dynamic>> getSpecialistStoryStats(String specialistId) async {
     try {
-      final snapshot = await _firestore
+      final querySnapshot = await _firestore
           .collection('stories')
           .where('specialistId', isEqualTo: specialistId)
           .get();
 
-      final stories =
-          snapshot.docs.map((doc) => Story.fromDocument(doc)).toList();
+      int totalStories = querySnapshot.docs.length;
+      int activeStories = 0;
+      int totalViews = 0;
 
-      final totalStories = stories.length;
-      final totalViews = stories.fold(0, (sum, story) => sum + story.views);
-      final totalLikes = stories.fold(0, (sum, story) => sum + story.likes);
-      final activeStories = stories.where((story) => !story.isExpired).length;
+      for (final doc in querySnapshot.docs) {
+        final data = doc.data();
+        if (data['isActive'] == true && 
+            (data['expiresAt'] as Timestamp).toDate().isAfter(DateTime.now())) {
+          activeStories++;
+        }
+        totalViews += data['viewsCount'] ?? 0;
+      }
 
-      return StoryStatistics(
-        totalStories: totalStories,
-        totalViews: totalViews,
-        totalLikes: totalLikes,
-        activeStories: activeStories,
-        averageViews:
-            totalStories > 0 ? (totalViews / totalStories).round() : 0,
-        averageLikes:
-            totalStories > 0 ? (totalLikes / totalStories).round() : 0,
-      );
+      return {
+        'totalStories': totalStories,
+        'activeStories': activeStories,
+        'totalViews': totalViews,
+      };
     } catch (e) {
-      throw Exception('Ошибка получения статистики сторисов: $e');
+      throw Exception('Ошибка получения статистики историй: $e');
     }
   }
-
-  // Приватные методы
-
-  Future<String> _uploadMediaFile(XFile file, String specialistId) async {
-    try {
-      final fileName = '${specialistId}/stories/${_uuid.v4()}_${file.name}';
-      final ref = _storage.ref().child(fileName);
-
-      final uploadTask = await ref.putFile(File(file.path));
-      return await uploadTask.ref.getDownloadURL();
-    } catch (e) {
-      throw Exception('Ошибка загрузки медиа файла: $e');
-    }
-  }
-
-  Future<String> _generateVideoThumbnail(
-      XFile videoFile, String specialistId) async {
-    try {
-      // TODO: Реализовать генерацию превью для видео
-      // Пока возвращаем заглушку
-      return '';
-    } catch (e) {
-      return '';
-    }
-  }
-
-  Future<void> _deleteMediaFile(String url) async {
-    try {
-      final ref = _storage.refFromURL(url);
-      await ref.delete();
-    } catch (e) {
-      // Игнорируем ошибки удаления файлов
-    }
-  }
-}
-
-/// Статистика сторисов
-class StoryStatistics {
-  final int totalStories;
-  final int totalViews;
-  final int totalLikes;
-  final int activeStories;
-  final int averageViews;
-  final int averageLikes;
-
-  const StoryStatistics({
-    required this.totalStories,
-    required this.totalViews,
-    required this.totalLikes,
-    required this.activeStories,
-    required this.averageViews,
-    required this.averageLikes,
-  });
 }
