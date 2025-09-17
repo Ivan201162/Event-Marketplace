@@ -5,6 +5,7 @@ import '../widgets/role_switcher.dart';
 import '../widgets/recommendations_section.dart';
 import '../widgets/enhanced_page_transition.dart';
 import '../widgets/responsive_layout.dart';
+import '../widgets/theme_switch_widget.dart';
 import '../core/app_theme.dart';
 import '../core/responsive_utils.dart';
 import '../models/user.dart';
@@ -62,22 +63,36 @@ class HomeScreen extends ConsumerWidget {
                             color: Colors.white,
                           ),
                         ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: IconButton(
-                            icon: const Icon(Icons.notifications_outlined,
-                                color: Colors.white),
-                            onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content: Text(
-                                        "Уведомления пока не реализованы")),
-                              );
-                            },
-                          ),
+                        Row(
+                          children: [
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: const QuickThemeToggle(
+                                iconColor: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: IconButton(
+                                icon: const Icon(Icons.notifications_outlined,
+                                    color: Colors.white),
+                                onPressed: () {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                        content: Text(
+                                            "Уведомления пока не реализованы")),
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),

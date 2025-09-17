@@ -4,6 +4,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:go_router/go_router.dart';
 import '../providers/auth_providers.dart';
 import '../providers/locale_provider.dart';
+import '../providers/theme_provider.dart';
+import '../widgets/theme_switch_widget.dart';
 import '../models/user.dart';
 import 'admin_panel_screen.dart';
 
@@ -46,6 +48,11 @@ class SettingsPage extends ConsumerWidget {
 
                 // Настройки языка
                 _buildLanguageSection(context),
+
+                const SizedBox(height: 24),
+
+                // Настройки темы
+                _buildThemeSection(context),
 
                 const SizedBox(height: 24),
 
@@ -263,6 +270,28 @@ class SettingsPage extends ConsumerWidget {
                 );
               },
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildThemeSection(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Тема приложения',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const ThemeSelectorWidget(showTitle: false),
           ],
         ),
       ),
