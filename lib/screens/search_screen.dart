@@ -4,6 +4,7 @@ import '../providers/specialist_providers.dart';
 import '../models/specialist.dart';
 import '../widgets/specialist_card.dart';
 import '../widgets/search_filters_widget.dart';
+import '../core/app_theme.dart';
 import 'specialist_profile_screen.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
@@ -30,38 +31,88 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final searchHistory = ref.watch(searchHistoryProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Поиск специалистов"),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        elevation: 0,
-        actions: [
-          IconButton(
-            icon:
-                Icon(_showFilters ? Icons.filter_list_off : Icons.filter_list),
-            onPressed: () {
-              setState(() {
-                _showFilters = !_showFilters;
-              });
-            },
+      body: CustomScrollView(
+        slivers: [
+          // Современный AppBar с градиентом
+          SliverAppBar(
+            expandedHeight: 120,
+            floating: false,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: const Text(
+                "Поиск специалистов",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              background: Container(
+                decoration: const BoxDecoration(
+                  gradient: BrandColors.primaryGradient,
+                ),
+                child: SafeArea(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(top: 40, left: 16, right: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          "Поиск специалистов",
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: IconButton(
+                            icon: Icon(
+                              _showFilters
+                                  ? Icons.filter_list_off
+                                  : Icons.filter_list,
+                              color: Colors.white,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _showFilters = !_showFilters;
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Поисковая строка
-          _buildSearchBar(),
 
-          // Статистика поиска
-          if (searchStats.hasActiveFilters || searchResults.hasValue)
-            _buildSearchStats(searchStats),
+          // Основной контент
+          SliverToBoxAdapter(
+            child: Column(
+              children: [
+                // Поисковая строка
+                _buildSearchBar(),
 
-          // Фильтры
-          if (_showFilters) _buildFiltersSection(),
+                // Статистика поиска
+                if (searchStats.hasActiveFilters || searchResults.hasValue)
+                  _buildSearchStats(searchStats),
+
+                // Фильтры
+                if (_showFilters) _buildFiltersSection(),
+
+                const SizedBox(height: 16),
+              ],
+            ),
+          ),
 
           // Результаты поиска
-          Expanded(
-            child: _buildSearchResults(searchResults, searchHistory),
-          ),
+          _buildSearchResults(searchResults, searchHistory),
         ],
       ),
     );
@@ -204,52 +255,57 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     return searchResults.when(
       data: (specialists) {
         if (specialists.isEmpty) {
-          return _buildEmptyState(searchHistory);
+          return SliverFillRemaining(
+            child: _buildEmptyState(searchHistory),
+          );
         }
 
-        return RefreshIndicator(
-          onRefresh: () async {
-            _performSearch();
-          },
-          child: ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: specialists.length,
-            itemBuilder: (context, index) {
-              final specialist = specialists[index];
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: SpecialistCard(
-                  specialist: specialist,
-                  onTap: () => _navigateToSpecialistProfile(specialist),
-                ),
-              );
-            },
+        return SliverPadding(
+          padding: const EdgeInsets.all(16),
+          sliver: SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (context, index) {
+                final specialist = specialists[index];
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: SpecialistCard(
+                    specialist: specialist,
+                    onTap: () => _navigateToSpecialistProfile(specialist),
+                  ),
+                );
+              },
+              childCount: specialists.length,
+            ),
           ),
         );
       },
-      loading: () => const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            CircularProgressIndicator(),
-            SizedBox(height: 16),
-            Text('Поиск специалистов...'),
-          ],
+      loading: () => SliverFillRemaining(
+        child: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              CircularProgressIndicator(),
+              SizedBox(height: 16),
+              Text('Поиск специалистов...'),
+            ],
+          ),
         ),
       ),
-      error: (error, stack) => Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(Icons.error_outline, size: 64, color: Colors.red),
-            const SizedBox(height: 16),
-            Text('Ошибка поиска: $error'),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _performSearch,
-              child: const Text('Повторить'),
-            ),
-          ],
+      error: (error, stack) => SliverFillRemaining(
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(Icons.error_outline, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              Text('Ошибка поиска: $error'),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: _performSearch,
+                child: const Text('Повторить'),
+              ),
+            ],
+          ),
         ),
       ),
     );

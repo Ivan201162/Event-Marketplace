@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../core/app_theme.dart';
 import 'chat_extended_screen.dart';
 
 /// Демо экран для показа расширенного чата
@@ -9,59 +10,109 @@ class ChatsDemoScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Чаты'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showNewChatDialog(context),
-          ),
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          // Заголовок с описанием новых функций
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.record_voice_over,
-                        color: Theme.of(context).primaryColor,
-                        size: 24,
-                      ),
-                      const SizedBox(width: 8),
-                      const Text(
-                        'Новые возможности чата',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+      body: CustomScrollView(
+        slivers: [
+          // Современный AppBar с градиентом
+          SliverAppBar(
+            expandedHeight: 120,
+            floating: false,
+            pinned: true,
+            flexibleSpace: FlexibleSpaceBar(
+              title: const Text(
+                'Чаты',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
+              background: Container(
+                decoration: const BoxDecoration(
+                  gradient: BrandColors.primaryGradient,
+                ),
+                child: SafeArea(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.only(top: 40, left: 16, right: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Чаты',
+                          style: TextStyle(
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                    ],
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: IconButton(
+                            icon: const Icon(Icons.add, color: Colors.white),
+                            onPressed: () => _showNewChatDialog(context),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(height: 12),
-                  const Text(
-                    '• Голосовые сообщения с визуализацией\n'
-                    '• Реакции на сообщения (эмодзи)\n'
-                    '• Улучшенный интерфейс чата\n'
-                    '• Статистика и аналитика',
-                    style: TextStyle(fontSize: 14),
-                  ),
-                ],
+                ),
               ),
             ),
           ),
 
-          const SizedBox(height: 16),
+          // Основной контент
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  // Заголовок с описанием новых функций
+                  Card(
+                    child: Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Icon(
+                                Icons.record_voice_over,
+                                color: Theme.of(context).primaryColor,
+                                size: 24,
+                              ),
+                              const SizedBox(width: 8),
+                              const Text(
+                                'Новые возможности чата',
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 12),
+                          const Text(
+                            '• Голосовые сообщения с визуализацией\n'
+                            '• Реакции на сообщения (эмодзи)\n'
+                            '• Улучшенный интерфейс чата\n'
+                            '• Статистика и аналитика',
+                            style: TextStyle(fontSize: 14),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
 
-          // Список чатов
-          _buildChatList(context),
+                  const SizedBox(height: 16),
+
+                  // Список чатов
+                  _buildChatList(context),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );
