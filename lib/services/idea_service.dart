@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import '../models/idea.dart';
+import '../models/idea_filter.dart';
+import '../models/collection.dart';
+import '../models/idea_stats.dart';
 import '../core/feature_flags.dart';
 
 /// Сервис для работы с идеями
@@ -412,6 +415,117 @@ class IdeaService {
     } catch (e) {
       debugPrint('Error toggling comment like: $e');
       throw Exception('Ошибка изменения лайка комментария: $e');
+    }
+  }
+
+  /// Получить идеи с фильтром
+  Stream<List<Idea>> getIdeas(IdeaFilter filter) {
+    Query query = _firestore.collection('ideas');
+
+    if (filter.category != null) {
+      query = query.where('category', isEqualTo: filter.category);
+    }
+
+    if (filter.authorId != null) {
+      query = query.where('authorId', isEqualTo: filter.authorId);
+    }
+
+    if (filter.tags != null && filter.tags!.isNotEmpty) {
+      query = query.where('tags', arrayContainsAny: filter.tags);
+    }
+
+    if (filter.isPublic != null) {
+      query = query.where('isPublic', isEqualTo: filter.isPublic);
+    }
+
+    query = query.orderBy('createdAt', descending: true);
+
+    if (filter.limit != null) {
+      query = query.limit(filter.limit!);
+    }
+
+    return query.snapshots().map((snapshot) {
+      return snapshot.docs
+          .map((doc) => Idea.fromMap(doc.data() as Map<String, dynamic>))
+          .toList();
+    });
+  }
+
+  /// Получить идею по ID
+  Future<Idea?> getIdea(String ideaId) async {
+    try {
+      final doc = await _firestore.collection('ideas').doc(ideaId).get();
+      if (doc.exists) {
+        return Idea.fromMap(doc.data()!);
+      }
+      return null;
+    } catch (e) {
+      debugPrint('Error getting idea: $e');
+      return null;
+    }
+  }
+
+  /// Получить топ идеи недели
+  Stream<List<Idea>> getTopIdeasOfWeek({int limit = 10}) {
+    final weekAgo = DateTime.now().subtract(const Duration(days: 7));
+
+    return _firestore
+        .collection('ideas')
+        .where('isPublic', isEqualTo: true)
+        .where('createdAt', isGreaterThan: Timestamp.fromDate(weekAgo))
+        .orderBy('createdAt')
+        .orderBy('likesCount', descending: true)
+        .limit(limit)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => Idea.fromMap(doc.data())).toList();
+    });
+  }
+
+  /// Получить коллекции пользователя
+  Stream<List<Collection>> getUserCollections(String userId) {
+    return _firestore
+        .collection('collections')
+        .where('authorId', isEqualTo: userId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs
+          .map((doc) => Collection.fromMap(doc.data()))
+          .toList();
+    });
+  }
+
+  /// Получить статистику идей
+  Future<IdeaStats> getIdeaStats(String ideaId) async {
+    try {
+      final idea = await getIdea(ideaId);
+      if (idea == null) {
+        throw Exception('Идея не найдена');
+      }
+
+      // Получить количество комментариев
+      final commentsSnapshot = await _firestore
+          .collection('idea_comments')
+          .where('ideaId', isEqualTo: ideaId)
+          .get();
+
+      // Получить количество сохранений
+      final savesSnapshot = await _firestore
+          .collection('idea_saves')
+          .where('ideaId', isEqualTo: ideaId)
+          .get();
+
+      return IdeaStats(
+        ideaId: ideaId,
+        likesCount: idea.likesCount,
+        commentsCount: commentsSnapshot.docs.length,
+        savesCount: savesSnapshot.docs.length,
+        viewsCount: idea.viewsCount,
+      );
+    } catch (e) {
+      debugPrint('Error getting idea stats: $e');
+      throw Exception('Ошибка получения статистики идеи: $e');
     }
   }
 }

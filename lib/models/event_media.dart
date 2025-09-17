@@ -202,7 +202,7 @@ class EventMedia {
     final seconds = duration!.inSeconds % 60;
 
     if (minutes > 0) {
-      return '${minutes}:${seconds.toString().padLeft(2, '0')}';
+      return '$minutes:${seconds.toString().padLeft(2, '0')}';
     } else {
       return '0:${seconds.toString().padLeft(2, '0')}';
     }
@@ -263,7 +263,7 @@ class EventMediaCollection {
 
   /// Получить общий размер всех файлов
   int get totalSize {
-    return media.fold(0, (sum, m) => sum + m.fileSize);
+    return media.fold(0, (total, m) => total + m.fileSize);
   }
 
   /// Получить общий размер в читаемом формате

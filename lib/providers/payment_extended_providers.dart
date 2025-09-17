@@ -49,8 +49,8 @@ final pendingPaymentsProvider =
                   p.status == PaymentStatus.processing)
               .toList(),
         ),
-        loading: () => const Stream.value([]),
-        error: (_, __) => const Stream.value([]),
+        loading: () => Stream.value([]),
+        error: (_, __) => Stream.value([]),
       );
 });
 
@@ -62,8 +62,8 @@ final completedPaymentsProvider =
         data: (payments) => Stream.value(
           payments.where((p) => p.status == PaymentStatus.completed).toList(),
         ),
-        loading: () => const Stream.value([]),
-        error: (_, __) => const Stream.value([]),
+        loading: () => Stream.value([]),
+        error: (_, __) => Stream.value([]),
       );
 });
 
@@ -75,8 +75,8 @@ final overduePaymentsProvider =
         data: (payments) => Stream.value(
           payments.where((p) => p.hasOverduePayments).toList(),
         ),
-        loading: () => const Stream.value([]),
-        error: (_, __) => const Stream.value([]),
+        loading: () => Stream.value([]),
+        error: (_, __) => Stream.value([]),
       );
 });
 
@@ -89,8 +89,8 @@ final paymentsByTypeProvider =
         data: (payments) => Stream.value(
           payments.where((p) => p.type == type).toList(),
         ),
-        loading: () => const Stream.value([]),
-        error: (_, __) => const Stream.value([]),
+        loading: () => Stream.value([]),
+        error: (_, __) => Stream.value([]),
       );
 });
 
@@ -103,8 +103,8 @@ final paymentsByStatusProvider =
         data: (payments) => Stream.value(
           payments.where((p) => p.status == status).toList(),
         ),
-        loading: () => const Stream.value([]),
-        error: (_, __) => const Stream.value([]),
+        loading: () => Stream.value([]),
+        error: (_, __) => Stream.value([]),
       );
 });
 
@@ -116,8 +116,8 @@ final totalPaymentsAmountProvider =
         data: (payments) => Stream.value(
           payments.fold(0.0, (sum, p) => sum + p.totalAmount),
         ),
-        loading: () => const Stream.value(0.0),
-        error: (_, __) => const Stream.value(0.0),
+        loading: () => Stream.value(0.0),
+        error: (_, __) => Stream.value(0.0),
       );
 });
 
@@ -129,8 +129,8 @@ final paidAmountProvider =
         data: (payments) => Stream.value(
           payments.fold(0.0, (sum, p) => sum + p.paidAmount),
         ),
-        loading: () => const Stream.value(0.0),
-        error: (_, __) => const Stream.value(0.0),
+        loading: () => Stream.value(0.0),
+        error: (_, __) => Stream.value(0.0),
       );
 });
 
@@ -142,8 +142,8 @@ final remainingAmountProvider =
         data: (payments) => Stream.value(
           payments.fold(0.0, (sum, p) => sum + p.remainingAmount),
         ),
-        loading: () => const Stream.value(0.0),
-        error: (_, __) => const Stream.value(0.0),
+        loading: () => Stream.value(0.0),
+        error: (_, __) => Stream.value(0.0),
       );
 });
 
@@ -160,8 +160,8 @@ final paymentProgressProvider =
               totalAmount > 0 ? (paidAmount / totalAmount) * 100 : 0.0;
           return Stream.value(progress);
         },
-        loading: () => const Stream.value(0.0),
-        error: (_, __) => const Stream.value(0.0),
+        loading: () => Stream.value(0.0),
+        error: (_, __) => Stream.value(0.0),
       );
 });
 
@@ -171,8 +171,8 @@ final paymentsCountProvider =
   final (userId, isCustomer) = params;
   return ref.watch(userPaymentsProvider(params)).when(
         data: (payments) => Stream.value(payments.length),
-        loading: () => const Stream.value(0),
-        error: (_, __) => const Stream.value(0),
+        loading: () => Stream.value(0),
+        error: (_, __) => Stream.value(0),
       );
 });
 
@@ -188,7 +188,7 @@ final nextPaymentProvider =
                   p.status == PaymentStatus.processing)
               .toList();
 
-          if (pendingPayments.isEmpty) return const Stream.value(null);
+          if (pendingPayments.isEmpty) return Stream.value(null);
 
           // Находим платеж с ближайшей датой
           pendingPayments.sort((a, b) {
@@ -204,8 +204,8 @@ final nextPaymentProvider =
 
           return Stream.value(pendingPayments.first);
         },
-        loading: () => const Stream.value(null),
-        error: (_, __) => const Stream.value(null),
+        loading: () => Stream.value(null),
+        error: (_, __) => Stream.value(null),
       );
 });
 
@@ -232,8 +232,8 @@ final paymentNotificationsProvider =
 
           return Stream.value(notifications);
         },
-        loading: () => const Stream.value([]),
-        error: (_, __) => const Stream.value([]),
+        loading: () => Stream.value([]),
+        error: (_, __) => Stream.value([]),
       );
 });
 
@@ -301,8 +301,8 @@ final filteredPaymentsProvider =
 
           return Stream.value(filtered);
         },
-        loading: () => const Stream.value([]),
-        error: (_, __) => const Stream.value([]),
+        loading: () => Stream.value([]),
+        error: (_, __) => Stream.value([]),
       );
 });
 
@@ -355,9 +355,24 @@ enum PaymentSortBy {
   type,
 }
 
+/// Нотификатор для фильтра платежей
+class PaymentFilterNotifier extends Notifier<PaymentFilter> {
+  @override
+  PaymentFilter build() => const PaymentFilter();
+
+  void updateFilter(PaymentFilter filter) {
+    state = filter;
+  }
+
+  void resetFilter() {
+    state = const PaymentFilter();
+  }
+}
+
 /// Провайдер для фильтра платежей
-final paymentFilterProvider = StateProvider<PaymentFilter>((ref) {
-  return const PaymentFilter();
+final paymentFilterProvider =
+    NotifierProvider<PaymentFilterNotifier, PaymentFilter>(() {
+  return PaymentFilterNotifier();
 });
 
 /// Провайдер для поиска платежей
@@ -376,7 +391,7 @@ final paymentSearchProvider =
 
           return Stream.value(filtered);
         },
-        loading: () => const Stream.value([]),
-        error: (_, __) => const Stream.value([]),
+        loading: () => Stream.value([]),
+        error: (_, __) => Stream.value([]),
       );
 });

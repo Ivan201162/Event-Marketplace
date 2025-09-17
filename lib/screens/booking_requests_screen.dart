@@ -166,7 +166,8 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: _getStatusColor(booking.status).withOpacity(0.1),
+                    color:
+                        _getStatusColor(booking.status).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                     border: Border.all(color: _getStatusColor(booking.status)),
                   ),
@@ -262,7 +263,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
               ],
             ),
 
-            if (booking.prepayment > 0) ...[
+            if ((booking.prepayment ?? 0) > 0) ...[
               const SizedBox(height: 4),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -274,7 +275,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                         ),
                   ),
                   Text(
-                    '${booking.prepayment.toStringAsFixed(0)} ₽',
+                    '${(booking.prepayment ?? 0).toStringAsFixed(0)} ₽',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: Colors.grey[600],
                         ),
@@ -432,9 +433,9 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                 _buildDetailRow('Описание:', booking.description!),
               _buildDetailRow(
                   'Стоимость:', '${booking.totalPrice.toStringAsFixed(0)} ₽'),
-              if (booking.prepayment > 0)
-                _buildDetailRow(
-                    'Аванс:', '${booking.prepayment.toStringAsFixed(0)} ₽'),
+              if ((booking.prepayment ?? 0) > 0)
+                _buildDetailRow('Аванс:',
+                    '${(booking.prepayment ?? 0).toStringAsFixed(0)} ₽'),
               _buildDetailRow('Статус:', _getStatusText(booking.status)),
             ],
           ),
@@ -507,29 +508,33 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
     }
   }
 
-  Color _getStatusColor(String status) {
+  Color _getStatusColor(BookingStatus status) {
     switch (status) {
-      case 'pending':
+      case BookingStatus.pending:
         return Colors.orange;
-      case 'confirmed':
+      case BookingStatus.confirmed:
         return Colors.green;
-      case 'rejected':
+      case BookingStatus.cancelled:
         return Colors.red;
-      default:
-        return Colors.grey;
+      case BookingStatus.completed:
+        return Colors.blue;
+      case BookingStatus.rejected:
+        return Colors.red;
     }
   }
 
-  String _getStatusText(String status) {
+  String _getStatusText(BookingStatus status) {
     switch (status) {
-      case 'pending':
+      case BookingStatus.pending:
         return 'Новая';
-      case 'confirmed':
+      case BookingStatus.confirmed:
         return 'Подтверждена';
-      case 'rejected':
+      case BookingStatus.cancelled:
+        return 'Отменена';
+      case BookingStatus.completed:
+        return 'Завершена';
+      case BookingStatus.rejected:
         return 'Отклонена';
-      default:
-        return 'Неизвестно';
     }
   }
 }

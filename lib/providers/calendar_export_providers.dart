@@ -54,29 +54,75 @@ final exportBookingsProvider =
   return null;
 });
 
+/// Нотификатор для проверки статуса экспорта
+class ExportStatusNotifier extends Notifier<String> {
+  @override
+  String build() => 'ready';
+
+  void setStatus(String status) {
+    state = status;
+  }
+}
+
 /// Провайдер для проверки статуса экспорта
-final exportStatusProvider = StateProvider<String>((ref) {
-  return 'ready';
+final exportStatusProvider = NotifierProvider<ExportStatusNotifier, String>(() {
+  return ExportStatusNotifier();
 });
+
+/// Нотификатор для отслеживания прогресса экспорта
+class ExportProgressNotifier extends Notifier<double> {
+  @override
+  double build() => 0.0;
+
+  void setProgress(double progress) {
+    state = progress;
+  }
+}
 
 /// Провайдер для отслеживания прогресса экспорта
-final exportProgressProvider = StateProvider<double>((ref) {
-  return 0.0;
+final exportProgressProvider =
+    NotifierProvider<ExportProgressNotifier, double>(() {
+  return ExportProgressNotifier();
 });
+
+/// Нотификатор для последней ошибки экспорта
+class ExportErrorNotifier extends Notifier<String?> {
+  @override
+  String? build() => null;
+
+  void setError(String? error) {
+    state = error;
+  }
+}
 
 /// Провайдер для последней ошибки экспорта
-final exportErrorProvider = StateProvider<String?>((ref) {
-  return null;
+final exportErrorProvider = NotifierProvider<ExportErrorNotifier, String?>(() {
+  return ExportErrorNotifier();
 });
 
+/// Нотификатор для истории экспорта
+class ExportHistoryNotifier extends Notifier<List<Map<String, dynamic>>> {
+  @override
+  List<Map<String, dynamic>> build() => [];
+
+  void addExport(Map<String, dynamic> export) {
+    state = [...state, export];
+  }
+
+  void clearHistory() {
+    state = [];
+  }
+}
+
 /// Провайдер для истории экспорта
-final exportHistoryProvider = StateProvider<List<Map<String, dynamic>>>((ref) {
-  return [];
+final exportHistoryProvider =
+    NotifierProvider<ExportHistoryNotifier, List<Map<String, dynamic>>>(() {
+  return ExportHistoryNotifier();
 });
 
 /// Провайдер для настроек экспорта
 final exportSettingsProvider =
-    StateNotifierProvider<ExportSettingsNotifier, ExportSettings>((ref) {
+    NotifierProvider<ExportSettingsNotifier, ExportSettings>(() {
   return ExportSettingsNotifier();
 });
 
@@ -122,8 +168,9 @@ class ExportSettings {
 }
 
 /// Нотификатор для настроек экспорта
-class ExportSettingsNotifier extends StateNotifier<ExportSettings> {
-  ExportSettingsNotifier() : super(const ExportSettings());
+class ExportSettingsNotifier extends Notifier<ExportSettings> {
+  @override
+  ExportSettings build() => const ExportSettings();
 
   void updateIncludeDescription(bool value) {
     state = state.copyWith(includeDescription: value);
@@ -158,30 +205,100 @@ class ExportSettingsNotifier extends StateNotifier<ExportSettings> {
   }
 }
 
+/// Нотификатор для статистики экспорта
+class ExportStatsNotifier extends Notifier<Map<String, int>> {
+  @override
+  Map<String, int> build() => {
+        'totalExports': 0,
+        'successfulExports': 0,
+        'failedExports': 0,
+        'eventsExported': 0,
+        'bookingsExported': 0,
+      };
+
+  void incrementStat(String key) {
+    state = {...state, key: (state[key] ?? 0) + 1};
+  }
+
+  void resetStats() {
+    state = {
+      'totalExports': 0,
+      'successfulExports': 0,
+      'failedExports': 0,
+      'eventsExported': 0,
+      'bookingsExported': 0,
+    };
+  }
+}
+
 /// Провайдер для статистики экспорта
-final exportStatsProvider = StateProvider<Map<String, int>>((ref) {
-  return {
-    'totalExports': 0,
-    'successfulExports': 0,
-    'failedExports': 0,
-    'eventsExported': 0,
-    'bookingsExported': 0,
-  };
+final exportStatsProvider =
+    NotifierProvider<ExportStatsNotifier, Map<String, int>>(() {
+  return ExportStatsNotifier();
 });
+
+/// Нотификатор для последнего экспорта
+class LastExportNotifier extends Notifier<Map<String, dynamic>?> {
+  @override
+  Map<String, dynamic>? build() => null;
+
+  void setLastExport(Map<String, dynamic>? export) {
+    state = export;
+  }
+}
 
 /// Провайдер для последнего экспорта
-final lastExportProvider = StateProvider<Map<String, dynamic>?>((ref) {
-  return null;
+final lastExportProvider =
+    NotifierProvider<LastExportNotifier, Map<String, dynamic>?>(() {
+  return LastExportNotifier();
 });
+
+/// Нотификатор для активных экспортов
+class ActiveExportsNotifier extends Notifier<Set<String>> {
+  @override
+  Set<String> build() => {};
+
+  void addExport(String exportId) {
+    state = {...state, exportId};
+  }
+
+  void removeExport(String exportId) {
+    state = state.where((id) => id != exportId).toSet();
+  }
+
+  void clearExports() {
+    state = {};
+  }
+}
 
 /// Провайдер для активных экспортов
-final activeExportsProvider = StateProvider<Set<String>>((ref) {
-  return {};
+final activeExportsProvider =
+    NotifierProvider<ActiveExportsNotifier, Set<String>>(() {
+  return ActiveExportsNotifier();
 });
 
+/// Нотификатор для очереди экспорта
+class ExportQueueNotifier extends Notifier<List<Map<String, dynamic>>> {
+  @override
+  List<Map<String, dynamic>> build() => [];
+
+  void addToQueue(Map<String, dynamic> export) {
+    state = [...state, export];
+  }
+
+  void removeFromQueue(String exportId) {
+    state = state.where((export) => export['id'] != exportId).toList();
+  }
+
+  void clearQueue() {
+    state = [];
+  }
+}
+
 /// Провайдер для очереди экспорта
-final exportQueueProvider = StateProvider<List<Map<String, dynamic>>>((ref) {
-  return [];
+final exportQueueProvider =
+    NotifierProvider<ExportQueueNotifier, List<Map<String, dynamic>>>(() {
+  return ExportQueueNotifier();
 });
 
 /// Провайдер для проверки, идет ли экспорт

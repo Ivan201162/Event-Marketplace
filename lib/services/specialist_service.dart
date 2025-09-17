@@ -464,8 +464,8 @@ class SpecialistService {
       String specialistId, DateTime date,
       {Duration slotDuration = const Duration(hours: 1)}) async {
     try {
-      return await _calendarService.getAvailableTimeSlots(specialistId, date,
-          slotDuration: slotDuration);
+      return await _calendarService.getAvailableTimeSlots(
+          specialistId, date, slotDuration);
     } catch (e) {
       print('Ошибка получения временных слотов: $e');
       return [];

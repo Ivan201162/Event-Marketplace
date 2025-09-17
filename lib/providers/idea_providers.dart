@@ -1,5 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/idea.dart';
+import '../models/idea_filter.dart';
+import '../models/idea_stats.dart';
 import '../services/idea_service.dart';
 
 /// Провайдер сервиса идей
@@ -46,6 +48,7 @@ final userCollectionsProvider =
 });
 
 /// Провайдер для получения статистики идей
-final ideaStatsProvider = FutureProvider<IdeaStats>((ref) {
-  return ref.watch(ideaServiceProvider).getIdeaStats();
+final ideaStatsProvider =
+    FutureProvider.family<IdeaStats, String>((ref, ideaId) {
+  return ref.watch(ideaServiceProvider).getIdeaStats(ideaId);
 });

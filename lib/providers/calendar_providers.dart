@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/calendar_service.dart';
 import '../models/specialist_schedule.dart';
+import '../models/calendar_event.dart';
 
 /// Провайдер сервиса календаря
 final calendarServiceProvider = Provider<CalendarService>((ref) {
@@ -11,7 +12,7 @@ final calendarServiceProvider = Provider<CalendarService>((ref) {
 final specialistScheduleProvider =
     StreamProvider.family<SpecialistSchedule?, String>((ref, specialistId) {
   final calendarService = ref.watch(calendarServiceProvider);
-  return calendarService.getSpecialistScheduleStream(specialistId);
+  return calendarService.getSpecialistSchedule(specialistId);
 });
 
 /// Провайдер доступности даты
@@ -35,8 +36,7 @@ final availableDatesProvider =
   final calendarService = ref.watch(calendarServiceProvider);
   return calendarService.getAvailableDates(
     params.specialistId,
-    params.startDate,
-    params.endDate,
+    30, // days ahead
   );
 });
 
@@ -48,13 +48,13 @@ final availableTimeSlotsProvider =
   return calendarService.getAvailableTimeSlots(
     params.specialistId,
     params.date,
-    slotDuration: params.slotDuration,
+    params.slotDuration,
   );
 });
 
 /// Провайдер событий на дату
 final eventsForDateProvider =
-    FutureProvider.family<List<ScheduleEvent>, EventsForDateParams>(
+    FutureProvider.family<List<CalendarEvent>, EventsForDateParams>(
         (ref, params) {
   final calendarService = ref.watch(calendarServiceProvider);
   return calendarService.getEventsForDate(params.specialistId, params.date);
@@ -63,7 +63,7 @@ final eventsForDateProvider =
 /// Провайдер всех расписаний (для админов)
 final allSchedulesProvider = StreamProvider<List<SpecialistSchedule>>((ref) {
   final calendarService = ref.watch(calendarServiceProvider);
-  return calendarService.getAllSchedulesStream();
+  return calendarService.getAllSchedules();
 });
 
 /// Провайдер для управления состоянием календаря
@@ -79,7 +79,7 @@ class CalendarState {
   final String? selectedSpecialistId;
   final List<DateTime> availableDates;
   final List<DateTime> availableTimeSlots;
-  final List<ScheduleEvent> eventsForSelectedDate;
+  final List<CalendarEvent> eventsForSelectedDate;
   final bool isLoading;
   final String? errorMessage;
 
@@ -100,7 +100,7 @@ class CalendarState {
     String? selectedSpecialistId,
     List<DateTime>? availableDates,
     List<DateTime>? availableTimeSlots,
-    List<ScheduleEvent>? eventsForSelectedDate,
+    List<CalendarEvent>? eventsForSelectedDate,
     bool? isLoading,
     String? errorMessage,
   }) {
@@ -155,6 +155,7 @@ class CalendarStateNotifier extends Notifier<CalendarState> {
       final timeSlots = await _calendarService.getAvailableTimeSlots(
         state.selectedSpecialistId!,
         state.selectedDate,
+        Duration(hours: 1), // По умолчанию 1 час
       );
 
       // Загружаем события на дату
@@ -185,8 +186,7 @@ class CalendarStateNotifier extends Notifier<CalendarState> {
     try {
       final availableDates = await _calendarService.getAvailableDates(
         state.selectedSpecialistId!,
-        startDate,
-        endDate,
+        30, // days ahead
       );
 
       state = state.copyWith(
@@ -208,7 +208,8 @@ class CalendarStateNotifier extends Notifier<CalendarState> {
     state = state.copyWith(isLoading: true, errorMessage: null);
 
     try {
-      await _calendarService.addEvent(state.selectedSpecialistId!, event);
+      await _calendarService.addEvent(
+          state.selectedSpecialistId!, event as CalendarEvent);
       await _loadDataForSelectedDate(); // Обновляем данные
     } catch (e) {
       state = state.copyWith(

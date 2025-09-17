@@ -1,9 +1,7 @@
 import 'dart:io';
-import 'dart:typed_data';
-import 'package:icalendar_parser/icalendar_parser.dart';
+import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
-import 'package:flutter/foundation.dart';
 import '../models/event.dart';
 import '../models/booking.dart';
 import '../core/feature_flags.dart';
@@ -260,6 +258,8 @@ class IcsExportService {
         return 'Отменено';
       case BookingStatus.completed:
         return 'Завершено';
+      case BookingStatus.rejected:
+        return 'Отклонено';
     }
   }
 

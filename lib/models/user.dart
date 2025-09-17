@@ -147,6 +147,43 @@ class AppUser {
   /// Получить отображаемое имя
   String get displayNameOrEmail => displayName ?? email.split('@').first;
 
+  /// Геттер для совместимости с кодом, использующим uid
+  String get uid => id;
+
+  /// Геттер для совместимости с кодом, использующим name
+  String get name => displayName ?? email.split('@').first;
+
+  /// Геттер для совместимости с кодом, использующим photoUrl
+  String? get photoUrl => photoURL;
+
+  /// Геттер для совместимости с кодом, использующим lastLogin
+  DateTime? get lastLogin => lastLoginAt;
+
+  /// Геттер для проверки заблокированности пользователя
+  bool get isBanned => !isActive;
+
+  /// Геттер для причины блокировки
+  String? get banReason => additionalData?['banReason'] as String?;
+
+  /// Геттер для биографии пользователя
+  String? get bio => additionalData?['bio'] as String?;
+
+  /// Геттер для проверки верификации
+  bool get isVerified => additionalData?['isVerified'] as bool? ?? false;
+
+  /// Геттер для специализаций
+  List<String> get specialties =>
+      List<String>.from(additionalData?['specialties'] ?? []);
+
+  /// Геттер для специализации (строка)
+  String? get specialization => additionalData?['specialization'] as String?;
+
+  /// Геттер для телефона
+  String? get phone => additionalData?['phone'] as String?;
+
+  /// Геттер для аватара (алиас для photoURL)
+  String? get avatar => photoURL;
+
   /// Проверить, является ли пользователь специалистом
   bool get isSpecialist => role == UserRole.specialist;
 

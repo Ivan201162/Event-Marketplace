@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/specialist_profile_extended.dart';
 import '../services/specialist_profile_extended_service.dart';
+import '../providers/specialist_providers.dart';
 
 /// Виджет редактора видео
 class VideoEditorWidget extends ConsumerStatefulWidget {

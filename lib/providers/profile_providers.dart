@@ -101,9 +101,9 @@ class SearchSpecialistsParams {
 }
 
 /// Провайдер для управления состоянием редактирования профиля заказчика
-final customerProfileEditProvider = StateNotifierProvider<
-    CustomerProfileEditNotifier, CustomerProfileEditState>((ref) {
-  return CustomerProfileEditNotifier(ref.read(profileServiceProvider));
+final customerProfileEditProvider =
+    NotifierProvider<CustomerProfileEditNotifier, CustomerProfileEditState>(() {
+  return CustomerProfileEditNotifier();
 });
 
 /// Состояние редактирования профиля заказчика
@@ -136,12 +136,14 @@ class CustomerProfileEditState {
 }
 
 /// Нотификатор для редактирования профиля заказчика
-class CustomerProfileEditNotifier
-    extends StateNotifier<CustomerProfileEditState> {
-  final ProfileService _profileService;
+class CustomerProfileEditNotifier extends Notifier<CustomerProfileEditState> {
+  late final ProfileService _profileService;
 
-  CustomerProfileEditNotifier(this._profileService)
-      : super(const CustomerProfileEditState());
+  @override
+  CustomerProfileEditState build() {
+    _profileService = ref.read(profileServiceProvider);
+    return const CustomerProfileEditState();
+  }
 
   /// Загрузить профиль
   Future<void> loadProfile(String userId) async {
@@ -222,9 +224,10 @@ class CustomerProfileEditNotifier
 }
 
 /// Провайдер для управления состоянием редактирования профиля специалиста
-final specialistProfileEditProvider = StateNotifierProvider<
-    SpecialistProfileEditNotifier, SpecialistProfileEditState>((ref) {
-  return SpecialistProfileEditNotifier(ref.read(profileServiceProvider));
+final specialistProfileEditProvider =
+    NotifierProvider<SpecialistProfileEditNotifier, SpecialistProfileEditState>(
+        () {
+  return SpecialistProfileEditNotifier();
 });
 
 /// Состояние редактирования профиля специалиста
@@ -258,11 +261,14 @@ class SpecialistProfileEditState {
 
 /// Нотификатор для редактирования профиля специалиста
 class SpecialistProfileEditNotifier
-    extends StateNotifier<SpecialistProfileEditState> {
-  final ProfileService _profileService;
+    extends Notifier<SpecialistProfileEditState> {
+  late final ProfileService _profileService;
 
-  SpecialistProfileEditNotifier(this._profileService)
-      : super(const SpecialistProfileEditState());
+  @override
+  SpecialistProfileEditState build() {
+    _profileService = ref.read(profileServiceProvider);
+    return const SpecialistProfileEditState();
+  }
 
   /// Загрузить профиль
   Future<void> loadProfile(String userId) async {

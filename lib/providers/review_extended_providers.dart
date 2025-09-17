@@ -30,23 +30,40 @@ final specialistReviewStatsProvider =
   return service.getSpecialistReviewStats(specialistId);
 });
 
+/// Нотификатор для фильтра отзывов
+class ReviewFilterNotifier extends Notifier<ReviewFilter> {
+  @override
+  ReviewFilter build() => const ReviewFilter();
+
+  void updateFilter(ReviewFilter filter) {
+    state = filter;
+  }
+
+  void resetFilter() {
+    state = const ReviewFilter();
+  }
+}
+
 /// Провайдер для фильтра отзывов
-final reviewFilterProvider = StateProvider<ReviewFilter>((ref) {
-  return const ReviewFilter();
+final reviewFilterProvider =
+    NotifierProvider<ReviewFilterNotifier, ReviewFilter>(() {
+  return ReviewFilterNotifier();
 });
 
 /// Провайдер для отзывов с медиа
 final reviewsWithMediaProvider =
     StreamProvider.family<List<ReviewExtended>, String>((ref, specialistId) {
   final filter = const ReviewFilter(hasMedia: true);
-  return ref.watch(specialistReviewsProvider((specialistId, filter)));
+  final service = ref.read(reviewExtendedServiceProvider);
+  return service.getSpecialistReviews(specialistId, filter);
 });
 
 /// Провайдер для верифицированных отзывов
 final verifiedReviewsProvider =
     StreamProvider.family<List<ReviewExtended>, String>((ref, specialistId) {
   final filter = const ReviewFilter(isVerified: true);
-  return ref.watch(specialistReviewsProvider((specialistId, filter)));
+  final service = ref.read(reviewExtendedServiceProvider);
+  return service.getSpecialistReviews(specialistId, filter);
 });
 
 /// Провайдер для отзывов по рейтингу
@@ -54,7 +71,8 @@ final reviewsByRatingProvider =
     StreamProvider.family<List<ReviewExtended>, (String, int)>((ref, params) {
   final (specialistId, rating) = params;
   final filter = ReviewFilter(minRating: rating, maxRating: rating);
-  return ref.watch(specialistReviewsProvider((specialistId, filter)));
+  final service = ref.read(reviewExtendedServiceProvider);
+  return service.getSpecialistReviews(specialistId, filter);
 });
 
 /// Провайдер для отзывов с тегами
@@ -63,7 +81,8 @@ final reviewsWithTagsProvider =
         (ref, params) {
   final (specialistId, tags) = params;
   final filter = ReviewFilter(tags: tags);
-  return ref.watch(specialistReviewsProvider((specialistId, filter)));
+  final service = ref.read(reviewExtendedServiceProvider);
+  return service.getSpecialistReviews(specialistId, filter);
 });
 
 /// Провайдер для последних отзывов
@@ -73,8 +92,8 @@ final recentReviewsProvider =
   final filter = const ReviewFilter(sortBy: ReviewSortBy.date);
   return ref.watch(specialistReviewsProvider((specialistId, filter))).when(
         data: (reviews) => Stream.value(reviews.take(limit).toList()),
-        loading: () => const Stream.value([]),
-        error: (_, __) => const Stream.value([]),
+        loading: () => Stream.value([]),
+        error: (_, __) => Stream.value([]),
       );
 });
 
@@ -85,8 +104,8 @@ final topReviewsByLikesProvider =
   final filter = const ReviewFilter(sortBy: ReviewSortBy.likes);
   return ref.watch(specialistReviewsProvider((specialistId, filter))).when(
         data: (reviews) => Stream.value(reviews.take(limit).toList()),
-        loading: () => const Stream.value([]),
-        error: (_, __) => const Stream.value([]),
+        loading: () => Stream.value([]),
+        error: (_, __) => Stream.value([]),
       );
 });
 
@@ -94,14 +113,16 @@ final topReviewsByLikesProvider =
 final highRatedReviewsProvider =
     StreamProvider.family<List<ReviewExtended>, String>((ref, specialistId) {
   final filter = const ReviewFilter(minRating: 4);
-  return ref.watch(specialistReviewsProvider((specialistId, filter)));
+  final service = ref.read(reviewExtendedServiceProvider);
+  return service.getSpecialistReviews(specialistId, filter);
 });
 
 /// Провайдер для отзывов с низким рейтингом
 final lowRatedReviewsProvider =
     StreamProvider.family<List<ReviewExtended>, String>((ref, specialistId) {
   final filter = const ReviewFilter(maxRating: 2);
-  return ref.watch(specialistReviewsProvider((specialistId, filter)));
+  final service = ref.read(reviewExtendedServiceProvider);
+  return service.getSpecialistReviews(specialistId, filter);
 });
 
 /// Провайдер для поиска отзывов
@@ -126,8 +147,8 @@ final searchReviewsProvider =
 
           return Stream.value(filtered);
         },
-        loading: () => const Stream.value([]),
-        error: (_, __) => const Stream.value([]),
+        loading: () => Stream.value([]),
+        error: (_, __) => Stream.value([]),
       );
 });
 
@@ -137,7 +158,8 @@ final reviewsForPeriodProvider =
         (ref, params) {
   final (specialistId, startDate, endDate) = params;
   final filter = ReviewFilter(startDate: startDate, endDate: endDate);
-  return ref.watch(specialistReviewsProvider((specialistId, filter)));
+  final service = ref.read(reviewExtendedServiceProvider);
+  return service.getSpecialistReviews(specialistId, filter);
 });
 
 /// Провайдер для отзывов за последний месяц
@@ -145,7 +167,9 @@ final reviewsLastMonthProvider =
     StreamProvider.family<List<ReviewExtended>, String>((ref, specialistId) {
   final now = DateTime.now();
   final lastMonth = DateTime(now.year, now.month - 1, 1);
-  return ref.watch(reviewsForPeriodProvider((specialistId, lastMonth, now)));
+  final service = ref.read(reviewExtendedServiceProvider);
+  final filter = ReviewFilter(startDate: lastMonth, endDate: now);
+  return service.getSpecialistReviews(specialistId, filter);
 });
 
 /// Провайдер для отзывов за последний год
@@ -153,7 +177,9 @@ final reviewsLastYearProvider =
     StreamProvider.family<List<ReviewExtended>, String>((ref, specialistId) {
   final now = DateTime.now();
   final lastYear = DateTime(now.year - 1, now.month, now.day);
-  return ref.watch(reviewsForPeriodProvider((specialistId, lastYear, now)));
+  final service = ref.read(reviewExtendedServiceProvider);
+  final filter = ReviewFilter(startDate: lastYear, endDate: now);
+  return service.getSpecialistReviews(specialistId, filter);
 });
 
 /// Провайдер для среднего рейтинга
@@ -161,8 +187,8 @@ final averageRatingProvider =
     StreamProvider.family<double, String>((ref, specialistId) {
   return ref.watch(specialistReviewStatsProvider(specialistId)).when(
         data: (stats) => Stream.value(stats.averageRating),
-        loading: () => const Stream.value(0.0),
-        error: (_, __) => const Stream.value(0.0),
+        loading: () => Stream.value(0.0),
+        error: (_, __) => Stream.value(0.0),
       );
 });
 
@@ -171,8 +197,8 @@ final totalReviewsCountProvider =
     StreamProvider.family<int, String>((ref, specialistId) {
   return ref.watch(specialistReviewStatsProvider(specialistId)).when(
         data: (stats) => Stream.value(stats.totalReviews),
-        loading: () => const Stream.value(0),
-        error: (_, __) => const Stream.value(0),
+        loading: () => Stream.value(0),
+        error: (_, __) => Stream.value(0),
       );
 });
 
@@ -181,8 +207,8 @@ final totalLikesCountProvider =
     StreamProvider.family<int, String>((ref, specialistId) {
   return ref.watch(specialistReviewStatsProvider(specialistId)).when(
         data: (stats) => Stream.value(stats.totalLikes),
-        loading: () => const Stream.value(0),
-        error: (_, __) => const Stream.value(0),
+        loading: () => Stream.value(0),
+        error: (_, __) => Stream.value(0),
       );
 });
 
@@ -191,8 +217,8 @@ final ratingDistributionProvider =
     StreamProvider.family<Map<int, int>, String>((ref, specialistId) {
   return ref.watch(specialistReviewStatsProvider(specialistId)).when(
         data: (stats) => Stream.value(stats.ratingDistribution),
-        loading: () => const Stream.value({}),
-        error: (_, __) => const Stream.value({}),
+        loading: () => Stream.value({}),
+        error: (_, __) => Stream.value({}),
       );
 });
 
@@ -201,8 +227,8 @@ final topTagsProvider =
     StreamProvider.family<List<String>, String>((ref, specialistId) {
   return ref.watch(specialistReviewStatsProvider(specialistId)).when(
         data: (stats) => Stream.value(stats.topTags),
-        loading: () => const Stream.value([]),
-        error: (_, __) => const Stream.value([]),
+        loading: () => Stream.value([]),
+        error: (_, __) => Stream.value([]),
       );
 });
 
@@ -211,8 +237,8 @@ final categoryRatingsProvider =
     StreamProvider.family<Map<String, double>, String>((ref, specialistId) {
   return ref.watch(specialistReviewStatsProvider(specialistId)).when(
         data: (stats) => Stream.value(stats.categoryRatings),
-        loading: () => const Stream.value({}),
-        error: (_, __) => const Stream.value({}),
+        loading: () => Stream.value({}),
+        error: (_, __) => Stream.value({}),
       );
 });
 
@@ -231,8 +257,8 @@ final reviewsWithDetailedRatingsProvider =
                   review.stats.value > 0)
               .toList(),
         ),
-        loading: () => const Stream.value([]),
-        error: (_, __) => const Stream.value([]),
+        loading: () => Stream.value([]),
+        error: (_, __) => Stream.value([]),
       );
 });
 
@@ -245,8 +271,8 @@ final reviewsWithPhotosProvider =
         data: (reviews) => Stream.value(
           reviews.where((review) => review.photos.isNotEmpty).toList(),
         ),
-        loading: () => const Stream.value([]),
-        error: (_, __) => const Stream.value([]),
+        loading: () => Stream.value([]),
+        error: (_, __) => Stream.value([]),
       );
 });
 
@@ -259,8 +285,8 @@ final reviewsWithVideosProvider =
         data: (reviews) => Stream.value(
           reviews.where((review) => review.videos.isNotEmpty).toList(),
         ),
-        loading: () => const Stream.value([]),
-        error: (_, __) => const Stream.value([]),
+        loading: () => Stream.value([]),
+        error: (_, __) => Stream.value([]),
       );
 });
 
@@ -273,8 +299,8 @@ final reviewsWithLikesProvider =
         data: (reviews) => Stream.value(
           reviews.where((review) => review.likesCount > 0).toList(),
         ),
-        loading: () => const Stream.value([]),
-        error: (_, __) => const Stream.value([]),
+        loading: () => Stream.value([]),
+        error: (_, __) => Stream.value([]),
       );
 });
 
@@ -287,7 +313,7 @@ final reviewsWithoutLikesProvider =
         data: (reviews) => Stream.value(
           reviews.where((review) => review.likesCount == 0).toList(),
         ),
-        loading: () => const Stream.value([]),
-        error: (_, __) => const Stream.value([]),
+        loading: () => Stream.value([]),
+        error: (_, __) => Stream.value([]),
       );
 });

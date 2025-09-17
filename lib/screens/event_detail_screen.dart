@@ -929,7 +929,7 @@ class EventDetailScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            review.comment,
+            review.content,
             style: const TextStyle(fontSize: 14),
             maxLines: 3,
             overflow: TextOverflow.ellipsis,

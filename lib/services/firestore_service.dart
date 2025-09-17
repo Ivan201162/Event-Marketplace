@@ -175,21 +175,25 @@ class FirestoreService {
 
     // Добавляем события в календарь
     await _calendarService.createBookingEvent(
-      specialistId: b1.specialistId,
-      bookingId: b1.id,
-      customerName: b1.customerId,
-      startTime: b1.eventDate,
-      endTime: b1.eventDate.add(const Duration(hours: 2)),
-      description: 'Тестовое бронирование 1',
+      CalendarEvent(
+        id: 'test_event_1',
+        title: 'Тестовое бронирование 1',
+        description: 'Тестовое бронирование 1',
+        startTime: b1.eventDate,
+        endTime: b1.eventDate.add(const Duration(hours: 2)),
+        isAllDay: false,
+      ),
     );
 
     await _calendarService.createBookingEvent(
-      specialistId: b2.specialistId,
-      bookingId: b2.id,
-      customerName: b2.customerId,
-      startTime: b2.eventDate,
-      endTime: b2.eventDate.add(const Duration(hours: 3)),
-      description: 'Тестовое бронирование 2',
+      CalendarEvent(
+        id: 'test_event_2',
+        title: 'Тестовое бронирование 2',
+        description: 'Тестовое бронирование 2',
+        startTime: b2.eventDate,
+        endTime: b2.eventDate.add(const Duration(hours: 3)),
+        isAllDay: false,
+      ),
     );
   }
 
@@ -230,12 +234,14 @@ class FirestoreService {
       // Если заявка подтверждена, добавляем событие в календарь
       if (booking.status == 'confirmed') {
         await _calendarService.createBookingEvent(
-          specialistId: booking.specialistId,
-          bookingId: booking.id,
-          customerName: booking.customerId,
-          startTime: booking.eventDate,
-          endTime: endTime,
-          description: 'Бронирование мероприятия',
+          CalendarEvent(
+            id: 'booking_${booking.id}',
+            title: 'Бронирование мероприятия',
+            description: 'Бронирование мероприятия',
+            startTime: booking.eventDate,
+            endTime: endTime,
+            isAllDay: false,
+          ),
         );
       }
     } catch (e) {
@@ -263,17 +269,18 @@ class FirestoreService {
       if (status == 'confirmed') {
         // Добавляем событие в календарь
         await _calendarService.createBookingEvent(
-          specialistId: booking.specialistId,
-          bookingId: booking.id,
-          customerName: booking.customerId,
-          startTime: booking.eventDate,
-          endTime: booking.eventDate.add(const Duration(hours: 2)),
-          description: 'Подтвержденное бронирование',
+          CalendarEvent(
+            id: 'booking_${booking.id}',
+            title: 'Подтвержденное бронирование',
+            description: 'Подтвержденное бронирование',
+            startTime: booking.eventDate,
+            endTime: booking.eventDate.add(const Duration(hours: 2)),
+            isAllDay: false,
+          ),
         );
       } else if (status == 'rejected' || status == 'cancelled') {
         // Удаляем событие из календаря
-        await _calendarService.removeBookingEvent(
-            booking.specialistId, booking.id);
+        await _calendarService.removeBookingEvent('booking_${booking.id}');
       }
 
       // Отправляем уведомления
@@ -299,7 +306,7 @@ class FirestoreService {
     return await _calendarService.getAvailableTimeSlots(
       specialistId,
       date,
-      slotDuration: slotDuration,
+      slotDuration,
     );
   }
 

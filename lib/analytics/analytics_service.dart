@@ -200,7 +200,7 @@ class AnalyticsService {
 
       await _analytics!.logEvent(
         name: event.type.name,
-        parameters: firebaseParams,
+        parameters: firebaseParams.cast<String, Object>(),
       );
 
       SafeLog.info('AnalyticsService: Event logged: ${event.type.name}');
@@ -243,7 +243,7 @@ class AnalyticsService {
       await _analytics!.logScreenView(
         screenName: screenName,
         screenClass: screenName,
-        parameters: parameters,
+        parameters: parameters?.cast<String, Object>(),
       );
 
       SafeLog.info('AnalyticsService: Screen view logged: $screenName');
@@ -271,7 +271,7 @@ class AnalyticsService {
         transactionId: transactionId,
         currency: currency,
         value: value,
-        parameters: parameters,
+        parameters: parameters?.cast<String, Object>(),
       );
 
       SafeLog.info('AnalyticsService: Purchase logged: $transactionId');
@@ -294,7 +294,7 @@ class AnalyticsService {
     try {
       await _analytics!.logSearch(
         searchTerm: searchTerm,
-        parameters: parameters,
+        parameters: parameters?.cast<String, Object>(),
       );
 
       SafeLog.info('AnalyticsService: Search logged: $searchTerm');

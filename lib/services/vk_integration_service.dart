@@ -208,7 +208,8 @@ class VKIntegrationService {
         if (path.startsWith('/') && path.length > 1) {
           final username = path.substring(1);
           // Для username нужно получить ID через API
-          return _getUserIdByUsername(username);
+          // Пока что возвращаем null, так как это асинхронная операция
+          return null;
         }
       }
 

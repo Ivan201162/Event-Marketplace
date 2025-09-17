@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../generated/l10n/app_localizations.dart';
 
 /// Провайдер для текущей локали
-final localeProvider = StateNotifierProvider<LocaleNotifier, Locale>((ref) {
+final localeProvider = NotifierProvider<LocaleNotifier, Locale>(() {
   return LocaleNotifier();
 });
 
@@ -79,9 +79,11 @@ final languageListProvider = Provider<List<Map<String, String>>>((ref) {
 });
 
 /// Нотификатор для управления локалью
-class LocaleNotifier extends StateNotifier<Locale> {
-  LocaleNotifier() : super(const Locale('en', '')) {
+class LocaleNotifier extends Notifier<Locale> {
+  @override
+  Locale build() {
     _loadLocale();
+    return const Locale('en', '');
   }
 
   /// Загрузить сохраненную локаль
@@ -138,7 +140,7 @@ class LocaleNotifier extends StateNotifier<Locale> {
 
 /// Расширение для получения локализованных строк
 extension LocalizationExtension on BuildContext {
-  AppLocalizations get l10n => AppLocalizations.of(this);
+  AppLocalizations get l10n => AppLocalizations.of(this)!;
 }
 
 /// Расширение для получения локализованных строк из провайдера

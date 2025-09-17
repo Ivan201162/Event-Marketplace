@@ -1,5 +1,3 @@
-import '../models/booking.dart';
-
 /// Статус платежа
 enum PaymentStatus {
   pending, // Ожидает обработки

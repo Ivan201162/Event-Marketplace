@@ -5,8 +5,11 @@ class ReviewStatistics {
   final int verifiedReviews;
   final Map<int, int> ratingDistribution; // рейтинг -> количество
   final List<String> topTags;
+  final List<String> commonTags;
   final double responseRate;
   final DateTime lastReviewDate;
+  final String averageRatingDescription;
+  final double verifiedPercentage;
 
   const ReviewStatistics({
     required this.averageRating,
@@ -14,8 +17,11 @@ class ReviewStatistics {
     required this.verifiedReviews,
     required this.ratingDistribution,
     required this.topTags,
+    required this.commonTags,
     required this.responseRate,
     required this.lastReviewDate,
+    required this.averageRatingDescription,
+    required this.verifiedPercentage,
   });
 
   factory ReviewStatistics.fromMap(Map<String, dynamic> data) {
@@ -25,8 +31,11 @@ class ReviewStatistics {
       verifiedReviews: data['verifiedReviews'] as int? ?? 0,
       ratingDistribution: Map<int, int>.from(data['ratingDistribution'] ?? {}),
       topTags: List<String>.from(data['topTags'] ?? []),
+      commonTags: List<String>.from(data['commonTags'] ?? []),
       responseRate: (data['responseRate'] as num?)?.toDouble() ?? 0.0,
       lastReviewDate: DateTime.parse(data['lastReviewDate'] as String),
+      averageRatingDescription: data['averageRatingDescription'] as String? ?? '',
+      verifiedPercentage: (data['verifiedPercentage'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
@@ -37,9 +46,18 @@ class ReviewStatistics {
       'verifiedReviews': verifiedReviews,
       'ratingDistribution': ratingDistribution,
       'topTags': topTags,
+      'commonTags': commonTags,
       'responseRate': responseRate,
       'lastReviewDate': lastReviewDate.toIso8601String(),
+      'averageRatingDescription': averageRatingDescription,
+      'verifiedPercentage': verifiedPercentage,
     };
+  }
+
+  /// Получить процент рейтинга
+  double getRatingPercentage(int rating) {
+    if (totalReviews == 0) return 0.0;
+    return (ratingDistribution[rating] ?? 0) / totalReviews * 100;
   }
 }
 

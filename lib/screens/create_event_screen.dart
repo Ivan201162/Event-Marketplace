@@ -617,9 +617,31 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
       } else {
         // Создание нового события
         final eventId = await createEventNotifier.createEvent(
-          user.id,
-          user.displayNameOrEmail,
-          user.photoURL,
+          Event(
+            id: '',
+            title: _titleController.text.trim(),
+            description: _descriptionController.text.trim(),
+            date: _eventDate,
+            endDate: _endDate,
+            location: _locationController.text.trim(),
+            price: _price,
+            category: _category,
+            maxParticipants: _maxParticipants,
+            contactInfo: _contactInfoController.text.trim().isEmpty
+                ? null
+                : _contactInfoController.text.trim(),
+            requirements: _requirementsController.text.trim().isEmpty
+                ? null
+                : _requirementsController.text.trim(),
+            isPublic: _isPublic,
+            organizerId: user.id,
+            organizerName: user.displayNameOrEmail,
+            organizerPhoto: user.photoURL,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+            participantsCount: 0,
+            isActive: true,
+          ),
         );
 
         if (eventId != null && context.mounted) {

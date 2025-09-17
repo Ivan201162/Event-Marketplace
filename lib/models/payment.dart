@@ -23,7 +23,7 @@ enum OrganizationType {
   individual, // Физическое лицо
   commercial, // Коммерческая организация
   government, // Государственное учреждение
-  non_profit, // Некоммерческая организация
+  nonProfit, // Некоммерческая организация
 }
 
 /// Модель платежа
@@ -168,9 +168,9 @@ class Payment {
     switch (type) {
       case PaymentType.advance:
         return 'Аванс';
-      case PaymentType.final_payment:
+      case PaymentType.finalPayment:
         return 'Финальный платеж';
-      case PaymentType.full_payment:
+      case PaymentType.fullPayment:
         return 'Полная оплата';
       case PaymentType.refund:
         return 'Возврат';
@@ -228,10 +228,10 @@ class Payment {
 
     final typeString = typeData.toString().toLowerCase();
     switch (typeString) {
-      case 'final_payment':
-        return PaymentType.final_payment;
-      case 'full_payment':
-        return PaymentType.full_payment;
+      case 'finalPayment':
+        return PaymentType.finalPayment;
+      case 'fullPayment':
+        return PaymentType.fullPayment;
       case 'refund':
         return PaymentType.refund;
       case 'advance':
@@ -272,8 +272,8 @@ class Payment {
         return OrganizationType.commercial;
       case 'government':
         return OrganizationType.government;
-      case 'non_profit':
-        return OrganizationType.non_profit;
+      case 'nonProfit':
+        return OrganizationType.nonProfit;
       case 'individual':
       default:
         return OrganizationType.individual;
@@ -344,9 +344,9 @@ class PaymentConfiguration {
           allowsPostPayment: true,
           finalPaymentDeadline: Duration(days: 30),
         );
-      case OrganizationType.non_profit:
+      case OrganizationType.nonProfit:
         return const PaymentConfiguration(
-          organizationType: OrganizationType.non_profit,
+          organizationType: OrganizationType.nonProfit,
           advancePercentage: 20.0,
           requiresAdvance: true,
           allowsPostPayment: true,

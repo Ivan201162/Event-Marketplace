@@ -72,7 +72,7 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.admin_panel_settings_off,
+            const Icon(Icons.admin_panel_settings,
                 size: 100, color: Colors.grey),
             const SizedBox(height: 20),
             Text(
@@ -411,7 +411,7 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(user.email),
-            if (user.bio.isNotEmpty) Text(user.bio),
+            if (user.bio?.isNotEmpty == true) Text(user.bio!),
             Row(
               children: [
                 if (user.isVerified)

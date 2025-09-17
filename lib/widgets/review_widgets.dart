@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/review.dart';
+import '../models/review_statistics.dart';
 import '../providers/review_providers.dart';
 
 /// Виджет отзыва
@@ -632,16 +633,15 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
 
     try {
       await ref.read(reviewStateProvider.notifier).createReview(
-            bookingId: widget.bookingId,
-            customerId: widget.customerId,
-            specialistId: widget.specialistId,
-            rating: ref.read(reviewFormProvider).rating,
+            targetId: widget.specialistId,
+            type: ReviewType.specialist,
             title: ref.read(reviewFormProvider).title.isEmpty
-                ? null
+                ? 'Отзыв'
                 : ref.read(reviewFormProvider).title,
-            comment: ref.read(reviewFormProvider).comment.isEmpty
-                ? null
+            content: ref.read(reviewFormProvider).comment.isEmpty
+                ? ref.read(reviewFormProvider).content
                 : ref.read(reviewFormProvider).comment,
+            rating: ref.read(reviewFormProvider).rating,
             tags: ref.read(reviewFormProvider).selectedTags,
           );
 
@@ -684,11 +684,7 @@ class ReviewListWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final reviewsAsync =
-        ref.watch(specialistReviewsProvider(SpecialistReviewsParams(
-      specialistId: specialistId,
-      onlyPublic: !showAll,
-    )));
+    final reviewsAsync = ref.watch(specialistReviewsProvider(specialistId));
 
     return reviewsAsync.when(
       data: (reviews) {

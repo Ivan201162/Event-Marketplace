@@ -96,7 +96,7 @@ final userTagsProvider =
     FutureProvider.family<List<String>, String>((ref, userId) async {
   final profile =
       await ref.read(customerProfileExtendedProvider(userId).future);
-  return profile?.allTags ?? [];
+  return profile?.allTags.toList() ?? <String>[];
 });
 
 /// Провайдер закреплённых заметок
@@ -120,28 +120,134 @@ final customerPreferencesProvider =
     FutureProvider.family<CustomerPreferences?, String>((ref, userId) async {
   final profile =
       await ref.read(customerProfileExtendedProvider(userId).future);
-  return profile?.preferences;
+  return profile?.preferences != null
+      ? CustomerPreferences.fromMap(profile!.preferences!)
+      : null;
 });
 
+/// Нотификатор для управления состоянием загрузки фото
+class PhotoUploadStateNotifier extends Notifier<Map<String, bool>> {
+  @override
+  Map<String, bool> build() => {};
+
+  void setUploading(String photoId, bool isUploading) {
+    state = {...state, photoId: isUploading};
+  }
+
+  void clearUploading(String photoId) {
+    state = Map.from(state)..remove(photoId);
+  }
+}
+
 /// Провайдер для управления состоянием загрузки фото
-final photoUploadStateProvider = StateProvider<Map<String, bool>>((ref) => {});
+final photoUploadStateProvider =
+    NotifierProvider<PhotoUploadStateNotifier, Map<String, bool>>(() {
+  return PhotoUploadStateNotifier();
+});
+
+/// Нотификатор для управления состоянием создания заметок
+class NoteCreationStateNotifier extends Notifier<Map<String, bool>> {
+  @override
+  Map<String, bool> build() => {};
+
+  void setCreating(String noteId, bool isCreating) {
+    state = {...state, noteId: isCreating};
+  }
+
+  void clearCreating(String noteId) {
+    state = Map.from(state)..remove(noteId);
+  }
+}
 
 /// Провайдер для управления состоянием создания заметок
-final noteCreationStateProvider = StateProvider<Map<String, bool>>((ref) => {});
+final noteCreationStateProvider =
+    NotifierProvider<NoteCreationStateNotifier, Map<String, bool>>(() {
+  return NoteCreationStateNotifier();
+});
+
+/// Нотификатор для управления состоянием поиска
+class SearchStateNotifier extends Notifier<Map<String, String>> {
+  @override
+  Map<String, String> build() => {};
+
+  void setSearchQuery(String field, String query) {
+    state = {...state, field: query};
+  }
+
+  void clearSearch(String field) {
+    state = Map.from(state)..remove(field);
+  }
+}
 
 /// Провайдер для управления состоянием поиска
-final searchStateProvider = StateProvider<Map<String, String>>((ref) => {});
+final searchStateProvider =
+    NotifierProvider<SearchStateNotifier, Map<String, String>>(() {
+  return SearchStateNotifier();
+});
+
+/// Нотификатор для управления выбранными тегами
+class SelectedTagsNotifier extends Notifier<Set<String>> {
+  @override
+  Set<String> build() => <String>{};
+
+  void addTag(String tag) {
+    state = {...state, tag};
+  }
+
+  void removeTag(String tag) {
+    state = state.where((t) => t != tag).toSet();
+  }
+
+  void clearTags() {
+    state = <String>{};
+  }
+}
 
 /// Провайдер для управления выбранными тегами
-final selectedTagsProvider = StateProvider<Set<String>>((ref) => Set<String>());
+final selectedTagsProvider =
+    NotifierProvider<SelectedTagsNotifier, Set<String>>(() {
+  return SelectedTagsNotifier();
+});
+
+/// Нотификатор для управления фильтрами заметок
+class NoteFiltersNotifier extends Notifier<NoteFilters> {
+  @override
+  NoteFilters build() => const NoteFilters();
+
+  void updateFilters(NoteFilters filters) {
+    state = filters;
+  }
+
+  void resetFilters() {
+    state = const NoteFilters();
+  }
+}
 
 /// Провайдер для управления фильтрами заметок
 final noteFiltersProvider =
-    StateProvider<NoteFilters>((ref) => const NoteFilters());
+    NotifierProvider<NoteFiltersNotifier, NoteFilters>(() {
+  return NoteFiltersNotifier();
+});
+
+/// Нотификатор для управления фильтрами фото
+class PhotoFiltersNotifier extends Notifier<PhotoFilters> {
+  @override
+  PhotoFilters build() => const PhotoFilters();
+
+  void updateFilters(PhotoFilters filters) {
+    state = filters;
+  }
+
+  void resetFilters() {
+    state = const PhotoFilters();
+  }
+}
 
 /// Провайдер для управления фильтрами фото
 final photoFiltersProvider =
-    StateProvider<PhotoFilters>((ref) => const PhotoFilters());
+    NotifierProvider<PhotoFiltersNotifier, PhotoFilters>(() {
+  return PhotoFiltersNotifier();
+});
 
 /// Фильтры для заметок
 class NoteFilters {

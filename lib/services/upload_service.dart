@@ -65,6 +65,9 @@ class UploadService {
   static const String _archivesPath = 'uploads/archives';
   static const String _otherPath = 'uploads/other';
 
+  /// Проверить доступность сервиса загрузки
+  bool get isAvailable => FeatureFlags.uploadEnabled;
+
   // Лимиты размеров файлов (в байтах)
   static const int _maxImageSize = 10 * 1024 * 1024; // 10 MB
   static const int _maxVideoSize = 100 * 1024 * 1024; // 100 MB
@@ -208,7 +211,7 @@ class UploadService {
           'UploadService: Picking file with extensions: $allowedExtensions');
 
       final FilePickerResult? result = await FilePicker.platform.pickFiles(
-        type: FileType.any,
+        type: FileType.custom,
         allowedExtensions: allowedExtensions,
         allowMultiple: allowMultiple,
       );

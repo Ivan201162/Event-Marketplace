@@ -98,29 +98,87 @@ final openSmsProvider =
   return await ShareService.openSms(params.phone, message: params.message);
 });
 
+/// Нотификатор для статуса шаринга
+class ShareStatusNotifier extends Notifier<String> {
+  @override
+  String build() => 'ready';
+
+  void setStatus(String status) {
+    state = status;
+  }
+
+  void reset() {
+    state = 'ready';
+  }
+}
+
 /// Провайдер для статуса шаринга
-final shareStatusProvider = StateProvider<String>((ref) {
-  return 'ready';
+final shareStatusProvider = NotifierProvider<ShareStatusNotifier, String>(() {
+  return ShareStatusNotifier();
 });
+
+/// Нотификатор для прогресса шаринга
+class ShareProgressNotifier extends Notifier<double> {
+  @override
+  double build() => 0.0;
+
+  void setProgress(double progress) {
+    state = progress;
+  }
+
+  void reset() {
+    state = 0.0;
+  }
+}
 
 /// Провайдер для отслеживания прогресса шаринга
-final shareProgressProvider = StateProvider<double>((ref) {
-  return 0.0;
+final shareProgressProvider =
+    NotifierProvider<ShareProgressNotifier, double>(() {
+  return ShareProgressNotifier();
 });
+
+/// Нотификатор для ошибок шаринга
+class ShareErrorNotifier extends Notifier<String?> {
+  @override
+  String? build() => null;
+
+  void setError(String? error) {
+    state = error;
+  }
+
+  void clearError() {
+    state = null;
+  }
+}
 
 /// Провайдер для последней ошибки шаринга
-final shareErrorProvider = StateProvider<String?>((ref) {
-  return null;
+final shareErrorProvider = NotifierProvider<ShareErrorNotifier, String?>(() {
+  return ShareErrorNotifier();
 });
 
+/// Нотификатор для истории шаринга
+class ShareHistoryNotifier extends Notifier<List<Map<String, dynamic>>> {
+  @override
+  List<Map<String, dynamic>> build() => [];
+
+  void addToHistory(Map<String, dynamic> item) {
+    state = [...state, item];
+  }
+
+  void clearHistory() {
+    state = [];
+  }
+}
+
 /// Провайдер для истории шаринга
-final shareHistoryProvider = StateProvider<List<Map<String, dynamic>>>((ref) {
-  return [];
+final shareHistoryProvider =
+    NotifierProvider<ShareHistoryNotifier, List<Map<String, dynamic>>>(() {
+  return ShareHistoryNotifier();
 });
 
 /// Провайдер для настроек шаринга
 final shareSettingsProvider =
-    StateNotifierProvider<ShareSettingsNotifier, ShareSettings>((ref) {
+    NotifierProvider<ShareSettingsNotifier, ShareSettings>(() {
   return ShareSettingsNotifier();
 });
 
@@ -171,8 +229,9 @@ class ShareSettings {
 }
 
 /// Нотификатор для настроек шаринга
-class ShareSettingsNotifier extends StateNotifier<ShareSettings> {
-  ShareSettingsNotifier() : super(const ShareSettings());
+class ShareSettingsNotifier extends Notifier<ShareSettings> {
+  @override
+  ShareSettings build() => const ShareSettings();
 
   void updateIncludeAppName(bool value) {
     state = state.copyWith(includeAppName: value);
@@ -211,34 +270,112 @@ class ShareSettingsNotifier extends StateNotifier<ShareSettings> {
   }
 }
 
+/// Нотификатор для статистики шаринга
+class ShareStatsNotifier extends Notifier<Map<String, int>> {
+  @override
+  Map<String, int> build() => {
+        'totalShares': 0,
+        'successfulShares': 0,
+        'failedShares': 0,
+        'eventsShared': 0,
+        'profilesShared': 0,
+        'bookingsShared': 0,
+        'textsShared': 0,
+        'linksShared': 0,
+        'filesShared': 0,
+      };
+
+  void incrementStat(String key) {
+    state = {...state, key: (state[key] ?? 0) + 1};
+  }
+
+  void resetStats() {
+    state = {
+      'totalShares': 0,
+      'successfulShares': 0,
+      'failedShares': 0,
+      'eventsShared': 0,
+      'profilesShared': 0,
+      'bookingsShared': 0,
+      'textsShared': 0,
+      'linksShared': 0,
+      'filesShared': 0,
+    };
+  }
+}
+
 /// Провайдер для статистики шаринга
-final shareStatsProvider = StateProvider<Map<String, int>>((ref) {
-  return {
-    'totalShares': 0,
-    'successfulShares': 0,
-    'failedShares': 0,
-    'eventsShared': 0,
-    'profilesShared': 0,
-    'bookingsShared': 0,
-    'textsShared': 0,
-    'linksShared': 0,
-    'filesShared': 0,
-  };
+final shareStatsProvider =
+    NotifierProvider<ShareStatsNotifier, Map<String, int>>(() {
+  return ShareStatsNotifier();
 });
+
+/// Нотификатор для последнего шаринга
+class LastShareNotifier extends Notifier<Map<String, dynamic>?> {
+  @override
+  Map<String, dynamic>? build() => null;
+
+  void setLastShare(Map<String, dynamic>? share) {
+    state = share;
+  }
+
+  void clearLastShare() {
+    state = null;
+  }
+}
 
 /// Провайдер для последнего шаринга
-final lastShareProvider = StateProvider<Map<String, dynamic>?>((ref) {
-  return null;
+final lastShareProvider =
+    NotifierProvider<LastShareNotifier, Map<String, dynamic>?>(() {
+  return LastShareNotifier();
 });
+
+/// Нотификатор для активных шарингов
+class ActiveSharesNotifier extends Notifier<Set<String>> {
+  @override
+  Set<String> build() => {};
+
+  void addShare(String shareId) {
+    state = {...state, shareId};
+  }
+
+  void removeShare(String shareId) {
+    state = state.where((id) => id != shareId).toSet();
+  }
+
+  void clearShares() {
+    state = {};
+  }
+}
 
 /// Провайдер для активных шарингов
-final activeSharesProvider = StateProvider<Set<String>>((ref) {
-  return {};
+final activeSharesProvider =
+    NotifierProvider<ActiveSharesNotifier, Set<String>>(() {
+  return ActiveSharesNotifier();
 });
 
+/// Нотификатор для очереди шаринга
+class ShareQueueNotifier extends Notifier<List<Map<String, dynamic>>> {
+  @override
+  List<Map<String, dynamic>> build() => [];
+
+  void addToQueue(Map<String, dynamic> share) {
+    state = [...state, share];
+  }
+
+  void removeFromQueue(String shareId) {
+    state = state.where((share) => share['id'] != shareId).toList();
+  }
+
+  void clearQueue() {
+    state = [];
+  }
+}
+
 /// Провайдер для очереди шаринга
-final shareQueueProvider = StateProvider<List<Map<String, dynamic>>>((ref) {
-  return [];
+final shareQueueProvider =
+    NotifierProvider<ShareQueueNotifier, List<Map<String, dynamic>>>(() {
+  return ShareQueueNotifier();
 });
 
 /// Провайдер для проверки, идет ли шаринг
@@ -263,21 +400,6 @@ final nextShareItemProvider = Provider<Map<String, dynamic>?>((ref) {
 final canAddToShareQueueProvider = Provider<bool>((ref) {
   final queueLength = ref.watch(shareQueueLengthProvider);
   return queueLength < 10;
-});
-
-/// Провайдер для получения информации о шаринге
-final shareInfoProvider = Provider<Map<String, dynamic>>((ref) {
-  final isAvailable = ref.watch(shareAvailableProvider);
-  final supportedPlatforms = ref.watch(supportedSharePlatformsProvider);
-  final isSharing = ref.watch(isSharingProvider);
-  final queueLength = ref.watch(shareQueueLengthProvider);
-
-  return {
-    'isAvailable': isAvailable,
-    'supportedPlatforms': supportedPlatforms,
-    'isSharing': isSharing,
-    'queueLength': queueLength,
-  };
 });
 
 /// Провайдер для проверки доступности конкретного типа шаринга

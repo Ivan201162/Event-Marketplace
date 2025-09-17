@@ -272,7 +272,7 @@ class _SearchScreenState extends State<SearchScreen> {
                       });
                     },
                     selectedColor:
-                        Theme.of(context).primaryColor.withOpacity(0.2),
+                        Theme.of(context).primaryColor.withValues(alpha: 0.2),
                     checkmarkColor: Theme.of(context).primaryColor,
                   ),
                 );
@@ -375,7 +375,7 @@ class BookingsScreen extends StatelessWidget {
                                 vertical: 4,
                               ),
                               decoration: BoxDecoration(
-                                color: statusColor.withOpacity(0.1),
+                                color: statusColor.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(12),
                               ),
                               child: Text(

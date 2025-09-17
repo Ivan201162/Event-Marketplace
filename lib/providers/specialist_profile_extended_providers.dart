@@ -98,27 +98,122 @@ final specialistProfileStatsProvider =
   return await service.getProfileStats(specialistId);
 });
 
+/// Нотификатор для состояния загрузки видео
+class VideoUploadStateNotifier extends Notifier<Map<String, bool>> {
+  @override
+  Map<String, bool> build() => {};
+
+  void setUploading(String videoId, bool isUploading) {
+    state = {...state, videoId: isUploading};
+  }
+
+  void clearState() {
+    state = {};
+  }
+}
+
 /// Провайдер для управления состоянием загрузки видео
-final videoUploadStateProvider = StateProvider<Map<String, bool>>((ref) => {});
+final videoUploadStateProvider =
+    NotifierProvider<VideoUploadStateNotifier, Map<String, bool>>(
+        () => VideoUploadStateNotifier());
+
+/// Нотификатор для состояния создания FAQ
+class FaqCreationStateNotifier extends Notifier<Map<String, bool>> {
+  @override
+  Map<String, bool> build() => {};
+
+  void setCreating(String faqId, bool isCreating) {
+    state = {...state, faqId: isCreating};
+  }
+
+  void clearState() {
+    state = {};
+  }
+}
 
 /// Провайдер для управления состоянием создания FAQ
-final faqCreationStateProvider = StateProvider<Map<String, bool>>((ref) => {});
+final faqCreationStateProvider =
+    NotifierProvider<FaqCreationStateNotifier, Map<String, bool>>(
+        () => FaqCreationStateNotifier());
+
+/// Нотификатор для состояния поиска специалистов
+class SpecialistSearchStateNotifier extends Notifier<Map<String, String>> {
+  @override
+  Map<String, String> build() => {};
+
+  void setSearchQuery(String query) {
+    state = {...state, 'query': query};
+  }
+
+  void clearState() {
+    state = {};
+  }
+}
 
 /// Провайдер для управления состоянием поиска
 final specialistSearchStateProvider =
-    StateProvider<Map<String, String>>((ref) => {});
+    NotifierProvider<SpecialistSearchStateNotifier, Map<String, String>>(
+        () => SpecialistSearchStateNotifier());
+
+/// Нотификатор для выбранных категорий FAQ
+class SelectedFAQCategoriesNotifier extends Notifier<Set<String>> {
+  @override
+  Set<String> build() => {};
+
+  void toggleCategory(String category) {
+    if (state.contains(category)) {
+      state = state.where((c) => c != category).toSet();
+    } else {
+      state = {...state, category};
+    }
+  }
+
+  void clearSelection() {
+    state = {};
+  }
+}
 
 /// Провайдер для управления выбранными категориями FAQ
 final selectedFAQCategoriesProvider =
-    StateProvider<Set<String>>((ref) => Set<String>());
+    NotifierProvider<SelectedFAQCategoriesNotifier, Set<String>>(
+        () => SelectedFAQCategoriesNotifier());
+
+/// Нотификатор для фильтров FAQ
+class FaqFiltersNotifier extends Notifier<FAQFilters> {
+  @override
+  FAQFilters build() => const FAQFilters();
+
+  void updateFilters(FAQFilters filters) {
+    state = filters;
+  }
+
+  void resetFilters() {
+    state = const FAQFilters();
+  }
+}
 
 /// Провайдер для управления фильтрами FAQ
-final faqFiltersProvider =
-    StateProvider<FAQFilters>((ref) => const FAQFilters());
+final faqFiltersProvider = NotifierProvider<FaqFiltersNotifier, FAQFilters>(
+    () => FaqFiltersNotifier());
+
+/// Нотификатор для фильтров видео
+class VideoFiltersNotifier extends Notifier<VideoFilters> {
+  @override
+  VideoFilters build() => const VideoFilters();
+
+  void updateFilters(VideoFilters filters) {
+    state = filters;
+  }
+
+  void resetFilters() {
+    state = const VideoFilters();
+  }
+}
 
 /// Провайдер для управления фильтрами видео
 final videoFiltersProvider =
-    StateProvider<VideoFilters>((ref) => const VideoFilters());
+    NotifierProvider<VideoFiltersNotifier, VideoFilters>(
+        () => VideoFiltersNotifier());
 
 /// Фильтры для FAQ
 class FAQFilters {

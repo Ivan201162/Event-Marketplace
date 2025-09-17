@@ -502,11 +502,11 @@ class ShareDialog extends StatelessWidget {
     if (text != null) {
       textToCopy = text!;
     } else if (event != null) {
-      textToCopy = ShareService._buildEventShareMessage(event!);
+      textToCopy = ShareService.buildEventShareMessage(event!);
     } else if (user != null) {
-      textToCopy = ShareService._buildProfileShareMessage(user!);
+      textToCopy = ShareService.buildProfileShareMessage(user!);
     } else if (booking != null) {
-      textToCopy = ShareService._buildBookingShareMessage(booking!);
+      textToCopy = ShareService.buildBookingShareMessage(booking!);
     }
 
     if (textToCopy.isNotEmpty) {

@@ -69,45 +69,62 @@ final searchReviewsProvider = StreamProvider.family<List<Review>,
 class ReviewFormState {
   final String title;
   final String content;
+  final String comment;
   final int rating;
   final List<String> tags;
+  final List<String> selectedTags;
   final List<String> images;
   final bool isSubmitting;
+  final bool isPublic;
   final String? error;
+  final String? errorMessage;
 
   const ReviewFormState({
     this.title = '',
     this.content = '',
+    this.comment = '',
     this.rating = 5,
     this.tags = const [],
+    this.selectedTags = const [],
     this.images = const [],
     this.isSubmitting = false,
+    this.isPublic = true,
     this.error,
+    this.errorMessage,
   });
 
   ReviewFormState copyWith({
     String? title,
     String? content,
+    String? comment,
     int? rating,
     List<String>? tags,
+    List<String>? selectedTags,
     List<String>? images,
     bool? isSubmitting,
+    bool? isPublic,
     String? error,
+    String? errorMessage,
   }) {
     return ReviewFormState(
       title: title ?? this.title,
       content: content ?? this.content,
+      comment: comment ?? this.comment,
       rating: rating ?? this.rating,
       tags: tags ?? this.tags,
+      selectedTags: selectedTags ?? this.selectedTags,
       images: images ?? this.images,
       isSubmitting: isSubmitting ?? this.isSubmitting,
+      isPublic: isPublic ?? this.isPublic,
       error: error ?? this.error,
+      errorMessage: errorMessage ?? this.errorMessage,
     );
   }
 }
 
 /// Провайдер состояния формы отзыва
-final reviewFormProvider = NotifierProvider<ReviewFormNotifier, ReviewFormState>(() {
+final reviewFormProvider =
+    NotifierProvider<ReviewFormNotifier, ReviewFormState>(() {
   return ReviewFormNotifier();
 });
 
@@ -147,6 +164,64 @@ class ReviewFormNotifier extends Notifier<ReviewFormState> {
   void reset() {
     state = const ReviewFormState();
   }
+
+  void updateComment(String comment) {
+    state = state.copyWith(comment: comment);
+  }
+
+  void updateSelectedTags(List<String> selectedTags) {
+    state = state.copyWith(selectedTags: selectedTags);
+  }
+
+  void updateIsPublic(bool isPublic) {
+    state = state.copyWith(isPublic: isPublic);
+  }
+
+  void setErrorMessage(String? errorMessage) {
+    state = state.copyWith(errorMessage: errorMessage);
+  }
+
+  void addTag(String tag) {
+    final tags = List<String>.from(state.tags);
+    if (!tags.contains(tag)) {
+      tags.add(tag);
+      state = state.copyWith(tags: tags);
+    }
+  }
+
+  void removeTag(String tag) {
+    final tags = List<String>.from(state.tags);
+    tags.remove(tag);
+    state = state.copyWith(tags: tags);
+  }
+
+  void togglePublic() {
+    state = state.copyWith(isPublic: !state.isPublic);
+  }
+
+  bool get isValid {
+    return state.title.isNotEmpty && 
+           state.content.isNotEmpty && 
+           state.rating > 0;
+  }
+
+  void startSubmitting() {
+    state = state.copyWith(isSubmitting: true, error: null);
+  }
+
+  void finishSubmitting() {
+    state = state.copyWith(isSubmitting: false);
+  }
+
+  void setRating(int rating) {
+    state = state.copyWith(rating: rating);
+  }
+
+
+  String? get errorMessage => state.error;
+  String get comment => state.content;
+  List<String> get selectedTags => state.tags;
+  bool get isPublic => true; // По умолчанию публичный
 }
 
 /// Состояние отзывов
@@ -175,7 +250,8 @@ class ReviewState {
 }
 
 /// Провайдер состояния отзывов
-final reviewStateProvider = NotifierProvider<ReviewStateNotifier, ReviewState>(() {
+final reviewStateProvider =
+    NotifierProvider<ReviewStateNotifier, ReviewState>(() {
   return ReviewStateNotifier();
 });
 
@@ -195,10 +271,24 @@ class ReviewStateNotifier extends Notifier<ReviewState> {
   void setError(String? error) {
     state = state.copyWith(error: error);
   }
+
+  Future<void> createReview({
+    required String targetId,
+    required ReviewType type,
+    required String title,
+    required String content,
+    required int rating,
+    List<String> tags = const [],
+    List<String> images = const [],
+  }) async {
+    // Здесь должна быть логика создания отзыва
+    // Пока что просто заглушка
+  }
 }
 
 /// Провайдер отзывов специалиста
-final specialistReviewsProvider = StreamProvider.family<List<Review>, String>((ref, specialistId) {
+final specialistReviewsProvider =
+    StreamProvider.family<List<Review>, String>((ref, specialistId) {
   final reviewService = ref.read(reviewServiceProvider);
   return reviewService.getReviewsForTarget(specialistId, ReviewType.specialist);
 });

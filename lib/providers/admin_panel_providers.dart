@@ -161,9 +161,19 @@ class UserFilter {
   }
 }
 
+/// Нотификатор для фильтра пользователей
+class UserFilterNotifier extends Notifier<UserFilter> {
+  @override
+  UserFilter build() => UserFilter();
+
+  void updateFilter(UserFilter filter) {
+    state = filter;
+  }
+}
+
 /// Провайдер для фильтра пользователей
-final userFilterProvider = StateProvider<UserFilter>((ref) {
-  return const UserFilter();
+final userFilterProvider = NotifierProvider<UserFilterNotifier, UserFilter>(() {
+  return UserFilterNotifier();
 });
 
 /// Провайдер для статистики пользователей

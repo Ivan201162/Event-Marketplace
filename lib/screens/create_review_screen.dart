@@ -344,7 +344,15 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
               true, // Подтвержден, так как пользователь участвовал в мероприятии
         );
 
-        await _reviewService.createReview(review);
+        await _reviewService.createReview(
+          targetId: review.targetId,
+          type: review.type,
+          title: review.title,
+          content: review.content,
+          rating: review.rating,
+          tags: review.tags,
+          images: review.images,
+        );
 
         if (context.mounted) {
           Navigator.pop(context, true);

@@ -105,8 +105,8 @@ class BadgeManager {
 
 /// Провайдер для проверки новых бейджей
 final newBadgeCheckerProvider =
-    StateNotifierProvider<NewBadgeChecker, NewBadgeState>((ref) {
-  return NewBadgeChecker(ref.read(badgeServiceProvider));
+    NotifierProvider<NewBadgeChecker, NewBadgeState>(() {
+  return NewBadgeChecker();
 });
 
 /// Состояние новых бейджей
@@ -131,12 +131,16 @@ class NewBadgeState {
 }
 
 /// Нотификатор для проверки новых бейджей
-class NewBadgeChecker extends StateNotifier<NewBadgeState> {
-  final BadgeService _service;
+class NewBadgeChecker extends Notifier<NewBadgeState> {
+  late final BadgeService _service;
   String? _lastUserId;
   List<Badge> _lastBadges = [];
 
-  NewBadgeChecker(this._service) : super(const NewBadgeState());
+  @override
+  NewBadgeState build() {
+    _service = ref.read(badgeServiceProvider);
+    return const NewBadgeState();
+  }
 
   /// Проверить новые бейджи для пользователя
   Future<void> checkNewBadges(String userId) async {

@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter/material.dart';
 import '../models/localization.dart';
 import '../services/localization_service.dart';
 
@@ -7,20 +8,52 @@ final localizationServiceProvider = Provider<LocalizationService>((ref) {
   return LocalizationService();
 });
 
+/// Нотификатор для настроек локализации
+class LocalizationSettingsNotifier extends Notifier<LocalizationSettings?> {
+  @override
+  LocalizationSettings? build() => null;
+
+  void setSettings(LocalizationSettings? settings) {
+    state = settings;
+  }
+}
+
 /// Провайдер настроек локализации
 final localizationSettingsProvider =
-    StateProvider<LocalizationSettings?>((ref) {
-  return null;
+    NotifierProvider<LocalizationSettingsNotifier, LocalizationSettings?>(() {
+  return LocalizationSettingsNotifier();
 });
+
+/// Нотификатор для текущей локализации
+class CurrentLocalizationNotifier extends Notifier<LocalizationModel?> {
+  @override
+  LocalizationModel? build() => null;
+
+  void setLocalization(LocalizationModel? localization) {
+    state = localization;
+  }
+}
 
 /// Провайдер текущей локализации
-final currentLocalizationProvider = StateProvider<LocalizationModel?>((ref) {
-  return null;
+final currentLocalizationProvider =
+    NotifierProvider<CurrentLocalizationNotifier, LocalizationModel?>(() {
+  return CurrentLocalizationNotifier();
 });
 
+/// Нотификатор для текущего языка
+class CurrentLanguageNotifier extends Notifier<String> {
+  @override
+  String build() => 'ru';
+
+  void setLanguage(String language) {
+    state = language;
+  }
+}
+
 /// Провайдер текущего языка
-final currentLanguageProvider = StateProvider<String>((ref) {
-  return 'ru';
+final currentLanguageProvider =
+    NotifierProvider<CurrentLanguageNotifier, String>(() {
+  return CurrentLanguageNotifier();
 });
 
 /// Провайдер текущей локали
@@ -33,10 +66,29 @@ final currentLocaleProvider = Provider<Locale>((ref) {
   return supportedLanguage.locale;
 });
 
+/// Нотификатор для доступных локализаций
+class AvailableLocalizationsNotifier extends Notifier<List<LocalizationModel>> {
+  @override
+  List<LocalizationModel> build() => [];
+
+  void setLocalizations(List<LocalizationModel> localizations) {
+    state = localizations;
+  }
+
+  void addLocalization(LocalizationModel localization) {
+    state = [...state, localization];
+  }
+
+  void removeLocalization(String languageCode) {
+    state = state.where((l) => l.languageCode != languageCode).toList();
+  }
+}
+
 /// Провайдер доступных локализаций
 final availableLocalizationsProvider =
-    StateProvider<List<LocalizationModel>>((ref) {
-  return [];
+    NotifierProvider<AvailableLocalizationsNotifier, List<LocalizationModel>>(
+        () {
+  return AvailableLocalizationsNotifier();
 });
 
 /// Провайдер поддерживаемых языков

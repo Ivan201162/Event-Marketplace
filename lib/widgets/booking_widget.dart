@@ -520,16 +520,20 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
       // Создаем бронирование
       final booking = Booking(
         id: 'booking_${DateTime.now().millisecondsSinceEpoch}',
-        customerId:
-            'current_user_id', // TODO: Получить ID текущего пользователя
-        specialistId: widget.specialist.id,
+        eventId: 'event_${DateTime.now().millisecondsSinceEpoch}',
+        eventTitle: 'Услуга специалиста ${widget.specialist.name}',
+        userId: 'current_user_id', // TODO: Получить ID текущего пользователя
+        userName: 'Текущий пользователь', // TODO: Получить имя пользователя
+        userEmail: 'user@example.com', // TODO: Получить email пользователя
+        userPhone: '+7 (999) 123-45-67', // TODO: Получить телефон пользователя
+        status: BookingStatus.pending,
+        bookingDate: DateTime.now(),
         eventDate: _selectedTime!,
-        endDate: endTime,
-        status: 'pending',
-        prepayment: widget.specialist.hourlyRate *
-            _selectedHours *
-            0.3, // 30% предоплата
+        participantsCount: 1,
         totalPrice: widget.specialist.hourlyRate * _selectedHours,
+        notes: 'Бронирование через приложение',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
 
       // Сохраняем бронирование с интеграцией календаря

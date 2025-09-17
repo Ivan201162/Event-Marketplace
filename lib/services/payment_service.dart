@@ -35,6 +35,10 @@ class PaymentService {
         paymentMethod: paymentMethod,
         metadata: metadata,
         organizationType: organizationType,
+        updatedAt: DateTime.now(),
+        dueDate: DateTime.now().add(Duration(days: 7)),
+        isPrepayment: type == PaymentType.advance,
+        isFinalPayment: type == PaymentType.finalPayment,
       );
 
       await _db.collection('payments').doc(payment.id).set(payment.toMap());
@@ -50,7 +54,7 @@ class PaymentService {
     try {
       final doc = await _db.collection('payments').doc(paymentId).get();
       if (doc.exists) {
-        return Payment.fromDocument(doc);
+        return Payment.fromMap(doc.data()!);
       }
       return null;
     } catch (e) {
@@ -69,7 +73,7 @@ class PaymentService {
           .get();
 
       return querySnapshot.docs
-          .map((doc) => Payment.fromDocument(doc))
+          .map((doc) => Payment.fromMap(doc.data()))
           .toList();
     } catch (e) {
       print('Ошибка получения платежей по заявке: $e');
@@ -85,7 +89,7 @@ class PaymentService {
         .orderBy('createdAt', descending: false)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => Payment.fromDocument(doc)).toList());
+            snapshot.docs.map((doc) => Payment.fromMap(doc.data())).toList());
   }
 
   /// Получить платежи по клиенту
@@ -96,7 +100,7 @@ class PaymentService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => Payment.fromDocument(doc)).toList());
+            snapshot.docs.map((doc) => Payment.fromMap(doc.data())).toList());
   }
 
   /// Получить платежи по специалисту
@@ -107,7 +111,7 @@ class PaymentService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => Payment.fromDocument(doc)).toList());
+            snapshot.docs.map((doc) => Payment.fromMap(doc.data())).toList());
   }
 
   /// Обновить статус платежа
@@ -489,6 +493,10 @@ class PaymentService {
           'advancePercentage': calculation.advancePercentage,
           'totalAmount': calculation.totalAmount,
         },
+        updatedAt: DateTime.now(),
+        dueDate: DateTime.now().add(Duration(days: 7)),
+        isPrepayment: true,
+        isFinalPayment: false,
       ));
     }
 
@@ -510,6 +518,10 @@ class PaymentService {
           'advanceAmount': calculation.advanceAmount,
           'totalAmount': calculation.totalAmount,
         },
+        updatedAt: DateTime.now(),
+        dueDate: DateTime.now().add(Duration(days: 30)),
+        isPrepayment: false,
+        isFinalPayment: true,
       ));
     }
 

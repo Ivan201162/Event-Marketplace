@@ -286,7 +286,7 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
 
   Widget _buildGuestsList() {
     return StreamBuilder<List<Guest>>(
-      stream: _guestService.getEventGuests(_selectedEventId, _filter),
+      stream: _guestService.getEventGuests(_selectedEventId),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());

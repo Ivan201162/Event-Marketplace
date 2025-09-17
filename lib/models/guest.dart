@@ -67,17 +67,17 @@ class Guest {
   String? get guestPhone => phone;
   String? get guestPhotoUrl => avatar;
   int get greetingsCount => metadata['greetingsCount'] as int? ?? 0;
-  DateTime? get registeredAt => metadata['registeredAt'] != null 
-      ? DateTime.parse(metadata['registeredAt'] as String) 
+  DateTime? get registeredAt => metadata['registeredAt'] != null
+      ? DateTime.parse(metadata['registeredAt'] as String)
       : null;
-  DateTime? get confirmedAt => metadata['confirmedAt'] != null 
-      ? DateTime.parse(metadata['confirmedAt'] as String) 
+  DateTime? get confirmedAt => metadata['confirmedAt'] != null
+      ? DateTime.parse(metadata['confirmedAt'] as String)
       : null;
-  DateTime? get checkedInAt => metadata['checkedInAt'] != null 
-      ? DateTime.parse(metadata['checkedInAt'] as String) 
+  DateTime? get checkedInAt => metadata['checkedInAt'] != null
+      ? DateTime.parse(metadata['checkedInAt'] as String)
       : null;
-  DateTime? get checkedOutAt => metadata['checkedOutAt'] != null 
-      ? DateTime.parse(metadata['checkedOutAt'] as String) 
+  DateTime? get checkedOutAt => metadata['checkedOutAt'] != null
+      ? DateTime.parse(metadata['checkedOutAt'] as String)
       : null;
 
   /// Цвет статуса

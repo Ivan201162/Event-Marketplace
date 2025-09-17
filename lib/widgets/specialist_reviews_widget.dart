@@ -15,7 +15,8 @@ class SpecialistReviewsWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final reviewsAsync = ref.watch(specialistReviewsProvider(specialistId));
-    final statisticsAsync = ref.watch(reviewStatsProvider((targetId: specialistId, type: ReviewType.specialist)));
+    final statisticsAsync = ref.watch(reviewStatsProvider(
+        (targetId: specialistId, type: ReviewType.specialist)));
 
     return Container(
       padding: const EdgeInsets.all(16),

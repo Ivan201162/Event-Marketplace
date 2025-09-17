@@ -26,6 +26,9 @@ class FeatureFlags {
   // Подписки
   static const bool subscriptionsEnabled = false;
 
+  // Отзывы
+  static const bool reviewsEnabled = true;
+
   // Идеи и коллекции
   static const bool ideasEnabled = false;
 
@@ -53,6 +56,11 @@ class FeatureFlags {
   // Социальные функции
   static const bool socialLoginEnabled = true;
   static const bool vkLoginEnabled = false;
+  static const bool socialPostsEnabled = true;
+  static const bool storiesEnabled = true;
+  static const bool audioMessagesEnabled = true;
+  static const bool callsEnabled = false; // включим позже (WebRTC)
+  static const bool arPreviewsEnabled = false; // включим позже
 
   // Отладка
   static const bool debugMode = true;
@@ -89,6 +97,8 @@ class FeatureFlags {
         return shareEnabled;
       case 'subscriptions':
         return subscriptionsEnabled;
+      case 'reviews':
+        return reviewsEnabled;
       case 'ideas':
         return ideasEnabled;
       case 'guest_mode':
@@ -109,6 +119,16 @@ class FeatureFlags {
         return socialLoginEnabled;
       case 'vk_login':
         return vkLoginEnabled;
+      case 'social_posts':
+        return socialPostsEnabled;
+      case 'stories':
+        return storiesEnabled;
+      case 'audio_messages':
+        return audioMessagesEnabled;
+      case 'calls':
+        return callsEnabled;
+      case 'ar_previews':
+        return arPreviewsEnabled;
       case 'debug':
         return debugMode;
       case 'verbose_logging':
@@ -136,6 +156,7 @@ class FeatureFlags {
     if (calendarSyncEnabled) features.add('calendar_sync');
     if (shareEnabled) features.add('share');
     if (subscriptionsEnabled) features.add('subscriptions');
+    if (reviewsEnabled) features.add('reviews');
     if (ideasEnabled) features.add('ideas');
     if (guestModeEnabled) features.add('guest_mode');
     if (vkIntegrationEnabled) features.add('vk_integration');
@@ -146,6 +167,11 @@ class FeatureFlags {
     if (contractsEnabled) features.add('contracts');
     if (socialLoginEnabled) features.add('social_login');
     if (vkLoginEnabled) features.add('vk_login');
+    if (socialPostsEnabled) features.add('social_posts');
+    if (storiesEnabled) features.add('stories');
+    if (audioMessagesEnabled) features.add('audio_messages');
+    if (callsEnabled) features.add('calls');
+    if (arPreviewsEnabled) features.add('ar_previews');
     if (debugMode) features.add('debug');
     if (verboseLogging) features.add('verbose_logging');
 
@@ -169,6 +195,7 @@ class FeatureFlags {
       'calendar_sync': calendarSyncEnabled,
       'share': shareEnabled,
       'subscriptions': subscriptionsEnabled,
+      'reviews': reviewsEnabled,
       'ideas': ideasEnabled,
       'guest_mode': guestModeEnabled,
       'vk_integration': vkIntegrationEnabled,
@@ -179,6 +206,11 @@ class FeatureFlags {
       'contracts': contractsEnabled,
       'social_login': socialLoginEnabled,
       'vk_login': vkLoginEnabled,
+      'social_posts': socialPostsEnabled,
+      'stories': storiesEnabled,
+      'audio_messages': audioMessagesEnabled,
+      'calls': callsEnabled,
+      'ar_previews': arPreviewsEnabled,
       'debug': debugMode,
       'verbose_logging': verboseLogging,
     };

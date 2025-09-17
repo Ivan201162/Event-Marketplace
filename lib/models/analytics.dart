@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 /// Модель для аналитики доходов и расходов
 class Analytics {
@@ -294,7 +295,7 @@ class IncomeCategories {
     'Другое': '📊',
   };
 
-  static const Map<String, Color> categoryColors = {
+  static final Map<String, Color> categoryColors = {
     'Услуги': Color(0xFF4CAF50),
     'Консультации': Color(0xFF2196F3),
     'Обучение': Color(0xFF9C27B0),
@@ -324,7 +325,7 @@ class ExpenseCategories {
     'Другое': '📊',
   };
 
-  static const Map<String, Color> categoryColors = {
+  static final Map<String, Color> categoryColors = {
     'Реклама': Color(0xFFF44336),
     'Инструменты': Color(0xFF795548),
     'Обучение': Color(0xFF3F51B5),
@@ -449,9 +450,9 @@ class AnalyticsReport {
       ),
       generatedAt:
           (map['generatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      stats: IncomeExpenseStats.fromMap(map['stats'] ?? {}),
+      stats: IncomeExpenseStatsSerializer.fromMap(map['stats'] ?? {}),
       chartData: (map['chartData'] as List<dynamic>?)
-              ?.map((e) => ChartData.fromMap(e))
+              ?.map((e) => ChartDataSerializer.fromMap(e))
               .toList() ??
           [],
       notes: map['notes'],
@@ -516,7 +517,7 @@ extension ChartDataExtension on ChartData {
     return {
       'label': label,
       'value': value,
-      'color': color?.value,
+      'color': color?.toARGB32(),
       'description': description,
     };
   }
@@ -528,7 +529,7 @@ class ChartDataSerializer {
     return ChartData(
       label: map['label'] ?? '',
       value: (map['value'] ?? 0.0).toDouble(),
-      color: map['color'] != null ? Color(map['color']) : null,
+      color: map['color'] != null ? Color(map['color'] as int) : null,
       description: map['description'],
     );
   }

@@ -2,15 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Тип уведомления
 enum NotificationType {
-  booking_confirmed,
-  booking_rejected,
-  booking_cancelled,
-  payment_completed,
-  payment_failed,
-  event_reminder,
-  new_message,
-  review_request,
-  system_announcement,
+  bookingConfirmed,
+  bookingRejected,
+  bookingCancelled,
+  paymentCompleted,
+  paymentFailed,
+  eventReminder,
+  newMessage,
+  reviewRequest,
+  systemAnnouncement,
 }
 
 /// Приоритет уведомления
@@ -63,7 +63,7 @@ class AppNotification {
       content: data['content'] ?? '',
       type: NotificationType.values.firstWhere(
         (e) => e.name == data['type'],
-        orElse: () => NotificationType.system_announcement,
+        orElse: () => NotificationType.systemAnnouncement,
       ),
       priority: NotificationPriority.values.firstWhere(
         (e) => e.name == data['priority'],

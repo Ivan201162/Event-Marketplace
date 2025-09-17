@@ -288,13 +288,24 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
       // Симулируем создание бронирования для тестирования Cloud Functions
       final testBooking = Booking(
         id: 'test_booking_${DateTime.now().millisecondsSinceEpoch}',
+        eventId: 'test_event_1',
+        eventTitle: 'Тестовое событие',
+        userId: testCustomerId,
+        userName: 'Тестовый клиент',
+        userEmail: 'test@example.com',
+        userPhone: '+7 (999) 123-45-67',
+        status: BookingStatus.pending,
+        bookingDate: DateTime.now(),
+        eventDate: DateTime.now().add(const Duration(days: 3)),
+        participantsCount: 2,
+        totalPrice: 5000,
+        notes: 'Тестовое бронирование',
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
         customerId: testCustomerId,
         specialistId: testSpecialistId,
-        eventDate: DateTime.now().add(const Duration(days: 3)),
         endDate: DateTime.now().add(const Duration(days: 3, hours: 2)),
-        status: 'pending',
         prepayment: 1000,
-        totalPrice: 5000,
       );
 
       final firestoreService = ref.read(firestoreServiceProvider);

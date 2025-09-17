@@ -121,9 +121,11 @@ final recommendationStatsProvider =
                     .reduce((a, b) => a + b) /
                 recommendations.length
             : 0.0,
-        topTypes: recommendations.groupedByType.entries.toList()
-          ..sort((a, b) => b.value.length.compareTo(a.value.length))
-          ..take(3).map((e) => e.key).toList(),
+        topTypes: () {
+          final entries = recommendations.groupedByType.entries.toList();
+          entries.sort((a, b) => b.value.length.compareTo(a.value.length));
+          return entries.take(3).map((e) => e.key).toList();
+        }(),
       );
       return stats;
     },
@@ -157,8 +159,8 @@ class RecommendationStats {
 }
 
 /// Провайдер для отслеживания взаимодействий с рекомендациями
-final recommendationInteractionProvider = StateNotifierProvider<
-    RecommendationInteractionNotifier, RecommendationInteractionState>((ref) {
+final recommendationInteractionProvider = NotifierProvider<
+    RecommendationInteractionNotifier, RecommendationInteractionState>(() {
   return RecommendationInteractionNotifier();
 });
 

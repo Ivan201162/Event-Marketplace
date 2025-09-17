@@ -95,8 +95,8 @@ final chatReactionStatsProvider =
           final reactionService = ref.read(messageReactionServiceProvider);
           yield await reactionService.getChatReactionStats(chatId);
         },
-        loading: () => const Stream.value({}),
-        error: (_, __) => const Stream.value({}),
+        loading: () => Stream.value({}),
+        error: (_, __) => Stream.value({}),
       );
 });
 
@@ -140,19 +140,68 @@ final chatMediaProvider =
       });
 });
 
+/// Нотификатор для статуса записи
+class RecordingStatusNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  void setRecording(bool isRecording) {
+    state = isRecording;
+  }
+}
+
 /// Провайдер для статуса записи
-final recordingStatusProvider = StateProvider<bool>((ref) => false);
+final recordingStatusProvider =
+    NotifierProvider<RecordingStatusNotifier, bool>(() {
+  return RecordingStatusNotifier();
+});
+
+/// Нотификатор для статуса воспроизведения
+class PlayingStatusNotifier extends Notifier<String?> {
+  @override
+  String? build() => null;
+
+  void setPlaying(String? messageId) {
+    state = messageId;
+  }
+}
 
 /// Провайдер для статуса воспроизведения
-final playingStatusProvider = StateProvider<String?>((ref) => null);
+final playingStatusProvider =
+    NotifierProvider<PlayingStatusNotifier, String?>(() {
+  return PlayingStatusNotifier();
+});
+
+/// Нотификатор для текущего воспроизводимого сообщения
+class CurrentPlayingMessageNotifier extends Notifier<ChatMessageExtended?> {
+  @override
+  ChatMessageExtended? build() => null;
+
+  void setCurrentPlaying(ChatMessageExtended? message) {
+    state = message;
+  }
+}
 
 /// Провайдер для текущего воспроизводимого сообщения
 final currentPlayingMessageProvider =
-    StateProvider<ChatMessageExtended?>((ref) => null);
+    NotifierProvider<CurrentPlayingMessageNotifier, ChatMessageExtended?>(() {
+  return CurrentPlayingMessageNotifier();
+});
+
+/// Нотификатор для статуса "печатает"
+class TypingStatusNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  void setTyping(bool isTyping) {
+    state = isTyping;
+  }
+}
 
 /// Провайдер для статуса "печатает"
-final typingStatusProvider =
-    StateProvider.family<bool, String>((ref, chatId) => false);
+final typingStatusProvider = Provider<Map<String, bool>>((ref) {
+  return {};
+});
 
 /// Провайдер для активных пользователей в чате
 final activeUsersProvider =
@@ -169,7 +218,7 @@ final activeUsersProvider =
 
 /// Провайдер для настроек чата
 final chatSettingsProvider =
-    StateNotifierProvider<ChatSettingsNotifier, ChatSettings>((ref) {
+    NotifierProvider<ChatSettingsNotifier, ChatSettings>(() {
   return ChatSettingsNotifier();
 });
 
@@ -207,8 +256,9 @@ class ChatSettings {
 }
 
 /// Notifier для настроек чата
-class ChatSettingsNotifier extends StateNotifier<ChatSettings> {
-  ChatSettingsNotifier() : super(const ChatSettings());
+class ChatSettingsNotifier extends Notifier<ChatSettings> {
+  @override
+  ChatSettings build() => const ChatSettings();
 
   void updateSoundEnabled(bool enabled) {
     state = state.copyWith(soundEnabled: enabled);

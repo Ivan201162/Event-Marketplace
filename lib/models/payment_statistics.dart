@@ -32,10 +32,13 @@ class PaymentStatistics {
       totalTransactions: data['totalTransactions'] as int? ?? 0,
       successfulTransactions: data['successfulTransactions'] as int? ?? 0,
       failedTransactions: data['failedTransactions'] as int? ?? 0,
-      averageTransactionAmount: (data['averageTransactionAmount'] as num?)?.toDouble() ?? 0.0,
+      averageTransactionAmount:
+          (data['averageTransactionAmount'] as num?)?.toDouble() ?? 0.0,
       revenueByMonth: Map<String, double>.from(data['revenueByMonth'] ?? {}),
-      transactionsByStatus: Map<String, int>.from(data['transactionsByStatus'] ?? {}),
-      lastTransactionDate: DateTime.parse(data['lastTransactionDate'] as String),
+      transactionsByStatus:
+          Map<String, int>.from(data['transactionsByStatus'] ?? {}),
+      lastTransactionDate:
+          DateTime.parse(data['lastTransactionDate'] as String),
     );
   }
 

@@ -306,9 +306,9 @@ class DJPlaylist {
     final minutes = total.inMinutes % 60;
 
     if (hours > 0) {
-      return '${hours}ч ${minutes}м';
+      return '$hoursч $minutesм';
     } else {
-      return '${minutes}м';
+      return '$minutesм';
     }
   }
 
@@ -329,7 +329,7 @@ class DJPlaylist {
     if (averageRating == null || ratingCount == 0) {
       return 'Нет оценок';
     }
-    return '${averageRating!.toStringAsFixed(1)} (${ratingCount} оценок)';
+    return '${averageRating!.toStringAsFixed(1)} ($ratingCount оценок)';
   }
 }
 
@@ -391,7 +391,9 @@ class VKPlaylist {
       'count': trackCount,
       'owner_id': ownerId,
       'owner_name': ownerName,
-      'create_time': createdAt?.millisecondsSinceEpoch ~/ 1000,
+      'create_time': createdAt?.millisecondsSinceEpoch != null
+          ? createdAt!.millisecondsSinceEpoch ~/ 1000
+          : null,
       'tracks': tracks.map((track) => track.toMap()).toList(),
     };
   }

@@ -110,36 +110,121 @@ final adminSettingsProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   return await adminService.getAdminSettings();
 });
 
+/// Нотификатор для статуса админ-действий
+class AdminActionStatusNotifier extends Notifier<String> {
+  @override
+  String build() => 'ready';
+
+  void setStatus(String status) {
+    state = status;
+  }
+}
+
 /// Провайдер для статуса админ-действий
-final adminActionStatusProvider = StateProvider<String>((ref) {
-  return 'ready';
+final adminActionStatusProvider =
+    NotifierProvider<AdminActionStatusNotifier, String>(() {
+  return AdminActionStatusNotifier();
 });
+
+/// Нотификатор для отслеживания прогресса админ-действий
+class AdminActionProgressNotifier extends Notifier<double> {
+  @override
+  double build() => 0.0;
+
+  void setProgress(double progress) {
+    state = progress;
+  }
+}
 
 /// Провайдер для отслеживания прогресса админ-действий
-final adminActionProgressProvider = StateProvider<double>((ref) {
-  return 0.0;
+final adminActionProgressProvider =
+    NotifierProvider<AdminActionProgressNotifier, double>(() {
+  return AdminActionProgressNotifier();
 });
 
+/// Нотификатор для последней ошибки админ-действий
+class AdminActionErrorNotifier extends Notifier<String?> {
+  @override
+  String? build() => null;
+
+  void setError(String? error) {
+    state = error;
+  }
+}
+
 /// Провайдер для последней ошибки админ-действий
-final adminActionErrorProvider = StateProvider<String?>((ref) {
-  return null;
+final adminActionErrorProvider =
+    NotifierProvider<AdminActionErrorNotifier, String?>(() {
+  return AdminActionErrorNotifier();
 });
+
+/// Нотификатор для истории админ-действий
+class AdminActionHistoryNotifier extends Notifier<List<Map<String, dynamic>>> {
+  @override
+  List<Map<String, dynamic>> build() => [];
+
+  void addAction(Map<String, dynamic> action) {
+    state = [...state, action];
+  }
+
+  void clearHistory() {
+    state = [];
+  }
+}
 
 /// Провайдер для истории админ-действий
 final adminActionHistoryProvider =
-    StateProvider<List<Map<String, dynamic>>>((ref) {
-  return [];
+    NotifierProvider<AdminActionHistoryNotifier, List<Map<String, dynamic>>>(
+        () {
+  return AdminActionHistoryNotifier();
 });
 
+/// Нотификатор для активных админ-действий
+class ActiveAdminActionsNotifier extends Notifier<Set<String>> {
+  @override
+  Set<String> build() => {};
+
+  void addAction(String actionId) {
+    state = {...state, actionId};
+  }
+
+  void removeAction(String actionId) {
+    state = state.where((id) => id != actionId).toSet();
+  }
+
+  void clearActions() {
+    state = {};
+  }
+}
+
 /// Провайдер для активных админ-действий
-final activeAdminActionsProvider = StateProvider<Set<String>>((ref) {
-  return {};
+final activeAdminActionsProvider =
+    NotifierProvider<ActiveAdminActionsNotifier, Set<String>>(() {
+  return ActiveAdminActionsNotifier();
 });
+
+/// Нотификатор для очереди админ-действий
+class AdminActionQueueNotifier extends Notifier<List<Map<String, dynamic>>> {
+  @override
+  List<Map<String, dynamic>> build() => [];
+
+  void addToQueue(Map<String, dynamic> action) {
+    state = [...state, action];
+  }
+
+  void removeFromQueue(String actionId) {
+    state = state.where((action) => action['id'] != actionId).toList();
+  }
+
+  void clearQueue() {
+    state = [];
+  }
+}
 
 /// Провайдер для очереди админ-действий
 final adminActionQueueProvider =
-    StateProvider<List<Map<String, dynamic>>>((ref) {
-  return [];
+    NotifierProvider<AdminActionQueueNotifier, List<Map<String, dynamic>>>(() {
+  return AdminActionQueueNotifier();
 });
 
 /// Провайдер для проверки, идет ли админ-действие
@@ -166,24 +251,60 @@ final canAddToAdminQueueProvider = Provider<bool>((ref) {
   return queueLength < 10;
 });
 
+/// Нотификатор для статистики админ-действий
+class AdminActionStatsNotifier extends Notifier<Map<String, int>> {
+  @override
+  Map<String, int> build() => {
+        'totalActions': 0,
+        'successfulActions': 0,
+        'failedActions': 0,
+        'usersBanned': 0,
+        'usersUnbanned': 0,
+        'usersVerified': 0,
+        'eventsHidden': 0,
+        'eventsShown': 0,
+        'eventsDeleted': 0,
+      };
+
+  void incrementStat(String key) {
+    state = {...state, key: (state[key] ?? 0) + 1};
+  }
+
+  void resetStats() {
+    state = {
+      'totalActions': 0,
+      'successfulActions': 0,
+      'failedActions': 0,
+      'usersBanned': 0,
+      'usersUnbanned': 0,
+      'usersVerified': 0,
+      'eventsHidden': 0,
+      'eventsShown': 0,
+      'eventsDeleted': 0,
+    };
+  }
+}
+
 /// Провайдер для статистики админ-действий
-final adminActionStatsProvider = StateProvider<Map<String, int>>((ref) {
-  return {
-    'totalActions': 0,
-    'successfulActions': 0,
-    'failedActions': 0,
-    'usersBanned': 0,
-    'usersUnbanned': 0,
-    'usersVerified': 0,
-    'eventsHidden': 0,
-    'eventsShown': 0,
-    'eventsDeleted': 0,
-  };
+final adminActionStatsProvider =
+    NotifierProvider<AdminActionStatsNotifier, Map<String, int>>(() {
+  return AdminActionStatsNotifier();
 });
 
+/// Нотификатор для последнего админ-действия
+class LastAdminActionNotifier extends Notifier<Map<String, dynamic>?> {
+  @override
+  Map<String, dynamic>? build() => null;
+
+  void setLastAction(Map<String, dynamic>? action) {
+    state = action;
+  }
+}
+
 /// Провайдер для последнего админ-действия
-final lastAdminActionProvider = StateProvider<Map<String, dynamic>?>((ref) {
-  return null;
+final lastAdminActionProvider =
+    NotifierProvider<LastAdminActionNotifier, Map<String, dynamic>?>(() {
+  return LastAdminActionNotifier();
 });
 
 /// Провайдер для получения информации об админ-панели

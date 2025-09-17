@@ -6,8 +6,8 @@ enum MessageType {
   image, // Изображение
   file, // Файл
   system, // Системное сообщение
-  booking_update, // Обновление заявки
-  payment_update, // Обновление платежа
+  bookingUpdate, // Обновление заявки
+  paymentUpdate, // Обновление платежа
 }
 
 /// Статусы сообщений
@@ -142,9 +142,9 @@ class ChatMessage {
         return 'Файл';
       case MessageType.system:
         return 'Системное';
-      case MessageType.booking_update:
+      case MessageType.bookingUpdate:
         return 'Обновление заявки';
-      case MessageType.payment_update:
+      case MessageType.paymentUpdate:
         return 'Обновление платежа';
     }
   }
@@ -161,10 +161,10 @@ class ChatMessage {
         return MessageType.file;
       case 'system':
         return MessageType.system;
-      case 'booking_update':
-        return MessageType.booking_update;
-      case 'payment_update':
-        return MessageType.payment_update;
+      case 'bookingUpdate':
+        return MessageType.bookingUpdate;
+      case 'paymentUpdate':
+        return MessageType.paymentUpdate;
       case 'text':
       default:
         return MessageType.text;
@@ -245,8 +245,7 @@ class Chat {
           ? (data['updatedAt'] as Timestamp).toDate()
           : DateTime.now(),
       lastMessage: data['lastMessage'] != null
-          ? ChatMessage.fromDocument(
-              DocumentSnapshot.fromMap(data['lastMessage']))
+          ? ChatMessage.fromDocument(data['lastMessage'])
           : null,
       unreadCount: data['unreadCount'] ?? 0,
       isActive: data['isActive'] ?? true,

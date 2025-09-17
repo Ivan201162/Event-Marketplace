@@ -522,15 +522,24 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
 
     try {
       final ideaId = await _ideaService.createIdea(
-        title: _titleController.text.trim(),
-        description: _descriptionController.text.trim(),
-        category: _selectedCategory,
-        authorId: widget.userId,
-        authorName: 'Демо Пользователь', // TODO: Получить из контекста
-        tags: _tags,
-        type: _selectedType,
-        images: _images,
-        isPublic: _isPublic,
+        Idea(
+          id: '',
+          title: _titleController.text.trim(),
+          description: _descriptionController.text.trim(),
+          category: _selectedCategory,
+          authorId: widget.userId,
+          authorName: 'Демо Пользователь', // TODO: Получить из контекста
+          tags: _tags,
+          type: _selectedType,
+          images: _images,
+          isPublic: _isPublic,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          likesCount: 0,
+          savesCount: 0,
+          viewsCount: 0,
+          commentsCount: 0,
+        ),
       );
 
       if (ideaId != null) {

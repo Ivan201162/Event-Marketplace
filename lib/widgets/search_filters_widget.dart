@@ -639,4 +639,3 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
     widget.onFiltersChanged(_filters);
   }
 }
-

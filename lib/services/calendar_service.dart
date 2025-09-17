@@ -4,6 +4,7 @@ import 'package:icalendar_parser/icalendar_parser.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../models/calendar_event.dart';
+import '../models/specialist_schedule.dart';
 
 /// Сервис для работы с календарем
 class CalendarService {
@@ -651,5 +652,29 @@ class CalendarService {
   /// Удалить событие бронирования
   Future<void> removeBookingEvent(String eventId) async {
     await deleteEvent(eventId);
+  }
+
+  /// Получить расписание специалиста
+  Stream<SpecialistSchedule?> getSpecialistSchedule(String specialistId) {
+    return _firestore
+        .collection('specialist_schedules')
+        .doc(specialistId)
+        .snapshots()
+        .map((doc) {
+      if (!doc.exists) return null;
+      return SpecialistSchedule.fromMap(doc.data()!);
+    });
+  }
+
+  /// Получить все расписания
+  Stream<List<SpecialistSchedule>> getAllSchedules() {
+    return _firestore
+        .collection('specialist_schedules')
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs
+          .map((doc) => SpecialistSchedule.fromMap(doc.data()))
+          .toList();
+    });
   }
 }

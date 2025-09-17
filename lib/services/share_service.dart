@@ -20,7 +20,7 @@ class ShareService {
     try {
       SafeLog.info('ShareService: Sharing event: ${event.title}');
 
-      final message = customMessage ?? _buildEventShareMessage(event);
+      final message = customMessage ?? buildEventShareMessage(event);
       final subject = 'Событие: ${event.title}';
 
       await Share.share(
@@ -47,7 +47,7 @@ class ShareService {
     try {
       SafeLog.info('ShareService: Sharing profile: ${user.name}');
 
-      final message = customMessage ?? _buildProfileShareMessage(user);
+      final message = customMessage ?? buildProfileShareMessage(user);
       final subject = 'Профиль: ${user.name}';
 
       await Share.share(
@@ -74,7 +74,7 @@ class ShareService {
     try {
       SafeLog.info('ShareService: Sharing booking: ${booking.eventTitle}');
 
-      final message = customMessage ?? _buildBookingShareMessage(booking);
+      final message = customMessage ?? buildBookingShareMessage(booking);
       final subject = 'Бронирование: ${booking.eventTitle}';
 
       await Share.share(
@@ -288,7 +288,7 @@ class ShareService {
   }
 
   /// Построить сообщение для шаринга события
-  static String _buildEventShareMessage(Event event) {
+  static String buildEventShareMessage(Event event) {
     final buffer = StringBuffer();
 
     buffer.writeln('🎉 Интересное событие!');
@@ -317,7 +317,7 @@ class ShareService {
   }
 
   /// Построить сообщение для шаринга профиля
-  static String _buildProfileShareMessage(AppUser user) {
+  static String buildProfileShareMessage(AppUser user) {
     final buffer = StringBuffer();
 
     buffer.writeln('👤 Познакомьтесь с интересным человеком!');
@@ -341,7 +341,7 @@ class ShareService {
   }
 
   /// Построить сообщение для шаринга бронирования
-  static String _buildBookingShareMessage(Booking booking) {
+  static String buildBookingShareMessage(Booking booking) {
     final buffer = StringBuffer();
 
     buffer.writeln('🎫 Я забронировал место на событие!');
@@ -427,7 +427,7 @@ class ShareService {
       };
 
   /// Построить сообщение для шаринга события
-  static String _buildEventShareMessage(Event event) {
+  static String buildEventShareMessage(Event event) {
     final buffer = StringBuffer();
     buffer.writeln('🎉 ${event.title}');
     buffer.writeln();
@@ -445,7 +445,7 @@ class ShareService {
   }
 
   /// Построить сообщение для шаринга профиля
-  static String _buildProfileShareMessage(AppUser user) {
+  static String buildProfileShareMessage(AppUser user) {
     final buffer = StringBuffer();
     buffer.writeln('👤 ${user.name}');
     buffer.writeln();
@@ -463,7 +463,7 @@ class ShareService {
   }
 
   /// Построить сообщение для шаринга бронирования
-  static String _buildBookingShareMessage(Booking booking) {
+  static String buildBookingShareMessage(Booking booking) {
     final buffer = StringBuffer();
     buffer.writeln('📋 Бронирование');
     buffer.writeln();

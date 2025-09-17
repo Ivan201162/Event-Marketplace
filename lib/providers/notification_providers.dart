@@ -34,8 +34,7 @@ final fcmTokenProvider = FutureProvider<String?>((ref) async {
 
 /// Провайдер для управления настройками уведомлений
 final notificationSettingsProvider =
-    StateNotifierProvider<NotificationSettingsNotifier, NotificationSettings>(
-        (ref) {
+    NotifierProvider<NotificationSettingsNotifier, NotificationSettings>(() {
   return NotificationSettingsNotifier();
 });
 
@@ -101,9 +100,11 @@ class NotificationSettings {
 }
 
 /// Нотификатор для настроек уведомлений
-class NotificationSettingsNotifier extends StateNotifier<NotificationSettings> {
-  NotificationSettingsNotifier() : super(const NotificationSettings()) {
+class NotificationSettingsNotifier extends Notifier<NotificationSettings> {
+  @override
+  NotificationSettings build() {
     _loadSettings();
+    return const NotificationSettings();
   }
 
   /// Загружает настройки из SharedPreferences

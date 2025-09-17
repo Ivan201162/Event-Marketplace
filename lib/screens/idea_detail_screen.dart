@@ -556,10 +556,17 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
 
     try {
       final commentId = await _ideaService.addComment(
-        ideaId: _idea.id,
-        authorId: widget.userId,
-        authorName: 'Демо Пользователь', // TODO: Получить из контекста
-        content: content,
+        IdeaComment(
+          id: '',
+          ideaId: _idea.id,
+          authorId: widget.userId,
+          authorName: 'Демо Пользователь', // TODO: Получить из контекста
+          content: content,
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          likesCount: 0,
+          isEdited: false,
+        ),
       );
 
       if (commentId != null) {

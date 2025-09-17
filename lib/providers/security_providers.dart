@@ -7,9 +7,24 @@ final securityServiceProvider = Provider<SecurityService>((ref) {
   return SecurityService();
 });
 
+/// Нотификатор для настроек безопасности
+class SecuritySettingsNotifier extends Notifier<SecuritySettings?> {
+  @override
+  SecuritySettings? build() => null;
+
+  void updateSettings(SecuritySettings? settings) {
+    state = settings;
+  }
+
+  void clearSettings() {
+    state = null;
+  }
+}
+
 /// Провайдер настроек безопасности
-final securitySettingsProvider = StateProvider<SecuritySettings?>((ref) {
-  return null;
+final securitySettingsProvider =
+    NotifierProvider<SecuritySettingsNotifier, SecuritySettings?>(() {
+  return SecuritySettingsNotifier();
 });
 
 /// Провайдер аудита безопасности
