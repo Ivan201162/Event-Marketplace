@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/user_role_provider.dart';
 import '../widgets/role_switcher.dart';
+import '../widgets/recommendations_section.dart';
 import '../models/user.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -203,6 +204,9 @@ class HomeScreen extends ConsumerWidget {
                 ),
               ),
             ),
+
+            // Секция рекомендаций
+            const RecommendationsSection(),
 
             const SizedBox(height: 24),
           ],
