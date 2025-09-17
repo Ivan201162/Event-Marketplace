@@ -1,5 +1,5 @@
 # Multi-stage build for Flutter web app
-FROM ubuntu:22.04 as build-env
+FROM ubuntu:24.04 as build-env
 
 # Install dependencies
 RUN apt-get update && apt-get install -y \
