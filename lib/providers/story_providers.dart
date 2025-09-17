@@ -8,7 +8,8 @@ final storyServiceProvider = Provider<StoryService>((ref) {
 });
 
 /// Провайдер для историй специалиста
-final specialistStoriesProvider = StreamProvider.family<List<Story>, String>((ref, specialistId) {
+final specialistStoriesProvider =
+    StreamProvider.family<List<Story>, String>((ref, specialistId) {
   final storyService = ref.read(storyServiceProvider);
   return storyService.getSpecialistStories(specialistId);
 });
@@ -20,7 +21,8 @@ final allStoriesProvider = StreamProvider<List<Story>>((ref) {
 });
 
 /// Провайдер для состояния историй
-final storyStateProvider = StateNotifierProvider<StoryStateNotifier, StoryState>((ref) {
+final storyStateProvider =
+    StateNotifierProvider<StoryStateNotifier, StoryState>((ref) {
   return StoryStateNotifier();
 });
 

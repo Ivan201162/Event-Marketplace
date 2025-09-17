@@ -9,7 +9,8 @@ final chatServiceProvider = Provider<ChatService>((ref) {
 });
 
 /// Провайдер для списка чатов пользователя
-final userChatsProvider = FutureProvider.family<List<Chat>, UserChatsParams>((ref, params) async {
+final userChatsProvider =
+    FutureProvider.family<List<Chat>, UserChatsParams>((ref, params) async {
   final chatService = ref.read(chatServiceProvider);
   return chatService.getUserChats(params.userId);
 });
@@ -22,13 +23,15 @@ class UserChatsParams {
 }
 
 /// Провайдер для сообщений чата
-final chatMessagesProvider = StreamProvider.family<List<ChatMessage>, String>((ref, chatId) {
+final chatMessagesProvider =
+    StreamProvider.family<List<ChatMessage>, String>((ref, chatId) {
   final chatService = ref.read(chatServiceProvider);
   return chatService.getChatMessages(chatId);
 });
 
 /// Провайдер для состояния формы сообщения
-final messageFormProvider = NotifierProvider<MessageFormNotifier, MessageFormState>(() {
+final messageFormProvider =
+    NotifierProvider<MessageFormNotifier, MessageFormState>(() {
   return MessageFormNotifier();
 });
 
@@ -78,7 +81,8 @@ class MessageFormNotifier extends Notifier<MessageFormState> {
   }
 
   void removeAttachment(String attachment) {
-    final updatedAttachments = state.attachments.where((a) => a != attachment).toList();
+    final updatedAttachments =
+        state.attachments.where((a) => a != attachment).toList();
     state = state.copyWith(attachments: updatedAttachments);
   }
 

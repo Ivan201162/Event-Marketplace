@@ -47,19 +47,23 @@ final paymentHistoryProvider =
 });
 
 /// Провайдер для платежей специалиста
-final paymentsBySpecialistProvider = FutureProvider.family<List<PaymentInfo>, String>((ref, userId) async {
+final paymentsBySpecialistProvider =
+    FutureProvider.family<List<PaymentInfo>, String>((ref, userId) async {
   // TODO: Реализовать получение платежей специалиста
   return [];
 });
 
 /// Провайдер для платежей клиента
-final paymentsByCustomerProvider = FutureProvider.family<List<PaymentInfo>, String>((ref, userId) async {
+final paymentsByCustomerProvider =
+    FutureProvider.family<List<PaymentInfo>, String>((ref, userId) async {
   // TODO: Реализовать получение платежей клиента
   return [];
 });
 
 /// Провайдер для статистики платежей
-final paymentStatisticsProvider = FutureProvider.family<PaymentStatistics, PaymentStatisticsParams>((ref, params) async {
+final paymentStatisticsProvider =
+    FutureProvider.family<PaymentStatistics, PaymentStatisticsParams>(
+        (ref, params) async {
   // TODO: Реализовать получение статистики платежей
   return PaymentStatistics(
     totalCount: 0,

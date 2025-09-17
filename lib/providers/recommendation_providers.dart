@@ -9,7 +9,8 @@ final recommendationEngineProvider = Provider<RecommendationEngine>((ref) {
 });
 
 /// Провайдер рекомендаций для текущего пользователя
-final userRecommendationsProvider = FutureProvider<List<Specialist>>((ref) async {
+final userRecommendationsProvider =
+    FutureProvider<List<Specialist>>((ref) async {
   final authState = ref.watch(authStateProvider);
   final engine = ref.read(recommendationEngineProvider);
 
@@ -21,13 +22,16 @@ final userRecommendationsProvider = FutureProvider<List<Specialist>>((ref) async
 });
 
 /// Провайдер популярных специалистов
-final popularSpecialistsProvider = FutureProvider<List<Specialist>>((ref) async {
+final popularSpecialistsProvider =
+    FutureProvider<List<Specialist>>((ref) async {
   final engine = ref.read(recommendationEngineProvider);
   return engine.getPopularSpecialists();
 });
 
 /// Провайдер ближайших специалистов
-final nearbySpecialistsProvider = FutureProvider.family<List<Specialist>, NearbySpecialistsParams>((ref, params) async {
+final nearbySpecialistsProvider =
+    FutureProvider.family<List<Specialist>, NearbySpecialistsParams>(
+        (ref, params) async {
   final engine = ref.read(recommendationEngineProvider);
   return engine.getNearbySpecialists(
     latitude: params.latitude,

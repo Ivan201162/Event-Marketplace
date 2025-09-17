@@ -29,7 +29,8 @@ class ChatService {
         .collection('messages')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => ChatMessage.fromDocument(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => ChatMessage.fromDocument(doc)).toList());
   }
 
   /// Отправить сообщение
@@ -63,7 +64,8 @@ class ChatService {
   }
 
   /// Обновить статус сообщения
-  Future<void> updateMessageStatus(String chatId, String messageId, MessageStatus status) async {
+  Future<void> updateMessageStatus(
+      String chatId, String messageId, MessageStatus status) async {
     try {
       await _firestore
           .collection('chats')
@@ -138,7 +140,8 @@ class ChatService {
       }
       return totalUnread;
     } catch (e) {
-      throw Exception('Ошибка получения количества непрочитанных сообщений: $e');
+      throw Exception(
+          'Ошибка получения количества непрочитанных сообщений: $e');
     }
   }
 }

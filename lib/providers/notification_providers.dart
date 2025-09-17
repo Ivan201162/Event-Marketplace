@@ -156,7 +156,8 @@ class NotificationSettingsNotifier extends Notifier<NotificationSettings> {
 }
 
 /// Провайдер для состояния уведомлений
-final notificationStateProvider = NotifierProvider<NotificationStateNotifier, NotificationState>(() {
+final notificationStateProvider =
+    NotifierProvider<NotificationStateNotifier, NotificationState>(() {
   return NotificationStateNotifier();
 });
 

@@ -8,7 +8,8 @@ final recommendationServiceProvider = Provider<RecommendationService>((ref) {
 });
 
 /// Провайдер для взаимодействий с рекомендациями
-final recommendationInteractionProvider = StateNotifierProvider<RecommendationInteractionNotifier, RecommendationInteractionState>((ref) {
+final recommendationInteractionProvider = StateNotifierProvider<
+    RecommendationInteractionNotifier, RecommendationInteractionState>((ref) {
   return RecommendationInteractionNotifier();
 });
 
@@ -38,11 +39,14 @@ class RecommendationInteractionState {
 }
 
 /// Нотификатор для взаимодействий с рекомендациями
-class RecommendationInteractionNotifier extends StateNotifier<RecommendationInteractionState> {
-  RecommendationInteractionNotifier() : super(const RecommendationInteractionState());
+class RecommendationInteractionNotifier
+    extends StateNotifier<RecommendationInteractionState> {
+  RecommendationInteractionNotifier()
+      : super(const RecommendationInteractionState());
 
   void addInteraction(RecommendationInteraction interaction) {
-    final updatedInteractions = Map<String, List<RecommendationInteraction>>.from(state.interactions);
+    final updatedInteractions =
+        Map<String, List<RecommendationInteraction>>.from(state.interactions);
     final userId = interaction.userId;
     final userInteractions = updatedInteractions[userId] ?? [];
     updatedInteractions[userId] = [...userInteractions, interaction];
@@ -50,9 +54,11 @@ class RecommendationInteractionNotifier extends StateNotifier<RecommendationInte
   }
 
   void removeInteraction(String userId, String interactionId) {
-    final updatedInteractions = Map<String, List<RecommendationInteraction>>.from(state.interactions);
+    final updatedInteractions =
+        Map<String, List<RecommendationInteraction>>.from(state.interactions);
     final userInteractions = updatedInteractions[userId] ?? [];
-    updatedInteractions[userId] = userInteractions.where((i) => i.id != interactionId).toList();
+    updatedInteractions[userId] =
+        userInteractions.where((i) => i.id != interactionId).toList();
     state = state.copyWith(interactions: updatedInteractions);
   }
 
@@ -66,7 +72,8 @@ class RecommendationInteractionNotifier extends StateNotifier<RecommendationInte
 }
 
 /// Провайдер для похожих специалистов
-final similarSpecialistsRecommendationsProvider = FutureProvider.family<List<Specialist>, String>((ref, specialistId) async {
+final similarSpecialistsRecommendationsProvider =
+    FutureProvider.family<List<Specialist>, String>((ref, specialistId) async {
   final recommendationService = ref.read(recommendationServiceProvider);
   return recommendationService.getSimilarSpecialists(specialistId);
 });

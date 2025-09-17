@@ -10,10 +10,8 @@ class RecommendationService {
   Future<List<Specialist>> getSimilarSpecialists(String specialistId) async {
     try {
       // Получить данные специалиста
-      final specialistDoc = await _firestore
-          .collection('specialists')
-          .doc(specialistId)
-          .get();
+      final specialistDoc =
+          await _firestore.collection('specialists').doc(specialistId).get();
 
       if (!specialistDoc.exists) {
         return [];
@@ -48,7 +46,9 @@ class RecommendationService {
   /// Записать взаимодействие с рекомендацией
   Future<void> recordInteraction(RecommendationInteraction interaction) async {
     try {
-      await _firestore.collection('recommendation_interactions').add(interaction.toMap());
+      await _firestore
+          .collection('recommendation_interactions')
+          .add(interaction.toMap());
     } catch (e) {
       throw Exception('Ошибка записи взаимодействия: $e');
     }
@@ -80,22 +80,24 @@ class RecommendationService {
         final type = data['type'] as String;
 
         // Получить данные специалиста
-        final specialistDoc = await _firestore
-            .collection('specialists')
-            .doc(specialistId)
-            .get();
+        final specialistDoc =
+            await _firestore.collection('specialists').doc(specialistId).get();
 
         if (specialistDoc.exists) {
           final specialistData = specialistDoc.data()!;
-          final categories = List<String>.from(specialistData['categories'] ?? []);
+          final categories =
+              List<String>.from(specialistData['categories'] ?? []);
 
           // Подсчитать очки для категорий
           for (final category in categories) {
-            categoryScores[category] = (categoryScores[category] ?? 0) + _getInteractionScore(type);
+            categoryScores[category] =
+                (categoryScores[category] ?? 0) + _getInteractionScore(type);
           }
 
           // Подсчитать очки для специалиста
-          specialistScores[specialistId] = (specialistScores[specialistId] ?? 0) + _getInteractionScore(type);
+          specialistScores[specialistId] =
+              (specialistScores[specialistId] ?? 0) +
+                  _getInteractionScore(type);
         }
       }
 
@@ -146,7 +148,9 @@ class RecommendationService {
           .limit(20)
           .get();
 
-      return querySnapshot.docs.map((doc) => Specialist.fromDocument(doc)).toList();
+      return querySnapshot.docs
+          .map((doc) => Specialist.fromDocument(doc))
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения популярных специалистов: $e');
     }
@@ -178,12 +182,13 @@ class RecommendationService {
   List<String> _getTopCategories(Map<String, int> categoryScores, int count) {
     final sortedCategories = categoryScores.entries.toList()
       ..sort((a, b) => b.value.compareTo(a.value));
-    
+
     return sortedCategories.take(count).map((e) => e.key).toList();
   }
 
   /// Получить рекомендации на основе местоположения
-  Future<List<Specialist>> getLocationBasedRecommendations(double latitude, double longitude, double radiusKm) async {
+  Future<List<Specialist>> getLocationBasedRecommendations(
+      double latitude, double longitude, double radiusKm) async {
     try {
       // Простая реализация - получить всех специалистов и фильтровать по расстоянию
       final querySnapshot = await _firestore
@@ -194,11 +199,10 @@ class RecommendationService {
       final specialists = querySnapshot.docs
           .map((doc) => Specialist.fromDocument(doc))
           .where((specialist) {
-            // Здесь должна быть логика расчета расстояния
-            // Пока возвращаем всех специалистов
-            return true;
-          })
-          .toList();
+        // Здесь должна быть логика расчета расстояния
+        // Пока возвращаем всех специалистов
+        return true;
+      }).toList();
 
       // Сортировать по рейтингу
       specialists.sort((a, b) => b.rating.compareTo(a.rating));

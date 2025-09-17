@@ -15,7 +15,8 @@ class StoryService {
         .orderBy('expiresAt')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Story.fromDocument(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Story.fromDocument(doc)).toList());
   }
 
   /// Получить все активные истории
@@ -27,7 +28,8 @@ class StoryService {
         .orderBy('expiresAt')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Story.fromDocument(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Story.fromDocument(doc)).toList());
   }
 
   /// Создать историю
@@ -43,7 +45,10 @@ class StoryService {
   /// Обновить историю
   Future<void> updateStory(Story story) async {
     try {
-      await _firestore.collection('stories').doc(story.id).update(story.toMap());
+      await _firestore
+          .collection('stories')
+          .doc(story.id)
+          .update(story.toMap());
     } catch (e) {
       throw Exception('Ошибка обновления истории: $e');
     }
@@ -66,14 +71,14 @@ class StoryService {
     try {
       final storyRef = _firestore.collection('stories').doc(storyId);
       final storyDoc = await storyRef.get();
-      
+
       if (!storyDoc.exists) {
         throw Exception('История не найдена');
       }
 
       final storyData = storyDoc.data()!;
       final viewedBy = List<String>.from(storyData['viewedBy'] ?? []);
-      
+
       if (!viewedBy.contains(userId)) {
         viewedBy.add(userId);
         await storyRef.update({
@@ -101,7 +106,8 @@ class StoryService {
         .orderBy('expiresAt')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Story.fromDocument(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Story.fromDocument(doc)).toList());
   }
 
   /// Очистить истекшие истории
@@ -126,7 +132,8 @@ class StoryService {
   }
 
   /// Получить статистику историй специалиста
-  Future<Map<String, dynamic>> getSpecialistStoryStats(String specialistId) async {
+  Future<Map<String, dynamic>> getSpecialistStoryStats(
+      String specialistId) async {
     try {
       final querySnapshot = await _firestore
           .collection('stories')
@@ -139,7 +146,7 @@ class StoryService {
 
       for (final doc in querySnapshot.docs) {
         final data = doc.data();
-        if (data['isActive'] == true && 
+        if (data['isActive'] == true &&
             (data['expiresAt'] as Timestamp).toDate().isAfter(DateTime.now())) {
           activeStories++;
         }

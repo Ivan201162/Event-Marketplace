@@ -124,7 +124,13 @@ class DetailedRating {
 
   /// Получить средний рейтинг
   double get averageRating {
-    return (professionalism + communication + punctuality + quality + creativity + value) / 6;
+    return (professionalism +
+            communication +
+            punctuality +
+            quality +
+            creativity +
+            value) /
+        6;
   }
 }
 

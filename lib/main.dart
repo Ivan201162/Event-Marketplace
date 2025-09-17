@@ -10,6 +10,7 @@ import 'core/feature_flags.dart';
 import 'core/safe_log.dart';
 import 'core/error_handler.dart';
 import 'core/app_router.dart';
+import 'core/app_theme.dart';
 import 'providers/auth_providers.dart';
 import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
@@ -95,14 +96,12 @@ class MyApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeProvider);
-    final lightTheme = ref.watch(lightThemeProvider);
-    final darkTheme = ref.watch(darkThemeProvider);
     final router = AppRouter.createRouter();
 
     return MaterialApp.router(
       title: 'Event Marketplace',
-      theme: lightTheme,
-      darkTheme: darkTheme,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
       themeMode: themeMode,
       routerConfig: router,
       // Локализация

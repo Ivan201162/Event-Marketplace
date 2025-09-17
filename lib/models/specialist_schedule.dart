@@ -36,8 +36,7 @@ class SpecialistSchedule {
               .toList() ??
           [],
       workingHours: (data['workingHours'] as Map<String, dynamic>?)
-              ?.map((key, value) => MapEntry(
-                  int.parse(key),
+              ?.map((key, value) => MapEntry(int.parse(key),
                   WorkingHours.fromMap(value as Map<String, dynamic>)))
               .cast<int, WorkingHours>() ??
           {},
@@ -68,7 +67,8 @@ class SpecialistSchedule {
               id: booking.id,
               title: booking.eventTitle,
               startTime: booking.eventDate,
-              endTime: booking.endDate ?? booking.eventDate.add(Duration(hours: 2)),
+              endTime:
+                  booking.endDate ?? booking.eventDate.add(Duration(hours: 2)),
               type: ScheduleEventType.booking,
               bookingId: booking.id,
             ))

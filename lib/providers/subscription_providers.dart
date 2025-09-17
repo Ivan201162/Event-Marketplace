@@ -8,13 +8,15 @@ final subscriptionServiceProvider = Provider<SubscriptionService>((ref) {
 });
 
 /// Провайдер для подписок пользователя
-final userSubscriptionsProvider = StreamProvider.family<List<Subscription>, String>((ref, userId) {
+final userSubscriptionsProvider =
+    StreamProvider.family<List<Subscription>, String>((ref, userId) {
   final subscriptionService = ref.read(subscriptionServiceProvider);
   return subscriptionService.getUserSubscriptions(userId);
 });
 
 /// Провайдер для проверки подписки
-final isSubscribedProvider = FutureProvider.family<bool, IsSubscribedParams>((ref, params) async {
+final isSubscribedProvider =
+    FutureProvider.family<bool, IsSubscribedParams>((ref, params) async {
   final subscriptionService = ref.read(subscriptionServiceProvider);
   return subscriptionService.isSubscribed(params.userId, params.specialistId);
 });
@@ -31,13 +33,15 @@ class IsSubscribedParams {
 }
 
 /// Провайдер для подписчиков специалиста
-final specialistSubscribersProvider = StreamProvider.family<List<Subscription>, String>((ref, specialistId) {
+final specialistSubscribersProvider =
+    StreamProvider.family<List<Subscription>, String>((ref, specialistId) {
   final subscriptionService = ref.read(subscriptionServiceProvider);
   return subscriptionService.getSpecialistSubscribers(specialistId);
 });
 
 /// Провайдер для состояния подписок
-final subscriptionStateProvider = StateNotifierProvider<SubscriptionStateNotifier, SubscriptionState>((ref) {
+final subscriptionStateProvider =
+    StateNotifierProvider<SubscriptionStateNotifier, SubscriptionState>((ref) {
   return SubscriptionStateNotifier();
 });
 
@@ -84,7 +88,8 @@ class SubscriptionStateNotifier extends StateNotifier<SubscriptionState> {
   }
 
   void removeSubscription(String subscriptionId) {
-    final updatedSubscriptions = state.subscriptions.where((s) => s.id != subscriptionId).toList();
+    final updatedSubscriptions =
+        state.subscriptions.where((s) => s.id != subscriptionId).toList();
     state = state.copyWith(subscriptions: updatedSubscriptions);
   }
 

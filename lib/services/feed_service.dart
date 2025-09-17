@@ -11,7 +11,8 @@ class FeedService {
         .collection('feed_posts')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => FeedPost.fromDocument(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => FeedPost.fromDocument(doc)).toList());
   }
 
   /// Получить комментарии поста
@@ -22,22 +23,21 @@ class FeedService {
         .collection('comments')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => FeedComment.fromDocument(doc)).toList());
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => FeedComment.fromDocument(doc)).toList());
   }
 
   /// Получить лайки поста
   Stream<List<String>> getPostLikes(String postId) {
-    return _firestore
-        .collection('feed_posts')
-        .doc(postId)
-        .snapshots()
-        .map((snapshot) => List<String>.from(snapshot.data()?['likedBy'] ?? []));
+    return _firestore.collection('feed_posts').doc(postId).snapshots().map(
+        (snapshot) => List<String>.from(snapshot.data()?['likedBy'] ?? []));
   }
 
   /// Создать пост
   Future<String> createPost(FeedPost post) async {
     try {
-      final docRef = await _firestore.collection('feed_posts').add(post.toMap());
+      final docRef =
+          await _firestore.collection('feed_posts').add(post.toMap());
       return docRef.id;
     } catch (e) {
       throw Exception('Ошибка создания поста: $e');
@@ -47,7 +47,10 @@ class FeedService {
   /// Обновить пост
   Future<void> updatePost(FeedPost post) async {
     try {
-      await _firestore.collection('feed_posts').doc(post.id).update(post.toMap());
+      await _firestore
+          .collection('feed_posts')
+          .doc(post.id)
+          .update(post.toMap());
     } catch (e) {
       throw Exception('Ошибка обновления поста: $e');
     }
@@ -67,7 +70,7 @@ class FeedService {
     try {
       final postRef = _firestore.collection('feed_posts').doc(postId);
       final postDoc = await postRef.get();
-      
+
       if (!postDoc.exists) {
         throw Exception('Пост не найден');
       }
@@ -134,16 +137,17 @@ class FeedService {
   }
 
   /// Лайкнуть/убрать лайк с комментария
-  Future<void> toggleCommentLike(String postId, String commentId, String userId) async {
+  Future<void> toggleCommentLike(
+      String postId, String commentId, String userId) async {
     try {
       final commentRef = _firestore
           .collection('feed_posts')
           .doc(postId)
           .collection('comments')
           .doc(commentId);
-      
+
       final commentDoc = await commentRef.get();
-      
+
       if (!commentDoc.exists) {
         throw Exception('Комментарий не найден');
       }

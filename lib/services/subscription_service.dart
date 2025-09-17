@@ -13,7 +13,9 @@ class SubscriptionService {
         .where('isActive', isEqualTo: true)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Subscription.fromDocument(doc)).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Subscription.fromDocument(doc))
+            .toList());
   }
 
   /// Получить подписчиков специалиста
@@ -24,7 +26,9 @@ class SubscriptionService {
         .where('isActive', isEqualTo: true)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) => snapshot.docs.map((doc) => Subscription.fromDocument(doc)).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Subscription.fromDocument(doc))
+            .toList());
   }
 
   /// Проверить, подписан ли пользователь на специалиста
@@ -44,7 +48,8 @@ class SubscriptionService {
   }
 
   /// Подписаться на специалиста
-  Future<String> subscribe(String userId, String specialistId, String specialistName, String? specialistPhotoUrl) async {
+  Future<String> subscribe(String userId, String specialistId,
+      String specialistName, String? specialistPhotoUrl) async {
     try {
       // Проверить, не подписан ли уже
       final existingSubscription = await _firestore
@@ -75,7 +80,9 @@ class SubscriptionService {
           notificationsEnabled: true,
         );
 
-        final docRef = await _firestore.collection('subscriptions').add(subscription.toMap());
+        final docRef = await _firestore
+            .collection('subscriptions')
+            .add(subscription.toMap());
         return docRef.id;
       }
     } catch (e) {
@@ -104,7 +111,8 @@ class SubscriptionService {
   }
 
   /// Обновить настройки уведомлений
-  Future<void> updateNotificationSettings(String subscriptionId, bool notificationsEnabled) async {
+  Future<void> updateNotificationSettings(
+      String subscriptionId, bool notificationsEnabled) async {
     try {
       await _firestore.collection('subscriptions').doc(subscriptionId).update({
         'notificationsEnabled': notificationsEnabled,
@@ -155,7 +163,7 @@ class SubscriptionService {
           .get();
 
       final totalSubscribers = subscribersQuery.docs.length;
-      
+
       // Подсчитать подписчиков с включенными уведомлениями
       int subscribersWithNotifications = 0;
       for (final doc in subscribersQuery.docs) {
