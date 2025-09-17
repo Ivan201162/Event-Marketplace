@@ -1,80 +1,65 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/subscription_service.dart';
-import '../models/subscription.dart';
-import '../core/feature_flags.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:event_marketplace_app/models/subscription.dart';
+import 'package:event_marketplace_app/services/subscription_service.dart';
 
-/// Провайдер сервиса подписок
-final subscriptionServiceProvider = Provider<SubscriptionService>((ref) {
+part 'subscription_providers.g.dart';
+
+/// Провайдер для SubscriptionService
+@riverpod
+SubscriptionService subscriptionService(SubscriptionServiceRef ref) {
   return SubscriptionService();
-});
+}
 
-/// Провайдер для проверки доступности подписок
-final subscriptionsAvailableProvider = Provider<bool>((ref) {
-  return FeatureFlags.subscriptionsEnabled;
-});
+/// Провайдер для проверки подписки
+@riverpod
+Future<bool> isSubscribed(
+  IsSubscribedRef ref, {
+  required String userId,
+  required String specialistId,
+}) async {
+  final service = ref.watch(subscriptionServiceProvider);
+  return service.isSubscribed(
+    userId: userId,
+    specialistId: specialistId,
+  );
+}
 
-/// Провайдер подписки пользователя
-final userSubscriptionProvider =
-    StreamProvider.family<Subscription?, String>((ref, userId) {
-  final subscriptionService = ref.read(subscriptionServiceProvider);
-  return subscriptionService.getUserSubscription(userId);
-});
+/// Провайдер для получения подписок пользователя
+@riverpod
+Future<List<Subscription>> userSubscriptions(
+    UserSubscriptionsRef ref, String userId) async {
+  final service = ref.watch(subscriptionServiceProvider);
+  return service.getUserSubscriptions(userId);
+}
 
-/// Провайдер истории подписок пользователя
-final userSubscriptionHistoryProvider =
-    StreamProvider.family<List<Subscription>, String>((ref, userId) {
-  final subscriptionService = ref.read(subscriptionServiceProvider);
-  return subscriptionService.getUserSubscriptionHistory(userId);
-});
+/// Провайдер для получения подписчиков специалиста
+@riverpod
+Future<List<Subscription>> specialistSubscribers(
+    SpecialistSubscribersRef ref, String specialistId) async {
+  final service = ref.watch(subscriptionServiceProvider);
+  return service.getSpecialistSubscribers(specialistId);
+}
 
-/// Провайдер активных подписок
-final activeSubscriptionsProvider = StreamProvider<List<Subscription>>((ref) {
-  final subscriptionService = ref.read(subscriptionServiceProvider);
-  return subscriptionService.getActiveSubscriptions();
-});
+/// Провайдер для получения количества подписчиков
+@riverpod
+Future<int> specialistSubscribersCount(
+    SpecialistSubscribersCountRef ref, String specialistId) async {
+  final service = ref.watch(subscriptionServiceProvider);
+  return service.getSpecialistSubscribersCount(specialistId);
+}
 
-/// Провайдер подписок, истекающих скоро
-final expiringSubscriptionsProvider =
-    StreamProvider.family<List<Subscription>, int>((ref, daysAhead) {
-  final subscriptionService = ref.read(subscriptionServiceProvider);
-  return subscriptionService.getExpiringSubscriptions(daysAhead: daysAhead);
-});
+/// Провайдер для получения уведомлений пользователя
+@riverpod
+Future<List<SubscriptionNotification>> userNotifications(
+    UserNotificationsRef ref, String userId) async {
+  final service = ref.watch(subscriptionServiceProvider);
+  return service.getUserNotifications(userId: userId);
+}
 
-/// Провайдер типа подписки пользователя
-final userSubscriptionTypeProvider =
-    FutureProvider.family<SubscriptionType, String>((ref, userId) async {
-  final subscriptionService = ref.read(subscriptionServiceProvider);
-  return await subscriptionService.getUserSubscriptionType(userId);
-});
-
-/// Провайдер доступа к функции
-final featureAccessProvider =
-    FutureProvider.family<bool, ({String userId, String feature})>(
-        (ref, params) async {
-  final subscriptionService = ref.read(subscriptionServiceProvider);
-  return await subscriptionService.hasFeatureAccess(
-      params.userId, params.feature);
-});
-
-/// Провайдер лимита пользователя
-final userLimitProvider =
-    FutureProvider.family<int, ({String userId, String limit})>(
-        (ref, params) async {
-  final subscriptionService = ref.read(subscriptionServiceProvider);
-  return await subscriptionService.getUserLimit(params.userId, params.limit);
-});
-
-/// Провайдер проверки превышения лимита
-final limitExceededProvider = FutureProvider.family<bool,
-    ({String userId, String limit, int currentUsage})>((ref, params) async {
-  final subscriptionService = ref.read(subscriptionServiceProvider);
-  return await subscriptionService.isLimitExceeded(
-      params.userId, params.limit, params.currentUsage);
-});
-
-/// Провайдер статистики подписок
-final subscriptionStatsProvider =
-    FutureProvider<Map<String, dynamic>>((ref) async {
-  final subscriptionService = ref.read(subscriptionServiceProvider);
-  return await subscriptionService.getSubscriptionStats();
-});
+/// Провайдер для получения количества непрочитанных уведомлений
+@riverpod
+Future<int> unreadNotificationsCount(
+    UnreadNotificationsCountRef ref, String userId) async {
+  final service = ref.watch(subscriptionServiceProvider);
+  return service.getUnreadNotificationsCount(userId);
+}
