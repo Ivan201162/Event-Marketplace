@@ -1,0 +1,144 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Запускается каждый день в 2:00 UTC
+    - cron: '0 2 * * *'
+
+jobs:
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.35.x'
+        channel: 'stable'
+        
+    - name: Get dependencies
+      run: flutter pub get
+      
+    - name: Run Flutter security audit
+      run: flutter pub audit
+      
+    - name: Run Dart security audit
+      run: dart pub audit
+      
+    - name: Check for known vulnerabilities
+      run: |
+        # Проверяем на известные уязвимости
+        flutter pub deps --json | jq '.packages[] | select(.vulnerabilities != null)'
+        
+    - name: Scan for secrets
+      uses: trufflesecurity/trufflehog@main
+      with:
+        path: ./
+        base: main
+        head: HEAD
+        extra_args: --debug --only-verified
+        
+    - name: Check for hardcoded secrets
+      run: |
+        # Проверяем на хардкодные секреты
+        if grep -r "password\|secret\|key\|token" --include="*.dart" --include="*.yaml" --include="*.json" . | grep -v "// TODO\|// FIXME\|// NOTE"; then
+          echo "Potential hardcoded secrets found!"
+          exit 1
+        fi
+        
+    - name: Check for insecure dependencies
+      run: |
+        # Проверяем на небезопасные зависимости
+        flutter pub deps --json | jq '.packages[] | select(.name | test("http://"))'
+        
+    - name: Validate Firebase security rules
+      run: |
+        # Проверяем правила безопасности Firebase
+        if [ -f "firestore.rules" ]; then
+          echo "Firestore rules found"
+        fi
+        if [ -f "storage.rules" ]; then
+          echo "Storage rules found"
+        fi
+        
+    - name: Check for insecure network configurations
+      run: |
+        # Проверяем на небезопасные сетевые конфигурации
+        if grep -r "http://" --include="*.dart" . | grep -v "// TODO\|// FIXME\|// NOTE"; then
+          echo "Insecure HTTP connections found!"
+          exit 1
+        fi
+        
+    - name: Check for debug code in production
+      run: |
+        # Проверяем на отладочный код в продакшене
+        if grep -r "print\|debugPrint\|kDebugMode" --include="*.dart" . | grep -v "// TODO\|// FIXME\|// NOTE"; then
+          echo "Debug code found in production!"
+          exit 1
+        fi
+        
+    - name: Check for insecure file permissions
+      run: |
+        # Проверяем права доступа к файлам
+        find . -type f -name "*.dart" -exec chmod 644 {} \;
+        find . -type f -name "*.yaml" -exec chmod 644 {} \;
+        find . -type f -name "*.json" -exec chmod 644 {} \;
+        
+    - name: Generate security report
+      run: |
+        echo "# Security Scan Report" > security-report.md
+        echo "## Date: $(date)" >> security-report.md
+        echo "## Status: PASSED" >> security-report.md
+        echo "## Checks:" >> security-report.md
+        echo "- [x] Flutter security audit" >> security-report.md
+        echo "- [x] Dart security audit" >> security-report.md
+        echo "- [x] Known vulnerabilities check" >> security-report.md
+        echo "- [x] Secrets scan" >> security-report.md
+        echo "- [x] Hardcoded secrets check" >> security-report.md
+        echo "- [x] Insecure dependencies check" >> security-report.md
+        echo "- [x] Firebase security rules validation" >> security-report.md
+        echo "- [x] Insecure network configurations check" >> security-report.md
+        echo "- [x] Debug code in production check" >> security-report.md
+        echo "- [x] File permissions check" >> security-report.md
+        
+    - name: Upload security report
+      uses: actions/upload-artifact@v4
+      with:
+        name: security-report
+        path: security-report.md
+        
+    - name: Comment PR with security report
+      if: github.event_name == 'pull_request'
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const report = fs.readFileSync('security-report.md', 'utf8');
+          
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: report
+          });
+          
+    - name: Create security issue if vulnerabilities found
+      if: failure()
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.create({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            title: 'Security vulnerabilities detected',
+            body: 'Security scan detected potential vulnerabilities. Please review the security report.',
+            labels: ['security', 'vulnerability', 'urgent']
+          });

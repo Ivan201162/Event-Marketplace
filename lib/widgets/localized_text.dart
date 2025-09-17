@@ -1,39 +1,166 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/localization_providers.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// Виджет для локализованного текста
-class LocalizedText extends ConsumerWidget {
-  final String textKey;
-  final Map<String, dynamic>? params;
+class LocalizedText extends StatelessWidget {
+  final String Function(AppLocalizations l10n) textBuilder;
   final TextStyle? style;
   final TextAlign? textAlign;
   final int? maxLines;
   final TextOverflow? overflow;
-  final String? fallback;
+  final TextDirection? textDirection;
+  final Locale? locale;
+  final bool? softWrap;
+  final double? textScaleFactor;
 
   const LocalizedText(
-    this.textKey, {
+    this.textBuilder, {
     super.key,
-    this.params,
     this.style,
     this.textAlign,
     this.maxLines,
     this.overflow,
-    this.fallback,
+    this.textDirection,
+    this.locale,
+    this.softWrap,
+    this.textScaleFactor,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final translate = ref.watch(translateProvider);
-    final hasTranslation = ref.watch(hasTranslationProvider);
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Text(
+      textBuilder(l10n),
+      style: style,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      textDirection: textDirection,
+      locale: locale,
+      softWrap: softWrap,
+      textScaleFactor: textScaleFactor,
+    );
+  }
+}
 
-    String text;
-    if (hasTranslation(textKey)) {
-      text = translate(textKey, params: params);
-    } else {
-      text = fallback ?? textKey;
-    }
+/// Виджет для локализованного текста с параметрами
+class LocalizedTextWithParams extends StatelessWidget {
+  final String Function(AppLocalizations l10n) textBuilder;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final int? maxLines;
+  final TextOverflow? overflow;
+  final TextDirection? textDirection;
+  final Locale? locale;
+  final bool? softWrap;
+  final double? textScaleFactor;
+
+  const LocalizedTextWithParams(
+    this.textBuilder, {
+    super.key,
+    this.style,
+    this.textAlign,
+    this.maxLines,
+    this.overflow,
+    this.textDirection,
+    this.locale,
+    this.softWrap,
+    this.textScaleFactor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Text(
+      textBuilder(l10n),
+      style: style,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      textDirection: textDirection,
+      locale: locale,
+      softWrap: softWrap,
+      textScaleFactor: textScaleFactor,
+    );
+  }
+}
+
+/// Виджет для локализованного текста с форматированием
+class LocalizedRichText extends StatelessWidget {
+  final TextSpan Function(AppLocalizations l10n) textSpanBuilder;
+  final TextAlign? textAlign;
+  final TextDirection? textDirection;
+  final bool? softWrap;
+  final TextOverflow? overflow;
+  final double? textScaleFactor;
+  final int? maxLines;
+  final Locale? locale;
+  final StrutStyle? strutStyle;
+  final TextWidthBasis? textWidthBasis;
+  final TextHeightBehavior? textHeightBehavior;
+
+  const LocalizedRichText(
+    this.textSpanBuilder, {
+    super.key,
+    this.textAlign,
+    this.textDirection,
+    this.softWrap,
+    this.overflow,
+    this.textScaleFactor,
+    this.maxLines,
+    this.locale,
+    this.strutStyle,
+    this.textWidthBasis,
+    this.textHeightBehavior,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return RichText(
+      text: textSpanBuilder(l10n),
+      textAlign: textAlign ?? TextAlign.start,
+      textDirection: textDirection,
+      softWrap: softWrap ?? true,
+      overflow: overflow ?? TextOverflow.clip,
+      textScaleFactor: textScaleFactor ?? 1.0,
+      maxLines: maxLines,
+      locale: locale,
+      strutStyle: strutStyle,
+      textWidthBasis: textWidthBasis ?? TextWidthBasis.parent,
+      textHeightBehavior: textHeightBehavior,
+    );
+  }
+}
+
+/// Виджет для локализованного текста с автоматическим определением направления
+class LocalizedDirectionalText extends StatelessWidget {
+  final String Function(AppLocalizations l10n) textBuilder;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final int? maxLines;
+  final TextOverflow? overflow;
+  final bool? softWrap;
+  final double? textScaleFactor;
+
+  const LocalizedDirectionalText(
+    this.textBuilder, {
+    super.key,
+    this.style,
+    this.textAlign,
+    this.maxLines,
+    this.overflow,
+    this.softWrap,
+    this.textScaleFactor,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final text = textBuilder(l10n);
+
+    // Автоматическое определение направления текста
+    final textDirection = _getTextDirection(text);
 
     return Text(
       text,
@@ -41,401 +168,153 @@ class LocalizedText extends ConsumerWidget {
       textAlign: textAlign,
       maxLines: maxLines,
       overflow: overflow,
+      textDirection: textDirection,
+      softWrap: softWrap,
+      textScaleFactor: textScaleFactor,
     );
+  }
+
+  TextDirection _getTextDirection(String text) {
+    // Простая эвристика для определения направления текста
+    final arabicRegex = RegExp(r'[\u0600-\u06FF]');
+    final hebrewRegex = RegExp(r'[\u0590-\u05FF]');
+
+    if (arabicRegex.hasMatch(text) || hebrewRegex.hasMatch(text)) {
+      return TextDirection.rtl;
+    }
+
+    return TextDirection.ltr;
   }
 }
 
-/// Виджет для локализованного текста с анимацией
-class AnimatedLocalizedText extends ConsumerStatefulWidget {
-  final String textKey;
-  final Map<String, dynamic>? params;
+/// Виджет для локализованного текста с поддержкой плюрализации
+class LocalizedPluralText extends StatelessWidget {
+  final String Function(AppLocalizations l10n, int count) textBuilder;
+  final int count;
   final TextStyle? style;
   final TextAlign? textAlign;
   final int? maxLines;
   final TextOverflow? overflow;
-  final String? fallback;
-  final Duration duration;
-  final Curve curve;
+  final TextDirection? textDirection;
+  final Locale? locale;
+  final bool? softWrap;
+  final double? textScaleFactor;
 
-  const AnimatedLocalizedText(
-    this.textKey, {
+  const LocalizedPluralText(
+    this.textBuilder,
+    this.count, {
     super.key,
-    this.params,
     this.style,
     this.textAlign,
     this.maxLines,
     this.overflow,
-    this.fallback,
-    this.duration = const Duration(milliseconds: 300),
-    this.curve = Curves.easeInOut,
+    this.textDirection,
+    this.locale,
+    this.softWrap,
+    this.textScaleFactor,
   });
-
-  @override
-  ConsumerState<AnimatedLocalizedText> createState() =>
-      _AnimatedLocalizedTextState();
-}
-
-class _AnimatedLocalizedTextState extends ConsumerState<AnimatedLocalizedText>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller = AnimationController(
-      duration: widget.duration,
-      vsync: this,
-    );
-    _animation = CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    );
-    _controller.forward();
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    final translate = ref.watch(translateProvider);
-    final hasTranslation = ref.watch(hasTranslationProvider);
-
-    String text;
-    if (hasTranslation(widget.textKey)) {
-      text = translate(widget.textKey, params: widget.params);
-    } else {
-      text = widget.fallback ?? widget.textKey;
-    }
-
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return Opacity(
-          opacity: _animation.value,
-          child: Transform.translate(
-            offset: Offset(0, 10 * (1 - _animation.value)),
-            child: Text(
-              text,
-              style: widget.style,
-              textAlign: widget.textAlign,
-              maxLines: widget.maxLines,
-              overflow: widget.overflow,
-            ),
-          ),
-        );
-      },
-    );
-  }
-}
-
-/// Виджет для локализованной кнопки
-class LocalizedButton extends ConsumerWidget {
-  final String textKey;
-  final Map<String, dynamic>? params;
-  final VoidCallback? onPressed;
-  final ButtonStyle? style;
-  final Widget? icon;
-  final String? fallback;
-
-  const LocalizedButton(
-    this.textKey, {
-    super.key,
-    this.params,
-    this.onPressed,
-    this.style,
-    this.icon,
-    this.fallback,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final translate = ref.watch(translateProvider);
-    final hasTranslation = ref.watch(hasTranslationProvider);
-
-    String text;
-    if (hasTranslation(textKey)) {
-      text = translate(textKey, params: params);
-    } else {
-      text = fallback ?? textKey;
-    }
-
-    return ElevatedButton(
-      onPressed: onPressed,
+    final l10n = AppLocalizations.of(context)!;
+    return Text(
+      textBuilder(l10n, count),
       style: style,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (icon != null) ...[
-            icon!,
-            const SizedBox(width: 8),
-          ],
-          Text(text),
-        ],
-      ),
-    );
-  }
-}
-
-/// Виджет для локализованного текстового поля
-class LocalizedTextField extends ConsumerWidget {
-  final String labelKey;
-  final String? hintKey;
-  final String? helperKey;
-  final String? errorKey;
-  final TextEditingController? controller;
-  final String? Function(String?)? validator;
-  final void Function(String)? onChanged;
-  final void Function(String)? onSubmitted;
-  final TextInputType? keyboardType;
-  final bool obscureText;
-  final int? maxLines;
-  final int? maxLength;
-  final String? fallbackLabel;
-  final String? fallbackHint;
-  final String? fallbackHelper;
-  final String? fallbackError;
-
-  const LocalizedTextField({
-    super.key,
-    required this.labelKey,
-    this.hintKey,
-    this.helperKey,
-    this.errorKey,
-    this.controller,
-    this.validator,
-    this.onChanged,
-    this.onSubmitted,
-    this.keyboardType,
-    this.obscureText = false,
-    this.maxLines = 1,
-    this.maxLength,
-    this.fallbackLabel,
-    this.fallbackHint,
-    this.fallbackHelper,
-    this.fallbackError,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final translate = ref.watch(translateProvider);
-    final hasTranslation = ref.watch(hasTranslationProvider);
-
-    String label;
-    if (hasTranslation(labelKey)) {
-      label = translate(labelKey);
-    } else {
-      label = fallbackLabel ?? labelKey;
-    }
-
-    String? hint;
-    if (hintKey != null) {
-      if (hasTranslation(hintKey!)) {
-        hint = translate(hintKey!);
-      } else {
-        hint = fallbackHint ?? hintKey;
-      }
-    }
-
-    String? helper;
-    if (helperKey != null) {
-      if (hasTranslation(helperKey!)) {
-        helper = translate(helperKey!);
-      } else {
-        helper = fallbackHelper ?? helperKey;
-      }
-    }
-
-    return TextField(
-      controller: controller,
-      onChanged: onChanged,
-      onSubmitted: onSubmitted,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
+      textAlign: textAlign,
       maxLines: maxLines,
-      maxLength: maxLength,
-      decoration: InputDecoration(
-        labelText: label,
-        hintText: hint,
-        helperText: helper,
-        border: const OutlineInputBorder(),
-      ),
+      overflow: overflow,
+      textDirection: textDirection,
+      locale: locale,
+      softWrap: softWrap,
+      textScaleFactor: textScaleFactor,
     );
   }
 }
 
-/// Виджет для локализованного диалога
-class LocalizedDialog extends ConsumerWidget {
-  final String titleKey;
-  final String? contentKey;
-  final List<LocalizedDialogAction> actions;
-  final String? fallbackTitle;
-  final String? fallbackContent;
+/// Виджет для локализованного текста с поддержкой дат
+class LocalizedDateText extends StatelessWidget {
+  final String Function(AppLocalizations l10n, DateTime date) textBuilder;
+  final DateTime date;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final int? maxLines;
+  final TextOverflow? overflow;
+  final TextDirection? textDirection;
+  final Locale? locale;
+  final bool? softWrap;
+  final double? textScaleFactor;
 
-  const LocalizedDialog({
+  const LocalizedDateText(
+    this.textBuilder,
+    this.date, {
     super.key,
-    required this.titleKey,
-    this.contentKey,
-    required this.actions,
-    this.fallbackTitle,
-    this.fallbackContent,
+    this.style,
+    this.textAlign,
+    this.maxLines,
+    this.overflow,
+    this.textDirection,
+    this.locale,
+    this.softWrap,
+    this.textScaleFactor,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final translate = ref.watch(translateProvider);
-    final hasTranslation = ref.watch(hasTranslationProvider);
-
-    String title;
-    if (hasTranslation(titleKey)) {
-      title = translate(titleKey);
-    } else {
-      title = fallbackTitle ?? titleKey;
-    }
-
-    String? content;
-    if (contentKey != null) {
-      if (hasTranslation(contentKey!)) {
-        content = translate(contentKey!);
-      } else {
-        content = fallbackContent ?? contentKey;
-      }
-    }
-
-    return AlertDialog(
-      title: Text(title),
-      content: content != null ? Text(content) : null,
-      actions: actions.map((action) => action.build(ref)).toList(),
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Text(
+      textBuilder(l10n, date),
+      style: style,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      textDirection: textDirection,
+      locale: locale,
+      softWrap: softWrap,
+      textScaleFactor: textScaleFactor,
     );
   }
 }
 
-/// Действие для локализованного диалога
-class LocalizedDialogAction {
-  final String textKey;
-  final VoidCallback? onPressed;
-  final String? fallback;
+/// Виджет для локализованного текста с поддержкой чисел
+class LocalizedNumberText extends StatelessWidget {
+  final String Function(AppLocalizations l10n, num number) textBuilder;
+  final num number;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final int? maxLines;
+  final TextOverflow? overflow;
+  final TextDirection? textDirection;
+  final Locale? locale;
+  final bool? softWrap;
+  final double? textScaleFactor;
 
-  const LocalizedDialogAction({
-    required this.textKey,
-    this.onPressed,
-    this.fallback,
-  });
-
-  Widget build(WidgetRef ref) {
-    final translate = ref.watch(translateProvider);
-    final hasTranslation = ref.watch(hasTranslationProvider);
-
-    String text;
-    if (hasTranslation(textKey)) {
-      text = translate(textKey);
-    } else {
-      text = fallback ?? textKey;
-    }
-
-    return TextButton(
-      onPressed: onPressed,
-      child: Text(text),
-    );
-  }
-}
-
-/// Виджет для локализованного списка
-class LocalizedListTile extends ConsumerWidget {
-  final String titleKey;
-  final String? subtitleKey;
-  final Widget? leading;
-  final Widget? trailing;
-  final VoidCallback? onTap;
-  final Map<String, dynamic>? titleParams;
-  final Map<String, dynamic>? subtitleParams;
-  final String? fallbackTitle;
-  final String? fallbackSubtitle;
-
-  const LocalizedListTile({
+  const LocalizedNumberText(
+    this.textBuilder,
+    this.number, {
     super.key,
-    required this.titleKey,
-    this.subtitleKey,
-    this.leading,
-    this.trailing,
-    this.onTap,
-    this.titleParams,
-    this.subtitleParams,
-    this.fallbackTitle,
-    this.fallbackSubtitle,
+    this.style,
+    this.textAlign,
+    this.maxLines,
+    this.overflow,
+    this.textDirection,
+    this.locale,
+    this.softWrap,
+    this.textScaleFactor,
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final translate = ref.watch(translateProvider);
-    final hasTranslation = ref.watch(hasTranslationProvider);
-
-    String title;
-    if (hasTranslation(titleKey)) {
-      title = translate(titleKey, params: titleParams);
-    } else {
-      title = fallbackTitle ?? titleKey;
-    }
-
-    String? subtitle;
-    if (subtitleKey != null) {
-      if (hasTranslation(subtitleKey!)) {
-        subtitle = translate(subtitleKey!, params: subtitleParams);
-      } else {
-        subtitle = fallbackSubtitle ?? subtitleKey;
-      }
-    }
-
-    return ListTile(
-      title: Text(title),
-      subtitle: subtitle != null ? Text(subtitle) : null,
-      leading: leading,
-      trailing: trailing,
-      onTap: onTap,
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return Text(
+      textBuilder(l10n, number),
+      style: style,
+      textAlign: textAlign,
+      maxLines: maxLines,
+      overflow: overflow,
+      textDirection: textDirection,
+      locale: locale,
+      softWrap: softWrap,
+      textScaleFactor: textScaleFactor,
     );
   }
-}
-
-/// Виджет для локализованного AppBar
-class LocalizedAppBar extends ConsumerWidget implements PreferredSizeWidget {
-  final String titleKey;
-  final List<Widget>? actions;
-  final Widget? leading;
-  final Map<String, dynamic>? titleParams;
-  final String? fallbackTitle;
-
-  const LocalizedAppBar({
-    super.key,
-    required this.titleKey,
-    this.actions,
-    this.leading,
-    this.titleParams,
-    this.fallbackTitle,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final translate = ref.watch(translateProvider);
-    final hasTranslation = ref.watch(hasTranslationProvider);
-
-    String title;
-    if (hasTranslation(titleKey)) {
-      title = translate(titleKey, params: titleParams);
-    } else {
-      title = fallbackTitle ?? titleKey;
-    }
-
-    return AppBar(
-      title: Text(title),
-      actions: actions,
-      leading: leading,
-    );
-  }
-
-  @override
-  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

@@ -1,312 +1,435 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/locale_providers.dart';
-import '../generated/l10n/app_localizations.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../providers/locale_provider.dart';
 
 /// Виджет для выбора языка
 class LanguageSelector extends ConsumerWidget {
-  final bool showAsDialog;
-  final bool showAsDropdown;
-  final EdgeInsets? padding;
+  final bool showLabel;
+  final bool showFlag;
+  final bool showNativeName;
+  final bool showEnglishName;
+  final bool showCode;
+  final bool isExpanded;
+  final EdgeInsetsGeometry? padding;
   final TextStyle? textStyle;
   final Color? iconColor;
+  final Color? backgroundColor;
+  final BorderRadius? borderRadius;
+  final VoidCallback? onChanged;
 
   const LanguageSelector({
     super.key,
-    this.showAsDialog = false,
-    this.showAsDropdown = false,
+    this.showLabel = true,
+    this.showFlag = true,
+    this.showNativeName = true,
+    this.showEnglishName = false,
+    this.showCode = false,
+    this.isExpanded = false,
     this.padding,
     this.textStyle,
     this.iconColor,
+    this.backgroundColor,
+    this.borderRadius,
+    this.onChanged,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentLocale = ref.watch(localeProvider);
-    final languageName = ref.watch(languageNameProvider);
-    final l10n = ref.watch(localizedStringsProvider);
+    final l10n = AppLocalizations.of(context)!;
 
-    if (showAsDialog) {
-      return _buildDialogButton(context, ref, languageName, l10n);
-    } else if (showAsDropdown) {
-      return _buildDropdown(context, ref, currentLocale, l10n);
-    } else {
-      return _buildListTile(context, ref, languageName, l10n);
-    }
-  }
-
-  Widget _buildDialogButton(BuildContext context, WidgetRef ref,
-      String languageName, AppLocalizations l10n) {
-    return ListTile(
-      leading: Icon(
-        Icons.language,
-        color: iconColor ?? Theme.of(context).colorScheme.primary,
-      ),
-      title: Text(
-        l10n.language,
-        style: textStyle ?? Theme.of(context).textTheme.titleMedium,
-      ),
-      subtitle: Text(
-        languageName,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        if (showLabel) ...[
+          Text(
+            l10n.language,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: 8),
+        ],
+        Container(
+          padding: padding ??
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+          decoration: BoxDecoration(
+            color: backgroundColor ?? Theme.of(context).cardColor,
+            borderRadius: borderRadius ?? BorderRadius.circular(12),
+            border: Border.all(
+              color: Theme.of(context).dividerColor,
+              width: 1,
             ),
-      ),
-      trailing: const Icon(Icons.arrow_forward_ios),
-      onTap: () => _showLanguageDialog(context, ref, l10n),
-    );
-  }
-
-  Widget _buildDropdown(BuildContext context, WidgetRef ref,
-      Locale currentLocale, AppLocalizations l10n) {
-    final languageList = ref.watch(languageListProvider);
-
-    return DropdownButton<Locale>(
-      value: currentLocale,
-      items: languageList.map((language) {
-        return DropdownMenuItem<Locale>(
-          value: Locale(language['code']!, ''),
-          child: Text(language['name']!),
-        );
-      }).toList(),
-      onChanged: (Locale? newLocale) {
-        if (newLocale != null) {
-          ref.read(localeProvider.notifier).setLocale(newLocale);
-        }
-      },
-      underline: Container(),
-      icon: Icon(
-        Icons.arrow_drop_down,
-        color: iconColor ?? Theme.of(context).colorScheme.primary,
-      ),
-    );
-  }
-
-  Widget _buildListTile(BuildContext context, WidgetRef ref,
-      String languageName, AppLocalizations l10n) {
-    return ListTile(
-      leading: Icon(
-        Icons.language,
-        color: iconColor ?? Theme.of(context).colorScheme.primary,
-      ),
-      title: Text(
-        l10n.language,
-        style: textStyle ?? Theme.of(context).textTheme.titleMedium,
-      ),
-      subtitle: Text(
-        languageName,
-        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-            ),
-      ),
-      trailing: const Icon(Icons.arrow_forward_ios),
-      onTap: () => _showLanguageDialog(context, ref, l10n),
-    );
-  }
-
-  void _showLanguageDialog(
-      BuildContext context, WidgetRef ref, AppLocalizations l10n) {
-    showDialog(
-      context: context,
-      builder: (context) => LanguageDialog(l10n: l10n),
-    );
-  }
-}
-
-/// Диалог выбора языка
-class LanguageDialog extends ConsumerWidget {
-  final AppLocalizations l10n;
-
-  const LanguageDialog({
-    super.key,
-    required this.l10n,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final currentLocale = ref.watch(localeProvider);
-    final languageList = ref.watch(languageListProvider);
-
-    return AlertDialog(
-      title: Text(l10n.language),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: languageList.map((language) {
-          final locale = Locale(language['code']!, '');
-          final isSelected = locale.languageCode == currentLocale.languageCode;
-
-          return RadioListTile<Locale>(
-            title: Text(language['name']!),
-            value: locale,
-            groupValue: currentLocale,
-            onChanged: (Locale? value) {
-              if (value != null) {
-                ref.read(localeProvider.notifier).setLocale(value);
-                Navigator.of(context).pop();
-              }
-            },
-            activeColor: Theme.of(context).colorScheme.primary,
-          );
-        }).toList(),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.of(context).pop(),
-          child: Text(l10n.cancel),
+          ),
+          child: isExpanded
+              ? DropdownButtonHideUnderline(
+                  child: DropdownButton<Locale>(
+                    value: currentLocale,
+                    isExpanded: true,
+                    items: _buildLanguageItems(context),
+                    onChanged: (locale) {
+                      if (locale != null) {
+                        ref.read(localeProvider.notifier).setLocale(locale);
+                        onChanged?.call();
+                      }
+                    },
+                    style: textStyle ?? Theme.of(context).textTheme.bodyMedium,
+                    icon: Icon(
+                      Icons.arrow_drop_down,
+                      color: iconColor ?? Theme.of(context).iconTheme.color,
+                    ),
+                  ),
+                )
+              : InkWell(
+                  onTap: () => _showLanguageDialog(context, ref),
+                  borderRadius: borderRadius ?? BorderRadius.circular(12),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (showFlag) ...[
+                        _buildFlag(currentLocale),
+                        const SizedBox(width: 8),
+                      ],
+                      Text(
+                        _getLanguageName(currentLocale, showNativeName,
+                            showEnglishName, showCode),
+                        style:
+                            textStyle ?? Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(
+                        Icons.arrow_drop_down,
+                        color: iconColor ?? Theme.of(context).iconTheme.color,
+                        size: 20,
+                      ),
+                    ],
+                  ),
+                ),
         ),
       ],
     );
   }
+
+  List<DropdownMenuItem<Locale>> _buildLanguageItems(BuildContext context) {
+    return [
+      DropdownMenuItem(
+        value: const Locale('ru', 'RU'),
+        child: _buildLanguageItem(const Locale('ru', 'RU')),
+      ),
+      DropdownMenuItem(
+        value: const Locale('en', 'US'),
+        child: _buildLanguageItem(const Locale('en', 'US')),
+      ),
+    ];
+  }
+
+  Widget _buildLanguageItem(Locale locale) {
+    return Row(
+      children: [
+        if (showFlag) ...[
+          _buildFlag(locale),
+          const SizedBox(width: 12),
+        ],
+        Text(
+          _getLanguageName(locale, showNativeName, showEnglishName, showCode),
+          style: const TextStyle(fontSize: 16),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildFlag(Locale locale) {
+    String flagEmoji;
+    switch (locale.languageCode) {
+      case 'ru':
+        flagEmoji = '🇷🇺';
+        break;
+      case 'en':
+        flagEmoji = '🇺🇸';
+        break;
+      default:
+        flagEmoji = '🌐';
+    }
+
+    return Text(
+      flagEmoji,
+      style: const TextStyle(fontSize: 20),
+    );
+  }
+
+  String _getLanguageName(
+      Locale locale, bool showNative, bool showEnglish, bool showCode) {
+    if (showCode) {
+      return locale.languageCode.toUpperCase();
+    }
+
+    switch (locale.languageCode) {
+      case 'ru':
+        if (showNative) return 'Русский';
+        if (showEnglish) return 'Russian';
+        return 'Русский';
+      case 'en':
+        if (showNative) return 'English';
+        if (showEnglish) return 'English';
+        return 'English';
+      default:
+        return locale.languageCode.toUpperCase();
+    }
+  }
+
+  void _showLanguageDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.language),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            _buildLanguageOption(
+              context,
+              ref,
+              const Locale('ru', 'RU'),
+              '🇷🇺',
+              'Русский',
+              'Russian',
+            ),
+            const SizedBox(height: 8),
+            _buildLanguageOption(
+              context,
+              ref,
+              const Locale('en', 'US'),
+              '🇺🇸',
+              'English',
+              'English',
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(AppLocalizations.of(context)!.close),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildLanguageOption(
+    BuildContext context,
+    WidgetRef ref,
+    Locale locale,
+    String flag,
+    String nativeName,
+    String englishName,
+  ) {
+    final currentLocale = ref.watch(localeProvider);
+    final isSelected = currentLocale == locale;
+
+    return ListTile(
+      leading: Text(flag, style: const TextStyle(fontSize: 24)),
+      title: Text(nativeName),
+      subtitle: Text(englishName),
+      trailing: isSelected ? const Icon(Icons.check, color: Colors.blue) : null,
+      selected: isSelected,
+      onTap: () {
+        ref.read(localeProvider.notifier).setLocale(locale);
+        Navigator.of(context).pop();
+        onChanged?.call();
+      },
+    );
+  }
 }
 
-/// Компактный селектор языка
+/// Компактный виджет для выбора языка
 class CompactLanguageSelector extends ConsumerWidget {
-  final bool showIcon;
+  final bool showFlag;
   final bool showText;
-  final double? iconSize;
-  final TextStyle? textStyle;
+  final Color? iconColor;
+  final VoidCallback? onChanged;
 
   const CompactLanguageSelector({
     super.key,
-    this.showIcon = true,
-    this.showText = true,
-    this.iconSize,
-    this.textStyle,
+    this.showFlag = true,
+    this.showText = false,
+    this.iconColor,
+    this.onChanged,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentLocale = ref.watch(localeProvider);
-    final languageName = ref.watch(languageNameProvider);
 
-    return GestureDetector(
-      onTap: () => _toggleLanguage(ref),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Theme.of(context).colorScheme.outline.withOpacity(0.3),
-          ),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
+    return IconButton(
+      onPressed: () => _showLanguageDialog(context, ref),
+      icon: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (showFlag) ...[
+            _buildFlag(currentLocale),
+            if (showText) const SizedBox(width: 4),
+          ],
+          if (showText) ...[
+            Text(
+              _getLanguageCode(currentLocale),
+              style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ],
+      ),
+      tooltip: AppLocalizations.of(context)!.language,
+    );
+  }
+
+  Widget _buildFlag(Locale locale) {
+    String flagEmoji;
+    switch (locale.languageCode) {
+      case 'ru':
+        flagEmoji = '🇷🇺';
+        break;
+      case 'en':
+        flagEmoji = '🇺🇸';
+        break;
+      default:
+        flagEmoji = '🌐';
+    }
+
+    return Text(
+      flagEmoji,
+      style: const TextStyle(fontSize: 16),
+    );
+  }
+
+  String _getLanguageCode(Locale locale) {
+    return locale.languageCode.toUpperCase();
+  }
+
+  void _showLanguageDialog(BuildContext context, WidgetRef ref) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(AppLocalizations.of(context)!.language),
+        content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (showIcon) ...[
-              Icon(
-                Icons.language,
-                size: iconSize ?? 16,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              const SizedBox(width: 4),
-            ],
-            if (showText)
-              Text(
-                languageName,
-                style: textStyle ?? Theme.of(context).textTheme.bodySmall,
-              ),
+            _buildLanguageOption(
+              context,
+              ref,
+              const Locale('ru', 'RU'),
+              '🇷🇺',
+              'Русский',
+            ),
+            const SizedBox(height: 8),
+            _buildLanguageOption(
+              context,
+              ref,
+              const Locale('en', 'US'),
+              '🇺🇸',
+              'English',
+            ),
           ],
         ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(AppLocalizations.of(context)!.close),
+          ),
+        ],
       ),
     );
   }
 
-  void _toggleLanguage(WidgetRef ref) {
-    ref.read(localeProvider.notifier).toggleLanguage();
+  Widget _buildLanguageOption(
+    BuildContext context,
+    WidgetRef ref,
+    Locale locale,
+    String flag,
+    String name,
+  ) {
+    final currentLocale = ref.watch(localeProvider);
+    final isSelected = currentLocale == locale;
+
+    return ListTile(
+      leading: Text(flag, style: const TextStyle(fontSize: 24)),
+      title: Text(name),
+      trailing: isSelected ? const Icon(Icons.check, color: Colors.blue) : null,
+      selected: isSelected,
+      onTap: () {
+        ref.read(localeProvider.notifier).setLocale(locale);
+        Navigator.of(context).pop();
+        onChanged?.call();
+      },
+    );
   }
 }
 
 /// Виджет для отображения текущего языка
 class CurrentLanguageDisplay extends ConsumerWidget {
-  final bool showIcon;
+  final bool showFlag;
+  final bool showName;
+  final bool showCode;
   final TextStyle? textStyle;
   final Color? iconColor;
 
   const CurrentLanguageDisplay({
     super.key,
-    this.showIcon = true,
+    this.showFlag = true,
+    this.showName = true,
+    this.showCode = false,
     this.textStyle,
     this.iconColor,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final languageName = ref.watch(languageNameProvider);
+    final currentLocale = ref.watch(localeProvider);
 
     return Row(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (showIcon) ...[
-          Icon(
-            Icons.language,
-            size: 16,
-            color: iconColor ??
-                Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-          ),
-          const SizedBox(width: 4),
+        if (showFlag) ...[
+          _buildFlag(currentLocale),
+          const SizedBox(width: 8),
         ],
-        Text(
-          languageName,
-          style: textStyle ??
-              Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.7),
-                  ),
-        ),
+        if (showName || showCode) ...[
+          Text(
+            _getLanguageDisplay(currentLocale),
+            style: textStyle ?? Theme.of(context).textTheme.bodyMedium,
+          ),
+        ],
       ],
     );
   }
-}
 
-/// Виджет для быстрого переключения языка
-class QuickLanguageToggle extends ConsumerWidget {
-  final bool showIcon;
-  final bool showText;
-  final double? iconSize;
-  final TextStyle? textStyle;
+  Widget _buildFlag(Locale locale) {
+    String flagEmoji;
+    switch (locale.languageCode) {
+      case 'ru':
+        flagEmoji = '🇷🇺';
+        break;
+      case 'en':
+        flagEmoji = '🇺🇸';
+        break;
+      default:
+        flagEmoji = '🌐';
+    }
 
-  const QuickLanguageToggle({
-    super.key,
-    this.showIcon = true,
-    this.showText = true,
-    this.iconSize,
-    this.textStyle,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final currentLocale = ref.watch(localeProvider);
-    final isRussian = ref.watch(isRussianProvider);
-
-    return IconButton(
-      onPressed: () => _toggleLanguage(ref),
-      icon: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (showIcon) ...[
-            Icon(
-              Icons.language,
-              size: iconSize ?? 20,
-            ),
-            const SizedBox(width: 4),
-          ],
-          if (showText)
-            Text(
-              isRussian ? 'EN' : 'RU',
-              style: textStyle ??
-                  Theme.of(context).textTheme.bodySmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-            ),
-        ],
-      ),
-      tooltip: isRussian ? 'Switch to English' : 'Переключить на русский',
+    return Text(
+      flagEmoji,
+      style: const TextStyle(fontSize: 20),
     );
   }
 
-  void _toggleLanguage(WidgetRef ref) {
-    ref.read(localeProvider.notifier).toggleLanguage();
+  String _getLanguageDisplay(Locale locale) {
+    if (showCode) {
+      return locale.languageCode.toUpperCase();
+    }
+
+    switch (locale.languageCode) {
+      case 'ru':
+        return 'Русский';
+      case 'en':
+        return 'English';
+      default:
+        return locale.languageCode.toUpperCase();
+    }
   }
 }

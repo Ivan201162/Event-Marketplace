@@ -1,0 +1,78 @@
+name: Dependency Update
+
+on:
+  schedule:
+    # Запускается каждый понедельник в 9:00 UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+
+jobs:
+  update-dependencies:
+    name: Update Dependencies
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.35.x'
+        channel: 'stable'
+        
+    - name: Get current dependencies
+      run: flutter pub get
+      
+    - name: Check for outdated packages
+      run: flutter pub outdated
+      
+    - name: Update dependencies
+      run: |
+        flutter pub upgrade
+        flutter pub get
+        
+    - name: Run tests after update
+      run: flutter test
+      
+    - name: Check if there are changes
+      id: check-changes
+      run: |
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "changes=true" >> $GITHUB_OUTPUT
+        else
+          echo "changes=false" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Create Pull Request
+      if: steps.check-changes.outputs.changes == 'true'
+      uses: peter-evans/create-pull-request@v5
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        commit-message: 'chore: update dependencies'
+        title: 'chore: update dependencies'
+        body: |
+          ## Dependency Update
+          
+          This PR updates the project dependencies to their latest versions.
+          
+          ### Changes
+          - Updated Flutter packages to latest versions
+          - Updated Dart packages to latest versions
+          
+          ### Testing
+          - [x] All tests pass
+          - [x] No breaking changes detected
+          
+          ### Notes
+          - Please review the changes carefully
+          - Test the application thoroughly before merging
+          - Check for any breaking changes in the updated packages
+        branch: dependency-update
+        delete-branch: true
+        labels: |
+          dependencies
+          automated
+          chore

@@ -1,0 +1,39 @@
+coverage:
+  status:
+    project:
+      default:
+        target: 80%
+        threshold: 5%
+    patch:
+      default:
+        target: 70%
+        threshold: 5%
+
+comment:
+  layout: "header,diff,files,footer"
+  behavior: default
+  require_changes: false
+  require_base: false
+  require_head: true
+
+github_checks:
+  annotations: true
+
+ignore:
+  - "test/"
+  - "integration_test/"
+  - "lib/generated/"
+  - "lib/l10n/"
+  - "*.g.dart"
+  - "*.freezed.dart"
+  - "*.mocks.dart"
+
+flags:
+  unittests:
+    paths:
+      - "lib/"
+    carryforward: true
+  integration:
+    paths:
+      - "integration_test/"
+    carryforward: true

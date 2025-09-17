@@ -1,0 +1,290 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    "schedule:weekly"
+  ],
+  "timezone": "UTC",
+  "schedule": [
+    "before 9am on monday"
+  ],
+  "labels": [
+    "dependencies",
+    "automated"
+  ],
+  "assignees": [
+    "event-marketplace-team"
+  ],
+  "reviewers": [
+    "event-marketplace-team"
+  ],
+  "commitMessagePrefix": "chore:",
+  "commitMessageAction": "update",
+  "commitMessageTopic": "{{depName}}",
+  "commitMessageExtra": "to {{newVersion}}",
+  "packageRules": [
+    {
+      "matchPackageNames": ["flutter"],
+      "allowedVersions": "3.35.x",
+      "enabled": false
+    },
+    {
+      "matchPackageNames": ["dart"],
+      "allowedVersions": "3.5.x",
+      "enabled": false
+    },
+    {
+      "matchPackagePatterns": ["^flutter_"],
+      "groupName": "Flutter packages",
+      "labels": ["dependencies", "flutter", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^firebase_"],
+      "groupName": "Firebase packages",
+      "labels": ["dependencies", "firebase", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^riverpod"],
+      "groupName": "Riverpod packages",
+      "labels": ["dependencies", "riverpod", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^go_router"],
+      "groupName": "Navigation packages",
+      "labels": ["dependencies", "navigation", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^flex_color_scheme"],
+      "groupName": "Theme packages",
+      "labels": ["dependencies", "theme", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^flutter_localizations"],
+      "groupName": "Localization packages",
+      "labels": ["dependencies", "localization", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^intl"],
+      "groupName": "Internationalization packages",
+      "labels": ["dependencies", "i18n", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^shared_preferences"],
+      "groupName": "Storage packages",
+      "labels": ["dependencies", "storage", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^http"],
+      "groupName": "Network packages",
+      "labels": ["dependencies", "network", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^cached_network_image"],
+      "groupName": "Image packages",
+      "labels": ["dependencies", "image", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^file_picker"],
+      "groupName": "File packages",
+      "labels": ["dependencies", "file", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^image_picker"],
+      "groupName": "Camera packages",
+      "labels": ["dependencies", "camera", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^url_launcher"],
+      "groupName": "URL packages",
+      "labels": ["dependencies", "url", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^flutter_animate"],
+      "groupName": "Animation packages",
+      "labels": ["dependencies", "animation", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^page_transition"],
+      "groupName": "Transition packages",
+      "labels": ["dependencies", "transition", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^pdf"],
+      "groupName": "PDF packages",
+      "labels": ["dependencies", "pdf", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^printing"],
+      "groupName": "Printing packages",
+      "labels": ["dependencies", "printing", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^path_provider"],
+      "groupName": "Path packages",
+      "labels": ["dependencies", "path", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^googleapis"],
+      "groupName": "Google API packages",
+      "labels": ["dependencies", "google", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^googleapis_auth"],
+      "groupName": "Google Auth packages",
+      "labels": ["dependencies", "google", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^icalendar_parser"],
+      "groupName": "Calendar packages",
+      "labels": ["dependencies", "calendar", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^record"],
+      "groupName": "Audio packages",
+      "labels": ["dependencies", "audio", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^permission_handler"],
+      "groupName": "Permission packages",
+      "labels": ["dependencies", "permission", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^emoji_picker_flutter"],
+      "groupName": "Emoji packages",
+      "labels": ["dependencies", "emoji", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^audioplayers"],
+      "groupName": "Audio Player packages",
+      "labels": ["dependencies", "audio", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^fl_chart"],
+      "groupName": "Chart packages",
+      "labels": ["dependencies", "chart", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^video_player"],
+      "groupName": "Video packages",
+      "labels": ["dependencies", "video", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^photo_view"],
+      "groupName": "Photo packages",
+      "labels": ["dependencies", "photo", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^qr_flutter"],
+      "groupName": "QR packages",
+      "labels": ["dependencies", "qr", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^qr_code_scanner"],
+      "groupName": "QR Scanner packages",
+      "labels": ["dependencies", "qr", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^uuid"],
+      "groupName": "UUID packages",
+      "labels": ["dependencies", "uuid", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^mailer"],
+      "groupName": "Email packages",
+      "labels": ["dependencies", "email", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^device_info_plus"],
+      "groupName": "Device Info packages",
+      "labels": ["dependencies", "device", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^google_maps_flutter"],
+      "groupName": "Maps packages",
+      "labels": ["dependencies", "maps", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^geolocator"],
+      "groupName": "Location packages",
+      "labels": ["dependencies", "location", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^geocoding"],
+      "groupName": "Geocoding packages",
+      "labels": ["dependencies", "geocoding", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^connectivity_plus"],
+      "groupName": "Connectivity packages",
+      "labels": ["dependencies", "connectivity", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^crypto"],
+      "groupName": "Crypto packages",
+      "labels": ["dependencies", "crypto", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^encrypt"],
+      "groupName": "Encryption packages",
+      "labels": ["dependencies", "encryption", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^local_auth"],
+      "groupName": "Local Auth packages",
+      "labels": ["dependencies", "auth", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^flutter_secure_storage"],
+      "groupName": "Secure Storage packages",
+      "labels": ["dependencies", "storage", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^package_info_plus"],
+      "groupName": "Package Info packages",
+      "labels": ["dependencies", "package", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^timezone"],
+      "groupName": "Timezone packages",
+      "labels": ["dependencies", "timezone", "automated"]
+    },
+    {
+      "matchPackagePatterns": ["^share_plus"],
+      "groupName": "Share packages",
+      "labels": ["dependencies", "share", "automated"]
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "labels": ["security", "vulnerability", "urgent"]
+  },
+  "prConcurrentLimit": 5,
+  "prHourlyLimit": 2,
+  "branchPrefix": "renovate/",
+  "semanticCommits": "enabled",
+  "semanticCommitType": "chore",
+  "semanticCommitScope": "deps",
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": ["before 9am on monday"]
+  },
+  "rangeStrategy": "bump",
+  "bumpVersion": "patch",
+  "recreateClosed": true,
+  "rebaseWhen": "behind-base-branch",
+  "platformAutomerge": true,
+  "automerge": false,
+  "automergeType": "pr",
+  "automergeStrategy": "squash",
+  "requiredStatusChecks": ["test", "build", "security-scan"],
+  "ignoreTests": false,
+  "ignorePaths": [
+    "test/",
+    "integration_test/",
+    "lib/generated/",
+    "lib/l10n/",
+    "*.g.dart",
+    "*.freezed.dart",
+    "*.mocks.dart"
+  ]
+}

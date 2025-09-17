@@ -254,7 +254,7 @@ abstract class AppLocalizations {
   /// **'Location'**
   String get location;
 
-  /// Price field label
+  /// Price characteristic
   ///
   /// In en, this message translates to:
   /// **'Price'**
@@ -368,7 +368,7 @@ abstract class AppLocalizations {
   /// **'Rating'**
   String get rating;
 
-  /// Review title field label
+  /// Review title label
   ///
   /// In en, this message translates to:
   /// **'Review Title'**
@@ -679,6 +679,516 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'All rights reserved'**
   String get allRightsReserved;
+
+  /// Specialists tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Specialists'**
+  String get specialists;
+
+  /// Recommendations tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Recommendations'**
+  String get recommendations;
+
+  /// Chats tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Chats'**
+  String get chats;
+
+  /// My bookings tab label
+  ///
+  /// In en, this message translates to:
+  /// **'My Bookings'**
+  String get myBookings;
+
+  /// Booking requests tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Requests'**
+  String get bookingRequests;
+
+  /// Admin panel tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Admin Panel'**
+  String get adminPanel;
+
+  /// Debug tab label
+  ///
+  /// In en, this message translates to:
+  /// **'Debug'**
+  String get debug;
+
+  /// Search specialists header
+  ///
+  /// In en, this message translates to:
+  /// **'Search Specialists'**
+  String get searchSpecialists;
+
+  /// No specialists found message
+  ///
+  /// In en, this message translates to:
+  /// **'No specialists found'**
+  String get noSpecialistsFound;
+
+  /// Book specialist button text
+  ///
+  /// In en, this message translates to:
+  /// **'Book Specialist'**
+  String get bookSpecialist;
+
+  /// View profile button text
+  ///
+  /// In en, this message translates to:
+  /// **'View Profile'**
+  String get viewProfile;
+
+  /// Specialist profile header
+  ///
+  /// In en, this message translates to:
+  /// **'Specialist Profile'**
+  String get specialistProfile;
+
+  /// Specialization label
+  ///
+  /// In en, this message translates to:
+  /// **'Specialization'**
+  String get specialization;
+
+  /// Experience label
+  ///
+  /// In en, this message translates to:
+  /// **'Experience'**
+  String get experience;
+
+  /// Portfolio label
+  ///
+  /// In en, this message translates to:
+  /// **'Portfolio'**
+  String get portfolio;
+
+  /// Availability label
+  ///
+  /// In en, this message translates to:
+  /// **'Availability'**
+  String get availability;
+
+  /// Price per hour label
+  ///
+  /// In en, this message translates to:
+  /// **'Price per hour'**
+  String get pricePerHour;
+
+  /// Contact specialist button text
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Specialist'**
+  String get contactSpecialist;
+
+  /// Booking form header
+  ///
+  /// In en, this message translates to:
+  /// **'Booking Form'**
+  String get bookingForm;
+
+  /// Select service placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Select service'**
+  String get selectService;
+
+  /// Select date placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Select date'**
+  String get selectDate;
+
+  /// Select time placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Select time'**
+  String get selectTime;
+
+  /// Duration label
+  ///
+  /// In en, this message translates to:
+  /// **'Duration'**
+  String get duration;
+
+  /// Hours unit
+  ///
+  /// In en, this message translates to:
+  /// **'hours'**
+  String get hours;
+
+  /// Additional notes label
+  ///
+  /// In en, this message translates to:
+  /// **'Additional notes'**
+  String get additionalNotes;
+
+  /// Create booking button text
+  ///
+  /// In en, this message translates to:
+  /// **'Create Booking'**
+  String get createBooking;
+
+  /// Booking created success message
+  ///
+  /// In en, this message translates to:
+  /// **'Booking created successfully'**
+  String get bookingCreated;
+
+  /// Booking creation error message
+  ///
+  /// In en, this message translates to:
+  /// **'Booking creation error'**
+  String get bookingError;
+
+  /// Chat header
+  ///
+  /// In en, this message translates to:
+  /// **'Chat'**
+  String get chat;
+
+  /// Type message placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message...'**
+  String get typeMessage;
+
+  /// Send message button text
+  ///
+  /// In en, this message translates to:
+  /// **'Send Message'**
+  String get sendMessage;
+
+  /// No messages message
+  ///
+  /// In en, this message translates to:
+  /// **'No messages'**
+  String get noMessages;
+
+  /// Start conversation call to action
+  ///
+  /// In en, this message translates to:
+  /// **'Start conversation'**
+  String get startConversation;
+
+  /// Chat info header
+  ///
+  /// In en, this message translates to:
+  /// **'Chat Info'**
+  String get chatInfo;
+
+  /// Create review header
+  ///
+  /// In en, this message translates to:
+  /// **'Create Review'**
+  String get createReview;
+
+  /// Rate quality header
+  ///
+  /// In en, this message translates to:
+  /// **'Rate the quality of work'**
+  String get rateQuality;
+
+  /// Excellent rating
+  ///
+  /// In en, this message translates to:
+  /// **'Excellent'**
+  String get excellent;
+
+  /// Good rating
+  ///
+  /// In en, this message translates to:
+  /// **'Good'**
+  String get good;
+
+  /// Satisfactory rating
+  ///
+  /// In en, this message translates to:
+  /// **'Satisfactory'**
+  String get satisfactory;
+
+  /// Poor rating
+  ///
+  /// In en, this message translates to:
+  /// **'Poor'**
+  String get poor;
+
+  /// Very poor rating
+  ///
+  /// In en, this message translates to:
+  /// **'Very Poor'**
+  String get veryPoor;
+
+  /// Detailed review label
+  ///
+  /// In en, this message translates to:
+  /// **'Detailed Review'**
+  String get detailedReview;
+
+  /// Select characteristics header
+  ///
+  /// In en, this message translates to:
+  /// **'Select appropriate characteristics'**
+  String get selectCharacteristics;
+
+  /// Professionalism characteristic
+  ///
+  /// In en, this message translates to:
+  /// **'Professionalism'**
+  String get professionalism;
+
+  /// Punctuality characteristic
+  ///
+  /// In en, this message translates to:
+  /// **'Punctuality'**
+  String get punctuality;
+
+  /// Work quality characteristic
+  ///
+  /// In en, this message translates to:
+  /// **'Work Quality'**
+  String get workQuality;
+
+  /// Communication characteristic
+  ///
+  /// In en, this message translates to:
+  /// **'Communication'**
+  String get communication;
+
+  /// Recommend characteristic
+  ///
+  /// In en, this message translates to:
+  /// **'Recommend'**
+  String get recommend;
+
+  /// Privacy settings header
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Settings'**
+  String get privacySettings;
+
+  /// Public review setting
+  ///
+  /// In en, this message translates to:
+  /// **'Public Review'**
+  String get publicReview;
+
+  /// Public review description
+  ///
+  /// In en, this message translates to:
+  /// **'Review will be visible to other users'**
+  String get reviewVisibleToOthers;
+
+  /// Review submitted success message
+  ///
+  /// In en, this message translates to:
+  /// **'Review submitted successfully'**
+  String get reviewSubmitted;
+
+  /// Review submission error message
+  ///
+  /// In en, this message translates to:
+  /// **'Review submission error'**
+  String get reviewError;
+
+  /// Mark all as read button text
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all as read'**
+  String get markAllAsRead;
+
+  /// Clear all notifications button text
+  ///
+  /// In en, this message translates to:
+  /// **'Clear all notifications'**
+  String get clearAllNotifications;
+
+  /// No notifications message
+  ///
+  /// In en, this message translates to:
+  /// **'No notifications'**
+  String get noNotifications;
+
+  /// Notifications place description
+  ///
+  /// In en, this message translates to:
+  /// **'Important notifications will appear here'**
+  String get notificationsWillAppearHere;
+
+  /// Contact support button text
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Support'**
+  String get contactSupport;
+
+  /// Choose contact method description
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a convenient way to contact our support service:'**
+  String get chooseContactMethod;
+
+  /// Create ticket button text
+  ///
+  /// In en, this message translates to:
+  /// **'Create Ticket'**
+  String get createTicket;
+
+  /// Search questions placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Search questions...'**
+  String get searchQuestions;
+
+  /// No questions message
+  ///
+  /// In en, this message translates to:
+  /// **'No questions'**
+  String get noQuestions;
+
+  /// Questions place description
+  ///
+  /// In en, this message translates to:
+  /// **'Questions and answers will appear here'**
+  String get questionsWillAppearHere;
+
+  /// Nothing found message
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing found'**
+  String get nothingFound;
+
+  /// Try different query suggestion
+  ///
+  /// In en, this message translates to:
+  /// **'Try changing your search query'**
+  String get tryDifferentQuery;
+
+  /// App description
+  ///
+  /// In en, this message translates to:
+  /// **'Event Marketplace is a platform for finding and booking specialists for various events. Find the perfect host, photographer, musician or other specialist for your event.'**
+  String get appDescription;
+
+  /// Main features header
+  ///
+  /// In en, this message translates to:
+  /// **'Main Features'**
+  String get mainFeatures;
+
+  /// Search specialists feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Find the right specialist by category, location and reviews'**
+  String get searchSpecialistsFeature;
+
+  /// Booking feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Book a specialist for a convenient time and date'**
+  String get bookingFeature;
+
+  /// Communication feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Communicate with specialists through built-in chat'**
+  String get communicationFeature;
+
+  /// Reviews feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Leave reviews and read opinions from other users'**
+  String get reviewsFeature;
+
+  /// Payments feature description
+  ///
+  /// In en, this message translates to:
+  /// **'Secure payment system for services'**
+  String get paymentsFeature;
+
+  /// Developer info header
+  ///
+  /// In en, this message translates to:
+  /// **'Developer Information'**
+  String get developerInfo;
+
+  /// Developer label
+  ///
+  /// In en, this message translates to:
+  /// **'Developer'**
+  String get developer;
+
+  /// Support email
+  ///
+  /// In en, this message translates to:
+  /// **'support@eventmarketplace.com'**
+  String get supportEmail;
+
+  /// Website label
+  ///
+  /// In en, this message translates to:
+  /// **'Website'**
+  String get website;
+
+  /// Website URL
+  ///
+  /// In en, this message translates to:
+  /// **'www.eventmarketplace.com'**
+  String get websiteUrl;
+
+  /// 24/7 support
+  ///
+  /// In en, this message translates to:
+  /// **'24/7'**
+  String get support24_7;
+
+  /// Privacy policy header
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get privacyPolicy;
+
+  /// Privacy policy text
+  ///
+  /// In en, this message translates to:
+  /// **'The privacy policy of the application will be placed here. This document describes how we collect, use and protect your personal information.'**
+  String get privacyPolicyText;
+
+  /// Terms of service header
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of Service'**
+  String get termsOfService;
+
+  /// Terms of service text
+  ///
+  /// In en, this message translates to:
+  /// **'The terms of use of the application will be placed here. This document describes the rules and conditions for using our platform.'**
+  String get termsOfServiceText;
+
+  /// Open source licenses header
+  ///
+  /// In en, this message translates to:
+  /// **'Licenses'**
+  String get openSourceLicenses;
+
+  /// Clear all button text
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All'**
+  String get clearAll;
+
+  /// Clear all notifications confirmation
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to delete all notifications?'**
+  String get clearAllNotificationsConfirm;
 }
 
 class _AppLocalizationsDelegate

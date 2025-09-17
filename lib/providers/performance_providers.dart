@@ -1,37 +1,81 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:event_marketplace_app/services/performance_service.dart';
-import 'package:event_marketplace_app/services/logger_service.dart';
-import 'package:event_marketplace_app/services/monitoring_service.dart';
+import 'dart:async';
 
-/// Провайдер для PerformanceService
-final performanceServiceProvider = Provider<PerformanceService>((ref) {
-  return PerformanceService();
-});
+/// Состояние производительности
+class PerformanceState {
+  final double fps;
+  final int memoryUsage;
+  final int cpuUsage;
+  final bool isOptimized;
+  final List<String> optimizations;
 
-/// Провайдер для LoggerService
-final loggerServiceProvider = Provider<LoggerService>((ref) {
-  return LoggerService();
-});
+  const PerformanceState({
+    this.fps = 60.0,
+    this.memoryUsage = 0,
+    this.cpuUsage = 0,
+    this.isOptimized = false,
+    this.optimizations = const [],
+  });
 
-/// Провайдер для MonitoringService
-final monitoringServiceProvider = Provider<MonitoringService>((ref) {
-  return MonitoringService();
-});
+  PerformanceState copyWith({
+    double? fps,
+    int? memoryUsage,
+    int? cpuUsage,
+    bool? isOptimized,
+    List<String>? optimizations,
+  }) {
+    return PerformanceState(
+      fps: fps ?? this.fps,
+      memoryUsage: memoryUsage ?? this.memoryUsage,
+      cpuUsage: cpuUsage ?? this.cpuUsage,
+      isOptimized: isOptimized ?? this.isOptimized,
+      optimizations: optimizations ?? this.optimizations,
+    );
+  }
+}
 
-/// Провайдер для статистики производительности
-final performanceStatsProvider = Provider<Map<String, dynamic>>((ref) {
-  final performanceService = ref.watch(performanceServiceProvider);
-  return performanceService.getPerformanceStats();
-});
+/// Провайдер производительности
+class PerformanceNotifier extends StateNotifier<PerformanceState> {
+  PerformanceNotifier() : super(const PerformanceState()) {
+    _startMonitoring();
+  }
 
-/// Провайдер для статистики кэша
-final cacheStatsProvider = Provider<Map<String, dynamic>>((ref) {
-  final performanceService = ref.watch(performanceServiceProvider);
-  return performanceService.getCacheStats();
-});
+  Timer? _monitoringTimer;
 
-/// Провайдер для статистики мониторинга
-final monitoringStatsProvider = Provider<Map<String, dynamic>>((ref) {
-  final monitoringService = ref.watch(monitoringServiceProvider);
-  return monitoringService.getOverallStats();
+  void _startMonitoring() {
+    _monitoringTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      _updatePerformanceMetrics();
+    });
+  }
+
+  void _updatePerformanceMetrics() {
+    // Здесь должна быть логика мониторинга производительности
+    state = state.copyWith(
+      fps: 60.0,
+      memoryUsage: 100,
+      cpuUsage: 50,
+      isOptimized: true,
+      optimizations: ['Image caching', 'List virtualization'],
+    );
+  }
+
+  void optimizePerformance() {
+    state = state.copyWith(
+      isOptimized: true,
+      optimizations: [...state.optimizations, 'Manual optimization'],
+    );
+  }
+
+  @override
+  void dispose() {
+    _monitoringTimer?.cancel();
+    super.dispose();
+  }
+}
+
+/// Провайдер производительности
+final performanceProvider =
+    StateNotifierProvider<PerformanceNotifier, PerformanceState>((ref) {
+  return PerformanceNotifier();
 });

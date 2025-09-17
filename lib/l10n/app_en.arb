@@ -483,5 +483,445 @@
   "allRightsReserved": "All rights reserved",
   "@allRightsReserved": {
     "description": "All rights reserved text"
+  },
+
+  "specialists": "Specialists",
+  "@specialists": {
+    "description": "Specialists tab label"
+  },
+
+  "recommendations": "Recommendations",
+  "@recommendations": {
+    "description": "Recommendations tab label"
+  },
+
+  "chats": "Chats",
+  "@chats": {
+    "description": "Chats tab label"
+  },
+
+  "myBookings": "My Bookings",
+  "@myBookings": {
+    "description": "My bookings tab label"
+  },
+
+  "bookingRequests": "Requests",
+  "@bookingRequests": {
+    "description": "Booking requests tab label"
+  },
+
+  "adminPanel": "Admin Panel",
+  "@adminPanel": {
+    "description": "Admin panel tab label"
+  },
+
+  "debug": "Debug",
+  "@debug": {
+    "description": "Debug tab label"
+  },
+
+  "searchSpecialists": "Search Specialists",
+  "@searchSpecialists": {
+    "description": "Search specialists header"
+  },
+
+  "noSpecialistsFound": "No specialists found",
+  "@noSpecialistsFound": {
+    "description": "No specialists found message"
+  },
+
+  "bookSpecialist": "Book Specialist",
+  "@bookSpecialist": {
+    "description": "Book specialist button text"
+  },
+
+  "viewProfile": "View Profile",
+  "@viewProfile": {
+    "description": "View profile button text"
+  },
+
+  "specialistProfile": "Specialist Profile",
+  "@specialistProfile": {
+    "description": "Specialist profile header"
+  },
+
+  "specialization": "Specialization",
+  "@specialization": {
+    "description": "Specialization label"
+  },
+
+  "experience": "Experience",
+  "@experience": {
+    "description": "Experience label"
+  },
+
+  "portfolio": "Portfolio",
+  "@portfolio": {
+    "description": "Portfolio label"
+  },
+
+  "availability": "Availability",
+  "@availability": {
+    "description": "Availability label"
+  },
+
+  "pricePerHour": "Price per hour",
+  "@pricePerHour": {
+    "description": "Price per hour label"
+  },
+
+  "contactSpecialist": "Contact Specialist",
+  "@contactSpecialist": {
+    "description": "Contact specialist button text"
+  },
+
+  "bookingForm": "Booking Form",
+  "@bookingForm": {
+    "description": "Booking form header"
+  },
+
+  "selectService": "Select service",
+  "@selectService": {
+    "description": "Select service placeholder"
+  },
+
+  "selectDate": "Select date",
+  "@selectDate": {
+    "description": "Select date placeholder"
+  },
+
+  "selectTime": "Select time",
+  "@selectTime": {
+    "description": "Select time placeholder"
+  },
+
+  "duration": "Duration",
+  "@duration": {
+    "description": "Duration label"
+  },
+
+  "hours": "hours",
+  "@hours": {
+    "description": "Hours unit"
+  },
+
+  "additionalNotes": "Additional notes",
+  "@additionalNotes": {
+    "description": "Additional notes label"
+  },
+
+  "createBooking": "Create Booking",
+  "@createBooking": {
+    "description": "Create booking button text"
+  },
+
+  "bookingCreated": "Booking created successfully",
+  "@bookingCreated": {
+    "description": "Booking created success message"
+  },
+
+  "bookingError": "Booking creation error",
+  "@bookingError": {
+    "description": "Booking creation error message"
+  },
+
+  "chat": "Chat",
+  "@chat": {
+    "description": "Chat header"
+  },
+
+  "typeMessage": "Type a message...",
+  "@typeMessage": {
+    "description": "Type message placeholder"
+  },
+
+  "sendMessage": "Send Message",
+  "@sendMessage": {
+    "description": "Send message button text"
+  },
+
+  "noMessages": "No messages",
+  "@noMessages": {
+    "description": "No messages message"
+  },
+
+  "startConversation": "Start conversation",
+  "@startConversation": {
+    "description": "Start conversation call to action"
+  },
+
+  "chatInfo": "Chat Info",
+  "@chatInfo": {
+    "description": "Chat info header"
+  },
+
+  "createReview": "Create Review",
+  "@createReview": {
+    "description": "Create review header"
+  },
+
+  "rateQuality": "Rate the quality of work",
+  "@rateQuality": {
+    "description": "Rate quality header"
+  },
+
+  "excellent": "Excellent",
+  "@excellent": {
+    "description": "Excellent rating"
+  },
+
+  "good": "Good",
+  "@good": {
+    "description": "Good rating"
+  },
+
+  "satisfactory": "Satisfactory",
+  "@satisfactory": {
+    "description": "Satisfactory rating"
+  },
+
+  "poor": "Poor",
+  "@poor": {
+    "description": "Poor rating"
+  },
+
+  "veryPoor": "Very Poor",
+  "@veryPoor": {
+    "description": "Very poor rating"
+  },
+
+  "reviewTitle": "Review Title",
+  "@reviewTitle": {
+    "description": "Review title label"
+  },
+
+  "detailedReview": "Detailed Review",
+  "@detailedReview": {
+    "description": "Detailed review label"
+  },
+
+  "selectCharacteristics": "Select appropriate characteristics",
+  "@selectCharacteristics": {
+    "description": "Select characteristics header"
+  },
+
+  "professionalism": "Professionalism",
+  "@professionalism": {
+    "description": "Professionalism characteristic"
+  },
+
+  "punctuality": "Punctuality",
+  "@punctuality": {
+    "description": "Punctuality characteristic"
+  },
+
+  "workQuality": "Work Quality",
+  "@workQuality": {
+    "description": "Work quality characteristic"
+  },
+
+  "communication": "Communication",
+  "@communication": {
+    "description": "Communication characteristic"
+  },
+
+  "price": "Price",
+  "@price": {
+    "description": "Price characteristic"
+  },
+
+  "recommend": "Recommend",
+  "@recommend": {
+    "description": "Recommend characteristic"
+  },
+
+  "privacySettings": "Privacy Settings",
+  "@privacySettings": {
+    "description": "Privacy settings header"
+  },
+
+  "publicReview": "Public Review",
+  "@publicReview": {
+    "description": "Public review setting"
+  },
+
+  "reviewVisibleToOthers": "Review will be visible to other users",
+  "@reviewVisibleToOthers": {
+    "description": "Public review description"
+  },
+
+  "submitReview": "Submit Review",
+  "@submitReview": {
+    "description": "Submit review button text"
+  },
+
+  "reviewSubmitted": "Review submitted successfully",
+  "@reviewSubmitted": {
+    "description": "Review submitted success message"
+  },
+
+  "reviewError": "Review submission error",
+  "@reviewError": {
+    "description": "Review submission error message"
+  },
+
+  "markAllAsRead": "Mark all as read",
+  "@markAllAsRead": {
+    "description": "Mark all as read button text"
+  },
+
+  "clearAllNotifications": "Clear all notifications",
+  "@clearAllNotifications": {
+    "description": "Clear all notifications button text"
+  },
+
+  "noNotifications": "No notifications",
+  "@noNotifications": {
+    "description": "No notifications message"
+  },
+
+  "notificationsWillAppearHere": "Important notifications will appear here",
+  "@notificationsWillAppearHere": {
+    "description": "Notifications place description"
+  },
+
+  "contactSupport": "Contact Support",
+  "@contactSupport": {
+    "description": "Contact support button text"
+  },
+
+  "chooseContactMethod": "Choose a convenient way to contact our support service:",
+  "@chooseContactMethod": {
+    "description": "Choose contact method description"
+  },
+
+  "createTicket": "Create Ticket",
+  "@createTicket": {
+    "description": "Create ticket button text"
+  },
+
+  "searchQuestions": "Search questions...",
+  "@searchQuestions": {
+    "description": "Search questions placeholder"
+  },
+
+  "noQuestions": "No questions",
+  "@noQuestions": {
+    "description": "No questions message"
+  },
+
+  "questionsWillAppearHere": "Questions and answers will appear here",
+  "@questionsWillAppearHere": {
+    "description": "Questions place description"
+  },
+
+  "nothingFound": "Nothing found",
+  "@nothingFound": {
+    "description": "Nothing found message"
+  },
+
+  "tryDifferentQuery": "Try changing your search query",
+  "@tryDifferentQuery": {
+    "description": "Try different query suggestion"
+  },
+
+  "appDescription": "Event Marketplace is a platform for finding and booking specialists for various events. Find the perfect host, photographer, musician or other specialist for your event.",
+  "@appDescription": {
+    "description": "App description"
+  },
+
+  "mainFeatures": "Main Features",
+  "@mainFeatures": {
+    "description": "Main features header"
+  },
+
+  "searchSpecialistsFeature": "Find the right specialist by category, location and reviews",
+  "@searchSpecialistsFeature": {
+    "description": "Search specialists feature description"
+  },
+
+  "bookingFeature": "Book a specialist for a convenient time and date",
+  "@bookingFeature": {
+    "description": "Booking feature description"
+  },
+
+  "communicationFeature": "Communicate with specialists through built-in chat",
+  "@communicationFeature": {
+    "description": "Communication feature description"
+  },
+
+  "reviewsFeature": "Leave reviews and read opinions from other users",
+  "@reviewsFeature": {
+    "description": "Reviews feature description"
+  },
+
+  "paymentsFeature": "Secure payment system for services",
+  "@paymentsFeature": {
+    "description": "Payments feature description"
+  },
+
+  "developerInfo": "Developer Information",
+  "@developerInfo": {
+    "description": "Developer info header"
+  },
+
+  "developer": "Developer",
+  "@developer": {
+    "description": "Developer label"
+  },
+
+  "supportEmail": "support@eventmarketplace.com",
+  "@supportEmail": {
+    "description": "Support email"
+  },
+
+  "website": "Website",
+  "@website": {
+    "description": "Website label"
+  },
+
+  "websiteUrl": "www.eventmarketplace.com",
+  "@websiteUrl": {
+    "description": "Website URL"
+  },
+
+  "support24_7": "24/7",
+  "@support24_7": {
+    "description": "24/7 support"
+  },
+
+  "privacyPolicy": "Privacy Policy",
+  "@privacyPolicy": {
+    "description": "Privacy policy header"
+  },
+
+  "privacyPolicyText": "The privacy policy of the application will be placed here. This document describes how we collect, use and protect your personal information.",
+  "@privacyPolicyText": {
+    "description": "Privacy policy text"
+  },
+
+  "termsOfService": "Terms of Service",
+  "@termsOfService": {
+    "description": "Terms of service header"
+  },
+
+  "termsOfServiceText": "The terms of use of the application will be placed here. This document describes the rules and conditions for using our platform.",
+  "@termsOfServiceText": {
+    "description": "Terms of service text"
+  },
+
+  "openSourceLicenses": "Licenses",
+  "@openSourceLicenses": {
+    "description": "Open source licenses header"
+  },
+
+  "clearAll": "Clear All",
+  "@clearAll": {
+    "description": "Clear all button text"
+  },
+
+  "clearAllNotificationsConfirm": "Are you sure you want to delete all notifications?",
+  "@clearAllNotificationsConfirm": {
+    "description": "Clear all notifications confirmation"
   }
 }

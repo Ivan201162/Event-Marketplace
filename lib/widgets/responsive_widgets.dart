@@ -1,25 +1,26 @@
 import 'package:flutter/material.dart';
+import '../core/app_styles.dart';
 
-/// Адаптивный виджет для разных размеров экранов
+/// Адаптивный виджет, который показывает разные виджеты в зависимости от размера экрана
 class ResponsiveWidget extends StatelessWidget {
   final Widget mobile;
   final Widget? tablet;
   final Widget? desktop;
+  final Widget? fallback;
 
   const ResponsiveWidget({
     super.key,
     required this.mobile,
     this.tablet,
     this.desktop,
+    this.fallback,
   });
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-
-    if (screenWidth >= 1200) {
+    if (AppStyles.isDesktop(context)) {
       return desktop ?? tablet ?? mobile;
-    } else if (screenWidth >= 600) {
+    } else if (AppStyles.isTablet(context)) {
       return tablet ?? mobile;
     } else {
       return mobile;
@@ -27,433 +28,448 @@ class ResponsiveWidget extends StatelessWidget {
   }
 }
 
-/// Адаптивная сетка
-class ResponsiveGrid extends StatelessWidget {
-  final List<Widget> children;
-  final double spacing;
-  final double runSpacing;
-  final int? mobileColumns;
-  final int? tabletColumns;
-  final int? desktopColumns;
+/// Адаптивный контейнер с разными отступами для разных размеров экрана
+class ResponsiveContainer extends StatelessWidget {
+  final Widget child;
+  final EdgeInsets? mobilePadding;
+  final EdgeInsets? tabletPadding;
+  final EdgeInsets? desktopPadding;
+  final EdgeInsets? fallbackPadding;
 
-  const ResponsiveGrid({
+  const ResponsiveContainer({
     super.key,
-    required this.children,
-    this.spacing = 16.0,
-    this.runSpacing = 16.0,
-    this.mobileColumns,
-    this.tabletColumns,
-    this.desktopColumns,
+    required this.child,
+    this.mobilePadding,
+    this.tabletPadding,
+    this.desktopPadding,
+    this.fallbackPadding,
   });
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    EdgeInsets padding;
+
+    if (AppStyles.isDesktop(context)) {
+      padding = desktopPadding ??
+          tabletPadding ??
+          mobilePadding ??
+          fallbackPadding ??
+          EdgeInsets.zero;
+    } else if (AppStyles.isTablet(context)) {
+      padding =
+          tabletPadding ?? mobilePadding ?? fallbackPadding ?? EdgeInsets.zero;
+    } else {
+      padding = mobilePadding ?? fallbackPadding ?? EdgeInsets.zero;
+    }
+
+    return Padding(
+      padding: padding,
+      child: child,
+    );
+  }
+}
+
+/// Адаптивная сетка с разным количеством колонок
+class ResponsiveGrid extends StatelessWidget {
+  final List<Widget> children;
+  final int mobileColumns;
+  final int? tabletColumns;
+  final int? desktopColumns;
+  final double spacing;
+  final double runSpacing;
+
+  const ResponsiveGrid({
+    super.key,
+    required this.children,
+    this.mobileColumns = 1,
+    this.tabletColumns,
+    this.desktopColumns,
+    this.spacing = 16.0,
+    this.runSpacing = 16.0,
+  });
+
+  @override
+  Widget build(BuildContext context) {
     int columns;
 
-    if (screenWidth >= 1200) {
-      columns = desktopColumns ?? 4;
-    } else if (screenWidth >= 600) {
-      columns = tabletColumns ?? 2;
+    if (AppStyles.isDesktop(context)) {
+      columns = desktopColumns ?? tabletColumns ?? mobileColumns;
+    } else if (AppStyles.isTablet(context)) {
+      columns = tabletColumns ?? mobileColumns;
     } else {
-      columns = mobileColumns ?? 1;
+      columns = mobileColumns;
     }
 
     return Wrap(
       spacing: spacing,
       runSpacing: runSpacing,
-      children: children.map((child) {
-        return SizedBox(
-          width: (screenWidth - spacing * (columns - 1)) / columns,
-          child: child,
-        );
-      }).toList(),
+      children: children
+          .map((child) => SizedBox(
+                width: (MediaQuery.of(context).size.width -
+                        (spacing * (columns - 1))) /
+                    columns,
+                child: child,
+              ))
+          .toList(),
     );
   }
 }
 
-/// Адаптивный контейнер
-class ResponsiveContainer extends StatelessWidget {
-  final Widget child;
-  final double? maxWidth;
-  final EdgeInsets? padding;
-
-  const ResponsiveContainer({
-    super.key,
-    required this.child,
-    this.maxWidth,
-    this.padding,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final effectiveMaxWidth =
-        maxWidth ?? (screenWidth >= 1200 ? 1200.0 : screenWidth);
-
-    return Center(
-      child: Container(
-        width: effectiveMaxWidth,
-        padding: padding ?? const EdgeInsets.symmetric(horizontal: 16),
-        child: child,
-      ),
-    );
-  }
-}
-
-/// Адаптивный текст
-class ResponsiveText extends StatelessWidget {
-  final String text;
-  final TextStyle? style;
-  final TextAlign? textAlign;
-  final int? maxLines;
-  final TextOverflow? overflow;
-
-  const ResponsiveText(
-    this.text, {
-    super.key,
-    this.style,
-    this.textAlign,
-    this.maxLines,
-    this.overflow,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final baseStyle = style ?? Theme.of(context).textTheme.bodyMedium;
-
-    // Адаптивный размер шрифта
-    double fontSize = baseStyle?.fontSize ?? 14;
-    if (screenWidth >= 1200) {
-      fontSize *= 1.2;
-    } else if (screenWidth < 600) {
-      fontSize *= 0.9;
-    }
-
-    return Text(
-      text,
-      style: baseStyle?.copyWith(fontSize: fontSize),
-      textAlign: textAlign,
-      maxLines: maxLines,
-      overflow: overflow,
-    );
-  }
-}
-
-/// Адаптивная кнопка
-class ResponsiveButton extends StatelessWidget {
-  final String text;
-  final VoidCallback? onPressed;
-  final ButtonStyle? style;
-  final IconData? icon;
-  final bool isFullWidth;
-
-  const ResponsiveButton({
-    super.key,
-    required this.text,
-    this.onPressed,
-    this.style,
-    this.icon,
-    this.isFullWidth = false,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
-
-    Widget button;
-
-    if (icon != null) {
-      button = ElevatedButton.icon(
-        onPressed: onPressed,
-        icon: Icon(icon),
-        label: Text(text),
-        style: style,
-      );
-    } else {
-      button = ElevatedButton(
-        onPressed: onPressed,
-        style: style,
-        child: Text(text),
-      );
-    }
-
-    if (isFullWidth || isMobile) {
-      return SizedBox(
-        width: double.infinity,
-        child: button,
-      );
-    }
-
-    return button;
-  }
-}
-
-/// Адаптивная карточка
-class ResponsiveCard extends StatelessWidget {
-  final Widget child;
-  final EdgeInsets? padding;
-  final double? elevation;
-  final Color? color;
-  final BorderRadius? borderRadius;
-
-  const ResponsiveCard({
-    super.key,
-    required this.child,
-    this.padding,
-    this.elevation,
-    this.color,
-    this.borderRadius,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
-
-    return Card(
-      elevation: elevation ?? (isMobile ? 2 : 4),
-      color: color,
-      shape: RoundedRectangleBorder(
-        borderRadius: borderRadius ?? BorderRadius.circular(isMobile ? 8 : 12),
-      ),
-      child: Padding(
-        padding: padding ?? EdgeInsets.all(isMobile ? 12 : 16),
-        child: child,
-      ),
-    );
-  }
-}
-
-/// Адаптивный список
+/// Адаптивный список с разным количеством элементов в строке
 class ResponsiveList extends StatelessWidget {
   final List<Widget> children;
+  final int mobileItemsPerRow;
+  final int? tabletItemsPerRow;
+  final int? desktopItemsPerRow;
   final double spacing;
-  final bool shrinkWrap;
+  final double runSpacing;
   final ScrollPhysics? physics;
+  final bool shrinkWrap;
 
   const ResponsiveList({
     super.key,
     required this.children,
-    this.spacing = 8.0,
-    this.shrinkWrap = false,
+    this.mobileItemsPerRow = 1,
+    this.tabletItemsPerRow,
+    this.desktopItemsPerRow,
+    this.spacing = 16.0,
+    this.runSpacing = 16.0,
     this.physics,
+    this.shrinkWrap = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
+    int itemsPerRow;
 
-    if (isMobile) {
-      return ListView.separated(
-        shrinkWrap: shrinkWrap,
-        physics: physics,
-        itemCount: children.length,
-        separatorBuilder: (context, index) => SizedBox(height: spacing),
-        itemBuilder: (context, index) => children[index],
-      );
+    if (AppStyles.isDesktop(context)) {
+      itemsPerRow =
+          desktopItemsPerRow ?? tabletItemsPerRow ?? mobileItemsPerRow;
+    } else if (AppStyles.isTablet(context)) {
+      itemsPerRow = tabletItemsPerRow ?? mobileItemsPerRow;
     } else {
-      return Column(
-        children: children
-            .expand((child) => [child, SizedBox(height: spacing)])
-            .take(children.length * 2 - 1)
-            .toList(),
-      );
+      itemsPerRow = mobileItemsPerRow;
     }
+
+    return ListView.builder(
+      physics: physics,
+      shrinkWrap: shrinkWrap,
+      itemCount: (children.length / itemsPerRow).ceil(),
+      itemBuilder: (context, index) {
+        final startIndex = index * itemsPerRow;
+        final endIndex = (startIndex + itemsPerRow).clamp(0, children.length);
+        final rowChildren = children.sublist(startIndex, endIndex);
+
+        return Padding(
+          padding: EdgeInsets.only(bottom: runSpacing),
+          child: Row(
+            children: rowChildren
+                .map((child) => Expanded(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: spacing / 2),
+                        child: child,
+                      ),
+                    ))
+                .toList(),
+          ),
+        );
+      },
+    );
   }
 }
 
-/// Адаптивная навигация
-class ResponsiveNavigation extends StatelessWidget {
-  final int currentIndex;
-  final ValueChanged<int> onTap;
-  final List<NavigationItem> items;
-
-  const ResponsiveNavigation({
-    super.key,
-    required this.currentIndex,
-    required this.onTap,
-    required this.items,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
-
-    if (isMobile) {
-      return BottomNavigationBar(
-        currentIndex: currentIndex,
-        onTap: onTap,
-        type: BottomNavigationBarType.fixed,
-        items: items
-            .map((item) => BottomNavigationBarItem(
-                  icon: Icon(item.icon),
-                  label: item.label,
-                ))
-            .toList(),
-      );
-    } else {
-      return NavigationRail(
-        selectedIndex: currentIndex,
-        onDestinationSelected: onTap,
-        labelType: NavigationRailLabelType.all,
-        destinations: items
-            .map((item) => NavigationRailDestination(
-                  icon: Icon(item.icon),
-                  label: Text(item.label),
-                ))
-            .toList(),
-      );
-    }
-  }
-}
-
-/// Элемент навигации
-class NavigationItem {
-  final IconData icon;
-  final String label;
-
-  const NavigationItem({
-    required this.icon,
-    required this.label,
-  });
-}
-
-/// Адаптивный диалог
-class ResponsiveDialog extends StatelessWidget {
+/// Адаптивный виджет с разными стилями для разных размеров экрана
+class ResponsiveStyle extends StatelessWidget {
   final Widget child;
-  final String? title;
-  final List<Widget>? actions;
-  final bool isFullScreen;
+  final TextStyle? mobileStyle;
+  final TextStyle? tabletStyle;
+  final TextStyle? desktopStyle;
+  final TextStyle? fallbackStyle;
 
-  const ResponsiveDialog({
+  const ResponsiveStyle({
     super.key,
     required this.child,
-    this.title,
-    this.actions,
-    this.isFullScreen = false,
+    this.mobileStyle,
+    this.tabletStyle,
+    this.desktopStyle,
+    this.fallbackStyle,
   });
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
+    TextStyle? style;
 
-    if (isFullScreen || isMobile) {
-      return Dialog.fullscreen(
-        child: Column(
-          children: [
-            if (title != null)
-              AppBar(
-                title: Text(title!),
-                automaticallyImplyLeading: true,
-              ),
-            Expanded(child: child),
-            if (actions != null)
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: actions!,
-                ),
-              ),
-          ],
-        ),
-      );
+    if (AppStyles.isDesktop(context)) {
+      style = desktopStyle ?? tabletStyle ?? mobileStyle ?? fallbackStyle;
+    } else if (AppStyles.isTablet(context)) {
+      style = tabletStyle ?? mobileStyle ?? fallbackStyle;
     } else {
-      return AlertDialog(
-        title: title != null ? Text(title!) : null,
-        content: child,
-        actions: actions,
+      style = mobileStyle ?? fallbackStyle;
+    }
+
+    if (style != null && child is Text) {
+      return Text(
+        (child as Text).data ?? '',
+        style: (child as Text).style?.merge(style) ?? style,
+        textAlign: (child as Text).textAlign,
+        maxLines: (child as Text).maxLines,
+        overflow: (child as Text).overflow,
       );
     }
+
+    return child;
   }
 }
 
-/// Адаптивная форма
-class ResponsiveForm extends StatelessWidget {
-  final List<Widget> children;
-  final GlobalKey<FormState>? formKey;
-  final EdgeInsets? padding;
+/// Адаптивный виджет с разными размерами для разных размеров экрана
+class ResponsiveSize extends StatelessWidget {
+  final Widget child;
+  final double? mobileSize;
+  final double? tabletSize;
+  final double? desktopSize;
+  final double? fallbackSize;
 
-  const ResponsiveForm({
+  const ResponsiveSize({
     super.key,
-    required this.children,
-    this.formKey,
-    this.padding,
+    required this.child,
+    this.mobileSize,
+    this.tabletSize,
+    this.desktopSize,
+    this.fallbackSize,
   });
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
+    double? size;
 
-    return Form(
-      key: formKey,
-      child: Padding(
-        padding: padding ?? EdgeInsets.all(isMobile ? 16 : 24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: children,
-        ),
-      ),
-    );
+    if (AppStyles.isDesktop(context)) {
+      size = desktopSize ?? tabletSize ?? mobileSize ?? fallbackSize;
+    } else if (AppStyles.isTablet(context)) {
+      size = tabletSize ?? mobileSize ?? fallbackSize;
+    } else {
+      size = mobileSize ?? fallbackSize;
+    }
+
+    if (size != null) {
+      return SizedBox(
+        width: size,
+        height: size,
+        child: child,
+      );
+    }
+
+    return child;
   }
 }
 
-/// Адаптивное поле ввода
-class ResponsiveTextField extends StatelessWidget {
-  final String? labelText;
-  final String? hintText;
-  final TextEditingController? controller;
-  final String? Function(String?)? validator;
-  final TextInputType? keyboardType;
-  final bool obscureText;
-  final int? maxLines;
-  final Widget? prefixIcon;
-  final Widget? suffixIcon;
+/// Адаптивный виджет с разными отступами для разных размеров экрана
+class ResponsivePadding extends StatelessWidget {
+  final Widget child;
+  final EdgeInsets? mobilePadding;
+  final EdgeInsets? tabletPadding;
+  final EdgeInsets? desktopPadding;
+  final EdgeInsets? fallbackPadding;
 
-  const ResponsiveTextField({
+  const ResponsivePadding({
     super.key,
-    this.labelText,
-    this.hintText,
-    this.controller,
-    this.validator,
-    this.keyboardType,
-    this.obscureText = false,
-    this.maxLines = 1,
-    this.prefixIcon,
-    this.suffixIcon,
+    required this.child,
+    this.mobilePadding,
+    this.tabletPadding,
+    this.desktopPadding,
+    this.fallbackPadding,
   });
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 600;
+    EdgeInsets padding;
 
-    return TextFormField(
-      controller: controller,
-      validator: validator,
-      keyboardType: keyboardType,
-      obscureText: obscureText,
-      maxLines: maxLines,
-      decoration: InputDecoration(
-        labelText: labelText,
-        hintText: hintText,
-        prefixIcon: prefixIcon,
-        suffixIcon: suffixIcon,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(isMobile ? 8 : 12),
-        ),
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: isMobile ? 12 : 16,
-          vertical: isMobile ? 12 : 16,
-        ),
-      ),
+    if (AppStyles.isDesktop(context)) {
+      padding = desktopPadding ??
+          tabletPadding ??
+          mobilePadding ??
+          fallbackPadding ??
+          EdgeInsets.zero;
+    } else if (AppStyles.isTablet(context)) {
+      padding =
+          tabletPadding ?? mobilePadding ?? fallbackPadding ?? EdgeInsets.zero;
+    } else {
+      padding = mobilePadding ?? fallbackPadding ?? EdgeInsets.zero;
+    }
+
+    return Padding(
+      padding: padding,
+      child: child,
     );
+  }
+}
+
+/// Адаптивный виджет с разными отступами для разных размеров экрана
+class ResponsiveMargin extends StatelessWidget {
+  final Widget child;
+  final EdgeInsets? mobileMargin;
+  final EdgeInsets? tabletMargin;
+  final EdgeInsets? desktopMargin;
+  final EdgeInsets? fallbackMargin;
+
+  const ResponsiveMargin({
+    super.key,
+    required this.child,
+    this.mobileMargin,
+    this.tabletMargin,
+    this.desktopMargin,
+    this.fallbackMargin,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    EdgeInsets margin;
+
+    if (AppStyles.isDesktop(context)) {
+      margin = desktopMargin ??
+          tabletMargin ??
+          mobileMargin ??
+          fallbackMargin ??
+          EdgeInsets.zero;
+    } else if (AppStyles.isTablet(context)) {
+      margin =
+          tabletMargin ?? mobileMargin ?? fallbackMargin ?? EdgeInsets.zero;
+    } else {
+      margin = mobileMargin ?? fallbackMargin ?? EdgeInsets.zero;
+    }
+
+    return Container(
+      margin: margin,
+      child: child,
+    );
+  }
+}
+
+/// Адаптивный виджет с разными стилями для разных размеров экрана
+class ResponsiveDecoration extends StatelessWidget {
+  final Widget child;
+  final BoxDecoration? mobileDecoration;
+  final BoxDecoration? tabletDecoration;
+  final BoxDecoration? desktopDecoration;
+  final BoxDecoration? fallbackDecoration;
+
+  const ResponsiveDecoration({
+    super.key,
+    required this.child,
+    this.mobileDecoration,
+    this.tabletDecoration,
+    this.desktopDecoration,
+    this.fallbackDecoration,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    BoxDecoration? decoration;
+
+    if (AppStyles.isDesktop(context)) {
+      decoration = desktopDecoration ??
+          tabletDecoration ??
+          mobileDecoration ??
+          fallbackDecoration;
+    } else if (AppStyles.isTablet(context)) {
+      decoration = tabletDecoration ?? mobileDecoration ?? fallbackDecoration;
+    } else {
+      decoration = mobileDecoration ?? fallbackDecoration;
+    }
+
+    if (decoration != null) {
+      return Container(
+        decoration: decoration,
+        child: child,
+      );
+    }
+
+    return child;
+  }
+}
+
+/// Адаптивный виджет с разными стилями для разных размеров экрана
+class ResponsiveElevation extends StatelessWidget {
+  final Widget child;
+  final double? mobileElevation;
+  final double? tabletElevation;
+  final double? desktopElevation;
+  final double? fallbackElevation;
+
+  const ResponsiveElevation({
+    super.key,
+    required this.child,
+    this.mobileElevation,
+    this.tabletElevation,
+    this.desktopElevation,
+    this.fallbackElevation,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    double? elevation;
+
+    if (AppStyles.isDesktop(context)) {
+      elevation = desktopElevation ??
+          tabletElevation ??
+          mobileElevation ??
+          fallbackElevation;
+    } else if (AppStyles.isTablet(context)) {
+      elevation = tabletElevation ?? mobileElevation ?? fallbackElevation;
+    } else {
+      elevation = mobileElevation ?? fallbackElevation;
+    }
+
+    if (elevation != null) {
+      return Material(
+        elevation: elevation,
+        child: child,
+      );
+    }
+
+    return child;
+  }
+}
+
+/// Адаптивный виджет с разными стилями для разных размеров экрана
+class ResponsiveBorderRadius extends StatelessWidget {
+  final Widget child;
+  final BorderRadius? mobileBorderRadius;
+  final BorderRadius? tabletBorderRadius;
+  final BorderRadius? desktopBorderRadius;
+  final BorderRadius? fallbackBorderRadius;
+
+  const ResponsiveBorderRadius({
+    super.key,
+    required this.child,
+    this.mobileBorderRadius,
+    this.tabletBorderRadius,
+    this.desktopBorderRadius,
+    this.fallbackBorderRadius,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    BorderRadius? borderRadius;
+
+    if (AppStyles.isDesktop(context)) {
+      borderRadius = desktopBorderRadius ??
+          tabletBorderRadius ??
+          mobileBorderRadius ??
+          fallbackBorderRadius;
+    } else if (AppStyles.isTablet(context)) {
+      borderRadius =
+          tabletBorderRadius ?? mobileBorderRadius ?? fallbackBorderRadius;
+    } else {
+      borderRadius = mobileBorderRadius ?? fallbackBorderRadius;
+    }
+
+    if (borderRadius != null) {
+      return ClipRRect(
+        borderRadius: borderRadius,
+        child: child,
+      );
+    }
+
+    return child;
   }
 }
