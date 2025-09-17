@@ -7,6 +7,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'firebase_options.dart';
 import 'core/feature_flags.dart';
 import 'core/safe_log.dart';
+import 'core/error_handler.dart';
 import 'providers/auth_providers.dart';
 import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
@@ -74,30 +75,16 @@ void main() async {
   SafeLog.info(
       'App starting with features: ${FeatureFlags.getEnabledFeatures()}');
 
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(
+    ErrorBoundary(
+      child: const ProviderScope(child: MyApp()),
+    ),
+  );
 }
 
 /// Настройка глобальных обработчиков ошибок
 void _setupErrorHandlers() {
-  // Обработчик ошибок Flutter
-  FlutterError.onError = (FlutterErrorDetails details) {
-    SafeLog.error(
-      'Flutter error: ${details.exception}',
-      details.exception,
-      details.stack,
-    );
-
-    // В debug режиме показываем красный экран
-    if (kDebugMode) {
-      FlutterError.presentError(details);
-    }
-  };
-
-  // Обработчик ошибок платформы
-  PlatformDispatcher.instance.onError = (error, stack) {
-    SafeLog.critical('Platform error: $error', error, stack);
-    return true;
-  };
+  GlobalErrorHandler.initialize();
 }
 
 class MyApp extends ConsumerWidget {

@@ -200,9 +200,9 @@ class ReviewFormNotifier extends Notifier<ReviewFormState> {
   }
 
   bool get isValid {
-    return state.title.isNotEmpty && 
-           state.content.isNotEmpty && 
-           state.rating > 0;
+    return state.title.isNotEmpty &&
+        state.content.isNotEmpty &&
+        state.rating > 0;
   }
 
   void startSubmitting() {
@@ -216,7 +216,6 @@ class ReviewFormNotifier extends Notifier<ReviewFormState> {
   void setRating(int rating) {
     state = state.copyWith(rating: rating);
   }
-
 
   String? get errorMessage => state.error;
   String get comment => state.content;

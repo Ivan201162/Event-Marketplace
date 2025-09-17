@@ -34,8 +34,10 @@ class ReviewStatistics {
       commonTags: List<String>.from(data['commonTags'] ?? []),
       responseRate: (data['responseRate'] as num?)?.toDouble() ?? 0.0,
       lastReviewDate: DateTime.parse(data['lastReviewDate'] as String),
-      averageRatingDescription: data['averageRatingDescription'] as String? ?? '',
-      verifiedPercentage: (data['verifiedPercentage'] as num?)?.toDouble() ?? 0.0,
+      averageRatingDescription:
+          data['averageRatingDescription'] as String? ?? '',
+      verifiedPercentage:
+          (data['verifiedPercentage'] as num?)?.toDouble() ?? 0.0,
     );
   }
 
