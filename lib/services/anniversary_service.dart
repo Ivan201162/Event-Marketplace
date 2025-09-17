@@ -1,426 +1,235 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
-import '../models/wedding_anniversary.dart';
-import '../models/user.dart';
-import '../core/feature_flags.dart';
+import 'package:event_marketplace_app/models/user.dart';
+import 'package:event_marketplace_app/services/notification_service.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
 
-/// Сервис для работы с годовщинами свадьбы
+/// Сервис для работы с годовщинами и напоминаниями
 class AnniversaryService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final NotificationService _notificationService = NotificationService();
 
-  /// Добавить годовщину свадьбы для заказчика
-  Future<String> addWeddingAnniversary({
-    required String customerId,
-    required String customerName,
-    String? customerEmail,
-    required DateTime weddingDate,
-  }) async {
-    if (!FeatureFlags.anniversaryTrackingEnabled) {
-      throw Exception('Отслеживание годовщин отключено');
-    }
-
-    try {
-      final yearsMarried =
-          WeddingAnniversary.calculateYearsMarried(weddingDate);
-      final nextAnniversary =
-          WeddingAnniversary.calculateNextAnniversary(weddingDate);
-
-      final anniversary = WeddingAnniversary(
-        id: '', // Будет установлен Firestore
-        customerId: customerId,
-        customerName: customerName,
-        customerEmail: customerEmail,
-        weddingDate: weddingDate,
-        yearsMarried: yearsMarried,
-        nextAnniversary: nextAnniversary,
-        isActive: true,
-        reminderDates: ['30', '7', '1'], // За 30, 7 и 1 день
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-
-      final docRef = await _firestore
-          .collection('wedding_anniversaries')
-          .add(anniversary.toMap());
-
-      // Создаем напоминания
-      await _createReminders(docRef.id, anniversary);
-
-      return docRef.id;
-    } catch (e) {
-      debugPrint('Error adding wedding anniversary: $e');
-      throw Exception('Ошибка добавления годовщины: $e');
-    }
-  }
-
-  /// Получить годовщины заказчика
-  Stream<List<WeddingAnniversary>> getCustomerAnniversaries(String customerId) {
-    if (!FeatureFlags.anniversaryTrackingEnabled) {
-      return Stream.value([]);
-    }
-
-    return _firestore
-        .collection('wedding_anniversaries')
-        .where('customerId', isEqualTo: customerId)
-        .where('isActive', isEqualTo: true)
-        .orderBy('weddingDate', descending: false)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return WeddingAnniversary.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
-    });
-  }
-
-  /// Получить годовщину по ID
-  Future<WeddingAnniversary?> getAnniversaryById(String anniversaryId) async {
-    if (!FeatureFlags.anniversaryTrackingEnabled) {
-      return null;
-    }
-
-    try {
-      final doc = await _firestore
-          .collection('wedding_anniversaries')
-          .doc(anniversaryId)
-          .get();
-
-      if (!doc.exists) {
-        return null;
-      }
-
-      return WeddingAnniversary.fromMap({
-        'id': doc.id,
-        ...doc.data()!,
-      });
-    } catch (e) {
-      debugPrint('Error getting anniversary: $e');
-      return null;
-    }
-  }
-
-  /// Обновить годовщину
-  Future<void> updateAnniversary(
-      String anniversaryId, Map<String, dynamic> updates) async {
-    if (!FeatureFlags.anniversaryTrackingEnabled) {
-      throw Exception('Отслеживание годовщин отключено');
-    }
-
-    try {
-      await _firestore
-          .collection('wedding_anniversaries')
-          .doc(anniversaryId)
-          .update({
-        ...updates,
-        'updatedAt': FieldValue.serverTimestamp(),
-      });
-    } catch (e) {
-      debugPrint('Error updating anniversary: $e');
-      throw Exception('Ошибка обновления годовщины: $e');
-    }
-  }
-
-  /// Удалить годовщину
-  Future<void> deleteAnniversary(String anniversaryId) async {
-    if (!FeatureFlags.anniversaryTrackingEnabled) {
-      throw Exception('Отслеживание годовщин отключено');
-    }
-
-    try {
-      await _firestore
-          .collection('wedding_anniversaries')
-          .doc(anniversaryId)
-          .delete();
-    } catch (e) {
-      debugPrint('Error deleting anniversary: $e');
-      throw Exception('Ошибка удаления годовщины: $e');
-    }
-  }
-
-  /// Получить предстоящие годовщины
-  Stream<List<WeddingAnniversary>> getUpcomingAnniversaries(
-      {int daysAhead = 30}) {
-    if (!FeatureFlags.anniversaryTrackingEnabled) {
-      return Stream.value([]);
-    }
-
-    final now = DateTime.now();
-    final futureDate = now.add(Duration(days: daysAhead));
-
-    return _firestore
-        .collection('wedding_anniversaries')
-        .where('isActive', isEqualTo: true)
-        .where('nextAnniversary', isGreaterThanOrEqualTo: now)
-        .where('nextAnniversary', isLessThanOrEqualTo: futureDate)
-        .orderBy('nextAnniversary')
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return WeddingAnniversary.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
-    });
-  }
-
-  /// Создать напоминания для годовщины
-  Future<void> _createReminders(
-      String anniversaryId, WeddingAnniversary anniversary) async {
-    try {
-      final reminders = <Map<String, dynamic>>[];
-
-      for (final days in anniversary.reminderDates) {
-        final daysInt = int.tryParse(days) ?? 7;
-        final reminderDate =
-            anniversary.nextAnniversary.subtract(Duration(days: daysInt));
-
-        if (reminderDate.isAfter(DateTime.now())) {
-          final message = _generateReminderMessage(anniversary, daysInt);
-
-          reminders.add({
-            'anniversaryId': anniversaryId,
-            'customerId': anniversary.customerId,
-            'reminderDate': Timestamp.fromDate(reminderDate),
-            'message': message,
-            'isSent': false,
-            'createdAt': FieldValue.serverTimestamp(),
-          });
-        }
-      }
-
-      if (reminders.isNotEmpty) {
-        final batch = _firestore.batch();
-        for (final reminder in reminders) {
-          final docRef = _firestore.collection('anniversary_reminders').doc();
-          batch.set(docRef, reminder);
-        }
-        await batch.commit();
-      }
-    } catch (e) {
-      debugPrint('Error creating reminders: $e');
-    }
-  }
-
-  /// Сгенерировать сообщение напоминания
-  String _generateReminderMessage(
-      WeddingAnniversary anniversary, int daysAhead) {
-    final anniversaryName = anniversary.anniversaryName;
-    final years = anniversary.yearsMarried + 1; // Следующая годовщина
-
-    if (daysAhead == 30) {
-      return 'Через месяц у вас $anniversaryName! Уже $years лет вместе. Время подумать о праздновании! 💕';
-    } else if (daysAhead == 7) {
-      return 'Через неделю $anniversaryName! $years лет счастливого брака. Не забудьте поздравить друг друга! 🎉';
-    } else if (daysAhead == 1) {
-      return 'Завтра $anniversaryName! $years лет любви и верности. С днем годовщины! 💍';
-    } else {
-      return 'Через $daysAhead дней у вас $anniversaryName! $years лет вместе. 💕';
-    }
-  }
-
-  /// Получить рекомендации для годовщины
-  Future<List<String>> getAnniversaryRecommendations(
-      WeddingAnniversary anniversary) async {
-    // В реальном приложении здесь может быть логика получения рекомендаций
-    // на основе истории заказов, предпочтений и т.д.
-    return anniversary.anniversaryRecommendations;
-  }
-
-  /// Получить специалистов для годовщины
-  Future<List<Map<String, dynamic>>> getAnniversarySpecialists(
-      WeddingAnniversary anniversary) async {
-    try {
-      // Получаем специалистов, которые могут помочь с организацией годовщины
-      final specialistsQuery = await _firestore
-          .collection('users')
-          .where('role', isEqualTo: UserRole.specialist.name)
-          .limit(10)
-          .get();
-
-      final specialists = <Map<String, dynamic>>[];
-
-      for (final doc in specialistsQuery.docs) {
-        final specialist = AppUser.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-
-        // TODO: Добавить логику фильтрации специалистов по категориям
-        // подходящим для годовщин (фотографы, организаторы, декораторы и т.д.)
-
-        specialists.add({
-          'id': specialist.id,
-          'name': specialist.displayName,
-          'photo': specialist.photoURL,
-          'category':
-              'Организатор мероприятий', // TODO: Получить реальную категорию
-          'rating': 4.8, // TODO: Получить реальный рейтинг
-          'price': 'от 15000 ₽', // TODO: Получить реальную цену
-        });
-      }
-
-      return specialists;
-    } catch (e) {
-      debugPrint('Error getting anniversary specialists: $e');
-      return [];
-    }
-  }
-
-  /// Отправить напоминание о годовщине
-  Future<void> sendAnniversaryReminder(String reminderId) async {
-    try {
-      final reminderDoc = await _firestore
-          .collection('anniversary_reminders')
-          .doc(reminderId)
-          .get();
-
-      if (!reminderDoc.exists) {
-        return;
-      }
-
-      final reminder = AnniversaryReminder.fromMap({
-        'id': reminderDoc.id,
-        ...reminderDoc.data()!,
-      });
-
-      // TODO: Отправить push-уведомление или email
-      debugPrint('Sending anniversary reminder: ${reminder.message}');
-
-      // Отмечаем напоминание как отправленное
-      await _firestore
-          .collection('anniversary_reminders')
-          .doc(reminderId)
-          .update({
-        'isSent': true,
-        'sentAt': FieldValue.serverTimestamp(),
-      });
-    } catch (e) {
-      debugPrint('Error sending anniversary reminder: $e');
-    }
-  }
-
-  /// Получить статистику годовщин
-  Future<Map<String, dynamic>> getAnniversaryStats() async {
-    if (!FeatureFlags.anniversaryTrackingEnabled) {
-      return {};
-    }
-
-    try {
-      final anniversariesQuery = await _firestore
-          .collection('wedding_anniversaries')
-          .where('isActive', isEqualTo: true)
-          .get();
-
-      final stats = <String, dynamic>{
-        'total_anniversaries': 0,
-        'upcoming_this_month': 0,
-        'upcoming_this_year': 0,
-        'average_years_married': 0.0,
-        'milestone_anniversaries': 0,
-      };
-
-      final now = DateTime.now();
-      final thisMonth = DateTime(now.year, now.month);
-      final nextMonth = DateTime(now.year, now.month + 1);
-      final thisYear = DateTime(now.year);
-      final nextYear = DateTime(now.year + 1);
-
-      int totalYears = 0;
-      int milestoneCount = 0;
-
-      for (final doc in anniversariesQuery.docs) {
-        final anniversary = WeddingAnniversary.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-
-        stats['total_anniversaries'] =
-            (stats['total_anniversaries'] as int) + 1;
-        totalYears += anniversary.yearsMarried;
-
-        // Подсчет предстоящих годовщин
-        if (anniversary.nextAnniversary.isAfter(thisMonth) &&
-            anniversary.nextAnniversary.isBefore(nextMonth)) {
-          stats['upcoming_this_month'] =
-              (stats['upcoming_this_month'] as int) + 1;
-        }
-
-        if (anniversary.nextAnniversary.isAfter(thisYear) &&
-            anniversary.nextAnniversary.isBefore(nextYear)) {
-          stats['upcoming_this_year'] =
-              (stats['upcoming_this_year'] as int) + 1;
-        }
-
-        // Подсчет юбилейных годовщин
-        if ([1, 5, 10, 15, 20, 25, 30, 40, 50]
-            .contains(anniversary.yearsMarried + 1)) {
-          milestoneCount++;
-        }
-      }
-
-      if (stats['total_anniversaries'] > 0) {
-        stats['average_years_married'] =
-            totalYears / (stats['total_anniversaries'] as int);
-      }
-      stats['milestone_anniversaries'] = milestoneCount;
-
-      return stats;
-    } catch (e) {
-      debugPrint('Error getting anniversary stats: $e');
-      return {};
-    }
-  }
-
-  /// Обновить годовщины (пересчитать годы и следующую годовщину)
-  Future<void> updateAnniversaries() async {
-    if (!FeatureFlags.anniversaryTrackingEnabled) {
+  /// Проверить и отправить напоминания о годовщинах
+  Future<void> checkAndSendAnniversaryReminders() async {
+    if (!FeatureFlags.anniversaryRemindersEnabled) {
       return;
     }
 
     try {
-      final anniversariesQuery = await _firestore
-          .collection('wedding_anniversaries')
-          .where('isActive', isEqualTo: true)
+      final today = DateTime.now();
+      final tomorrow = today.add(const Duration(days: 1));
+      final nextWeek = today.add(const Duration(days: 7));
+
+      // Получаем пользователей с включенными напоминаниями
+      final usersSnapshot = await _firestore
+          .collection('users')
+          .where('anniversaryRemindersEnabled', isEqualTo: true)
+          .where('maritalStatus', isEqualTo: 'married')
           .get();
 
-      final batch = _firestore.batch();
+      for (final doc in usersSnapshot.docs) {
+        final user = AppUser.fromDocument(doc);
 
-      for (final doc in anniversariesQuery.docs) {
-        final anniversary = WeddingAnniversary.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
+        if (user.weddingDate == null) continue;
 
-        final newYearsMarried =
-            WeddingAnniversary.calculateYearsMarried(anniversary.weddingDate);
-        final newNextAnniversary = WeddingAnniversary.calculateNextAnniversary(
-            anniversary.weddingDate);
+        final weddingDate = user.weddingDate!;
+        final currentYear = today.year;
+        final weddingThisYear =
+            DateTime(currentYear, weddingDate.month, weddingDate.day);
+        final weddingNextYear =
+            DateTime(currentYear + 1, weddingDate.month, weddingDate.day);
 
-        // Обновляем только если что-то изменилось
-        if (newYearsMarried != anniversary.yearsMarried ||
-            newNextAnniversary != anniversary.nextAnniversary) {
-          batch.update(doc.reference, {
-            'yearsMarried': newYearsMarried,
-            'nextAnniversary': Timestamp.fromDate(newNextAnniversary),
-            'updatedAt': FieldValue.serverTimestamp(),
-          });
+        // Проверяем годовщину сегодня
+        if (_isSameDay(today, weddingThisYear)) {
+          await _sendAnniversaryNotification(user, 0); // Сегодня
+        }
+        // Проверяем годовщину завтра
+        else if (_isSameDay(tomorrow, weddingThisYear)) {
+          await _sendAnniversaryNotification(user, 1); // Завтра
+        }
+        // Проверяем годовщину через неделю
+        else if (_isSameDay(nextWeek, weddingThisYear)) {
+          await _sendAnniversaryNotification(user, 7); // Через неделю
+        }
+        // Проверяем годовщину в следующем году (если уже прошла в этом году)
+        else if (weddingThisYear.isBefore(today) &&
+            _isSameDay(nextWeek, weddingNextYear)) {
+          final years = currentYear - weddingDate.year + 1;
+          await _sendAnniversaryNotification(user, 7, years: years);
+        }
+      }
+    } catch (e) {
+      throw Exception('Ошибка проверки годовщин: $e');
+    }
+  }
 
-          // Создаем новые напоминания для обновленной годовщины
-          final updatedAnniversary = anniversary.copyWith(
-            yearsMarried: newYearsMarried,
-            nextAnniversary: newNextAnniversary,
-          );
+  /// Отправить уведомление о годовщине
+  Future<void> _sendAnniversaryNotification(
+    AppUser user,
+    int daysUntil, {
+    int? years,
+  }) async {
+    final yearsMarried =
+        years ?? (DateTime.now().year - user.weddingDate!.year);
 
-          await _createReminders(doc.id, updatedAnniversary);
+    String title;
+    String body;
+
+    if (daysUntil == 0) {
+      title = '🎉 Поздравляем с годовщиной!';
+      body =
+          'Сегодня ${yearsMarried}-я годовщина вашей свадьбы! Желаем счастья и любви!';
+    } else if (daysUntil == 1) {
+      title = 'Напоминание о годовщине';
+      body =
+          'Завтра ${yearsMarried}-я годовщина вашей свадьбы. Не забудьте поздравить друг друга!';
+    } else {
+      title = 'Приближается годовщина';
+      body =
+          'Через $daysUntil дней будет ${yearsMarried}-я годовщина вашей свадьбы. Время планировать празднование!';
+    }
+
+    await _notificationService.sendNotification(
+      userId: user.id,
+      title: title,
+      body: body,
+      type: 'anniversary_reminder',
+      data: {
+        'weddingDate': user.weddingDate!.toIso8601String(),
+        'yearsMarried': yearsMarried.toString(),
+        'daysUntil': daysUntil.toString(),
+        'partnerName': user.partnerName ?? 'вашего партнера',
+      },
+    );
+  }
+
+  /// Проверить, совпадают ли дни
+  bool _isSameDay(DateTime date1, DateTime date2) {
+    return date1.year == date2.year &&
+        date1.month == date2.month &&
+        date1.day == date2.day;
+  }
+
+  /// Получить количество лет в браке
+  int getYearsMarried(DateTime weddingDate) {
+    final now = DateTime.now();
+    int years = now.year - weddingDate.year;
+
+    // Если день рождения еще не наступил в этом году
+    if (now.month < weddingDate.month ||
+        (now.month == weddingDate.month && now.day < weddingDate.day)) {
+      years--;
+    }
+
+    return years;
+  }
+
+  /// Получить количество дней до следующей годовщины
+  int getDaysUntilNextAnniversary(DateTime weddingDate) {
+    final now = DateTime.now();
+    final currentYear = now.year;
+    final weddingThisYear =
+        DateTime(currentYear, weddingDate.month, weddingDate.day);
+
+    // Если годовщина уже прошла в этом году, считаем до следующего года
+    if (weddingThisYear.isBefore(now)) {
+      final weddingNextYear =
+          DateTime(currentYear + 1, weddingDate.month, weddingDate.day);
+      return weddingNextYear.difference(now).inDays;
+    } else {
+      return weddingThisYear.difference(now).inDays;
+    }
+  }
+
+  /// Получить информацию о годовщине пользователя
+  Map<String, dynamic> getAnniversaryInfo(AppUser user) {
+    if (user.weddingDate == null) {
+      return {
+        'hasWeddingDate': false,
+        'message': 'Дата свадьбы не указана',
+      };
+    }
+
+    final yearsMarried = getYearsMarried(user.weddingDate!);
+    final daysUntil = getDaysUntilNextAnniversary(user.weddingDate!);
+
+    return {
+      'hasWeddingDate': true,
+      'yearsMarried': yearsMarried,
+      'daysUntilNext': daysUntil,
+      'nextAnniversary': DateTime(
+        DateTime.now().year + (daysUntil > 365 ? 1 : 0),
+        user.weddingDate!.month,
+        user.weddingDate!.day,
+      ),
+      'partnerName': user.partnerName,
+      'remindersEnabled': user.anniversaryRemindersEnabled,
+    };
+  }
+
+  /// Обновить настройки напоминаний о годовщинах
+  Future<void> updateAnniversarySettings({
+    required String userId,
+    required bool enabled,
+    DateTime? weddingDate,
+    String? partnerName,
+  }) async {
+    try {
+      final updateData = <String, dynamic>{
+        'anniversaryRemindersEnabled': enabled,
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+
+      if (weddingDate != null) {
+        updateData['weddingDate'] = Timestamp.fromDate(weddingDate);
+      }
+
+      if (partnerName != null) {
+        updateData['partnerName'] = partnerName;
+      }
+
+      await _firestore.collection('users').doc(userId).update(updateData);
+    } catch (e) {
+      throw Exception('Ошибка обновления настроек годовщин: $e');
+    }
+  }
+
+  /// Получить пользователей с годовщинами в указанный период
+  Future<List<AppUser>> getUsersWithAnniversariesInPeriod({
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    try {
+      final users = <AppUser>[];
+      final usersSnapshot = await _firestore
+          .collection('users')
+          .where('anniversaryRemindersEnabled', isEqualTo: true)
+          .where('maritalStatus', isEqualTo: 'married')
+          .get();
+
+      for (final doc in usersSnapshot.docs) {
+        final user = AppUser.fromDocument(doc);
+
+        if (user.weddingDate == null) continue;
+
+        final weddingDate = user.weddingDate!;
+        final currentYear = DateTime.now().year;
+        final weddingThisYear =
+            DateTime(currentYear, weddingDate.month, weddingDate.day);
+        final weddingNextYear =
+            DateTime(currentYear + 1, weddingDate.month, weddingDate.day);
+
+        // Проверяем, попадает ли годовщина в указанный период
+        if ((weddingThisYear.isAfter(startDate) &&
+                weddingThisYear.isBefore(endDate)) ||
+            (weddingNextYear.isAfter(startDate) &&
+                weddingNextYear.isBefore(endDate))) {
+          users.add(user);
         }
       }
 
-      await batch.commit();
+      return users;
     } catch (e) {
-      debugPrint('Error updating anniversaries: $e');
+      throw Exception('Ошибка получения пользователей с годовщинами: $e');
     }
   }
 }

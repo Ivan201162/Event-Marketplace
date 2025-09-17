@@ -1,5 +1,32 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// Семейный статус
+enum MaritalStatus {
+  single, // Холост/не замужем
+  married, // Женат/замужем
+  divorced, // Разведен/разведена
+  widowed, // Вдовец/вдова
+  inRelationship, // В отношениях
+}
+
+/// Расширение для MaritalStatus
+extension MaritalStatusExtension on MaritalStatus {
+  String get displayName {
+    switch (this) {
+      case MaritalStatus.single:
+        return 'Холост/не замужем';
+      case MaritalStatus.married:
+        return 'Женат/замужем';
+      case MaritalStatus.divorced:
+        return 'Разведен/разведена';
+      case MaritalStatus.widowed:
+        return 'Вдовец/вдова';
+      case MaritalStatus.inRelationship:
+        return 'В отношениях';
+    }
+  }
+}
+
 /// Роли пользователей в системе
 enum UserRole {
   customer, // Заказчик
@@ -39,6 +66,12 @@ class AppUser {
   final String? socialId; // ID в социальной сети
   final Map<String, dynamic>? additionalData;
 
+  // Семейная информация
+  final MaritalStatus? maritalStatus;
+  final DateTime? weddingDate;
+  final String? partnerName;
+  final bool anniversaryRemindersEnabled;
+
   const AppUser({
     required this.id,
     required this.email,
@@ -51,6 +84,10 @@ class AppUser {
     this.socialProvider,
     this.socialId,
     this.additionalData,
+    this.maritalStatus,
+    this.weddingDate,
+    this.partnerName,
+    this.anniversaryRemindersEnabled = false,
   });
 
   /// Создать пользователя из документа Firestore
@@ -72,6 +109,17 @@ class AppUser {
       socialProvider: data['socialProvider'],
       socialId: data['socialId'],
       additionalData: data['additionalData'],
+      maritalStatus: data['maritalStatus'] != null
+          ? MaritalStatus.values.firstWhere(
+              (e) => e.name == data['maritalStatus'],
+              orElse: () => MaritalStatus.single,
+            )
+          : null,
+      weddingDate: data['weddingDate'] != null
+          ? (data['weddingDate'] as Timestamp).toDate()
+          : null,
+      partnerName: data['partnerName'],
+      anniversaryRemindersEnabled: data['anniversaryRemindersEnabled'] ?? false,
     );
   }
 
@@ -112,6 +160,11 @@ class AppUser {
       'socialProvider': socialProvider,
       'socialId': socialId,
       'additionalData': additionalData,
+      'maritalStatus': maritalStatus?.name,
+      'weddingDate':
+          weddingDate != null ? Timestamp.fromDate(weddingDate!) : null,
+      'partnerName': partnerName,
+      'anniversaryRemindersEnabled': anniversaryRemindersEnabled,
     };
   }
 
@@ -128,6 +181,10 @@ class AppUser {
     String? socialProvider,
     String? socialId,
     Map<String, dynamic>? additionalData,
+    MaritalStatus? maritalStatus,
+    DateTime? weddingDate,
+    String? partnerName,
+    bool? anniversaryRemindersEnabled,
   }) {
     return AppUser(
       id: id ?? this.id,
@@ -141,6 +198,11 @@ class AppUser {
       socialProvider: socialProvider ?? this.socialProvider,
       socialId: socialId ?? this.socialId,
       additionalData: additionalData ?? this.additionalData,
+      maritalStatus: maritalStatus ?? this.maritalStatus,
+      weddingDate: weddingDate ?? this.weddingDate,
+      partnerName: partnerName ?? this.partnerName,
+      anniversaryRemindersEnabled:
+          anniversaryRemindersEnabled ?? this.anniversaryRemindersEnabled,
     );
   }
 
