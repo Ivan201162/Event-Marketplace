@@ -18,28 +18,8 @@ class EventService {
             snapshot.docs.map((doc) => Event.fromDocument(doc)).toList());
   }
 
-  /// Получить все события (Future версия)
-  Future<List<Event>> getEvents() async {
-    try {
-      final snapshot = await _firestore
-          .collection('events')
-          .where('isPublic', isEqualTo: true)
-          .where('status', isEqualTo: 'active')
-          .orderBy('date')
-          .get();
-      return snapshot.docs.map((doc) => Event.fromDocument(doc)).toList();
-    } catch (e) {
-      throw Exception('Ошибка получения событий: $e');
-    }
-  }
-
-  /// Получить событие по ID (Future версия)
-  Future<Event?> getEvent(String eventId) async {
-    return await getEventById(eventId);
-  }
-
-  /// Получить события пользователя (Stream версия)
-  Stream<List<Event>> getUserEventsStream(String userId) {
+  /// Получить события пользователя
+  Stream<List<Event>> getUserEvents(String userId) {
     return _firestore
         .collection('events')
         .where('organizerId', isEqualTo: userId)
@@ -47,20 +27,6 @@ class EventService {
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Event.fromDocument(doc)).toList());
-  }
-
-  /// Получить события пользователя (Future версия)
-  Future<List<Event>> getUserEvents(String userId) async {
-    try {
-      final snapshot = await _firestore
-          .collection('events')
-          .where('organizerId', isEqualTo: userId)
-          .orderBy('date', descending: true)
-          .get();
-      return snapshot.docs.map((doc) => Event.fromDocument(doc)).toList();
-    } catch (e) {
-      throw Exception('Ошибка получения событий пользователя: $e');
-    }
   }
 
   /// Получить событие по ID
@@ -77,11 +43,10 @@ class EventService {
   }
 
   /// Создать новое событие
-  Future<Event> createEvent(Event event) async {
+  Future<String> createEvent(Event event) async {
     try {
       final docRef = await _firestore.collection('events').add(event.toMap());
-      final createdEvent = event.copyWith(id: docRef.id);
-      return createdEvent;
+      return docRef.id;
     } catch (e) {
       throw Exception('Ошибка создания события: $e');
     }
