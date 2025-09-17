@@ -28,6 +28,7 @@ class Booking {
   final DateTime updatedAt;
   final String? organizerId;
   final String? organizerName;
+  final DateTime? expiresAt; // Время истечения подтверждения
   final String? customerId;
   final String? specialistId;
   final DateTime? endDate;
@@ -76,6 +77,7 @@ class Booking {
     this.description,
     required this.updatedAt,
     this.organizerId,
+    this.expiresAt,
     this.organizerName,
     this.customerId,
     this.specialistId,
@@ -107,6 +109,9 @@ class Booking {
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       organizerId: data['organizerId'],
       organizerName: data['organizerName'],
+      expiresAt: data['expiresAt'] != null
+          ? (data['expiresAt'] as Timestamp).toDate()
+          : null,
       customerId: data['customerId'],
       specialistId: data['specialistId'],
       endDate: data['endDate'] != null
@@ -153,6 +158,7 @@ class Booking {
       'updatedAt': Timestamp.fromDate(updatedAt),
       'organizerId': organizerId,
       'organizerName': organizerName,
+      'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
       'customerId': customerId,
       'specialistId': specialistId,
       'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,

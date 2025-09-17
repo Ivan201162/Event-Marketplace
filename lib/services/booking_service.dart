@@ -53,7 +53,8 @@ class BookingService {
   }
 
   /// Создать новое бронирование
-  Future<String> createBooking(Booking booking) async {
+  Future<String> createBooking(Booking booking,
+      {Duration confirmationTimeout = const Duration(hours: 24)}) async {
     try {
       // Проверяем, есть ли свободные места
       final eventDoc =
@@ -68,9 +69,14 @@ class BookingService {
         throw Exception('Недостаточно свободных мест');
       }
 
+      // Устанавливаем время истечения подтверждения
+      final expiresAt = DateTime.now().add(confirmationTimeout);
+      final bookingWithExpiry = booking.copyWith(expiresAt: expiresAt);
+
       // Создаем бронирование
-      final docRef =
-          await _firestore.collection('bookings').add(booking.toMap());
+      final docRef = await _firestore
+          .collection('bookings')
+          .add(bookingWithExpiry.toMap());
 
       // Обновляем количество участников в событии
       await _firestore.collection('events').doc(booking.eventId).update({
@@ -219,6 +225,56 @@ class BookingService {
     } catch (e) {
       throw Exception('Ошибка проверки бронирования: $e');
     }
+  }
+
+  /// Проверить и обновить истекшие бронирования
+  Future<void> checkExpiredBookings() async {
+    try {
+      final now = DateTime.now();
+      final snapshot = await _firestore
+          .collection('bookings')
+          .where('status', isEqualTo: 'pending')
+          .where('expiresAt', isLessThan: Timestamp.fromDate(now))
+          .get();
+
+      for (final doc in snapshot.docs) {
+        final booking = Booking.fromDocument(doc);
+
+        // Отменяем истекшее бронирование
+        await updateBookingStatus(
+          booking.id,
+          BookingStatus.cancelled,
+          'Время подтверждения истекло',
+        );
+
+        // Отправляем уведомление пользователю
+        await _notificationService.sendNotification(
+          userId: booking.userId,
+          title: 'Бронирование отменено',
+          body:
+              'Время подтверждения бронирования "${booking.eventTitle}" истекло',
+          type: 'booking_expired',
+          data: {
+            'bookingId': booking.id,
+            'eventId': booking.eventId,
+          },
+        );
+      }
+    } catch (e) {
+      throw Exception('Ошибка проверки истекших бронирований: $e');
+    }
+  }
+
+  /// Получить время до истечения подтверждения
+  Duration? getTimeUntilExpiry(Booking booking) {
+    if (booking.expiresAt == null) return null;
+
+    final now = DateTime.now();
+    final expiry = booking.expiresAt!;
+
+    if (now.isAfter(expiry)) return null;
+
+    return expiry.difference(now);
   }
 
   /// Получить статистику бронирований пользователя
