@@ -157,7 +157,7 @@ class _VoicePlayerWidgetState extends ConsumerState<VoicePlayerWidget>
   }
 
   Widget _buildWaveform() {
-    return Container(
+    return SizedBox(
       height: 30,
       child: AnimatedBuilder(
         animation: _waveformAnimation,

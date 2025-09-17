@@ -274,7 +274,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
             const SizedBox(height: 12),
 
             // Заголовок отзыва
-            if (review.title != null) ...[
+            if (review.title != null && review.title!.isNotEmpty) ...[
               Text(
                 review.title!,
                 style: const TextStyle(
@@ -299,17 +299,17 @@ class SpecialistReviewsWidget extends ConsumerWidget {
             ],
 
             // Теги
-            if (false) ...[
+            if (review.tags != null && review.tags!.isNotEmpty) ...[
               // TODO: Implement tags
               Wrap(
                 spacing: 6,
                 runSpacing: 4,
-                children: [].map((tag) {
+                children: review.tags!.map((tag) {
                   return Container(
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Colors.blue.withOpacity(0.1),
+                      color: Colors.blue.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(

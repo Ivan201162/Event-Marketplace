@@ -67,7 +67,7 @@ class ThemeSwitch extends ConsumerWidget {
                     style: textStyle ?? Theme.of(context).textTheme.bodyMedium,
                     icon: Icon(
                       Icons.arrow_drop_down,
-                      color: iconColor ?? Theme.of(context).iconTheme.color,
+                      color: Theme.of(context).iconTheme.color,
                     ),
                   ),
                 )
@@ -89,7 +89,7 @@ class ThemeSwitch extends ConsumerWidget {
                       const SizedBox(width: 4),
                       Icon(
                         Icons.arrow_drop_down,
-                        color: iconColor ?? Theme.of(context).iconTheme.color,
+                        color: Theme.of(context).iconTheme.color,
                         size: 20,
                       ),
                     ],
@@ -147,7 +147,7 @@ class ThemeSwitch extends ConsumerWidget {
     return Icon(
       icon,
       size: 20,
-      color: iconColor ?? Theme.of(context).iconTheme.color,
+      color: Theme.of(context).iconTheme.color,
     );
   }
 
@@ -452,7 +452,7 @@ class CurrentThemeDisplay extends ConsumerWidget {
     return Icon(
       icon,
       size: 20,
-      color: iconColor ?? Theme.of(context).iconTheme.color,
+      color: Theme.of(context).iconTheme.color,
     );
   }
 
@@ -504,7 +504,7 @@ class QuickThemeToggle extends ConsumerWidget {
       },
       icon: Icon(
         isDark ? Icons.light_mode : Icons.dark_mode,
-        color: iconColor ?? Theme.of(context).iconTheme.color,
+        color: Theme.of(context).iconTheme.color,
       ),
       tooltip: showTooltip
           ? (isDark

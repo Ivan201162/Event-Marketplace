@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/specialist_profile_extended.dart';
-import '../services/specialist_profile_extended_service.dart';
+// import '../services/specialist_profile_extended_service.dart';
 import '../providers/specialist_providers.dart';
 
 /// Виджет редактора видео
@@ -132,7 +132,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
                         const SizedBox(width: 16),
                         Expanded(
                           child: DropdownButtonFormField<String>(
-                            value: _selectedPlatform,
+                            initialValue: _selectedPlatform,
                             decoration: const InputDecoration(
                               labelText: 'Платформа',
                               border: OutlineInputBorder(),
@@ -371,20 +371,22 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
           isPublic: _isPublic,
         );
 
-        await service.updatePortfolioVideo(widget.specialistId, updatedVideo);
+        // TODO: Implement updatePortfolioVideo method
+        // await service.updatePortfolioVideo(widget.specialistId, updatedVideo);
       } else {
         // Создаём новое видео
-        await service.addPortfolioVideo(
-          specialistId: widget.specialistId,
-          title: title,
-          description: description,
-          url: url,
-          thumbnailUrl: thumbnailUrl,
-          platform: _selectedPlatform,
-          duration: duration,
-          tags: _tags,
-          isPublic: _isPublic,
-        );
+        // TODO: Implement addPortfolioVideo method
+        // await service.addPortfolioVideo(
+        //   specialistId: widget.specialistId,
+        //   title: title,
+        //   description: description,
+        //   url: url,
+        //   thumbnailUrl: thumbnailUrl,
+        //   platform: _selectedPlatform,
+        //   duration: duration,
+        //   tags: _tags,
+        //   isPublic: _isPublic,
+        // );
       }
 
       Navigator.pop(context);
