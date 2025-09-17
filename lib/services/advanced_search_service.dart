@@ -1,340 +1,224 @@
-import 'package:flutter/foundation.dart';
-import '../models/specialist.dart';
-import '../models/event.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:event_marketplace_app/models/search_filters.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/core/feature_flags.dart';
 
-/// Расширенный сервис поиска
+/// Сервис расширенного поиска специалистов
 class AdvancedSearchService {
-  static final AdvancedSearchService _instance =
-      AdvancedSearchService._internal();
-  factory AdvancedSearchService() => _instance;
-  AdvancedSearchService._internal();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Поиск специалистов с расширенными фильтрами
-  Future<List<Specialist>> searchSpecialists({
-    String? query,
-    SpecialistCategory? category,
-    String? city,
-    double? minPrice,
-    double? maxPrice,
-    double? minRating,
-    SearchSortType sortType = SearchSortType.rating,
+  /// Поиск специалистов с фильтрами
+  Future<List<SpecialistSearchResult>> searchSpecialists({
+    required SpecialistSearchFilters filters,
     int limit = 20,
+    DocumentSnapshot? lastDocument,
   }) async {
+    if (!FeatureFlags.searchEnabled) {
+      return [];
+    }
+
     try {
-      // TODO: Реальная реализация поиска в Firestore
-      // Пока что возвращаем mock данные
-      debugPrint('Searching specialists with query: $query');
-      debugPrint('Category: $category, City: $city');
-      debugPrint('Price range: $minPrice - $maxPrice');
-      debugPrint('Min rating: $minRating, Sort: $sortType');
+      Query query = _firestore.collection('specialists');
 
-      await Future.delayed(const Duration(milliseconds: 500));
-
-      // Mock данные для демонстрации
-      final mockSpecialists = _getMockSpecialists();
-
-      // Применяем фильтры
-      var filteredSpecialists = mockSpecialists.where((specialist) {
-        // Фильтр по запросу
-        if (query != null && query.isNotEmpty) {
-          final searchQuery = query.toLowerCase();
-          if (!specialist.name.toLowerCase().contains(searchQuery) &&
-              !specialist.description.toLowerCase().contains(searchQuery)) {
-            return false;
-          }
-        }
-
-        // Фильтр по категории
-        if (category != null && specialist.category != category) {
-          return false;
-        }
-
-        // Фильтр по городу
-        if (city != null && city.isNotEmpty) {
-          if (!specialist.location.toLowerCase().contains(city.toLowerCase())) {
-            return false;
-          }
-        }
-
-        // Фильтр по цене
-        if (minPrice != null && specialist.hourlyRate < minPrice) {
-          return false;
-        }
-        if (maxPrice != null && specialist.hourlyRate > maxPrice) {
-          return false;
-        }
-
-        // Фильтр по рейтингу
-        if (minRating != null && specialist.rating < minRating) {
-          return false;
-        }
-
-        return true;
-      }).toList();
-
-      // Сортируем результаты
-      filteredSpecialists = _sortSpecialists(filteredSpecialists, sortType);
-
-      // Ограничиваем количество результатов
-      if (filteredSpecialists.length > limit) {
-        filteredSpecialists = filteredSpecialists.take(limit).toList();
+      // Фильтр по категориям
+      if (filters.categories.isNotEmpty) {
+        query = query.where('categories', arrayContainsAny: filters.categories);
       }
 
-      return filteredSpecialists;
+      // Фильтр по услугам
+      if (filters.services.isNotEmpty) {
+        query = query.where('services', arrayContainsAny: filters.services);
+      }
+
+      // Фильтр по локации
+      if (filters.locations.isNotEmpty) {
+        query = query.where('location', whereIn: filters.locations);
+      }
+
+      // Фильтр по рейтингу
+      if (filters.minRating > 0) {
+        query =
+            query.where('rating', isGreaterThanOrEqualTo: filters.minRating);
+      }
+      if (filters.maxRating < 5.0) {
+        query = query.where('rating', isLessThanOrEqualTo: filters.maxRating);
+      }
+
+      // Фильтр по цене
+      if (filters.minPrice > 0) {
+        query =
+            query.where('priceFrom', isGreaterThanOrEqualTo: filters.minPrice);
+      }
+      if (filters.maxPrice < 100000) {
+        query = query.where('priceFrom', isLessThanOrEqualTo: filters.maxPrice);
+      }
+
+      // Фильтр по доступности
+      if (filters.isAvailableNow) {
+        query = query.where('isAvailable', isEqualTo: true);
+      }
+
+      // Фильтр по портфолио
+      if (filters.hasPortfolio) {
+        query = query.where('hasPortfolio', isEqualTo: true);
+      }
+
+      // Фильтр по верификации
+      if (filters.isVerified) {
+        query = query.where('isVerified', isEqualTo: true);
+      }
+
+      // Фильтр по отзывам
+      if (filters.hasReviews) {
+        query = query.where('reviewCount', isGreaterThan: 0);
+      }
+
+      // Сортировка
+      switch (filters.sortBy) {
+        case SearchSortBy.rating:
+          query = query.orderBy('rating', descending: true);
+          break;
+        case SearchSortBy.priceAsc:
+          query = query.orderBy('priceFrom', descending: false);
+          break;
+        case SearchSortBy.priceDesc:
+          query = query.orderBy('priceFrom', descending: true);
+          break;
+        case SearchSortBy.reviewsCount:
+          query = query.orderBy('reviewCount', descending: true);
+          break;
+        case SearchSortBy.availability:
+          query = query.orderBy('isAvailable', descending: true);
+          break;
+        default:
+          query = query.orderBy('rating', descending: true);
+      }
+
+      // Пагинация
+      if (lastDocument != null) {
+        query = query.startAfterDocument(lastDocument);
+      }
+      query = query.limit(limit);
+
+      final snapshot = await query.get();
+      final results = <SpecialistSearchResult>[];
+
+      for (final doc in snapshot.docs) {
+        final data = doc.data() as Map<String, dynamic>;
+        final specialist = Specialist.fromMap(data);
+
+        // Фильтр по текстовому поиску
+        if (filters.searchQuery.isNotEmpty) {
+          final query = filters.searchQuery.toLowerCase();
+          final matchesName = specialist.name.toLowerCase().contains(query);
+          final matchesDescription =
+              specialist.description?.toLowerCase().contains(query) ?? false;
+          final matchesCategories = specialist.categories.any(
+            (category) => category.toLowerCase().contains(query),
+          );
+
+          if (!matchesName && !matchesDescription && !matchesCategories) {
+            continue;
+          }
+        }
+
+        // Фильтр по дате доступности
+        if (filters.availableFrom != null || filters.availableTo != null) {
+          // TODO: Реализовать проверку доступности по датам
+          // Это требует интеграции с календарем специалиста
+        }
+
+        results.add(SpecialistSearchResult(
+          specialistId: doc.id,
+          name: specialist.name,
+          avatar: specialist.avatar ?? '',
+          rating: specialist.rating,
+          reviewCount: specialist.reviewCount,
+          priceFrom: specialist.priceFrom,
+          categories: specialist.categories,
+          services: specialist.services,
+          location: specialist.location,
+          isAvailable: specialist.isAvailable,
+          isVerified: specialist.isVerified,
+          hasPortfolio: specialist.portfolio.isNotEmpty,
+          nextAvailableDate: specialist.nextAvailableDate,
+        ));
+      }
+
+      return results;
     } catch (e) {
-      debugPrint('Error searching specialists: $e');
+      throw Exception('Ошибка поиска специалистов: $e');
+    }
+  }
+
+  /// Получить популярные категории
+  Future<List<String>> getPopularCategories() async {
+    try {
+      final snapshot = await _firestore.collection('specialists').get();
+
+      final categoryCount = <String, int>{};
+
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+        final categories = List<String>.from(data['categories'] ?? []);
+
+        for (final category in categories) {
+          categoryCount[category] = (categoryCount[category] ?? 0) + 1;
+        }
+      }
+
+      final sortedCategories = categoryCount.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
+
+      return sortedCategories.take(10).map((e) => e.key).toList();
+    } catch (e) {
       return [];
     }
   }
 
-  /// Поиск событий с расширенными фильтрами
-  Future<List<Event>> searchEvents({
-    String? query,
-    String? category,
-    String? city,
-    DateTime? startDate,
-    DateTime? endDate,
-    double? minPrice,
-    double? maxPrice,
-    SearchSortType sortType = SearchSortType.date,
-    int limit = 20,
-  }) async {
+  /// Получить популярные услуги
+  Future<List<String>> getPopularServices() async {
     try {
-      // TODO: Реальная реализация поиска в Firestore
-      debugPrint('Searching events with query: $query');
-      debugPrint('Category: $category, City: $city');
-      debugPrint('Date range: $startDate - $endDate');
-      debugPrint('Price range: $minPrice - $maxPrice');
+      final snapshot = await _firestore.collection('specialists').get();
 
-      await Future.delayed(const Duration(milliseconds: 500));
+      final serviceCount = <String, int>{};
 
-      // Mock данные для демонстрации
-      final mockEvents = _getMockEvents();
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+        final services = List<String>.from(data['services'] ?? []);
 
-      // Применяем фильтры
-      var filteredEvents = mockEvents.where((event) {
-        // Фильтр по запросу
-        if (query != null && query.isNotEmpty) {
-          final searchQuery = query.toLowerCase();
-          if (!event.title.toLowerCase().contains(searchQuery) &&
-              !event.description.toLowerCase().contains(searchQuery)) {
-            return false;
-          }
+        for (final service in services) {
+          serviceCount[service] = (serviceCount[service] ?? 0) + 1;
         }
-
-        // Фильтр по категории
-        if (category != null && category.isNotEmpty) {
-          if (!event.category.toLowerCase().contains(category.toLowerCase())) {
-            return false;
-          }
-        }
-
-        // Фильтр по дате
-        if (startDate != null && event.startDate.isBefore(startDate)) {
-          return false;
-        }
-        if (endDate != null && event.startDate.isAfter(endDate)) {
-          return false;
-        }
-
-        // Фильтр по цене
-        if (minPrice != null && event.price < minPrice) {
-          return false;
-        }
-        if (maxPrice != null && event.price > maxPrice) {
-          return false;
-        }
-
-        return true;
-      }).toList();
-
-      // Сортируем результаты
-      filteredEvents = _sortEvents(filteredEvents, sortType);
-
-      // Ограничиваем количество результатов
-      if (filteredEvents.length > limit) {
-        filteredEvents = filteredEvents.take(limit).toList();
       }
 
-      return filteredEvents;
+      final sortedServices = serviceCount.entries.toList()
+        ..sort((a, b) => b.value.compareTo(a.value));
+
+      return sortedServices.take(10).map((e) => e.key).toList();
     } catch (e) {
-      debugPrint('Error searching events: $e');
       return [];
     }
   }
 
-  /// Сортировка специалистов
-  List<Specialist> _sortSpecialists(
-      List<Specialist> specialists, SearchSortType sortType) {
-    switch (sortType) {
-      case SearchSortType.rating:
-        specialists.sort((a, b) => b.rating.compareTo(a.rating));
-        break;
-      case SearchSortType.price:
-        specialists.sort((a, b) => a.hourlyRate.compareTo(b.hourlyRate));
-        break;
-      case SearchSortType.name:
-        specialists.sort((a, b) => a.name.compareTo(b.name));
-        break;
-      case SearchSortType.newest:
-        specialists.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-        break;
-      case SearchSortType.reviews:
-        specialists.sort((a, b) => b.reviewsCount.compareTo(a.reviewsCount));
-        break;
-      default:
-        specialists.sort((a, b) => b.rating.compareTo(a.rating));
+  /// Получить доступные локации
+  Future<List<String>> getAvailableLocations() async {
+    try {
+      final snapshot = await _firestore.collection('specialists').get();
+
+      final locations = <String>{};
+
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+        final location = data['location'] as String?;
+        if (location != null && location.isNotEmpty) {
+          locations.add(location);
+        }
+      }
+
+      return locations.toList()..sort();
+    } catch (e) {
+      return [];
     }
-    return specialists;
   }
-
-  /// Сортировка событий
-  List<Event> _sortEvents(List<Event> events, SearchSortType sortType) {
-    switch (sortType) {
-      case SearchSortType.date:
-        events.sort((a, b) => a.startDate.compareTo(b.startDate));
-        break;
-      case SearchSortType.price:
-        events.sort((a, b) => a.price.compareTo(b.price));
-        break;
-      case SearchSortType.name:
-        events.sort((a, b) => a.title.compareTo(b.title));
-        break;
-      case SearchSortType.newest:
-        events.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-        break;
-      case SearchSortType.rating:
-        // Для событий используем количество участников как "рейтинг"
-        events.sort(
-            (a, b) => b.currentParticipants.compareTo(a.currentParticipants));
-        break;
-      default:
-        events.sort((a, b) => a.startDate.compareTo(b.startDate));
-    }
-    return events;
-  }
-
-  /// Получить популярные поисковые запросы
-  Future<List<String>> getPopularQueries() async {
-    // TODO: Реальная реализация из аналитики
-    return [
-      'фотограф',
-      'видеограф',
-      'диджей',
-      'декоратор',
-      'свадьба',
-      'день рождения',
-      'корпоратив',
-      'детский праздник',
-    ];
-  }
-
-  /// Получить рекомендуемые категории
-  Future<List<SpecialistCategory>> getRecommendedCategories() async {
-    // TODO: Реальная реализация на основе пользовательских предпочтений
-    return [
-      SpecialistCategory.photographer,
-      SpecialistCategory.videographer,
-      SpecialistCategory.dj,
-      SpecialistCategory.decorator,
-      SpecialistCategory.animator,
-    ];
-  }
-
-  /// Mock данные специалистов
-  List<Specialist> _getMockSpecialists() {
-    return [
-      Specialist(
-        id: '1',
-        name: 'Анна Петрова',
-        description: 'Профессиональный фотограф с 5-летним опытом',
-        category: SpecialistCategory.photographer,
-        location: 'Москва',
-        hourlyRate: 5000.0,
-        rating: 4.8,
-        reviewsCount: 127,
-        isAvailable: true,
-        createdAt: DateTime.now().subtract(const Duration(days: 30)),
-        updatedAt: DateTime.now(),
-      ),
-      Specialist(
-        id: '2',
-        name: 'Михаил Сидоров',
-        description: 'Видеограф, специализирующийся на свадебных съемках',
-        category: SpecialistCategory.videographer,
-        location: 'Санкт-Петербург',
-        hourlyRate: 8000.0,
-        rating: 4.9,
-        reviewsCount: 89,
-        isAvailable: true,
-        createdAt: DateTime.now().subtract(const Duration(days: 45)),
-        updatedAt: DateTime.now(),
-      ),
-      Specialist(
-        id: '3',
-        name: 'Елена Козлова',
-        description: 'Диджей с большим опытом работы на мероприятиях',
-        category: SpecialistCategory.dj,
-        location: 'Москва',
-        hourlyRate: 3000.0,
-        rating: 4.7,
-        reviewsCount: 156,
-        isAvailable: true,
-        createdAt: DateTime.now().subtract(const Duration(days: 60)),
-        updatedAt: DateTime.now(),
-      ),
-    ];
-  }
-
-  /// Mock данные событий
-  List<Event> _getMockEvents() {
-    return [
-      Event(
-        id: '1',
-        title: 'Свадебная фотосессия в парке',
-        description: 'Романтическая фотосессия на природе',
-        startDate: DateTime.now().add(const Duration(days: 7)),
-        endDate: DateTime.now().add(const Duration(days: 7, hours: 3)),
-        location: 'Парк Сокольники, Москва',
-        maxParticipants: 2,
-        currentParticipants: 0,
-        price: 15000.0,
-        organizerId: '1',
-        organizerName: 'Анна Петрова',
-        category: 'Фотосессия',
-        tags: const ['свадьба', 'фотосессия', 'парк'],
-        isActive: true,
-        createdAt: DateTime.now().subtract(const Duration(days: 5)),
-        updatedAt: DateTime.now(),
-      ),
-      Event(
-        id: '2',
-        title: 'Детский день рождения',
-        description: 'Веселый праздник с аниматором',
-        startDate: DateTime.now().add(const Duration(days: 14)),
-        endDate: DateTime.now().add(const Duration(days: 14, hours: 4)),
-        location: 'Детский центр, Москва',
-        maxParticipants: 15,
-        currentParticipants: 8,
-        price: 25000.0,
-        organizerId: '2',
-        organizerName: 'Михаил Сидоров',
-        category: 'Детский праздник',
-        tags: const ['дети', 'день рождения', 'аниматор'],
-        isActive: true,
-        createdAt: DateTime.now().subtract(const Duration(days: 10)),
-        updatedAt: DateTime.now(),
-      ),
-    ];
-  }
-}
-
-/// Типы сортировки для поиска
-enum SearchSortType {
-  rating,
-  price,
-  name,
-  newest,
-  reviews,
-  date,
 }
