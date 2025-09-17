@@ -3,11 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:go_router/go_router.dart';
 // import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'firebase_options.dart';
 import 'core/feature_flags.dart';
 import 'core/safe_log.dart';
 import 'core/error_handler.dart';
+import 'core/app_router.dart';
 import 'providers/auth_providers.dart';
 import 'providers/theme_provider.dart';
 import 'providers/locale_provider.dart';
@@ -92,17 +94,17 @@ class MyApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authStateProvider);
     final themeMode = ref.watch(themeProvider);
     final lightTheme = ref.watch(lightThemeProvider);
     final darkTheme = ref.watch(darkThemeProvider);
+    final router = AppRouter.createRouter();
 
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'Event Marketplace',
       theme: lightTheme,
       darkTheme: darkTheme,
       themeMode: themeMode,
-      home: _buildHome(authState),
+      routerConfig: router,
       // Локализация
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
@@ -114,45 +116,7 @@ class MyApp extends ConsumerWidget {
         Locale('en', 'US'),
       ],
       locale: ref.watch(localeProvider),
-      // Анимации переходов
-      onGenerateRoute: (settings) {
-        switch (settings.name) {
-          case '/':
-            return AnimatedPageTransitions.fadeTransition(
-              child: _buildHome(authState),
-              context: context,
-            );
-          default:
-            return AnimatedPageTransitions.slideLeftTransition(
-              child: _buildHome(authState),
-              context: context,
-            );
-        }
-      },
     );
-  }
-
-  Widget _buildHome(AuthState authState) {
-    switch (authState) {
-      case AuthState.loading:
-        return const Scaffold(
-          body: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                CircularProgressIndicator(),
-                SizedBox(height: 16),
-                Text('Загрузка...'),
-              ],
-            ),
-          ),
-        );
-      case AuthState.authenticated:
-        return const MainApp();
-      case AuthState.unauthenticated:
-      case AuthState.error:
-        return const AuthScreen();
-    }
   }
 }
 
