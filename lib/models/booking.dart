@@ -54,6 +54,7 @@ class Booking {
   final bool? isPrepayment;
   final bool? isFinalPayment;
   final bool? prepaymentPaid;
+  final String? vkPlaylistUrl; // Ссылка на плейлист VK
 
   const Booking({
     required this.id,
@@ -83,6 +84,7 @@ class Booking {
     this.specialistId,
     this.endDate,
     this.prepayment,
+    this.vkPlaylistUrl,
   });
 
   /// Создать из документа Firestore
@@ -136,6 +138,7 @@ class Booking {
       isPrepayment: data['isPrepayment'],
       isFinalPayment: data['isFinalPayment'],
       prepaymentPaid: data['prepaymentPaid'],
+      vkPlaylistUrl: data['vkPlaylistUrl'],
     );
   }
 
@@ -178,6 +181,7 @@ class Booking {
       'isPrepayment': isPrepayment,
       'isFinalPayment': isFinalPayment,
       'prepaymentPaid': prepaymentPaid,
+      'vkPlaylistUrl': vkPlaylistUrl,
     };
   }
 
@@ -209,6 +213,7 @@ class Booking {
     String? customerPhone,
     String? customerEmail,
     String? description,
+    String? vkPlaylistUrl,
   }) {
     return Booking(
       id: id ?? this.id,
@@ -237,6 +242,7 @@ class Booking {
       customerPhone: customerPhone ?? this.customerPhone,
       customerEmail: customerEmail ?? this.customerEmail,
       description: description ?? this.description,
+      vkPlaylistUrl: vkPlaylistUrl ?? this.vkPlaylistUrl,
     );
   }
 
