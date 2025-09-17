@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+        http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+  <!-- Главная страница -->
+  <url>
+    <loc>https://eventmarketplace.app/</loc>
+    <lastmod>2024-12-01</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <!-- Поиск специалистов -->
+  <url>
+    <loc>https://eventmarketplace.app/search</loc>
+    <lastmod>2024-12-01</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <!-- Категории специалистов -->
+  <url>
+    <loc>https://eventmarketplace.app/categories</loc>
+    <lastmod>2024-12-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Фотографы -->
+  <url>
+    <loc>https://eventmarketplace.app/categories/photographer</loc>
+    <lastmod>2024-12-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Ведущие -->
+  <url>
+    <loc>https://eventmarketplace.app/categories/host</loc>
+    <lastmod>2024-12-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Музыканты -->
+  <url>
+    <loc>https://eventmarketplace.app/categories/musician</loc>
+    <lastmod>2024-12-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Декораторы -->
+  <url>
+    <loc>https://eventmarketplace.app/categories/decorator</loc>
+    <lastmod>2024-12-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- Кейтеринг -->
+  <url>
+    <loc>https://eventmarketplace.app/categories/catering</loc>
+    <lastmod>2024-12-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+
+  <!-- О нас -->
+  <url>
+    <loc>https://eventmarketplace.app/about</loc>
+    <lastmod>2024-12-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Контакты -->
+  <url>
+    <loc>https://eventmarketplace.app/contact</loc>
+    <lastmod>2024-12-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Помощь -->
+  <url>
+    <loc>https://eventmarketplace.app/help</loc>
+    <lastmod>2024-12-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+  <!-- Политика конфиденциальности -->
+  <url>
+    <loc>https://eventmarketplace.app/privacy</loc>
+    <lastmod>2024-12-01</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- Условия использования -->
+  <url>
+    <loc>https://eventmarketplace.app/terms</loc>
+    <lastmod>2024-12-01</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.3</priority>
+  </url>
+
+  <!-- Регистрация -->
+  <url>
+    <loc>https://eventmarketplace.app/register</loc>
+    <lastmod>2024-12-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+  <!-- Вход -->
+  <url>
+    <loc>https://eventmarketplace.app/login</loc>
+    <lastmod>2024-12-01</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>
+
+</urlset>

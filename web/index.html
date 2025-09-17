@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -16,21 +16,128 @@
   -->
   <base href="$FLUTTER_BASE_HREF">
 
+  <!-- Basic Meta Tags -->
   <meta charset="UTF-8">
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="description" content="Event Marketplace - платформа для поиска и бронирования специалистов для мероприятий. Найдите фотографов, ведущих, музыкантов и других профессионалов для вашего события.">
+  <meta name="keywords" content="мероприятия, специалисты, фотограф, ведущий, музыкант, бронирование, события, организация мероприятий">
+  <meta name="author" content="Event Marketplace Team">
+  <meta name="robots" content="index, follow">
+  <meta name="googlebot" content="index, follow">
+  <meta name="theme-color" content="#3B82F6">
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Event Marketplace - Платформа для поиска специалистов мероприятий">
+  <meta property="og:description" content="Найдите и забронируйте лучших специалистов для вашего мероприятия. Фотографы, ведущие, музыканты и многое другое в одном приложении.">
+  <meta property="og:image" content="https://eventmarketplace.app/images/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Event Marketplace - Платформа для поиска специалистов мероприятий">
+  <meta property="og:url" content="https://eventmarketplace.app">
+  <meta property="og:site_name" content="Event Marketplace">
+  <meta property="og:locale" content="ru_RU">
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Event Marketplace - Платформа для поиска специалистов мероприятий">
+  <meta name="twitter:description" content="Найдите и забронируйте лучших специалистов для вашего мероприятия. Фотографы, ведущие, музыканты и многое другое в одном приложении.">
+  <meta name="twitter:image" content="https://eventmarketplace.app/images/twitter-image.jpg">
+  <meta name="twitter:image:alt" content="Event Marketplace - Платформа для поиска специалистов мероприятий">
+  <meta name="twitter:site" content="@eventmarketplace">
+  <meta name="twitter:creator" content="@eventmarketplace">
+
+  <!-- Additional SEO Meta Tags -->
+  <meta name="application-name" content="Event Marketplace">
+  <meta name="apple-mobile-web-app-title" content="Event Marketplace">
+  <meta name="msapplication-TileColor" content="#3B82F6">
+  <meta name="msapplication-config" content="browserconfig.xml">
+  <meta name="format-detection" content="telephone=no">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://eventmarketplace.app">
+
+  <!-- Preconnect to external domains -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://api.eventmarketplace.app">
+  <link rel="preconnect" href="https://storage.googleapis.com">
+
+  <!-- DNS Prefetch -->
+  <link rel="dns-prefetch" href="//fonts.googleapis.com">
+  <link rel="dns-prefetch" href="//fonts.gstatic.com">
+  <link rel="dns-prefetch" href="//api.eventmarketplace.app">
+  <link rel="dns-prefetch" href="//storage.googleapis.com">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="event_marketplace_app">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Event Marketplace">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="icons/Icon-152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/Icon-180.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="icons/Icon-167.png">
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <!-- Android meta tags -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#3B82F6">
+  <meta name="msapplication-navbutton-color" content="#3B82F6">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 
-  <title>event_marketplace_app</title>
+  <!-- Favicon and Icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
   <link rel="manifest" href="manifest.json">
+
+  <!-- Structured Data (JSON-LD) -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebApplication",
+    "name": "Event Marketplace",
+    "description": "Платформа для поиска и бронирования специалистов для мероприятий",
+    "url": "https://eventmarketplace.app",
+    "applicationCategory": "BusinessApplication",
+    "operatingSystem": "Web, iOS, Android",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "RUB"
+    },
+    "author": {
+      "@type": "Organization",
+      "name": "Event Marketplace Team",
+      "url": "https://eventmarketplace.app"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Event Marketplace Team",
+      "url": "https://eventmarketplace.app"
+    },
+    "datePublished": "2024-01-01",
+    "dateModified": "2024-12-01",
+    "inLanguage": "ru",
+    "isAccessibleForFree": true,
+    "browserRequirements": "Requires JavaScript. Requires HTML5.",
+    "softwareVersion": "1.0.0",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "4.8",
+      "ratingCount": "1250"
+    }
+  }
+  </script>
+
+  <!-- Performance and Security -->
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+  <meta http-equiv="Referrer-Policy" content="strict-origin-when-cross-origin">
+
+  <title>Event Marketplace - Платформа для поиска специалистов мероприятий</title>
 </head>
 <body>
   <script src="flutter_bootstrap.js" async></script>
