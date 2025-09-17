@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:go_router/go_router.dart';
 import '../providers/auth_providers.dart';
 import '../providers/locale_provider.dart';
 import '../models/user.dart';
@@ -325,10 +326,17 @@ class SettingsPage extends ConsumerWidget {
               subtitle: const Text('FAQ и поддержка'),
               trailing: const Icon(Icons.arrow_forward_ios),
               onTap: () {
-                // TODO: Открыть экран помощи
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Функция в разработке')),
-                );
+                context.go('/help');
+              },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.monitor_heart),
+              title: const Text('Мониторинг'),
+              subtitle: const Text('Статус приложения и метрики'),
+              trailing: const Icon(Icons.arrow_forward_ios),
+              onTap: () {
+                context.go('/monitoring');
               },
             ),
             const Divider(),

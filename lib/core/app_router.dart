@@ -23,6 +23,7 @@ import '../screens/payments_screen.dart';
 import '../screens/notifications_screen.dart';
 import '../screens/help_screen.dart';
 import '../screens/about_screen.dart';
+import '../screens/monitoring_screen.dart';
 import '../widgets/animated_page_transition.dart';
 
 /// Централизованная система роутинга приложения
@@ -50,6 +51,7 @@ class AppRouter {
   static const String notifications = '/notifications';
   static const String help = '/help';
   static const String about = '/about';
+  static const String monitoring = '/monitoring';
 
   /// Создание GoRouter конфигурации
   static GoRouter createRouter() {
@@ -232,6 +234,13 @@ class AppRouter {
           path: about,
           name: 'about',
           builder: (context, state) => const AboutScreen(),
+        ),
+
+        // Мониторинг
+        GoRoute(
+          path: monitoring,
+          name: 'monitoring',
+          builder: (context, state) => const MonitoringScreen(),
         ),
       ],
       errorBuilder: (context, state) => Scaffold(

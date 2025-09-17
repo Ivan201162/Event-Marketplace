@@ -13,6 +13,8 @@ class FeatureFlags {
   static const bool pushNotificationsEnabled = true;
   static const bool fileUploadEnabled = true;
   static const bool chatAttachmentsEnabled = true;
+  static const bool crashlyticsEnabled = true;
+  static const bool performanceMonitoringEnabled = true;
 
   // Админские функции
   static const bool adminPanelEnabled = true;
@@ -85,6 +87,10 @@ class FeatureFlags {
         return fileUploadEnabled;
       case 'chat_attachments':
         return chatAttachmentsEnabled;
+      case 'crashlytics':
+        return crashlyticsEnabled;
+      case 'performance_monitoring':
+        return performanceMonitoringEnabled;
       case 'admin_panel':
         return adminPanelEnabled;
       case 'user_moderation':
@@ -150,6 +156,8 @@ class FeatureFlags {
     if (pushNotificationsEnabled) features.add('push_notifications');
     if (fileUploadEnabled) features.add('file_upload');
     if (chatAttachmentsEnabled) features.add('chat_attachments');
+    if (crashlyticsEnabled) features.add('crashlytics');
+    if (performanceMonitoringEnabled) features.add('performance_monitoring');
     if (adminPanelEnabled) features.add('admin_panel');
     if (userModerationEnabled) features.add('user_moderation');
     if (calendarExportEnabled) features.add('calendar_export');
@@ -189,6 +197,8 @@ class FeatureFlags {
       'push_notifications': pushNotificationsEnabled,
       'file_upload': fileUploadEnabled,
       'chat_attachments': chatAttachmentsEnabled,
+      'crashlytics': crashlyticsEnabled,
+      'performance_monitoring': performanceMonitoringEnabled,
       'admin_panel': adminPanelEnabled,
       'user_moderation': userModerationEnabled,
       'calendar_export': calendarExportEnabled,
