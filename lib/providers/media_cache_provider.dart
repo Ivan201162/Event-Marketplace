@@ -4,13 +4,13 @@ import '../services/video_optimization_service.dart';
 
 /// Провайдер для управления кэшем изображений
 final imageCacheProvider =
-    StateNotifierProvider<ImageCacheNotifier, ImageCacheState>((ref) {
+    NotifierProvider<ImageCacheNotifier, ImageCacheState>((ref) {
   return ImageCacheNotifier();
 });
 
 /// Провайдер для управления кэшем видео
 final videoCacheProvider =
-    StateNotifierProvider<VideoCacheNotifier, VideoCacheState>((ref) {
+    NotifierProvider<VideoCacheNotifier, VideoCacheState>((ref) {
   return VideoCacheNotifier();
 });
 
@@ -90,7 +90,7 @@ class VideoCacheState {
 }
 
 /// Нотификатор для кэша изображений
-class ImageCacheNotifier extends StateNotifier<ImageCacheState> {
+class ImageCacheNotifier extends Notifier<ImageCacheState> {
   ImageCacheNotifier() : super(const ImageCacheState()) {
     _loadCacheInfo();
   }
@@ -145,7 +145,7 @@ class ImageCacheNotifier extends StateNotifier<ImageCacheState> {
 }
 
 /// Нотификатор для кэша видео
-class VideoCacheNotifier extends StateNotifier<VideoCacheState> {
+class VideoCacheNotifier extends Notifier<VideoCacheState> {
   VideoCacheNotifier() : super(const VideoCacheState()) {
     _loadCacheInfo();
   }
@@ -200,7 +200,7 @@ class VideoCacheNotifier extends StateNotifier<VideoCacheState> {
 }
 
 /// Провайдер для настроек оптимизации медиа
-final mediaOptimizationSettingsProvider = StateNotifierProvider<
+final mediaOptimizationSettingsProvider = NotifierProvider<
     MediaOptimizationSettingsNotifier, MediaOptimizationSettings>((ref) {
   return MediaOptimizationSettingsNotifier();
 });
@@ -258,7 +258,7 @@ class MediaOptimizationSettings {
 
 /// Нотификатор для настроек оптимизации медиа
 class MediaOptimizationSettingsNotifier
-    extends StateNotifier<MediaOptimizationSettings> {
+    extends Notifier<MediaOptimizationSettings> {
   MediaOptimizationSettingsNotifier()
       : super(const MediaOptimizationSettings());
 
@@ -325,7 +325,7 @@ class MediaOptimizationSettingsNotifier
 
 /// Провайдер для статистики использования медиа
 final mediaUsageStatsProvider =
-    StateNotifierProvider<MediaUsageStatsNotifier, MediaUsageStats>((ref) {
+    NotifierProvider<MediaUsageStatsNotifier, MediaUsageStats>((ref) {
   return MediaUsageStatsNotifier();
 });
 
@@ -385,7 +385,7 @@ class MediaUsageStats {
 }
 
 /// Нотификатор для статистики использования медиа
-class MediaUsageStatsNotifier extends StateNotifier<MediaUsageStats> {
+class MediaUsageStatsNotifier extends Notifier<MediaUsageStats> {
   MediaUsageStatsNotifier() : super(const MediaUsageStats());
 
   /// Записать загрузку изображения

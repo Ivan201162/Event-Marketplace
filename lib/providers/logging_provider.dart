@@ -7,21 +7,22 @@ final loggingServiceProvider = Provider<LoggingService>((ref) {
 });
 
 /// Провайдер для уровня логирования
-final logLevelProvider =
-    StateNotifierProvider<LogLevelNotifier, LogLevel>((ref) {
+final logLevelProvider = NotifierProvider<LogLevelNotifier, LogLevel>((ref) {
   return LogLevelNotifier();
 });
 
 /// Провайдер для настроек логирования
 final loggingSettingsProvider =
-    StateNotifierProvider<LoggingSettingsNotifier, LoggingSettings>((ref) {
+    NotifierProvider<LoggingSettingsNotifier, LoggingSettings>((ref) {
   return LoggingSettingsNotifier();
 });
 
 /// Нотификатор для уровня логирования
-class LogLevelNotifier extends StateNotifier<LogLevel> {
-  LogLevelNotifier() : super(LogLevel.info) {
+class LogLevelNotifier extends Notifier<LogLevel> {
+  @override
+  LogLevel build() {
     _loadLogLevel();
+    return LogLevel.info;
   }
 
   Future<void> _loadLogLevel() async {
@@ -72,8 +73,9 @@ class LoggingSettings {
 }
 
 /// Нотификатор для настроек логирования
-class LoggingSettingsNotifier extends StateNotifier<LoggingSettings> {
-  LoggingSettingsNotifier() : super(const LoggingSettings());
+class LoggingSettingsNotifier extends Notifier<LoggingSettings> {
+  @override
+  LoggingSettings build() => const LoggingSettings();
 
   Future<void> setCrashlyticsEnabled(bool enabled) async {
     await LoggingService.setCrashlyticsEnabled(enabled);

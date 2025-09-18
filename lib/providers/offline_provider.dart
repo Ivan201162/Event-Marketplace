@@ -8,18 +8,18 @@ final connectivityProvider = StreamProvider<bool>((ref) {
 
 /// Провайдер для статуса офлайн-режима
 final offlineModeProvider =
-    StateNotifierProvider<OfflineModeNotifier, OfflineModeState>((ref) {
+    NotifierProvider<OfflineModeNotifier, OfflineModeState>((ref) {
   return OfflineModeNotifier();
 });
 
 /// Провайдер для информации о кэше
 final cacheInfoProvider =
-    StateNotifierProvider<CacheInfoNotifier, CacheInfoState>((ref) {
+    NotifierProvider<CacheInfoNotifier, CacheInfoState>((ref) {
   return CacheInfoNotifier();
 });
 
 /// Провайдер для синхронизации данных
-final syncProvider = StateNotifierProvider<SyncNotifier, SyncState>((ref) {
+final syncProvider = NotifierProvider<SyncNotifier, SyncState>((ref) {
   return SyncNotifier();
 });
 
@@ -168,7 +168,7 @@ class SyncState {
 }
 
 /// Нотификатор для офлайн-режима
-class OfflineModeNotifier extends StateNotifier<OfflineModeState> {
+class OfflineModeNotifier extends Notifier<OfflineModeState> {
   OfflineModeNotifier() : super(const OfflineModeState()) {
     _initialize();
   }
@@ -269,7 +269,7 @@ class OfflineModeNotifier extends StateNotifier<OfflineModeState> {
 }
 
 /// Нотификатор для информации о кэше
-class CacheInfoNotifier extends StateNotifier<CacheInfoState> {
+class CacheInfoNotifier extends Notifier<CacheInfoState> {
   CacheInfoNotifier() : super(const CacheInfoState()) {
     _loadCacheInfo();
   }
@@ -330,7 +330,7 @@ class CacheInfoNotifier extends StateNotifier<CacheInfoState> {
 }
 
 /// Нотификатор для синхронизации
-class SyncNotifier extends StateNotifier<SyncState> {
+class SyncNotifier extends Notifier<SyncState> {
   SyncNotifier() : super(const SyncState()) {
     _loadLastSyncTime();
   }

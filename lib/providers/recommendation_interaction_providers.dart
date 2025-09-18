@@ -8,7 +8,7 @@ final recommendationServiceProvider = Provider<RecommendationService>((ref) {
 });
 
 /// Провайдер для взаимодействий с рекомендациями
-final recommendationInteractionProvider = StateNotifierProvider<
+final recommendationInteractionProvider = NotifierProvider<
     RecommendationInteractionNotifier, RecommendationInteractionState>((ref) {
   return RecommendationInteractionNotifier();
 });
@@ -40,7 +40,7 @@ class RecommendationInteractionState {
 
 /// Нотификатор для взаимодействий с рекомендациями
 class RecommendationInteractionNotifier
-    extends StateNotifier<RecommendationInteractionState> {
+    extends Notifier<RecommendationInteractionState> {
   RecommendationInteractionNotifier()
       : super(const RecommendationInteractionState());
 

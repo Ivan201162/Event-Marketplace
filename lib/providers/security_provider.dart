@@ -4,7 +4,7 @@ import '../services/encryption_service.dart';
 
 /// Провайдер для управления безопасностью
 final securityProvider =
-    StateNotifierProvider<SecurityNotifier, SecurityState>((ref) {
+    NotifierProvider<SecurityNotifier, SecurityState>((ref) {
   return SecurityNotifier();
 });
 
@@ -15,7 +15,7 @@ final securityStatsProvider = FutureProvider<SecurityStats>((ref) async {
 
 /// Провайдер для валидации пароля
 final passwordValidationProvider =
-    StateNotifierProvider<PasswordValidationNotifier, PasswordValidationState>(
+    NotifierProvider<PasswordValidationNotifier, PasswordValidationState>(
         (ref) {
   return PasswordValidationNotifier();
 });
@@ -115,7 +115,7 @@ class PasswordValidationState {
 }
 
 /// Нотификатор для управления безопасностью
-class SecurityNotifier extends StateNotifier<SecurityState> {
+class SecurityNotifier extends Notifier<SecurityState> {
   SecurityNotifier() : super(const SecurityState()) {
     _initialize();
   }
@@ -217,8 +217,7 @@ class SecurityNotifier extends StateNotifier<SecurityState> {
 }
 
 /// Нотификатор для валидации пароля
-class PasswordValidationNotifier
-    extends StateNotifier<PasswordValidationState> {
+class PasswordValidationNotifier extends Notifier<PasswordValidationState> {
   PasswordValidationNotifier() : super(const PasswordValidationState());
 
   /// Обновить пароль

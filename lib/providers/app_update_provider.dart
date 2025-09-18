@@ -3,7 +3,7 @@ import '../services/app_update_service.dart';
 
 /// Провайдер для управления обновлениями приложения
 final appUpdateProvider =
-    StateNotifierProvider<AppUpdateNotifier, AppUpdateState>((ref) {
+    NotifierProvider<AppUpdateNotifier, AppUpdateState>((ref) {
   return AppUpdateNotifier();
 });
 
@@ -67,9 +67,11 @@ class AppUpdateState {
 }
 
 /// Нотификатор для управления обновлениями
-class AppUpdateNotifier extends StateNotifier<AppUpdateState> {
-  AppUpdateNotifier() : super(const AppUpdateState()) {
+class AppUpdateNotifier extends Notifier<AppUpdateState> {
+  @override
+  AppUpdateState build() {
     _initialize();
+    return const AppUpdateState();
   }
 
   /// Инициализация
