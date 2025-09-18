@@ -1,4 +1,6 @@
-/// Типы медиа файлов
+import 'package:flutter/foundation.dart';
+
+/// Тип медиа-контента
 enum MediaType {
   image,
   video,
@@ -8,59 +10,29 @@ enum MediaType {
 
 /// Расширение для MediaType
 extension MediaTypeExtension on MediaType {
-  /// Получить расширения файлов для типа
-  List<String> get extensions {
+  String get displayName {
     switch (this) {
       case MediaType.image:
-        return ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        return 'Изображение';
       case MediaType.video:
-        return ['mp4', 'avi', 'mov', 'wmv', 'flv'];
+        return 'Видео';
       case MediaType.audio:
-        return ['mp3', 'wav', 'aac', 'ogg', 'm4a'];
+        return 'Аудио';
       case MediaType.document:
-        return ['pdf', 'doc', 'docx', 'txt', 'rtf'];
+        return 'Документ';
     }
   }
 
-  /// Получить MIME типы для типа
-  List<String> get mimeTypes {
+  String get mimeType {
     switch (this) {
       case MediaType.image:
-        return ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        return 'image/*';
       case MediaType.video:
-        return ['video/mp4', 'video/avi', 'video/quicktime', 'video/x-ms-wmv'];
+        return 'video/*';
       case MediaType.audio:
-        return ['audio/mpeg', 'audio/wav', 'audio/aac', 'audio/ogg'];
+        return 'audio/*';
       case MediaType.document:
-        return ['application/pdf', 'application/msword', 'text/plain'];
-    }
-  }
-
-  /// Получить максимальный размер файла в MB
-  int get maxSizeMB {
-    switch (this) {
-      case MediaType.image:
-        return 5;
-      case MediaType.video:
-        return 100;
-      case MediaType.audio:
-        return 50;
-      case MediaType.document:
-        return 10;
-    }
-  }
-
-  /// Получить иконку для типа
-  String get icon {
-    switch (this) {
-      case MediaType.image:
-        return '🖼️';
-      case MediaType.video:
-        return '🎥';
-      case MediaType.audio:
-        return '🎵';
-      case MediaType.document:
-        return '📄';
+        return 'application/*';
     }
   }
 }

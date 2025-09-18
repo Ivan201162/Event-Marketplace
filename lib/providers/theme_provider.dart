@@ -4,14 +4,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../core/app_theme.dart';
 
 /// Типы тем
-enum ThemeMode {
+enum AppThemeMode {
   light,
   dark,
   system,
 }
 
 /// Провайдер для управления темами
-final themeProvider = NotifierProvider<ThemeNotifier, ThemeMode>(
+final themeProvider = NotifierProvider<ThemeNotifier, AppThemeMode>(
   () => ThemeNotifier(),
 );
 
@@ -22,11 +22,11 @@ final currentThemeProvider = Provider<ThemeData>((ref) {
       WidgetsBinding.instance.platformDispatcher.platformBrightness;
 
   switch (themeMode) {
-    case ThemeMode.light:
+    case AppThemeMode.light:
       return AppTheme.lightTheme;
-    case ThemeMode.dark:
+    case AppThemeMode.dark:
       return AppTheme.darkTheme;
-    case ThemeMode.system:
+    case AppThemeMode.system:
       return brightness == Brightness.dark
           ? AppTheme.darkTheme
           : AppTheme.lightTheme;
@@ -34,18 +34,20 @@ final currentThemeProvider = Provider<ThemeData>((ref) {
 });
 
 /// Провайдер для получения режима темы
-final themeModeProvider = Provider<ThemeMode>((ref) {
+final AppThemeModeProvider = Provider<AppThemeMode>((ref) {
   final themeMode = ref.watch(themeProvider);
   final brightness =
       WidgetsBinding.instance.platformDispatcher.platformBrightness;
 
   switch (themeMode) {
-    case ThemeMode.light:
-      return ThemeMode.light;
-    case ThemeMode.dark:
-      return ThemeMode.dark;
-    case ThemeMode.system:
-      return brightness == Brightness.dark ? ThemeMode.dark : ThemeMode.light;
+    case AppThemeMode.light:
+      return AppThemeMode.light;
+    case AppThemeMode.dark:
+      return AppThemeMode.dark;
+    case AppThemeMode.system:
+      return brightness == Brightness.dark
+          ? AppThemeMode.dark
+          : AppThemeMode.light;
   }
 });
 
@@ -60,11 +62,11 @@ final isDarkModeProvider = Provider<bool>((ref) {
   final systemBrightness = ref.watch(systemBrightnessProvider);
 
   switch (themeMode) {
-    case ThemeMode.light:
+    case AppThemeMode.light:
       return false;
-    case ThemeMode.dark:
+    case AppThemeMode.dark:
       return true;
-    case ThemeMode.system:
+    case AppThemeMode.system:
       return systemBrightness == Brightness.dark;
   }
 });
@@ -81,29 +83,29 @@ final brandColorsProvider = Provider<BrandColors>((ref) {
 });
 
 /// Нотификатор для управления темами
-class ThemeNotifier extends Notifier<ThemeMode> {
+class ThemeNotifier extends Notifier<AppThemeMode> {
   static const String _themeKey = 'theme_mode';
 
   @override
-  ThemeMode build() {
+  AppThemeMode build() {
     _loadTheme();
-    return ThemeMode.system;
+    return AppThemeMode.system;
   }
 
   /// Загрузить сохраненную тему
   Future<void> _loadTheme() async {
     try {
       final prefs = await SharedPreferences.getInstance();
-      final themeIndex = prefs.getInt(_themeKey) ?? ThemeMode.system.index;
-      state = ThemeMode.values[themeIndex];
+      final themeIndex = prefs.getInt(_themeKey) ?? AppThemeMode.system.index;
+      state = AppThemeMode.values[themeIndex];
     } catch (e) {
       // В случае ошибки используем системную тему
-      state = ThemeMode.system;
+      state = AppThemeMode.system;
     }
   }
 
   /// Сохранить выбранную тему
-  Future<void> _saveTheme(ThemeMode theme) async {
+  Future<void> _saveTheme(AppThemeMode theme) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt(_themeKey, theme.index);
@@ -114,20 +116,20 @@ class ThemeNotifier extends Notifier<ThemeMode> {
 
   /// Установить светлую тему
   Future<void> setLightTheme() async {
-    state = ThemeMode.light;
-    await _saveTheme(ThemeMode.light);
+    state = AppThemeMode.light;
+    await _saveTheme(AppThemeMode.light);
   }
 
   /// Установить темную тему
   Future<void> setDarkTheme() async {
-    state = ThemeMode.dark;
-    await _saveTheme(ThemeMode.dark);
+    state = AppThemeMode.dark;
+    await _saveTheme(AppThemeMode.dark);
   }
 
   /// Установить системную тему
   Future<void> setSystemTheme() async {
-    state = ThemeMode.system;
-    await _saveTheme(ThemeMode.system);
+    state = AppThemeMode.system;
+    await _saveTheme(AppThemeMode.system);
   }
 
   /// Переключить тему
@@ -136,7 +138,7 @@ class ThemeNotifier extends Notifier<ThemeMode> {
         WidgetsBinding.instance.platformDispatcher.platformBrightness;
     final isCurrentlyDark = currentBrightness == Brightness.dark;
 
-    if (state == ThemeMode.system) {
+    if (state == AppThemeMode.system) {
       // Если используется системная тема, переключаем на противоположную
       if (isCurrentlyDark) {
         await setLightTheme();
@@ -145,7 +147,7 @@ class ThemeNotifier extends Notifier<ThemeMode> {
       }
     } else {
       // Если используется конкретная тема, переключаем на противоположную
-      if (state == ThemeMode.light) {
+      if (state == AppThemeMode.light) {
         await setDarkTheme();
       } else {
         await setLightTheme();
@@ -156,11 +158,11 @@ class ThemeNotifier extends Notifier<ThemeMode> {
   /// Получить название текущей темы
   String getCurrentThemeName() {
     switch (state) {
-      case ThemeMode.light:
+      case AppThemeMode.light:
         return 'Светлая';
-      case ThemeMode.dark:
+      case AppThemeMode.dark:
         return 'Темная';
-      case ThemeMode.system:
+      case AppThemeMode.system:
         return 'Системная';
     }
   }
@@ -168,11 +170,11 @@ class ThemeNotifier extends Notifier<ThemeMode> {
   /// Получить описание текущей темы
   String getCurrentThemeDescription() {
     switch (state) {
-      case ThemeMode.light:
+      case AppThemeMode.light:
         return 'Всегда светлая тема';
-      case ThemeMode.dark:
+      case AppThemeMode.dark:
         return 'Всегда темная тема';
-      case ThemeMode.system:
+      case AppThemeMode.system:
         return 'Следует системным настройкам';
     }
   }
@@ -180,26 +182,26 @@ class ThemeNotifier extends Notifier<ThemeMode> {
   /// Получить иконку для текущей темы
   IconData getCurrentThemeIcon() {
     switch (state) {
-      case ThemeMode.light:
+      case AppThemeMode.light:
         return Icons.light_mode;
-      case ThemeMode.dark:
+      case AppThemeMode.dark:
         return Icons.dark_mode;
-      case ThemeMode.system:
+      case AppThemeMode.system:
         return Icons.brightness_auto;
     }
   }
 }
 
-/// Расширения для ThemeMode
-extension ThemeModeExtension on ThemeMode {
+/// Расширения для AppThemeMode
+extension AppThemeModeExtension on AppThemeMode {
   /// Получить название темы
   String get name {
     switch (this) {
-      case ThemeMode.light:
+      case AppThemeMode.light:
         return 'Светлая';
-      case ThemeMode.dark:
+      case AppThemeMode.dark:
         return 'Темная';
-      case ThemeMode.system:
+      case AppThemeMode.system:
         return 'Системная';
     }
   }
@@ -207,11 +209,11 @@ extension ThemeModeExtension on ThemeMode {
   /// Получить описание темы
   String get description {
     switch (this) {
-      case ThemeMode.light:
+      case AppThemeMode.light:
         return 'Всегда светлая тема';
-      case ThemeMode.dark:
+      case AppThemeMode.dark:
         return 'Всегда темная тема';
-      case ThemeMode.system:
+      case AppThemeMode.system:
         return 'Следует системным настройкам';
     }
   }
@@ -219,35 +221,35 @@ extension ThemeModeExtension on ThemeMode {
   /// Получить иконку темы
   IconData get icon {
     switch (this) {
-      case ThemeMode.light:
+      case AppThemeMode.light:
         return Icons.light_mode;
-      case ThemeMode.dark:
+      case AppThemeMode.dark:
         return Icons.dark_mode;
-      case ThemeMode.system:
+      case AppThemeMode.system:
         return Icons.brightness_auto;
     }
   }
 }
 
 /// Провайдер для получения доступных тем
-final availableThemesProvider = Provider<List<ThemeMode>>((ref) {
-  return ThemeMode.values;
+final availableThemesProvider = Provider<List<AppThemeMode>>((ref) {
+  return AppThemeMode.values;
 });
 
 /// Провайдер для получения информации о теме
 final themeInfoProvider =
-    Provider.family<ThemeInfo, ThemeMode>((ref, themeMode) {
+    Provider.family<ThemeInfo, AppThemeMode>((ref, AppThemeMode) {
   return ThemeInfo(
-    mode: themeMode,
-    name: themeMode.name,
-    description: themeMode.description,
-    icon: themeMode.icon,
+    mode: AppThemeMode,
+    name: AppThemeMode.name,
+    description: AppThemeMode.description,
+    icon: AppThemeMode.icon,
   );
 });
 
 /// Информация о теме
 class ThemeInfo {
-  final ThemeMode mode;
+  final AppThemeMode mode;
   final String name;
   final String description;
   final IconData icon;

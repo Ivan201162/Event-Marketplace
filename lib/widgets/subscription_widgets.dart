@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:event_marketplace_app/models/subscription.dart';
-import 'package:event_marketplace_app/services/subscription_service.dart';
-import 'package:event_marketplace_app/providers/subscription_providers.dart';
+import '../models/subscription.dart';
+import '../models/notification_type.dart';
+import '../models/subscription_notification.dart';
+import '../services/subscription_service.dart';
+import '../providers/subscription_providers.dart';
 
 /// Виджет кнопки подписки
 class SubscribeButton extends ConsumerStatefulWidget {

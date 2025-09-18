@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:event_marketplace_app/services/vk_integration_service.dart';
+import '../services/vk_integration_service.dart';
+import '../services/url_launcher_service.dart';
 
 /// Виджет для работы с VK плейлистами
 class VkPlaylistWidget extends ConsumerStatefulWidget {

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:event_marketplace_app/models/story.dart';
-import 'package:event_marketplace_app/services/story_service.dart';
-import 'package:event_marketplace_app/providers/story_providers.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import '../models/story.dart';
+import '../models/story_type.dart';
+import '../services/story_service.dart';
+import '../services/image_picker_service.dart';
+import '../providers/story_providers.dart';
+import '../generated/l10n/app_localizations.dart';
 
 /// Виджет для отображения сториса
 class StoryWidget extends ConsumerWidget {

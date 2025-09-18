@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/specialist_price_stats.dart';
 import '../services/specialist_price_stats_service.dart';
-import 'responsive_layout.dart';
+import '../ui/responsive/responsive_widgets.dart';
 
 /// Виджет для отображения статистики цен специалиста
 class SpecialistPriceStatsWidget extends ConsumerWidget {
@@ -245,7 +245,7 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
                 child: _buildCategoryStatItem(
                   'Диапазон',
                   stats.priceRange,
-                  Icons.range,
+                  Icons.trending_up,
                 ),
               ),
               Expanded(
