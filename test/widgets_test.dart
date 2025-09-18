@@ -365,9 +365,7 @@ void main() {
         const MaterialApp(
           home: Scaffold(
             body: ResponsiveContainer(
-              mobilePadding: EdgeInsets.all(16),
-              tabletPadding: EdgeInsets.all(24),
-              desktopPadding: EdgeInsets.all(32),
+              padding: EdgeInsets.all(16),
               child: Text('Content'),
             ),
           ),
@@ -388,9 +386,7 @@ void main() {
         const MaterialApp(
           home: Scaffold(
             body: ResponsiveGrid(
-              mobileColumns: 1,
-              tabletColumns: 2,
-              desktopColumns: 3,
+              crossAxisCount: 2,
               children: [
                 Text('Item 1'),
                 Text('Item 2'),
@@ -417,9 +413,6 @@ void main() {
         const MaterialApp(
           home: Scaffold(
             body: ResponsiveList(
-              mobileItemsPerRow: 1,
-              tabletItemsPerRow: 2,
-              desktopItemsPerRow: 3,
               children: [
                 Text('Item 1'),
                 Text('Item 2'),
