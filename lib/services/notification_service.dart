@@ -1,512 +1,611 @@
+import 'dart:async';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:shared_preferences/shared_preferences.dart';
-import 'dart:convert';
-import 'package:timezone/timezone.dart' as tz;
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:uuid/uuid.dart';
+import '../models/notification_template.dart';
 
-/// Сервис для управления уведомлениями
+/// Сервис уведомлений
 class NotificationService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  final Uuid _uuid = const Uuid();
+
   static final NotificationService _instance = NotificationService._internal();
   factory NotificationService() => _instance;
   NotificationService._internal();
 
-  final FlutterLocalNotificationsPlugin _localNotifications =
-      FlutterLocalNotificationsPlugin();
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final StreamController<SentNotification> _notificationController =
+      StreamController<SentNotification>.broadcast();
 
-  bool _isInitialized = false;
+  /// Поток уведомлений
+  Stream<SentNotification> get notificationStream =>
+      _notificationController.stream;
 
   /// Инициализация сервиса уведомлений
   Future<void> initialize() async {
-    if (_isInitialized) return;
-
     try {
-      // Инициализация локальных уведомлений
-      await _initializeLocalNotifications();
-
-      // Инициализация Firebase Messaging
-      await _initializeFirebaseMessaging();
-
-      // Запрос разрешений
+      // Запрашиваем разрешения на уведомления
       await _requestPermissions();
 
-      _isInitialized = true;
-      debugPrint('NotificationService initialized successfully');
+      // Настраиваем обработчики уведомлений
+      _setupNotificationHandlers();
+
+      // Создаем базовые шаблоны уведомлений
+      await _createDefaultTemplates();
     } catch (e) {
-      debugPrint('Error initializing NotificationService: $e');
-    }
-  }
-
-  /// Инициализация локальных уведомлений
-  Future<void> _initializeLocalNotifications() async {
-    const AndroidInitializationSettings androidSettings =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
-
-    const DarwinInitializationSettings iosSettings =
-        DarwinInitializationSettings(
-      requestAlertPermission: true,
-      requestBadgePermission: true,
-      requestSoundPermission: true,
-    );
-
-    const InitializationSettings settings = InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
-    );
-
-    await _localNotifications.initialize(
-      settings,
-      onDidReceiveNotificationResponse: _onNotificationTapped,
-    );
-  }
-
-  /// Инициализация Firebase Messaging
-  Future<void> _initializeFirebaseMessaging() async {
-    // Обработка сообщений в фоне
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-    // Обработка сообщений в foreground
-    FirebaseMessaging.onMessage.listen(_handleForegroundMessage);
-
-    // Обработка нажатий на уведомления
-    FirebaseMessaging.onMessageOpenedApp.listen(_handleNotificationTap);
-  }
-
-  /// Запрос разрешений
-  Future<void> _requestPermissions() async {
-    // Локальные уведомления
-    await _localNotifications
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.requestNotificationsPermission();
-
-    // Firebase Messaging
-    await _firebaseMessaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-      provisional: false,
-    );
-  }
-
-  /// Обработчик нажатия на локальное уведомление
-  void _onNotificationTapped(NotificationResponse response) {
-    debugPrint('Local notification tapped: ${response.payload}');
-    _handleNotificationPayload(response.payload);
-  }
-
-  /// Обработчик сообщений в foreground
-  void _handleForegroundMessage(RemoteMessage message) {
-    debugPrint('Foreground message received: ${message.messageId}');
-
-    // Показываем локальное уведомление
-    _showLocalNotification(
-      title: message.notification?.title ?? 'Event Marketplace',
-      body: message.notification?.body ?? '',
-      payload: jsonEncode(message.data),
-    );
-  }
-
-  /// Обработчик нажатия на Firebase уведомление
-  void _handleNotificationTap(RemoteMessage message) {
-    debugPrint('Firebase notification tapped: ${message.messageId}');
-    _handleNotificationPayload(jsonEncode(message.data));
-  }
-
-  /// Обработка данных уведомления
-  void _handleNotificationPayload(String? payload) {
-    if (payload == null) return;
-
-    try {
-      final data = jsonDecode(payload);
-      final type = data['type'] as String?;
-
-      switch (type) {
-        case 'review':
-          _handleReviewNotification(data);
-          break;
-        case 'booking':
-          _handleBookingNotification(data);
-          break;
-        case 'payment':
-          _handlePaymentNotification(data);
-          break;
-        case 'reminder':
-          _handleReminderNotification(data);
-          break;
-        default:
-          debugPrint('Unknown notification type: $type');
+      if (kDebugMode) {
+        print('Ошибка инициализации сервиса уведомлений: $e');
       }
-    } catch (e) {
-      debugPrint('Error parsing notification payload: $e');
     }
   }
 
-  /// Обработка уведомления о новом отзыве
-  void _handleReviewNotification(Map<String, dynamic> data) {
-    // final specialistId = data['specialistId'] as String?;
-    final customerName = data['customerName'] as String?;
-    final rating = data['rating'] as int?;
-
-    debugPrint('Review notification: $customerName rated $rating stars');
-    // Здесь можно добавить навигацию к отзыву
-  }
-
-  /// Обработка уведомления о бронировании
-  void _handleBookingNotification(Map<String, dynamic> data) {
-    final bookingId = data['bookingId'] as String?;
-    final status = data['status'] as String?;
-
-    debugPrint('Booking notification: $bookingId status changed to $status');
-    // Здесь можно добавить навигацию к бронированию
-  }
-
-  /// Обработка уведомления об оплате
-  void _handlePaymentNotification(Map<String, dynamic> data) {
-    final paymentId = data['paymentId'] as String?;
-    final amount = data['amount'] as double?;
-
-    debugPrint('Payment notification: $paymentId amount $amount');
-    // Здесь можно добавить навигацию к платежу
-  }
-
-  /// Обработка напоминания
-  void _handleReminderNotification(Map<String, dynamic> data) {
-    // final eventId = data['eventId'] as String?;
-    final eventName = data['eventName'] as String?;
-
-    debugPrint('Reminder notification: $eventName');
-    // Здесь можно добавить навигацию к событию
-  }
-
-  /// Показать локальное уведомление
-  Future<void> _showLocalNotification({
-    required String title,
-    required String body,
-    String? payload,
-    int id = 0,
-  }) async {
-    const AndroidNotificationDetails androidDetails =
-        AndroidNotificationDetails(
-      'event_marketplace',
-      'Event Marketplace Notifications',
-      channelDescription: 'Уведомления Event Marketplace',
-      importance: Importance.high,
-      priority: Priority.high,
-      showWhen: true,
-    );
-
-    const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
-
-    const NotificationDetails details = NotificationDetails(
-      android: androidDetails,
-      iOS: iosDetails,
-    );
-
-    await _localNotifications.show(
-      id,
-      title,
-      body,
-      details,
-      payload: payload,
-    );
-  }
-
-  /// Отправить уведомление о новом отзыве специалисту
-  Future<void> sendReviewNotification({
-    required String specialistId,
-    required String customerName,
-    required int rating,
-    required String reviewText,
-  }) async {
+  /// Запросить разрешения на уведомления
+  Future<void> _requestPermissions() async {
     try {
-      // Получаем FCM токен специалиста
-      final specialistDoc =
-          await _firestore.collection('users').doc(specialistId).get();
-
-      if (!specialistDoc.exists) return;
-
-      final fcmToken = specialistDoc.data()?['fcmToken'] as String?;
-      if (fcmToken == null) return;
-
-      // Отправляем уведомление через Firebase Functions
-      await _firestore.collection('notifications').add({
-        'type': 'review',
-        'specialistId': specialistId,
-        'customerName': customerName,
-        'rating': rating,
-        'reviewText': reviewText,
-        'fcmToken': fcmToken,
-        'createdAt': FieldValue.serverTimestamp(),
-        'read': false,
-      });
-
-      debugPrint('Review notification sent to specialist: $specialistId');
-    } catch (e) {
-      debugPrint('Error sending review notification: $e');
-    }
-  }
-
-  /// Отправить напоминание о неоплаченном бронировании
-  Future<void> sendPaymentReminder({
-    required String customerId,
-    required String bookingId,
-    required String eventName,
-    required double amount,
-    required DateTime dueDate,
-  }) async {
-    try {
-      // Планируем локальное уведомление
-      await _scheduleLocalNotification(
-        id: bookingId.hashCode,
-        title: 'Напоминание об оплате',
-        body:
-            'Не забудьте оплатить бронирование "$eventName" на сумму ${amount.toStringAsFixed(0)} ₽',
-        scheduledDate:
-            dueDate.subtract(const Duration(hours: 24)), // За 24 часа
-        payload: jsonEncode({
-          'type': 'reminder',
-          'bookingId': bookingId,
-          'eventName': eventName,
-          'amount': amount,
-        }),
+      final settings = await _messaging.requestPermission(
+        alert: true,
+        announcement: false,
+        badge: true,
+        carPlay: false,
+        criticalAlert: false,
+        provisional: false,
+        sound: true,
       );
 
-      debugPrint('Payment reminder scheduled for booking: $bookingId');
+      if (kDebugMode) {
+        print('Разрешения на уведомления: ${settings.authorizationStatus}');
+      }
     } catch (e) {
-      debugPrint('Error scheduling payment reminder: $e');
+      if (kDebugMode) {
+        print('Ошибка запроса разрешений: $e');
+      }
     }
   }
 
-  /// Запланировать локальное уведомление
-  Future<void> _scheduleLocalNotification({
-    required int id,
-    required String title,
-    required String body,
-    required DateTime scheduledDate,
-    String? payload,
-  }) async {
-    const AndroidNotificationDetails androidDetails =
-        AndroidNotificationDetails(
-      'event_marketplace_reminders',
-      'Event Marketplace Reminders',
-      channelDescription: 'Напоминания Event Marketplace',
-      importance: Importance.high,
-      priority: Priority.high,
-    );
+  /// Настроить обработчики уведомлений
+  void _setupNotificationHandlers() {
+    // Обработчик уведомлений в foreground
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (kDebugMode) {
+        print(
+            'Получено уведомление в foreground: ${message.notification?.title}');
+      }
+      _handleForegroundMessage(message);
+    });
 
-    const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
+    // Обработчик нажатия на уведомление
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      if (kDebugMode) {
+        print('Нажато на уведомление: ${message.notification?.title}');
+      }
+      _handleNotificationTap(message);
+    });
 
-    const NotificationDetails details = NotificationDetails(
-      android: androidDetails,
-      iOS: iosDetails,
-    );
-
-    await _localNotifications.zonedSchedule(
-      id,
-      title,
-      body,
-      tz.TZDateTime.from(scheduledDate, tz.local),
-      details,
-      payload: payload,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
-    );
+    // Обработчик уведомления при закрытом приложении
+    FirebaseMessaging.getInitialMessage().then((RemoteMessage? message) {
+      if (message != null) {
+        if (kDebugMode) {
+          print('Уведомление при запуске: ${message.notification?.title}');
+        }
+        _handleNotificationTap(message);
+      }
+    });
   }
 
-  /// Отменить запланированное уведомление
-  Future<void> cancelNotification(int id) async {
-    await _localNotifications.cancel(id);
+  /// Обработать уведомление в foreground
+  void _handleForegroundMessage(RemoteMessage message) {
+    // TODO: Показать локальное уведомление
+    if (kDebugMode) {
+      print('Foreground message: ${message.notification?.title}');
+    }
   }
 
-  /// Отменить все уведомления
-  Future<void> cancelAllNotifications() async {
-    await _localNotifications.cancelAll();
+  /// Обработать нажатие на уведомление
+  void _handleNotificationTap(RemoteMessage message) {
+    // TODO: Навигация к соответствующему экрану
+    if (kDebugMode) {
+      print('Notification tap: ${message.data}');
+    }
   }
 
-  /// Получить FCM токен
-  Future<String?> getFCMToken() async {
+  /// Создать базовые шаблоны уведомлений
+  Future<void> _createDefaultTemplates() async {
     try {
-      return await _firebaseMessaging.getToken();
+      final templates = [
+        NotificationTemplate(
+          id: 'booking_created',
+          name: 'Новое бронирование',
+          title: 'Новое бронирование',
+          body: 'У вас новое бронирование от {{customerName}} на {{date}}',
+          type: NotificationType.booking,
+          channel: NotificationChannel.push,
+          variables: {
+            'customerName': 'Имя клиента',
+            'date': 'Дата бронирования'
+          },
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+        NotificationTemplate(
+          id: 'payment_received',
+          name: 'Получен платеж',
+          title: 'Получен платеж',
+          body: 'Получен платеж {{amount}} ₽ за бронирование {{bookingId}}',
+          type: NotificationType.payment,
+          channel: NotificationChannel.push,
+          variables: {'amount': 'Сумма', 'bookingId': 'ID бронирования'},
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+        NotificationTemplate(
+          id: 'message_received',
+          name: 'Новое сообщение',
+          title: 'Новое сообщение',
+          body: '{{senderName}}: {{message}}',
+          type: NotificationType.message,
+          channel: NotificationChannel.push,
+          variables: {
+            'senderName': 'Имя отправителя',
+            'message': 'Текст сообщения'
+          },
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+        NotificationTemplate(
+          id: 'review_received',
+          name: 'Новый отзыв',
+          title: 'Новый отзыв',
+          body: '{{customerName}} оставил отзыв: {{rating}} звезд',
+          type: NotificationType.review,
+          channel: NotificationChannel.push,
+          variables: {'customerName': 'Имя клиента', 'rating': 'Рейтинг'},
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+        NotificationTemplate(
+          id: 'reminder_booking',
+          name: 'Напоминание о бронировании',
+          title: 'Напоминание',
+          body: 'Через {{hours}} часов у вас бронирование с {{customerName}}',
+          type: NotificationType.reminder,
+          channel: NotificationChannel.push,
+          variables: {
+            'hours': 'Количество часов',
+            'customerName': 'Имя клиента'
+          },
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+        ),
+      ];
+
+      for (final template in templates) {
+        await _firestore
+            .collection('notificationTemplates')
+            .doc(template.id)
+            .set(template.toMap());
+      }
     } catch (e) {
-      debugPrint('Error getting FCM token: $e');
-      return null;
+      if (kDebugMode) {
+        print('Ошибка создания базовых шаблонов: $e');
+      }
     }
   }
 
-  /// Сохранить FCM токен пользователя
-  Future<void> saveFCMToken(String userId) async {
-    try {
-      final token = await getFCMToken();
-      if (token == null) return;
-
-      await _firestore.collection('users').doc(userId).update({
-        'fcmToken': token,
-        'lastTokenUpdate': FieldValue.serverTimestamp(),
-      });
-
-      debugPrint('FCM token saved for user: $userId');
-    } catch (e) {
-      debugPrint('Error saving FCM token: $e');
-    }
-  }
-
-  /// Подписаться на топик
-  Future<void> subscribeToTopic(String topic) async {
-    try {
-      await _firebaseMessaging.subscribeToTopic(topic);
-      debugPrint('Subscribed to topic: $topic');
-    } catch (e) {
-      debugPrint('Error subscribing to topic: $e');
-    }
-  }
-
-  /// Отписаться от топика
-  Future<void> unsubscribeFromTopic(String topic) async {
-    try {
-      await _firebaseMessaging.unsubscribeFromTopic(topic);
-      debugPrint('Unsubscribed from topic: $topic');
-    } catch (e) {
-      debugPrint('Error unsubscribing from topic: $e');
-    }
-  }
-
-  /// Отправить уведомление о бронировании
-  Future<void> sendBookingNotification({
+  /// Отправить уведомление по шаблону
+  Future<String> sendNotificationByTemplate({
+    required String templateId,
     required String userId,
-    required String title,
-    required String body,
+    required Map<String, String> variables,
     Map<String, dynamic>? data,
   }) async {
     try {
-      await _firestore.collection('notifications').add({
-        'userId': userId,
-        'title': title,
-        'body': body,
-        'type': 'booking',
-        'data': data ?? {},
-        'createdAt': FieldValue.serverTimestamp(),
-        'isRead': false,
-      });
+      // Получаем шаблон
+      final templateDoc = await _firestore
+          .collection('notificationTemplates')
+          .doc(templateId)
+          .get();
+
+      if (!templateDoc.exists) {
+        throw Exception('Шаблон уведомления не найден');
+      }
+
+      final template = NotificationTemplate.fromDocument(templateDoc);
+
+      if (!template.isActive) {
+        throw Exception('Шаблон уведомления неактивен');
+      }
+
+      // Заменяем переменные
+      final title = template.replaceTitleVariables(variables);
+      final body = template.replaceVariables(variables);
+
+      // Отправляем уведомление
+      return await _sendNotification(
+        userId: userId,
+        title: title,
+        body: body,
+        type: template.type,
+        channel: template.channel,
+        data: data ?? {},
+        templateId: templateId,
+      );
     } catch (e) {
-      debugPrint('Error sending booking notification: $e');
+      if (kDebugMode) {
+        print('Ошибка отправки уведомления по шаблону: $e');
+      }
+      rethrow;
     }
   }
 
-  /// Отправить уведомление об отмене бронирования
-  Future<void> sendCancellationNotification({
+  /// Отправить уведомление
+  Future<String> sendNotification({
     required String userId,
     required String title,
     required String body,
+    required NotificationType type,
+    required NotificationChannel channel,
     Map<String, dynamic>? data,
   }) async {
-    try {
-      await _firestore.collection('notifications').add({
-        'userId': userId,
-        'title': title,
-        'body': body,
-        'type': 'cancellation',
-        'data': data ?? {},
-        'createdAt': FieldValue.serverTimestamp(),
-        'isRead': false,
-      });
-    } catch (e) {
-      debugPrint('Error sending cancellation notification: $e');
-    }
-  }
-
-  /// Создать уведомление о бронировании
-  Future<void> createBookingNotification({
-    required String userId,
-    required String title,
-    required String body,
-    Map<String, dynamic>? data,
-  }) async {
-    await sendBookingNotification(
+    return await _sendNotification(
       userId: userId,
       title: title,
       body: body,
-      data: data,
+      type: type,
+      channel: channel,
+      data: data ?? {},
     );
   }
 
-  /// Создать уведомление о платеже
-  Future<void> createPaymentNotification({
+  /// Внутренний метод отправки уведомления
+  Future<String> _sendNotification({
     required String userId,
     required String title,
     required String body,
-    Map<String, dynamic>? data,
+    required NotificationType type,
+    required NotificationChannel channel,
+    required Map<String, dynamic> data,
+    String? templateId,
   }) async {
     try {
-      await _firestore.collection('notifications').add({
-        'userId': userId,
-        'title': title,
-        'body': body,
-        'type': 'payment',
-        'data': data ?? {},
-        'createdAt': FieldValue.serverTimestamp(),
-        'isRead': false,
-      });
+      final notificationId = _uuid.v4();
+      final now = DateTime.now();
+
+      // Создаем запись об отправленном уведомлении
+      final sentNotification = SentNotification(
+        id: notificationId,
+        templateId: templateId ?? '',
+        userId: userId,
+        title: title,
+        body: body,
+        type: type,
+        channel: channel,
+        data: data,
+        status: NotificationStatus.pending,
+        sentAt: now,
+      );
+
+      // Сохраняем в Firestore
+      await _firestore
+          .collection('sentNotifications')
+          .doc(notificationId)
+          .set(sentNotification.toMap());
+
+      // Отправляем уведомление в зависимости от канала
+      switch (channel) {
+        case NotificationChannel.push:
+          await _sendPushNotification(userId, title, body, data);
+          break;
+        case NotificationChannel.email:
+          await _sendEmailNotification(userId, title, body, data);
+          break;
+        case NotificationChannel.sms:
+          await _sendSmsNotification(userId, title, body, data);
+          break;
+        case NotificationChannel.inApp:
+          await _sendInAppNotification(userId, title, body, data);
+          break;
+      }
+
+      // Обновляем статус на "отправлено"
+      await _updateNotificationStatus(notificationId, NotificationStatus.sent);
+
+      // Отправляем в поток
+      _notificationController
+          .add(sentNotification.copyWith(status: NotificationStatus.sent));
+
+      return notificationId;
     } catch (e) {
-      debugPrint('Error sending payment notification: $e');
+      if (kDebugMode) {
+        print('Ошибка отправки уведомления: $e');
+      }
+
+      // Обновляем статус на "ошибка"
+      if (notificationId != null) {
+        await _updateNotificationStatus(
+            notificationId, NotificationStatus.failed, e.toString());
+      }
+
+      rethrow;
     }
   }
 
-  /// Универсальный метод для отправки уведомлений
-  Future<void> sendNotification({
-    required String userId,
-    required String title,
-    required String body,
-    String? type,
-    Map<String, dynamic>? data,
-  }) async {
+  /// Отправить push-уведомление
+  Future<void> _sendPushNotification(
+    String userId,
+    String title,
+    String body,
+    Map<String, dynamic> data,
+  ) async {
     try {
-      await _firestore.collection('notifications').add({
-        'userId': userId,
-        'title': title,
-        'body': body,
-        'type': type ?? 'general',
-        'data': data ?? {},
-        'createdAt': FieldValue.serverTimestamp(),
-        'isRead': false,
-      });
+      // Получаем FCM токены пользователя
+      final userDoc = await _firestore.collection('users').doc(userId).get();
+      if (!userDoc.exists) return;
+
+      final userData = userDoc.data()!;
+      final fcmTokens = List<String>.from(userData['fcmTokens'] ?? []);
+
+      if (fcmTokens.isEmpty) return;
+
+      // Отправляем на каждый токен
+      for (final token in fcmTokens) {
+        try {
+          await _messaging.sendMessage(
+            to: token,
+            notification: {
+              'title': title,
+              'body': body,
+            },
+            data: data.map((key, value) => MapEntry(key, value.toString())),
+          );
+        } catch (e) {
+          if (kDebugMode) {
+            print('Ошибка отправки push на токен $token: $e');
+          }
+        }
+      }
     } catch (e) {
-      debugPrint('Error sending notification: $e');
+      if (kDebugMode) {
+        print('Ошибка отправки push-уведомления: $e');
+      }
+      rethrow;
     }
   }
-}
 
-/// Обработчик фоновых сообщений Firebase
-@pragma('vm:entry-point')
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  debugPrint('Background message received: ${message.messageId}');
-  // Здесь можно добавить обработку фоновых сообщений
-}
+  /// Отправить email-уведомление
+  Future<void> _sendEmailNotification(
+    String userId,
+    String title,
+    String body,
+    Map<String, dynamic> data,
+  ) async {
+    // TODO: Реализовать отправку email через Cloud Functions
+    if (kDebugMode) {
+      print('Email notification: $title - $body');
+    }
+  }
 
-/// Универсальный метод для отправки уведомлений
-Future<void> sendNotification({
-  required String userId,
-  required String title,
-  required String body,
-  String? type,
-  Map<String, dynamic>? data,
-}) async {
-  final notificationService = NotificationService();
-  await notificationService.sendBookingNotification(
-    userId: userId,
-    title: title,
-    body: body,
-    data: data,
-  );
+  /// Отправить SMS-уведомление
+  Future<void> _sendSmsNotification(
+    String userId,
+    String title,
+    String body,
+    Map<String, dynamic> data,
+  ) async {
+    // TODO: Реализовать отправку SMS через Cloud Functions
+    if (kDebugMode) {
+      print('SMS notification: $title - $body');
+    }
+  }
+
+  /// Отправить внутриприложенческое уведомление
+  Future<void> _sendInAppNotification(
+    String userId,
+    String title,
+    String body,
+    Map<String, dynamic> data,
+  ) async {
+    // TODO: Реализовать внутриприложенческие уведомления
+    if (kDebugMode) {
+      print('In-app notification: $title - $body');
+    }
+  }
+
+  /// Обновить статус уведомления
+  Future<void> _updateNotificationStatus(
+    String notificationId,
+    NotificationStatus status, [
+    String? errorMessage,
+  ]) async {
+    try {
+      final updateData = {
+        'status': status.toString().split('.').last,
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      };
+
+      if (status == NotificationStatus.delivered) {
+        updateData['deliveredAt'] = Timestamp.fromDate(DateTime.now());
+      } else if (status == NotificationStatus.read) {
+        updateData['readAt'] = Timestamp.fromDate(DateTime.now());
+      } else if (status == NotificationStatus.failed && errorMessage != null) {
+        updateData['errorMessage'] = errorMessage;
+      }
+
+      await _firestore
+          .collection('sentNotifications')
+          .doc(notificationId)
+          .update(updateData);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка обновления статуса уведомления: $e');
+      }
+    }
+  }
+
+  /// Отметить уведомление как прочитанное
+  Future<void> markAsRead(String notificationId) async {
+    await _updateNotificationStatus(notificationId, NotificationStatus.read);
+  }
+
+  /// Отметить уведомление как доставленное
+  Future<void> markAsDelivered(String notificationId) async {
+    await _updateNotificationStatus(
+        notificationId, NotificationStatus.delivered);
+  }
+
+  /// Получить уведомления пользователя
+  Future<List<SentNotification>> getUserNotifications(String userId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('sentNotifications')
+          .where('userId', isEqualTo: userId)
+          .orderBy('sentAt', descending: true)
+          .limit(50)
+          .get();
+
+      return snapshot.docs
+          .map((doc) => SentNotification.fromDocument(doc))
+          .toList();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка получения уведомлений пользователя: $e');
+      }
+      return [];
+    }
+  }
+
+  /// Получить шаблоны уведомлений
+  Future<List<NotificationTemplate>> getNotificationTemplates() async {
+    try {
+      final snapshot = await _firestore
+          .collection('notificationTemplates')
+          .where('isActive', isEqualTo: true)
+          .orderBy('name')
+          .get();
+
+      return snapshot.docs
+          .map((doc) => NotificationTemplate.fromDocument(doc))
+          .toList();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка получения шаблонов уведомлений: $e');
+      }
+      return [];
+    }
+  }
+
+  /// Получить статистику уведомлений
+  Future<NotificationStatistics> getNotificationStatistics({
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      final now = DateTime.now();
+      final start = startDate ?? now.subtract(const Duration(days: 30));
+      final end = endDate ?? now;
+
+      final snapshot = await _firestore
+          .collection('sentNotifications')
+          .where('sentAt', isGreaterThanOrEqualTo: Timestamp.fromDate(start))
+          .where('sentAt', isLessThanOrEqualTo: Timestamp.fromDate(end))
+          .get();
+
+      final notifications = snapshot.docs
+          .map((doc) => SentNotification.fromDocument(doc))
+          .toList();
+
+      int totalSent = 0;
+      int totalDelivered = 0;
+      int totalRead = 0;
+      int totalFailed = 0;
+      final sentByType = <String, int>{};
+      final sentByChannel = <String, int>{};
+
+      for (final notification in notifications) {
+        totalSent++;
+
+        switch (notification.status) {
+          case NotificationStatus.delivered:
+            totalDelivered++;
+            break;
+          case NotificationStatus.read:
+            totalRead++;
+            break;
+          case NotificationStatus.failed:
+            totalFailed++;
+            break;
+          default:
+            break;
+        }
+
+        sentByType[notification.type.name] =
+            (sentByType[notification.type.name] ?? 0) + 1;
+        sentByChannel[notification.channel.name] =
+            (sentByChannel[notification.channel.name] ?? 0) + 1;
+      }
+
+      final deliveryRate =
+          totalSent > 0 ? (totalDelivered / totalSent) * 100 : 0.0;
+      final readRate =
+          totalDelivered > 0 ? (totalRead / totalDelivered) * 100 : 0.0;
+
+      return NotificationStatistics(
+        totalSent: totalSent,
+        totalDelivered: totalDelivered,
+        totalRead: totalRead,
+        totalFailed: totalFailed,
+        sentByType: sentByType,
+        sentByChannel: sentByChannel,
+        deliveryRate: deliveryRate,
+        readRate: readRate,
+        periodStart: start,
+        periodEnd: end,
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка получения статистики уведомлений: $e');
+      }
+      return NotificationStatistics(
+        totalSent: 0,
+        totalDelivered: 0,
+        totalRead: 0,
+        totalFailed: 0,
+        sentByType: {},
+        sentByChannel: {},
+        deliveryRate: 0.0,
+        readRate: 0.0,
+        periodStart: DateTime.now().subtract(const Duration(days: 30)),
+        periodEnd: DateTime.now(),
+      );
+    }
+  }
+
+  /// Очистить старые уведомления
+  Future<void> cleanupOldNotifications({int daysToKeep = 90}) async {
+    try {
+      final cutoffDate = DateTime.now().subtract(Duration(days: daysToKeep));
+
+      final snapshot = await _firestore
+          .collection('sentNotifications')
+          .where('sentAt', isLessThan: Timestamp.fromDate(cutoffDate))
+          .get();
+
+      final batch = _firestore.batch();
+      for (final doc in snapshot.docs) {
+        batch.delete(doc.reference);
+      }
+
+      await batch.commit();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка очистки старых уведомлений: $e');
+      }
+    }
+  }
+
+  /// Закрыть сервис
+  void dispose() {
+    _notificationController.close();
+  }
 }
