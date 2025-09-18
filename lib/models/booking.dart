@@ -337,7 +337,7 @@ class Booking {
       serviceId: map['serviceId'] ?? '',
       serviceName: map['serviceName'] ?? '',
       servicePrice: (map['servicePrice'] ?? 0).toDouble(),
-      eventDate: map['eventDate'] != null 
+      eventDate: map['eventDate'] != null
           ? (map['eventDate'] as Timestamp).toDate()
           : DateTime.now(),
       eventTime: map['eventTime'] ?? '',
@@ -350,10 +350,10 @@ class Booking {
         (e) => e.name == map['status'],
         orElse: () => BookingStatus.pending,
       ),
-      createdAt: map['createdAt'] != null 
+      createdAt: map['createdAt'] != null
           ? (map['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
-      updatedAt: map['updatedAt'] != null 
+      updatedAt: map['updatedAt'] != null
           ? (map['updatedAt'] as Timestamp).toDate()
           : DateTime.now(),
     );

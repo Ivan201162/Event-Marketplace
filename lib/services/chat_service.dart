@@ -15,7 +15,9 @@ class ChatService {
           .orderBy('lastMessageAt', descending: true)
           .get();
 
-      return querySnapshot.docs.map((doc) => chat_model.Chat.fromDocument(doc)).toList();
+      return querySnapshot.docs
+          .map((doc) => chat_model.Chat.fromDocument(doc))
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения чатов: $e');
     }
@@ -29,12 +31,14 @@ class ChatService {
         .collection('messages')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => message_model.ChatMessage.fromDocument(doc)).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => message_model.ChatMessage.fromDocument(doc))
+            .toList());
   }
 
   /// Отправить сообщение
-  Future<void> sendMessage(String chatId, message_model.ChatMessage message) async {
+  Future<void> sendMessage(
+      String chatId, message_model.ChatMessage message) async {
     try {
       await _firestore
           .collection('chats')
@@ -89,13 +93,13 @@ class ChatService {
           .doc(chatId)
           .collection('messages')
           .where('senderId', isNotEqualTo: userId)
-              .where('status', isNotEqualTo: message_model.MessageStatus.read.name)
+          .where('status', isNotEqualTo: message_model.MessageStatus.read.name)
           .get();
 
       final batch = _firestore.batch();
       for (final doc in querySnapshot.docs) {
         batch.update(doc.reference, {
-            'status': message_model.MessageStatus.read.name,
+          'status': message_model.MessageStatus.read.name,
           'readAt': Timestamp.fromDate(DateTime.now()),
         });
       }
@@ -134,7 +138,8 @@ class ChatService {
             .doc(chatDoc.id)
             .collection('messages')
             .where('senderId', isNotEqualTo: userId)
-            .where('status', isNotEqualTo: message_model.MessageStatus.read.name)
+            .where('status',
+                isNotEqualTo: message_model.MessageStatus.read.name)
             .get();
         totalUnread += messagesSnapshot.docs.length;
       }

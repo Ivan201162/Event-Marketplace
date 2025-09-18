@@ -31,7 +31,7 @@ class _ContentManagementScreenState
 
   @override
   Widget build(BuildContext context) {
-      return ResponsiveScaffold(
+    return ResponsiveScaffold(
       body: Column(
         children: [
           // Вкладки

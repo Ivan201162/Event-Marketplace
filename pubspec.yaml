@@ -9,96 +9,135 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  shared_preferences: ^2.1.1
-  table_calendar: ^3.0.9
-  cloud_firestore: ^6.0.1
-  firebase_core: ^4.1.0
-  firebase_auth: ^6.0.2
-  firebase_messaging: ^16.0.1
-  firebase_analytics: ^12.0.1
-  firebase_storage: ^13.0.1
-  flutter_local_notifications: ^19.4.2
-  flutter_riverpod: ^3.0.0
-  go_router: ^14.2.7
-  google_sign_in: ^7.1.1
-  # vk_login: ^1.0.0  # Temporarily disabled due to dependency conflicts
-  http: ^1.1.0
-  file_picker: ^10.3.3
-  image_picker: ^1.0.7
-  url_launcher: ^6.2.2
-  cached_network_image: ^3.4.1
-  # UX Improvements
-  flutter_animate: ^4.5.0
-  page_transition: ^2.1.0
-  # Theme and UI
-  flex_color_scheme: ^8.3.0
-  # PDF Generation
-  pdf: ^3.10.7
-  printing: ^5.12.0
-  # File handling
-  path_provider: ^2.1.1
-  # Calendar integration
-  googleapis: ^14.0.0
-  googleapis_auth: ^2.0.0
-  icalendar_parser: ^2.1.0
-  # Audio recording
-  record: ^6.1.1
-  permission_handler: ^12.0.1
-  # Emoji picker
-  emoji_picker_flutter: ^4.3.0
-  # Audio playback
-  audioplayers: ^6.5.1
-  # Localization
+  
+  # Core Flutter
   flutter_localizations:
     sdk: flutter
+  
+  # State Management
+  flutter_riverpod: ^2.4.9
+  riverpod_annotation: ^2.3.3
+  
+  # Navigation
+  go_router: ^14.2.7
+  
+  # Firebase
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
+  cloud_firestore: ^4.13.6
+  firebase_storage: ^11.5.6
+  firebase_messaging: ^14.7.10
+  firebase_analytics: ^10.7.4
+  firebase_crashlytics: ^3.4.9
+  firebase_performance: ^0.9.3+7
+  
+  # UI & Theme
+  flex_color_scheme: ^7.3.1
+  flutter_animate: ^4.5.0
+  page_transition: ^2.1.0
+  
+  # Localization
   intl: ^0.20.2
-  # Analytics and charts (added for step 10)
-  fl_chart: ^1.1.1
-  # Media handling (added for step 11)
+  
+  # Storage & Preferences
+  shared_preferences: ^2.2.2
+  flutter_secure_storage: ^9.0.0
+  path_provider: ^2.1.1
+  
+  # Network & HTTP
+  http: ^1.1.2
+  connectivity_plus: ^5.0.2
+  
+  # Media & Files
+  image_picker: ^1.0.4
+  file_picker: ^6.1.1
+  cached_network_image: ^3.3.0
   video_player: ^2.8.1
-  photo_view: ^0.15.0
-  # Calendar integration (added for step 12)
-  # Guest management (added for step 13)
+  photo_view: ^0.14.0
+  video_thumbnail: ^0.5.3
+  image: ^4.1.3
+  
+  # Audio
+  audioplayers: ^5.2.1
+  record: ^5.0.4
+  
+  # Permissions
+  permission_handler: ^11.1.0
+  
+  # Calendar
+  table_calendar: ^3.0.9
+  googleapis: ^11.4.0
+  googleapis_auth: ^1.4.1
+  icalendar_parser: ^2.1.0
+  
+  # PDF & Printing
+  pdf: ^3.10.7
+  printing: ^5.12.0
+  
+  # QR Codes
   qr_flutter: ^4.1.0
   qr_code_scanner: ^1.0.1
-  # Ideas module (added for step 14)
-  uuid: ^4.1.0
-  # Support system (added for step 15)
-  mailer: ^6.0.1
-  device_info_plus: ^12.1.0
-  # Integrations (added for step 16)
-  google_maps_flutter: ^2.5.0
-  geolocator: ^10.1.1
-  geocoding: ^2.2.2
-  connectivity_plus: ^5.0.2
-  # Security (added for step 18)
+  
+  # Charts & Analytics
+  fl_chart: ^0.66.0
+  
+  # Authentication
+  google_sign_in: ^6.1.6
+  local_auth: ^2.1.7
+  
+  # Security & Crypto
   crypto: ^3.0.3
   encrypt: ^5.0.1
-  local_auth: ^2.1.6
-  flutter_secure_storage: ^9.0.0
-  package_info_plus: ^8.3.1
-  timezone: ^0.10.1
-  # Share functionality
-  share_plus: ^7.0.2
-
-  firebase_crashlytics: any
-  firebase_performance: any
-  freezed_annotation: any
-  riverpod_annotation: any
-  in_app_review: any
-  pointycastle: any
-  image: any
-  path: any
-  video_thumbnail: any
+  pointycastle: ^3.7.3
+  
+  # Utils
+  uuid: ^4.2.1
+  url_launcher: ^6.2.2
+  share_plus: ^7.2.2
+  device_info_plus: ^9.1.1
+  package_info_plus: ^4.2.0
+  timezone: ^0.9.2
+  
+  # Notifications
+  flutter_local_notifications: ^16.3.2
+  
+  # Emoji
+  emoji_picker_flutter: ^4.3.0
+  
+  # Email
+  mailer: ^6.0.1
+  
+  # Maps & Location
+  google_maps_flutter: ^2.5.0
+  geolocator: ^10.1.0
+  geocoding: ^2.1.1
+  
+  # Code Generation
+  freezed_annotation: ^2.4.1
+  json_annotation: ^4.8.1
+  
+  # Reviews
+  in_app_review: ^2.0.8
+  
+  # Path
+  path: ^1.8.3
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^6.0.0
-  mockito: ^5.4.4
-  build_runner: ^2.4.7
-
   integration_test:
     sdk: flutter
+  
+  # Code Generation
+  build_runner: ^2.4.7
+  freezed: ^2.4.6
+  json_serializable: ^6.7.1
+  riverpod_generator: ^2.3.9
+  
+  # Testing
+  mockito: ^5.4.4
+  
+  # Linting
+  flutter_lints: ^3.0.1
 flutter:
   generate: true
   uses-material-design: true

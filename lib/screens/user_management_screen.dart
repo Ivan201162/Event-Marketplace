@@ -30,7 +30,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
 
   @override
   Widget build(BuildContext context) {
-      return ResponsiveScaffold(
+    return ResponsiveScaffold(
       body: Column(
         children: [
           // Вкладки

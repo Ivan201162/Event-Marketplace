@@ -318,10 +318,10 @@ class Payment {
       transactionId: map['transactionId'],
       description: map['description'] ?? '',
       metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-      createdAt: map['createdAt'] != null 
+      createdAt: map['createdAt'] != null
           ? (map['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
-      updatedAt: map['updatedAt'] != null 
+      updatedAt: map['updatedAt'] != null
           ? (map['updatedAt'] as Timestamp).toDate()
           : DateTime.now(),
     );

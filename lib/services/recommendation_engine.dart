@@ -90,14 +90,14 @@ class RecommendationEngine {
       categoryCount['Свадьба'] = (categoryCount['Свадьба'] ?? 0) + 1;
       serviceCount['Фотограф'] = (serviceCount['Фотограф'] ?? 0) + 1;
 
-        if (booking.totalPrice != null) {
-          priceRange.add(booking.totalPrice!);
+      if (booking.totalPrice != null) {
+        priceRange.add(booking.totalPrice!);
       }
     }
 
     // Анализируем отзывы
     for (final review in history.reviews) {
-        ratingPreferences.add(review.rating.toDouble());
+      ratingPreferences.add(review.rating.toDouble());
     }
 
     // Определяем предпочтительные категории

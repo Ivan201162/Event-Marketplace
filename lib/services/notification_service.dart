@@ -643,7 +643,8 @@ class NotificationService {
       await sendNotification(
         recipientId: customerId,
         title: 'Напоминание об оплате',
-        body: 'Не забудьте оплатить заказ на сумму ${amount.toStringAsFixed(2)} руб.',
+        body:
+            'Не забудьте оплатить заказ на сумму ${amount.toStringAsFixed(2)} руб.',
         type: NotificationType.payment,
         data: {
           'bookingId': bookingId,

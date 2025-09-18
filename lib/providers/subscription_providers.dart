@@ -40,7 +40,8 @@ final specialistSubscribersProvider =
 });
 
 /// Провайдер для состояния подписок
-final subscriptionStateProvider = NotifierProvider<SubscriptionStateNotifier, SubscriptionState>(
+final subscriptionStateProvider =
+    NotifierProvider<SubscriptionStateNotifier, SubscriptionState>(
   () => SubscriptionStateNotifier(),
 );
 
