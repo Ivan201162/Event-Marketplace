@@ -1,8 +1,10 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/app_settings.dart';
 import '../services/settings_service.dart';
 import '../widgets/responsive_layout.dart';
+import '../widgets/responsive_widgets.dart';
 
 /// Экран управления настройками и конфигурацией
 class SettingsManagementScreen extends ConsumerStatefulWidget {
@@ -30,8 +32,7 @@ class _SettingsManagementScreenState
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveScaffold(
-      title: 'Управление настройками',
+      return ResponsiveScaffold(
       body: Column(
         children: [
           // Вкладки
@@ -625,7 +626,7 @@ class _SettingsManagementScreenState
     if (value == null) return 'null';
     if (value is String) return '"$value"';
     if (value is Map || value is List) {
-      return const JsonEncoder.withIndent('  ').convert(value);
+      return JsonEncoder.withIndent('  ').convert(value);
     }
     return value.toString();
   }

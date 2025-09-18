@@ -31,6 +31,7 @@ class Booking {
   final DateTime? expiresAt; // Время истечения подтверждения
   final String? customerId;
   final String? specialistId;
+  final String? specialistName;
   final DateTime? endDate;
   final double? prepayment;
 
@@ -73,6 +74,7 @@ class Booking {
     this.expiresAt,
     this.customerId,
     this.specialistId,
+    this.specialistName,
     this.endDate,
     this.prepayment,
     this.title,

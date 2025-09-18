@@ -30,6 +30,7 @@ enum OrganizationType {
 class Payment {
   final String id;
   final String bookingId;
+  final String userId;
   final String customerId;
   final String specialistId;
   final PaymentType type;
@@ -49,6 +50,7 @@ class Payment {
   const Payment({
     required this.id,
     required this.bookingId,
+    required this.userId,
     required this.customerId,
     required this.specialistId,
     required this.type,
@@ -306,7 +308,7 @@ class Payment {
       currency: map['currency'] ?? 'RUB',
       type: PaymentType.values.firstWhere(
         (e) => e.name == map['type'],
-        orElse: () => PaymentType.full,
+        orElse: () => PaymentType.fullPayment,
       ),
       status: PaymentStatus.values.firstWhere(
         (e) => e.name == map['status'],

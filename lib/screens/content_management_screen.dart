@@ -4,6 +4,7 @@ import 'package:file_picker/file_picker.dart';
 import '../models/content_management.dart';
 import '../services/content_management_service.dart';
 import '../widgets/responsive_layout.dart';
+import '../widgets/responsive_widgets.dart';
 
 /// Экран управления контентом и медиа
 class ContentManagementScreen extends ConsumerStatefulWidget {
@@ -30,8 +31,7 @@ class _ContentManagementScreenState
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveScaffold(
-      title: 'Управление контентом',
+      return ResponsiveScaffold(
       body: Column(
         children: [
           // Вкладки

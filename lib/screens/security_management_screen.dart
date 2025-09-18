@@ -1,8 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/security_audit.dart';
 import '../services/security_service.dart';
 import '../widgets/responsive_layout.dart';
+import '../widgets/responsive_widgets.dart';
 
 /// Экран управления безопасностью
 class SecurityManagementScreen extends ConsumerStatefulWidget {
@@ -30,8 +32,7 @@ class _SecurityManagementScreenState
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveScaffold(
-      title: 'Управление безопасностью',
+      return ResponsiveScaffold(
       body: Column(
         children: [
           // Вкладки

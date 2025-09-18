@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/external_integration.dart';
 import '../services/integration_service.dart';
 import '../widgets/responsive_layout.dart';
+import '../widgets/responsive_widgets.dart';
 
 /// Экран управления интеграциями
 class IntegrationManagementScreen extends ConsumerStatefulWidget {
@@ -28,8 +29,7 @@ class _IntegrationManagementScreenState
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveScaffold(
-      title: 'Управление интеграциями',
+      return ResponsiveScaffold(
       body: Column(
         children: [
           // Вкладки

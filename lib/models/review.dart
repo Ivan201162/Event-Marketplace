@@ -137,6 +137,7 @@ class DetailedRating {
 /// Модель отзыва
 class Review {
   final String id;
+  final String bookingId;
   final String reviewerId;
   final String reviewerName;
   final String? reviewerAvatar;
@@ -165,6 +166,7 @@ class Review {
 
   const Review({
     required this.id,
+    required this.bookingId,
     required this.reviewerId,
     required this.reviewerName,
     this.reviewerAvatar,
@@ -459,10 +461,7 @@ class Review {
       title: map['title'] ?? '',
       comment: map['comment'] ?? '',
       tags: (map['tags'] as List<dynamic>?)
-          ?.map((tag) => ReviewTags.values.firstWhere(
-                (e) => e.name == tag,
-                orElse: () => ReviewTags.quality,
-              ))
+          ?.map((tag) => tag.toString())
           .toList() ?? [],
       isVerified: map['isVerified'] ?? false,
       isPublic: map['isPublic'] ?? true,

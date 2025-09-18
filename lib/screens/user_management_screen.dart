@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user_management.dart';
 import '../services/user_management_service.dart';
 import '../widgets/responsive_layout.dart';
+import '../widgets/responsive_widgets.dart';
 
 /// Экран управления пользователями и ролями
 class UserManagementScreen extends ConsumerStatefulWidget {
@@ -29,8 +30,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return ResponsiveScaffold(
-      title: 'Управление пользователями',
+      return ResponsiveScaffold(
       body: Column(
         children: [
           // Вкладки

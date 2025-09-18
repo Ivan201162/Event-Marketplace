@@ -71,8 +71,7 @@ class CustomerProfileExtendedService {
         id: '',
         userId: userId,
         name: baseProfile.name,
-        email: baseProfile.email,
-        phone: baseProfile.phone,
+        phoneNumber: baseProfile.phoneNumber,
         avatarUrl: baseProfile.avatarUrl,
         bio: baseProfile.bio,
         location: baseProfile.location,
@@ -339,16 +338,13 @@ class CustomerProfileExtendedService {
 
       final updatedProfile = profile.copyWith(
         preferences: {
-          'budget': preferences.budget,
-          'eventTypes': preferences.eventTypes,
-          'location': preferences.location,
-          'dateRange': preferences.dateRange,
-          'guestCount': preferences.guestCount,
-          'style': preferences.style,
-          'colors': preferences.colors,
-          'music': preferences.music,
-          'catering': preferences.catering,
-          'decorations': preferences.decorations,
+          'preferredCategories': preferences.preferredCategories,
+          'preferredLocations': preferences.preferredLocations,
+          'preferredDays': preferences.preferredDays,
+          'allowNotifications': preferences.allowNotifications,
+          'allowMarketing': preferences.allowMarketing,
+          'language': preferences.language,
+          'theme': preferences.theme,
         },
       );
       await updateExtendedProfile(updatedProfile);
