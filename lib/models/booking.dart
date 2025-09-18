@@ -319,4 +319,41 @@ class Booking {
   bool get canBeCompleted {
     return status == BookingStatus.confirmed;
   }
+
+  /// Создать объект из Map
+  factory Booking.fromMap(Map<String, dynamic> map) {
+    return Booking(
+      id: map['id'] ?? '',
+      eventId: map['eventId'] ?? '',
+      eventTitle: map['eventTitle'] ?? '',
+      userId: map['userId'] ?? '',
+      userName: map['userName'] ?? '',
+      userEmail: map['userEmail'],
+      userPhone: map['userPhone'],
+      specialistId: map['specialistId'] ?? '',
+      specialistName: map['specialistName'] ?? '',
+      serviceId: map['serviceId'] ?? '',
+      serviceName: map['serviceName'] ?? '',
+      servicePrice: (map['servicePrice'] ?? 0).toDouble(),
+      eventDate: map['eventDate'] != null 
+          ? (map['eventDate'] as Timestamp).toDate()
+          : DateTime.now(),
+      eventTime: map['eventTime'] ?? '',
+      eventDuration: map['eventDuration'] ?? 0,
+      eventLocation: map['eventLocation'] ?? '',
+      eventAddress: map['eventAddress'] ?? '',
+      eventDescription: map['eventDescription'] ?? '',
+      specialRequests: map['specialRequests'] ?? '',
+      status: BookingStatus.values.firstWhere(
+        (e) => e.name == map['status'],
+        orElse: () => BookingStatus.pending,
+      ),
+      createdAt: map['createdAt'] != null 
+          ? (map['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      updatedAt: map['updatedAt'] != null 
+          ? (map['updatedAt'] as Timestamp).toDate()
+          : DateTime.now(),
+    );
+  }
 }

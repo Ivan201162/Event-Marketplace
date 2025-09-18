@@ -43,8 +43,28 @@ class CustomerProfileExtendedService {
         return null;
       }
 
-      final baseProfile =
-          CustomerProfile.fromDocument(baseProfileDoc.docs.first);
+      // Создаём базовый профиль из данных
+      final baseProfileData = baseProfileDoc.docs.first.data();
+      final baseProfile = CustomerProfileExtended(
+        id: baseProfileDoc.docs.first.id,
+        userId: userId,
+        name: baseProfileData['name'],
+        photoURL: baseProfileData['photoURL'],
+        bio: baseProfileData['bio'],
+        phoneNumber: baseProfileData['phoneNumber'],
+        location: baseProfileData['location'],
+        interests: List<String>.from(baseProfileData['interests'] ?? []),
+        eventTypes: List<String>.from(baseProfileData['eventTypes'] ?? []),
+        preferences: baseProfileData['preferences'],
+        createdAt: (baseProfileData['createdAt'] as Timestamp).toDate(),
+        updatedAt: (baseProfileData['updatedAt'] as Timestamp).toDate(),
+        inspirationPhotos: [],
+        notes: [],
+        favoriteSpecialists: [],
+        savedEvents: [],
+        extendedPreferences: CustomerPreferences(),
+        lastUpdated: DateTime.now(),
+      );
 
       // Создаём расширенный профиль
       final extendedProfile = CustomerProfileExtended(
@@ -317,7 +337,20 @@ class CustomerProfileExtendedService {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return;
 
-      final updatedProfile = profile.copyWith(preferences: preferences);
+      final updatedProfile = profile.copyWith(
+        preferences: {
+          'budget': preferences.budget,
+          'eventTypes': preferences.eventTypes,
+          'location': preferences.location,
+          'dateRange': preferences.dateRange,
+          'guestCount': preferences.guestCount,
+          'style': preferences.style,
+          'colors': preferences.colors,
+          'music': preferences.music,
+          'catering': preferences.catering,
+          'decorations': preferences.decorations,
+        },
+      );
       await updateExtendedProfile(updatedProfile);
     } catch (e) {
       print('Error updating preferences: $e');

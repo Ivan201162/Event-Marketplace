@@ -439,6 +439,48 @@ class Review {
   String toString() {
     return 'Review(id: $id, type: $type, rating: $rating, title: $title)';
   }
+
+  /// Создать объект из Map
+  factory Review.fromMap(Map<String, dynamic> map) {
+    return Review(
+      id: map['id'] ?? '',
+      bookingId: map['bookingId'] ?? '',
+      customerId: map['customerId'] ?? '',
+      customerName: map['customerName'] ?? '',
+      specialistId: map['specialistId'] ?? '',
+      specialistName: map['specialistName'] ?? '',
+      serviceId: map['serviceId'] ?? '',
+      serviceName: map['serviceName'] ?? '',
+      type: ReviewType.values.firstWhere(
+        (e) => e.name == map['type'],
+        orElse: () => ReviewType.service,
+      ),
+      rating: (map['rating'] ?? 0).toDouble(),
+      title: map['title'] ?? '',
+      comment: map['comment'] ?? '',
+      tags: (map['tags'] as List<dynamic>?)
+          ?.map((tag) => ReviewTags.values.firstWhere(
+                (e) => e.name == tag,
+                orElse: () => ReviewTags.quality,
+              ))
+          .toList() ?? [],
+      isVerified: map['isVerified'] ?? false,
+      isPublic: map['isPublic'] ?? true,
+      response: map['response'],
+      responseDate: map['responseDate'] != null 
+          ? (map['responseDate'] as Timestamp).toDate()
+          : null,
+      helpfulCount: map['helpfulCount'] ?? 0,
+      reportCount: map['reportCount'] ?? 0,
+      isReported: map['isReported'] ?? false,
+      createdAt: map['createdAt'] != null 
+          ? (map['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      updatedAt: map['updatedAt'] != null 
+          ? (map['updatedAt'] as Timestamp).toDate()
+          : DateTime.now(),
+    );
+  }
 }
 
 /// Статистика отзывов

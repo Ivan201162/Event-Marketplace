@@ -173,7 +173,7 @@ class CalendarService {
   Future<String?> exportToICS(List<CalendarEvent> events) async {
     try {
       final calendar = ICalendar(
-        headData: ICalendarHeadData(
+        data: ICalendarHeadData(
           prodId: 'Event Marketplace App',
           version: '2.0',
         ),

@@ -14,7 +14,7 @@ class RecommendationEngine {
     required String userId,
     int limit = 10,
   }) async {
-    if (!FeatureFlags.recommendationsEnabled) {
+    if (!FeatureFlags.isRecommendationsEnabled) {
       return [];
     }
 
@@ -90,14 +90,14 @@ class RecommendationEngine {
       categoryCount['Свадьба'] = (categoryCount['Свадьба'] ?? 0) + 1;
       serviceCount['Фотограф'] = (serviceCount['Фотограф'] ?? 0) + 1;
 
-      if (booking.price != null) {
-        priceRange.add(booking.price!);
+        if (booking.totalPrice != null) {
+          priceRange.add(booking.totalPrice!);
       }
     }
 
     // Анализируем отзывы
     for (final review in history.reviews) {
-      ratingPreferences.add(review.rating);
+        ratingPreferences.add(review.rating.toDouble());
     }
 
     // Определяем предпочтительные категории

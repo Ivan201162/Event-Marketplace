@@ -238,6 +238,7 @@ class Specialist {
   final String? avatarUrl;
   final String? avatar;
   final String? specialization;
+  final String? phone;
 
   const Specialist({
     required this.id,
@@ -267,6 +268,7 @@ class Specialist {
     this.avatarUrl,
     this.avatar,
     this.specialization,
+    this.phone,
   });
 
   /// Создать из Map

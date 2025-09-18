@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/customer_profile_extended.dart';
 import '../services/customer_profile_extended_service.dart';
+import '../providers/customer_profile_extended_providers.dart';
 
 /// Виджет редактора заметок
 class NoteEditorWidget extends ConsumerStatefulWidget {

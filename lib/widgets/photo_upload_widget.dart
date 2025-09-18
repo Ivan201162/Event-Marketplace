@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import '../models/customer_profile_extended.dart';
 import '../services/customer_profile_extended_service.dart';
+import '../providers/customer_profile_extended_providers.dart';
 
 /// Виджет загрузки фото
 class PhotoUploadWidget extends ConsumerStatefulWidget {

@@ -11,9 +11,9 @@ enum ThemeMode {
 }
 
 /// Провайдер для управления темами
-final themeProvider = StateNotifierProvider<ThemeNotifier, ThemeMode>((ref) {
-  return ThemeNotifier();
-});
+final themeProvider = NotifierProvider<ThemeNotifier, ThemeMode>(
+  () => ThemeNotifier(),
+);
 
 /// Провайдер для получения текущей темы
 final currentThemeProvider = Provider<ThemeData>((ref) {
@@ -81,11 +81,13 @@ final brandColorsProvider = Provider<BrandColors>((ref) {
 });
 
 /// Нотификатор для управления темами
-class ThemeNotifier extends StateNotifier<ThemeMode> {
+class ThemeNotifier extends Notifier<ThemeMode> {
   static const String _themeKey = 'theme_mode';
 
-  ThemeNotifier() : super(ThemeMode.system) {
+  @override
+  ThemeMode build() {
     _loadTheme();
+    return ThemeMode.system;
   }
 
   /// Загрузить сохраненную тему

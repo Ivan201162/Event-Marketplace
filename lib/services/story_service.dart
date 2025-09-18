@@ -150,7 +150,7 @@ class StoryService {
             (data['expiresAt'] as Timestamp).toDate().isAfter(DateTime.now())) {
           activeStories++;
         }
-        totalViews += data['viewsCount'] ?? 0;
+        totalViews += (data['viewsCount'] ?? 0) as int;
       }
 
       return {

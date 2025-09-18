@@ -201,11 +201,9 @@ class SpecialistAnalyticsService {
           .get();
 
       final bookings = bookingsQuery.docs
-          .map((doc) => Booking.fromMap({
-                'id': doc.id,
-                ...doc.data(),
-              }))
-          .toList();
+          .map((doc) => Booking.fromMap(doc.data()))
+          .toList()
+          .cast<Booking>();
 
       // Получаем все платежи специалиста
       final paymentsQuery = await _firestore
@@ -214,11 +212,9 @@ class SpecialistAnalyticsService {
           .get();
 
       final payments = paymentsQuery.docs
-          .map((doc) => Payment.fromMap({
-                'id': doc.id,
-                ...doc.data(),
-              }))
-          .toList();
+          .map((doc) => Payment.fromMap(doc.data()))
+          .toList()
+          .cast<Payment>();
 
       // Получаем все отзывы специалиста
       final reviewsQuery = await _firestore
@@ -228,11 +224,9 @@ class SpecialistAnalyticsService {
           .get();
 
       final reviews = reviewsQuery.docs
-          .map((doc) => Review.fromMap({
-                'id': doc.id,
-                ...doc.data(),
-              }))
-          .toList();
+          .map((doc) => Review.fromMap(doc.data()))
+          .toList()
+          .cast<Review>();
 
       // Генерируем статистику доходов
       final incomeStats = _generateIncomeStats(bookings, payments);

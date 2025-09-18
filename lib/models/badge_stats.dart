@@ -1,77 +1,39 @@
-/// Статистика бейджей
-class BadgeStats {
-  final int totalBadges;
-  final int earnedBadges;
-  final int availableBadges;
-  final Map<String, int> categoryCounts;
-  final DateTime lastEarned;
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-  const BadgeStats({
-    required this.totalBadges,
-    required this.earnedBadges,
-    required this.availableBadges,
-    required this.categoryCounts,
-    required this.lastEarned,
-  });
+part 'badge_stats.freezed.dart';
+part 'badge_stats.g.dart';
 
-  factory BadgeStats.fromMap(Map<String, dynamic> data) {
-    return BadgeStats(
-      totalBadges: data['totalBadges'] as int? ?? 0,
-      earnedBadges: data['earnedBadges'] as int? ?? 0,
-      availableBadges: data['availableBadges'] as int? ?? 0,
-      categoryCounts: Map<String, int>.from(data['categoryCounts'] ?? {}),
-      lastEarned: DateTime.parse(data['lastEarned'] as String),
-    );
-  }
+/// Статистика по бейджам
+@freezed
+class BadgeStats with _$BadgeStats {
+  const factory BadgeStats({
+    @Default(0) int totalBadges,
+    @Default(0) int earnedBadges,
+    @Default(0) int availableBadges,
+    @Default(0) int points,
+    @Default(0) int level,
+    @Default('') String currentLevel,
+    @Default(0) int nextLevelPoints,
+    @Default(0.0) double progress,
+  }) = _BadgeStats;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'totalBadges': totalBadges,
-      'earnedBadges': earnedBadges,
-      'availableBadges': availableBadges,
-      'categoryCounts': categoryCounts,
-      'lastEarned': lastEarned.toIso8601String(),
-    };
-  }
+  factory BadgeStats.fromJson(Map<String, dynamic> json) =>
+      _$BadgeStatsFromJson(json);
 }
 
 /// Запись в таблице лидеров по бейджам
-class BadgeLeaderboardEntry {
-  final String userId;
-  final String userName;
-  final String? userAvatar;
-  final int badgeCount;
-  final List<String> recentBadges;
-  final int rank;
+@freezed
+class BadgeLeaderboardEntry with _$BadgeLeaderboardEntry {
+  const factory BadgeLeaderboardEntry({
+    required String userId,
+    required String userName,
+    required String userAvatar,
+    @Default(0) int totalBadges,
+    @Default(0) int points,
+    @Default(0) int level,
+    @Default(0) int position,
+  }) = _BadgeLeaderboardEntry;
 
-  const BadgeLeaderboardEntry({
-    required this.userId,
-    required this.userName,
-    this.userAvatar,
-    required this.badgeCount,
-    required this.recentBadges,
-    required this.rank,
-  });
-
-  factory BadgeLeaderboardEntry.fromMap(Map<String, dynamic> data) {
-    return BadgeLeaderboardEntry(
-      userId: data['userId'] as String,
-      userName: data['userName'] as String,
-      userAvatar: data['userAvatar'] as String?,
-      badgeCount: data['badgeCount'] as int? ?? 0,
-      recentBadges: List<String>.from(data['recentBadges'] ?? []),
-      rank: data['rank'] as int? ?? 0,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'userName': userName,
-      'userAvatar': userAvatar,
-      'badgeCount': badgeCount,
-      'recentBadges': recentBadges,
-      'rank': rank,
-    };
-  }
+  factory BadgeLeaderboardEntry.fromJson(Map<String, dynamic> json) =>
+      _$BadgeLeaderboardEntryFromJson(json);
 }

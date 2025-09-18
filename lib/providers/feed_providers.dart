@@ -28,10 +28,9 @@ final postLikesProvider =
 });
 
 /// Провайдер для состояния ленты
-final feedStateProvider =
-    StateNotifierProvider<FeedStateNotifier, FeedState>((ref) {
-  return FeedStateNotifier();
-});
+final feedStateProvider = NotifierProvider<FeedStateNotifier, FeedState>(
+  () => FeedStateNotifier(),
+);
 
 /// Состояние ленты
 class FeedState {
@@ -63,8 +62,9 @@ class FeedState {
 }
 
 /// Нотификатор для состояния ленты
-class FeedStateNotifier extends StateNotifier<FeedState> {
-  FeedStateNotifier() : super(const FeedState());
+class FeedStateNotifier extends Notifier<FeedState> {
+  @override
+  FeedState build() => const FeedState();
 
   void setPosts(List<FeedPost> posts) {
     state = state.copyWith(posts: posts);

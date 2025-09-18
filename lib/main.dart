@@ -13,6 +13,7 @@ import 'core/theme/theme_provider.dart';
 import 'core/feature_flags.dart';
 import 'core/error_handler.dart';
 import 'core/constants/app_constants.dart';
+import 'core/extensions/build_context_extensions.dart';
 import 'core/constants/app_routes.dart';
 
 import 'services/auth_service.dart';

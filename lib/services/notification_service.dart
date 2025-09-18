@@ -604,6 +604,60 @@ class NotificationService {
     }
   }
 
+  /// Отправить уведомление о новом отзыве
+  Future<void> sendReviewNotification({
+    required String specialistId,
+    required String customerId,
+    required String reviewId,
+    required double rating,
+    required String reviewText,
+  }) async {
+    try {
+      await sendNotification(
+        recipientId: specialistId,
+        title: 'Новый отзыв',
+        body: 'Вы получили новый отзыв с оценкой $rating',
+        type: NotificationType.review,
+        data: {
+          'reviewId': reviewId,
+          'customerId': customerId,
+          'rating': rating.toString(),
+          'reviewText': reviewText,
+        },
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка отправки уведомления о отзыве: $e');
+      }
+    }
+  }
+
+  /// Отправить напоминание об оплате
+  Future<void> sendPaymentReminder({
+    required String customerId,
+    required String bookingId,
+    required double amount,
+    required DateTime dueDate,
+  }) async {
+    try {
+      await sendNotification(
+        recipientId: customerId,
+        title: 'Напоминание об оплате',
+        body: 'Не забудьте оплатить заказ на сумму ${amount.toStringAsFixed(2)} руб.',
+        type: NotificationType.payment,
+        data: {
+          'bookingId': bookingId,
+          'amount': amount.toString(),
+          'dueDate': dueDate.toIso8601String(),
+        },
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка отправки напоминания об оплате: $e');
+      }
+    }
+  }
+
   /// Закрыть сервис
   void dispose() {
     _notificationController.close();

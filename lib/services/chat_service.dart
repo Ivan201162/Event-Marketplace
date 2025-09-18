@@ -1,13 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/chat.dart';
-import '../models/chat_message.dart';
+import '../models/chat.dart' as chat_model;
+import '../models/chat_message.dart' as message_model;
 
 /// Сервис для работы с чатами
 class ChatService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Получить чаты пользователя
-  Future<List<Chat>> getUserChats(String userId) async {
+  Future<List<chat_model.Chat>> getUserChats(String userId) async {
     try {
       final querySnapshot = await _firestore
           .collection('chats')
@@ -15,14 +15,14 @@ class ChatService {
           .orderBy('lastMessageAt', descending: true)
           .get();
 
-      return querySnapshot.docs.map((doc) => Chat.fromDocument(doc)).toList();
+      return querySnapshot.docs.map((doc) => chat_model.Chat.fromDocument(doc)).toList();
     } catch (e) {
       throw Exception('Ошибка получения чатов: $e');
     }
   }
 
   /// Получить сообщения чата
-  Stream<List<ChatMessage>> getChatMessages(String chatId) {
+  Stream<List<message_model.ChatMessage>> getChatMessages(String chatId) {
     return _firestore
         .collection('chats')
         .doc(chatId)
@@ -30,11 +30,11 @@ class ChatService {
         .orderBy('createdAt', descending: true)
         .snapshots()
         .map((snapshot) =>
-            snapshot.docs.map((doc) => ChatMessage.fromDocument(doc)).toList());
+            snapshot.docs.map((doc) => message_model.ChatMessage.fromDocument(doc)).toList());
   }
 
   /// Отправить сообщение
-  Future<void> sendMessage(String chatId, ChatMessage message) async {
+  Future<void> sendMessage(String chatId, message_model.ChatMessage message) async {
     try {
       await _firestore
           .collection('chats')
@@ -89,13 +89,13 @@ class ChatService {
           .doc(chatId)
           .collection('messages')
           .where('senderId', isNotEqualTo: userId)
-          .where('status', isNotEqualTo: MessageStatus.read.name)
+              .where('status', isNotEqualTo: message_model.MessageStatus.read.name)
           .get();
 
       final batch = _firestore.batch();
       for (final doc in querySnapshot.docs) {
         batch.update(doc.reference, {
-          'status': MessageStatus.read.name,
+            'status': message_model.MessageStatus.read.name,
           'readAt': Timestamp.fromDate(DateTime.now()),
         });
       }
@@ -134,7 +134,7 @@ class ChatService {
             .doc(chatDoc.id)
             .collection('messages')
             .where('senderId', isNotEqualTo: userId)
-            .where('status', isNotEqualTo: MessageStatus.read.name)
+            .where('status', isNotEqualTo: message_model.MessageStatus.read.name)
             .get();
         totalUnread += messagesSnapshot.docs.length;
       }

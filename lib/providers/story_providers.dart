@@ -21,10 +21,9 @@ final allStoriesProvider = StreamProvider<List<Story>>((ref) {
 });
 
 /// Провайдер для состояния историй
-final storyStateProvider =
-    StateNotifierProvider<StoryStateNotifier, StoryState>((ref) {
-  return StoryStateNotifier();
-});
+final storyStateProvider = NotifierProvider<StoryStateNotifier, StoryState>(
+  () => StoryStateNotifier(),
+);
 
 /// Состояние историй
 class StoryState {
@@ -56,8 +55,9 @@ class StoryState {
 }
 
 /// Нотификатор для состояния историй
-class StoryStateNotifier extends StateNotifier<StoryState> {
-  StoryStateNotifier() : super(const StoryState());
+class StoryStateNotifier extends Notifier<StoryState> {
+  @override
+  StoryState build() => const StoryState();
 
   void setStories(List<Story> stories) {
     state = state.copyWith(stories: stories);

@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class CustomerProfileExtended {
   final String id;
   final String userId;
+  final String? name;
   final String? photoURL;
   final String? bio;
   final String? phoneNumber;
@@ -23,6 +24,7 @@ class CustomerProfileExtended {
   const CustomerProfileExtended({
     required this.id,
     required this.userId,
+    this.name,
     this.photoURL,
     this.bio,
     this.phoneNumber,

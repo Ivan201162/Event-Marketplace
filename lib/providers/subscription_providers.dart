@@ -40,10 +40,9 @@ final specialistSubscribersProvider =
 });
 
 /// Провайдер для состояния подписок
-final subscriptionStateProvider =
-    StateNotifierProvider<SubscriptionStateNotifier, SubscriptionState>((ref) {
-  return SubscriptionStateNotifier();
-});
+final subscriptionStateProvider = NotifierProvider<SubscriptionStateNotifier, SubscriptionState>(
+  () => SubscriptionStateNotifier(),
+);
 
 /// Состояние подписок
 class SubscriptionState {
@@ -75,8 +74,9 @@ class SubscriptionState {
 }
 
 /// Нотификатор для состояния подписок
-class SubscriptionStateNotifier extends StateNotifier<SubscriptionState> {
-  SubscriptionStateNotifier() : super(const SubscriptionState());
+class SubscriptionStateNotifier extends Notifier<SubscriptionState> {
+  @override
+  SubscriptionState build() => const SubscriptionState();
 
   void setSubscriptions(List<Subscription> subscriptions) {
     state = state.copyWith(subscriptions: subscriptions);

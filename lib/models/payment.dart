@@ -294,6 +294,36 @@ class Payment {
   String toString() {
     return 'Payment(id: $id, type: $type, status: $status, amount: $amount)';
   }
+
+  /// Создать объект из Map
+  factory Payment.fromMap(Map<String, dynamic> map) {
+    return Payment(
+      id: map['id'] ?? '',
+      bookingId: map['bookingId'] ?? '',
+      userId: map['userId'] ?? '',
+      specialistId: map['specialistId'] ?? '',
+      amount: (map['amount'] ?? 0).toDouble(),
+      currency: map['currency'] ?? 'RUB',
+      type: PaymentType.values.firstWhere(
+        (e) => e.name == map['type'],
+        orElse: () => PaymentType.full,
+      ),
+      status: PaymentStatus.values.firstWhere(
+        (e) => e.name == map['status'],
+        orElse: () => PaymentStatus.pending,
+      ),
+      paymentMethod: map['paymentMethod'] ?? '',
+      transactionId: map['transactionId'],
+      description: map['description'] ?? '',
+      metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+      createdAt: map['createdAt'] != null 
+          ? (map['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      updatedAt: map['updatedAt'] != null 
+          ? (map['updatedAt'] as Timestamp).toDate()
+          : DateTime.now(),
+    );
+  }
 }
 
 /// Конфигурация платежей для разных типов организаций
