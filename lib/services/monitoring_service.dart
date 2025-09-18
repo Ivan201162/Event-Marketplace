@@ -1,318 +1,698 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:math';
 import 'package:flutter/foundation.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import 'package:firebase_performance/firebase_performance.dart';
-import 'package:event_marketplace_app/core/feature_flags.dart';
-import 'package:event_marketplace_app/core/safe_log.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uuid/uuid.dart';
+import '../models/monitoring.dart';
 
-/// Сервис мониторинга приложения
+/// Сервис мониторинга и алертов
 class MonitoringService {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final Uuid _uuid = const Uuid();
+
   static final MonitoringService _instance = MonitoringService._internal();
   factory MonitoringService() => _instance;
   MonitoringService._internal();
 
-  final FirebaseCrashlytics _crashlytics = FirebaseCrashlytics.instance;
-  final FirebasePerformance _performance = FirebasePerformance.instance;
+  final Map<String, MonitoringMetric> _metricsCache = {};
+  final Map<String, MonitoringAlert> _alertsCache = {};
+  final Map<String, MonitoringDashboard> _dashboardsCache = {};
 
-  bool _isInitialized = false;
-  final Map<String, Trace> _activeTraces = {};
-  final Map<String, Timer> _timers = {};
+  final StreamController<MonitoringMetric> _metricsController =
+      StreamController.broadcast();
+  final StreamController<MonitoringAlert> _alertsController =
+      StreamController.broadcast();
 
-  /// Инициализация мониторинга
+  Timer? _metricsTimer;
+  Timer? _alertsTimer;
+
+  /// Инициализация сервиса
   Future<void> initialize() async {
-    if (_isInitialized) return;
-
     try {
-      // Настройка Crashlytics
-      if (FeatureFlags.crashlyticsEnabled) {
-        await _setupCrashlytics();
+      await _loadMetricsCache();
+      await _loadAlertsCache();
+      await _loadDashboardsCache();
+
+      // Запускаем периодический сбор метрик
+      _startMetricsCollection();
+
+      // Запускаем проверку алертов
+      _startAlertsMonitoring();
+
+      if (kDebugMode) {
+        print('Monitoring service initialized');
       }
-
-      // Настройка Performance Monitoring
-      if (FeatureFlags.performanceMonitoringEnabled) {
-        await _setupPerformanceMonitoring();
-      }
-
-      // Настройка глобальных обработчиков ошибок
-      _setupGlobalErrorHandlers();
-
-      _isInitialized = true;
-      SafeLog.info('Monitoring service initialized');
     } catch (e) {
-      SafeLog.error('Failed to initialize monitoring service', e);
+      if (kDebugMode) {
+        print('Ошибка инициализации сервиса мониторинга: $e');
+      }
     }
   }
 
-  /// Настройка Crashlytics
-  Future<void> _setupCrashlytics() async {
+  /// Запустить сбор метрик
+  void _startMetricsCollection() {
+    _metricsTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
+      _collectSystemMetrics();
+    });
+  }
+
+  /// Запустить мониторинг алертов
+  void _startAlertsMonitoring() {
+    _alertsTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      _checkAlerts();
+    });
+  }
+
+  /// Собрать системные метрики
+  Future<void> _collectSystemMetrics() async {
     try {
-      // Включение автоматического сбора данных о сбоях
-      await _crashlytics.setCrashlyticsCollectionEnabled(true);
+      final now = DateTime.now();
 
-      // Настройка пользовательских ключей
-      await _crashlytics.setCustomKey('app_version', '1.0.0');
-      await _crashlytics.setCustomKey('platform', Platform.operatingSystem);
-
-      SafeLog.info('Crashlytics configured');
+      // Собираем различные метрики
+      await _collectMemoryMetrics(now);
+      await _collectCPUMetrics(now);
+      await _collectNetworkMetrics(now);
+      await _collectDatabaseMetrics(now);
+      await _collectUserMetrics(now);
+      await _collectErrorMetrics(now);
     } catch (e) {
-      SafeLog.error('Failed to setup Crashlytics', e);
+      if (kDebugMode) {
+        print('Ошибка сбора метрик: $e');
+      }
     }
   }
 
-  /// Настройка Performance Monitoring
-  Future<void> _setupPerformanceMonitoring() async {
+  /// Собрать метрики памяти
+  Future<void> _collectMemoryMetrics(DateTime timestamp) async {
     try {
-      // Включение мониторинга производительности
-      await _performance.setPerformanceCollectionEnabled(true);
+      // Симуляция метрик памяти
+      final memoryUsage = Random().nextDouble() * 1000; // MB
+      final memoryAvailable = Random().nextDouble() * 2000; // MB
 
-      SafeLog.info('Performance monitoring configured');
+      await _recordMetric(
+        name: 'memory_usage',
+        description: 'Использование памяти',
+        type: MetricType.gauge,
+        category: 'system',
+        value: memoryUsage,
+        unit: 'MB',
+        timestamp: timestamp,
+        source: 'system',
+      );
+
+      await _recordMetric(
+        name: 'memory_available',
+        description: 'Доступная память',
+        type: MetricType.gauge,
+        category: 'system',
+        value: memoryAvailable,
+        unit: 'MB',
+        timestamp: timestamp,
+        source: 'system',
+      );
     } catch (e) {
-      SafeLog.error('Failed to setup performance monitoring', e);
+      if (kDebugMode) {
+        print('Ошибка сбора метрик памяти: $e');
+      }
     }
   }
 
-  /// Настройка глобальных обработчиков ошибок
-  void _setupGlobalErrorHandlers() {
-    // Обработка Flutter ошибок
-    FlutterError.onError = (FlutterErrorDetails details) {
-      SafeLog.error('Flutter error: ${details.exception}', details.exception,
-          details.stack);
+  /// Собрать метрики CPU
+  Future<void> _collectCPUMetrics(DateTime timestamp) async {
+    try {
+      // Симуляция метрик CPU
+      final cpuUsage = Random().nextDouble() * 100; // %
 
-      if (FeatureFlags.crashlyticsEnabled) {
-        _crashlytics.recordFlutterFatalError(details);
+      await _recordMetric(
+        name: 'cpu_usage',
+        description: 'Использование CPU',
+        type: MetricType.gauge,
+        category: 'system',
+        value: cpuUsage,
+        unit: '%',
+        timestamp: timestamp,
+        source: 'system',
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка сбора метрик CPU: $e');
       }
-    };
-
-    // Обработка ошибок платформы
-    PlatformDispatcher.instance.onError = (error, stack) {
-      SafeLog.critical('Platform error: $error', error, stack);
-
-      if (FeatureFlags.crashlyticsEnabled) {
-        _crashlytics.recordError(error, stack, fatal: true);
-      }
-
-      return true;
-    };
+    }
   }
 
-  /// Запись ошибки
-  Future<void> recordError(
-    dynamic error,
-    StackTrace? stackTrace, {
-    String? reason,
-    bool fatal = false,
-    Map<String, dynamic>? customKeys,
+  /// Собрать метрики сети
+  Future<void> _collectNetworkMetrics(DateTime timestamp) async {
+    try {
+      // Симуляция метрик сети
+      final networkLatency = Random().nextDouble() * 100; // ms
+      final networkThroughput = Random().nextDouble() * 1000; // Mbps
+
+      await _recordMetric(
+        name: 'network_latency',
+        description: 'Задержка сети',
+        type: MetricType.gauge,
+        category: 'network',
+        value: networkLatency,
+        unit: 'ms',
+        timestamp: timestamp,
+        source: 'network',
+      );
+
+      await _recordMetric(
+        name: 'network_throughput',
+        description: 'Пропускная способность сети',
+        type: MetricType.gauge,
+        category: 'network',
+        value: networkThroughput,
+        unit: 'Mbps',
+        timestamp: timestamp,
+        source: 'network',
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка сбора метрик сети: $e');
+      }
+    }
+  }
+
+  /// Собрать метрики базы данных
+  Future<void> _collectDatabaseMetrics(DateTime timestamp) async {
+    try {
+      // Симуляция метрик БД
+      final dbConnections = Random().nextInt(100);
+      final dbQueryTime = Random().nextDouble() * 1000; // ms
+
+      await _recordMetric(
+        name: 'db_connections',
+        description: 'Количество подключений к БД',
+        type: MetricType.gauge,
+        category: 'database',
+        value: dbConnections.toDouble(),
+        unit: 'connections',
+        timestamp: timestamp,
+        source: 'database',
+      );
+
+      await _recordMetric(
+        name: 'db_query_time',
+        description: 'Время выполнения запросов',
+        type: MetricType.timer,
+        category: 'database',
+        value: dbQueryTime,
+        unit: 'ms',
+        timestamp: timestamp,
+        source: 'database',
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка сбора метрик БД: $e');
+      }
+    }
+  }
+
+  /// Собрать метрики пользователей
+  Future<void> _collectUserMetrics(DateTime timestamp) async {
+    try {
+      // Симуляция метрик пользователей
+      final activeUsers = Random().nextInt(1000);
+      final newUsers = Random().nextInt(100);
+      final sessionDuration = Random().nextDouble() * 3600; // seconds
+
+      await _recordMetric(
+        name: 'active_users',
+        description: 'Активные пользователи',
+        type: MetricType.gauge,
+        category: 'users',
+        value: activeUsers.toDouble(),
+        unit: 'users',
+        timestamp: timestamp,
+        source: 'analytics',
+      );
+
+      await _recordMetric(
+        name: 'new_users',
+        description: 'Новые пользователи',
+        type: MetricType.counter,
+        category: 'users',
+        value: newUsers.toDouble(),
+        unit: 'users',
+        timestamp: timestamp,
+        source: 'analytics',
+      );
+
+      await _recordMetric(
+        name: 'session_duration',
+        description: 'Длительность сессии',
+        type: MetricType.timer,
+        category: 'users',
+        value: sessionDuration,
+        unit: 'seconds',
+        timestamp: timestamp,
+        source: 'analytics',
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка сбора метрик пользователей: $e');
+      }
+    }
+  }
+
+  /// Собрать метрики ошибок
+  Future<void> _collectErrorMetrics(DateTime timestamp) async {
+    try {
+      // Симуляция метрик ошибок
+      final errorCount = Random().nextInt(10);
+      final errorRate = Random().nextDouble() * 5; // %
+
+      await _recordMetric(
+        name: 'error_count',
+        description: 'Количество ошибок',
+        type: MetricType.counter,
+        category: 'errors',
+        value: errorCount.toDouble(),
+        unit: 'errors',
+        timestamp: timestamp,
+        source: 'error_tracking',
+      );
+
+      await _recordMetric(
+        name: 'error_rate',
+        description: 'Процент ошибок',
+        type: MetricType.rate,
+        category: 'errors',
+        value: errorRate / 100,
+        unit: '%',
+        timestamp: timestamp,
+        source: 'error_tracking',
+      );
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка сбора метрик ошибок: $e');
+      }
+    }
+  }
+
+  /// Записать метрику
+  Future<void> _recordMetric({
+    required String name,
+    required String description,
+    required MetricType type,
+    required String category,
+    required double value,
+    required String unit,
+    required DateTime timestamp,
+    String? source,
+    Map<String, dynamic>? tags,
+    Map<String, dynamic>? metadata,
   }) async {
     try {
-      SafeLog.error('Recorded error: $error', error, stackTrace);
+      final metricId = _uuid.v4();
 
-      if (FeatureFlags.crashlyticsEnabled) {
-        // Добавление пользовательских ключей
-        if (customKeys != null) {
-          for (final entry in customKeys.entries) {
-            await _crashlytics.setCustomKey(entry.key, entry.value);
-          }
-        }
+      final metric = MonitoringMetric(
+        id: metricId,
+        name: name,
+        description: description,
+        type: type,
+        category: category,
+        value: value,
+        unit: unit,
+        tags: tags ?? {},
+        timestamp: timestamp,
+        source: source,
+        metadata: metadata ?? {},
+      );
 
-        await _crashlytics.recordError(
-          error,
-          stackTrace,
-          reason: reason,
-          fatal: fatal,
-        );
-      }
+      await _firestore
+          .collection('monitoringMetrics')
+          .doc(metricId)
+          .set(metric.toMap());
+      _metricsCache[metricId] = metric;
+
+      // Отправляем в поток
+      _metricsController.add(metric);
     } catch (e) {
-      SafeLog.error('Failed to record error', e);
+      if (kDebugMode) {
+        print('Ошибка записи метрики: $e');
+      }
     }
   }
 
-  /// Запись нефатальной ошибки
-  Future<void> recordNonFatalError(
-    dynamic error,
-    StackTrace? stackTrace, {
-    String? reason,
-    Map<String, dynamic>? customKeys,
+  /// Проверить алерты
+  Future<void> _checkAlerts() async {
+    try {
+      for (final alert in _alertsCache.values) {
+        if (alert.status != AlertStatus.active) continue;
+
+        final metric = _getLatestMetric(alert.metricName);
+        if (metric == null) continue;
+
+        final shouldTrigger = _evaluateAlertCondition(metric, alert);
+        if (shouldTrigger && !alert.isTriggered) {
+          await _triggerAlert(alert);
+        } else if (!shouldTrigger && alert.isTriggered) {
+          await _resolveAlert(alert);
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка проверки алертов: $e');
+      }
+    }
+  }
+
+  /// Получить последнюю метрику по имени
+  MonitoringMetric? _getLatestMetric(String metricName) {
+    final metrics =
+        _metricsCache.values.where((m) => m.name == metricName).toList();
+
+    if (metrics.isEmpty) return null;
+
+    metrics.sort((a, b) => b.timestamp.compareTo(a.timestamp));
+    return metrics.first;
+  }
+
+  /// Оценить условие алерта
+  bool _evaluateAlertCondition(MonitoringMetric metric, MonitoringAlert alert) {
+    switch (alert.operator) {
+      case '>':
+        return metric.value > alert.threshold;
+      case '>=':
+        return metric.value >= alert.threshold;
+      case '<':
+        return metric.value < alert.threshold;
+      case '<=':
+        return metric.value <= alert.threshold;
+      case '==':
+        return metric.value == alert.threshold;
+      case '!=':
+        return metric.value != alert.threshold;
+      default:
+        return false;
+    }
+  }
+
+  /// Сработать алерт
+  Future<void> _triggerAlert(MonitoringAlert alert) async {
+    try {
+      final updatedAlert = alert.copyWith(
+        status: AlertStatus.triggered,
+        triggeredAt: DateTime.now(),
+        triggeredBy: 'system',
+      );
+
+      await _firestore.collection('monitoringAlerts').doc(alert.id).update({
+        'status': AlertStatus.triggered.toString().split('.').last,
+        'triggeredAt': Timestamp.fromDate(DateTime.now()),
+        'triggeredBy': 'system',
+      });
+
+      _alertsCache[alert.id] = updatedAlert;
+      _alertsController.add(updatedAlert);
+
+      // Отправляем уведомления
+      await _sendAlertNotifications(updatedAlert);
+
+      if (kDebugMode) {
+        print('Alert triggered: ${alert.name}');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка срабатывания алерта: $e');
+      }
+    }
+  }
+
+  /// Решить алерт
+  Future<void> _resolveAlert(MonitoringAlert alert) async {
+    try {
+      final updatedAlert = alert.copyWith(
+        status: AlertStatus.resolved,
+        resolvedAt: DateTime.now(),
+        resolvedBy: 'system',
+      );
+
+      await _firestore.collection('monitoringAlerts').doc(alert.id).update({
+        'status': AlertStatus.resolved.toString().split('.').last,
+        'resolvedAt': Timestamp.fromDate(DateTime.now()),
+        'resolvedBy': 'system',
+      });
+
+      _alertsCache[alert.id] = updatedAlert;
+      _alertsController.add(updatedAlert);
+
+      if (kDebugMode) {
+        print('Alert resolved: ${alert.name}');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка решения алерта: $e');
+      }
+    }
+  }
+
+  /// Отправить уведомления об алерте
+  Future<void> _sendAlertNotifications(MonitoringAlert alert) async {
+    try {
+      // TODO: Реализовать отправку уведомлений
+      // - Email уведомления
+      // - Push уведомления
+      // - SMS уведомления
+      // - Slack/Discord уведомления
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка отправки уведомлений об алерте: $e');
+      }
+    }
+  }
+
+  /// Создать алерт
+  Future<String> createAlert({
+    required String name,
+    required String description,
+    required AlertSeverity severity,
+    required String metricName,
+    required String condition,
+    required double threshold,
+    required String operator,
+    List<String>? notificationChannels,
+    Map<String, dynamic>? metadata,
+    String? createdBy,
   }) async {
-    await recordError(error, stackTrace,
-        reason: reason, fatal: false, customKeys: customKeys);
-  }
-
-  /// Запись пользовательского действия
-  Future<void> logUserAction(String action,
-      {Map<String, dynamic>? parameters}) async {
     try {
-      SafeLog.info('User action: $action', parameters);
+      final alertId = _uuid.v4();
+      final now = DateTime.now();
 
-      if (FeatureFlags.crashlyticsEnabled) {
-        await _crashlytics.log('User action: $action');
+      final alert = MonitoringAlert(
+        id: alertId,
+        name: name,
+        description: description,
+        severity: severity,
+        metricName: metricName,
+        condition: condition,
+        threshold: threshold,
+        operator: operator,
+        notificationChannels: notificationChannels ?? [],
+        metadata: metadata ?? {},
+        createdBy: createdBy,
+        createdAt: now,
+      );
 
-        if (parameters != null) {
-          for (final entry in parameters.entries) {
-            await _crashlytics.setCustomKey('action_${entry.key}', entry.value);
-          }
-        }
-      }
-    } catch (e) {
-      SafeLog.error('Failed to log user action', e);
-    }
-  }
+      await _firestore
+          .collection('monitoringAlerts')
+          .doc(alertId)
+          .set(alert.toMap());
+      _alertsCache[alertId] = alert;
 
-  /// Начало трассировки производительности
-  Future<void> startTrace(String traceName) async {
-    if (!FeatureFlags.performanceMonitoringEnabled) return;
-
-    try {
-      final trace = _performance.newTrace(traceName);
-      await trace.start();
-      _activeTraces[traceName] = trace;
-
-      SafeLog.info('Started trace: $traceName');
-    } catch (e) {
-      SafeLog.error('Failed to start trace: $traceName', e);
-    }
-  }
-
-  /// Завершение трассировки производительности
-  Future<void> stopTrace(String traceName) async {
-    if (!FeatureFlags.performanceMonitoringEnabled) return;
-
-    try {
-      final trace = _activeTraces.remove(traceName);
-      if (trace != null) {
-        await trace.stop();
-        SafeLog.info('Stopped trace: $traceName');
-      }
-    } catch (e) {
-      SafeLog.error('Failed to stop trace: $traceName', e);
-    }
-  }
-
-  /// Измерение времени выполнения
-  Future<T> measureExecutionTime<T>(
-    String operationName,
-    Future<T> Function() operation,
-  ) async {
-    if (!FeatureFlags.performanceMonitoringEnabled) {
-      return await operation();
-    }
-
-    final stopwatch = Stopwatch()..start();
-
-    try {
-      await startTrace(operationName);
-      final result = await operation();
-      return result;
-    } finally {
-      stopwatch.stop();
-      await stopTrace(operationName);
-
-      SafeLog.info(
-          'Operation $operationName took ${stopwatch.elapsedMilliseconds}ms');
-    }
-  }
-
-  /// Мониторинг использования памяти
-  Future<Map<String, dynamic>> getMemoryUsage() async {
-    try {
-      final info = ProcessInfo.currentRss;
-      return {
-        'rss': info,
-        'timestamp': DateTime.now().toIso8601String(),
-      };
-    } catch (e) {
-      SafeLog.error('Failed to get memory usage', e);
-      return {};
-    }
-  }
-
-  /// Мониторинг состояния сети
-  Future<Map<String, dynamic>> getNetworkStatus() async {
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      final isConnected = result.isNotEmpty && result[0].rawAddress.isNotEmpty;
-
-      return {
-        'isConnected': isConnected,
-        'timestamp': DateTime.now().toIso8601String(),
-      };
-    } catch (e) {
-      return {
-        'isConnected': false,
-        'error': e.toString(),
-        'timestamp': DateTime.now().toIso8601String(),
-      };
-    }
-  }
-
-  /// Получение метрик приложения
-  Future<Map<String, dynamic>> getAppMetrics() async {
-    try {
-      final memoryUsage = await getMemoryUsage();
-      final networkStatus = await getNetworkStatus();
-
-      return {
-        'memory': memoryUsage,
-        'network': networkStatus,
-        'activeTraces': _activeTraces.keys.toList(),
-        'timestamp': DateTime.now().toIso8601String(),
-      };
-    } catch (e) {
-      SafeLog.error('Failed to get app metrics', e);
-      return {};
-    }
-  }
-
-  /// Установка пользовательского идентификатора
-  Future<void> setUserId(String userId) async {
-    try {
-      if (FeatureFlags.crashlyticsEnabled) {
-        await _crashlytics.setUserIdentifier(userId);
+      if (kDebugMode) {
+        print('Alert created: $name');
       }
 
-      SafeLog.info('User ID set: $userId');
+      return alertId;
     } catch (e) {
-      SafeLog.error('Failed to set user ID', e);
+      if (kDebugMode) {
+        print('Ошибка создания алерта: $e');
+      }
+      rethrow;
     }
   }
 
-  /// Установка пользовательских атрибутов
-  Future<void> setUserAttributes(Map<String, String> attributes) async {
+  /// Создать дашборд
+  Future<String> createDashboard({
+    required String name,
+    required String description,
+    List<String>? metricIds,
+    List<String>? alertIds,
+    DashboardLayout layout = DashboardLayout.grid,
+    bool isPublic = false,
+    Map<String, dynamic>? settings,
+    String? createdBy,
+  }) async {
     try {
-      if (FeatureFlags.crashlyticsEnabled) {
-        for (final entry in attributes.entries) {
-          await _crashlytics.setCustomKey(entry.key, entry.value);
-        }
+      final dashboardId = _uuid.v4();
+      final now = DateTime.now();
+
+      final dashboard = MonitoringDashboard(
+        id: dashboardId,
+        name: name,
+        description: description,
+        metricIds: metricIds ?? [],
+        alertIds: alertIds ?? [],
+        layout: layout,
+        isPublic: isPublic,
+        settings: settings ?? {},
+        createdBy: createdBy,
+        createdAt: now,
+        updatedAt: now,
+      );
+
+      await _firestore
+          .collection('monitoringDashboards')
+          .doc(dashboardId)
+          .set(dashboard.toMap());
+      _dashboardsCache[dashboardId] = dashboard;
+
+      if (kDebugMode) {
+        print('Dashboard created: $name');
       }
 
-      SafeLog.info('User attributes set: $attributes');
+      return dashboardId;
     } catch (e) {
-      SafeLog.error('Failed to set user attributes', e);
+      if (kDebugMode) {
+        print('Ошибка создания дашборда: $e');
+      }
+      rethrow;
     }
   }
 
-  /// Очистка данных мониторинга
-  Future<void> clearData() async {
+  /// Получить метрики по категории
+  List<MonitoringMetric> getMetricsByCategory(String category) {
+    return _metricsCache.values
+        .where((metric) => metric.category == category)
+        .toList()
+      ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+  }
+
+  /// Получить алерты по серьезности
+  List<MonitoringAlert> getAlertsBySeverity(AlertSeverity severity) {
+    return _alertsCache.values
+        .where((alert) => alert.severity == severity)
+        .toList()
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  }
+
+  /// Получить активные алерты
+  List<MonitoringAlert> getActiveAlerts() {
+    return _alertsCache.values
+        .where((alert) => alert.status == AlertStatus.active)
+        .toList()
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  }
+
+  /// Получить сработавшие алерты
+  List<MonitoringAlert> getTriggeredAlerts() {
+    return _alertsCache.values
+        .where((alert) => alert.status == AlertStatus.triggered)
+        .toList()
+      ..sort((a, b) => b.triggeredAt!.compareTo(a.triggeredAt!));
+  }
+
+  /// Получить все метрики
+  List<MonitoringMetric> getAllMetrics() {
+    return _metricsCache.values.toList()
+      ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
+  }
+
+  /// Получить все алерты
+  List<MonitoringAlert> getAllAlerts() {
+    return _alertsCache.values.toList()
+      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  }
+
+  /// Получить все дашборды
+  List<MonitoringDashboard> getAllDashboards() {
+    return _dashboardsCache.values.toList()
+      ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
+  }
+
+  /// Получить поток метрик
+  Stream<MonitoringMetric> get metricsStream => _metricsController.stream;
+
+  /// Получить поток алертов
+  Stream<MonitoringAlert> get alertsStream => _alertsController.stream;
+
+  /// Загрузить кэш метрик
+  Future<void> _loadMetricsCache() async {
     try {
-      if (FeatureFlags.crashlyticsEnabled) {
-        await _crashlytics.deleteUnsentReports();
+      final snapshot = await _firestore
+          .collection('monitoringMetrics')
+          .orderBy('timestamp', descending: true)
+          .limit(1000)
+          .get();
+
+      for (final doc in snapshot.docs) {
+        final metric = MonitoringMetric.fromDocument(doc);
+        _metricsCache[metric.id] = metric;
       }
 
-      _activeTraces.clear();
-      _timers.clear();
-
-      SafeLog.info('Monitoring data cleared');
+      if (kDebugMode) {
+        print('Loaded ${_metricsCache.length} metrics');
+      }
     } catch (e) {
-      SafeLog.error('Failed to clear monitoring data', e);
+      if (kDebugMode) {
+        print('Ошибка загрузки кэша метрик: $e');
+      }
     }
   }
 
-  /// Проверка доступности мониторинга
-  bool get isAvailable =>
-      _isInitialized &&
-      (FeatureFlags.crashlyticsEnabled ||
-          FeatureFlags.performanceMonitoringEnabled);
+  /// Загрузить кэш алертов
+  Future<void> _loadAlertsCache() async {
+    try {
+      final snapshot = await _firestore.collection('monitoringAlerts').get();
 
-  /// Получение статуса инициализации
-  bool get isInitialized => _isInitialized;
+      for (final doc in snapshot.docs) {
+        final alert = MonitoringAlert.fromDocument(doc);
+        _alertsCache[alert.id] = alert;
+      }
+
+      if (kDebugMode) {
+        print('Loaded ${_alertsCache.length} alerts');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка загрузки кэша алертов: $e');
+      }
+    }
+  }
+
+  /// Загрузить кэш дашбордов
+  Future<void> _loadDashboardsCache() async {
+    try {
+      final snapshot =
+          await _firestore.collection('monitoringDashboards').get();
+
+      for (final doc in snapshot.docs) {
+        final dashboard = MonitoringDashboard.fromDocument(doc);
+        _dashboardsCache[dashboard.id] = dashboard;
+      }
+
+      if (kDebugMode) {
+        print('Loaded ${_dashboardsCache.length} dashboards');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('Ошибка загрузки кэша дашбордов: $e');
+      }
+    }
+  }
+
+  /// Закрыть сервис
+  void dispose() {
+    _metricsTimer?.cancel();
+    _alertsTimer?.cancel();
+    _metricsController.close();
+    _alertsController.close();
+    _metricsCache.clear();
+    _alertsCache.clear();
+    _dashboardsCache.clear();
+  }
 }
