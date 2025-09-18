@@ -333,7 +333,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
 
             // Категория мероприятия
             DropdownButtonFormField<EventCategory>(
-              value: _category,
+              initialValue: _category,
               decoration: const InputDecoration(
                 labelText: 'Категория мероприятия',
                 border: OutlineInputBorder(),

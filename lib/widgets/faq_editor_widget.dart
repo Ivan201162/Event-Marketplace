@@ -109,7 +109,7 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
                       children: [
                         Expanded(
                           child: DropdownButtonFormField<String>(
-                            value: _selectedCategory,
+                            initialValue: _selectedCategory,
                             decoration: const InputDecoration(
                               labelText: 'Категория',
                               border: OutlineInputBorder(),

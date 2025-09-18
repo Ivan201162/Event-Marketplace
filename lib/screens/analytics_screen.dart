@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/specialist_analytics_service.dart';
-import '../models/user.dart';
 
 /// Экран аналитики для специалистов
 class AnalyticsScreen extends ConsumerStatefulWidget {

@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/review.dart';
-import '../core/feature_flags.dart';
 import '../core/safe_log.dart';
 
 /// Сервис для работы с отзывами

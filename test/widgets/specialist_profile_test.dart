@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:event_marketplace_app/screens/specialist_profile_screen.dart';
-import 'package:event_marketplace_app/models/specialist.dart';
 
 void main() {
   group('SpecialistProfileScreen', () {

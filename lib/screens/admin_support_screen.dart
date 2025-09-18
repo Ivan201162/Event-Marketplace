@@ -182,7 +182,7 @@ class _AdminSupportScreenState extends ConsumerState<AdminSupportScreen> {
           // Фильтр по статусу
           Expanded(
             child: DropdownButtonFormField<SupportStatus?>(
-              value: _selectedStatus,
+              initialValue: _selectedStatus,
               decoration: const InputDecoration(
                 labelText: 'Статус',
                 border: OutlineInputBorder(),
@@ -227,7 +227,7 @@ class _AdminSupportScreenState extends ConsumerState<AdminSupportScreen> {
           // Фильтр по категории
           Expanded(
             child: DropdownButtonFormField<SupportCategory?>(
-              value: _selectedCategory,
+              initialValue: _selectedCategory,
               decoration: const InputDecoration(
                 labelText: 'Категория',
                 border: OutlineInputBorder(),
@@ -265,7 +265,7 @@ class _AdminSupportScreenState extends ConsumerState<AdminSupportScreen> {
           // Фильтр по приоритету
           Expanded(
             child: DropdownButtonFormField<SupportPriority?>(
-              value: _selectedPriority,
+              initialValue: _selectedPriority,
               decoration: const InputDecoration(
                 labelText: 'Приоритет',
                 border: OutlineInputBorder(),

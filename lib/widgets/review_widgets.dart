@@ -350,14 +350,13 @@ class ReviewStatisticsWidget extends StatelessWidget {
           Icons.verified,
           Colors.blue,
         ),
-        if (statistics.lastReviewDate != null)
-          _buildInfoItem(
-            context,
-            'Последний',
-            _formatDate(statistics.lastReviewDate!),
-            Icons.schedule,
-            Colors.grey,
-          ),
+        _buildInfoItem(
+          context,
+          'Последний',
+          _formatDate(statistics.lastReviewDate),
+          Icons.schedule,
+          Colors.grey,
+        ),
       ],
     );
   }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/badge_providers.dart';
 import '../providers/auth_providers.dart';
 import '../models/badge.dart' as models;
 import '../widgets/badge_widget.dart';

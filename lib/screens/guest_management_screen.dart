@@ -116,7 +116,8 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
               ),
               const SizedBox(height: 8),
               DropdownButtonFormField<String>(
-                value: _selectedEventId.isEmpty ? null : _selectedEventId,
+                initialValue:
+                    _selectedEventId.isEmpty ? null : _selectedEventId,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   hintText: 'Выберите событие',

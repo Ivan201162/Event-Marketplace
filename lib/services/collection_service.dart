@@ -52,7 +52,7 @@ class CollectionService {
       return snapshot.docs.map((doc) {
         return IdeaCollection.fromMap({
           'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
+          ...doc.data(),
         });
       }).toList();
     });
@@ -73,7 +73,7 @@ class CollectionService {
       return snapshot.docs.map((doc) {
         return IdeaCollection.fromMap({
           'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
+          ...doc.data(),
         });
       }).toList();
     });
@@ -378,7 +378,7 @@ class CollectionService {
       final collections = snapshot.docs.map((doc) {
         return IdeaCollection.fromMap({
           'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
+          ...doc.data(),
         });
       }).toList();
 
@@ -412,7 +412,7 @@ class CollectionService {
       return snapshot.docs.map((doc) {
         return IdeaCollection.fromMap({
           'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
+          ...doc.data(),
         });
       }).toList();
     });

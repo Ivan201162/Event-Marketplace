@@ -341,7 +341,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<FeatureCategory>(
-              value: _selectedCategory,
+              initialValue: _selectedCategory,
               decoration: const InputDecoration(
                 labelText: 'Категория',
                 border: OutlineInputBorder(),
@@ -361,7 +361,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<FeaturePriority>(
-              value: _selectedPriority,
+              initialValue: _selectedPriority,
               decoration: const InputDecoration(
                 labelText: 'Приоритет',
                 border: OutlineInputBorder(),

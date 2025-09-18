@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import '../models/booking.dart';
 import '../models/payment.dart';
 import '../models/review.dart';
-import '../models/event.dart';
 
 /// Статистика доходов специалиста
 class SpecialistIncomeStats {
@@ -477,7 +476,7 @@ class SpecialistAnalyticsService {
       return snapshot.docs
           .map((doc) => {
                 'specialistId': doc.id,
-                ...doc.data() as Map<String, dynamic>,
+                ...doc.data(),
               })
           .toList();
     } catch (e) {

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:event_marketplace_app/models/feed_post.dart';
-import 'package:event_marketplace_app/services/feed_service.dart';
 import 'package:event_marketplace_app/providers/feed_providers.dart';
 import 'package:event_marketplace_app/widgets/feed_widgets.dart';
 

@@ -348,7 +348,10 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceVariant.withOpacity(0.3),
+        color: Theme.of(context)
+            .colorScheme
+            .surfaceContainerHighest
+            .withOpacity(0.3),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(

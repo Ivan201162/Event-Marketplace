@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:event_marketplace_app/providers/recommendation_providers.dart';
 import 'package:event_marketplace_app/widgets/specialist_card.dart';
 

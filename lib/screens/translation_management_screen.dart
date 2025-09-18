@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/localization.dart';
 import '../providers/localization_providers.dart';
 import '../services/localization_service.dart';
 
@@ -440,7 +439,7 @@ class _TranslationDialogState extends State<_TranslationDialog> {
           children: [
             // Категория
             DropdownButtonFormField<String>(
-              value: _selectedCategory,
+              initialValue: _selectedCategory,
               decoration: const InputDecoration(
                 labelText: 'Категория',
                 border: OutlineInputBorder(),

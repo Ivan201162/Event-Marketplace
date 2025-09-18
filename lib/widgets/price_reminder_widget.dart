@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/price_reminder_provider.dart';
-import '../services/price_reminder_service.dart';
 import 'responsive_layout.dart';
 
 /// Виджет для отображения напоминаний об обновлении цен

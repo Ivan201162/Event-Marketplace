@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/review.dart';
 import '../services/review_service.dart';
 import '../providers/auth_providers.dart';
-import '../core/feature_flags.dart';
 import '../core/safe_log.dart';
 
 /// Экран отзывов
@@ -67,11 +66,10 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
             icon: const Icon(Icons.filter_list),
             onPressed: _showFilterDialog,
           ),
-          if (currentUser != null)
-            IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: _createReview,
-            ),
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: _createReview,
+          ),
         ],
       ),
       body: TabBarView(
@@ -226,7 +224,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceVariant,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(8),
       ),
       child: Row(
@@ -416,7 +414,8 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
       children: tags
           .map((tag) => Chip(
                 label: Text(tag),
-                backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
+                backgroundColor:
+                    Theme.of(context).colorScheme.surfaceContainerHighest,
                 labelStyle: TextStyle(
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                   fontSize: 12,
@@ -430,7 +429,7 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceVariant,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(8),
         border: Border(
           left: BorderSide(
@@ -841,7 +840,6 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
 
   Future<void> _voteHelpful(Review review, bool isHelpful) async {
     final currentUser = ref.read(currentUserProvider);
-    if (currentUser == null) return;
 
     try {
       await _reviewService.voteHelpful(review.id, currentUser.id, isHelpful);

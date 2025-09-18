@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/event.dart';
 import '../providers/auth_providers.dart';
 import '../providers/booking_providers.dart';
-import '../providers/event_providers.dart';
 
 /// Экран создания бронирования
 class CreateBookingScreen extends ConsumerStatefulWidget {
@@ -31,8 +30,8 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
     // Заполняем email текущего пользователя
     final currentUser = ref.read(currentUserProvider);
     currentUser.whenData((user) {
-      if (user != null && user.email != null) {
-        _emailController.text = user.email!;
+      if (user != null) {
+        _emailController.text = user.email;
         ref.read(createBookingProvider.notifier).updateUserEmail(user.email);
       }
     });

@@ -59,7 +59,7 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
             children: [
               Expanded(
                 child: DropdownButtonFormField<String>(
-                  value: _selectedFilter,
+                  initialValue: _selectedFilter,
                   decoration: const InputDecoration(
                     labelText: 'Фильтр по типу',
                     border: OutlineInputBorder(),
@@ -90,7 +90,7 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
               const SizedBox(width: 16),
               Expanded(
                 child: DropdownButtonFormField<String>(
-                  value: _selectedSort,
+                  initialValue: _selectedSort,
                   decoration: const InputDecoration(
                     labelText: 'Сортировка',
                     border: OutlineInputBorder(),

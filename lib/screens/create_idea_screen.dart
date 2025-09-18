@@ -184,7 +184,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
 
             // Категория
             DropdownButtonFormField<String>(
-              value: _selectedCategory,
+              initialValue: _selectedCategory,
               decoration: const InputDecoration(
                 labelText: 'Категория *',
                 border: OutlineInputBorder(),
@@ -206,7 +206,7 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
 
             // Тип идеи
             DropdownButtonFormField<IdeaType>(
-              value: _selectedType,
+              initialValue: _selectedType,
               decoration: const InputDecoration(
                 labelText: 'Тип идеи',
                 border: OutlineInputBorder(),
@@ -542,12 +542,8 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
         ),
       );
 
-      if (ideaId != null) {
-        Navigator.pop(context, true);
-        _showSuccessSnackBar('Идея успешно создана');
-      } else {
-        _showErrorSnackBar('Ошибка создания идеи');
-      }
+      Navigator.pop(context, true);
+      _showSuccessSnackBar('Идея успешно создана');
     } catch (e) {
       _showErrorSnackBar('Ошибка: $e');
     } finally {

@@ -128,7 +128,7 @@ class FeatureRequestService {
       return snapshot.docs.map((doc) {
         return FeatureRequest.fromMap({
           'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
+          ...doc.data(),
         });
       }).toList();
     });

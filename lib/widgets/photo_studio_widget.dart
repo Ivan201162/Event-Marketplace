@@ -593,7 +593,7 @@ class _BookingDialogState extends State<_BookingDialog> {
           children: [
             // Выбор опции
             DropdownButtonFormField<StudioOption>(
-              value: _selectedOption,
+              initialValue: _selectedOption,
               decoration: const InputDecoration(
                 labelText: 'Выберите опцию',
                 border: OutlineInputBorder(),

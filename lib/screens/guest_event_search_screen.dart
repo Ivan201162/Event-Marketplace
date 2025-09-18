@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/event.dart';
-import '../models/guest.dart';
 import '../services/guest_service.dart';
 import '../services/event_service.dart';
 import '../core/feature_flags.dart';

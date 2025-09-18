@@ -84,9 +84,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
             ),
         ],
       ),
-      body: currentUser == null
-          ? const Center(child: Text('Необходимо войти в систему'))
-          : _buildForm(currentUser),
+      body: _buildForm(currentUser),
     );
   }
 
@@ -135,7 +133,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceVariant,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(
@@ -522,7 +520,6 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
     if (!_formKey.currentState!.validate()) return;
 
     final currentUser = ref.read(currentUserProvider);
-    if (currentUser == null) return;
 
     setState(() => _isSubmitting = true);
 

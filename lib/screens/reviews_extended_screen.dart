@@ -446,7 +446,7 @@ class _FilterDialogState extends State<_FilterDialog> {
               const SizedBox(width: 16),
               Expanded(
                 child: DropdownButtonFormField<int?>(
-                  value: _filter.minRating,
+                  initialValue: _filter.minRating,
                   decoration: const InputDecoration(
                     labelText: 'От',
                     border: OutlineInputBorder(),
@@ -470,7 +470,7 @@ class _FilterDialogState extends State<_FilterDialog> {
               const SizedBox(width: 8),
               Expanded(
                 child: DropdownButtonFormField<int?>(
-                  value: _filter.maxRating,
+                  initialValue: _filter.maxRating,
                   decoration: const InputDecoration(
                     labelText: 'До',
                     border: OutlineInputBorder(),
@@ -522,7 +522,7 @@ class _FilterDialogState extends State<_FilterDialog> {
 
           // Сортировка
           DropdownButtonFormField<ReviewSortBy>(
-            value: _filter.sortBy,
+            initialValue: _filter.sortBy,
             decoration: const InputDecoration(
               labelText: 'Сортировка',
               border: OutlineInputBorder(),

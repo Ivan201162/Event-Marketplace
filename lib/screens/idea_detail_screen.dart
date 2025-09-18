@@ -569,11 +569,9 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
         ),
       );
 
-      if (commentId != null) {
-        _commentController.clear();
-        _showComments = true;
-        setState(() {});
-      }
+      _commentController.clear();
+      _showComments = true;
+      setState(() {});
     } catch (e) {
       _showErrorSnackBar('Ошибка добавления комментария: $e');
     } finally {

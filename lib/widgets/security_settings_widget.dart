@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/security_provider.dart';
-import '../services/encryption_service.dart';
 import '../widgets/responsive_layout.dart';
 import '../core/responsive_utils.dart';
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:event_marketplace_app/services/chat_bot_service.dart';
-import 'package:event_marketplace_app/models/support_ticket.dart';
 
 /// Виджет бота-помощника в чате поддержки
 class ChatBotWidget extends ConsumerStatefulWidget {

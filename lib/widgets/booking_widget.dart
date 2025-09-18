@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/specialist.dart';
 import '../models/booking.dart';
-import '../providers/calendar_providers.dart';
 import '../providers/specialist_providers.dart';
 import '../providers/firestore_providers.dart';
-import '../services/firestore_service.dart';
 import 'calendar_widget.dart';
 
 /// Виджет бронирования

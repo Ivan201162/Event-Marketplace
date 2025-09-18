@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:crypto/crypto.dart';
 import '../models/cache_item.dart';
 
 /// Сервис кэширования и оптимизации
@@ -79,7 +78,7 @@ class CacheService {
         _memoryCache[key] = diskItem;
         _updateAccess(key);
         _hitCount++;
-        return diskItem.data as T;
+        return diskItem.data;
       }
 
       _missCount++;

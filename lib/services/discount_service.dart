@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import '../models/booking_discount.dart';
-import '../models/booking.dart';
 
 /// Сервис для работы со скидками
 class DiscountService {

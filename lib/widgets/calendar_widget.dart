@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
 import '../providers/calendar_providers.dart';
 import '../models/specialist_schedule.dart';
-import '../services/firestore_service.dart';
 import '../providers/firestore_providers.dart';
 
 class CalendarWidget extends ConsumerStatefulWidget {

@@ -2,8 +2,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:mailer/mailer.dart';
-import 'package:mailer/smtp_server.dart';
 import 'package:uuid/uuid.dart';
 import '../models/support_ticket.dart';
 

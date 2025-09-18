@@ -302,7 +302,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
         subtitle: Text(subtitle),
         value: value,
         onChanged: onChanged,
-        activeColor: Theme.of(context).colorScheme.primary,
+        activeThumbColor: Theme.of(context).colorScheme.primary,
       ),
     );
   }

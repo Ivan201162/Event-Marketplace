@@ -61,7 +61,7 @@ class IdeaService {
       return snapshot.docs.map((doc) {
         return Idea.fromMap({
           'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
+          ...doc.data(),
         });
       }).toList();
     });
@@ -82,7 +82,7 @@ class IdeaService {
       return snapshot.docs.map((doc) {
         return Idea.fromMap({
           'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
+          ...doc.data(),
         });
       }).toList();
     });
@@ -281,7 +281,7 @@ class IdeaService {
       return snapshot.docs.map((doc) {
         return Idea.fromMap({
           'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
+          ...doc.data(),
         });
       }).toList();
     });
@@ -304,7 +304,7 @@ class IdeaService {
       return snapshot.docs.map((doc) {
         return Idea.fromMap({
           'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
+          ...doc.data(),
         });
       }).toList();
     });
@@ -348,7 +348,7 @@ class IdeaService {
       return snapshot.docs.map((doc) {
         return IdeaComment.fromMap({
           'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
+          ...doc.data(),
         });
       }).toList();
     });

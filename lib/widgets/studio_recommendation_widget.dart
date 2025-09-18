@@ -220,7 +220,7 @@ class _CreateStudioRecommendationWidgetState
 
           // Выбор студии
           DropdownButtonFormField<PhotoStudio>(
-            value: _selectedStudio,
+            initialValue: _selectedStudio,
             decoration: const InputDecoration(
               labelText: 'Выберите студию',
               border: OutlineInputBorder(),

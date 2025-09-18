@@ -77,7 +77,7 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
               // Тип события
               Expanded(
                 child: DropdownButtonFormField<SecurityEventType?>(
-                  value: _selectedEventType,
+                  initialValue: _selectedEventType,
                   decoration: const InputDecoration(
                     labelText: 'Тип события',
                     border: OutlineInputBorder(),
@@ -107,7 +107,7 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
               // Серьезность
               Expanded(
                 child: DropdownButtonFormField<SecurityEventSeverity?>(
-                  value: _selectedSeverity,
+                  initialValue: _selectedSeverity,
                   decoration: const InputDecoration(
                     labelText: 'Серьезность',
                     border: OutlineInputBorder(),

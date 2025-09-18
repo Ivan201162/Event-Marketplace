@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/booking.dart';
 import '../providers/auth_providers.dart';
 import '../providers/booking_providers.dart';
-import 'event_detail_screen.dart';
 
 /// Экран моих бронирований
 class MyBookingsScreen extends ConsumerWidget {

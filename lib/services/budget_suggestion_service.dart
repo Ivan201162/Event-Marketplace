@@ -578,7 +578,7 @@ class BudgetSuggestionService {
         specialistId: specialist?.id,
         specialistName: specialist?.name,
         description: reason,
-        estimatedPrice: specialist?.priceRange?.min,
+        estimatedPrice: specialist?.priceRange.min,
         reason: reason,
       );
     } catch (e) {

@@ -251,10 +251,8 @@ class SpecialistPriceStatsService {
       for (final bookings in categoryGroups.values) {
         totalBookings += bookings.length;
         for (final booking in bookings) {
-          if (booking.totalPrice != null) {
-            totalRevenue += booking.totalPrice!;
-            allPrices.add(booking.totalPrice!);
-          }
+          totalRevenue += booking.totalPrice;
+          allPrices.add(booking.totalPrice);
         }
       }
 

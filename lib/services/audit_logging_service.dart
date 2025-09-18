@@ -514,7 +514,7 @@ class AuditLoggingService {
 
       final auditSnapshot = await auditQuery.get();
       final auditLogs = auditSnapshot.docs
-          .map((doc) => AuditLog.fromMap(doc.data() as Map<String, dynamic>))
+          .map((doc) => AuditLog.fromMap(doc.data()))
           .toList();
 
       // Статистика системных логов
@@ -525,7 +525,7 @@ class AuditLoggingService {
 
       final systemSnapshot = await systemQuery.get();
       final systemLogs = systemSnapshot.docs
-          .map((doc) => SystemLog.fromMap(doc.data() as Map<String, dynamic>))
+          .map((doc) => SystemLog.fromMap(doc.data()))
           .toList();
 
       return {

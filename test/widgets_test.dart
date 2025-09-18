@@ -4,8 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:event_marketplace_app/widgets/theme_switch.dart';
 import 'package:event_marketplace_app/widgets/language_selector.dart';
 import 'package:event_marketplace_app/widgets/responsive_widgets.dart';
-import 'package:event_marketplace_app/providers/theme_provider.dart';
-import 'package:event_marketplace_app/providers/locale_provider.dart';
 
 void main() {
   group('Theme Switch Tests', () {

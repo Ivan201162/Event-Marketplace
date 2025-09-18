@@ -121,7 +121,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                                   size: 16, color: Colors.amber),
                               const SizedBox(width: 4),
                               Text(
-                                specialist.rating?.toStringAsFixed(1) ?? '0.0',
+                                specialist.rating.toStringAsFixed(1) ?? '0.0',
                                 style: const TextStyle(
                                     fontWeight: FontWeight.w500),
                               ),
@@ -144,7 +144,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
             ),
             const SizedBox(height: 8),
             DropdownButtonFormField<String>(
-              value: _selectedService,
+              initialValue: _selectedService,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Выберите услугу',

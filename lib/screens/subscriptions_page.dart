@@ -53,15 +53,13 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
           ],
         ),
       ),
-      body: currentUser == null
-          ? const Center(child: Text('Необходимо войти в систему'))
-          : TabBarView(
-              controller: _tabController,
-              children: [
-                _buildPlansTab(currentUser),
-                _buildMySubscriptionTab(currentUser),
-              ],
-            ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          _buildPlansTab(currentUser),
+          _buildMySubscriptionTab(currentUser),
+        ],
+      ),
     );
   }
 
@@ -180,7 +178,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
     return Container(
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceVariant,
+        color: Theme.of(context).colorScheme.surfaceContainerHighest,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Row(

@@ -392,7 +392,7 @@ class _IntegrationManagementScreenState
 
             // Тип интеграции
             DropdownButtonFormField<IntegrationType>(
-              value: selectedType,
+              initialValue: selectedType,
               decoration: const InputDecoration(
                 labelText: 'Тип интеграции',
                 border: OutlineInputBorder(),
@@ -420,7 +420,7 @@ class _IntegrationManagementScreenState
 
             // Тип аутентификации
             DropdownButtonFormField<AuthenticationType>(
-              value: selectedAuthType,
+              initialValue: selectedAuthType,
               decoration: const InputDecoration(
                 labelText: 'Тип аутентификации',
                 border: OutlineInputBorder(),

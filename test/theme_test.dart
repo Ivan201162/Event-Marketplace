@@ -101,7 +101,7 @@ void main() {
       expect(colorScheme.primary, isNotNull);
       expect(colorScheme.secondary, isNotNull);
       expect(colorScheme.surface, isNotNull);
-      expect(colorScheme.background, isNotNull);
+      expect(colorScheme.surface, isNotNull);
     });
 
     testWidgets('should have correct color scheme in dark theme',
@@ -129,7 +129,7 @@ void main() {
       expect(colorScheme.primary, isNotNull);
       expect(colorScheme.secondary, isNotNull);
       expect(colorScheme.surface, isNotNull);
-      expect(colorScheme.background, isNotNull);
+      expect(colorScheme.surface, isNotNull);
     });
   });
 

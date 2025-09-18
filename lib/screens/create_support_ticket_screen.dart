@@ -160,7 +160,7 @@ class _CreateSupportTicketScreenState
 
             // Категория
             DropdownButtonFormField<SupportCategory>(
-              value: _selectedCategory,
+              initialValue: _selectedCategory,
               decoration: const InputDecoration(
                 labelText: 'Категория *',
                 border: OutlineInputBorder(),
@@ -188,7 +188,7 @@ class _CreateSupportTicketScreenState
 
             // Приоритет
             DropdownButtonFormField<SupportPriority>(
-              value: _selectedPriority,
+              initialValue: _selectedPriority,
               decoration: const InputDecoration(
                 labelText: 'Приоритет',
                 border: OutlineInputBorder(),

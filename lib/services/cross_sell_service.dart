@@ -506,7 +506,7 @@ class CrossSellService {
           categoryId: categoryId,
           categoryName: categoryName,
           description: specialist.description,
-          estimatedPrice: specialist.priceRange?.min,
+          estimatedPrice: specialist.priceRange.min,
           imageUrl: specialist.avatarUrl,
         ));
 

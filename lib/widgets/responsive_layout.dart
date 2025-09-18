@@ -358,8 +358,8 @@ class ResponsiveButton extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressed,
       style: style?.copyWith(
-            padding: MaterialStateProperty.all(effectivePadding),
-            textStyle: MaterialStateProperty.all(TextStyle(fontSize: fontSize)),
+            padding: WidgetStateProperty.all(effectivePadding),
+            textStyle: WidgetStateProperty.all(TextStyle(fontSize: fontSize)),
           ) ??
           ElevatedButton.styleFrom(
             padding: effectivePadding,

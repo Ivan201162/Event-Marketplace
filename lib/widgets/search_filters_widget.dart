@@ -478,7 +478,7 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
           children: [
             Expanded(
               child: DropdownButtonFormField<String>(
-                value: _filters.sortBy,
+                initialValue: _filters.sortBy,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   contentPadding:

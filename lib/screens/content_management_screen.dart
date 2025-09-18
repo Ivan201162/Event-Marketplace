@@ -603,7 +603,7 @@ class _ContentManagementScreenState
 
             // Тип медиа
             DropdownButtonFormField<MediaType>(
-              value: selectedType,
+              initialValue: selectedType,
               decoration: const InputDecoration(
                 labelText: 'Тип медиа',
                 border: OutlineInputBorder(),
@@ -836,7 +836,7 @@ class _ContentManagementScreenState
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<GalleryType>(
-                value: selectedType,
+                initialValue: selectedType,
                 decoration: const InputDecoration(
                   labelText: 'Тип галереи',
                   border: OutlineInputBorder(),

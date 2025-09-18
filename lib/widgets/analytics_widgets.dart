@@ -600,7 +600,7 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
             ),
             const SizedBox(height: 8),
             DropdownButtonFormField<ReportType>(
-              value: formState.selectedType,
+              initialValue: formState.selectedType,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 contentPadding:
@@ -627,7 +627,7 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
             ),
             const SizedBox(height: 8),
             DropdownButtonFormField<AnalyticsPeriod>(
-              value: formState.selectedPeriod,
+              initialValue: formState.selectedPeriod,
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 contentPadding:

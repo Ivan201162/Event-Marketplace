@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:event_marketplace_app/screens/booking_requests_screen.dart';
-import 'package:event_marketplace_app/models/booking.dart';
 
 void main() {
   group('BookingRequestsScreen', () {

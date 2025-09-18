@@ -3,7 +3,6 @@ import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:event_marketplace_app/models/booking.dart';
 import 'package:event_marketplace_app/models/review.dart';
 import 'package:event_marketplace_app/models/app_user.dart';
-import 'package:event_marketplace_app/models/event.dart';
 import 'package:event_marketplace_app/core/feature_flags.dart';
 
 /// Движок рекомендаций для специалистов
@@ -86,12 +85,10 @@ class RecommendationEngine {
 
     // Анализируем бронирования
     for (final booking in history.bookings) {
-      if (booking.eventId != null) {
-        // TODO: Получить категории и услуги из события
-        // Пока используем заглушку
-        categoryCount['Свадьба'] = (categoryCount['Свадьба'] ?? 0) + 1;
-        serviceCount['Фотограф'] = (serviceCount['Фотограф'] ?? 0) + 1;
-      }
+      // TODO: Получить категории и услуги из события
+      // Пока используем заглушку
+      categoryCount['Свадьба'] = (categoryCount['Свадьба'] ?? 0) + 1;
+      serviceCount['Фотограф'] = (serviceCount['Фотограф'] ?? 0) + 1;
 
       if (booking.price != null) {
         priceRange.add(booking.price!);

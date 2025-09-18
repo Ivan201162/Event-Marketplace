@@ -9,7 +9,6 @@ import '../models/review.dart';
 import '../services/review_service.dart';
 import 'create_event_screen.dart';
 import 'create_booking_screen.dart';
-import 'create_review_screen.dart';
 
 /// Экран детального просмотра события
 class EventDetailScreen extends ConsumerWidget {

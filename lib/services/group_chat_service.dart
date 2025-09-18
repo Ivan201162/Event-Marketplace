@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
 import '../models/group_chat.dart';
 import '../models/event.dart';
-import '../models/booking.dart';
 
 /// Сервис для работы с групповыми чатами
 class GroupChatService {

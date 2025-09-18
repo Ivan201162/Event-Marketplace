@@ -425,7 +425,7 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
             children: [
               // Категория
               DropdownButtonFormField<SpecialistCategory>(
-                value: _selectedCategory,
+                initialValue: _selectedCategory,
                 decoration: const InputDecoration(labelText: 'Категория'),
                 items: SpecialistCategory.values.map((category) {
                   return DropdownMenuItem(
@@ -449,7 +449,7 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
 
               // Уровень опыта
               DropdownButtonFormField<ExperienceLevel>(
-                value: _selectedExperience,
+                initialValue: _selectedExperience,
                 decoration: const InputDecoration(labelText: 'Уровень опыта'),
                 items: ExperienceLevel.values.map((level) {
                   return DropdownMenuItem(

@@ -5,7 +5,6 @@ import '../core/safe_log.dart';
 import '../models/user.dart';
 import '../models/event.dart';
 import '../services/admin_service.dart';
-import '../providers/admin_providers.dart';
 
 /// Экран админ-панели
 class AdminPanelPage extends ConsumerStatefulWidget {

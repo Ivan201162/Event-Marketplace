@@ -68,7 +68,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
     return bookingsAsync.when(
       data: (bookings) {
         final filteredBookings = bookings
-            .where((booking) => booking is Booking && booking.status == status)
+            .where((booking) => booking.status == status)
             .cast<Booking>()
             .toList();
 

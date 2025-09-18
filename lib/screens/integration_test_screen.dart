@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/firestore_providers.dart';
 import '../providers/calendar_providers.dart';
-import '../services/fcm_service.dart';
 import '../models/booking.dart';
 
 /// Экран для тестирования интеграции всех компонентов

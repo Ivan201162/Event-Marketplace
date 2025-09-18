@@ -81,6 +81,15 @@ dependencies:
   # Share functionality
   share_plus: ^7.0.2
 
+  firebase_crashlytics: any
+  firebase_performance: any
+  freezed_annotation: any
+  riverpod_annotation: any
+  in_app_review: any
+  pointycastle: any
+  image: any
+  path: any
+  video_thumbnail: any
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -88,6 +97,8 @@ dev_dependencies:
   mockito: ^5.4.4
   build_runner: ^2.4.7
 
+  integration_test:
+    sdk: flutter
 flutter:
   generate: true
   uses-material-design: true

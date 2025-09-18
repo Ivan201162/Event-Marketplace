@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/guest.dart';
 import '../services/guest_service.dart';
 
 /// Экран создания события для гостей

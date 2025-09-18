@@ -24,7 +24,6 @@ import '../screens/notifications_screen.dart';
 import '../screens/help_screen.dart';
 import '../screens/about_screen.dart';
 import '../screens/monitoring_screen.dart';
-import '../widgets/animated_page_transition.dart';
 
 /// Централизованная система роутинга приложения
 class AppRouter {
