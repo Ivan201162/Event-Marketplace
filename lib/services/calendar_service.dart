@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:icalendar_parser/icalendar_parser.dart';
+import 'package:icalendar_parser/icalendar_parser.dart' as ical;
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -199,16 +199,15 @@ class CalendarService {
   /// Экспортировать события в ICS файл
   Future<String?> exportToICS(List<CalendarEvent> events) async {
     try {
-      final calendar = ICalendar(
-        headData: ICalendarHeadData(
+      final calendar = ical.ICalendar(
+        headData: ical.ICalendarHeadData(
           prodId: 'Event Marketplace App',
           version: '2.0',
         ),
       );
 
       for (final event in events) {
-        final icsEvent = IEventData(
-          uid: event.id,
+        final icsEvent = ical.IEventData(
           start: event.startTime,
           end: event.endTime,
           summary: event.title,
