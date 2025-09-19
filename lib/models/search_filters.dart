@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import '../core/stubs/stubs.dart';
 
 part 'search_filters.freezed.dart';
 part 'search_filters.g.dart';

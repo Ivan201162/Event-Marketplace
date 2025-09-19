@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import '../core/stubs/stubs.dart';
 
 part 'security_password_strength.freezed.dart';
 part 'security_password_strength.g.dart';

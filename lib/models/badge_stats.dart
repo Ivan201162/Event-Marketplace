@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import '../core/stubs/stubs.dart';
 
 part 'badge_stats.freezed.dart';
 part 'badge_stats.g.dart';
