@@ -308,7 +308,8 @@ class PortfolioItemWidget extends StatelessWidget {
                       ? Container(
                           width: double.infinity,
                           color: Colors.grey[200],
-                          child: Icon(Icons.image, size: 48, color: Colors.grey[400]),
+                          child: Icon(Icons.image,
+                              size: 48, color: Colors.grey[400]),
                         )
                       : CachedNetworkImage(
                           imageUrl: imageUrl,

@@ -31,9 +31,11 @@ class ContentManagementService {
       await _loadGalleryCache();
       await _loadProcessingCache();
 
-      AppLogger.logI('Content management service initialized', 'content_management');
+      AppLogger.logI(
+          'Content management service initialized', 'content_management');
     } catch (e) {
-      AppLogger.logE('Ошибка инициализации сервиса управления контентом', 'content_management', e);
+      AppLogger.logE('Ошибка инициализации сервиса управления контентом',
+          'content_management', e);
     }
   }
 

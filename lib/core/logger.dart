@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 /// Централизованный логгер для приложения
 class AppLogger {
   static const bool _isDebugMode = kDebugMode;
-  
+
   /// Логирование отладочной информации
   static void logD(String message, [String? tag]) {
     if (_isDebugMode) {
@@ -11,7 +11,7 @@ class AppLogger {
       debugPrint('DEBUG: $tagStr$message');
     }
   }
-  
+
   /// Логирование информации
   static void logI(String message, [String? tag]) {
     if (_isDebugMode) {
@@ -19,7 +19,7 @@ class AppLogger {
       debugPrint('INFO: $tagStr$message');
     }
   }
-  
+
   /// Логирование предупреждений
   static void logW(String message, [String? tag]) {
     if (_isDebugMode) {
@@ -27,9 +27,10 @@ class AppLogger {
       debugPrint('WARNING: $tagStr$message');
     }
   }
-  
+
   /// Логирование ошибок
-  static void logE(String message, [String? tag, Object? error, StackTrace? stackTrace]) {
+  static void logE(String message,
+      [String? tag, Object? error, StackTrace? stackTrace]) {
     if (_isDebugMode) {
       final tagStr = tag != null ? '[$tag] ' : '';
       debugPrint('ERROR: $tagStr$message');
@@ -41,7 +42,7 @@ class AppLogger {
       }
     }
   }
-  
+
   /// Логирование только в debug режиме
   static void logDebug(String message, [String? tag]) {
     if (_isDebugMode) {

@@ -124,11 +124,13 @@ class CachedImageWidget extends StatelessWidget {
         child: CachedNetworkImage(
           imageUrl: imageUrl,
           fit: fit,
-          placeholder: (context, url) => placeholder ??
+          placeholder: (context, url) =>
+              placeholder ??
               const Center(
                 child: CircularProgressIndicator(),
               ),
-          errorWidget: (context, url, error) => errorWidget ??
+          errorWidget: (context, url, error) =>
+              errorWidget ??
               Container(
                 color: Colors.grey[300],
                 child: const Icon(Icons.error),
