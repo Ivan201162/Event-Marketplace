@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/app_theme.dart';
+import 'core/logger.dart';
 import 'core/constants/app_constants.dart';
 import 'core/constants/app_routes.dart';
 import 'core/feature_flags.dart';
@@ -93,9 +94,9 @@ Future<void> _initializeServices() async {
     final reportService = ReportService();
     final abTestService = ABTestService();
 
-    print('All services initialized successfully');
+    AppLogger.logI('All services initialized successfully', 'main');
   } catch (e) {
-    print('Error initializing services: $e');
+    AppLogger.logE('Error initializing services', 'main', e);
     FirebaseCrashlytics.instance.recordError(e, null);
   }
 }

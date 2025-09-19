@@ -6,6 +6,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
+import '../core/logger.dart';
 import '../models/content_management.dart';
 
 /// Сервис управления контентом и медиа
@@ -30,13 +31,9 @@ class ContentManagementService {
       await _loadGalleryCache();
       await _loadProcessingCache();
 
-      if (kDebugMode) {
-        print('Content management service initialized');
-      }
+      AppLogger.logI('Content management service initialized', 'content_management');
     } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка инициализации сервиса управления контентом: $e');
-      }
+      AppLogger.logE('Ошибка инициализации сервиса управления контентом', 'content_management', e);
     }
   }
 

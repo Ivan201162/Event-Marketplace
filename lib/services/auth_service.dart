@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../core/safe_log.dart';
+import '../core/logger.dart';
 import '../models/user.dart';
 import 'storage_service.dart';
 
@@ -105,7 +106,7 @@ class AuthService {
           }
           return null;
         } catch (e) {
-          print('Ошибка получения пользователя: $e');
+          AppLogger.logE('Ошибка получения пользователя', 'auth_service', e);
           return null;
         }
       });
