@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../core/utils/utils.dart';
 
 /// Модель для аудита действий пользователей
 class AuditLog {
@@ -30,19 +31,19 @@ class AuditLog {
         action: (map['action'] as String?) ?? '',
         resource: (map['resource'] as String?) ?? '',
         resourceId: (map['resourceId'] as String?) ?? '',
-        oldData: map['oldData'],
-        newData: map['newData'],
-        ipAddress: map['ipAddress'],
-        userAgent: map['userAgent'],
-        sessionId: map['sessionId'],
+        oldData: safeMapFromDynamic(map['oldData'] as Map<dynamic, dynamic>?),
+        newData: safeMapFromDynamic(map['newData'] as Map<dynamic, dynamic>?),
+        ipAddress: safeStringFromDynamic(map['ipAddress']),
+        userAgent: safeStringFromDynamic(map['userAgent']),
+        sessionId: safeStringFromDynamic(map['sessionId']),
         level: AuditLogLevel.fromString((map['level'] as String?) ?? 'info'),
         category: AuditLogCategory.fromString(
             (map['category'] as String?) ?? 'general'),
-        description: map['description'],
-        metadata: map['metadata'],
-        timestamp: (map['timestamp'] as Timestamp).toDate(),
-        errorMessage: map['errorMessage'],
-        isSuccess: map['isSuccess'] ?? true,
+        description: safeStringFromDynamic(map['description']),
+        metadata: safeMapFromDynamic(map['metadata'] as Map<dynamic, dynamic>?),
+        timestamp: safeDateTimeFromTimestamp(map['timestamp']),
+        errorMessage: safeStringFromDynamic(map['errorMessage']),
+        isSuccess: safeBoolFromDynamic(map['isSuccess'], true),
       );
   final String id;
   final String userId;
