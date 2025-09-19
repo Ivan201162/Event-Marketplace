@@ -123,6 +123,7 @@ class AppLocalizations {
   String get language => t('language');
   String get russian => t('russian');
   String get english => t('english');
+  String get close => t('close');
 }
 
 class _AppLocalizationsDelegate

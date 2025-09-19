@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:event_marketplace_app/core/i18n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../providers/locale_provider.dart';
@@ -209,7 +209,7 @@ class LanguageSelector extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context)!.close),
+            child: Text(AppLocalizations.of(context).close),
           ),
         ],
       ),
@@ -330,7 +330,7 @@ class CompactLanguageSelector extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: Text(AppLocalizations.of(context)!.close),
+            child: Text(AppLocalizations.of(context).close),
           ),
         ],
       ),
