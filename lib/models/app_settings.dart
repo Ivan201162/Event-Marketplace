@@ -325,39 +325,41 @@ class AppConfiguration {
     final data = doc.data() as Map<String, dynamic>;
     return AppConfiguration(
       id: doc.id,
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
-      config: Map<String, dynamic>.from(data['config'] ?? {}),
+      name: (data['name'] as String?) ?? '',
+      description: (data['description'] as String?) ?? '',
+      config: Map<String, dynamic>.from(
+          data['config'] as Map<dynamic, dynamic>? ?? {}),
       type: ConfigurationType.values.firstWhere(
         (e) => e.toString().split('.').last == data['type'],
         orElse: () => ConfigurationType.general,
       ),
-      environment: data['environment'],
-      isActive: data['isActive'] ?? false,
+      environment: data['environment'] as String?,
+      isActive: (data['isActive'] as bool?) ?? false,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      createdBy: data['createdBy'],
-      updatedBy: data['updatedBy'],
+      createdBy: data['createdBy'] as String?,
+      updatedBy: data['updatedBy'] as String?,
     );
   }
 
   /// Создать из Map
   factory AppConfiguration.fromMap(Map<String, dynamic> data) =>
       AppConfiguration(
-        id: data['id'] ?? '',
-        name: data['name'] ?? '',
-        description: data['description'] ?? '',
-        config: Map<String, dynamic>.from(data['config'] ?? {}),
+        id: (data['id'] as String?) ?? '',
+        name: (data['name'] as String?) ?? '',
+        description: (data['description'] as String?) ?? '',
+        config: Map<String, dynamic>.from(
+            data['config'] as Map<dynamic, dynamic>? ?? {}),
         type: ConfigurationType.values.firstWhere(
           (e) => e.toString().split('.').last == data['type'],
           orElse: () => ConfigurationType.general,
         ),
-        environment: data['environment'],
-        isActive: data['isActive'] ?? false,
+        environment: data['environment'] as String?,
+        isActive: (data['isActive'] as bool?) ?? false,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-        createdBy: data['createdBy'],
-        updatedBy: data['updatedBy'],
+        createdBy: data['createdBy'] as String?,
+        updatedBy: data['updatedBy'] as String?,
       );
   final String id;
   final String name;
