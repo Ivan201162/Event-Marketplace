@@ -3,7 +3,7 @@ import '../services/app_review_service.dart';
 
 /// Провайдер для управления отзывами о приложении
 final appReviewProvider = NotifierProvider<AppReviewNotifier, AppReviewState>(
-    (ref) => AppReviewNotifier());
+    () => AppReviewNotifier());
 
 /// Провайдер для статистики отзывов
 final reviewStatsProvider = FutureProvider<ReviewStats>(
@@ -66,8 +66,10 @@ class AppReviewState {
 
 /// Нотификатор для управления отзывами
 class AppReviewNotifier extends Notifier<AppReviewState> {
-  AppReviewNotifier() : super(const AppReviewState()) {
+  @override
+  AppReviewState build() {
     _initialize();
+    return const AppReviewState();
   }
 
   /// Инициализация

@@ -5,12 +5,12 @@ import '../services/video_optimization_service.dart';
 /// Провайдер для управления кэшем изображений
 final imageCacheProvider =
     NotifierProvider<ImageCacheNotifier, ImageCacheState>(
-        (ref) => ImageCacheNotifier());
+        () => ImageCacheNotifier());
 
 /// Провайдер для управления кэшем видео
 final videoCacheProvider =
     NotifierProvider<VideoCacheNotifier, VideoCacheState>(
-        (ref) => VideoCacheNotifier());
+        () => VideoCacheNotifier());
 
 /// Провайдер для общего размера кэша
 final totalCacheSizeProvider = FutureProvider<int>((ref) async {
@@ -85,8 +85,10 @@ class VideoCacheState {
 
 /// Нотификатор для кэша изображений
 class ImageCacheNotifier extends Notifier<ImageCacheState> {
-  ImageCacheNotifier() : super(const ImageCacheState()) {
+  @override
+  ImageCacheState build() {
     _loadCacheInfo();
+    return const ImageCacheState();
   }
 
   /// Загрузить информацию о кэше
@@ -137,8 +139,10 @@ class ImageCacheNotifier extends Notifier<ImageCacheState> {
 
 /// Нотификатор для кэша видео
 class VideoCacheNotifier extends Notifier<VideoCacheState> {
-  VideoCacheNotifier() : super(const VideoCacheState()) {
+  @override
+  VideoCacheState build() {
     _loadCacheInfo();
+    return const VideoCacheState();
   }
 
   /// Загрузить информацию о кэше
@@ -359,7 +363,10 @@ class MediaUsageStats {
 
 /// Нотификатор для статистики использования медиа
 class MediaUsageStatsNotifier extends Notifier<MediaUsageStats> {
-  MediaUsageStatsNotifier() : super(const MediaUsageStats());
+  @override
+  MediaUsageStats build() {
+    return const MediaUsageStats();
+  }
 
   /// Записать загрузку изображения
   void recordImageLoaded() {

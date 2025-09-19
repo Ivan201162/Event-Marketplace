@@ -7,12 +7,12 @@ final loggingServiceProvider =
 
 /// Провайдер для уровня логирования
 final logLevelProvider =
-    NotifierProvider<LogLevelNotifier, LogLevel>((ref) => LogLevelNotifier());
+    NotifierProvider<LogLevelNotifier, LogLevel>(() => LogLevelNotifier());
 
 /// Провайдер для настроек логирования
 final loggingSettingsProvider =
     NotifierProvider<LoggingSettingsNotifier, LoggingSettings>(
-        (ref) => LoggingSettingsNotifier());
+        () => LoggingSettingsNotifier());
 
 /// Нотификатор для уровня логирования
 class LogLevelNotifier extends Notifier<LogLevel> {
