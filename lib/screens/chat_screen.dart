@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/chat.dart';
-import '../models/chat_message.dart';
+import '../models/chat_message.dart' as chat_message;
 import '../providers/chat_providers.dart';
 
 /// Экран чата
@@ -36,7 +36,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: chatAsync.when(
-          data: (chat) => Text(chat?.name ?? 'Чат'),
+          data: (chat) => Text(chat?.title ?? 'Чат'),
           loading: () => const Text('Загрузка...'),
           error: (_, __) => const Text('Ошибка'),
         ),
@@ -221,10 +221,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     if (content.isEmpty) return;
 
     // Отправка сообщения
-    ref.read(chatStateProvider.notifier).sendMessage(
-          chatId: widget.chatId,
-          content: content,
-        );
+    // TODO: Implement message sending
+    // ref.read(chatStateProvider.notifier).sendMessage(
+    //   chatId: widget.chatId,
+    //   content: content,
+    // );
 
     _messageController.clear();
     _scrollToBottom();

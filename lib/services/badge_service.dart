@@ -284,8 +284,8 @@ class BadgeService {
                 userName: userData?['name'] as String? ?? 'Пользователь',
                 userAvatar: userData?['avatarUrl'] as String?,
                 badgeCount: entry.value,
-                rank: leaderboard.length + 1,
-                recentBadges: [],
+                // rank: leaderboard.length + 1,
+                // recentBadges: [],
               ),
             );
           }

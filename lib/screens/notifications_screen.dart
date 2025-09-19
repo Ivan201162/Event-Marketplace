@@ -103,7 +103,7 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
                 ? Colors.grey[300]
                 : Theme.of(context).colorScheme.primary,
             child: Icon(
-              _getNotificationIcon(notification.type),
+              _getNotificationIcon(notification.type.toString()),
               color: notification.isRead ? Colors.grey[600] : Colors.white,
             ),
           ),

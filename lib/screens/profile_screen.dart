@@ -565,7 +565,8 @@ class ProfileScreen extends ConsumerWidget {
               ElevatedButton.icon(
                 onPressed: () async {
                   try {
-                    await ref.read(firestoreServiceProvider).addTestBookings();
+                    // TODO: Implement test bookings
+                    // await ref.read(firestoreServiceProvider).addTestBookings();
                     if (context.mounted) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(

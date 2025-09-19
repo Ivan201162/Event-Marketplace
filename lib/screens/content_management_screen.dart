@@ -30,7 +30,7 @@ class _ContentManagementScreenState
   }
 
   @override
-  Widget build(BuildContext context) => ResponsiveScaffold(
+  Widget build(BuildContext context) => Scaffold(
         body: Column(
           children: [
             // Вкладки

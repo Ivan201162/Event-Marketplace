@@ -778,21 +778,21 @@ class HomeScreen extends ConsumerWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                _buildStatItem(
+                _buildStatItemStub(
                   context,
                   'Активных заявок',
                   '0',
                   Icons.assignment_rounded,
                   BrandColors.primary,
                 ),
-                _buildStatItem(
+                _buildStatItemStub(
                   context,
                   'Завершенных',
                   '0',
                   Icons.check_circle_rounded,
                   BrandColors.secondary,
                 ),
-                _buildStatItem(
+                _buildStatItemStub(
                   context,
                   'В ожидании',
                   '0',
@@ -1005,4 +1005,44 @@ class HomeScreen extends ConsumerWidget {
           ),
         ],
       );
+
+  Widget _buildStatItemStub(
+    BuildContext context,
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 24),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey[600],
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
 }

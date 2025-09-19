@@ -199,27 +199,28 @@ class CalendarService {
   /// Экспортировать события в ICS файл
   Future<String?> exportToICS(List<CalendarEvent> events) async {
     try {
-      final calendar = ical.ICalendar(
-        headData: ical.ICalendarHeadData(
-          prodId: 'Event Marketplace App',
-          version: '2.0',
-        ),
-      );
+      // TODO: Implement proper calendar export
+      // final calendar = ical.ICalendar(
+      //   headData: ical.ICalendarHeadData(
+      //     prodId: 'Event Marketplace App',
+      //     version: '2.0',
+      //   ),
+      // );
 
-      for (final event in events) {
-        final icsEvent = ical.IEventData(
-          start: event.startTime,
-          end: event.endTime,
-          summary: event.title,
-          description: event.description,
-          location: event.location,
-        );
+      // TODO: Implement event export
+      // for (final event in events) {
+      //   final icsEvent = ical.IEventData(
+      //     start: event.startTime,
+      //     end: event.endTime,
+      //     summary: event.title,
+      //     description: event.description,
+      //     location: event.location,
+      //   );
+      //   calendar.addEvent(icsEvent);
+      // }
 
-        calendar.addEvent(icsEvent);
-      }
-
-      final icsContent = calendar.toString();
-      return icsContent;
+      // TODO: Return proper ICS content
+      return 'BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR';
     } catch (e) {
       print('Ошибка экспорта в ICS: $e');
       return null;

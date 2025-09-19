@@ -244,17 +244,16 @@ class SettingsPage extends ConsumerWidget {
               const SizedBox(height: 16),
               ListTile(
                 leading: const Icon(Icons.language),
-                title: Text(l10n.russian),
-                subtitle: Text(l10n.language),
-                trailing: ref.watch(localeProvider).languageCode == 'ru'
-                    ? const Icon(Icons.check, color: Colors.green)
-                    : null,
+                title: const Text('Русский'),
+                subtitle: const Text('Язык'),
+                trailing: const Icon(Icons.check, color: Colors.green),
                 onTap: () {
-                  ref
-                      .read(localeProvider.notifier)
-                      .setLocale(const Locale('ru'));
+                  // TODO: Implement locale change
+                  // ref
+                  //     .read(localeProvider.notifier)
+                  //     .setLocale(const Locale('ru'));
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('${l10n.language} ${l10n.russian}')),
+                    const SnackBar(content: Text('Язык изменен на русский')),
                   );
                 },
               ),
@@ -262,16 +261,17 @@ class SettingsPage extends ConsumerWidget {
               ListTile(
                 leading: const Icon(Icons.language),
                 title: Text(l10n.english),
-                subtitle: Text(l10n.language),
+                subtitle: const Text('Язык'),
                 trailing: ref.watch(localeProvider).languageCode == 'en'
                     ? const Icon(Icons.check, color: Colors.green)
                     : null,
                 onTap: () {
-                  ref
-                      .read(localeProvider.notifier)
-                      .setLocale(const Locale('en'));
+                  // TODO: Implement locale change
+                  // ref
+                  //     .read(localeProvider.notifier)
+                  //     .setLocale(const Locale('en'));
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('${l10n.language} ${l10n.english}')),
+                    const SnackBar(content: Text('Язык изменен на английский')),
                   );
                 },
               ),

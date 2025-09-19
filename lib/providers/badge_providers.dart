@@ -30,8 +30,9 @@ final badgeLeaderboardProvider =
 });
 
 /// Провайдер для бейджей по категориям
-final userBadgesByCategoryProvider =
-    Provider.family<Map<BadgeCategory, List<Badge>>, String>((ref, userId) {
+final userBadgesByCategoryProvider = Provider.family<
+    Map<badge_model.BadgeCategory, List<badge_model.Badge>>,
+    String>((ref, userId) {
   final badgesAsync = ref.watch(userBadgesProvider(userId));
 
   return badgesAsync.when(
@@ -43,7 +44,7 @@ final userBadgesByCategoryProvider =
 
 /// Провайдер для видимых бейджей пользователя
 final visibleUserBadgesProvider =
-    Provider.family<List<Badge>, String>((ref, userId) {
+    Provider.family<List<badge_model.Badge>, String>((ref, userId) {
   final badgesAsync = ref.watch(userBadgesProvider(userId));
 
   return badgesAsync.when(
@@ -55,7 +56,7 @@ final visibleUserBadgesProvider =
 
 /// Провайдер для последних бейджей пользователя
 final recentUserBadgesProvider =
-    Provider.family<List<Badge>, String>((ref, userId) {
+    Provider.family<List<badge_model.Badge>, String>((ref, userId) {
   final badgesAsync = ref.watch(userBadgesProvider(userId));
 
   return badgesAsync.when(
@@ -73,7 +74,7 @@ final badgeManagerProvider = Provider<BadgeManager>(
 /// Менеджер бейджей
 class BadgeManager {
   BadgeManager(this._service);
-  final BadgeService _service;
+  final badge_service.BadgeService _service;
 
   /// Проверить бейджи после бронирования
   Future<void> checkBookingBadges(
@@ -118,11 +119,11 @@ class NewBadgeState {
     this.newBadges = const [],
     this.hasNewBadges = false,
   });
-  final List<Badge> newBadges;
+  final List<badge_model.Badge> newBadges;
   final bool hasNewBadges;
 
   NewBadgeState copyWith({
-    List<Badge>? newBadges,
+    List<badge_model.Badge>? newBadges,
     bool? hasNewBadges,
   }) =>
       NewBadgeState(
@@ -133,9 +134,9 @@ class NewBadgeState {
 
 /// Нотификатор для проверки новых бейджей
 class NewBadgeChecker extends Notifier<NewBadgeState> {
-  late final BadgeService _service;
+  late final badge_service.BadgeService _service;
   String? _lastUserId;
-  List<Badge> _lastBadges = [];
+  List<badge_model.Badge> _lastBadges = [];
 
   @override
   NewBadgeState build() {
@@ -196,7 +197,7 @@ final userAchievementsProvider =
 
   return UserAchievements(
     badges: badgesAsync.value ?? [],
-    stats: statsAsync.value ?? badge_model.BadgeStats.empty(),
+    stats: statsAsync.value ?? const badge_model.BadgeStats(totalBadges: 0),
     isLoading: badgesAsync.isLoading || statsAsync.isLoading,
   );
 });
