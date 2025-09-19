@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "event-marketplace-mvp"
-  }
+    "default": "event-marketplace-mvp",
+    "dart format .": "event-marketplace-mvp"
+  },
+  "targets": {},
+  "etags": {}
 }
