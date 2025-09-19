@@ -4,6 +4,60 @@
 
 Спасибо за интерес к Event Marketplace App! Мы приветствуем вклад от сообщества и ценим ваше участие в развитии проекта.
 
+## Настройка окружения разработки
+
+### Требования
+- Flutter 3.x
+- Dart 3.x
+- Android Studio / VS Code
+- Git
+
+### Первоначальная настройка
+1. Клонируйте репозиторий:
+   ```bash
+   git clone https://github.com/your-username/event_marketplace_app.git
+   cd event_marketplace_app
+   ```
+
+2. Установите зависимости:
+   ```bash
+   flutter pub get
+   ```
+
+3. Настройте Firebase (см. раздел Firebase Setup ниже)
+
+4. Запустите приложение:
+   ```bash
+   flutter run
+   ```
+
+### Firebase Setup
+⚠️ **ВАЖНО**: Секретные файлы Firebase НЕ включены в репозиторий по соображениям безопасности.
+
+1. Создайте проект в [Firebase Console](https://console.firebase.google.com/)
+2. Добавьте Android приложение и скачайте `google-services.json`
+3. Добавьте iOS приложение и скачайте `GoogleService-Info.plist`
+4. Поместите файлы в соответствующие папки:
+   - `android/app/google-services.json`
+   - `ios/Runner/GoogleService-Info.plist`
+5. Настройте Firebase CLI:
+   ```bash
+   firebase login
+   flutterfire configure
+   ```
+
+### Структура проекта
+```
+lib/
+├── core/           # Основные утилиты и константы
+├── models/         # Модели данных
+├── providers/      # Riverpod провайдеры
+├── screens/        # Экраны приложения
+├── services/       # Бизнес-логика и API
+├── widgets/        # Переиспользуемые виджеты
+└── main.dart       # Точка входа
+```
+
 ## Как внести вклад
 
 ### 1. Сообщения об ошибках
