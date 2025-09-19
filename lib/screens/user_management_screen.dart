@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user_management.dart';
 import '../services/user_management_service.dart';
 import '../widgets/responsive_layout.dart';
-import '../ui/ui.dart';
+import '../ui/ui.dart' hide ResponsiveCard;
+import '../widgets/responsive_layout.dart';
 
 /// Экран управления пользователями и ролями
 class UserManagementScreen extends ConsumerStatefulWidget {

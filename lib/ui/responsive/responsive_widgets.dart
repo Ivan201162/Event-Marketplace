@@ -108,10 +108,10 @@ class ResponsiveCard extends StatelessWidget {
       color: color,
       shadowColor: shadowColor,
       shape: RoundedRectangleBorder(
-        borderRadius: responsiveBorderRadius,
+        borderRadius: responsiveBorderRadius!,
       ),
       child: Padding(
-        padding: responsivePadding,
+        padding: responsivePadding!,
         child: child,
       ),
     );
@@ -200,10 +200,10 @@ class ResponsiveGrid extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: responsiveCrossAxisCount,
-        crossAxisSpacing: responsiveCrossAxisSpacing,
-        mainAxisSpacing: responsiveMainAxisSpacing,
-        childAspectRatio: responsiveChildAspectRatio,
+        crossAxisCount: responsiveCrossAxisCount!,
+        crossAxisSpacing: responsiveCrossAxisSpacing!,
+        mainAxisSpacing: responsiveMainAxisSpacing!,
+        childAspectRatio: responsiveChildAspectRatio!,
       ),
       itemCount: children.length,
       itemBuilder: (context, index) => children[index],
