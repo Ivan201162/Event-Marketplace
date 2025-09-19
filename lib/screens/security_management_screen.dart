@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/security_audit.dart';
 import '../services/security_service.dart';
 import '../widgets/responsive_layout.dart';
-import '../widgets/responsive_widgets.dart';
+import '../ui/ui.dart';
 
 /// Экран управления безопасностью
 class SecurityManagementScreen extends ConsumerStatefulWidget {

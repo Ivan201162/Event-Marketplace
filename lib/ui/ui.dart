@@ -1,3 +1,2 @@
-// UI Barrel file - экспорт всех UI компонентов
-export '../core/extensions/context_extensions.dart';
+/// Баррель файл для UI компонентов
 export 'responsive/responsive_widgets.dart';

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/user_management.dart';
 import '../services/user_management_service.dart';
 import '../widgets/responsive_layout.dart';
-import '../widgets/responsive_widgets.dart';
+import '../ui/ui.dart';
 
 /// Экран управления пользователями и ролями
 class UserManagementScreen extends ConsumerStatefulWidget {

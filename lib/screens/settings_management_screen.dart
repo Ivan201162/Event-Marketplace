@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/app_settings.dart';
 import '../services/settings_service.dart';
 import '../widgets/responsive_layout.dart';
-import '../widgets/responsive_widgets.dart';
+import '../ui/ui.dart';
 
 /// Экран управления настройками и конфигурацией
 class SettingsManagementScreen extends ConsumerStatefulWidget {
