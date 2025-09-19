@@ -124,18 +124,9 @@ class EventMarketplaceApp extends ConsumerWidget {
       themeMode: _convertToThemeMode(themeMode),
 
       // Локализация
-      localizationsDelegates: const [
-        AppLocalizations.delegate,
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: const [
-        Locale('ru', 'RU'),
-        Locale('en', 'US'),
-        Locale('kk', 'KZ'),
-      ],
-      locale: const Locale('ru', 'RU'),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      locale: const Locale('ru'),
 
       // Роутинг
       routerConfig: router,

@@ -59,7 +59,9 @@ class AppNotification {
       isRead: (data['isRead'] as bool?) ?? false,
       bookingId: data['bookingId'] as String?,
       paymentId: data['paymentId'] as String?,
-      data: data['data'] != null ? Map<String, dynamic>.from(data['data'] as Map<dynamic, dynamic>) : null,
+      data: data['data'] != null
+          ? Map<String, dynamic>.from(data['data'] as Map<dynamic, dynamic>)
+          : null,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       readAt: data['readAt'] != null
           ? (data['readAt'] as Timestamp).toDate()

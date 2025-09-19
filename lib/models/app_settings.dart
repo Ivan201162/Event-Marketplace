@@ -39,7 +39,8 @@ class AppSettings {
           ? List<String>.from(data['allowedValues'] as Iterable<dynamic>)
           : null,
       validation: data['validation'] != null
-          ? Map<String, dynamic>.from(data['validation'] as Map<dynamic, dynamic>)
+          ? Map<String, dynamic>.from(
+              data['validation'] as Map<dynamic, dynamic>)
           : null,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
@@ -65,7 +66,8 @@ class AppSettings {
             ? List<String>.from(data['allowedValues'] as Iterable<dynamic>)
             : null,
         validation: data['validation'] != null
-            ? Map<String, dynamic>.from(data['validation'] as Map<dynamic, dynamic>)
+            ? Map<String, dynamic>.from(
+                data['validation'] as Map<dynamic, dynamic>)
             : null,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
