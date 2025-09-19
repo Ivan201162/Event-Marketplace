@@ -1,77 +1,53 @@
 import 'package:flutter/material.dart';
 
-/// Универсальные расширения для BuildContext
+/// Расширения для BuildContext для работы с размерами экрана и темой
 extension ContextExtensions on BuildContext {
-  /// Получить тему приложения
-  ThemeData get theme => Theme.of(this);
+  /// Проверка, является ли устройство мобильным
+  bool get isMobile => MediaQuery.of(this).size.width < 768;
 
-  /// Получить цветовую схему
-  ColorScheme get colorScheme => theme.colorScheme;
+  /// Проверка, является ли устройство планшетом
+  bool get isTablet =>
+      MediaQuery.of(this).size.width >= 768 &&
+      MediaQuery.of(this).size.width < 1024;
 
-  /// Получить текстовую тему
-  TextTheme get textTheme => theme.textTheme;
+  /// Проверка, является ли устройство десктопом
+  bool get isDesktop => MediaQuery.of(this).size.width >= 1024;
 
-  /// Получить медиа-запросы
-  MediaQueryData get mediaQuery => MediaQuery.of(this);
+  /// Получение текстовой темы
+  TextTheme get text => Theme.of(this).textTheme;
 
-  /// Получить размер экрана
-  Size get screenSize => mediaQuery.size;
+  /// Получение цветовой схемы
+  ColorScheme get colors => Theme.of(this).colorScheme;
 
-  /// Получить ширину экрана
-  double get screenWidth => screenSize.width;
-
-  /// Получить высоту экрана
-  double get screenHeight => screenSize.height;
-
-  /// Проверить, является ли экран мобильным
-  bool get isMobile => screenWidth < 600;
-
-  /// Проверить, является ли экран планшетом
-  bool get isTablet => screenWidth >= 600 && screenWidth < 1200;
-
-  /// Проверить, является ли экран десктопом
-  bool get isDesktop => screenWidth >= 1200;
-
-  /// Получить безопасную область
-  EdgeInsets get safeArea => mediaQuery.padding;
-
-  /// Получить статус-бар
-  double get statusBarHeight => safeArea.top;
-
-  /// Получить нижнюю панель
-  double get bottomBarHeight => safeArea.bottom;
-
-  /// Показать снэкбар
-  void showSnackBar(String message, {Color? backgroundColor}) {
-    ScaffoldMessenger.of(this).showSnackBar(
-      SnackBar(
-        content: Text(message),
-        backgroundColor: backgroundColor ?? colorScheme.error,
-      ),
-    );
+  /// Адаптивный выбор значения в зависимости от размера экрана
+  T responsive<T>(T mobile, [T? tablet, T? desktop]) {
+    if (isDesktop && desktop != null) {
+      return desktop;
+    } else if (isTablet && tablet != null) {
+      return tablet;
+    } else {
+      return mobile;
+    }
   }
 
-  /// Показать диалог
-  Future<T?> showDialog<T>({
-    required Widget child,
-    bool barrierDismissible = true,
-  }) =>
-      showGeneralDialog<T>(
-        context: this,
-        barrierDismissible: barrierDismissible,
-        barrierLabel: '',
-        barrierColor: Colors.black54,
-        pageBuilder: (context, animation, secondaryAnimation) => child,
-        transitionBuilder: (context, animation, secondaryAnimation, child) =>
-            FadeTransition(
-          opacity: animation,
-          child: child,
-        ),
-      );
+  /// Получение ширины экрана
+  double get screenWidth => MediaQuery.of(this).size.width;
 
-  /// Получить локализацию
-  Locale get locale => Localizations.localeOf(this);
+  /// Получение высоты экрана
+  double get screenHeight => MediaQuery.of(this).size.height;
 
-  /// Проверить, является ли текущая тема темной
-  bool get isDarkMode => theme.brightness == Brightness.dark;
+  /// Проверка темной темы
+  bool get isDarkMode => Theme.of(this).brightness == Brightness.dark;
+
+  /// Получение отступов безопасной зоны
+  EdgeInsets get safeArea => MediaQuery.of(this).padding;
+
+  /// Получение размера экрана
+  Size get screenSize => MediaQuery.of(this).size;
+
+  /// Проверка ориентации
+  bool get isPortrait =>
+      MediaQuery.of(this).orientation == Orientation.portrait;
+  bool get isLandscape =>
+      MediaQuery.of(this).orientation == Orientation.landscape;
 }
