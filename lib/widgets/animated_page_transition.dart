@@ -102,23 +102,25 @@ class AnimatedAppearance extends StatelessWidget {
   final double opacity;
 
   @override
-  Widget build(BuildContext context) => child
-      .animate()
-      .fadeIn(
-        duration: duration,
-        delay: delay,
-        begin: opacity,
+  Widget build(BuildContext context) => Animate(
+        child: child,
       )
-      .slideY(
-        duration: duration,
-        delay: delay,
-        begin: offset.dy / 100,
-      )
-      .slideX(
-        duration: duration,
-        delay: delay,
-        begin: offset.dx / 100,
-      );
+          .animate()
+          .fadeIn(
+            duration: duration,
+            delay: delay,
+            begin: opacity,
+          )
+          .slideY(
+            duration: duration,
+            delay: delay,
+            begin: offset.dy / 100,
+          )
+          .slideX(
+            duration: duration,
+            delay: delay,
+            begin: offset.dx / 100,
+          );
 }
 
 /// Анимированная кнопка с эффектом нажатия

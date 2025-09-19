@@ -235,11 +235,13 @@ class ResponsiveGrid extends StatelessWidget {
   const ResponsiveGrid({
     super.key,
     required this.children,
+    this.crossAxisCount,
     this.crossAxisSpacing,
     this.mainAxisSpacing,
     this.childAspectRatio,
   });
   final List<Widget> children;
+  final int? crossAxisCount;
   final double? crossAxisSpacing;
   final double? mainAxisSpacing;
   final double? childAspectRatio;
@@ -247,7 +249,8 @@ class ResponsiveGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final crossAxisCount = ResponsiveUtils.getGridColumns(screenWidth);
+    final gridCrossAxisCount =
+        crossAxisCount ?? ResponsiveUtils.getGridColumns(screenWidth);
     final effectiveCrossAxisSpacing =
         crossAxisSpacing ?? ResponsiveUtils.getItemSpacing(screenWidth);
     final effectiveMainAxisSpacing =
@@ -257,7 +260,7 @@ class ResponsiveGrid extends StatelessWidget {
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
+        crossAxisCount: gridCrossAxisCount,
         crossAxisSpacing: effectiveCrossAxisSpacing,
         mainAxisSpacing: effectiveMainAxisSpacing,
         childAspectRatio: childAspectRatio ?? 1.5,

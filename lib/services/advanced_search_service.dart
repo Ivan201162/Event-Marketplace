@@ -19,7 +19,7 @@ class AdvancedSearchService {
     }
 
     try {
-      var query = _firestore.collection('specialists');
+      Query<Map<String, dynamic>> query = _firestore.collection('specialists');
 
       // Фильтр по категориям
       if (filters.categories.isNotEmpty) {

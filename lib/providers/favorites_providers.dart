@@ -13,6 +13,15 @@ final userFavoritesProvider =
   return favoritesService.getUserFavorites(userId);
 });
 
+/// Провайдер количества избранных событий пользователя
+final favoritesCountProvider =
+    StreamProvider.family<int, String>((ref, userId) {
+  final favoritesService = ref.watch(favoritesServiceProvider);
+  return favoritesService
+      .getUserFavorites(userId)
+      .map((favorites) => favorites.length);
+});
+
 /// Провайдер проверки, добавлено ли событие в избранное
 final isFavoriteProvider =
     FutureProvider.family<bool, ({String userId, String eventId})>(

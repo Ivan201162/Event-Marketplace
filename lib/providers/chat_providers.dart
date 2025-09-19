@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/chat.dart';
-import '../models/chat_message.dart';
+import '../models/chat_message.dart' as chat_message;
 import '../services/chat_service.dart';
 
 /// Провайдер сервиса чата
@@ -21,9 +21,16 @@ class UserChatsParams {
 
 /// Провайдер для сообщений чата
 final chatMessagesProvider =
-    StreamProvider.family<List<ChatMessage>, String>((ref, chatId) {
+    StreamProvider.family<List<chat_message.ChatMessage>, String>(
+        (ref, chatId) {
   final chatService = ref.read(chatServiceProvider);
   return chatService.getChatMessages(chatId);
+});
+
+/// Провайдер для чата
+final chatProvider = StreamProvider.family<Chat?, String>((ref, chatId) {
+  final chatService = ref.read(chatServiceProvider);
+  return chatService.getChat(chatId);
 });
 
 /// Провайдер для состояния формы сообщения
@@ -104,13 +111,13 @@ class ChatState {
     this.error,
   });
   final List<Chat> chats;
-  final Map<String, List<ChatMessage>> messages;
+  final Map<String, List<chat_message.ChatMessage>> messages;
   final bool isLoading;
   final String? error;
 
   ChatState copyWith({
     List<Chat>? chats,
-    Map<String, List<ChatMessage>>? messages,
+    Map<String, List<chat_message.ChatMessage>>? messages,
     bool? isLoading,
     String? error,
   }) =>
@@ -131,13 +138,14 @@ class ChatStateNotifier extends Notifier<ChatState> {
     state = state.copyWith(chats: chats);
   }
 
-  void setMessages(String chatId, List<ChatMessage> messages) {
-    final updatedMessages = Map<String, List<ChatMessage>>.from(state.messages);
+  void setMessages(String chatId, List<chat_message.ChatMessage> messages) {
+    final updatedMessages =
+        Map<String, List<chat_message.ChatMessage>>.from(state.messages);
     updatedMessages[chatId] = messages;
     state = state.copyWith(messages: updatedMessages);
   }
 
-  void addMessage(String chatId, ChatMessage message) {
+  void addMessage(String chatId, chat_message.ChatMessage message) {
     final currentMessages = state.messages[chatId] ?? [];
     final updatedMessages = [...currentMessages, message];
     setMessages(chatId, updatedMessages);
@@ -149,5 +157,17 @@ class ChatStateNotifier extends Notifier<ChatState> {
 
   void setError(String? error) {
     state = state.copyWith(error: error);
+  }
+
+  Future<void> sendMessage(String chatId, String text) async {
+    try {
+      setLoading(true);
+      final chatService = ref.read(chatServiceProvider);
+      await chatService.sendMessage(chatId, text);
+      setLoading(false);
+    } catch (e) {
+      setError(e.toString());
+      setLoading(false);
+    }
   }
 }

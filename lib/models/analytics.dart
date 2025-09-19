@@ -19,16 +19,16 @@ class Analytics {
 
     return Analytics(
       id: doc.id,
-      userId: data['userId'] ?? '',
+      userId: data['userId'] as String? ?? '',
       type: AnalyticsType.values.firstWhere(
         (t) => t.name == data['type'],
         orElse: () => AnalyticsType.income,
       ),
       date: (data['date'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      amount: (data['amount'] ?? 0.0).toDouble(),
-      category: data['category'] ?? '',
-      description: data['description'],
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      amount: (data['amount'] as num?)?.toDouble() ?? 0.0,
+      category: data['category'] as String? ?? '',
+      description: data['description'] as String?,
+      metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
     );
   }
   final String id;
@@ -155,10 +155,10 @@ class MonthlyData {
 
   factory MonthlyData.fromMap(Map<String, dynamic> map) => MonthlyData(
         month: (map['month'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        income: (map['income'] ?? 0.0).toDouble(),
-        expense: (map['expense'] ?? 0.0).toDouble(),
-        netIncome: (map['netIncome'] ?? 0.0).toDouble(),
-        transactionCount: map['transactionCount'] ?? 0,
+        income: (map['income'] as num?)?.toDouble() ?? 0.0,
+        expense: (map['expense'] as num?)?.toDouble() ?? 0.0,
+        netIncome: (map['netIncome'] as num?)?.toDouble() ?? 0.0,
+        transactionCount: map['transactionCount'] as int? ?? 0,
       );
   final DateTime month;
   final double income;
@@ -340,18 +340,18 @@ class BudgetGoal {
 
     return BudgetGoal(
       id: doc.id,
-      userId: data['userId'] ?? '',
-      name: data['name'] ?? '',
-      targetAmount: (data['targetAmount'] ?? 0.0).toDouble(),
-      currentAmount: (data['currentAmount'] ?? 0.0).toDouble(),
+      userId: data['userId'] as String? ?? '',
+      name: data['name'] as String? ?? '',
+      targetAmount: (data['targetAmount'] as num?)?.toDouble() ?? 0.0,
+      currentAmount: (data['currentAmount'] as num?)?.toDouble() ?? 0.0,
       targetDate:
           (data['targetDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
       type: BudgetType.values.firstWhere(
         (t) => t.name == data['type'],
         orElse: () => BudgetType.income,
       ),
-      description: data['description'],
-      isCompleted: data['isCompleted'] ?? false,
+      description: data['description'] as String?,
+      isCompleted: data['isCompleted'] as bool? ?? false,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
@@ -413,21 +413,23 @@ class AnalyticsReport {
   });
 
   factory AnalyticsReport.fromMap(Map<String, dynamic> map) => AnalyticsReport(
-        id: map['id'] ?? '',
-        userId: map['userId'] ?? '',
-        title: map['title'] ?? '',
+        id: map['id'] as String? ?? '',
+        userId: map['userId'] as String? ?? '',
+        title: map['title'] as String? ?? '',
         period: AnalyticsPeriod.values.firstWhere(
           (p) => p.name == map['period'],
           orElse: () => AnalyticsPeriod.month,
         ),
         generatedAt:
             (map['generatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        stats: IncomeExpenseStatsSerializer.fromMap(map['stats'] ?? {}),
+        stats: IncomeExpenseStatsSerializer.fromMap(
+            map['stats'] as Map<String, dynamic>? ?? {}),
         chartData: (map['chartData'] as List<dynamic>?)
-                ?.map(ChartDataSerializer.fromMap)
+                ?.map((e) =>
+                    ChartDataSerializer.fromMap(e as Map<String, dynamic>))
                 .toList() ??
             [],
-        notes: map['notes'],
+        notes: map['notes'] as String?,
       );
   final String id;
   final String userId;
@@ -469,19 +471,19 @@ extension IncomeExpenseStatsExtension on IncomeExpenseStats {
 class IncomeExpenseStatsSerializer {
   static IncomeExpenseStats fromMap(Map<String, dynamic> map) =>
       IncomeExpenseStats(
-        totalIncome: (map['totalIncome'] ?? 0.0).toDouble(),
-        totalExpense: (map['totalExpense'] ?? 0.0).toDouble(),
-        netIncome: (map['netIncome'] ?? 0.0).toDouble(),
-        transactionCount: map['transactionCount'] ?? 0,
+        totalIncome: (map['totalIncome'] as num?)?.toDouble() ?? 0.0,
+        totalExpense: (map['totalExpense'] as num?)?.toDouble() ?? 0.0,
+        netIncome: (map['netIncome'] as num?)?.toDouble() ?? 0.0,
+        transactionCount: map['transactionCount'] as int? ?? 0,
         periodStart:
             (map['periodStart'] as Timestamp?)?.toDate() ?? DateTime.now(),
         periodEnd: (map['periodEnd'] as Timestamp?)?.toDate() ?? DateTime.now(),
         incomeByCategory:
-            Map<String, double>.from(map['incomeByCategory'] ?? {}),
+            Map<String, double>.from(map['incomeByCategory'] as Map? ?? {}),
         expenseByCategory:
-            Map<String, double>.from(map['expenseByCategory'] ?? {}),
+            Map<String, double>.from(map['expenseByCategory'] as Map? ?? {}),
         monthlyData: (map['monthlyData'] as List<dynamic>?)
-                ?.map((e) => MonthlyData.fromMap(e))
+                ?.map((e) => MonthlyData.fromMap(e as Map<String, dynamic>))
                 .toList() ??
             [],
       );
@@ -499,9 +501,9 @@ extension ChartDataExtension on ChartData {
 // Статические методы для десериализации
 class ChartDataSerializer {
   static ChartData fromMap(Map<String, dynamic> map) => ChartData(
-        label: map['label'] ?? '',
-        value: (map['value'] ?? 0.0).toDouble(),
+        label: map['label'] as String? ?? '',
+        value: (map['value'] as num?)?.toDouble() ?? 0.0,
         color: map['color'] != null ? Color(map['color'] as int) : null,
-        description: map['description'],
+        description: map['description'] as String?,
       );
 }

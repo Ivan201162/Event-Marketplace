@@ -54,7 +54,8 @@ class ImprovementSuggestionsService {
     String? lastDocumentId,
   }) async {
     try {
-      var query = _firestore.collection('improvement_suggestions');
+      Query<Map<String, dynamic>> query =
+          _firestore.collection('improvement_suggestions');
 
       if (status != null) {
         query = query.where('status', isEqualTo: status.name);

@@ -147,6 +147,7 @@ class Review {
     required this.createdAt,
     this.updatedAt,
     this.isVerified = false,
+    this.reportCount = 0,
     this.isHelpful = false,
     this.helpfulCount = 0,
     this.notHelpfulCount = 0,
@@ -170,6 +171,7 @@ class Review {
       reviewerName: data['reviewerName'] ?? '',
       reviewerAvatar: data['reviewerAvatar'],
       targetId: data['targetId'] ?? '',
+      bookingId: data['bookingId'] ?? '',
       type: ReviewType.values.firstWhere(
         (e) => e.name == data['type'],
         orElse: () => ReviewType.event,
@@ -210,25 +212,19 @@ class Review {
   factory Review.fromMap(Map<String, dynamic> map) => Review(
         id: map['id'] ?? '',
         bookingId: map['bookingId'] ?? '',
-        customerId: map['customerId'] ?? '',
-        customerName: map['customerName'] ?? '',
-        specialistId: map['specialistId'] ?? '',
-        specialistName: map['specialistName'] ?? '',
-        serviceId: map['serviceId'] ?? '',
-        serviceName: map['serviceName'] ?? '',
+        reviewerId: map['customerId'] ?? map['reviewerId'] ?? '',
+        reviewerName: map['customerName'] ?? map['reviewerName'] ?? '',
         type: ReviewType.values.firstWhere(
           (e) => e.name == map['type'],
           orElse: () => ReviewType.service,
         ),
         rating: (map['rating'] ?? 0).toDouble(),
         title: map['title'] ?? '',
-        comment: map['comment'] ?? '',
         tags: (map['tags'] as List<dynamic>?)
                 ?.map((tag) => tag.toString())
                 .toList() ??
             [],
         isVerified: map['isVerified'] ?? false,
-        isPublic: map['isPublic'] ?? true,
         response: map['response'],
         responseDate: map['responseDate'] != null
             ? (map['responseDate'] as Timestamp).toDate()
@@ -259,6 +255,7 @@ class Review {
   final DateTime createdAt;
   final DateTime? updatedAt;
   final bool isVerified; // Проверенный отзыв
+  final int reportCount; // Количество жалоб
   final bool isHelpful; // Полезный отзыв
   final int helpfulCount; // Количество "полезно"
   final int notHelpfulCount; // Количество "не полезно"
@@ -332,6 +329,7 @@ class Review {
   }) =>
       Review(
         id: id ?? this.id,
+        bookingId: bookingId ?? this.bookingId,
         reviewerId: reviewerId ?? this.reviewerId,
         reviewerName: reviewerName ?? this.reviewerName,
         reviewerAvatar: reviewerAvatar ?? this.reviewerAvatar,
@@ -574,15 +572,14 @@ class ReviewFilter {
   /// Проверить, есть ли активные фильтры
   bool get hasActiveFilters =>
       minRating != null ||
-          maxRating != null ||
-          (tags != null && tags!.isNotEmpty) ||
-          verifiedOnly ??
-      false || withImages ??
-      false || withResponse ??
-      false ||
-          fromDate != null ||
-          toDate != null ||
-          (searchQuery != null && searchQuery!.isNotEmpty);
+      maxRating != null ||
+      (tags != null && tags!.isNotEmpty) ||
+      (verifiedOnly ?? false) ||
+      (withImages ?? false) ||
+      (withResponse ?? false) ||
+      fromDate != null ||
+      toDate != null ||
+      (searchQuery != null && searchQuery!.isNotEmpty);
 
   /// Сбросить все фильтры
   ReviewFilter clear() => const ReviewFilter();

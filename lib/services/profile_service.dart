@@ -76,6 +76,8 @@ class ProfileService {
         return getSpecialistProfile(userId);
       case UserRole.guest:
         return null;
+      case UserRole.admin:
+        return null;
     }
   }
 
@@ -94,6 +96,8 @@ class ProfileService {
         break;
       case UserRole.guest:
         throw Exception('Гости не могут иметь профили');
+      case UserRole.admin:
+        throw Exception('Админы не могут иметь профили');
     }
   }
 
@@ -153,7 +157,8 @@ class ProfileService {
     String? location,
   }) async {
     try {
-      var queryRef = _firestore.collection('specialist_profiles');
+      Query<Map<String, dynamic>> queryRef =
+          _firestore.collection('specialist_profiles');
 
       // Фильтр по категориям
       if (categories != null && categories.isNotEmpty) {
@@ -244,6 +249,8 @@ class ProfileService {
           break;
         case UserRole.guest:
           throw Exception('Гости не могут иметь профили');
+        case UserRole.admin:
+          throw Exception('Админы не могут иметь профили');
       }
     } catch (e) {
       print('Ошибка удаления профиля: $e');

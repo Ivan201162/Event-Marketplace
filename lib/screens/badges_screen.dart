@@ -249,7 +249,7 @@ class BadgeDetailScreen extends StatelessWidget {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           elevation: 0,
         ),
-        body: AnimatedList(
+        body: ListView(
           children: [
             // Основная информация
             Padding(

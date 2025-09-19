@@ -610,6 +610,8 @@ class ProfileScreen extends ConsumerWidget {
         return Colors.green;
       case UserRole.guest:
         return Colors.orange;
+      case UserRole.admin:
+        return Colors.red;
     }
   }
 

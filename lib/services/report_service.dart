@@ -211,7 +211,7 @@ class ReportService {
       final specialistId = parameters['specialistId'] as String?;
       final status = parameters['status'] as String?;
 
-      var query = _firestore.collection('bookings');
+      Query<Map<String, dynamic>> query = _firestore.collection('bookings');
 
       if (startDate != null) {
         query = query.where(
@@ -302,7 +302,7 @@ class ReportService {
       final endDate = parameters['endDate'] as DateTime?;
       final paymentMethod = parameters['paymentMethod'] as String?;
 
-      var query = _firestore.collection('payments');
+      Query<Map<String, dynamic>> query = _firestore.collection('payments');
 
       if (startDate != null) {
         query = query.where(
@@ -374,7 +374,7 @@ class ReportService {
       final userType = parameters['userType'] as String?;
       final isActive = parameters['isActive'] as bool?;
 
-      var query = _firestore.collection('users');
+      Query<Map<String, dynamic>> query = _firestore.collection('users');
 
       if (userType != null) {
         query = query.where('type', isEqualTo: userType);
@@ -444,7 +444,7 @@ class ReportService {
       final category = parameters['category'] as String?;
       final isVerified = parameters['isVerified'] as bool?;
 
-      var query = _firestore.collection('specialists');
+      Query<Map<String, dynamic>> query = _firestore.collection('specialists');
 
       if (category != null) {
         query = query.where('category', isEqualTo: category);
@@ -516,7 +516,8 @@ class ReportService {
       final startDate = parameters['startDate'] as DateTime?;
       final endDate = parameters['endDate'] as DateTime?;
 
-      var query = _firestore.collection('analyticsEvents');
+      Query<Map<String, dynamic>> query =
+          _firestore.collection('analyticsEvents');
 
       if (startDate != null) {
         query = query.where(
@@ -580,7 +581,8 @@ class ReportService {
       final endDate = parameters['endDate'] as DateTime?;
       final type = parameters['type'] as String?;
 
-      var query = _firestore.collection('sentNotifications');
+      Query<Map<String, dynamic>> query =
+          _firestore.collection('sentNotifications');
 
       if (startDate != null) {
         query = query.where(
@@ -671,7 +673,7 @@ class ReportService {
       final endDate = parameters['endDate'] as DateTime?;
       final errorType = parameters['errorType'] as String?;
 
-      var query = _firestore.collection('appErrors');
+      Query<Map<String, dynamic>> query = _firestore.collection('appErrors');
 
       if (startDate != null) {
         query = query.where(
@@ -859,7 +861,7 @@ class ReportService {
     int limit = 50,
   }) async {
     try {
-      var query = _firestore.collection('reports');
+      Query<Map<String, dynamic>> query = _firestore.collection('reports');
 
       if (generatedBy != null) {
         query = query.where('generatedBy', isEqualTo: generatedBy);

@@ -60,7 +60,7 @@ class AdminService {
       final stats = <String, int>{};
 
       final totalUsers = await _firestore.collection('users').count().get();
-      stats['total'] = totalUsers.count;
+      stats['total'] = totalUsers.count ?? 0;
 
       for (final status in UserStatus.values) {
         final count = await _firestore
@@ -68,7 +68,7 @@ class AdminService {
             .where('status', isEqualTo: status.name)
             .count()
             .get();
-        stats[status.name] = count.count;
+        stats[status.name] = count.count ?? 0;
       }
 
       return stats;

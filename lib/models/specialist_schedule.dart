@@ -139,6 +139,22 @@ class ScheduleException {
       createdAt: (data['createdAt'] as Timestamp).toDate(),
     );
   }
+
+  factory ScheduleException.fromMap(Map<String, dynamic> data) {
+    return ScheduleException(
+      id: data['id'] ?? '',
+      specialistId: data['specialistId'] ?? '',
+      type: ScheduleExceptionType.values.firstWhere(
+        (e) => e.name == data['type'],
+        orElse: () => ScheduleExceptionType.blocked,
+      ),
+      startDate: (data['startDate'] as Timestamp).toDate(),
+      endDate: (data['endDate'] as Timestamp).toDate(),
+      reason: data['reason'] ?? '',
+      description: data['description'],
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+    );
+  }
   final String id;
   final String specialistId;
   final ScheduleExceptionType type;

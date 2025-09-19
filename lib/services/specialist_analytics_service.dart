@@ -27,12 +27,14 @@ class SpecialistIncomeStats {
         weeklyIncome: (data['weeklyIncome'] as num?)?.toDouble() ?? 0.0,
         averageBookingValue:
             (data['averageBookingValue'] as num?)?.toDouble() ?? 0.0,
-        totalBookings: data['totalBookings'] ?? 0,
-        completedBookings: data['completedBookings'] ?? 0,
-        cancelledBookings: data['cancelledBookings'] ?? 0,
+        totalBookings: (data['totalBookings'] as int?) ?? 0,
+        completedBookings: (data['completedBookings'] as int?) ?? 0,
+        cancelledBookings: (data['cancelledBookings'] as int?) ?? 0,
         completionRate: (data['completionRate'] as num?)?.toDouble() ?? 0.0,
-        incomeByMonth: Map<String, double>.from(data['incomeByMonth'] ?? {}),
-        bookingsByMonth: Map<String, int>.from(data['bookingsByMonth'] ?? {}),
+        incomeByMonth: Map<String, double>.from(
+            data['incomeByMonth'] as Map<String, dynamic>? ?? {}),
+        bookingsByMonth: Map<String, int>.from(
+            data['bookingsByMonth'] as Map<String, dynamic>? ?? {}),
       );
   final double totalIncome;
   final double monthlyIncome;
@@ -79,14 +81,16 @@ class SpecialistReviewStats {
   factory SpecialistReviewStats.fromMap(Map<String, dynamic> data) =>
       SpecialistReviewStats(
         averageRating: (data['averageRating'] as num?)?.toDouble() ?? 0.0,
-        totalReviews: data['totalReviews'] ?? 0,
-        fiveStarReviews: data['fiveStarReviews'] ?? 0,
-        fourStarReviews: data['fourStarReviews'] ?? 0,
-        threeStarReviews: data['threeStarReviews'] ?? 0,
-        twoStarReviews: data['twoStarReviews'] ?? 0,
-        oneStarReviews: data['oneStarReviews'] ?? 0,
-        reviewsByMonth: Map<String, int>.from(data['reviewsByMonth'] ?? {}),
-        commonTags: List<String>.from(data['commonTags'] ?? []),
+        totalReviews: (data['totalReviews'] as int?) ?? 0,
+        fiveStarReviews: (data['fiveStarReviews'] as int?) ?? 0,
+        fourStarReviews: (data['fourStarReviews'] as int?) ?? 0,
+        threeStarReviews: (data['threeStarReviews'] as int?) ?? 0,
+        twoStarReviews: (data['twoStarReviews'] as int?) ?? 0,
+        oneStarReviews: (data['oneStarReviews'] as int?) ?? 0,
+        reviewsByMonth: Map<String, int>.from(
+            data['reviewsByMonth'] as Map<String, dynamic>? ?? {}),
+        commonTags:
+            List<String>.from(data['commonTags'] as List<dynamic>? ?? []),
         responseRate: (data['responseRate'] as num?)?.toDouble() ?? 0.0,
       );
   final double averageRating;
@@ -128,12 +132,15 @@ class SpecialistAnalytics {
   /// Создать из Map
   factory SpecialistAnalytics.fromMap(Map<String, dynamic> data) =>
       SpecialistAnalytics(
-        specialistId: data['specialistId'] ?? '',
-        incomeStats: SpecialistIncomeStats.fromMap(data['incomeStats'] ?? {}),
-        reviewStats: SpecialistReviewStats.fromMap(data['reviewStats'] ?? {}),
-        lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
-        additionalMetrics:
-            Map<String, dynamic>.from(data['additionalMetrics'] ?? {}),
+        specialistId: (data['specialistId'] as String?) ?? '',
+        incomeStats: SpecialistIncomeStats.fromMap(
+            data['incomeStats'] as Map<String, dynamic>? ?? {}),
+        reviewStats: SpecialistReviewStats.fromMap(
+            data['reviewStats'] as Map<String, dynamic>? ?? {}),
+        lastUpdated:
+            (data['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        additionalMetrics: Map<String, dynamic>.from(
+            data['additionalMetrics'] as Map<String, dynamic>? ?? {}),
       );
   final String specialistId;
   final SpecialistIncomeStats incomeStats;
@@ -255,7 +262,7 @@ class SpecialistAnalyticsService {
     // Общие показатели
     final totalIncome = payments
         .where((p) => p.status == PaymentStatus.completed)
-        .fold(0, (sum, p) => sum + p.amount);
+        .fold(0.0, (sum, p) => sum + p.amount);
 
     final monthlyIncome = payments
         .where(
@@ -263,7 +270,7 @@ class SpecialistAnalyticsService {
               p.status == PaymentStatus.completed &&
               p.createdAt.isAfter(thisMonth),
         )
-        .fold(0, (sum, p) => sum + p.amount);
+        .fold(0.0, (sum, p) => sum + p.amount);
 
     final weeklyIncome = payments
         .where(
@@ -271,7 +278,7 @@ class SpecialistAnalyticsService {
               p.status == PaymentStatus.completed &&
               p.createdAt.isAfter(lastWeek),
         )
-        .fold(0, (sum, p) => sum + p.amount);
+        .fold(0.0, (sum, p) => sum + p.amount);
 
     final completedBookings =
         bookings.where((b) => b.status == BookingStatus.completed).length;
@@ -302,7 +309,7 @@ class SpecialistAnalyticsService {
                 p.createdAt.year == month.year &&
                 p.createdAt.month == month.month,
           )
-          .fold(0, (sum, p) => sum + p.amount);
+          .fold(0.0, (sum, p) => sum + p.amount);
 
       final monthBookings = bookings
           .where(

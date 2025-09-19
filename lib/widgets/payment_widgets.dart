@@ -326,29 +326,7 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
           const Text('Выберите способ оплаты:'),
           const SizedBox(height: 12),
           _buildPaymentMethodSelector(),
-          if (formState.errorMessage != null) ...[
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.red.withOpacity(0.3)),
-              ),
-              child: Row(
-                children: [
-                  const Icon(Icons.error, color: Colors.red, size: 16),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      formState.errorMessage!,
-                      style: const TextStyle(color: Colors.red, fontSize: 12),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+          // TODO: Add error message display when payment form provider is implemented
         ],
       ),
       actions: [
@@ -357,14 +335,8 @@ class _PaymentDialogState extends ConsumerState<PaymentDialog> {
           child: const Text('Отмена'),
         ),
         ElevatedButton(
-          onPressed: formState.isProcessing ? null : _processPayment,
-          child: formState.isProcessing
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Text('Оплатить'),
+          onPressed: _processPayment,
+          child: const Text('Оплатить'),
         ),
       ],
     );

@@ -7,6 +7,21 @@ class SpecialistService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
   final CalendarService _calendarService = CalendarService();
 
+  /// Получить ленту специалиста
+  Stream<List<Map<String, dynamic>>> getSpecialistFeed(String specialistId) {
+    return _db
+        .collection('specialist_posts')
+        .where('specialistId', isEqualTo: specialistId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => {
+                  'id': doc.id,
+                  ...doc.data(),
+                })
+            .toList());
+  }
+
   /// Получить специалиста по ID
   Future<Specialist?> getSpecialist(String specialistId) async {
     try {
@@ -97,7 +112,7 @@ class SpecialistService {
     int limit = 50,
   }) async {
     try {
-      var query = _db.collection('specialists');
+      Query<Map<String, dynamic>> query = _db.collection('specialists');
 
       // Фильтр по доступности
       if (filters.isAvailable != null) {
@@ -172,7 +187,7 @@ class SpecialistService {
     SpecialistFilters filters, {
     int limit = 50,
   }) {
-    var query = _db.collection('specialists');
+    Query<Map<String, dynamic>> query = _db.collection('specialists');
 
     // Фильтр по доступности
     if (filters.isAvailable != null) {

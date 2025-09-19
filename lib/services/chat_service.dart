@@ -50,7 +50,7 @@ class ChatService {
       // Обновить время последнего сообщения в чате
       await _firestore.collection('chats').doc(chatId).update({
         'lastMessage': message.content,
-        'lastMessageAt': Timestamp.fromDate(message.createdAt),
+        'lastMessageAt': Timestamp.fromDate(message.timestamp),
         'lastMessageBy': message.senderId,
       });
     } catch (e) {
@@ -59,9 +59,9 @@ class ChatService {
   }
 
   /// Создать новый чат
-  Future<String> createChat(Chat chat) async {
+  Future<String> createChat(Map<String, dynamic> chatData) async {
     try {
-      final docRef = await _firestore.collection('chats').add(chat.toMap());
+      final docRef = await _firestore.collection('chats').add(chatData);
       return docRef.id;
     } catch (e) {
       throw Exception('Ошибка создания чата: $e');
@@ -72,7 +72,7 @@ class ChatService {
   Future<void> updateMessageStatus(
     String chatId,
     String messageId,
-    MessageStatus status,
+    String status,
   ) async {
     try {
       await _firestore
@@ -81,7 +81,7 @@ class ChatService {
           .collection('messages')
           .doc(messageId)
           .update({
-        'status': status.name,
+        'status': status,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
     } catch (e) {

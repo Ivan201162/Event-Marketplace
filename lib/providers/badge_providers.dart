@@ -1,28 +1,30 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/badge.dart';
-import '../services/badge_service.dart';
+import '../models/badge.dart' as badge_model;
+import '../services/badge_service.dart' as badge_service;
 
 /// Провайдер для сервиса бейджей
-final badgeServiceProvider = Provider<BadgeService>((ref) => BadgeService());
+final badgeServiceProvider =
+    Provider<badge_service.BadgeService>((ref) => badge_service.BadgeService());
 
 /// Провайдер для бейджей пользователя
 final userBadgesProvider =
-    StreamProvider.family<List<Badge>, String>((ref, userId) {
+    StreamProvider.family<List<badge_model.Badge>, String>((ref, userId) {
   final service = ref.read(badgeServiceProvider);
   return Stream.fromFuture(service.getUserBadges(userId));
 });
 
 /// Провайдер для статистики бейджей пользователя
 final userBadgeStatsProvider =
-    FutureProvider.family<BadgeStats, String>((ref, userId) {
+    FutureProvider.family<badge_model.BadgeStats, String>((ref, userId) {
   final service = ref.read(badgeServiceProvider);
   return service.getBadgeStats(userId);
 });
 
 /// Провайдер для таблицы лидеров по бейджам
 final badgeLeaderboardProvider =
-    FutureProvider.family<List<BadgeLeaderboardEntry>, int>((ref, limit) {
+    FutureProvider.family<List<badge_model.BadgeLeaderboardEntry>, int>(
+        (ref, limit) {
   final service = ref.read(badgeServiceProvider);
   return service.getBadgeLeaderboard(limit: limit);
 });
@@ -95,11 +97,12 @@ class BadgeManager {
   }
 
   /// Получить статистику бейджей
-  Future<BadgeStats> getBadgeStats(String userId) async =>
+  Future<badge_model.BadgeStats> getBadgeStats(String userId) async =>
       _service.getBadgeStats(userId);
 
   /// Получить таблицу лидеров
-  Future<List<BadgeLeaderboardEntry>> getLeaderboard({int limit = 10}) async =>
+  Future<List<badge_model.BadgeLeaderboardEntry>> getLeaderboard(
+          {int limit = 10}) async =>
       _service.getBadgeLeaderboard(limit: limit);
 }
 
@@ -189,7 +192,7 @@ final userAchievementsProvider =
 
   return UserAchievements(
     badges: badgesAsync.value ?? [],
-    stats: statsAsync.value ?? BadgeStats.empty(),
+    stats: statsAsync.value ?? badge_model.BadgeStats.empty(),
     isLoading: badgesAsync.isLoading || statsAsync.isLoading,
   );
 });
@@ -201,8 +204,8 @@ class UserAchievements {
     required this.stats,
     required this.isLoading,
   });
-  final List<Badge> badges;
-  final BadgeStats stats;
+  final List<badge_model.Badge> badges;
+  final badge_model.BadgeStats stats;
   final bool isLoading;
 
   /// Получить прогресс до следующего бейджа

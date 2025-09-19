@@ -75,7 +75,7 @@ class StoryService {
       }
 
       final storyData = storyDoc.data();
-      final viewedBy = List<String>.from(storyData['viewedBy'] ?? []);
+      final viewedBy = List<String>.from(storyData?['viewedBy'] ?? []);
 
       if (!viewedBy.contains(userId)) {
         viewedBy.add(userId);
@@ -179,7 +179,7 @@ class StoryService {
       }
 
       final storyData = storyDoc.data();
-      final likedBy = List<String>.from(storyData['likedBy'] ?? []);
+      final likedBy = List<String>.from(storyData?['likedBy'] ?? []);
 
       if (!likedBy.contains(userId)) {
         likedBy.add(userId);

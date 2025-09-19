@@ -175,6 +175,7 @@ class MonitoringAlert {
     required this.threshold,
     required this.operator,
     required this.createdAt,
+    this.createdBy,
     this.triggeredAt,
     this.resolvedAt,
     this.triggeredBy,
@@ -257,6 +258,7 @@ class MonitoringAlert {
   final double threshold;
   final String operator;
   final DateTime createdAt;
+  final String? createdBy;
   final DateTime? triggeredAt;
   final DateTime? resolvedAt;
   final String? triggeredBy;

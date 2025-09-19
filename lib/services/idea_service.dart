@@ -436,7 +436,7 @@ class IdeaService {
 
   /// Получить идеи с фильтром
   Stream<List<Idea>> getIdeas(IdeaFilter filter) {
-    var query = _firestore.collection('ideas');
+    Query<Map<String, dynamic>> query = _firestore.collection('ideas');
 
     if (filter.category != null) {
       query = query.where('category', isEqualTo: filter.category);

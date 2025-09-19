@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -16,10 +17,7 @@ class PerformanceOptimizations {
     );
 
     // Устанавливаем оптимальные настройки рендеринга
-    WidgetsBinding.instance.renderView.configuration =
-        WidgetsBinding.instance.renderView.configuration.copyWith(
-      devicePixelRatio: 1.0,
-    );
+    // Note: ViewConfiguration doesn't have copyWith, so we skip this optimization
 
     // Оптимизируем память
     _optimizeMemory();
@@ -155,7 +153,7 @@ class PerformanceOptimizations {
     String? name,
   }) =>
       Provider<T>(
-        create: (ref) => create(),
+        (ref) => create(),
         name: name,
       );
 
@@ -167,7 +165,7 @@ class PerformanceOptimizations {
     String? name,
   }) =>
           StateNotifierProvider<T, U>(
-            create: (ref) => create(),
+            (ref) => create(),
             name: name,
           );
 
@@ -178,7 +176,7 @@ class PerformanceOptimizations {
     Duration duration = const Duration(minutes: 30),
   }) =>
       CacheProvider(
-        key: key,
+        cacheKey: key,
         duration: duration,
         child: child,
       );
@@ -287,22 +285,14 @@ class PerformanceOptimizations {
   /// Оптимизация CPU
   static void optimizeCPU() {
     // Устанавливаем приоритет для основного потока
-    WidgetsBinding.instance.schedulerBinding.addPostFrameCallback((_) {
-      // Оптимизируем рендеринг
-      WidgetsBinding.instance.renderView.configuration =
-          WidgetsBinding.instance.renderView.configuration.copyWith(
-        devicePixelRatio: 1.0,
-      );
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      // Note: ViewConfiguration doesn't have copyWith, so we skip this optimization
     });
   }
 
   /// Оптимизация GPU
   static void optimizeGPU() {
-    // Отключаем антиалиасинг для лучшей производительности
-    WidgetsBinding.instance.renderView.configuration =
-        WidgetsBinding.instance.renderView.configuration.copyWith(
-      devicePixelRatio: 1.0,
-    );
+    // Note: ViewConfiguration doesn't have copyWith, so we skip this optimization
   }
 
   /// Оптимизация диска
@@ -317,8 +307,8 @@ class PerformanceOptimizations {
     imageCache.clear();
   }
 
-  /// Оптимизация сети
-  static void optimizeNetwork() {
+  /// Оптимизация сетевых настроек
+  static void optimizeNetworkSettings() {
     // Устанавливаем таймауты для сетевых запросов
     // Это должно быть настроено в HTTP клиенте
   }
@@ -329,8 +319,8 @@ class PerformanceOptimizations {
     // Это должно быть настроено в сервисах
   }
 
-  /// Оптимизация кэша
-  static void optimizeCache() {
+  /// Очистка кэша
+  static void clearCache() {
     // Очищаем старый кэш
     imageCache.clear();
   }
@@ -341,13 +331,9 @@ class PerformanceOptimizations {
     // Это должно быть настроено в настройках приложения
   }
 
-  /// Оптимизация рендеринга
-  static void optimizeRendering() {
-    // Оптимизируем рендеринг
-    WidgetsBinding.instance.renderView.configuration =
-        WidgetsBinding.instance.renderView.configuration.copyWith(
-      devicePixelRatio: 1.0,
-    );
+  /// Настройки рендеринга
+  static void configureRendering() {
+    // Note: ViewConfiguration doesn't have copyWith, so we skip this optimization
   }
 
   /// Оптимизация памяти
@@ -364,11 +350,11 @@ class PerformanceOptimizations {
     optimizeGPU();
     optimizeDisk();
     optimizeRAM();
-    optimizeNetwork();
+    optimizeNetworkSettings();
     optimizeDatabase();
-    optimizeCache();
+    clearCache();
     optimizeAnimations();
-    optimizeRendering();
+    configureRendering();
     optimizeMemory();
   }
 }
@@ -378,12 +364,11 @@ class CacheProvider extends StatefulWidget {
   const CacheProvider({
     super.key,
     required this.child,
-    required this.key,
+    required this.cacheKey,
     required this.duration,
   });
   final Widget child;
-  @override
-  final String key;
+  final String cacheKey;
   final Duration duration;
 
   @override

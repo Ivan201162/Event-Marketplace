@@ -159,7 +159,7 @@ class BackupService {
     Map<String, dynamic> filters,
   ) async {
     try {
-      var query = _firestore.collection(collectionName);
+      Query<Map<String, dynamic>> query = _firestore.collection(collectionName);
 
       // Применяем фильтры
       for (final entry in filters.entries) {
@@ -229,7 +229,7 @@ class BackupService {
     int limit = 50,
   }) async {
     try {
-      var query = _firestore.collection('backups');
+      Query<Map<String, dynamic>> query = _firestore.collection('backups');
 
       if (createdBy != null) {
         query = query.where('createdBy', isEqualTo: createdBy);
@@ -489,7 +489,7 @@ class BackupService {
     int limit = 50,
   }) async {
     try {
-      var query = _firestore.collection('restores');
+      Query<Map<String, dynamic>> query = _firestore.collection('restores');
 
       if (createdBy != null) {
         query = query.where('createdBy', isEqualTo: createdBy);

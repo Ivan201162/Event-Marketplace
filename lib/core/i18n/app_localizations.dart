@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 /// Локализация приложения
 class AppLocalizations {
@@ -11,12 +12,12 @@ class AppLocalizations {
   static const LocalizationsDelegate<AppLocalizations> delegate =
       _AppLocalizationsDelegate();
 
-  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates = [
-    delegate,
-    GlobalMaterialLocalizations.delegate,
-    GlobalWidgetsLocalizations.delegate,
-    GlobalCupertinoLocalizations.delegate,
-  ];
+  static List<LocalizationsDelegate<dynamic>> get localizationsDelegates => [
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ];
 
   static const List<Locale> supportedLocales = [
     Locale('en', ''),
@@ -576,9 +577,6 @@ class AppLocalizations {
       _localizedValues[locale.languageCode]?['darkTheme'] ?? 'Dark Theme';
   String get systemTheme =>
       _localizedValues[locale.languageCode]?['systemTheme'] ?? 'System Theme';
-  String get notifications =>
-      _localizedValues[locale.languageCode]?['notifications'] ??
-      'Notifications';
   String get pushNotifications =>
       _localizedValues[locale.languageCode]?['pushNotifications'] ??
       'Push Notifications';
@@ -594,14 +592,10 @@ class AppLocalizations {
       _localizedValues[locale.languageCode]?['security'] ?? 'Security';
   String get account =>
       _localizedValues[locale.languageCode]?['account'] ?? 'Account';
-  String get profile =>
-      _localizedValues[locale.languageCode]?['profile'] ?? 'Profile';
   String get preferences =>
       _localizedValues[locale.languageCode]?['preferences'] ?? 'Preferences';
   String get advanced =>
       _localizedValues[locale.languageCode]?['advanced'] ?? 'Advanced';
-  String get about =>
-      _localizedValues[locale.languageCode]?['about'] ?? 'About';
   String get version =>
       _localizedValues[locale.languageCode]?['version'] ?? 'Version';
   String get build =>

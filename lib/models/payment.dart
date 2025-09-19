@@ -55,6 +55,7 @@ class Payment {
     return Payment(
       id: doc.id,
       bookingId: data['bookingId'] ?? '',
+      userId: data['userId'] ?? '',
       customerId: data['customerId'] ?? '',
       specialistId: data['specialistId'] ?? '',
       type: _parsePaymentType(data['type']),
@@ -87,6 +88,7 @@ class Payment {
         id: map['id'] ?? '',
         bookingId: map['bookingId'] ?? '',
         userId: map['userId'] ?? '',
+        customerId: map['customerId'] ?? map['userId'] ?? '',
         specialistId: map['specialistId'] ?? '',
         amount: (map['amount'] ?? 0).toDouble(),
         currency: map['currency'] ?? 'RUB',
@@ -104,9 +106,6 @@ class Payment {
         metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
         createdAt: map['createdAt'] != null
             ? (map['createdAt'] as Timestamp).toDate()
-            : DateTime.now(),
-        updatedAt: map['updatedAt'] != null
-            ? (map['updatedAt'] as Timestamp).toDate()
             : DateTime.now(),
       );
   final String id;
@@ -131,6 +130,7 @@ class Payment {
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
         'bookingId': bookingId,
+        'userId': userId,
         'customerId': customerId,
         'specialistId': specialistId,
         'type': type.name,
@@ -153,6 +153,7 @@ class Payment {
   Payment copyWith({
     String? id,
     String? bookingId,
+    String? userId,
     String? customerId,
     String? specialistId,
     PaymentType? type,
@@ -172,6 +173,7 @@ class Payment {
       Payment(
         id: id ?? this.id,
         bookingId: bookingId ?? this.bookingId,
+        userId: userId ?? this.userId,
         customerId: customerId ?? this.customerId,
         specialistId: specialistId ?? this.specialistId,
         type: type ?? this.type,

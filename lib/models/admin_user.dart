@@ -39,21 +39,21 @@ class AdminUser {
     final data = doc.data() as Map<String, dynamic>;
     return AdminUser(
       id: doc.id,
-      email: data['email'] ?? '',
-      firstName: data['firstName'] ?? '',
-      lastName: data['lastName'] ?? '',
+      email: data['email'] as String? ?? '',
+      firstName: data['firstName'] as String? ?? '',
+      lastName: data['lastName'] as String? ?? '',
       profileImageUrl: data['profileImageUrl'] as String?,
       role: AdminRole.values.firstWhere(
         (e) => e.name == data['role'],
         orElse: () => AdminRole.moderator,
       ),
-      permissions: List<String>.from(data['permissions'] ?? []),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      permissions: List<String>.from(data['permissions'] as List? ?? []),
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       lastLoginAt: data['lastLoginAt'] != null
-          ? (data['lastLoginAt'] as Timestamp).toDate()
+          ? (data['lastLoginAt'] as Timestamp?)?.toDate()
           : null,
-      isActive: data['isActive'] ?? true,
+      isActive: data['isActive'] as bool? ?? true,
       notes: data['notes'] as String?,
     );
   }
@@ -191,28 +191,28 @@ class ManagedUser {
     final data = doc.data() as Map<String, dynamic>;
     return ManagedUser(
       id: doc.id,
-      email: data['email'] ?? '',
-      firstName: data['firstName'] ?? '',
-      lastName: data['lastName'] ?? '',
+      email: data['email'] as String? ?? '',
+      firstName: data['firstName'] as String? ?? '',
+      lastName: data['lastName'] as String? ?? '',
       profileImageUrl: data['profileImageUrl'] as String?,
       status: UserStatus.values.firstWhere(
         (e) => e.name == data['status'],
         orElse: () => UserStatus.active,
       ),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       lastLoginAt: data['lastLoginAt'] != null
-          ? (data['lastLoginAt'] as Timestamp).toDate()
+          ? (data['lastLoginAt'] as Timestamp?)?.toDate()
           : null,
-      totalBookings: data['totalBookings'] ?? 0,
-      completedBookings: data['completedBookings'] ?? 0,
+      totalBookings: data['totalBookings'] as int? ?? 0,
+      completedBookings: data['completedBookings'] as int? ?? 0,
       rating: (data['rating'] as num?)?.toDouble(),
-      isVerified: data['isVerified'] ?? false,
+      isVerified: data['isVerified'] as bool? ?? false,
       verificationNotes: data['verificationNotes'] as String?,
-      reportedIssues: List<String>.from(data['reportedIssues'] ?? []),
+      reportedIssues: List<String>.from(data['reportedIssues'] as List? ?? []),
       banReason: data['banReason'] as String?,
       bannedUntil: data['bannedUntil'] != null
-          ? (data['bannedUntil'] as Timestamp).toDate()
+          ? (data['bannedUntil'] as Timestamp?)?.toDate()
           : null,
       notes: data['notes'] as String?,
     );
@@ -382,18 +382,18 @@ class UserReport {
     final data = doc.data() as Map<String, dynamic>;
     return UserReport(
       id: doc.id,
-      reporterId: data['reporterId'] ?? '',
-      reportedUserId: data['reportedUserId'] ?? '',
-      reason: data['reason'] ?? '',
-      description: data['description'] ?? '',
-      evidenceUrls: List<String>.from(data['evidenceUrls'] ?? []),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      reporterId: data['reporterId'] as String? ?? '',
+      reportedUserId: data['reportedUserId'] as String? ?? '',
+      reason: data['reason'] as String? ?? '',
+      description: data['description'] as String? ?? '',
+      evidenceUrls: List<String>.from(data['evidenceUrls'] as List? ?? []),
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       resolvedAt: data['resolvedAt'] != null
-          ? (data['resolvedAt'] as Timestamp).toDate()
+          ? (data['resolvedAt'] as Timestamp?)?.toDate()
           : null,
       resolvedBy: data['resolvedBy'] as String?,
       resolution: data['resolution'] as String?,
-      isResolved: data['isResolved'] ?? false,
+      isResolved: data['isResolved'] as bool? ?? false,
     );
   }
   final String id;

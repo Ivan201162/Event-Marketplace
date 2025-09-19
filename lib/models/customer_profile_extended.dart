@@ -7,6 +7,7 @@ class CustomerProfileExtended {
     required this.userId,
     this.name,
     this.photoURL,
+    this.avatarUrl,
     this.bio,
     this.phoneNumber,
     this.location,
@@ -67,6 +68,7 @@ class CustomerProfileExtended {
   final String userId;
   final String? name;
   final String? photoURL;
+  final String? avatarUrl;
   final String? bio;
   final String? phoneNumber;
   final String? location;

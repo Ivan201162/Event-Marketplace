@@ -20,30 +20,31 @@ class AnalyticsEvent {
     final data = doc.data() as Map<String, dynamic>;
     return AnalyticsEvent(
       id: doc.id,
-      userId: data['userId'],
-      eventName: data['eventName'] ?? '',
-      screen: data['screen'] ?? '',
-      parameters: Map<String, dynamic>.from(data['parameters'] ?? {}),
-      timestamp: (data['timestamp'] as Timestamp).toDate(),
-      sessionId: data['sessionId'] ?? '',
-      deviceId: data['deviceId'] ?? '',
-      appVersion: data['appVersion'] ?? '',
-      platform: data['platform'] ?? '',
+      userId: data['userId'] as String?,
+      eventName: data['eventName'] as String? ?? '',
+      screen: data['screen'] as String? ?? '',
+      parameters: Map<String, dynamic>.from(data['parameters'] as Map? ?? {}),
+      timestamp: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      sessionId: data['sessionId'] as String? ?? '',
+      deviceId: data['deviceId'] as String? ?? '',
+      appVersion: data['appVersion'] as String? ?? '',
+      platform: data['platform'] as String? ?? '',
     );
   }
 
   /// Создать из Map
   factory AnalyticsEvent.fromMap(Map<String, dynamic> data) => AnalyticsEvent(
-        id: data['id'] ?? '',
-        userId: data['userId'],
-        eventName: data['eventName'] ?? '',
-        screen: data['screen'] ?? '',
-        parameters: Map<String, dynamic>.from(data['parameters'] ?? {}),
-        timestamp: (data['timestamp'] as Timestamp).toDate(),
-        sessionId: data['sessionId'] ?? '',
-        deviceId: data['deviceId'] ?? '',
-        appVersion: data['appVersion'] ?? '',
-        platform: data['platform'] ?? '',
+        id: data['id'] as String? ?? '',
+        userId: data['userId'] as String?,
+        eventName: data['eventName'] as String? ?? '',
+        screen: data['screen'] as String? ?? '',
+        parameters: Map<String, dynamic>.from(data['parameters'] as Map? ?? {}),
+        timestamp:
+            (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        sessionId: data['sessionId'] as String? ?? '',
+        deviceId: data['deviceId'] as String? ?? '',
+        appVersion: data['appVersion'] as String? ?? '',
+        platform: data['platform'] as String? ?? '',
       );
   final String id;
   final String? userId;
@@ -287,36 +288,38 @@ class UserSession {
     final data = doc.data() as Map<String, dynamic>;
     return UserSession(
       sessionId: doc.id,
-      userId: data['userId'],
-      deviceId: data['deviceId'] ?? '',
-      startTime: (data['startTime'] as Timestamp).toDate(),
+      userId: data['userId'] as String?,
+      deviceId: data['deviceId'] as String? ?? '',
+      startTime: (data['startTime'] as Timestamp?)?.toDate() ?? DateTime.now(),
       endTime: data['endTime'] != null
-          ? (data['endTime'] as Timestamp).toDate()
+          ? (data['endTime'] as Timestamp?)?.toDate()
           : null,
-      platform: data['platform'] ?? '',
-      appVersion: data['appVersion'] ?? '',
-      screens: List<String>.from(data['screens'] ?? []),
-      eventCount: data['eventCount'] ?? 0,
-      duration:
-          data['duration'] != null ? Duration(seconds: data['duration']) : null,
+      platform: data['platform'] as String? ?? '',
+      appVersion: data['appVersion'] as String? ?? '',
+      screens: List<String>.from(data['screens'] as List? ?? []),
+      eventCount: data['eventCount'] as int? ?? 0,
+      duration: data['duration'] != null
+          ? Duration(seconds: data['duration'] as int)
+          : null,
     );
   }
 
   /// Создать из Map
   factory UserSession.fromMap(Map<String, dynamic> data) => UserSession(
-        sessionId: data['sessionId'] ?? '',
-        userId: data['userId'],
-        deviceId: data['deviceId'] ?? '',
-        startTime: (data['startTime'] as Timestamp).toDate(),
+        sessionId: data['sessionId'] as String? ?? '',
+        userId: data['userId'] as String?,
+        deviceId: data['deviceId'] as String? ?? '',
+        startTime:
+            (data['startTime'] as Timestamp?)?.toDate() ?? DateTime.now(),
         endTime: data['endTime'] != null
-            ? (data['endTime'] as Timestamp).toDate()
+            ? (data['endTime'] as Timestamp?)?.toDate()
             : null,
-        platform: data['platform'] ?? '',
-        appVersion: data['appVersion'] ?? '',
-        screens: List<String>.from(data['screens'] ?? []),
-        eventCount: data['eventCount'] ?? 0,
+        platform: data['platform'] as String? ?? '',
+        appVersion: data['appVersion'] as String? ?? '',
+        screens: List<String>.from(data['screens'] as List? ?? []),
+        eventCount: data['eventCount'] as int? ?? 0,
         duration: data['duration'] != null
-            ? Duration(seconds: data['duration'])
+            ? Duration(seconds: data['duration'] as int)
             : null,
       );
   final String sessionId;

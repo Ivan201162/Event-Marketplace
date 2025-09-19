@@ -40,7 +40,7 @@ class GlobalErrorHandler {
   }
 
   /// Логирование ошибки
-  static void _logError(error, StackTrace? stack) {
+  static void _logError(dynamic error, StackTrace? stack) {
     if (FeatureFlags.debugMode) {
       developer.log(
         'Error: $error',
@@ -59,7 +59,7 @@ class GlobalErrorHandler {
   /// Обработка ошибки с показом пользователю
   static void handleError(
     BuildContext context,
-    error, {
+    dynamic error, {
     String? title,
     String? message,
     VoidCallback? onRetry,
@@ -73,7 +73,7 @@ class GlobalErrorHandler {
     }
 
     // Показ диалога с ошибкой
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(title ?? 'Ошибка'),
@@ -97,7 +97,7 @@ class GlobalErrorHandler {
   }
 
   /// Получение понятного сообщения об ошибке
-  static String _getErrorMessage(error) {
+  static String _getErrorMessage(dynamic error) {
     if (error is String) {
       return error;
     }
@@ -117,14 +117,14 @@ class GlobalErrorHandler {
   }
 
   /// Обработка ошибки без показа диалога
-  static void logError(error, [StackTrace? stack]) {
+  static void logError(dynamic error, [StackTrace? stack]) {
     _logError(error, stack);
   }
 
   /// Обработка ошибки с контекстом
   static void logErrorWithContext(
     String context,
-    error, [
+    dynamic error, [
     StackTrace? stack,
   ]) {
     if (FeatureFlags.debugMode) {

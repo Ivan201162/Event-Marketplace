@@ -42,6 +42,7 @@ class ReviewService {
       // Создаем отзыв
       final review = Review(
         id: '', // Будет установлен Firestore
+        bookingId: '', // TODO: Получить из контекста
         reviewerId: reviewerId,
         reviewerName: reviewerName,
         reviewerAvatar: reviewerAvatar,

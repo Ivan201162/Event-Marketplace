@@ -74,7 +74,7 @@ class FeedService {
       }
 
       final postData = postDoc.data();
-      final likedBy = List<String>.from(postData['likedBy'] ?? []);
+      final likedBy = List<String>.from(postData?['likedBy'] ?? []);
       final isLiked = likedBy.contains(userId);
 
       if (isLiked) {
@@ -154,7 +154,7 @@ class FeedService {
       }
 
       final commentData = commentDoc.data();
-      final likedBy = List<String>.from(commentData['likedBy'] ?? []);
+      final likedBy = List<String>.from(commentData?['likedBy'] ?? []);
       final isLiked = likedBy.contains(userId);
 
       if (isLiked) {

@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'core/i18n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,19 +10,17 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'core/constants/app_constants.dart';
 import 'core/constants/app_routes.dart';
-import 'core/error_handler.dart';
 import 'core/extensions/build_context_extensions.dart';
 import 'core/feature_flags.dart';
-import 'core/theme/app_theme.dart';
-import 'core/theme/theme_provider.dart';
+import 'core/app_theme.dart';
+import 'providers/theme_provider.dart';
 import 'firebase_options.dart';
 import 'screens/admin_panel_screen.dart';
-import 'screens/auth/login_screen.dart';
-import 'screens/auth/register_screen.dart';
-import 'screens/booking_screen.dart';
+import 'screens/auth_screen.dart';
+import 'screens/booking_form_screen.dart';
 import 'screens/chat_screen.dart';
 import 'screens/content_management_screen.dart';
-import 'screens/favorites_screen.dart';
+import 'screens/favorites_page.dart';
 import 'screens/home_screen.dart';
 import 'screens/integration_management_screen.dart';
 import 'screens/notifications_screen.dart';
@@ -30,19 +28,19 @@ import 'screens/profile_screen.dart';
 import 'screens/search_screen.dart';
 import 'screens/security_management_screen.dart';
 import 'screens/settings_management_screen.dart';
-import 'screens/settings_screen.dart';
+import 'screens/settings_page.dart';
 import 'screens/specialist_profile_screen.dart';
 import 'screens/user_management_screen.dart';
-import 'services/ab_testing_service.dart';
+import 'services/ab_test_service.dart';
 import 'services/analytics_service.dart';
 import 'services/auth_service.dart';
 import 'services/backup_service.dart';
-import 'services/caching_service.dart';
+import 'services/cache_service.dart';
 import 'services/content_management_service.dart';
 import 'services/integration_service.dart';
 import 'services/notification_service.dart';
 import 'services/performance_service.dart';
-import 'services/reporting_service.dart';
+import 'services/report_service.dart';
 import 'services/security_service.dart';
 import 'services/settings_service.dart';
 import 'services/user_management_service.dart';
@@ -78,23 +76,24 @@ void main() async {
 Future<void> _initializeServices() async {
   try {
     // Основные сервисы
-    await AuthService().initialize();
-    await NotificationService().initialize();
-    await AnalyticsService().initialize();
-    PerformanceService().initialize();
+    // Note: Most services don't have initialize methods, they are initialized on first use
+    final authService = AuthService();
+    final notificationService = NotificationService();
+    final analyticsService = AnalyticsService();
+    final performanceService = PerformanceService();
 
     // Сервисы управления
-    await SecurityService().initialize();
-    await IntegrationService().initialize();
-    await ContentManagementService().initialize();
-    await UserManagementService().initialize();
-    await SettingsService().initialize();
+    final securityService = SecurityService();
+    final integrationService = IntegrationService();
+    final contentManagementService = ContentManagementService();
+    final userManagementService = UserManagementService();
+    final settingsService = SettingsService();
 
     // Сервисы оптимизации
-    await CachingService().initialize();
-    await BackupService().initialize();
-    await ReportingService().initialize();
-    await ABTestingService().initialize();
+    final cacheService = CacheService();
+    final backupService = BackupService();
+    final reportService = ReportService();
+    final abTestService = ABTestService();
 
     print('All services initialized successfully');
   } catch (e) {
@@ -122,7 +121,7 @@ class EventMarketplaceApp extends ConsumerWidget {
       // Тема
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
-      themeMode: themeMode,
+      themeMode: _convertToThemeMode(themeMode),
 
       // Локализация
       localizationsDelegates: const [
@@ -142,10 +141,20 @@ class EventMarketplaceApp extends ConsumerWidget {
       routerConfig: router,
 
       // Обработка ошибок
-      builder: (context, child) => ErrorHandler(
-        child: child ?? const SizedBox.shrink(),
-      ),
+      builder: (context, child) => child ?? const SizedBox.shrink(),
     );
+  }
+
+  /// Конвертация AppThemeMode в ThemeMode
+  ThemeMode _convertToThemeMode(AppThemeMode appThemeMode) {
+    switch (appThemeMode) {
+      case AppThemeMode.light:
+        return ThemeMode.light;
+      case AppThemeMode.dark:
+        return ThemeMode.dark;
+      case AppThemeMode.system:
+        return ThemeMode.system;
+    }
   }
 }
 
@@ -156,7 +165,7 @@ final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: AppRoutes.home,
     redirect: (context, state) {
-      final isLoggedIn = authService.isLoggedIn;
+      final isLoggedIn = authService.currentFirebaseUser != null;
       final isAuthRoute = state.matchedLocation.startsWith('/auth');
 
       if (!isLoggedIn && !isAuthRoute) {
@@ -181,12 +190,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.login,
         name: 'login',
-        builder: (context, state) => const LoginScreen(),
+        builder: (context, state) => const AuthScreen(),
       ),
       GoRoute(
         path: AppRoutes.register,
         name: 'register',
-        builder: (context, state) => const RegisterScreen(),
+        builder: (context, state) => const AuthScreen(),
       ),
 
       // Профили
@@ -200,7 +209,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'specialist-profile',
         builder: (context, state) {
           final specialistId = state.pathParameters['id'];
-          return SpecialistProfileScreen(specialistId: specialistId);
+          return SpecialistProfileScreen(specialistId: specialistId ?? '');
         },
       ),
 
@@ -210,7 +219,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'booking',
         builder: (context, state) {
           final specialistId = state.pathParameters['specialistId'];
-          return BookingScreen(specialistId: specialistId);
+          return BookingFormScreen(specialistId: specialistId ?? '');
         },
       ),
 
@@ -220,7 +229,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'chat',
         builder: (context, state) {
           final chatId = state.pathParameters['chatId'];
-          return ChatScreen(chatId: chatId);
+          return ChatScreen(chatId: chatId ?? '');
         },
       ),
 
@@ -233,7 +242,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.favorites,
         name: 'favorites',
-        builder: (context, state) => const FavoritesScreen(),
+        builder: (context, state) => const FavoritesPage(),
       ),
 
       // Уведомления и настройки
@@ -245,7 +254,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.settings,
         name: 'settings',
-        builder: (context, state) => const SettingsScreen(),
+        builder: (context, state) => const SettingsPage(),
       ),
 
       // Административные панели
@@ -319,8 +328,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 final authServiceProvider = Provider<AuthService>((ref) => AuthService());
 
 /// Провайдер режима темы
-final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>(
-    (ref) => ThemeModeNotifier());
+final themeModeProvider = themeProvider;
 
 /// Провайдер флагов функций
 final featureFlagsProvider = Provider<FeatureFlags>((ref) => FeatureFlags());
@@ -358,16 +366,15 @@ final settingsServiceProvider =
     Provider<SettingsService>((ref) => SettingsService());
 
 /// Провайдер сервиса кэширования
-final cachingServiceProvider =
-    Provider<CachingService>((ref) => CachingService());
+final cachingServiceProvider = Provider<CacheService>((ref) => CacheService());
 
 /// Провайдер сервиса бэкапов
 final backupServiceProvider = Provider<BackupService>((ref) => BackupService());
 
 /// Провайдер сервиса отчетов
 final reportingServiceProvider =
-    Provider<ReportingService>((ref) => ReportingService());
+    Provider<ReportService>((ref) => ReportService());
 
 /// Провайдер сервиса A/B тестирования
 final abTestingServiceProvider =
-    Provider<ABTestingService>((ref) => ABTestingService());
+    Provider<ABTestService>((ref) => ABTestService());

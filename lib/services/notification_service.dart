@@ -18,6 +18,52 @@ class NotificationService {
 
   static final NotificationService _instance = NotificationService._internal();
 
+  /// Получить FCM токен
+  Future<String?> getFCMToken() async {
+    try {
+      return await _messaging.getToken();
+    } catch (e) {
+      debugPrint('Ошибка получения FCM токена: $e');
+      return null;
+    }
+  }
+
+  /// Отправить уведомление о бронировании
+  Future<String> sendBookingNotification({
+    required String userId,
+    required String eventTitle,
+    required String specialistName,
+    required DateTime bookingDate,
+    required NotificationChannel channel,
+  }) async {
+    return await sendNotification(
+      userId: userId,
+      title: 'Новое бронирование',
+      body:
+          'Ваше бронирование на $eventTitle с $specialistName подтверждено на ${bookingDate.toString()}',
+      type: NotificationType.booking,
+      channel: channel,
+    );
+  }
+
+  /// Отправить уведомление об отмене
+  Future<String> sendCancellationNotification({
+    required String userId,
+    required String eventTitle,
+    required String specialistName,
+    required DateTime bookingDate,
+    required NotificationChannel channel,
+  }) async {
+    return await sendNotification(
+      userId: userId,
+      title: 'Бронирование отменено',
+      body:
+          'Ваше бронирование на $eventTitle с $specialistName на ${bookingDate.toString()} было отменено',
+      type: NotificationType.cancellation,
+      channel: channel,
+    );
+  }
+
   final StreamController<SentNotification> _notificationController =
       StreamController<SentNotification>.broadcast();
 
@@ -250,9 +296,10 @@ class NotificationService {
     required NotificationType type,
     required NotificationChannel channel,
     Map<String, dynamic>? data,
+    String? recipientId,
   }) async =>
       _sendNotification(
-        userId: userId,
+        userId: recipientId ?? userId,
         title: title,
         body: body,
         type: type,
@@ -357,11 +404,11 @@ class NotificationService {
         try {
           await _messaging.sendMessage(
             to: token,
-            notification: {
+            data: {
               'title': title,
               'body': body,
+              ...data.map((key, value) => MapEntry(key, value.toString())),
             },
-            data: data.map((key, value) => MapEntry(key, value.toString())),
           );
         } catch (e) {
           if (kDebugMode) {
@@ -605,20 +652,50 @@ class NotificationService {
     }
   }
 
+  /// Отправить уведомление о напоминании об оплате
+  Future<void> sendPaymentReminderNotification({
+    required String customerId,
+    required String bookingId,
+    required String eventName,
+    required double amount,
+    required DateTime dueDate,
+  }) async {
+    try {
+      await sendNotification(
+        userId: customerId,
+        title: 'Напоминание об оплате',
+        body:
+            'Не забудьте оплатить $eventName на сумму ${amount.toStringAsFixed(2)} руб. до ${dueDate.toString()}',
+        type: NotificationType.payment,
+        channel: NotificationChannel.push,
+        data: {
+          'bookingId': bookingId,
+          'eventName': eventName,
+          'amount': amount.toString(),
+          'dueDate': dueDate.toIso8601String(),
+        },
+      );
+    } catch (e) {
+      debugPrint('Ошибка отправки напоминания об оплате: $e');
+    }
+  }
+
   /// Отправить уведомление о новом отзыве
   Future<void> sendReviewNotification({
     required String specialistId,
     required String customerId,
+    required String customerName,
     required String reviewId,
     required double rating,
     required String reviewText,
   }) async {
     try {
       await sendNotification(
-        recipientId: specialistId,
+        userId: specialistId,
         title: 'Новый отзыв',
         body: 'Вы получили новый отзыв с оценкой $rating',
         type: NotificationType.review,
+        channel: NotificationChannel.push,
         data: {
           'reviewId': reviewId,
           'customerId': customerId,
@@ -642,11 +719,12 @@ class NotificationService {
   }) async {
     try {
       await sendNotification(
-        recipientId: customerId,
+        userId: customerId,
         title: 'Напоминание об оплате',
         body:
             'Не забудьте оплатить заказ на сумму ${amount.toStringAsFixed(2)} руб.',
         type: NotificationType.payment,
+        channel: NotificationChannel.push,
         data: {
           'bookingId': bookingId,
           'amount': amount.toString(),

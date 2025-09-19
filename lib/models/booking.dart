@@ -27,6 +27,7 @@ class Booking {
     required this.participantsCount,
     required this.totalPrice,
     this.notes,
+    this.serviceId,
     required this.createdAt,
     required this.updatedAt,
     this.organizerId,
@@ -122,8 +123,6 @@ class Booking {
         specialistId: map['specialistId'] ?? '',
         specialistName: map['specialistName'] ?? '',
         serviceId: map['serviceId'] ?? '',
-        serviceName: map['serviceName'] ?? '',
-        servicePrice: (map['servicePrice'] ?? 0).toDouble(),
         eventDate: map['eventDate'] != null
             ? (map['eventDate'] as Timestamp).toDate()
             : DateTime.now(),
@@ -165,6 +164,7 @@ class Booking {
   final String? customerId;
   final String? specialistId;
   final String? specialistName;
+  final String? serviceId;
   final DateTime? endDate;
   final double? prepayment;
 
@@ -248,7 +248,9 @@ class Booking {
     String? organizerName,
     String? customerId,
     String? specialistId,
+    String? serviceId,
     DateTime? endDate,
+    DateTime? expiresAt,
     double? prepayment,
     String? title,
     String? customerName,
@@ -288,6 +290,7 @@ class Booking {
         expiresAt: expiresAt,
         customerId: customerId ?? this.customerId,
         specialistId: specialistId ?? this.specialistId,
+        serviceId: serviceId ?? this.serviceId,
         endDate: endDate ?? this.endDate,
         prepayment: prepayment ?? this.prepayment,
         title: title ?? this.title,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/security.dart';
+import '../models/security_password_level.dart';
 import '../services/security_service.dart';
 
 /// Виджет для отображения силы пароля

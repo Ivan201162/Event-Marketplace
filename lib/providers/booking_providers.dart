@@ -6,6 +6,48 @@ import '../services/booking_service.dart';
 final bookingServiceProvider =
     Provider<BookingService>((ref) => BookingService());
 
+/// Провайдер для формы бронирования
+final bookingFormProvider =
+    NotifierProvider<BookingFormNotifier, BookingFormState>(
+        BookingFormNotifier.new);
+
+/// Состояние формы бронирования
+class BookingFormState {
+  const BookingFormState({
+    this.isLoading = false,
+    this.errorMessage,
+  });
+  final bool isLoading;
+  final String? errorMessage;
+
+  BookingFormState copyWith({
+    bool? isLoading,
+    String? errorMessage,
+  }) =>
+      BookingFormState(
+        isLoading: isLoading ?? this.isLoading,
+        errorMessage: errorMessage ?? this.errorMessage,
+      );
+}
+
+/// Нотификатор для формы бронирования
+class BookingFormNotifier extends Notifier<BookingFormState> {
+  @override
+  BookingFormState build() => const BookingFormState();
+
+  void setLoading(bool isLoading) {
+    state = state.copyWith(isLoading: isLoading);
+  }
+
+  void setError(String? errorMessage) {
+    state = state.copyWith(errorMessage: errorMessage);
+  }
+
+  void clearError() {
+    state = state.copyWith(errorMessage: null);
+  }
+}
+
 /// Провайдер бронирований пользователя
 final userBookingsProvider =
     StreamProvider.family<List<Booking>, String>((ref, userId) {

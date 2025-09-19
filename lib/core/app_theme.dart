@@ -55,7 +55,6 @@ class AppTheme {
         tooltipsMatchBackground: true,
         swapColors: false,
         lightIsWhite: true,
-        useSubThemes: true,
         visualDensity: FlexColorScheme.comfortablePlatformDensity,
         fontFamily: 'Roboto',
         primary: BrandColors.primary,
@@ -64,7 +63,6 @@ class AppTheme {
         secondaryContainer: BrandColors.secondaryVariant,
         tertiary: BrandColors.accent,
         tertiaryContainer: BrandColors.accentVariant,
-        appBarPrimary: BrandColors.primary,
         error: BrandColors.error,
       ).copyWith(
         // Кастомные настройки
@@ -160,13 +158,13 @@ class AppTheme {
           ),
         ),
         // Кастомные стили карточек
-        cardTheme: CardTheme(
+        cardTheme: const CardThemeData(
           elevation: 2,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
           color: Colors.white,
-          shadowColor: Colors.black.withOpacity(0.1),
+          shadowColor: Colors.black12,
         ),
         // Кастомные стили кнопок
         elevatedButtonTheme: ElevatedButtonThemeData(
@@ -219,7 +217,6 @@ class AppTheme {
         tooltipsMatchBackground: true,
         swapColors: false,
         darkIsTrueBlack: false,
-        useSubThemes: true,
         visualDensity: FlexColorScheme.comfortablePlatformDensity,
         fontFamily: 'Roboto',
         primary: BrandColors.primary,
@@ -228,7 +225,6 @@ class AppTheme {
         secondaryContainer: BrandColors.secondaryVariant,
         tertiary: BrandColors.accent,
         tertiaryContainer: BrandColors.accentVariant,
-        appBarPrimary: BrandColors.primary,
         error: BrandColors.error,
       ).copyWith(
         // Кастомные настройки для темной темы
@@ -247,13 +243,13 @@ class AppTheme {
           onError: Colors.white,
         ),
         // Кастомные стили карточек для темной темы
-        cardTheme: CardTheme(
+        cardTheme: const CardThemeData(
           elevation: 2,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
+            borderRadius: BorderRadius.all(Radius.circular(16)),
           ),
-          color: const Color(0xFF1F2937),
-          shadowColor: Colors.black.withOpacity(0.3),
+          color: Color(0xFF1F2937),
+          shadowColor: Colors.black26,
         ),
       );
 }

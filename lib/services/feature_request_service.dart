@@ -73,7 +73,8 @@ class FeatureRequestService {
       return Stream.value([]);
     }
 
-    var query = _firestore.collection('feature_requests');
+    Query<Map<String, dynamic>> query =
+        _firestore.collection('feature_requests');
 
     // Применяем фильтры
     if (status != null) {

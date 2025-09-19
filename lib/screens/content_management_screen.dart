@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/content_management.dart';
 import '../services/content_management_service.dart';
-import '../widgets/responsive_layout.dart';
-import '../widgets/responsive_widgets.dart';
+import '../widgets/responsive_layout.dart' as responsive_layout;
+import '../widgets/responsive_widgets.dart' as responsive_widgets;
 
 /// Экран управления контентом и медиа
 class ContentManagementScreen extends ConsumerStatefulWidget {
@@ -51,7 +51,7 @@ class _ContentManagementScreenState
         ),
       );
 
-  Widget _buildTabs() => ResponsiveCard(
+  Widget _buildTabs() => responsive_widgets.ResponsiveCard(
         child: Row(
           children: [
             Expanded(
@@ -111,10 +111,10 @@ class _ContentManagementScreenState
   Widget _buildMediaTab() => Column(
         children: [
           // Заголовок с фильтрами
-          ResponsiveCard(
+          responsive_widgets.ResponsiveCard(
             child: Row(
               children: [
-                const ResponsiveText(
+                const responsive_widgets.ResponsiveText(
                   'Медиа контент',
                   isTitle: true,
                 ),
@@ -177,7 +177,7 @@ class _ContentManagementScreenState
   Widget _buildMediaCard(MediaContent media) {
     final statusColor = _getStatusColor(media.status);
 
-    return ResponsiveCard(
+    return responsive_widgets.ResponsiveCard(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -313,10 +313,10 @@ class _ContentManagementScreenState
   Widget _buildGalleriesTab() => Column(
         children: [
           // Заголовок
-          ResponsiveCard(
+          responsive_widgets.ResponsiveCard(
             child: Row(
               children: [
-                const ResponsiveText(
+                const responsive_widgets.ResponsiveText(
                   'Галереи контента',
                   isTitle: true,
                 ),
@@ -351,7 +351,8 @@ class _ContentManagementScreenState
         ],
       );
 
-  Widget _buildGalleryCard(ContentGallery gallery) => ResponsiveCard(
+  Widget _buildGalleryCard(ContentGallery gallery) =>
+      responsive_widgets.ResponsiveCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -447,11 +448,11 @@ class _ContentManagementScreenState
       );
 
   Widget _buildUploadTab() => SingleChildScrollView(
-        child: ResponsiveCard(
+        child: responsive_widgets.ResponsiveCard(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const ResponsiveText(
+              const responsive_widgets.ResponsiveText(
                 'Загрузка медиа',
                 isTitle: true,
               ),

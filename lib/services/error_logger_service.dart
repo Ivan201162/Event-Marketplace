@@ -299,7 +299,7 @@ class ErrorLoggerService {
     bool unresolvedOnly = false,
   }) async {
     try {
-      var query = _firestore.collection('appErrors');
+      Query<Map<String, dynamic>> query = _firestore.collection('appErrors');
 
       if (resolvedOnly) {
         query = query.where('resolved', isEqualTo: true);

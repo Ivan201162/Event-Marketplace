@@ -12,7 +12,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
-          child: MyApp(),
+          child: EventMarketplaceApp(),
         ),
       );
 
@@ -82,7 +82,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
-          child: MyApp(),
+          child: EventMarketplaceApp(),
         ),
       );
 
@@ -115,7 +115,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
-          child: MyApp(),
+          child: EventMarketplaceApp(),
         ),
       );
 
@@ -148,7 +148,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
-          child: MyApp(),
+          child: EventMarketplaceApp(),
         ),
       );
 
@@ -181,7 +181,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
-          child: MyApp(),
+          child: EventMarketplaceApp(),
         ),
       );
 
@@ -222,7 +222,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
-          child: MyApp(),
+          child: EventMarketplaceApp(),
         ),
       );
 
@@ -258,7 +258,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
-          child: MyApp(),
+          child: EventMarketplaceApp(),
         ),
       );
 
@@ -288,7 +288,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
-          child: MyApp(),
+          child: EventMarketplaceApp(),
         ),
       );
 
@@ -313,7 +313,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
-          child: MyApp(),
+          child: EventMarketplaceApp(),
         ),
       );
 
@@ -334,7 +334,7 @@ void main() {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
-          child: MyApp(),
+          child: EventMarketplaceApp(),
         ),
       );
 

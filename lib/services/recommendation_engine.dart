@@ -16,7 +16,7 @@ class RecommendationEngine {
     required String userId,
     int limit = 10,
   }) async {
-    if (!FeatureFlags.isRecommendationsEnabled) {
+    if (!FeatureFlags.recommendationsEnabled) {
       return [];
     }
 
@@ -100,7 +100,7 @@ class RecommendationEngine {
       categoryCount['Свадьба'] = (categoryCount['Свадьба'] ?? 0) + 1;
       serviceCount['Фотограф'] = (serviceCount['Фотограф'] ?? 0) + 1;
 
-      priceRange.add(booking.totalPrice);
+      priceRange.add(booking.totalPrice.toInt());
     }
 
     // Анализируем отзывы
@@ -152,7 +152,7 @@ class RecommendationEngine {
     required List<String> excludeIds,
     int limit = 10,
   }) async {
-    var query = _firestore.collection('specialists');
+    Query<Map<String, dynamic>> query = _firestore.collection('specialists');
 
     // Фильтр по категориям
     if (preferences.preferredCategories.isNotEmpty) {

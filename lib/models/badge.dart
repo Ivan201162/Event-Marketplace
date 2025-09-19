@@ -333,6 +333,59 @@ enum BadgeCategory {
   general,
 }
 
+/// Статистика бейджей пользователя
+class BadgeStats {
+  const BadgeStats({
+    required this.totalBadges,
+    required this.earnedBadges,
+    required this.availableBadges,
+    required this.recentBadges,
+    required this.badgesByCategory,
+    this.specialistBadges = 0,
+    this.customerBadges = 0,
+    this.generalBadges = 0,
+  });
+
+  final int totalBadges;
+  final int earnedBadges;
+  final int availableBadges;
+  final List<Badge> recentBadges;
+  final Map<BadgeCategory, int> badgesByCategory;
+  final int specialistBadges;
+  final int customerBadges;
+  final int generalBadges;
+
+  static const BadgeStats empty = BadgeStats(
+    totalBadges: 0,
+    earnedBadges: 0,
+    availableBadges: 0,
+    recentBadges: [],
+    badgesByCategory: {},
+    specialistBadges: 0,
+    customerBadges: 0,
+    generalBadges: 0,
+  );
+}
+
+/// Запись в таблице лидеров по бейджам
+class BadgeLeaderboardEntry {
+  const BadgeLeaderboardEntry({
+    required this.userId,
+    required this.userName,
+    required this.userAvatar,
+    required this.badgeCount,
+    required this.rank,
+    required this.recentBadges,
+  });
+
+  final String userId;
+  final String userName;
+  final String? userAvatar;
+  final int badgeCount;
+  final int rank;
+  final List<Badge> recentBadges;
+}
+
 /// Расширение для работы с бейджами
 extension BadgeListExtension on List<Badge> {
   /// Получает бейджи по категории

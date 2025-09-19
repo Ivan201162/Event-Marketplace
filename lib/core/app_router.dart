@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../screens/about_screen.dart';
@@ -25,6 +26,38 @@ import '../screens/recommendations_screen.dart';
 import '../screens/search_screen.dart';
 import '../screens/settings_page.dart';
 import '../screens/specialist_profile_screen.dart';
+import '../providers/event_providers.dart';
+
+/// Wrapper для загрузки события по ID
+class EventDetailScreenWrapper extends ConsumerWidget {
+  const EventDetailScreenWrapper({
+    super.key,
+    required this.eventId,
+  });
+  final String eventId;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return ref.watch(eventProvider(eventId)).when(
+          data: (event) {
+            if (event == null) {
+              return Scaffold(
+                appBar: AppBar(title: const Text('Событие не найдено')),
+                body: const Center(child: Text('Событие не найдено')),
+              );
+            }
+            return EventDetailScreen(event: event);
+          },
+          loading: () => const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          ),
+          error: (error, stack) => Scaffold(
+            appBar: AppBar(title: const Text('Ошибка')),
+            body: Center(child: Text('Ошибка загрузки: $error')),
+          ),
+        );
+  }
+}
 
 /// Централизованная система роутинга приложения
 class AppRouter {
@@ -142,7 +175,7 @@ class AppRouter {
             name: 'eventDetail',
             builder: (context, state) {
               final eventId = state.pathParameters['id'];
-              return EventDetailScreen(event: null, eventId: eventId);
+              return EventDetailScreenWrapper(eventId: eventId ?? '');
             },
           ),
 
@@ -152,7 +185,7 @@ class AppRouter {
             name: 'specialistProfile',
             builder: (context, state) {
               final specialistId = state.pathParameters['id'];
-              return SpecialistProfileScreen(specialistId: specialistId);
+              return SpecialistProfileScreen(specialistId: specialistId ?? '');
             },
           ),
 
@@ -169,7 +202,7 @@ class AppRouter {
             name: 'bookingForm',
             builder: (context, state) {
               final specialistId = state.pathParameters['specialistId'];
-              return BookingFormScreen(specialistId: specialistId);
+              return BookingFormScreen(specialistId: specialistId ?? '');
             },
           ),
 
@@ -179,7 +212,7 @@ class AppRouter {
             name: 'createReview',
             builder: (context, state) {
               final targetId = state.pathParameters['targetId'];
-              return CreateReviewScreen(targetId: targetId);
+              return CreateReviewScreen(targetId: targetId ?? '');
             },
           ),
 
@@ -189,7 +222,7 @@ class AppRouter {
             name: 'chat',
             builder: (context, state) {
               final chatId = state.pathParameters['chatId'];
-              return ChatScreen(chatId: chatId);
+              return ChatScreen(chatId: chatId ?? '');
             },
           ),
 

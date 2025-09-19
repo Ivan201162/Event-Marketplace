@@ -4,7 +4,8 @@ import '../services/specialist_analytics_service.dart';
 
 /// Экран аналитики для специалистов
 class AnalyticsScreen extends ConsumerStatefulWidget {
-  const AnalyticsScreen({super.key});
+  const AnalyticsScreen({super.key, this.userId});
+  final String? userId;
 
   @override
   ConsumerState<AnalyticsScreen> createState() => _AnalyticsScreenState();

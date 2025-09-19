@@ -3,6 +3,7 @@ import '../models/subscription.dart';
 import '../models/subscription_notification.dart';
 import '../models/specialist_recommendation.dart';
 import '../models/specialist.dart';
+import '../models/notification.dart';
 
 /// Сервис для работы с подписками
 class SubscriptionService {
@@ -199,7 +200,7 @@ class SubscriptionService {
                   specialistId: doc.data()['specialistId'] ?? '',
                   type: NotificationType.values.firstWhere(
                     (e) => e.toString().split('.').last == doc.data()['type'],
-                    orElse: () => NotificationType.general,
+                    orElse: () => NotificationType.system,
                   ),
                   title: doc.data()['title'] ?? '',
                   body: doc.data()['body'] ?? '',

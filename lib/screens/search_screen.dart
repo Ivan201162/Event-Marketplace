@@ -179,12 +179,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           final query = history[index];
           return Padding(
             padding: const EdgeInsets.only(right: 8),
-            child: ActionChip(
+            child: Chip(
               label: Text(query),
-              onPressed: () {
-                _searchController.text = query;
-                _performSearch();
-              },
+              deleteIcon: const Icon(Icons.close),
               onDeleted: () {
                 ref
                     .read(searchHistoryProvider.notifier)

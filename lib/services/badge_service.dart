@@ -281,9 +281,11 @@ class BadgeService {
             leaderboard.add(
               BadgeLeaderboardEntry(
                 userId: entry.key,
-                userName: userData['name'] as String? ?? 'Пользователь',
-                userAvatar: userData['avatarUrl'] as String?,
+                userName: userData?['name'] as String? ?? 'Пользователь',
+                userAvatar: userData?['avatarUrl'] as String?,
                 badgeCount: entry.value,
+                rank: leaderboard.length + 1,
+                recentBadges: [],
               ),
             );
           }

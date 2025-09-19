@@ -642,7 +642,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
             participantsCount: 0,
-            isActive: true,
+            status: EventStatus.active,
           ),
         );
 

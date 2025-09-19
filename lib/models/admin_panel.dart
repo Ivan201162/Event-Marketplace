@@ -18,16 +18,16 @@ class AdminPanel {
 
     return AdminPanel(
       id: doc.id,
-      adminId: data['adminId'] ?? '',
-      adminName: data['adminName'] ?? '',
+      adminId: data['adminId'] as String? ?? '',
+      adminName: data['adminName'] as String? ?? '',
       role: AdminRole.values.firstWhere(
         (r) => r.name == data['role'],
         orElse: () => AdminRole.moderator,
       ),
-      permissions: List<String>.from(data['permissions'] ?? []),
+      permissions: List<String>.from(data['permissions'] as List? ?? []),
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       lastLogin: (data['lastLogin'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      isActive: data['isActive'] ?? true,
+      isActive: data['isActive'] as bool? ?? true,
     );
   }
   final String id;
@@ -156,16 +156,16 @@ class AdminStats {
       );
 
   factory AdminStats.fromMap(Map<String, dynamic> map) => AdminStats(
-        totalUsers: map['totalUsers'] ?? 0,
-        totalSpecialists: map['totalSpecialists'] ?? 0,
-        totalBookings: map['totalBookings'] ?? 0,
-        totalPayments: map['totalPayments'] ?? 0,
-        totalReviews: map['totalReviews'] ?? 0,
-        totalRevenue: (map['totalRevenue'] ?? 0.0).toDouble(),
-        activeUsers: map['activeUsers'] ?? 0,
-        pendingBookings: map['pendingBookings'] ?? 0,
-        pendingReviews: map['pendingReviews'] ?? 0,
-        bannedUsers: map['bannedUsers'] ?? 0,
+        totalUsers: map['totalUsers'] as int? ?? 0,
+        totalSpecialists: map['totalSpecialists'] as int? ?? 0,
+        totalBookings: map['totalBookings'] as int? ?? 0,
+        totalPayments: map['totalPayments'] as int? ?? 0,
+        totalReviews: map['totalReviews'] as int? ?? 0,
+        totalRevenue: (map['totalRevenue'] as num?)?.toDouble() ?? 0.0,
+        activeUsers: map['activeUsers'] as int? ?? 0,
+        pendingBookings: map['pendingBookings'] as int? ?? 0,
+        pendingReviews: map['pendingReviews'] as int? ?? 0,
+        bannedUsers: map['bannedUsers'] as int? ?? 0,
         lastUpdated:
             (map['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
       );
@@ -215,16 +215,16 @@ class AdminAction {
 
     return AdminAction(
       id: doc.id,
-      adminId: data['adminId'] ?? '',
-      adminName: data['adminName'] ?? '',
+      adminId: data['adminId'] as String? ?? '',
+      adminName: data['adminName'] as String? ?? '',
       type: AdminActionType.values.firstWhere(
         (t) => t.name == data['type'],
         orElse: () => AdminActionType.other,
       ),
-      targetId: data['targetId'] ?? '',
-      targetType: data['targetType'] ?? '',
-      description: data['description'] ?? '',
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      targetId: data['targetId'] as String? ?? '',
+      targetType: data['targetType'] as String? ?? '',
+      description: data['description'] as String? ?? '',
+      metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
       timestamp: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
@@ -295,17 +295,17 @@ class AdminNotification {
 
     return AdminNotification(
       id: doc.id,
-      title: data['title'] ?? '',
-      message: data['message'] ?? '',
+      title: data['title'] as String? ?? '',
+      message: data['message'] as String? ?? '',
       type: AdminNotificationType.values.firstWhere(
         (t) => t.name == data['type'],
         orElse: () => AdminNotificationType.info,
       ),
-      targetId: data['targetId'],
-      targetType: data['targetType'],
-      isRead: data['isRead'] ?? false,
+      targetId: data['targetId'] as String?,
+      targetType: data['targetType'] as String?,
+      isRead: data['isRead'] as bool? ?? false,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
     );
   }
   final String id;
@@ -381,21 +381,22 @@ class AdminSettings {
   });
 
   factory AdminSettings.fromMap(Map<String, dynamic> map) => AdminSettings(
-        enableUserRegistration: map['enableUserRegistration'] ?? true,
+        enableUserRegistration: map['enableUserRegistration'] as bool? ?? true,
         enableSpecialistVerification:
-            map['enableSpecialistVerification'] ?? true,
-        enableAutoModeration: map['enableAutoModeration'] ?? false,
-        enableEmailNotifications: map['enableEmailNotifications'] ?? true,
-        enableSmsNotifications: map['enableSmsNotifications'] ?? false,
-        maxFileSize: map['maxFileSize'] ?? 10485760,
+            map['enableSpecialistVerification'] as bool? ?? true,
+        enableAutoModeration: map['enableAutoModeration'] as bool? ?? false,
+        enableEmailNotifications:
+            map['enableEmailNotifications'] as bool? ?? true,
+        enableSmsNotifications: map['enableSmsNotifications'] as bool? ?? false,
+        maxFileSize: map['maxFileSize'] as int? ?? 10485760,
         allowedFileTypes: List<String>.from(
-          map['allowedFileTypes'] ??
+          map['allowedFileTypes'] as List? ??
               ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx'],
         ),
         paymentSettings:
-            Map<String, dynamic>.from(map['paymentSettings'] ?? {}),
-        notificationSettings:
-            Map<String, dynamic>.from(map['notificationSettings'] ?? {}),
+            Map<String, dynamic>.from(map['paymentSettings'] as Map? ?? {}),
+        notificationSettings: Map<String, dynamic>.from(
+            map['notificationSettings'] as Map? ?? {}),
         lastUpdated:
             (map['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
       );

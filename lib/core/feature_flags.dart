@@ -27,6 +27,7 @@ class FeatureFlags {
 
   // Подписки
   static const bool subscriptionsEnabled = false;
+  static const bool recommendationsEnabled = true;
 
   // Отзывы
   static const bool reviewsEnabled = true;
@@ -103,6 +104,8 @@ class FeatureFlags {
         return shareEnabled;
       case 'subscriptions':
         return subscriptionsEnabled;
+      case 'recommendations':
+        return recommendationsEnabled;
       case 'reviews':
         return reviewsEnabled;
       case 'ideas':
@@ -164,6 +167,7 @@ class FeatureFlags {
     if (calendarSyncEnabled) features.add('calendar_sync');
     if (shareEnabled) features.add('share');
     if (subscriptionsEnabled) features.add('subscriptions');
+    if (recommendationsEnabled) features.add('recommendations');
     if (reviewsEnabled) features.add('reviews');
     if (ideasEnabled) features.add('ideas');
     if (guestModeEnabled) features.add('guest_mode');
@@ -204,6 +208,7 @@ class FeatureFlags {
         'calendar_sync': calendarSyncEnabled,
         'share': shareEnabled,
         'subscriptions': subscriptionsEnabled,
+        'recommendations': recommendationsEnabled,
         'reviews': reviewsEnabled,
         'ideas': ideasEnabled,
         'guest_mode': guestModeEnabled,

@@ -13,6 +13,7 @@ class ResponsiveText extends StatelessWidget {
     this.fontSize,
     this.fontWeight,
     this.color,
+    this.isTitle = false,
   });
   final String text;
   final TextStyle? style;
@@ -22,6 +23,7 @@ class ResponsiveText extends StatelessWidget {
   final double? fontSize;
   final FontWeight? fontWeight;
   final Color? color;
+  final bool isTitle;
 
   @override
   Widget build(BuildContext context) {
@@ -37,14 +39,14 @@ class ResponsiveText extends StatelessWidget {
   }
 
   TextStyle _getResponsiveStyle(BuildContext context) {
-    var baseFontSize = fontSize ?? 14.0;
+    var baseFontSize = fontSize ?? (isTitle ? 18.0 : 14.0);
 
     if (context.isMobile) {
-      baseFontSize = fontSize ?? 14.0;
+      baseFontSize = fontSize ?? (isTitle ? 18.0 : 14.0);
     } else if (context.isTablet) {
-      baseFontSize = (fontSize ?? 14.0) * 1.1;
+      baseFontSize = (fontSize ?? (isTitle ? 18.0 : 14.0)) * 1.1;
     } else if (context.isDesktop) {
-      baseFontSize = (fontSize ?? 14.0) * 1.2;
+      baseFontSize = (fontSize ?? (isTitle ? 18.0 : 14.0)) * 1.2;
     }
 
     return TextStyle(
@@ -97,7 +99,7 @@ class ResponsiveCard extends StatelessWidget {
     if (onTap != null) {
       return InkWell(
         onTap: onTap,
-        borderRadius: borderRadius ?? responsiveBorderRadius,
+        borderRadius: (borderRadius ?? responsiveBorderRadius) as BorderRadius?,
         child: card,
       );
     }
@@ -224,11 +226,9 @@ class ResponsiveGrid extends StatelessWidget {
 
     return GridView.count(
       crossAxisCount: crossAxisCount ?? responsiveCrossAxisCount,
-      spacing: spacing ?? responsiveSpacing,
-      runSpacing: runSpacing ?? responsiveSpacing,
       childAspectRatio: childAspectRatio ?? responsiveChildAspectRatio,
-      mainAxisSpacing: responsiveSpacing,
-      crossAxisSpacing: responsiveSpacing,
+      mainAxisSpacing: spacing ?? responsiveSpacing,
+      crossAxisSpacing: runSpacing ?? responsiveSpacing,
       children: children,
     );
   }

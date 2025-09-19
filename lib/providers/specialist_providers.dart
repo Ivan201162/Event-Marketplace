@@ -7,6 +7,14 @@ import '../services/specialist_service.dart';
 final specialistServiceProvider =
     Provider<SpecialistService>((ref) => SpecialistService());
 
+/// Провайдер для ленты специалиста
+final specialistFeedProvider =
+    StreamProvider.family<List<Map<String, dynamic>>, String>(
+        (ref, specialistId) {
+  final specialistService = ref.watch(specialistServiceProvider);
+  return specialistService.getSpecialistFeed(specialistId);
+});
+
 /// Провайдер всех специалистов
 final allSpecialistsProvider = StreamProvider<List<Specialist>>((ref) {
   final specialistService = ref.watch(specialistServiceProvider);

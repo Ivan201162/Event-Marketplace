@@ -17,15 +17,35 @@ class EventService {
         (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
       );
 
-  /// Получить события пользователя
+  /// Получить все события (Future)
+  Future<List<Event>> getEvents() async {
+    final snapshot = await _firestore
+        .collection('events')
+        .where('isPublic', isEqualTo: true)
+        .where('status', isEqualTo: 'active')
+        .orderBy('date')
+        .get();
+    return snapshot.docs.map(Event.fromDocument).toList();
+  }
+
+  /// Получить события пользователя (Stream)
   Stream<List<Event>> getUserEvents(String userId) => _firestore
       .collection('events')
       .where('organizerId', isEqualTo: userId)
-      .orderBy('date', descending: true)
+      .orderBy('date')
       .snapshots()
       .map(
         (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
       );
+
+  /// Получить событие по ID
+  Future<Event?> getEvent(String eventId) async {
+    final doc = await _firestore.collection('events').doc(eventId).get();
+    if (doc.exists) {
+      return Event.fromDocument(doc);
+    }
+    return null;
+  }
 
   /// Получить событие по ID
   Future<Event?> getEventById(String eventId) async {

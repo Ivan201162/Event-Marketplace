@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/customer_profile.dart';
 import '../models/specialist_profile.dart';
-import '../models/user.dart';
+import '../models/user.dart' as user_model;
 import '../services/profile_service.dart';
 
 /// Провайдер сервиса профилей
@@ -163,7 +163,7 @@ class CustomerProfileEditNotifier extends Notifier<CustomerProfileEditState> {
   void updateField({
     String? photoURL,
     String? bio,
-    MaritalStatus? maritalStatus,
+    user_model.MaritalStatus? maritalStatus,
     DateTime? weddingDate,
     DateTime? anniversaryDate,
     String? phoneNumber,

@@ -145,7 +145,7 @@ class ABTestService {
     int limit = 50,
   }) async {
     try {
-      var query = _firestore.collection('abTests');
+      Query<Map<String, dynamic>> query = _firestore.collection('abTests');
 
       if (status != null) {
         query =

@@ -113,9 +113,9 @@ class PaymentExtendedService {
         bookingId: bookingId,
         customerId: customerId,
         specialistId: specialistId,
-        totalAmount: totalAmount,
-        paidAmount: paidAmount,
-        remainingAmount: remainingAmount,
+        totalAmount: totalAmount.toDouble(),
+        paidAmount: paidAmount.toDouble(),
+        remainingAmount: remainingAmount.toDouble(),
         status: PaymentStatus.pending,
         type: type,
         installments: installments,
@@ -201,7 +201,7 @@ class PaymentExtendedService {
       // Пересчитываем суммы
       final paidAmount = updatedInstallments
           .where((i) => i.status == PaymentStatus.completed)
-          .fold(0, (total, i) => total + i.amount);
+          .fold(0.0, (total, i) => total + i.amount);
 
       final remainingAmount = payment.totalAmount - paidAmount;
       final status = remainingAmount <= 0

@@ -222,12 +222,14 @@ class Specialist {
     required this.experienceLevel,
     required this.yearsOfExperience,
     required this.hourlyRate,
+    this.pricePerHour,
     this.minBookingHours,
     this.maxBookingHours,
     this.min,
     this.serviceAreas = const [],
     this.languages = const [],
     this.equipment = const [],
+    this.services = const [],
     this.portfolio = const [],
     this.contactInfo,
     this.businessInfo,
@@ -267,8 +269,6 @@ class Specialist {
         rating: (data['rating'] as num?)?.toDouble() ?? 0.0,
         reviewCount: data['reviewCount'] ?? 0,
         pricePerHour: (data['pricePerHour'] as num?)?.toDouble(),
-        minPrice: (data['minPrice'] as num?)?.toDouble(),
-        maxPrice: (data['maxPrice'] as num?)?.toDouble(),
         location: data['location'] ?? '',
         isAvailable: data['isAvailable'] ?? true,
         isVerified: data['isVerified'] ?? false,
@@ -357,12 +357,14 @@ class Specialist {
   final ExperienceLevel experienceLevel;
   final int yearsOfExperience;
   final double hourlyRate;
+  final double? pricePerHour;
   final double? minBookingHours;
   final double? maxBookingHours;
   final double? min; // Минимальная цена
   final List<String> serviceAreas; // Географические области
   final List<String> languages; // Языки
   final List<String> equipment; // Оборудование
+  final List<String> services; // Услуги
   final List<String> portfolio; // Ссылки на портфолио
   final Map<String, dynamic>? contactInfo;
   final Map<String, dynamic>? businessInfo;

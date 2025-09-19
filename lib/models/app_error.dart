@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 /// Модель ошибки приложения
 class AppError {
@@ -17,36 +18,37 @@ class AppError {
 
   /// Создать из документа Firestore
   factory AppError.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data() as Map<String, dynamic>? ?? {};
     return AppError(
       id: doc.id,
-      userId: data['userId'],
-      device: data['device'] ?? '',
-      screen: data['screen'] ?? '',
-      errorMessage: data['errorMessage'] ?? '',
-      stackTrace: data['stackTrace'],
-      errorType: data['errorType'] ?? 'unknown',
-      resolved: data['resolved'] ?? false,
-      timestamp: (data['timestamp'] as Timestamp).toDate(),
+      userId: data['userId'] as String?,
+      device: data['device'] as String? ?? '',
+      screen: data['screen'] as String? ?? '',
+      errorMessage: data['errorMessage'] as String? ?? '',
+      stackTrace: data['stackTrace'] as String?,
+      errorType: data['errorType'] as String? ?? 'unknown',
+      resolved: data['resolved'] as bool? ?? false,
+      timestamp: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
       metadata: data['metadata'] != null
-          ? Map<String, dynamic>.from(data['metadata'])
+          ? Map<String, dynamic>.from(data['metadata'] as Map)
           : null,
     );
   }
 
   /// Создать из Map
   factory AppError.fromMap(Map<String, dynamic> data) => AppError(
-        id: data['id'] ?? '',
-        userId: data['userId'],
-        device: data['device'] ?? '',
-        screen: data['screen'] ?? '',
-        errorMessage: data['errorMessage'] ?? '',
-        stackTrace: data['stackTrace'],
-        errorType: data['errorType'] ?? 'unknown',
-        resolved: data['resolved'] ?? false,
-        timestamp: (data['timestamp'] as Timestamp).toDate(),
+        id: data['id'] as String? ?? '',
+        userId: data['userId'] as String?,
+        device: data['device'] as String? ?? '',
+        screen: data['screen'] as String? ?? '',
+        errorMessage: data['errorMessage'] as String? ?? '',
+        stackTrace: data['stackTrace'] as String?,
+        errorType: data['errorType'] as String? ?? 'unknown',
+        resolved: data['resolved'] as bool? ?? false,
+        timestamp:
+            (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
         metadata: data['metadata'] != null
-            ? Map<String, dynamic>.from(data['metadata'])
+            ? Map<String, dynamic>.from(data['metadata'] as Map)
             : null,
       );
   final String id;

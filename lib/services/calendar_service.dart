@@ -33,7 +33,8 @@ class CalendarService {
     String userId,
     CalendarFilter filter,
   ) {
-    var query = _firestore.collection('calendar_events');
+    Query<Map<String, dynamic>> query =
+        _firestore.collection('calendar_events');
 
     // Фильтр по пользователю
     query = query.where('customerId', isEqualTo: userId);
@@ -103,7 +104,8 @@ class CalendarService {
     String specialistId,
     CalendarFilter filter,
   ) {
-    var query = _firestore.collection('calendar_events');
+    Query<Map<String, dynamic>> query =
+        _firestore.collection('calendar_events');
 
     // Фильтр по специалисту
     query = query.where('specialistId', isEqualTo: specialistId);
@@ -195,14 +197,14 @@ class CalendarService {
   Future<String?> exportToICS(List<CalendarEvent> events) async {
     try {
       final calendar = ICalendar(
-        data: ICalendarHeadData(
+        headData: ICalendarHeadData(
           prodId: 'Event Marketplace App',
           version: '2.0',
         ),
       );
 
       for (final event in events) {
-        final icsEvent = IEvent(
+        final icsEvent = IEventData(
           uid: event.id,
           start: event.startTime,
           end: event.endTime,

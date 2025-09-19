@@ -273,7 +273,8 @@ class AuditLoggingService {
     DocumentSnapshot? startAfter,
   }) async {
     try {
-      var query = _firestore.collection(_auditLogsCollection);
+      Query<Map<String, dynamic>> query =
+          _firestore.collection(_auditLogsCollection);
 
       if (userId != null) {
         query = query.where('userId', isEqualTo: userId);
@@ -330,7 +331,8 @@ class AuditLoggingService {
     DocumentSnapshot? startAfter,
   }) async {
     try {
-      var query = _firestore.collection(_systemLogsCollection);
+      Query<Map<String, dynamic>> query =
+          _firestore.collection(_systemLogsCollection);
 
       if (component != null) {
         query = query.where('component', isEqualTo: component);

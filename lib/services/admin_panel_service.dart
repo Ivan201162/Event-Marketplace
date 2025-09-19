@@ -494,7 +494,7 @@ class AdminPanelService {
       final exportData = <String, dynamic>{};
 
       for (final collection in collections) {
-        var query = _firestore.collection(collection);
+        Query<Map<String, dynamic>> query = _firestore.collection(collection);
 
         if (startDate != null) {
           query = query.where(

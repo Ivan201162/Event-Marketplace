@@ -6,7 +6,12 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
-import 'package:pointycastle/export.dart';
+import 'package:pointycastle/export.dart' hide Digest;
+import 'package:pointycastle/api.dart' hide Digest;
+import 'package:pointycastle/block/aes_fast.dart';
+import 'package:pointycastle/block/modes/cbc.dart';
+import 'package:pointycastle/paddings/pkcs7.dart';
+import 'package:pointycastle/padded_block_cipher/padded_block_cipher_impl.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/security_audit.dart';
@@ -253,7 +258,7 @@ class SecurityService {
       final encrypted = cipher.process(Uint8List.fromList(dataBytes));
 
       // Объединяем IV и зашифрованные данные
-      final result = Uint8List(iv.length + encrypted.length);
+      final result = Uint8List((iv.length + encrypted.length).toInt());
       result.setRange(0, iv.length, iv);
       result.setRange(iv.length, result.length, encrypted);
 
@@ -420,7 +425,8 @@ class SecurityService {
     int limit = 100,
   }) async {
     try {
-      var query = _firestore.collection('securityAudits');
+      Query<Map<String, dynamic>> query =
+          _firestore.collection('securityAudits');
 
       if (level != null) {
         query =
@@ -507,7 +513,7 @@ class SecurityService {
         eventType: 'policy_created',
         description: 'Создана политика безопасности: $name',
         level: SecurityLevel.info,
-        createdBy: createdBy,
+        userId: createdBy,
         metadata: {'policyId': policyId, 'policyType': type.toString()},
       );
 
@@ -622,6 +628,37 @@ class SecurityService {
     if (!password.contains(RegExp('[0-9]'))) return false;
     if (!password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) return false;
     return true;
+  }
+
+  /// Генерировать безопасный пароль
+  String generateSecurePassword({
+    int length = 12,
+    bool includeUppercase = true,
+    bool includeLowercase = true,
+    bool includeNumbers = true,
+    bool includeSpecialChars = true,
+  }) {
+    const String uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const String lowercase = 'abcdefghijklmnopqrstuvwxyz';
+    const String numbers = '0123456789';
+    const String specialChars = '!@#\$%^&*()_+-=[]{}|;:,.<>?';
+
+    String chars = '';
+    if (includeUppercase) chars += uppercase;
+    if (includeLowercase) chars += lowercase;
+    if (includeNumbers) chars += numbers;
+    if (includeSpecialChars) chars += specialChars;
+
+    if (chars.isEmpty) {
+      throw ArgumentError('At least one character type must be included');
+    }
+
+    String password = '';
+    for (int i = 0; i < length; i++) {
+      password += chars[_random.nextInt(chars.length)];
+    }
+
+    return password;
   }
 
   /// Проверить безопасность токена

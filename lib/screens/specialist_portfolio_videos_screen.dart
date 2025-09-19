@@ -55,7 +55,7 @@ class _SpecialistPortfolioVideosScreenState
           tabs: const [
             Tab(text: 'Все видео', icon: Icon(Icons.video_library)),
             Tab(text: 'Публичные', icon: Icon(Icons.public)),
-            Tab(text: 'По платформам', icon: Icon(Icons.platform)),
+            Tab(text: 'По платформам', icon: Icon(Icons.devices)),
           ],
         ),
         actions: [
@@ -111,7 +111,7 @@ class _SpecialistPortfolioVideosScreenState
                 Icons.video_library,
               ),
               _buildStatItem('Публичных', stats.publicVideos, Icons.public),
-              _buildStatItem('Платформ', _getPlatformsCount(), Icons.platform),
+              _buildStatItem('Платформ', _getPlatformsCount(), Icons.devices),
             ],
           ),
         ),
@@ -215,7 +215,7 @@ class _SpecialistPortfolioVideosScreenState
           return _buildEmptyState(
             'Нет видео',
             'Добавьте видео с разных платформ',
-            Icons.platform_outlined,
+            Icons.devices_outlined,
           );
         }
 

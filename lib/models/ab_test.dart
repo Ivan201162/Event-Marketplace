@@ -23,52 +23,61 @@ class ABTest {
     final data = doc.data() as Map<String, dynamic>;
     return ABTest(
       id: doc.id,
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
+      name: (data['name'] as String?) ?? '',
+      description: (data['description'] as String?) ?? '',
       status: ABTestStatus.values.firstWhere(
         (e) => e.toString().split('.').last == data['status'],
         orElse: () => ABTestStatus.draft,
       ),
       variants: (data['variants'] as List<dynamic>?)
-              ?.map((v) => ABTestVariant.fromMap(v))
+              ?.map((v) => ABTestVariant.fromMap(v as Map<String, dynamic>))
               .toList() ??
           [],
-      targeting: ABTestTargeting.fromMap(data['targeting'] ?? {}),
-      metrics: ABTestMetrics.fromMap(data['metrics'] ?? {}),
-      startDate: (data['startDate'] as Timestamp).toDate(),
+      targeting: ABTestTargeting.fromMap(
+          (data['targeting'] as Map<String, dynamic>?) ?? {}),
+      metrics: ABTestMetrics.fromMap(
+          (data['metrics'] as Map<String, dynamic>?) ?? {}),
+      startDate: (data['startDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
       endDate: data['endDate'] != null
-          ? (data['endDate'] as Timestamp).toDate()
+          ? (data['endDate'] as Timestamp?)?.toDate()
           : null,
-      createdBy: data['createdBy'],
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      createdBy: data['createdBy'] as String?,
+      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      metadata: Map<String, dynamic>.from(
+          (data['metadata'] as Map<dynamic, dynamic>?) ?? {}),
     );
   }
 
   /// Создать из Map
   factory ABTest.fromMap(Map<String, dynamic> data) => ABTest(
-        id: data['id'] ?? '',
-        name: data['name'] ?? '',
-        description: data['description'] ?? '',
+        id: (data['id'] as String?) ?? '',
+        name: (data['name'] as String?) ?? '',
+        description: (data['description'] as String?) ?? '',
         status: ABTestStatus.values.firstWhere(
           (e) => e.toString().split('.').last == data['status'],
           orElse: () => ABTestStatus.draft,
         ),
         variants: (data['variants'] as List<dynamic>?)
-                ?.map((v) => ABTestVariant.fromMap(v))
+                ?.map((v) => ABTestVariant.fromMap(v as Map<String, dynamic>))
                 .toList() ??
             [],
-        targeting: ABTestTargeting.fromMap(data['targeting'] ?? {}),
-        metrics: ABTestMetrics.fromMap(data['metrics'] ?? {}),
-        startDate: (data['startDate'] as Timestamp).toDate(),
+        targeting: ABTestTargeting.fromMap(
+            (data['targeting'] as Map<String, dynamic>?) ?? {}),
+        metrics: ABTestMetrics.fromMap(
+            (data['metrics'] as Map<String, dynamic>?) ?? {}),
+        startDate:
+            (data['startDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
         endDate: data['endDate'] != null
-            ? (data['endDate'] as Timestamp).toDate()
+            ? (data['endDate'] as Timestamp?)?.toDate()
             : null,
-        createdBy: data['createdBy'],
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+        createdBy: data['createdBy'] as String?,
+        createdAt:
+            (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        updatedAt:
+            (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        metadata: Map<String, dynamic>.from(
+            (data['metadata'] as Map<dynamic, dynamic>?) ?? {}),
       );
   final String id;
   final String name;
@@ -209,13 +218,16 @@ class ABTestVariant {
 
   /// Создать из Map
   factory ABTestVariant.fromMap(Map<String, dynamic> data) => ABTestVariant(
-        id: data['id'] ?? '',
-        name: data['name'] ?? '',
-        description: data['description'] ?? '',
-        trafficPercentage: (data['trafficPercentage'] as num).toDouble(),
-        configuration: Map<String, dynamic>.from(data['configuration'] ?? {}),
-        isControl: data['isControl'] ?? false,
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        id: data['id'] as String? ?? '',
+        name: data['name'] as String? ?? '',
+        description: data['description'] as String? ?? '',
+        trafficPercentage:
+            (data['trafficPercentage'] as num?)?.toDouble() ?? 0.0,
+        configuration:
+            Map<String, dynamic>.from(data['configuration'] as Map? ?? {}),
+        isControl: data['isControl'] as bool? ?? false,
+        createdAt:
+            (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       );
   final String id;
   final String name;
@@ -300,18 +312,19 @@ class ABTestTargeting {
 
   /// Создать из Map
   factory ABTestTargeting.fromMap(Map<String, dynamic> data) => ABTestTargeting(
-        userIds: List<String>.from(data['userIds'] ?? []),
-        userSegments: List<String>.from(data['userSegments'] ?? []),
-        platforms: List<String>.from(data['platforms'] ?? []),
-        appVersions: List<String>.from(data['appVersions'] ?? []),
-        customFilters: Map<String, dynamic>.from(data['customFilters'] ?? {}),
+        userIds: List<String>.from(data['userIds'] as List? ?? []),
+        userSegments: List<String>.from(data['userSegments'] as List? ?? []),
+        platforms: List<String>.from(data['platforms'] as List? ?? []),
+        appVersions: List<String>.from(data['appVersions'] as List? ?? []),
+        customFilters:
+            Map<String, dynamic>.from(data['customFilters'] as Map? ?? {}),
         trafficPercentage:
             (data['trafficPercentage'] as num?)?.toDouble() ?? 100.0,
         startTime: data['startTime'] != null
-            ? (data['startTime'] as Timestamp).toDate()
+            ? (data['startTime'] as Timestamp?)?.toDate()
             : null,
         endTime: data['endTime'] != null
-            ? (data['endTime'] as Timestamp).toDate()
+            ? (data['endTime'] as Timestamp?)?.toDate()
             : null,
       );
   final List<String> userIds;
@@ -402,15 +415,17 @@ class ABTestMetrics {
 
   /// Создать из Map
   factory ABTestMetrics.fromMap(Map<String, dynamic> data) => ABTestMetrics(
-        primaryMetric: data['primaryMetric'] ?? '',
-        secondaryMetrics: List<String>.from(data['secondaryMetrics'] ?? []),
+        primaryMetric: data['primaryMetric'] as String? ?? '',
+        secondaryMetrics:
+            List<String>.from(data['secondaryMetrics'] as List? ?? []),
         minimumDetectableEffect:
             (data['minimumDetectableEffect'] as num?)?.toDouble() ?? 0.05,
         significanceLevel:
             (data['significanceLevel'] as num?)?.toDouble() ?? 0.05,
         power: (data['power'] as num?)?.toDouble() ?? 0.8,
-        minimumSampleSize: data['minimumSampleSize'] ?? 1000,
-        customMetrics: Map<String, dynamic>.from(data['customMetrics'] ?? {}),
+        minimumSampleSize: data['minimumSampleSize'] as int? ?? 1000,
+        customMetrics:
+            Map<String, dynamic>.from(data['customMetrics'] as Map? ?? {}),
       );
   final String primaryMetric;
   final List<String> secondaryMetrics;
@@ -499,31 +514,33 @@ class ABTestParticipation {
     final data = doc.data() as Map<String, dynamic>;
     return ABTestParticipation(
       id: doc.id,
-      testId: data['testId'] ?? '',
-      userId: data['userId'] ?? '',
-      variantId: data['variantId'] ?? '',
-      assignedAt: (data['assignedAt'] as Timestamp).toDate(),
+      testId: data['testId'] as String? ?? '',
+      userId: data['userId'] as String? ?? '',
+      variantId: data['variantId'] as String? ?? '',
+      assignedAt:
+          (data['assignedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       convertedAt: data['convertedAt'] != null
-          ? (data['convertedAt'] as Timestamp).toDate()
+          ? (data['convertedAt'] as Timestamp?)?.toDate()
           : null,
-      events: Map<String, dynamic>.from(data['events'] ?? {}),
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      events: Map<String, dynamic>.from(data['events'] as Map? ?? {}),
+      metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
     );
   }
 
   /// Создать из Map
   factory ABTestParticipation.fromMap(Map<String, dynamic> data) =>
       ABTestParticipation(
-        id: data['id'] ?? '',
-        testId: data['testId'] ?? '',
-        userId: data['userId'] ?? '',
-        variantId: data['variantId'] ?? '',
-        assignedAt: (data['assignedAt'] as Timestamp).toDate(),
+        id: data['id'] as String? ?? '',
+        testId: data['testId'] as String? ?? '',
+        userId: data['userId'] as String? ?? '',
+        variantId: data['variantId'] as String? ?? '',
+        assignedAt:
+            (data['assignedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
         convertedAt: data['convertedAt'] != null
-            ? (data['convertedAt'] as Timestamp).toDate()
+            ? (data['convertedAt'] as Timestamp?)?.toDate()
             : null,
-        events: Map<String, dynamic>.from(data['events'] ?? {}),
-        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+        events: Map<String, dynamic>.from(data['events'] as Map? ?? {}),
+        metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
       );
   final String id;
   final String testId;

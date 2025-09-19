@@ -477,7 +477,8 @@ class PerformanceMonitoringService {
     int limit = 100,
   }) async {
     try {
-      var query = _firestore.collection('performanceMetrics');
+      Query<Map<String, dynamic>> query =
+          _firestore.collection('performanceMetrics');
 
       if (metricName != null) {
         query = query.where('name', isEqualTo: metricName);

@@ -16,6 +16,16 @@ class MonitoringService {
 
   static final MonitoringService _instance = MonitoringService._internal();
 
+  /// Начать операцию
+  void startOperation(String name) {
+    // Implementation for starting operation monitoring
+  }
+
+  /// Завершить операцию
+  void endOperation(String name) {
+    // Implementation for ending operation monitoring
+  }
+
   final Map<String, MonitoringMetric> _metricsCache = {};
   final Map<String, MonitoringAlert> _alertsCache = {};
   final Map<String, MonitoringDashboard> _dashboardsCache = {};
