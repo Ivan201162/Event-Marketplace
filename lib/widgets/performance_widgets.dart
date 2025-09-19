@@ -120,18 +120,14 @@ class CachedImageWidget extends StatelessWidget {
   Widget build(BuildContext context) => SizedBox(
         width: width,
         height: height,
-        child: Image.network(
-          imageUrl,
+        child: CachedNetworkImage(
+          imageUrl: imageUrl,
           fit: fit,
-          loadingBuilder: (context, child, loadingProgress) {
-            if (loadingProgress == null) return child;
-            return placeholder ??
-                const Center(
-                  child: CircularProgressIndicator(),
-                );
-          },
-          errorBuilder: (context, error, stackTrace) =>
-              errorWidget ??
+          placeholder: (context, url) => placeholder ??
+              const Center(
+                child: CircularProgressIndicator(),
+              ),
+          errorWidget: (context, url, error) => errorWidget ??
               Container(
                 color: Colors.grey[300],
                 child: const Icon(Icons.error),
