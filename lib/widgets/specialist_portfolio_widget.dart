@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../models/specialist.dart';
 
 /// Виджет портфолио специалиста
@@ -303,22 +304,26 @@ class PortfolioItemWidget extends StatelessWidget {
               children: [
                 // Изображение
                 Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      image: DecorationImage(
-                        image: NetworkImage(imageUrl),
-                        fit: BoxFit.cover,
-                        onError: (exception, stackTrace) {
-                          // Обработка ошибки загрузки изображения
-                        },
-                      ),
-                    ),
-                    child: imageUrl.isEmpty
-                        ? Icon(Icons.image, size: 48, color: Colors.grey[400])
-                        : null,
-                  ),
+                  child: imageUrl.isEmpty
+                      ? Container(
+                          width: double.infinity,
+                          color: Colors.grey[200],
+                          child: Icon(Icons.image, size: 48, color: Colors.grey[400]),
+                        )
+                      : CachedNetworkImage(
+                          imageUrl: imageUrl,
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) => Container(
+                            color: Colors.grey[200],
+                            child: const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          ),
+                          errorWidget: (context, url, error) => Container(
+                            color: Colors.grey[200],
+                            child: const Icon(Icons.error),
+                          ),
+                        ),
                 ),
 
                 // Информация
