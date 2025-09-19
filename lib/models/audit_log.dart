@@ -24,19 +24,20 @@ class AuditLog {
   });
 
   factory AuditLog.fromMap(Map<String, dynamic> map) => AuditLog(
-        id: map['id'] ?? '',
-        userId: map['userId'] ?? '',
-        userEmail: map['userEmail'] ?? '',
-        action: map['action'] ?? '',
-        resource: map['resource'] ?? '',
-        resourceId: map['resourceId'] ?? '',
+        id: (map['id'] as String?) ?? '',
+        userId: (map['userId'] as String?) ?? '',
+        userEmail: (map['userEmail'] as String?) ?? '',
+        action: (map['action'] as String?) ?? '',
+        resource: (map['resource'] as String?) ?? '',
+        resourceId: (map['resourceId'] as String?) ?? '',
         oldData: map['oldData'],
         newData: map['newData'],
         ipAddress: map['ipAddress'],
         userAgent: map['userAgent'],
         sessionId: map['sessionId'],
-        level: AuditLogLevel.fromString(map['level'] ?? 'info'),
-        category: AuditLogCategory.fromString(map['category'] ?? 'general'),
+        level: AuditLogLevel.fromString((map['level'] as String?) ?? 'info'),
+        category: AuditLogCategory.fromString(
+            (map['category'] as String?) ?? 'general'),
         description: map['description'],
         metadata: map['metadata'],
         timestamp: (map['timestamp'] as Timestamp).toDate(),
@@ -479,19 +480,19 @@ class LoggingConfig {
         enablePerformanceLogging: map['enablePerformanceLogging'] ?? false,
         enableSecurityLogging: map['enableSecurityLogging'] ?? true,
         auditLogLevels: (map['auditLogLevels'] as List<dynamic>?)
-                ?.map(AuditLogLevel.fromString)
+                ?.map((e) => AuditLogLevel.fromString(e as String))
                 .toList() ??
             AuditLogLevel.values,
         systemLogLevels: (map['systemLogLevels'] as List<dynamic>?)
-                ?.map(SystemLogLevel.fromString)
+                ?.map((e) => SystemLogLevel.fromString(e as String))
                 .toList() ??
             SystemLogLevel.values,
         auditLogCategories: (map['auditLogCategories'] as List<dynamic>?)
-                ?.map(AuditLogCategory.fromString)
+                ?.map((e) => AuditLogCategory.fromString(e as String))
                 .toList() ??
             AuditLogCategory.values,
         systemLogCategories: (map['systemLogCategories'] as List<dynamic>?)
-                ?.map(SystemLogCategory.fromString)
+                ?.map((e) => SystemLogCategory.fromString(e as String))
                 .toList() ??
             SystemLogCategory.values,
         maxLogRetentionDays: map['maxLogRetentionDays'] ?? 90,

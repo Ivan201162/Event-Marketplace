@@ -525,11 +525,11 @@ class DependencyConfig {
         enableBreakingChangeNotifications:
             map['enableBreakingChangeNotifications'] ?? true,
         allowedUpdateTypes: (map['allowedUpdateTypes'] as List<dynamic>?)
-                ?.map(UpdateType.fromString)
+                ?.map((e) => UpdateType.fromString(e as String))
                 .toList() ??
             UpdateType.values,
         allowedPriorities: (map['allowedPriorities'] as List<dynamic>?)
-                ?.map(UpdatePriority.fromString)
+                ?.map((e) => UpdatePriority.fromString(e as String))
                 .toList() ??
             UpdatePriority.values,
         maxConcurrentUpdates: map['maxConcurrentUpdates'] ?? 3,
