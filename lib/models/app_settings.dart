@@ -481,28 +481,30 @@ class SettingsHistory {
     final data = doc.data() as Map<String, dynamic>;
     return SettingsHistory(
       id: doc.id,
-      settingId: data['settingId'] ?? '',
-      settingKey: data['settingKey'] ?? '',
+      settingId: (data['settingId'] as String?) ?? '',
+      settingKey: (data['settingKey'] as String?) ?? '',
       oldValue: data['oldValue'],
       newValue: data['newValue'],
-      changedBy: data['changedBy'] ?? '',
-      reason: data['reason'],
+      changedBy: (data['changedBy'] as String?) ?? '',
+      reason: data['reason'] as String?,
       changedAt: (data['changedAt'] as Timestamp).toDate(),
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      metadata: Map<String, dynamic>.from(
+          data['metadata'] as Map<dynamic, dynamic>? ?? {}),
     );
   }
 
   /// Создать из Map
   factory SettingsHistory.fromMap(Map<String, dynamic> data) => SettingsHistory(
-        id: data['id'] ?? '',
-        settingId: data['settingId'] ?? '',
-        settingKey: data['settingKey'] ?? '',
+        id: (data['id'] as String?) ?? '',
+        settingId: (data['settingId'] as String?) ?? '',
+        settingKey: (data['settingKey'] as String?) ?? '',
         oldValue: data['oldValue'],
         newValue: data['newValue'],
-        changedBy: data['changedBy'] ?? '',
-        reason: data['reason'],
+        changedBy: (data['changedBy'] as String?) ?? '',
+        reason: data['reason'] as String?,
         changedAt: (data['changedAt'] as Timestamp).toDate(),
-        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+        metadata: Map<String, dynamic>.from(
+            data['metadata'] as Map<dynamic, dynamic>? ?? {}),
       );
   final String id;
   final String settingId;
