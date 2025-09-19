@@ -18,7 +18,7 @@ class SecuritySettings {
   });
 
   factory SecuritySettings.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return SecuritySettings(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -75,22 +75,21 @@ class SecuritySettings {
     bool? auditLogging,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) {
-    return SecuritySettings(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      twoFactorEnabled: twoFactorEnabled ?? this.twoFactorEnabled,
-      biometricEnabled: biometricEnabled ?? this.biometricEnabled,
-      pinCodeEnabled: pinCodeEnabled ?? this.pinCodeEnabled,
-      sessionTimeout: sessionTimeout ?? this.sessionTimeout,
-      loginNotifications: loginNotifications ?? this.loginNotifications,
-      securityAlerts: securityAlerts ?? this.securityAlerts,
-      dataEncryption: dataEncryption ?? this.dataEncryption,
-      auditLogging: auditLogging ?? this.auditLogging,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
+  }) =>
+      SecuritySettings(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        twoFactorEnabled: twoFactorEnabled ?? this.twoFactorEnabled,
+        biometricEnabled: biometricEnabled ?? this.biometricEnabled,
+        pinCodeEnabled: pinCodeEnabled ?? this.pinCodeEnabled,
+        sessionTimeout: sessionTimeout ?? this.sessionTimeout,
+        loginNotifications: loginNotifications ?? this.loginNotifications,
+        securityAlerts: securityAlerts ?? this.securityAlerts,
+        dataEncryption: dataEncryption ?? this.dataEncryption,
+        auditLogging: auditLogging ?? this.auditLogging,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 }
 
 /// Устройство безопасности
@@ -109,7 +108,7 @@ class SecurityDevice {
   });
 
   factory SecurityDevice.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return SecurityDevice(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -158,20 +157,19 @@ class SecurityDevice {
     DateTime? lastSeen,
     DateTime? createdAt,
     Map<String, dynamic>? metadata,
-  }) {
-    return SecurityDevice(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      deviceId: deviceId ?? this.deviceId,
-      deviceName: deviceName ?? this.deviceName,
-      deviceType: deviceType ?? this.deviceType,
-      platform: platform ?? this.platform,
-      isTrusted: isTrusted ?? this.isTrusted,
-      lastSeen: lastSeen ?? this.lastSeen,
-      createdAt: createdAt ?? this.createdAt,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      SecurityDevice(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        deviceId: deviceId ?? this.deviceId,
+        deviceName: deviceName ?? this.deviceName,
+        deviceType: deviceType ?? this.deviceType,
+        platform: platform ?? this.platform,
+        isTrusted: isTrusted ?? this.isTrusted,
+        lastSeen: lastSeen ?? this.lastSeen,
+        createdAt: createdAt ?? this.createdAt,
+        metadata: metadata ?? this.metadata,
+      );
 }
 
 /// Сила пароля

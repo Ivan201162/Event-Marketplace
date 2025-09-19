@@ -266,7 +266,9 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
                   if (review.isVerified)
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(12),

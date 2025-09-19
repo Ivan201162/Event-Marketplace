@@ -286,7 +286,7 @@ class UploadService {
       );
 
       // Отслеживаем прогресс загрузки
-      uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
+      uploadTask.snapshotEvents.listen((snapshot) {
         final progress = snapshot.bytesTransferred / snapshot.totalBytes;
         SafeLog.info(
           'UploadService: Upload progress: ${(progress * 100).toStringAsFixed(1)}%',
@@ -295,7 +295,7 @@ class UploadService {
 
       // Ждем завершения загрузки
       final snapshot = await uploadTask;
-      final String downloadUrl = await snapshot.ref.getDownloadURL();
+      final downloadUrl = await snapshot.ref.getDownloadURL();
 
       SafeLog.info('UploadService: File uploaded successfully: $downloadUrl');
 
@@ -374,7 +374,7 @@ class UploadService {
 
       // Ждем завершения загрузки
       final snapshot = await uploadTask;
-      final String downloadUrl = await snapshot.ref.getDownloadURL();
+      final downloadUrl = await snapshot.ref.getDownloadURL();
 
       SafeLog.info(
         'UploadService: File uploaded successfully from bytes: $downloadUrl',

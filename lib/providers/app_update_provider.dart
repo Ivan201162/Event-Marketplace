@@ -3,15 +3,18 @@ import '../services/app_update_service.dart';
 
 /// Провайдер для управления обновлениями приложения
 final appUpdateProvider = NotifierProvider<AppUpdateNotifier, AppUpdateState>(
-    () => AppUpdateNotifier());
+  AppUpdateNotifier.new,
+);
 
 /// Провайдер для информации о текущей версии
 final currentVersionProvider = FutureProvider<PackageInfo>(
-    (ref) async => AppUpdateService.getCurrentVersionInfo());
+  (ref) async => AppUpdateService.getCurrentVersionInfo(),
+);
 
 /// Провайдер для проверки обновлений
 final updateCheckProvider = FutureProvider<UpdateInfo?>(
-    (ref) async => AppUpdateService.checkForUpdates());
+  (ref) async => AppUpdateService.checkForUpdates(),
+);
 
 /// Состояние обновлений приложения
 class AppUpdateState {

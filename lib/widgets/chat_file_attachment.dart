@@ -221,7 +221,6 @@ class _ChatFileAttachmentState extends ConsumerState<ChatFileAttachment> {
       final result = await FilePicker.platform.pickFiles(
         type: fileType,
         allowedExtensions: allowedExtensions,
-        allowMultiple: false,
       );
 
       if (result != null && result.files.isNotEmpty) {

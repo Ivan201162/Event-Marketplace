@@ -126,7 +126,9 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
       );
 
   Widget _buildOverallStats(
-          BuildContext context, SpecialistPriceAggregate stats) =>
+    BuildContext context,
+    SpecialistPriceAggregate stats,
+  ) =>
       Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
@@ -195,7 +197,9 @@ class SpecialistPriceStatsWidget extends ConsumerWidget {
       );
 
   Widget _buildCategoryStatsCard(
-          BuildContext context, SpecialistPriceStats stats) =>
+    BuildContext context,
+    SpecialistPriceStats stats,
+  ) =>
       Container(
         margin: const EdgeInsets.only(bottom: 12),
         padding: const EdgeInsets.all(12),
@@ -541,4 +545,5 @@ final specialistPriceStatsProvider =
 /// Провайдер для сервиса статистики цен
 final specialistPriceStatsServiceProvider =
     Provider<SpecialistPriceStatsService>(
-        (ref) => SpecialistPriceStatsService());
+  (ref) => SpecialistPriceStatsService(),
+);

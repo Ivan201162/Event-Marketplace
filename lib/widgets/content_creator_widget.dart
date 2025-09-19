@@ -107,8 +107,11 @@ class ContentCreatorCard extends ConsumerWidget {
                 ],
                 Row(
                   children: [
-                    const Icon(Icons.photo_library,
-                        size: 16, color: Colors.grey),
+                    const Icon(
+                      Icons.photo_library,
+                      size: 16,
+                      color: Colors.grey,
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       '${creator.portfolioSize} работ',

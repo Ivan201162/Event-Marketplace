@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../core/stubs/stubs.dart';
 import '../models/chat.dart';
 import '../models/chat_message.dart' as chat_message;
 import '../services/chat_service.dart';
@@ -37,7 +36,8 @@ final chatProvider = StreamProvider.family<Chat?, String>((ref, chatId) {
 /// Провайдер для состояния формы сообщения
 final messageFormProvider =
     NotifierProvider<MessageFormNotifier, MessageFormState>(
-        MessageFormNotifier.new);
+  MessageFormNotifier.new,
+);
 
 /// Состояние формы сообщения
 class MessageFormState {

@@ -24,8 +24,7 @@ class PhotoStudioService {
       final snapshot =
           await query.orderBy('rating', descending: true).limit(limit).get();
 
-      List<PhotoStudio> studios =
-          snapshot.docs.map(PhotoStudio.fromDocument).toList();
+      var studios = snapshot.docs.map(PhotoStudio.fromDocument).toList();
 
       // Фильтрация по цене на клиенте
       if (minPrice != null || maxPrice != null) {

@@ -145,7 +145,9 @@ class _PhotoFilterWidgetState extends State<PhotoFilterWidget> {
                       const Text(
                         'Теги',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       _buildTagFilters(),

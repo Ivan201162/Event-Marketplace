@@ -1,9 +1,10 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/app_settings.dart';
 import '../services/settings_service.dart';
-import '../widgets/responsive_layout.dart';
 import '../ui/ui.dart' hide ResponsiveCard;
 import '../widgets/responsive_layout.dart';
 

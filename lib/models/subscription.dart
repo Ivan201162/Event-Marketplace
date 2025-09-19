@@ -15,7 +15,7 @@ class Subscription {
 
   /// Создать из документа Firestore
   factory Subscription.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return Subscription(
       id: doc.id,

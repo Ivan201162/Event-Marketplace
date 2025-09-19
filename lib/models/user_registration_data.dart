@@ -59,7 +59,7 @@ class UserRegistrationData {
 
   /// Создать из документа Firestore
   factory UserRegistrationData.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return UserRegistrationData(
       id: doc.id,
       email: data['email'] ?? '',

@@ -123,7 +123,8 @@ class ReviewFormState {
 /// Провайдер состояния формы отзыва
 final reviewFormProvider =
     NotifierProvider<ReviewFormNotifier, ReviewFormState>(
-        ReviewFormNotifier.new);
+  ReviewFormNotifier.new,
+);
 
 /// Notifier для формы отзыва
 class ReviewFormNotifier extends Notifier<ReviewFormState> {

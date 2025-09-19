@@ -382,7 +382,9 @@ class ProfileScreen extends ConsumerWidget {
               if (user.lastLoginAt != null)
                 _buildInfoRow('Последний вход', _formatDate(user.lastLoginAt!)),
               _buildInfoRow(
-                  'Статус', user.isActive ? 'Активен' : 'Заблокирован'),
+                'Статус',
+                user.isActive ? 'Активен' : 'Заблокирован',
+              ),
             ],
           ),
         ),
@@ -390,7 +392,10 @@ class ProfileScreen extends ConsumerWidget {
 
   /// Карточка настроек
   Widget _buildSettingsCard(
-          BuildContext context, WidgetRef ref, AppUser user) =>
+    BuildContext context,
+    WidgetRef ref,
+    AppUser user,
+  ) =>
       Card(
         elevation: 4,
         child: Padding(
@@ -505,7 +510,8 @@ class ProfileScreen extends ConsumerWidget {
                   onTap: () => Navigator.of(context).push(
                     MaterialPageRoute(
                       builder: (context) => SpecialistPortfolioVideosScreen(
-                          specialistId: user.id),
+                        specialistId: user.id,
+                      ),
                     ),
                   ),
                 ),

@@ -18,7 +18,7 @@ class BookingDiscount {
 
   /// Создать из документа Firestore
   factory BookingDiscount.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return BookingDiscount(
       isOffered: data['isOffered'] ?? false,
       percent: data['percent']?.toDouble(),

@@ -340,7 +340,9 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
                 DropdownMenuItem(value: 'all', child: Text('Все')),
                 DropdownMenuItem(value: 'active', child: Text('Активные')),
                 DropdownMenuItem(
-                    value: 'banned', child: Text('Заблокированные')),
+                  value: 'banned',
+                  child: Text('Заблокированные'),
+                ),
                 DropdownMenuItem(
                   value: 'verified',
                   child: Text('Верифицированные'),
@@ -378,7 +380,9 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
                 DropdownMenuItem(value: 'active', child: Text('Активные')),
                 DropdownMenuItem(value: 'hidden', child: Text('Скрытые')),
                 DropdownMenuItem(
-                    value: 'completed', child: Text('Завершенные')),
+                  value: 'completed',
+                  child: Text('Завершенные'),
+                ),
               ],
               onChanged: (value) {
                 // TODO: Implement event filtering

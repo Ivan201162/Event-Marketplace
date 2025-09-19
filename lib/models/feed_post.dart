@@ -22,7 +22,7 @@ class FeedPost {
 
   /// Создать из документа Firestore
   factory FeedPost.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return FeedPost(
       id: doc.id,
@@ -155,7 +155,7 @@ class FeedComment {
 
   /// Создать из документа Firestore
   factory FeedComment.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return FeedComment(
       id: doc.id,

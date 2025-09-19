@@ -42,7 +42,7 @@ class IdeaService {
               .map(
                 (doc) => Idea.fromMap({
                   'id': doc.id,
-                  ...doc.data() as Map<String, dynamic>,
+                  ...doc.data(),
                 }),
               )
               .toList(),
@@ -253,7 +253,7 @@ class IdeaService {
           .map(
             (doc) => Idea.fromMap({
               'id': doc.id,
-              ...doc.data() as Map<String, dynamic>,
+              ...doc.data(),
             }),
           )
           .toList();
@@ -461,9 +461,8 @@ class IdeaService {
     }
 
     return query.snapshots().map(
-          (snapshot) => snapshot.docs
-              .map((doc) => Idea.fromMap(doc.data() as Map<String, dynamic>))
-              .toList(),
+          (snapshot) =>
+              snapshot.docs.map((doc) => Idea.fromMap(doc.data())).toList(),
         );
   }
 
@@ -493,8 +492,10 @@ class IdeaService {
         .orderBy('likesCount', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Idea.fromMap(doc.data())).toList());
+        .map(
+          (snapshot) =>
+              snapshot.docs.map((doc) => Idea.fromMap(doc.data())).toList(),
+        );
   }
 
   /// Получить коллекции пользователя

@@ -163,7 +163,7 @@ class Review {
 
   /// Создать отзыв из документа Firestore
   factory Review.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return Review(
       id: doc.id,
@@ -329,7 +329,7 @@ class Review {
   }) =>
       Review(
         id: id ?? this.id,
-        bookingId: bookingId ?? this.bookingId,
+        bookingId: bookingId ?? bookingId,
         reviewerId: reviewerId ?? this.reviewerId,
         reviewerName: reviewerName ?? this.reviewerName,
         reviewerAvatar: reviewerAvatar ?? this.reviewerAvatar,
@@ -479,7 +479,7 @@ class ReviewStats {
 
   /// Создать статистику из документа Firestore
   factory ReviewStats.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return ReviewStats(
       averageRating: (data['averageRating'] ?? 0.0).toDouble(),

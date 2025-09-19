@@ -3,11 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../generated/l10n/app_localizations.dart';
+import '../models/media_type.dart';
 import '../models/story.dart';
 import '../models/story_type.dart';
-import '../models/media_type.dart';
 import '../providers/story_providers.dart';
-import '../services/story_service.dart';
 
 /// Виджет для отображения сториса
 class StoryWidget extends ConsumerWidget {

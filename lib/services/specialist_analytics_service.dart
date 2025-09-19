@@ -32,9 +32,11 @@ class SpecialistIncomeStats {
         cancelledBookings: (data['cancelledBookings'] as int?) ?? 0,
         completionRate: (data['completionRate'] as num?)?.toDouble() ?? 0.0,
         incomeByMonth: Map<String, double>.from(
-            data['incomeByMonth'] as Map<String, dynamic>? ?? {}),
+          data['incomeByMonth'] as Map<String, dynamic>? ?? {},
+        ),
         bookingsByMonth: Map<String, int>.from(
-            data['bookingsByMonth'] as Map<String, dynamic>? ?? {}),
+          data['bookingsByMonth'] as Map<String, dynamic>? ?? {},
+        ),
       );
   final double totalIncome;
   final double monthlyIncome;
@@ -88,7 +90,8 @@ class SpecialistReviewStats {
         twoStarReviews: (data['twoStarReviews'] as int?) ?? 0,
         oneStarReviews: (data['oneStarReviews'] as int?) ?? 0,
         reviewsByMonth: Map<String, int>.from(
-            data['reviewsByMonth'] as Map<String, dynamic>? ?? {}),
+          data['reviewsByMonth'] as Map<String, dynamic>? ?? {},
+        ),
         commonTags:
             List<String>.from(data['commonTags'] as List<dynamic>? ?? []),
         responseRate: (data['responseRate'] as num?)?.toDouble() ?? 0.0,
@@ -134,13 +137,16 @@ class SpecialistAnalytics {
       SpecialistAnalytics(
         specialistId: (data['specialistId'] as String?) ?? '',
         incomeStats: SpecialistIncomeStats.fromMap(
-            data['incomeStats'] as Map<String, dynamic>? ?? {}),
+          data['incomeStats'] as Map<String, dynamic>? ?? {},
+        ),
         reviewStats: SpecialistReviewStats.fromMap(
-            data['reviewStats'] as Map<String, dynamic>? ?? {}),
+          data['reviewStats'] as Map<String, dynamic>? ?? {},
+        ),
         lastUpdated:
             (data['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
         additionalMetrics: Map<String, dynamic>.from(
-            data['additionalMetrics'] as Map<String, dynamic>? ?? {}),
+          data['additionalMetrics'] as Map<String, dynamic>? ?? {},
+        ),
       );
   final String specialistId;
   final SpecialistIncomeStats incomeStats;
@@ -262,7 +268,7 @@ class SpecialistAnalyticsService {
     // Общие показатели
     final totalIncome = payments
         .where((p) => p.status == PaymentStatus.completed)
-        .fold(0.0, (sum, p) => sum + p.amount);
+        .fold(0, (sum, p) => sum + p.amount);
 
     final monthlyIncome = payments
         .where(
@@ -270,7 +276,7 @@ class SpecialistAnalyticsService {
               p.status == PaymentStatus.completed &&
               p.createdAt.isAfter(thisMonth),
         )
-        .fold(0.0, (sum, p) => sum + p.amount);
+        .fold(0, (sum, p) => sum + p.amount);
 
     final weeklyIncome = payments
         .where(
@@ -278,7 +284,7 @@ class SpecialistAnalyticsService {
               p.status == PaymentStatus.completed &&
               p.createdAt.isAfter(lastWeek),
         )
-        .fold(0.0, (sum, p) => sum + p.amount);
+        .fold(0, (sum, p) => sum + p.amount);
 
     final completedBookings =
         bookings.where((b) => b.status == BookingStatus.completed).length;
@@ -309,7 +315,7 @@ class SpecialistAnalyticsService {
                 p.createdAt.year == month.year &&
                 p.createdAt.month == month.month,
           )
-          .fold(0.0, (sum, p) => sum + p.amount);
+          .fold(0, (sum, p) => sum + p.amount);
 
       final monthBookings = bookings
           .where(
@@ -451,7 +457,7 @@ class SpecialistAnalyticsService {
           .map(
             (doc) => {
               'specialistId': doc.id,
-              ...doc.data() as Map<String, dynamic>,
+              ...doc.data(),
             },
           )
           .toList();

@@ -1,11 +1,9 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import '../core/stubs/stubs.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/content_management.dart';
 import '../services/content_management_service.dart';
-import '../widgets/responsive_layout.dart' as responsive_layout;
 import '../ui/ui.dart';
 
 /// Экран управления контентом и медиа
@@ -486,10 +484,7 @@ class _ContentManagementScreenState
             ),
             child: InkWell(
               onTap: () async {
-                final result = await FilePicker.platform.pickFiles(
-                  type: FileType.any,
-                  allowMultiple: false,
-                );
+                final result = await FilePicker.platform.pickFiles();
 
                 if (result != null && result.files.isNotEmpty) {
                   final file = result.files.first;

@@ -19,7 +19,7 @@ class CrossSellSuggestion {
 
   /// Создать из документа Firestore
   factory CrossSellSuggestion.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return CrossSellSuggestion(
       id: doc.id,
       bookingId: data['bookingId'] ?? '',

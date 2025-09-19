@@ -185,8 +185,11 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
               const SizedBox(height: 12),
               Row(
                 children: [
-                  const Icon(Icons.calendar_today,
-                      size: 16, color: Colors.grey),
+                  const Icon(
+                    Icons.calendar_today,
+                    size: 16,
+                    color: Colors.grey,
+                  ),
                   const SizedBox(width: 8),
                   Text(
                     widget.event.formattedDate,

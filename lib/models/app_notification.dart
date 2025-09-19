@@ -41,7 +41,7 @@ class AppNotification {
 
   /// Создать из документа Firestore
   factory AppNotification.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return AppNotification(
       id: doc.id,
       userId: (data['userId'] as String?) ?? '',

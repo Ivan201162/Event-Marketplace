@@ -372,7 +372,8 @@ class PaymentFilterNotifier extends Notifier<PaymentFilter> {
 /// Провайдер для фильтра платежей
 final paymentFilterProvider =
     NotifierProvider<PaymentFilterNotifier, PaymentFilter>(
-        PaymentFilterNotifier.new);
+  PaymentFilterNotifier.new,
+);
 
 /// Провайдер для поиска платежей
 final paymentSearchProvider =

@@ -273,8 +273,10 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                           children: [
                             Icon(Icons.delete, color: Colors.red),
                             SizedBox(width: 8),
-                            Text('Удалить',
-                                style: TextStyle(color: Colors.red)),
+                            Text(
+                              'Удалить',
+                              style: TextStyle(color: Colors.red),
+                            ),
                           ],
                         ),
                       ),
@@ -288,7 +290,9 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                   if (playlist.isPublic) ...[
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.green[100],
                         borderRadius: BorderRadius.circular(12),
@@ -296,8 +300,11 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Icon(Icons.public,
-                              size: 14, color: Colors.green[600]),
+                          Icon(
+                            Icons.public,
+                            size: 14,
+                            color: Colors.green[600],
+                          ),
                           const SizedBox(width: 4),
                           Text(
                             'Публичный',
@@ -322,8 +329,11 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.play_arrow,
-                            size: 14, color: Colors.blue[600]),
+                        Icon(
+                          Icons.play_arrow,
+                          size: 14,
+                          color: Colors.blue[600],
+                        ),
                         const SizedBox(width: 4),
                         Text(
                           '${playlist.playCount} прослушиваний',
@@ -599,7 +609,8 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
               SwitchListTile(
                 title: const Text('Публичный плейлист'),
                 subtitle: const Text(
-                    'Другие пользователи смогут видеть этот плейлист'),
+                  'Другие пользователи смогут видеть этот плейлист',
+                ),
                 value: _isPublic,
                 onChanged: (value) {
                   setState(() {
@@ -727,7 +738,6 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
     try {
       final result = await FilePicker.platform.pickFiles(
         type: FileType.audio,
-        allowMultiple: false,
       );
 
       if (result != null && result.files.isNotEmpty) {

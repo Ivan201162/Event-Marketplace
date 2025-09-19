@@ -192,8 +192,10 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
                           children: [
                             Icon(Icons.delete, color: Colors.red),
                             SizedBox(width: 8),
-                            Text('Удалить',
-                                style: TextStyle(color: Colors.red)),
+                            Text(
+                              'Удалить',
+                              style: TextStyle(color: Colors.red),
+                            ),
                           ],
                         ),
                       ),
@@ -282,7 +284,8 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
           if (snapshot.hasError) {
             return Center(
               child: Text(
-                  'Ошибка загрузки предстоящих годовщин: ${snapshot.error}'),
+                'Ошибка загрузки предстоящих годовщин: ${snapshot.error}',
+              ),
             );
           }
 

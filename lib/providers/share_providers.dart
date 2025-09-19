@@ -41,7 +41,8 @@ final shareBookingProvider =
 
 /// Провайдер для шаринга текста
 final shareTextProvider = FutureProvider.family<bool, String>(
-    (ref, text) async => ShareService.shareText(text));
+  (ref, text) async => ShareService.shareText(text),
+);
 
 /// Провайдер для шаринга ссылки
 final shareLinkProvider = FutureProvider.family<bool,
@@ -75,7 +76,8 @@ final shareFilesProvider = FutureProvider.family<bool,
 
 /// Провайдер для открытия ссылки
 final openLinkProvider = FutureProvider.family<bool, String>(
-    (ref, url) async => ShareService.openLink(url));
+  (ref, url) async => ShareService.openLink(url),
+);
 
 /// Провайдер для открытия email
 final openEmailProvider = FutureProvider.family<bool,
@@ -89,7 +91,8 @@ final openEmailProvider = FutureProvider.family<bool,
 
 /// Провайдер для открытия телефона
 final openPhoneProvider = FutureProvider.family<bool, String>(
-    (ref, phone) async => ShareService.openPhone(phone));
+  (ref, phone) async => ShareService.openPhone(phone),
+);
 
 /// Провайдер для открытия SMS
 final openSmsProvider =
@@ -169,12 +172,14 @@ class ShareHistoryNotifier extends Notifier<List<Map<String, dynamic>>> {
 /// Провайдер для истории шаринга
 final shareHistoryProvider =
     NotifierProvider<ShareHistoryNotifier, List<Map<String, dynamic>>>(
-        ShareHistoryNotifier.new);
+  ShareHistoryNotifier.new,
+);
 
 /// Провайдер для настроек шаринга
 final shareSettingsProvider =
     NotifierProvider<ShareSettingsNotifier, ShareSettings>(
-        ShareSettingsNotifier.new);
+  ShareSettingsNotifier.new,
+);
 
 /// Настройки шаринга
 class ShareSettings {
@@ -299,7 +304,8 @@ class ShareStatsNotifier extends Notifier<Map<String, int>> {
 /// Провайдер для статистики шаринга
 final shareStatsProvider =
     NotifierProvider<ShareStatsNotifier, Map<String, int>>(
-        ShareStatsNotifier.new);
+  ShareStatsNotifier.new,
+);
 
 /// Нотификатор для последнего шаринга
 class LastShareNotifier extends Notifier<Map<String, dynamic>?> {
@@ -318,7 +324,8 @@ class LastShareNotifier extends Notifier<Map<String, dynamic>?> {
 /// Провайдер для последнего шаринга
 final lastShareProvider =
     NotifierProvider<LastShareNotifier, Map<String, dynamic>?>(
-        LastShareNotifier.new);
+  LastShareNotifier.new,
+);
 
 /// Нотификатор для активных шарингов
 class ActiveSharesNotifier extends Notifier<Set<String>> {
@@ -341,7 +348,8 @@ class ActiveSharesNotifier extends Notifier<Set<String>> {
 /// Провайдер для активных шарингов
 final activeSharesProvider =
     NotifierProvider<ActiveSharesNotifier, Set<String>>(
-        ActiveSharesNotifier.new);
+  ActiveSharesNotifier.new,
+);
 
 /// Нотификатор для очереди шаринга
 class ShareQueueNotifier extends Notifier<List<Map<String, dynamic>>> {
@@ -364,7 +372,8 @@ class ShareQueueNotifier extends Notifier<List<Map<String, dynamic>>> {
 /// Провайдер для очереди шаринга
 final shareQueueProvider =
     NotifierProvider<ShareQueueNotifier, List<Map<String, dynamic>>>(
-        ShareQueueNotifier.new);
+  ShareQueueNotifier.new,
+);
 
 /// Провайдер для проверки, идет ли шаринг
 final isSharingProvider = Provider<bool>((ref) {

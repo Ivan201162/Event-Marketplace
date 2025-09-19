@@ -132,7 +132,6 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
                 ),
               ),
               headerStyle: const HeaderStyle(
-                formatButtonVisible: true,
                 titleCentered: true,
               ),
               onDaySelected: (selectedDay, focusedDay) {
@@ -573,8 +572,10 @@ class _FilterDialogState extends State<_FilterDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             // Статусы
-            const Text('Статус:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text(
+              'Статус:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             ...EventStatus.values.map(
               (status) => CheckboxListTile(
                 title: Text(_getStatusText(status)),

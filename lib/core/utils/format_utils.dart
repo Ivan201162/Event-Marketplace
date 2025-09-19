@@ -22,8 +22,10 @@ String formatTime(DateTime time, [String pattern = 'HH:mm']) {
 }
 
 /// Форматирование даты и времени
-String formatDateTime(DateTime dateTime,
-    [String pattern = 'dd.MM.yyyy HH:mm']) {
+String formatDateTime(
+  DateTime dateTime, [
+  String pattern = 'dd.MM.yyyy HH:mm',
+]) {
   final formatter = DateFormat(pattern, 'ru_RU');
   return formatter.format(dateTime);
 }
@@ -32,8 +34,9 @@ String formatDateTime(DateTime dateTime,
 String formatFileSize(int bytes) {
   if (bytes < 1024) return '$bytes B';
   if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-  if (bytes < 1024 * 1024 * 1024)
+  if (bytes < 1024 * 1024 * 1024) {
     return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+  }
   return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
 }
 
@@ -56,11 +59,7 @@ String formatName(String name) {
 }
 
 /// Форматирование рейтинга
-String formatRating(double rating) {
-  return rating.toStringAsFixed(1);
-}
+String formatRating(double rating) => rating.toStringAsFixed(1);
 
 /// Форматирование процентов
-String formatPercentage(double value) {
-  return '${(value * 100).toStringAsFixed(1)}%';
-}
+String formatPercentage(double value) => '${(value * 100).toStringAsFixed(1)}%';

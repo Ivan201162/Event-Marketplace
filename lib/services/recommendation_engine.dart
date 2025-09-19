@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../core/feature_flags.dart';
-import '../models/app_user.dart';
 import '../models/booking.dart';
 import '../models/review.dart';
 import '../models/specialist.dart';
@@ -35,16 +34,18 @@ class RecommendationEngine {
       );
 
       // Преобразуем в SpecialistRecommendation
-      return specialists.map((specialist) {
-        return SpecialistRecommendation(
-          id: '${userId}_${specialist.id}',
-          specialistId: specialist.id,
-          reason: 'Рекомендуется на основе ваших предпочтений',
-          score: 0.8, // Заглушка
-          timestamp: DateTime.now(),
-          specialist: specialist,
-        );
-      }).toList();
+      return specialists
+          .map(
+            (specialist) => SpecialistRecommendation(
+              id: '${userId}_${specialist.id}',
+              specialistId: specialist.id,
+              reason: 'Рекомендуется на основе ваших предпочтений',
+              score: 0.8, // Заглушка
+              timestamp: DateTime.now(),
+              specialist: specialist,
+            ),
+          )
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения рекомендаций: $e');
     }
@@ -196,7 +197,7 @@ class RecommendationEngine {
     for (final doc in snapshot.docs) {
       if (excludeIds.contains(doc.id)) continue;
 
-      final data = doc.data() as Map<String, dynamic>;
+      final data = doc.data();
       final specialist = Specialist.fromMap(data);
       specialists.add(specialist);
 

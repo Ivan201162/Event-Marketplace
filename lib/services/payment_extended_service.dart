@@ -201,7 +201,7 @@ class PaymentExtendedService {
       // Пересчитываем суммы
       final paidAmount = updatedInstallments
           .where((i) => i.status == PaymentStatus.completed)
-          .fold(0.0, (total, i) => total + i.amount);
+          .fold(0, (total, i) => total + i.amount);
 
       final remainingAmount = payment.totalAmount - paidAmount;
       final status = remainingAmount <= 0
@@ -232,7 +232,7 @@ class PaymentExtendedService {
       pdf.addPage(
         pw.Page(
           pageFormat: PdfPageFormat.a4,
-          build: (pw.Context context) => pw.Column(
+          build: (context) => pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               // Заголовок
@@ -322,7 +322,7 @@ class PaymentExtendedService {
       pdf.addPage(
         pw.Page(
           pageFormat: PdfPageFormat.a4,
-          build: (pw.Context context) => pw.Column(
+          build: (context) => pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               // Заголовок
@@ -422,20 +422,18 @@ class PaymentExtendedService {
 
       final payments = snapshot.docs.map(PaymentExtended.fromDocument).toList();
 
-      final int totalPayments = payments.length;
-      final int completedPayments =
+      final totalPayments = payments.length;
+      final completedPayments =
           payments.where((p) => p.status == PaymentStatus.completed).length;
-      final int pendingPayments =
+      final pendingPayments =
           payments.where((p) => p.status == PaymentStatus.pending).length;
-      final int failedPayments =
+      final failedPayments =
           payments.where((p) => p.status == PaymentStatus.failed).length;
 
-      final double totalAmount =
-          payments.fold(0.0, (total, p) => total + p.totalAmount);
-      final double paidAmount =
-          payments.fold(0.0, (total, p) => total + p.paidAmount);
-      final double pendingAmount =
-          payments.fold(0.0, (total, p) => total + p.remainingAmount);
+      final totalAmount = payments.fold(0, (total, p) => total + p.totalAmount);
+      final paidAmount = payments.fold(0, (total, p) => total + p.paidAmount);
+      final pendingAmount =
+          payments.fold(0, (total, p) => total + p.remainingAmount);
 
       final paymentsByType = <String, int>{};
       final paymentsByStatus = <String, int>{};

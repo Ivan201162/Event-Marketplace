@@ -16,7 +16,7 @@ class StudioRecommendation {
 
   /// Создать из документа Firestore
   factory StudioRecommendation.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return StudioRecommendation(
       id: doc.id,
       photographerId: data['photographerId'] ?? '',
@@ -156,7 +156,7 @@ class DualBooking {
 
   /// Создать из документа Firestore
   factory DualBooking.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return DualBooking(
       id: doc.id,
       customerId: data['customerId'] ?? '',

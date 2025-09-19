@@ -273,8 +273,11 @@ class BudgetSuggestionWidget extends ConsumerWidget {
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.info_outline,
-                        size: 16, color: Colors.blue),
+                    const Icon(
+                      Icons.info_outline,
+                      size: 16,
+                      color: Colors.blue,
+                    ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(
@@ -473,7 +476,8 @@ class _CreateBudgetSuggestionWidgetState
                           )
                         : const Icon(Icons.send),
                     label: Text(
-                        _isLoading ? 'Создание...' : 'Создать предложение'),
+                      _isLoading ? 'Создание...' : 'Создать предложение',
+                    ),
                   ),
                 ),
               ],

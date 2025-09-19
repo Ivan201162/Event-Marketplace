@@ -8,8 +8,9 @@ final recommendationServiceProvider =
 
 /// Провайдер для взаимодействий с рекомендациями
 final recommendationInteractionProvider = NotifierProvider<
-        RecommendationInteractionNotifier, RecommendationInteractionState>(
-    (ref) => RecommendationInteractionNotifier());
+    RecommendationInteractionNotifier, RecommendationInteractionState>(
+  (ref) => RecommendationInteractionNotifier(),
+);
 
 /// Состояние взаимодействий с рекомендациями
 class RecommendationInteractionState {

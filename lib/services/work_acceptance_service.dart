@@ -304,7 +304,7 @@ class WorkAcceptanceAct {
 
   /// Создать из документа Firestore
   factory WorkAcceptanceAct.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return WorkAcceptanceAct(
       id: doc.id,
       actNumber: data['actNumber'] ?? '',

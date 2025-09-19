@@ -375,7 +375,7 @@ class ReviewExtendedService {
   /// Выбрать фото из галереи
   Future<List<XFile>> pickPhotos({int maxImages = 5}) async {
     try {
-      final List<XFile> images = await _imagePicker.pickMultiImage(
+      final images = await _imagePicker.pickMultiImage(
         maxWidth: 1920,
         maxHeight: 1080,
         imageQuality: 85,
@@ -447,7 +447,7 @@ class ReviewExtendedService {
 
       // Подсчитываем статистику
       var totalRating = 0;
-      final int totalReviews = reviews.length;
+      final totalReviews = reviews.length;
       final ratingDistribution = <int, int>{};
       var totalLikes = 0;
       var totalViews = 0;

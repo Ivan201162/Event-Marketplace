@@ -53,7 +53,8 @@ final AppThemeModeProvider = Provider<AppThemeMode>((ref) {
 
 /// Провайдер для получения яркости системы
 final systemBrightnessProvider = Provider<Brightness>(
-    (ref) => WidgetsBinding.instance.platformDispatcher.platformBrightness);
+  (ref) => WidgetsBinding.instance.platformDispatcher.platformBrightness,
+);
 
 /// Провайдер для проверки, включена ли темная тема
 final isDarkModeProvider = Provider<bool>((ref) {

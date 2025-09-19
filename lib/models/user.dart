@@ -74,7 +74,7 @@ class AppUser {
 
   /// Создать пользователя из документа Firestore
   factory AppUser.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return AppUser(
       id: doc.id,
       email: data['email'] ?? '',

@@ -102,7 +102,7 @@ class SpecialistProfileExtended {
       );
 
   factory SpecialistProfileExtended.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return SpecialistProfileExtended(
       id: doc.id,

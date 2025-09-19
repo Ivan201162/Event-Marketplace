@@ -136,7 +136,9 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                 '${widget.booking.eventDate.day}.${widget.booking.eventDate.month}.${widget.booking.eventDate.year}',
               ),
               _buildInfoRow(
-                  'Участников', '${widget.booking.participantsCount}'),
+                'Участников',
+                '${widget.booking.participantsCount}',
+              ),
               _buildInfoRow('Общая сумма', '${widget.booking.totalPrice} ₽'),
               _buildInfoRow('Статус', widget.booking.statusText),
             ],

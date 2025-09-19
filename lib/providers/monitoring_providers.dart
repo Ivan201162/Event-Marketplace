@@ -10,7 +10,8 @@ final monitoringServiceProvider =
 /// Провайдер состояния мониторинга
 final monitoringStateProvider =
     NotifierProvider<MonitoringStateNotifier, MonitoringState>(
-        MonitoringStateNotifier.new);
+  MonitoringStateNotifier.new,
+);
 
 /// Состояние мониторинга
 class MonitoringState {

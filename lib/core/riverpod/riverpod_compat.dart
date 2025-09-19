@@ -9,7 +9,5 @@ typedef Reader = T Function<T>(ProviderListenable<T> provider);
 /// Расширение для Ref с синхронным чтением
 extension RefX on Ref {
   /// Синхронное чтение провайдера
-  T readSync<T>(ProviderListenable<T> provider) {
-    return read(provider);
-  }
+  T readSync<T>(ProviderListenable<T> provider) => read(provider);
 }

@@ -100,7 +100,8 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
                       SwitchListTile(
                         title: const Text('Фильтр по дате'),
                         subtitle: const Text(
-                            'Показать заметки за определённый период'),
+                          'Показать заметки за определённый период',
+                        ),
                         value: _showByDate,
                         onChanged: (value) {
                           setState(() {
@@ -147,7 +148,9 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
                       const Text(
                         'Связь с объектами',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 8),
 
@@ -197,7 +200,9 @@ class _NoteFilterWidgetState extends State<NoteFilterWidget> {
                       const Text(
                         'Теги',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       _buildTagFilters(),

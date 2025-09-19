@@ -29,8 +29,8 @@ class ImageOptimizationService {
       }
 
       // Вычисляем новые размеры
-      int newWidth = image.width;
-      int newHeight = image.height;
+      var newWidth = image.width;
+      var newHeight = image.height;
 
       if (maxWidth != null && image.width > maxWidth) {
         newWidth = maxWidth;

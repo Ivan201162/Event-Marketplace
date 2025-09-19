@@ -82,15 +82,7 @@ class FCMService {
   /// Запрос разрешений
   Future<void> _requestPermissions() async {
     // Запрос разрешений для FCM
-    final settings = await _firebaseMessaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
+    final settings = await _firebaseMessaging.requestPermission();
 
     print('User granted permission: ${settings.authorizationStatus}');
 
@@ -368,7 +360,7 @@ class FCMService {
 
   /// Получить настройки уведомлений
   Future<NotificationSettings> getNotificationSettings() async =>
-      await _firebaseMessaging.getNotificationSettings();
+      _firebaseMessaging.getNotificationSettings();
 
   /// Проверить, включены ли уведомления
   Future<bool> areNotificationsEnabled() async {

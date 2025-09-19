@@ -32,10 +32,12 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
   @override
   Widget build(BuildContext context) {
     final isSubscribedAsync = ref.watch(
-      isSubscribedProvider(IsSubscribedParams(
-        userId: widget.userId,
-        specialistId: widget.specialistId,
-      )),
+      isSubscribedProvider(
+        IsSubscribedParams(
+          userId: widget.userId,
+          specialistId: widget.specialistId,
+        ),
+      ),
     );
 
     return isSubscribedAsync.when(
@@ -86,10 +88,12 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
 
       // Обновляем состояние
       ref.invalidate(
-        isSubscribedProvider(IsSubscribedParams(
-          userId: widget.userId,
-          specialistId: widget.specialistId,
-        )),
+        isSubscribedProvider(
+          IsSubscribedParams(
+            userId: widget.userId,
+            specialistId: widget.specialistId,
+          ),
+        ),
       );
 
       widget.onSubscriptionChanged?.call();

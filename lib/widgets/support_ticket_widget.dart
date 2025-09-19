@@ -39,7 +39,9 @@ class SupportTicketWidget extends StatelessWidget {
                     const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: ticket.statusColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
@@ -330,7 +332,9 @@ class SupportTicketGridTile extends StatelessWidget {
                     const Spacer(),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: ticket.statusColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(8),

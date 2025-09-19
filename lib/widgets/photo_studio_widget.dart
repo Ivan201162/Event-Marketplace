@@ -90,7 +90,9 @@ class PhotoStudioCard extends ConsumerWidget {
                   if (studio.priceRange != null) ...[
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.green.withValues(alpha: 0.2),
                         borderRadius: BorderRadius.circular(12),
@@ -107,8 +109,11 @@ class PhotoStudioCard extends ConsumerWidget {
                   ],
                   Row(
                     children: [
-                      const Icon(Icons.photo_library,
-                          size: 16, color: Colors.grey),
+                      const Icon(
+                        Icons.photo_library,
+                        size: 16,
+                        color: Colors.grey,
+                      ),
                       const SizedBox(width: 4),
                       Text(
                         '${studio.photosCount} фото',
@@ -268,7 +273,8 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                             ),
                             const SizedBox(height: 12),
                             ...studio.studioOptions.map(
-                                (option) => _buildOptionCard(context, option)),
+                              (option) => _buildOptionCard(context, option),
+                            ),
                           ],
                         ),
                       ),

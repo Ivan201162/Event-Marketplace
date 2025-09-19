@@ -5,11 +5,13 @@ import '../services/secure_storage_service.dart';
 
 /// Провайдер для управления безопасностью
 final securityProvider = NotifierProvider<SecurityNotifier, SecurityState>(
-    (ref) => SecurityNotifier());
+  (ref) => SecurityNotifier(),
+);
 
 /// Провайдер для статистики безопасности
 final securityStatsProvider = FutureProvider<SecurityStats>(
-    (ref) async => SecureStorageService.getSecurityStats());
+  (ref) async => SecureStorageService.getSecurityStats(),
+);
 
 /// Провайдер для валидации пароля
 final passwordValidationProvider =

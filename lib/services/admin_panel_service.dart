@@ -74,45 +74,45 @@ class AdminPanelService {
       final reviewsSnapshot = futures[4] as QuerySnapshot;
 
       // Подсчитываем статистику
-      final int totalUsers = usersSnapshot.docs.length;
-      final int totalSpecialists = specialistsSnapshot.docs.length;
-      final int totalBookings = bookingsSnapshot.docs.length;
-      final int totalPayments = paymentsSnapshot.docs.length;
-      final int totalReviews = reviewsSnapshot.docs.length;
+      final totalUsers = usersSnapshot.docs.length;
+      final totalSpecialists = specialistsSnapshot.docs.length;
+      final totalBookings = bookingsSnapshot.docs.length;
+      final totalPayments = paymentsSnapshot.docs.length;
+      final totalReviews = reviewsSnapshot.docs.length;
 
       // Активные пользователи (за последние 30 дней)
       final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
-      final int activeUsers = usersSnapshot.docs.where((doc) {
+      final activeUsers = usersSnapshot.docs.where((doc) {
         final lastLogin =
-            (doc.data() as Map<String, dynamic>)['lastLogin'] as Timestamp?;
+            (doc.data()! as Map<String, dynamic>)['lastLogin'] as Timestamp?;
         return lastLogin != null && lastLogin.toDate().isAfter(thirtyDaysAgo);
       }).length;
 
       // Ожидающие бронирования
-      final int pendingBookings = bookingsSnapshot.docs.where((doc) {
+      final pendingBookings = bookingsSnapshot.docs.where((doc) {
         final status =
-            (doc.data() as Map<String, dynamic>)['status'] as String?;
+            (doc.data()! as Map<String, dynamic>)['status'] as String?;
         return status == 'pending';
       }).length;
 
       // Ожидающие отзывы (не модерированные)
-      final int pendingReviews = reviewsSnapshot.docs.where((doc) {
+      final pendingReviews = reviewsSnapshot.docs.where((doc) {
         final isModerated =
-            (doc.data() as Map<String, dynamic>)['isModerated'] as bool?;
+            (doc.data()! as Map<String, dynamic>)['isModerated'] as bool?;
         return isModerated != true;
       }).length;
 
       // Заблокированные пользователи
-      final int bannedUsers = usersSnapshot.docs.where((doc) {
+      final bannedUsers = usersSnapshot.docs.where((doc) {
         final isBanned =
-            (doc.data() as Map<String, dynamic>)['isBanned'] as bool?;
+            (doc.data()! as Map<String, dynamic>)['isBanned'] as bool?;
         return isBanned ?? false;
       }).length;
 
       // Общий доход
       var totalRevenue = 0;
       for (final doc in paymentsSnapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data()! as Map<String, dynamic>;
         final status = data['status'] as String?;
         if (status == 'completed') {
           final paidAmount = (data['paidAmount'] as num?)?.toDouble() ?? 0.0;

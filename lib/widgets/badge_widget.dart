@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/badge.dart' as badge_model;
 import '../providers/badge_providers.dart';
 import 'animated_page_transition.dart';
-import '../core/app_theme.dart';
 
 /// Виджет для отображения бейджа
 class BadgeWidget extends StatelessWidget {
@@ -219,10 +219,14 @@ class BadgeCollectionWidget extends ConsumerWidget {
             ],
             if (category == null)
               _buildGridLayout(
-                  context, filteredBadges.cast<badge_model.Badge>())
+                context,
+                filteredBadges.cast<badge_model.Badge>(),
+              )
             else
               _buildListLayout(
-                  context, filteredBadges.cast<badge_model.Badge>()),
+                context,
+                filteredBadges.cast<badge_model.Badge>(),
+              ),
           ],
         );
       },
@@ -232,7 +236,9 @@ class BadgeCollectionWidget extends ConsumerWidget {
   }
 
   Widget _buildGridLayout(
-          BuildContext context, List<badge_model.Badge> badges) =>
+    BuildContext context,
+    List<badge_model.Badge> badges,
+  ) =>
       Wrap(
         spacing: 12,
         runSpacing: 12,
@@ -249,7 +255,9 @@ class BadgeCollectionWidget extends ConsumerWidget {
       );
 
   Widget _buildListLayout(
-          BuildContext context, List<badge_model.Badge> badges) =>
+    BuildContext context,
+    List<badge_model.Badge> badges,
+  ) =>
       Column(
         children: badges
             .map(
@@ -403,7 +411,11 @@ class BadgeStatsWidget extends ConsumerWidget {
                   Icons.event,
                 ),
                 _buildStatItem(
-                    context, 'Общие', stats.generalBadges, Icons.star),
+                  context,
+                  'Общие',
+                  stats.generalBadges,
+                  Icons.star,
+                ),
               ],
             ),
           ],

@@ -87,8 +87,11 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(Icons.collections_bookmark,
-                size: 64, color: Colors.grey),
+            const Icon(
+              Icons.collections_bookmark,
+              size: 64,
+              color: Colors.grey,
+            ),
             const SizedBox(height: 16),
             const Text(
               'Нет коллекций',

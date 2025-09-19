@@ -548,7 +548,7 @@ class _MessageInputWidgetState extends ConsumerState<MessageInputWidget> {
   /// Загрузка изображений
   Future<void> _pickImages() async {
     final picker = ImagePicker();
-    final List<XFile> images = await picker.pickMultiImage();
+    final images = await picker.pickMultiImage();
 
     if (images.isNotEmpty) {
       setState(() {

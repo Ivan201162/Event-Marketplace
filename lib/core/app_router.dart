@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../providers/event_providers.dart';
 import '../screens/about_screen.dart';
 import '../screens/admin_panel_screen.dart';
 import '../screens/analytics_screen.dart';
@@ -26,7 +27,6 @@ import '../screens/recommendations_screen.dart';
 import '../screens/search_screen.dart';
 import '../screens/settings_page.dart';
 import '../screens/specialist_profile_screen.dart';
-import '../providers/event_providers.dart';
 
 /// Wrapper для загрузки события по ID
 class EventDetailScreenWrapper extends ConsumerWidget {
@@ -37,26 +37,25 @@ class EventDetailScreenWrapper extends ConsumerWidget {
   final String eventId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(eventProvider(eventId)).when(
-          data: (event) {
-            if (event == null) {
-              return Scaffold(
-                appBar: AppBar(title: const Text('Событие не найдено')),
-                body: const Center(child: Text('Событие не найдено')),
-              );
-            }
-            return EventDetailScreen(event: event);
-          },
-          loading: () => const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
-          ),
-          error: (error, stack) => Scaffold(
-            appBar: AppBar(title: const Text('Ошибка')),
-            body: Center(child: Text('Ошибка загрузки: $error')),
-          ),
-        );
-  }
+  Widget build(BuildContext context, WidgetRef ref) =>
+      ref.watch(eventProvider(eventId)).when(
+            data: (event) {
+              if (event == null) {
+                return Scaffold(
+                  appBar: AppBar(title: const Text('Событие не найдено')),
+                  body: const Center(child: Text('Событие не найдено')),
+                );
+              }
+              return EventDetailScreen(event: event);
+            },
+            loading: () => const Scaffold(
+              body: Center(child: CircularProgressIndicator()),
+            ),
+            error: (error, stack) => Scaffold(
+              appBar: AppBar(title: const Text('Ошибка')),
+              body: Center(child: Text('Ошибка загрузки: $error')),
+            ),
+          );
 }
 
 /// Централизованная система роутинга приложения

@@ -238,7 +238,10 @@ class SpecialistScheduleService {
           endHour: 18,
         ), // Вторник
         3: const WorkingHours(
-            isWorking: true, startHour: 9, endHour: 18), // Среда
+          isWorking: true,
+          startHour: 9,
+          endHour: 18,
+        ), // Среда
         4: const WorkingHours(
           isWorking: true,
           startHour: 9,

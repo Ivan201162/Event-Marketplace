@@ -1,5 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/security.dart';
 import '../models/security_settings.dart';
 import '../services/security_service.dart';
 
@@ -24,28 +23,35 @@ class SecuritySettingsNotifier extends Notifier<SecuritySettings?> {
 /// Провайдер настроек безопасности
 final securitySettingsProvider =
     NotifierProvider<SecuritySettingsNotifier, SecuritySettings?>(
-        SecuritySettingsNotifier.new);
+  SecuritySettingsNotifier.new,
+);
 
 /// Провайдер аудита безопасности
 final securityAuditLogsProvider =
-    StreamProvider.family<List<SecurityAuditLog>, String>((ref, userId) =>
-        ref.watch(securityServiceProvider).getSecurityAuditLogs(userId));
+    StreamProvider.family<List<SecurityAuditLog>, String>(
+  (ref, userId) =>
+      ref.watch(securityServiceProvider).getSecurityAuditLogs(userId),
+);
 
 /// Провайдер устройств пользователя
 final userDevicesProvider = StreamProvider.family<List<SecurityDevice>, String>(
-    (ref, userId) => ref.watch(securityServiceProvider).getUserDevices(userId));
+  (ref, userId) => ref.watch(securityServiceProvider).getUserDevices(userId),
+);
 
 /// Провайдер доступности биометрической аутентификации
 final biometricAvailableProvider = FutureProvider<bool>(
-    (ref) => ref.watch(securityServiceProvider).isBiometricAvailable());
+  (ref) => ref.watch(securityServiceProvider).isBiometricAvailable(),
+);
 
 /// Провайдер доступных биометрических методов
 final availableBiometricsProvider = FutureProvider<List<dynamic>>(
-    (ref) => ref.watch(securityServiceProvider).getAvailableBiometrics());
+  (ref) => ref.watch(securityServiceProvider).getAvailableBiometrics(),
+);
 
 /// Провайдер для проверки наличия PIN-кода
 final hasPinCodeProvider = FutureProvider<bool>(
-    (ref) => ref.watch(securityServiceProvider).hasPinCode());
+  (ref) => ref.watch(securityServiceProvider).hasPinCode(),
+);
 
 /// Провайдер для аутентификации по биометрии
 final biometricAuthProvider = FutureProvider.family<bool, String>(
@@ -56,24 +62,29 @@ final biometricAuthProvider = FutureProvider.family<bool, String>(
 
 /// Провайдер для проверки PIN-кода
 final pinVerificationProvider = FutureProvider.family<bool, String>(
-    (ref, pin) => ref.watch(securityServiceProvider).verifyPinCode(pin));
+  (ref, pin) => ref.watch(securityServiceProvider).verifyPinCode(pin),
+);
 
 /// Провайдер для установки PIN-кода
 final setPinCodeProvider = FutureProvider.family<bool, String>(
-    (ref, pin) => ref.watch(securityServiceProvider).setPinCode(pin));
+  (ref, pin) => ref.watch(securityServiceProvider).setPinCode(pin),
+);
 
 /// Провайдер для удаления PIN-кода
 final removePinCodeProvider = FutureProvider<bool>(
-    (ref) => ref.watch(securityServiceProvider).removePinCode());
+  (ref) => ref.watch(securityServiceProvider).removePinCode(),
+);
 
 /// Провайдер для шифрования данных
 final encryptDataProvider = FutureProvider.family<String, String>(
-    (ref, data) => ref.watch(securityServiceProvider).encryptData(data));
+  (ref, data) => ref.watch(securityServiceProvider).encryptData(data),
+);
 
 /// Провайдер для расшифровки данных
 final decryptDataProvider = FutureProvider.family<String, String>(
-    (ref, encryptedData) =>
-        ref.watch(securityServiceProvider).decryptData(encryptedData));
+  (ref, encryptedData) =>
+      ref.watch(securityServiceProvider).decryptData(encryptedData),
+);
 
 /// Провайдер для безопасного сохранения
 final secureStoreProvider =
@@ -86,21 +97,27 @@ final secureStoreProvider =
 
 /// Провайдер для безопасного чтения
 final secureReadProvider = FutureProvider.family<String?, String>(
-    (ref, key) => ref.watch(securityServiceProvider).secureRead(key));
+  (ref, key) => ref.watch(securityServiceProvider).secureRead(key),
+);
 
 /// Провайдер для удаления безопасных данных
 final secureDeleteProvider = FutureProvider.family<void, String>(
-    (ref, key) => ref.watch(securityServiceProvider).secureDelete(key));
+  (ref, key) => ref.watch(securityServiceProvider).secureDelete(key),
+);
 
 /// Провайдер для получения настроек безопасности
 final getSecuritySettingsProvider =
-    FutureProvider.family<SecuritySettings?, String>((ref, userId) =>
-        ref.watch(securityServiceProvider).getSecuritySettings(userId));
+    FutureProvider.family<SecuritySettings?, String>(
+  (ref, userId) =>
+      ref.watch(securityServiceProvider).getSecuritySettings(userId),
+);
 
 /// Провайдер для обновления настроек безопасности
 final updateSecuritySettingsProvider =
-    FutureProvider.family<bool, SecuritySettings>((ref, settings) =>
-        ref.watch(securityServiceProvider).updateSecuritySettings(settings));
+    FutureProvider.family<bool, SecuritySettings>(
+  (ref, settings) =>
+      ref.watch(securityServiceProvider).updateSecuritySettings(settings),
+);
 
 /// Провайдер для блокировки устройства
 final blockDeviceProvider =
@@ -145,7 +162,8 @@ final generatePasswordProvider = Provider<
 
 /// Провайдер для очистки всех безопасных данных
 final clearAllSecureDataProvider = FutureProvider<void>(
-    (ref) => ref.watch(securityServiceProvider).clearAllSecureData());
+  (ref) => ref.watch(securityServiceProvider).clearAllSecureData(),
+);
 
 /// Провайдер для инициализации сервиса безопасности
 final securityInitializationProvider = FutureProvider<void>((ref) async {

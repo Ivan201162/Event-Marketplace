@@ -5,7 +5,8 @@ import '../services/specialist_profile_extended_service.dart';
 /// Провайдер сервиса расширенного профиля специалиста
 final specialistProfileExtendedServiceProvider =
     Provider<SpecialistProfileExtendedService>(
-        (ref) => SpecialistProfileExtendedService());
+  (ref) => SpecialistProfileExtendedService(),
+);
 
 /// Провайдер расширенного профиля специалиста
 final specialistProfileExtendedProvider =

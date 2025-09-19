@@ -17,7 +17,7 @@ class AnalyticsEvent {
 
   /// Создать из документа Firestore
   factory AnalyticsEvent.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return AnalyticsEvent(
       id: doc.id,
       userId: data['userId'] as String?,
@@ -285,7 +285,7 @@ class UserSession {
 
   /// Создать из документа Firestore
   factory UserSession.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return UserSession(
       sessionId: doc.id,
       userId: data['userId'] as String?,

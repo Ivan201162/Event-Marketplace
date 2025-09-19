@@ -34,7 +34,9 @@ class IntegrationSettingsScreen extends ConsumerWidget {
                   title: 'Геолокация',
                   subtitle: 'Настройки определения местоположения',
                   onTap: () => _navigateToScreen(
-                      context, const LocationSettingsScreen()),
+                    context,
+                    const LocationSettingsScreen(),
+                  ),
                 ),
                 _buildSettingsTile(
                   icon: Icons.share,

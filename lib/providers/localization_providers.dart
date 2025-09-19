@@ -21,7 +21,8 @@ class LocalizationSettingsNotifier extends Notifier<LocalizationSettings?> {
 /// Провайдер настроек локализации
 final localizationSettingsProvider =
     NotifierProvider<LocalizationSettingsNotifier, LocalizationSettings?>(
-        LocalizationSettingsNotifier.new);
+  LocalizationSettingsNotifier.new,
+);
 
 /// Нотификатор для текущей локализации
 class CurrentLocalizationNotifier extends Notifier<LocalizationModel?> {
@@ -36,7 +37,8 @@ class CurrentLocalizationNotifier extends Notifier<LocalizationModel?> {
 /// Провайдер текущей локализации
 final currentLocalizationProvider =
     NotifierProvider<CurrentLocalizationNotifier, LocalizationModel?>(
-        CurrentLocalizationNotifier.new);
+  CurrentLocalizationNotifier.new,
+);
 
 /// Нотификатор для текущего языка
 class CurrentLanguageNotifier extends Notifier<String> {
@@ -51,7 +53,8 @@ class CurrentLanguageNotifier extends Notifier<String> {
 /// Провайдер текущего языка
 final currentLanguageProvider =
     NotifierProvider<CurrentLanguageNotifier, String>(
-        CurrentLanguageNotifier.new);
+  CurrentLanguageNotifier.new,
+);
 
 /// Провайдер текущей локали
 final currentLocaleProvider = Provider<Locale>((ref) {
@@ -100,7 +103,8 @@ final localizationStatsProvider =
 
 /// Провайдер всех статистик локализации
 final allLocalizationStatsProvider = FutureProvider<List<LocalizationStats>>(
-    (ref) => ref.watch(localizationServiceProvider).getAllLocalizationStats());
+  (ref) => ref.watch(localizationServiceProvider).getAllLocalizationStats(),
+);
 
 /// Провайдер для перевода текста
 final translateProvider =

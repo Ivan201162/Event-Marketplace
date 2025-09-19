@@ -47,7 +47,7 @@ class Badge {
 
   /// Создаёт бейдж из документа Firestore
   factory Badge.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return Badge(
       id: doc.id,
@@ -361,9 +361,6 @@ class BadgeStats {
     availableBadges: 0,
     recentBadges: [],
     badgesByCategory: {},
-    specialistBadges: 0,
-    customerBadges: 0,
-    generalBadges: 0,
   );
 }
 

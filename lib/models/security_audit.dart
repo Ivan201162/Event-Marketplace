@@ -20,7 +20,7 @@ class SecurityAudit {
 
   /// Создать из документа Firestore
   factory SecurityAudit.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return SecurityAudit(
       id: doc.id,
       eventType: data['eventType'] ?? '',
@@ -199,7 +199,7 @@ class SecurityPolicy {
 
   /// Создать из документа Firestore
   factory SecurityPolicy.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return SecurityPolicy(
       id: doc.id,
       name: data['name'] ?? '',
@@ -347,7 +347,7 @@ class EncryptionKey {
 
   /// Создать из документа Firestore
   factory EncryptionKey.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return EncryptionKey(
       id: doc.id,
       name: data['name'] ?? '',

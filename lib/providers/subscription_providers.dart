@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../models/specialist_recommendation.dart';
 import '../models/subscription.dart';
 import '../models/subscription_notification.dart';
-import '../models/specialist_recommendation.dart';
 import '../services/subscription_service.dart';
 
 /// Провайдер сервиса подписок

@@ -156,7 +156,7 @@ class AnalyticsService {
 
     try {
       _currentUserId = null;
-      await _analytics!.setUserId(id: null);
+      await _analytics!.setUserId();
       SafeLog.info('AnalyticsService: User ID cleared');
     } catch (e, stackTrace) {
       SafeLog.error('AnalyticsService: Error clearing user ID', e, stackTrace);

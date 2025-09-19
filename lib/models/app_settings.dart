@@ -21,7 +21,7 @@ class AppSettings {
 
   /// Создать из документа Firestore
   factory AppSettings.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return AppSettings(
       id: doc.id,
       key: (data['key'] as String?) ?? '',
@@ -40,7 +40,8 @@ class AppSettings {
           : null,
       validation: data['validation'] != null
           ? Map<String, dynamic>.from(
-              data['validation'] as Map<dynamic, dynamic>)
+              data['validation'] as Map<dynamic, dynamic>,
+            )
           : null,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
@@ -67,7 +68,8 @@ class AppSettings {
             : null,
         validation: data['validation'] != null
             ? Map<String, dynamic>.from(
-                data['validation'] as Map<dynamic, dynamic>)
+                data['validation'] as Map<dynamic, dynamic>,
+              )
             : null,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
@@ -322,13 +324,14 @@ class AppConfiguration {
 
   /// Создать из документа Firestore
   factory AppConfiguration.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return AppConfiguration(
       id: doc.id,
       name: (data['name'] as String?) ?? '',
       description: (data['description'] as String?) ?? '',
       config: Map<String, dynamic>.from(
-          data['config'] as Map<dynamic, dynamic>? ?? {}),
+        data['config'] as Map<dynamic, dynamic>? ?? {},
+      ),
       type: ConfigurationType.values.firstWhere(
         (e) => e.toString().split('.').last == data['type'],
         orElse: () => ConfigurationType.general,
@@ -349,7 +352,8 @@ class AppConfiguration {
         name: (data['name'] as String?) ?? '',
         description: (data['description'] as String?) ?? '',
         config: Map<String, dynamic>.from(
-            data['config'] as Map<dynamic, dynamic>? ?? {}),
+          data['config'] as Map<dynamic, dynamic>? ?? {},
+        ),
         type: ConfigurationType.values.firstWhere(
           (e) => e.toString().split('.').last == data['type'],
           orElse: () => ConfigurationType.general,
@@ -478,7 +482,7 @@ class SettingsHistory {
 
   /// Создать из документа Firestore
   factory SettingsHistory.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return SettingsHistory(
       id: doc.id,
       settingId: (data['settingId'] as String?) ?? '',
@@ -489,7 +493,8 @@ class SettingsHistory {
       reason: data['reason'] as String?,
       changedAt: (data['changedAt'] as Timestamp).toDate(),
       metadata: Map<String, dynamic>.from(
-          data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+        data['metadata'] as Map<dynamic, dynamic>? ?? {},
+      ),
     );
   }
 
@@ -504,7 +509,8 @@ class SettingsHistory {
         reason: data['reason'] as String?,
         changedAt: (data['changedAt'] as Timestamp).toDate(),
         metadata: Map<String, dynamic>.from(
-            data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+          data['metadata'] as Map<dynamic, dynamic>? ?? {},
+        ),
       );
   final String id;
   final String settingId;

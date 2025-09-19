@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:isolate';
 import 'package:flutter/foundation.dart';
 import 'logger_service.dart';
 import 'monitoring_service.dart';

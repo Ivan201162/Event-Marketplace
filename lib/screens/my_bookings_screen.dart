@@ -135,7 +135,9 @@ class MyBookingsScreen extends ConsumerWidget {
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: _getStatusColor(booking.status).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
@@ -193,8 +195,11 @@ class MyBookingsScreen extends ConsumerWidget {
                       style: const TextStyle(color: Colors.blue),
                     ),
                     const Spacer(),
-                    const Icon(Icons.attach_money,
-                        size: 16, color: Colors.green),
+                    const Icon(
+                      Icons.attach_money,
+                      size: 16,
+                      color: Colors.green,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       booking.totalPrice == 0

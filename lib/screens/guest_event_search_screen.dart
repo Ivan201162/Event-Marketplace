@@ -88,8 +88,11 @@ class _GuestEventSearchScreenState
             children: [
               Row(
                 children: [
-                  Icon(Icons.qr_code_scanner,
-                      color: Colors.blue[600], size: 32),
+                  Icon(
+                    Icons.qr_code_scanner,
+                    color: Colors.blue[600],
+                    size: 32,
+                  ),
                   const SizedBox(width: 12),
                   const Expanded(
                     child: Text(

@@ -439,7 +439,8 @@ class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
                           )
                         : const Icon(Icons.send),
                     label: Text(
-                        _isLoading ? 'Создание...' : 'Создать предложение'),
+                      _isLoading ? 'Создание...' : 'Создать предложение',
+                    ),
                   ),
                 ),
               ],

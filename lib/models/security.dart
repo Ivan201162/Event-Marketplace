@@ -12,7 +12,7 @@ class UserRole {
   });
 
   factory UserRole.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return UserRole(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -53,7 +53,7 @@ class AuditLog {
   });
 
   factory AuditLog.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return AuditLog(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -104,7 +104,7 @@ class SecuritySession {
   });
 
   factory SecuritySession.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return SecuritySession(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -185,7 +185,7 @@ class SecurityAlert {
   });
 
   factory SecurityAlert.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return SecurityAlert(
       id: doc.id,
       userId: data['userId'] ?? '',
@@ -246,7 +246,7 @@ class UserBlock {
   });
 
   factory UserBlock.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return UserBlock(
       id: doc.id,
       userId: data['userId'] ?? '',

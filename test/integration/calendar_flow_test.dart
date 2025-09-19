@@ -1,5 +1,4 @@
 import 'package:event_marketplace_app/main.dart';
-import 'package:event_marketplace_app/models/specialist_schedule.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -10,7 +9,7 @@ void main() {
         (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -30,7 +29,7 @@ void main() {
     testWidgets('should handle adding unavailable period', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -67,7 +66,7 @@ void main() {
     testWidgets('should handle adding vacation period', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -107,7 +106,7 @@ void main() {
     testWidgets('should handle viewing calendar statistics', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -133,7 +132,7 @@ void main() {
     testWidgets('should handle viewing calendar analytics', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -158,7 +157,7 @@ void main() {
     testWidgets('should handle viewing test data', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -181,7 +180,7 @@ void main() {
     testWidgets('should handle calendar navigation', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -207,7 +206,7 @@ void main() {
     testWidgets('should handle calendar date selection', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -232,7 +231,7 @@ void main() {
     testWidgets('should handle calendar event viewing', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -257,7 +256,7 @@ void main() {
     testWidgets('should handle calendar event editing', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -292,7 +291,7 @@ void main() {
     testWidgets('should handle calendar event deletion', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );

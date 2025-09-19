@@ -330,7 +330,8 @@ class _ConnectionSettingsScreenState
               SwitchListTile(
                 title: const Text('Синхронизация в фоне'),
                 subtitle: const Text(
-                    'Разрешить синхронизацию данных в фоновом режиме'),
+                  'Разрешить синхронизацию данных в фоновом режиме',
+                ),
                 value: true, // TODO: Получить из настроек
                 onChanged: (value) {
                   // TODO: Сохранить настройку

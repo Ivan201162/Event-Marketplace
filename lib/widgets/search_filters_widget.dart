@@ -470,14 +470,18 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
                   ),
                   items: const [
                     DropdownMenuItem(
-                        value: 'rating', child: Text('По рейтингу')),
+                      value: 'rating',
+                      child: Text('По рейтингу'),
+                    ),
                     DropdownMenuItem(value: 'price', child: Text('По цене')),
                     DropdownMenuItem(
                       value: 'experience',
                       child: Text('По опыту'),
                     ),
                     DropdownMenuItem(
-                        value: 'reviews', child: Text('По отзывам')),
+                      value: 'reviews',
+                      child: Text('По отзывам'),
+                    ),
                   ],
                   onChanged: (value) {
                     setState(() {
@@ -497,7 +501,8 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
                 onPressed: () {
                   setState(() {
                     _filters = _filters.copyWith(
-                        sortAscending: !_filters.sortAscending);
+                      sortAscending: !_filters.sortAscending,
+                    );
                   });
                   widget.onFiltersChanged(_filters);
                 },

@@ -98,7 +98,8 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
                       SwitchListTile(
                         title: const Text('Фильтр по дате'),
                         subtitle: const Text(
-                            'Показать вопросы за определённый период'),
+                          'Показать вопросы за определённый период',
+                        ),
                         value: _showByDate,
                         onChanged: (value) {
                           setState(() {
@@ -145,7 +146,9 @@ class _FAQFilterWidgetState extends State<FAQFilterWidget> {
                       const Text(
                         'Категории',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       _buildCategoryFilters(),

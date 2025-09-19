@@ -314,8 +314,11 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.people_outline,
-                      size: 64, color: Colors.grey),
+                  const Icon(
+                    Icons.people_outline,
+                    size: 64,
+                    color: Colors.grey,
+                  ),
                   const SizedBox(height: 16),
                   const Text(
                     'Нет гостей',
@@ -621,8 +624,10 @@ class _FilterDialogState extends State<_FilterDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             // Статусы
-            const Text('Статус:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text(
+              'Статус:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             ...GuestStatus.values.map(
               (status) => CheckboxListTile(
                 title: Text(_getStatusText(status)),

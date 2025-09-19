@@ -37,7 +37,7 @@ class ChatMessage {
 
   /// Создать из документа Firestore
   factory ChatMessage.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return ChatMessage(
       id: doc.id,
       chatId: data['chatId'] ?? '',
@@ -216,7 +216,7 @@ class Chat {
 
   /// Создать из документа Firestore
   factory Chat.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return Chat(
       id: doc.id,
       customerId: data['customerId'] ?? '',

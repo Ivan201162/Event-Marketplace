@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
-import 'specialist.dart';
+
 import 'recommendation.dart';
+import 'specialist.dart';
 
 /// Модель рекомендации специалиста
 @immutable
@@ -75,8 +76,7 @@ class SpecialistRecommendation {
 /// Расширение для фильтрации списка рекомендаций специалистов
 extension SpecialistRecommendationListExtension
     on List<SpecialistRecommendation> {
-  List<SpecialistRecommendation> byType(RecommendationType type) {
-    return where((recommendation) => recommendation.recommendation.type == type)
-        .toList();
-  }
+  List<SpecialistRecommendation> byType(RecommendationType type) =>
+      where((recommendation) => recommendation.recommendation.type == type)
+          .toList();
 }

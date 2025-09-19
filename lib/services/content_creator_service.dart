@@ -28,14 +28,15 @@ class ContentCreatorService {
       final snapshot =
           await query.orderBy('rating', descending: true).limit(limit).get();
 
-      List<ContentCreator> creators =
-          snapshot.docs.map(ContentCreator.fromDocument).toList();
+      var creators = snapshot.docs.map(ContentCreator.fromDocument).toList();
 
       // Фильтрация по форматам на клиенте (если указаны)
       if (formats != null && formats.isNotEmpty) {
         creators = creators
-            .where((creator) =>
-                creator.formats.any((format) => formats.contains(format.name)))
+            .where(
+              (creator) => creator.formats
+                  .any((format) => formats.contains(format.name)),
+            )
             .toList();
       }
 

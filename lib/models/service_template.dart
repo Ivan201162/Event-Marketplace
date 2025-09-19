@@ -17,7 +17,7 @@ class ServiceTemplate {
 
   /// Создать из документа Firestore
   factory ServiceTemplate.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return ServiceTemplate(
       id: doc.id,
       categoryId: data['categoryId'] ?? '',
@@ -87,7 +87,7 @@ class SpecialistService {
 
   /// Создать из документа Firestore
   factory SpecialistService.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return SpecialistService(
       id: doc.id,
       specialistId: data['specialistId'] ?? '',

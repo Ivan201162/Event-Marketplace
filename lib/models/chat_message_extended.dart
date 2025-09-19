@@ -38,7 +38,7 @@ class ChatMessageExtended {
       );
 
   factory ChatMessageExtended.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return ChatMessageExtended(
       id: doc.id,

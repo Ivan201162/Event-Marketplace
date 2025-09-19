@@ -118,7 +118,9 @@ class _TranslationManagementScreenState
                       ),
                       DropdownMenuItem(value: 'events', child: Text('События')),
                       DropdownMenuItem(
-                          value: 'profile', child: Text('Профиль')),
+                        value: 'profile',
+                        child: Text('Профиль'),
+                      ),
                       DropdownMenuItem(
                         value: 'settings',
                         child: Text('Настройки'),
@@ -300,7 +302,8 @@ class _TranslationManagementScreenState
     if (_selectedCategory != 'all') {
       filtered = Map.fromEntries(
         filtered.entries.where(
-            (entry) => _getCategoryFromKey(entry.key) == _selectedCategory),
+          (entry) => _getCategoryFromKey(entry.key) == _selectedCategory,
+        ),
       );
     }
 
@@ -450,7 +453,9 @@ class _TranslationDialogState extends State<_TranslationDialog> {
                 items: const [
                   DropdownMenuItem(value: 'general', child: Text('Общие')),
                   DropdownMenuItem(
-                      value: 'navigation', child: Text('Навигация')),
+                    value: 'navigation',
+                    child: Text('Навигация'),
+                  ),
                   DropdownMenuItem(value: 'events', child: Text('События')),
                   DropdownMenuItem(value: 'profile', child: Text('Профиль')),
                   DropdownMenuItem(value: 'settings', child: Text('Настройки')),

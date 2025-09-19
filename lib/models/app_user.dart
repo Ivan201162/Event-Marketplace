@@ -2,15 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель пользователя приложения
 class AppUser {
-  final String id;
-  final String email;
-  final String? displayName;
-  final String? photoUrl;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final bool isActive;
-  final Map<String, dynamic>? preferences;
-
   const AppUser({
     required this.id,
     required this.email,
@@ -24,7 +15,7 @@ class AppUser {
 
   /// Создать из документа Firestore
   factory AppUser.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return AppUser(
       id: doc.id,
       email: (data['email'] as String?) ?? '',
@@ -48,6 +39,14 @@ class AppUser {
         isActive: (data['isActive'] as bool?) ?? true,
         preferences: data['preferences'] as Map<String, dynamic>?,
       );
+  final String id;
+  final String email;
+  final String? displayName;
+  final String? photoUrl;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final bool isActive;
+  final Map<String, dynamic>? preferences;
 
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {

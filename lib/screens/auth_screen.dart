@@ -391,7 +391,8 @@ class AuthScreen extends ConsumerWidget {
   Widget _buildDivider(BuildContext context) => Row(
         children: [
           Expanded(
-              child: Divider(color: Theme.of(context).colorScheme.outline)),
+            child: Divider(color: Theme.of(context).colorScheme.outline),
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Text(
@@ -402,7 +403,8 @@ class AuthScreen extends ConsumerWidget {
             ),
           ),
           Expanded(
-              child: Divider(color: Theme.of(context).colorScheme.outline)),
+            child: Divider(color: Theme.of(context).colorScheme.outline),
+          ),
         ],
       );
 

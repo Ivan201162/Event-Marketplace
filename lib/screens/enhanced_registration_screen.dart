@@ -809,7 +809,8 @@ class _EnhancedRegistrationScreenState
               child: ElevatedButton(
                 onPressed: _canProceedToNextPage() ? _nextPage : null,
                 child: Text(
-                    _currentPage == _totalPages - 1 ? 'Завершить' : 'Далее'),
+                  _currentPage == _totalPages - 1 ? 'Завершить' : 'Далее',
+                ),
               ),
             ),
           ],

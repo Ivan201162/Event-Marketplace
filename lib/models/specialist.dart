@@ -312,7 +312,7 @@ class Specialist {
 
   /// Создать из документа Firestore
   factory Specialist.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return Specialist(
       id: doc.id,
       userId: data['userId'] ?? '',

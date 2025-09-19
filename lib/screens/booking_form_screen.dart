@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../core/stubs/stubs.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/stubs/stubs.dart';
 import '../models/booking.dart';
 import '../models/specialist.dart';
 import '../providers/booking_providers.dart';
@@ -154,7 +154,7 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
                   hintText: 'Выберите услугу',
                 ),
                 items: specialist.services
-                        ?.map(
+                        .map(
                           (service) => DropdownMenuItem(
                             value: service,
                             child: Text(service),

@@ -16,7 +16,8 @@ final maxEventsPerExportProvider =
 
 /// Провайдер для проверки возможности экспорта
 final canExportEventsProvider = Provider.family<bool, int>(
-    (ref, count) => IcsExportService.canExportEvents(count));
+  (ref, count) => IcsExportService.canExportEvents(count),
+);
 
 /// Провайдер для экспорта одного события
 final exportEventProvider =
@@ -76,7 +77,8 @@ class ExportProgressNotifier extends Notifier<double> {
 
 /// Провайдер для отслеживания прогресса экспорта
 final exportProgressProvider = NotifierProvider<ExportProgressNotifier, double>(
-    ExportProgressNotifier.new);
+  ExportProgressNotifier.new,
+);
 
 /// Нотификатор для последней ошибки экспорта
 class ExportErrorNotifier extends Notifier<String?> {
@@ -109,12 +111,14 @@ class ExportHistoryNotifier extends Notifier<List<Map<String, dynamic>>> {
 /// Провайдер для истории экспорта
 final exportHistoryProvider =
     NotifierProvider<ExportHistoryNotifier, List<Map<String, dynamic>>>(
-        ExportHistoryNotifier.new);
+  ExportHistoryNotifier.new,
+);
 
 /// Провайдер для настроек экспорта
 final exportSettingsProvider =
     NotifierProvider<ExportSettingsNotifier, ExportSettings>(
-        ExportSettingsNotifier.new);
+  ExportSettingsNotifier.new,
+);
 
 /// Настройки экспорта
 class ExportSettings {
@@ -222,7 +226,8 @@ class ExportStatsNotifier extends Notifier<Map<String, int>> {
 /// Провайдер для статистики экспорта
 final exportStatsProvider =
     NotifierProvider<ExportStatsNotifier, Map<String, int>>(
-        ExportStatsNotifier.new);
+  ExportStatsNotifier.new,
+);
 
 /// Нотификатор для последнего экспорта
 class LastExportNotifier extends Notifier<Map<String, dynamic>?> {
@@ -237,7 +242,8 @@ class LastExportNotifier extends Notifier<Map<String, dynamic>?> {
 /// Провайдер для последнего экспорта
 final lastExportProvider =
     NotifierProvider<LastExportNotifier, Map<String, dynamic>?>(
-        LastExportNotifier.new);
+  LastExportNotifier.new,
+);
 
 /// Нотификатор для активных экспортов
 class ActiveExportsNotifier extends Notifier<Set<String>> {
@@ -260,7 +266,8 @@ class ActiveExportsNotifier extends Notifier<Set<String>> {
 /// Провайдер для активных экспортов
 final activeExportsProvider =
     NotifierProvider<ActiveExportsNotifier, Set<String>>(
-        ActiveExportsNotifier.new);
+  ActiveExportsNotifier.new,
+);
 
 /// Нотификатор для очереди экспорта
 class ExportQueueNotifier extends Notifier<List<Map<String, dynamic>>> {
@@ -283,7 +290,8 @@ class ExportQueueNotifier extends Notifier<List<Map<String, dynamic>>> {
 /// Провайдер для очереди экспорта
 final exportQueueProvider =
     NotifierProvider<ExportQueueNotifier, List<Map<String, dynamic>>>(
-        ExportQueueNotifier.new);
+  ExportQueueNotifier.new,
+);
 
 /// Провайдер для проверки, идет ли экспорт
 final isExportingProvider = Provider<bool>((ref) {

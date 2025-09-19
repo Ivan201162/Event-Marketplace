@@ -52,7 +52,8 @@ final specialistsByCategoryProvider =
 /// Провайдер фильтров поиска
 final specialistFiltersProvider =
     NotifierProvider<SpecialistFiltersNotifier, SpecialistFilters>(
-        SpecialistFiltersNotifier.new);
+  SpecialistFiltersNotifier.new,
+);
 
 class SpecialistFiltersNotifier extends Notifier<SpecialistFilters> {
   @override
@@ -100,12 +101,14 @@ final searchStateProvider =
 /// Провайдер избранных специалистов
 final favoriteSpecialistsProvider =
     NotifierProvider<FavoriteSpecialistsNotifier, List<String>>(
-        FavoriteSpecialistsNotifier.new);
+  FavoriteSpecialistsNotifier.new,
+);
 
 /// Провайдер истории поиска
 final searchHistoryProvider =
     NotifierProvider<SearchHistoryNotifier, List<String>>(
-        SearchHistoryNotifier.new);
+  SearchHistoryNotifier.new,
+);
 
 /// Параметры для проверки доступности специалиста
 class SpecialistAvailabilityParams {

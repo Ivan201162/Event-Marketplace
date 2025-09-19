@@ -23,7 +23,7 @@ class Story {
 
   /// Создать из документа Firestore
   factory Story.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return Story(
       id: doc.id,

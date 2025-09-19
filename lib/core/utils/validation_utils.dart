@@ -26,8 +26,8 @@ bool isValidUrl(String url) {
 /// Валидация пароля (минимум 8 символов, содержит буквы и цифры)
 bool isValidPassword(String password) {
   if (password.length < 8) return false;
-  final hasLetter = RegExp(r'[a-zA-Z]').hasMatch(password);
-  final hasDigit = RegExp(r'[0-9]').hasMatch(password);
+  final hasLetter = RegExp('[a-zA-Z]').hasMatch(password);
+  final hasDigit = RegExp('[0-9]').hasMatch(password);
   return hasLetter && hasDigit;
 }
 
@@ -38,16 +38,10 @@ bool isValidName(String name) {
 }
 
 /// Валидация возраста
-bool isValidAge(int age) {
-  return age >= 0 && age <= 150;
-}
+bool isValidAge(int age) => age >= 0 && age <= 150;
 
 /// Валидация цены
-bool isValidPrice(double price) {
-  return price >= 0;
-}
+bool isValidPrice(double price) => price >= 0;
 
 /// Валидация рейтинга
-bool isValidRating(double rating) {
-  return rating >= 0 && rating <= 5;
-}
+bool isValidRating(double rating) => rating >= 0 && rating <= 5;

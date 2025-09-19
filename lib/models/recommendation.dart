@@ -92,34 +92,30 @@ class Recommendation {
     required this.createdAt,
   });
 
+  factory Recommendation.fromMap(Map<String, dynamic> map) => Recommendation(
+        id: map['id'] as String,
+        type: RecommendationType.values.firstWhere(
+          (e) => e.name == map['type'],
+          orElse: () => RecommendationType.basedOnHistory,
+        ),
+        score: (map['score'] as num).toDouble(),
+        reason: map['reason'] as String,
+        createdAt: DateTime.parse(map['createdAt'] as String),
+      );
+
   final String id;
   final RecommendationType type;
   final double score;
   final String reason;
   final DateTime createdAt;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'type': type.name,
-      'score': score,
-      'reason': reason,
-      'createdAt': createdAt.toIso8601String(),
-    };
-  }
-
-  factory Recommendation.fromMap(Map<String, dynamic> map) {
-    return Recommendation(
-      id: map['id'] as String,
-      type: RecommendationType.values.firstWhere(
-        (e) => e.name == map['type'],
-        orElse: () => RecommendationType.basedOnHistory,
-      ),
-      score: (map['score'] as num).toDouble(),
-      reason: map['reason'] as String,
-      createdAt: DateTime.parse(map['createdAt'] as String),
-    );
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'type': type.name,
+        'score': score,
+        'reason': reason,
+        'createdAt': createdAt.toIso8601String(),
+      };
 
   @override
   bool operator ==(Object other) {
@@ -148,7 +144,6 @@ class Recommendation {
 
 /// Расширение для фильтрации списка рекомендаций
 extension RecommendationListExtension on List<Recommendation> {
-  List<Recommendation> byType(RecommendationType type) {
-    return where((recommendation) => recommendation.type == type).toList();
-  }
+  List<Recommendation> byType(RecommendationType type) =>
+      where((recommendation) => recommendation.type == type).toList();
 }

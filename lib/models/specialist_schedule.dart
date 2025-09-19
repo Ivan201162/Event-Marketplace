@@ -38,7 +38,8 @@ class SpecialistSchedule {
             {},
         exceptions: (data['exceptions'] as List<dynamic>?)
                 ?.map(
-                    (e) => ScheduleException.fromMap(e as Map<String, dynamic>))
+                  (e) => ScheduleException.fromMap(e as Map<String, dynamic>),
+                )
                 .toList() ??
             [],
         availability: (data['availability'] as Map<String, dynamic>?)
@@ -124,7 +125,7 @@ class ScheduleException {
   });
 
   factory ScheduleException.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return ScheduleException(
       id: doc.id,
       specialistId: data['specialistId'] ?? '',
@@ -140,21 +141,20 @@ class ScheduleException {
     );
   }
 
-  factory ScheduleException.fromMap(Map<String, dynamic> data) {
-    return ScheduleException(
-      id: data['id'] ?? '',
-      specialistId: data['specialistId'] ?? '',
-      type: ScheduleExceptionType.values.firstWhere(
-        (e) => e.name == data['type'],
-        orElse: () => ScheduleExceptionType.blocked,
-      ),
-      startDate: (data['startDate'] as Timestamp).toDate(),
-      endDate: (data['endDate'] as Timestamp).toDate(),
-      reason: data['reason'] ?? '',
-      description: data['description'],
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-    );
-  }
+  factory ScheduleException.fromMap(Map<String, dynamic> data) =>
+      ScheduleException(
+        id: data['id'] ?? '',
+        specialistId: data['specialistId'] ?? '',
+        type: ScheduleExceptionType.values.firstWhere(
+          (e) => e.name == data['type'],
+          orElse: () => ScheduleExceptionType.blocked,
+        ),
+        startDate: (data['startDate'] as Timestamp).toDate(),
+        endDate: (data['endDate'] as Timestamp).toDate(),
+        reason: data['reason'] ?? '',
+        description: data['description'],
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+      );
   final String id;
   final String specialistId;
   final ScheduleExceptionType type;

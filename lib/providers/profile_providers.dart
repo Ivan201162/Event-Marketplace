@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/customer_profile.dart';
+import '../models/security.dart';
 import '../models/specialist_profile.dart';
 import '../models/user.dart' as user_model;
-import '../models/security.dart';
 import '../services/profile_service.dart';
 
 /// Провайдер сервиса профилей
@@ -102,7 +102,8 @@ class SearchSpecialistsParams {
 /// Провайдер для управления состоянием редактирования профиля заказчика
 final customerProfileEditProvider =
     NotifierProvider<CustomerProfileEditNotifier, CustomerProfileEditState>(
-        CustomerProfileEditNotifier.new);
+  CustomerProfileEditNotifier.new,
+);
 
 /// Состояние редактирования профиля заказчика
 class CustomerProfileEditState {

@@ -650,16 +650,22 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
               const SizedBox(height: 12),
               Row(
                 children: [
-                  Icon(Icons.favorite_border,
-                      size: 16, color: Colors.grey[600]),
+                  Icon(
+                    Icons.favorite_border,
+                    size: 16,
+                    color: Colors.grey[600],
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     '${(index + 1) * 10}',
                     style: TextStyle(color: Colors.grey[600], fontSize: 12),
                   ),
                   const SizedBox(width: 16),
-                  Icon(Icons.comment_outlined,
-                      size: 16, color: Colors.grey[600]),
+                  Icon(
+                    Icons.comment_outlined,
+                    size: 16,
+                    color: Colors.grey[600],
+                  ),
                   const SizedBox(width: 4),
                   Text(
                     '${(index + 1) * 3}',

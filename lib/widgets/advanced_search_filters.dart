@@ -92,8 +92,10 @@ class _AdvancedSearchFiltersState extends ConsumerState<AdvancedSearchFilters> {
   Widget _buildCategoryFilter() => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('Категории',
-              style: TextStyle(fontWeight: FontWeight.w600)),
+          const Text(
+            'Категории',
+            style: TextStyle(fontWeight: FontWeight.w600),
+          ),
           const SizedBox(height: 8),
           Consumer(
             builder: (context, ref, child) {

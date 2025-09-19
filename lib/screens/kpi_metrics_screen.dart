@@ -710,7 +710,10 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
                 ),
                 const SizedBox(width: 8),
                 _buildInfoChip(
-                    'Теги', '${dashboard.tags.length}', Colors.green),
+                  'Теги',
+                  '${dashboard.tags.length}',
+                  Colors.green,
+                ),
               ],
             ),
 

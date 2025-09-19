@@ -251,9 +251,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
                 children: [
                   _buildStatItem('Всего', stats.totalBookings.toString()),
                   _buildStatItem(
-                      'Завершено', stats.completedBookings.toString()),
+                    'Завершено',
+                    stats.completedBookings.toString(),
+                  ),
                   _buildStatItem(
-                      'Отменено', stats.cancelledBookings.toString()),
+                    'Отменено',
+                    stats.cancelledBookings.toString(),
+                  ),
                   _buildStatItem(
                     'Успешность',
                     '${(stats.completionRate * 100).toStringAsFixed(1)}%',

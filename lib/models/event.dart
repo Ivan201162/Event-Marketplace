@@ -31,7 +31,7 @@ class Event {
 
   /// Создать событие из документа Firestore
   factory Event.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return Event(
       id: doc.id,

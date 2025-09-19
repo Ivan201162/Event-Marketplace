@@ -122,15 +122,19 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                               style: const TextStyle(fontSize: 12),
                             ),
                             const SizedBox(width: 8),
-                            const Icon(Icons.star,
-                                color: Colors.amber, size: 12),
+                            const Icon(
+                              Icons.star,
+                              color: Colors.amber,
+                              size: 12,
+                            ),
                             const SizedBox(width: 8),
                             Expanded(
                               child: LinearProgressIndicator(
                                 value: percentage / 100,
                                 backgroundColor: Colors.grey[300],
                                 valueColor: const AlwaysStoppedAnimation<Color>(
-                                    Colors.amber),
+                                  Colors.amber,
+                                ),
                               ),
                             ),
                             const SizedBox(width: 8),
@@ -311,7 +315,9 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                       .map(
                         (tag) => Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.blue.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),

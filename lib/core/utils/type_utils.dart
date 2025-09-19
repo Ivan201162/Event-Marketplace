@@ -11,20 +11,22 @@ Map<String, dynamic> safeMapFromDynamic(Map<dynamic, dynamic>? data) {
 
 /// Безопасное преобразование List<dynamic> в List<T>
 List<T> safeListFromDynamic<T>(
-    List<dynamic>? data, T Function(dynamic) converter) {
-  if (data == null) return [];
-  return data.map(converter).toList();
+  List<dynamic>? data,
+  T Function(dynamic) converter,
+) {
+  if (data == null) return <T>[];
+  return data.map(converter).toList().cast<T>();
 }
 
 /// Безопасное преобразование String из dynamic
-String safeStringFromDynamic(dynamic data, [String defaultValue = '']) {
+String safeStringFromDynamic(data, [String defaultValue = '']) {
   if (data == null) return defaultValue;
   if (data is String) return data;
   return data.toString();
 }
 
 /// Безопасное преобразование bool из dynamic
-bool safeBoolFromDynamic(dynamic data, [bool defaultValue = false]) {
+bool safeBoolFromDynamic(data, [bool defaultValue = false]) {
   if (data == null) return defaultValue;
   if (data is bool) return data;
   if (data is String) {
@@ -34,7 +36,7 @@ bool safeBoolFromDynamic(dynamic data, [bool defaultValue = false]) {
 }
 
 /// Безопасное преобразование int из dynamic
-int safeIntFromDynamic(dynamic data, [int defaultValue = 0]) {
+int safeIntFromDynamic(data, [int defaultValue = 0]) {
   if (data == null) return defaultValue;
   if (data is int) return data;
   if (data is double) return data.toInt();
@@ -45,7 +47,7 @@ int safeIntFromDynamic(dynamic data, [int defaultValue = 0]) {
 }
 
 /// Безопасное преобразование double из dynamic
-double safeDoubleFromDynamic(dynamic data, [double defaultValue = 0.0]) {
+double safeDoubleFromDynamic(data, [double defaultValue = 0.0]) {
   if (data == null) return defaultValue;
   if (data is double) return data;
   if (data is int) return data.toDouble();
@@ -56,7 +58,7 @@ double safeDoubleFromDynamic(dynamic data, [double defaultValue = 0.0]) {
 }
 
 /// Безопасное преобразование DateTime из Timestamp
-DateTime safeDateTimeFromTimestamp(dynamic data) {
+DateTime safeDateTimeFromTimestamp(data) {
   if (data == null) return DateTime.now();
   if (data is Timestamp) return data.toDate();
   if (data is DateTime) return data;
@@ -68,7 +70,10 @@ DateTime safeDateTimeFromTimestamp(dynamic data) {
 
 /// Безопасное преобразование enum из String
 T safeEnumFromString<T extends Enum>(
-    List<T> values, dynamic data, T defaultValue) {
+  List<T> values,
+  data,
+  T defaultValue,
+) {
   if (data == null) return defaultValue;
   final stringValue = data.toString();
   return values.firstWhere(

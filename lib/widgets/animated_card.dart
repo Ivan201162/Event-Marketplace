@@ -36,12 +36,14 @@ class _AnimatedCardState extends State<AnimatedCard>
       vsync: this,
     );
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: 0.95,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
   }
 
   @override
@@ -51,16 +53,14 @@ class _AnimatedCardState extends State<AnimatedCard>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: widget.onTap,
-      onTapDown: (_) => _controller.forward(),
-      onTapUp: (_) => _controller.reverse(),
-      onTapCancel: () => _controller.reverse(),
-      child: AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(
+  Widget build(BuildContext context) => GestureDetector(
+        onTap: widget.onTap,
+        onTapDown: (_) => _controller.forward(),
+        onTapUp: (_) => _controller.reverse(),
+        onTapCancel: () => _controller.reverse(),
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) => Transform.scale(
             scale: _scaleAnimation.value,
             child: Card(
               elevation: widget.elevation,
@@ -70,9 +70,7 @@ class _AnimatedCardState extends State<AnimatedCard>
                 child: widget.child,
               ),
             ),
-          );
-        },
-      ),
-    );
-  }
+          ),
+        ),
+      );
 }

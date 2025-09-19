@@ -25,7 +25,7 @@ class MediaContent {
 
   /// Создать из документа Firestore
   factory MediaContent.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return MediaContent(
       id: doc.id,
       title: data['title'] ?? '',
@@ -270,7 +270,7 @@ class ContentGallery {
 
   /// Создать из документа Firestore
   factory ContentGallery.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return ContentGallery(
       id: doc.id,
       name: data['name'] ?? '',
@@ -428,7 +428,7 @@ class MediaProcessing {
 
   /// Создать из документа Firestore
   factory MediaProcessing.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return MediaProcessing(
       id: doc.id,
       mediaId: data['mediaId'] ?? '',

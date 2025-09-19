@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:event_marketplace_app/core/i18n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/i18n/app_localizations.dart';
 import '../providers/locale_provider.dart';
 
 /// Виджет для выбора языка
@@ -183,7 +183,7 @@ class LanguageSelector extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.language),
+        title: Text(AppLocalizations.of(context).language),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -277,7 +277,7 @@ class CompactLanguageSelector extends ConsumerWidget {
           ],
         ],
       ),
-      tooltip: AppLocalizations.of(context)!.language,
+      tooltip: AppLocalizations.of(context).language,
     );
   }
 
@@ -306,7 +306,7 @@ class CompactLanguageSelector extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: Text(AppLocalizations.of(context)!.language),
+        title: Text(AppLocalizations.of(context).language),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [

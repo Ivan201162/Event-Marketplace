@@ -624,8 +624,10 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
                             ),
                           ),
                           const SizedBox(height: 8),
-                          ..._statistics!.itemsByType.entries.map((entry) =>
-                              _buildStatRow(entry.key, '${entry.value}')),
+                          ..._statistics!.itemsByType.entries.map(
+                            (entry) =>
+                                _buildStatRow(entry.key, '${entry.value}'),
+                          ),
                         ],
 
                         const SizedBox(height: 16),

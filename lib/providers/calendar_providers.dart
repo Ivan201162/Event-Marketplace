@@ -71,7 +71,8 @@ final allSchedulesProvider = StreamProvider<List<SpecialistSchedule>>((ref) {
 /// Провайдер для управления состоянием календаря
 final calendarStateProvider =
     NotifierProvider<CalendarStateNotifier, CalendarState>(
-        CalendarStateNotifier.new);
+  CalendarStateNotifier.new,
+);
 
 /// Состояние календаря
 class CalendarState {

@@ -275,15 +275,15 @@ class EventService {
 
     // Фильтр по цене
     if (filter.minPrice != null) {
-      query = query.where('price', isGreaterThanOrEqualTo: filter.minPrice!);
+      query = query.where('price', isGreaterThanOrEqualTo: filter.minPrice);
     }
     if (filter.maxPrice != null) {
-      query = query.where('price', isLessThanOrEqualTo: filter.maxPrice!);
+      query = query.where('price', isLessThanOrEqualTo: filter.maxPrice);
     }
 
     // Фильтр по организатору
     if (filter.organizerId != null) {
-      query = query.where('organizerId', isEqualTo: filter.organizerId!);
+      query = query.where('organizerId', isEqualTo: filter.organizerId);
     }
 
     return query.orderBy('date').snapshots().map(

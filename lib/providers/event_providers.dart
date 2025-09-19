@@ -9,7 +9,8 @@ final eventServiceProvider = Provider<EventService>((ref) => EventService());
 /// Провайдер для формы создания события
 final createEventProvider =
     NotifierProvider<CreateEventNotifier, CreateEventState>(
-        CreateEventNotifier.new);
+  CreateEventNotifier.new,
+);
 
 /// Состояние формы создания события
 class CreateEventState {
@@ -44,14 +45,14 @@ class CreateEventNotifier extends Notifier<CreateEventState> {
   }
 
   void clearError() {
-    state = state.copyWith(errorMessage: null);
+    state = state.copyWith();
   }
 }
 
 /// Провайдер всех событий
 final eventsProvider = FutureProvider<List<Event>>((ref) async {
   final eventService = ref.read(eventServiceProvider);
-  return await eventService.getEvents();
+  return eventService.getEvents();
 });
 
 /// Провайдер событий пользователя
@@ -65,5 +66,5 @@ final userEventsProvider =
 final eventProvider =
     FutureProvider.family<Event?, String>((ref, eventId) async {
   final eventService = ref.read(eventServiceProvider);
-  return await eventService.getEvent(eventId);
+  return eventService.getEvent(eventId);
 });

@@ -5,12 +5,14 @@ import '../services/video_optimization_service.dart';
 /// Провайдер для управления кэшем изображений
 final imageCacheProvider =
     NotifierProvider<ImageCacheNotifier, ImageCacheState>(
-        () => ImageCacheNotifier());
+  ImageCacheNotifier.new,
+);
 
 /// Провайдер для управления кэшем видео
 final videoCacheProvider =
     NotifierProvider<VideoCacheNotifier, VideoCacheState>(
-        () => VideoCacheNotifier());
+  VideoCacheNotifier.new,
+);
 
 /// Провайдер для общего размера кэша
 final totalCacheSizeProvider = FutureProvider<int>((ref) async {
@@ -307,7 +309,8 @@ class MediaOptimizationSettingsNotifier
 /// Провайдер для статистики использования медиа
 final mediaUsageStatsProvider =
     NotifierProvider<MediaUsageStatsNotifier, MediaUsageStats>(
-        (ref) => MediaUsageStatsNotifier());
+  (ref) => MediaUsageStatsNotifier(),
+);
 
 /// Статистика использования медиа
 class MediaUsageStats {
@@ -364,9 +367,7 @@ class MediaUsageStats {
 /// Нотификатор для статистики использования медиа
 class MediaUsageStatsNotifier extends Notifier<MediaUsageStats> {
   @override
-  MediaUsageStats build() {
-    return const MediaUsageStats();
-  }
+  MediaUsageStats build() => const MediaUsageStats();
 
   /// Записать загрузку изображения
   void recordImageLoaded() {

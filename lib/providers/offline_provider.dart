@@ -8,11 +8,13 @@ final connectivityProvider =
 /// Провайдер для статуса офлайн-режима
 final offlineModeProvider =
     NotifierProvider<OfflineModeNotifier, OfflineModeState>(
-        (ref) => OfflineModeNotifier());
+  (ref) => OfflineModeNotifier(),
+);
 
 /// Провайдер для информации о кэше
 final cacheInfoProvider = NotifierProvider<CacheInfoNotifier, CacheInfoState>(
-    (ref) => CacheInfoNotifier());
+  (ref) => CacheInfoNotifier(),
+);
 
 /// Провайдер для синхронизации данных
 final syncProvider =

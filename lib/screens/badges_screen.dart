@@ -130,7 +130,9 @@ class _BadgesScreenState extends ConsumerState<BadgesScreen>
 
   /// Вкладка с бейджами по категории
   Widget _buildCategoryBadgesTab(
-          String userId, models.BadgeCategory category) =>
+    String userId,
+    models.BadgeCategory category,
+  ) =>
       custom.AnimatedList(
         children: [
           // Информация о категории

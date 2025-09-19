@@ -23,21 +23,24 @@ Map<String, dynamic> _$BadgeStatsFromJson(Map<String, dynamic> json) {
 
 /// Заглушка для JSON сериализации
 Map<String, dynamic> _$BadgeLeaderboardEntryFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   // TODO: Implement proper JSON serialization for BadgeLeaderboardEntry
   return json;
 }
 
 /// Заглушка для JSON сериализации
 Map<String, dynamic> _$SpecialistSearchFiltersFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   // TODO: Implement proper JSON serialization for SpecialistSearchFilters
   return json;
 }
 
 /// Заглушка для JSON сериализации
 Map<String, dynamic> _$SpecialistSearchResultFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   // TODO: Implement proper JSON serialization for SpecialistSearchResult
   return json;
 }
@@ -50,7 +53,8 @@ Map<String, dynamic> _$SearchStateFromJson(Map<String, dynamic> json) {
 
 /// Заглушка для JSON сериализации
 Map<String, dynamic> _$SecurityPasswordStrengthFromJson(
-    Map<String, dynamic> json) {
+  Map<String, dynamic> json,
+) {
   // TODO: Implement proper JSON serialization for SecurityPasswordStrength
   return json;
 }
@@ -158,18 +162,10 @@ class MethodStubs {
 
 /// Заглушка для IEventData
 class IEventData {
-  IEventData({
-    required String summary,
-    required DateTime start,
-    required DateTime end,
-    String? description,
-    String? location,
-  });
+  IEventData();
 }
 
 /// Заглушка для ICalendar
 class ICalendar {
-  ICalendar({
-    required List<IEventData> data,
-  });
+  ICalendar();
 }

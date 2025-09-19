@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -311,9 +310,7 @@ class AuditLoggingService {
       }
 
       final snapshot = await query.get();
-      return snapshot.docs
-          .map((doc) => AuditLog.fromMap(doc.data() as Map<String, dynamic>))
-          .toList();
+      return snapshot.docs.map((doc) => AuditLog.fromMap(doc.data())).toList();
     } catch (e) {
       await _crashlytics.recordError(e, null);
       return [];
@@ -363,9 +360,7 @@ class AuditLoggingService {
       }
 
       final snapshot = await query.get();
-      return snapshot.docs
-          .map((doc) => SystemLog.fromMap(doc.data() as Map<String, dynamic>))
-          .toList();
+      return snapshot.docs.map((doc) => SystemLog.fromMap(doc.data())).toList();
     } catch (e) {
       await _crashlytics.recordError(e, null);
       return [];

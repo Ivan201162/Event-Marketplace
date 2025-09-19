@@ -9,7 +9,8 @@ final bookingServiceProvider =
 /// Провайдер для формы бронирования
 final bookingFormProvider =
     NotifierProvider<BookingFormNotifier, BookingFormState>(
-        BookingFormNotifier.new);
+  BookingFormNotifier.new,
+);
 
 /// Состояние формы бронирования
 class BookingFormState {
@@ -44,7 +45,7 @@ class BookingFormNotifier extends Notifier<BookingFormState> {
   }
 
   void clearError() {
-    state = state.copyWith(errorMessage: null);
+    state = state.copyWith();
   }
 }
 
@@ -94,7 +95,8 @@ final eventBookingStatsProvider =
 /// Провайдер для управления состоянием создания бронирования
 final createBookingProvider =
     NotifierProvider<CreateBookingNotifier, CreateBookingState>(
-        CreateBookingNotifier.new);
+  CreateBookingNotifier.new,
+);
 
 /// Состояние создания бронирования
 class CreateBookingState {

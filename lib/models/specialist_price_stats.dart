@@ -17,7 +17,7 @@ class SpecialistPriceStats {
 
   /// Создать из документа Firestore
   factory SpecialistPriceStats.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return SpecialistPriceStats(
       specialistId: data['specialistId'] ?? '',
       categoryId: data['categoryId'] ?? '',

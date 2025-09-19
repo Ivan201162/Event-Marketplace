@@ -8,19 +8,22 @@ class SpecialistService {
   final CalendarService _calendarService = CalendarService();
 
   /// Получить ленту специалиста
-  Stream<List<Map<String, dynamic>>> getSpecialistFeed(String specialistId) {
-    return _db
-        .collection('specialist_posts')
-        .where('specialistId', isEqualTo: specialistId)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => {
-                  'id': doc.id,
-                  ...doc.data(),
-                })
-            .toList());
-  }
+  Stream<List<Map<String, dynamic>>> getSpecialistFeed(String specialistId) =>
+      _db
+          .collection('specialist_posts')
+          .where('specialistId', isEqualTo: specialistId)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map(
+            (snapshot) => snapshot.docs
+                .map(
+                  (doc) => {
+                    'id': doc.id,
+                    ...doc.data(),
+                  },
+                )
+                .toList(),
+          );
 
   /// Получить специалиста по ID
   Future<Specialist?> getSpecialist(String specialistId) async {
@@ -169,7 +172,7 @@ class SpecialistService {
       query = query.limit(limit);
 
       final querySnapshot = await query.get();
-      List<Specialist> specialists =
+      var specialists =
           querySnapshot.docs.map(Specialist.fromDocument).toList();
 
       // Дополнительная фильтрация на клиенте
@@ -240,7 +243,7 @@ class SpecialistService {
     query = query.limit(limit);
 
     return query.snapshots().map((querySnapshot) {
-      List<Specialist> specialists =
+      var specialists =
           querySnapshot.docs.map(Specialist.fromDocument).toList();
 
       // Дополнительная фильтрация на клиенте

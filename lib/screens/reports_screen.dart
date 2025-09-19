@@ -323,7 +323,10 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                 _buildInfoChip('Тип', template.type.name, Colors.blue),
                 const SizedBox(width: 8),
                 _buildInfoChip(
-                    'Категория', template.category.name, Colors.green),
+                  'Категория',
+                  template.category.name,
+                  Colors.green,
+                ),
               ],
             ),
 

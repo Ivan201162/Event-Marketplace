@@ -46,7 +46,8 @@ class ReviewFilterNotifier extends Notifier<ReviewFilter> {
 /// Провайдер для фильтра отзывов
 final reviewFilterProvider =
     NotifierProvider<ReviewFilterNotifier, ReviewFilter>(
-        ReviewFilterNotifier.new);
+  ReviewFilterNotifier.new,
+);
 
 /// Провайдер для отзывов с медиа
 final reviewsWithMediaProvider =

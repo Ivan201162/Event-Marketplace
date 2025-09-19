@@ -287,7 +287,9 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
                     _getEventTypeText(event.eventType),
                   ),
                   _buildInfoRow(
-                      'Серьезность', _getSeverityText(event.severity)),
+                    'Серьезность',
+                    _getSeverityText(event.severity),
+                  ),
                   _buildInfoRow('Время', _formatDateTime(event.timestamp)),
 
                   if (event.ipAddress != null)

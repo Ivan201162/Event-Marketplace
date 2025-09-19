@@ -19,7 +19,7 @@ class BudgetSuggestion {
 
   /// Создать из документа Firestore
   factory BudgetSuggestion.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return BudgetSuggestion(
       id: doc.id,
       bookingId: data['bookingId'] ?? '',
@@ -60,7 +60,8 @@ class BudgetSuggestion {
         suggestions: (data['suggestions'] as List<dynamic>?)
                 ?.map(
                   (item) => BudgetSuggestionItem.fromMap(
-                      item as Map<String, dynamic>),
+                    item as Map<String, dynamic>,
+                  ),
                 )
                 .toList() ??
             [],

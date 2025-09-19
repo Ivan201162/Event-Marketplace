@@ -140,7 +140,7 @@ class StoryService {
           .where('specialistId', isEqualTo: specialistId)
           .get();
 
-      final int totalStories = querySnapshot.docs.length;
+      final totalStories = querySnapshot.docs.length;
       var activeStories = 0;
       var totalViews = 0;
 
@@ -164,9 +164,8 @@ class StoryService {
   }
 
   /// Отметить историю как просмотренную (алиас для markAsViewed)
-  Future<void> markStoryAsViewed(String storyId, String userId) async {
-    return markAsViewed(storyId, userId);
-  }
+  Future<void> markStoryAsViewed(String storyId, String userId) async =>
+      markAsViewed(storyId, userId);
 
   /// Лайкнуть историю
   Future<void> likeStory(String storyId, String userId) async {

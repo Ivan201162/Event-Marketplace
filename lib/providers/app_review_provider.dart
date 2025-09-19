@@ -3,11 +3,13 @@ import '../services/app_review_service.dart';
 
 /// Провайдер для управления отзывами о приложении
 final appReviewProvider = NotifierProvider<AppReviewNotifier, AppReviewState>(
-    () => AppReviewNotifier());
+  AppReviewNotifier.new,
+);
 
 /// Провайдер для статистики отзывов
 final reviewStatsProvider = FutureProvider<ReviewStats>(
-    (ref) async => AppReviewService.getReviewStats());
+  (ref) async => AppReviewService.getReviewStats(),
+);
 
 /// Провайдер для проверки доступности in-app review
 final reviewAvailabilityProvider =
@@ -15,7 +17,8 @@ final reviewAvailabilityProvider =
 
 /// Провайдер для рекомендуемого времени запроса отзыва
 final reviewTimingProvider = FutureProvider<ReviewTiming>(
-    (ref) async => AppReviewService.getRecommendedTiming());
+  (ref) async => AppReviewService.getRecommendedTiming(),
+);
 
 /// Состояние отзывов о приложении
 class AppReviewState {

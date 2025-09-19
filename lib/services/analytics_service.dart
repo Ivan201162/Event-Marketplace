@@ -204,7 +204,7 @@ class AnalyticsService {
 
       await _firestore
           .collection('userSessions')
-          .doc(_currentSessionId!)
+          .doc(_currentSessionId)
           .set(session.toMap());
     } catch (e) {
       if (kDebugMode) {
@@ -220,7 +220,7 @@ class AnalyticsService {
 
       await _firestore
           .collection('userSessions')
-          .doc(_currentSessionId!)
+          .doc(_currentSessionId)
           .update({
         'userId': _currentUserId,
         'screens': _currentScreens,

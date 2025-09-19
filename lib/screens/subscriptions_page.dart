@@ -641,7 +641,9 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
               _buildDetailRow('Период', subscription.periodDisplayName),
               _buildDetailRow('Цена', subscription.formattedPrice),
               _buildDetailRow(
-                  'Дата начала', _formatDate(subscription.startDate)),
+                'Дата начала',
+                _formatDate(subscription.startDate),
+              ),
               _buildDetailRow(
                 'Дата окончания',
                 _formatDate(subscription.endDate),

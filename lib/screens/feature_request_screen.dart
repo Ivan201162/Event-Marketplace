@@ -282,7 +282,9 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
                       backgroundColor: Colors.blue[600],
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 8),
+                        horizontal: 12,
+                        vertical: 8,
+                      ),
                     ),
                   ),
                 ],

@@ -21,7 +21,7 @@ class Backup {
 
   /// Создать из документа Firestore
   factory Backup.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return Backup(
       id: doc.id,
       name: data['name'] ?? '',
@@ -254,7 +254,7 @@ class Restore {
 
   /// Создать из документа Firestore
   factory Restore.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return Restore(
       id: doc.id,
       backupId: data['backupId'] ?? '',

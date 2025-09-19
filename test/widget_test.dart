@@ -10,9 +10,11 @@ void main() {
     final prefs = await SharedPreferences.getInstance();
 
     // Build our app and trigger a frame.
-    await tester.pumpWidget(ProviderScope(
-      child: EventMarketplaceApp(prefs: prefs),
-    ));
+    await tester.pumpWidget(
+      ProviderScope(
+        child: EventMarketplaceApp(prefs: prefs),
+      ),
+    );
 
     // Verify that the app loads
     expect(find.byType(EventMarketplaceApp), findsOneWidget);

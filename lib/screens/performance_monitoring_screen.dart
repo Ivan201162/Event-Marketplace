@@ -140,8 +140,10 @@ class _PerformanceMonitoringScreenState
                       crossAxisCount: 2,
                       childAspectRatio: 2.5,
                       children: _currentMetrics.entries
-                          .map((entry) =>
-                              _buildCurrentMetricCard(entry.key, entry.value))
+                          .map(
+                            (entry) =>
+                                _buildCurrentMetricCard(entry.key, entry.value),
+                          )
                           .toList(),
                     ),
                 ],

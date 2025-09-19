@@ -21,7 +21,7 @@ class PaymentExtended {
   });
 
   factory PaymentExtended.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return PaymentExtended(
       id: doc.id,
@@ -257,7 +257,8 @@ class AdvancePaymentSettings {
   factory AdvancePaymentSettings.fromMap(Map<String, dynamic> map) =>
       AdvancePaymentSettings(
         availablePercentages: List<double>.from(
-            map['availablePercentages'] ?? [10.0, 30.0, 50.0]),
+          map['availablePercentages'] ?? [10.0, 30.0, 50.0],
+        ),
         minAdvanceAmount: (map['minAdvanceAmount'] ?? 1000.0).toDouble(),
         maxAdvanceAmount: (map['maxAdvanceAmount'] ?? 100000.0).toDouble(),
         allowCustomAmount: map['allowCustomAmount'] ?? true,

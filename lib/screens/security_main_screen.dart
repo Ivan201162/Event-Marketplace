@@ -25,7 +25,9 @@ class SecurityMainScreen extends ConsumerWidget {
                   title: 'Настройки безопасности',
                   subtitle: 'Управление аутентификацией и шифрованием',
                   onTap: () => _navigateToScreen(
-                      context, const SecuritySettingsScreen()),
+                    context,
+                    const SecuritySettingsScreen(),
+                  ),
                 ),
                 _buildSettingsTile(
                   icon: Icons.security,
@@ -294,7 +296,9 @@ class SecurityMainScreen extends ConsumerWidget {
                     ),
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 4),
+                        horizontal: 8,
+                        vertical: 4,
+                      ),
                       decoration: BoxDecoration(
                         color: Colors.green,
                         borderRadius: BorderRadius.circular(12),

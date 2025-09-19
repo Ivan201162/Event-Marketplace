@@ -504,7 +504,9 @@ class _ABTestManagementScreenState
                           Text(
                             '${variantStats.participants} участников, ${variantStats.conversions} конверсий',
                             style: const TextStyle(
-                                fontSize: 12, color: Colors.grey),
+                              fontSize: 12,
+                              color: Colors.grey,
+                            ),
                           ),
                         ],
                       ),

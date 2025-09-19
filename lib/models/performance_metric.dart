@@ -18,7 +18,7 @@ class PerformanceMetric {
 
   /// Создать из документа Firestore
   factory PerformanceMetric.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return PerformanceMetric(
       id: doc.id,
       name: data['name'] ?? '',
@@ -361,7 +361,7 @@ class PerformanceAlert {
 
   /// Создать из документа Firestore
   factory PerformanceAlert.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return PerformanceAlert(
       id: doc.id,
       metricName: data['metricName'] ?? '',

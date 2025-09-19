@@ -24,7 +24,7 @@ class AppVersion {
 
   /// Создать из документа Firestore
   factory AppVersion.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return AppVersion(
       id: doc.id,
       version: data['version'] ?? '',
@@ -248,7 +248,7 @@ class AppUpdate {
 
   /// Создать из документа Firestore
   factory AppUpdate.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return AppUpdate(
       id: doc.id,
       currentVersion: data['currentVersion'] ?? '',
@@ -419,7 +419,7 @@ class VersionStatistics {
 
   /// Создать из документа Firestore
   factory VersionStatistics.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return VersionStatistics(
       version: data['version'] ?? '',
       platform: data['platform'] ?? '',

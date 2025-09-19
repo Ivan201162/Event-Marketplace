@@ -40,7 +40,7 @@ class Contract {
 
   /// Создать из документа Firestore
   factory Contract.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return Contract(
       id: doc.id,
       contractNumber: data['contractNumber'] ?? '',

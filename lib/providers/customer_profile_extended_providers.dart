@@ -5,7 +5,8 @@ import '../services/customer_profile_extended_service.dart';
 /// Провайдер сервиса расширенного профиля
 final customerProfileExtendedServiceProvider =
     Provider<CustomerProfileExtendedService>(
-        (ref) => CustomerProfileExtendedService());
+  (ref) => CustomerProfileExtendedService(),
+);
 
 /// Провайдер расширенного профиля заказчика
 final customerProfileExtendedProvider =
@@ -141,7 +142,8 @@ class PhotoUploadStateNotifier extends Notifier<Map<String, bool>> {
 /// Провайдер для управления состоянием загрузки фото
 final photoUploadStateProvider =
     NotifierProvider<PhotoUploadStateNotifier, Map<String, bool>>(
-        PhotoUploadStateNotifier.new);
+  PhotoUploadStateNotifier.new,
+);
 
 /// Нотификатор для управления состоянием создания заметок
 class NoteCreationStateNotifier extends Notifier<Map<String, bool>> {
@@ -160,7 +162,8 @@ class NoteCreationStateNotifier extends Notifier<Map<String, bool>> {
 /// Провайдер для управления состоянием создания заметок
 final noteCreationStateProvider =
     NotifierProvider<NoteCreationStateNotifier, Map<String, bool>>(
-        NoteCreationStateNotifier.new);
+  NoteCreationStateNotifier.new,
+);
 
 /// Нотификатор для управления состоянием поиска
 class SearchStateNotifier extends Notifier<Map<String, String>> {
@@ -179,7 +182,8 @@ class SearchStateNotifier extends Notifier<Map<String, String>> {
 /// Провайдер для управления состоянием поиска
 final searchStateProvider =
     NotifierProvider<SearchStateNotifier, Map<String, String>>(
-        SearchStateNotifier.new);
+  SearchStateNotifier.new,
+);
 
 /// Нотификатор для управления выбранными тегами
 class SelectedTagsNotifier extends Notifier<Set<String>> {
@@ -202,7 +206,8 @@ class SelectedTagsNotifier extends Notifier<Set<String>> {
 /// Провайдер для управления выбранными тегами
 final selectedTagsProvider =
     NotifierProvider<SelectedTagsNotifier, Set<String>>(
-        SelectedTagsNotifier.new);
+  SelectedTagsNotifier.new,
+);
 
 /// Нотификатор для управления фильтрами заметок
 class NoteFiltersNotifier extends Notifier<NoteFilters> {
@@ -239,7 +244,8 @@ class PhotoFiltersNotifier extends Notifier<PhotoFilters> {
 /// Провайдер для управления фильтрами фото
 final photoFiltersProvider =
     NotifierProvider<PhotoFiltersNotifier, PhotoFilters>(
-        PhotoFiltersNotifier.new);
+  PhotoFiltersNotifier.new,
+);
 
 /// Фильтры для заметок
 class NoteFilters {

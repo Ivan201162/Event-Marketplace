@@ -72,7 +72,7 @@ class _SpecialistProfileEditScreenState
   /// Загрузка изображений для портфолио
   Future<void> _pickImages() async {
     final picker = ImagePicker();
-    final List<XFile> images = await picker.pickMultiImage();
+    final images = await picker.pickMultiImage();
 
     if (images.isNotEmpty) {
       setState(() {
@@ -803,7 +803,6 @@ class _SpecialistProfileEditScreenState
         firstDay: DateTime.utc(2020),
         lastDay: DateTime.utc(2030, 12, 31),
         focusedDay: DateTime.now(),
-        calendarFormat: CalendarFormat.month,
         startingDayOfWeek: StartingDayOfWeek.monday,
         calendarStyle: CalendarStyle(
           outsideDaysVisible: false,
@@ -815,15 +814,12 @@ class _SpecialistProfileEditScreenState
             color: Colors.blue,
             shape: BoxShape.circle,
           ),
-          defaultDecoration: const BoxDecoration(
-            shape: BoxShape.circle,
-          ),
           weekendDecoration: BoxDecoration(
             color: Colors.grey.withOpacity(0.1),
             shape: BoxShape.circle,
           ),
         ),
-        headerStyle: HeaderStyle(
+        headerStyle: const HeaderStyle(
           formatButtonVisible: false,
           titleCentered: true,
         ),

@@ -28,7 +28,7 @@ class EventIdea {
 
   /// Создание из документа Firestore
   factory EventIdea.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return EventIdea(
       id: doc.id,
       title: data['title'] ?? '',

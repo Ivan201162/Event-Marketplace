@@ -18,7 +18,7 @@ class MonitoringMetric {
 
   /// Создать из документа Firestore
   factory MonitoringMetric.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return MonitoringMetric(
       id: doc.id,
       name: data['name'] ?? '',
@@ -186,7 +186,7 @@ class MonitoringAlert {
 
   /// Создать из документа Firestore
   factory MonitoringAlert.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return MonitoringAlert(
       id: doc.id,
       name: data['name'] ?? '',
@@ -408,7 +408,7 @@ class MonitoringDashboard {
 
   /// Создать из документа Firestore
   factory MonitoringDashboard.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return MonitoringDashboard(
       id: doc.id,
       name: data['name'] ?? '',

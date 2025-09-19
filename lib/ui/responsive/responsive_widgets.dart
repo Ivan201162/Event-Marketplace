@@ -81,25 +81,25 @@ class ResponsiveCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final responsivePadding = padding ??
         context.responsive(
-          const EdgeInsets.all(16.0),
-          const EdgeInsets.all(20.0),
-          const EdgeInsets.all(24.0),
+          const EdgeInsets.all(16),
+          const EdgeInsets.all(20),
+          const EdgeInsets.all(24),
         );
 
     final responsiveMargin = margin ??
         context.responsive(
-          const EdgeInsets.all(8.0),
-          const EdgeInsets.all(12.0),
-          const EdgeInsets.all(16.0),
+          const EdgeInsets.all(8),
+          const EdgeInsets.all(12),
+          const EdgeInsets.all(16),
         );
 
-    final responsiveElevation = elevation ?? context.responsive(2.0, 3.0, 4.0);
+    final responsiveElevation = elevation ?? context.responsive(2, 3, 4);
 
     final responsiveBorderRadius = borderRadius ??
         context.responsive(
-          BorderRadius.circular(8.0),
-          BorderRadius.circular(12.0),
-          BorderRadius.circular(16.0),
+          BorderRadius.circular(8),
+          BorderRadius.circular(12),
+          BorderRadius.circular(16),
         );
 
     return Card(
@@ -144,16 +144,16 @@ class ResponsiveContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     final responsivePadding = padding ??
         context.responsive(
-          const EdgeInsets.all(16.0),
-          const EdgeInsets.all(20.0),
-          const EdgeInsets.all(24.0),
+          const EdgeInsets.all(16),
+          const EdgeInsets.all(20),
+          const EdgeInsets.all(24),
         );
 
     final responsiveMargin = margin ??
         context.responsive(
-          const EdgeInsets.all(8.0),
-          const EdgeInsets.all(12.0),
-          const EdgeInsets.all(16.0),
+          const EdgeInsets.all(8),
+          const EdgeInsets.all(12),
+          const EdgeInsets.all(16),
         );
 
     return Container(
@@ -190,11 +190,11 @@ class ResponsiveGrid extends StatelessWidget {
     final responsiveCrossAxisCount =
         crossAxisCount ?? context.responsive(2, 3, 4);
     final responsiveCrossAxisSpacing =
-        crossAxisSpacing ?? context.responsive(8.0, 12.0, 16.0);
+        crossAxisSpacing ?? context.responsive(8, 12, 16);
     final responsiveMainAxisSpacing =
-        mainAxisSpacing ?? context.responsive(8.0, 12.0, 16.0);
+        mainAxisSpacing ?? context.responsive(8, 12, 16);
     final responsiveChildAspectRatio =
-        childAspectRatio ?? context.responsive(1.0, 1.2, 1.5);
+        childAspectRatio ?? context.responsive(1, 1.2, 1.5);
 
     return GridView.builder(
       shrinkWrap: true,

@@ -1,9 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/security_audit.dart';
 import '../services/security_service.dart';
-import '../widgets/responsive_layout.dart';
 import '../ui/ui.dart' hide ResponsiveCard;
 import '../widgets/responsive_layout.dart';
 
@@ -191,7 +191,8 @@ class _SecurityManagementScreenState
                               Icon(
                                 _getRiskIcon(_statistics!.overallRiskLevel),
                                 color: _getRiskColor(
-                                    _statistics!.overallRiskLevel),
+                                  _statistics!.overallRiskLevel,
+                                ),
                                 size: 32,
                               ),
                               const SizedBox(width: 16),

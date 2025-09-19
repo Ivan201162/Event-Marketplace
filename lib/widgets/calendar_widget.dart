@@ -81,7 +81,6 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                   shape: BoxShape.circle,
                 ),
                 markersMaxCount: 3,
-                canMarkersOverflow: true,
                 // Стили для занятых дат
                 disabledDecoration: BoxDecoration(
                   color: Colors.grey.withOpacity(0.3),
@@ -92,7 +91,6 @@ class _CalendarWidgetState extends ConsumerState<CalendarWidget> {
                 ),
               ),
               headerStyle: HeaderStyle(
-                formatButtonVisible: true,
                 titleCentered: true,
                 formatButtonShowsNext: false,
                 formatButtonDecoration: BoxDecoration(

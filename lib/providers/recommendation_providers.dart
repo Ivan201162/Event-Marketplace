@@ -2,7 +2,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/specialist.dart';
 import '../models/specialist_recommendation.dart';
 import '../services/recommendation_engine.dart';
-import 'auth_providers.dart';
 
 /// Провайдер движка рекомендаций
 final recommendationEngineProvider =

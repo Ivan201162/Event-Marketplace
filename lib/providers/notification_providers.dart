@@ -29,13 +29,14 @@ final unreadNotificationsCountProvider = StreamProvider<int>(
 /// Провайдер для FCM токена
 final fcmTokenProvider = FutureProvider<String?>((ref) async {
   final service = ref.read(notificationServiceProvider);
-  return await service.getFCMToken();
+  return service.getFCMToken();
 });
 
 /// Провайдер для управления настройками уведомлений
 final notificationSettingsProvider =
     NotifierProvider<NotificationSettingsNotifier, NotificationSettings>(
-        NotificationSettingsNotifier.new);
+  NotificationSettingsNotifier.new,
+);
 
 /// Настройки уведомлений
 class NotificationSettings {
@@ -152,11 +153,13 @@ class NotificationSettingsNotifier extends Notifier<NotificationSettings> {
 /// Провайдер для состояния уведомлений
 final notificationStateProvider =
     NotifierProvider<NotificationStateNotifier, NotificationState>(
-        NotificationStateNotifier.new);
+  NotificationStateNotifier.new,
+);
 
 /// Провайдер для отправки уведомлений
 final sendNotificationProvider = Provider<SendNotificationNotifier>(
-    (ref) => SendNotificationNotifier(ref.read(notificationServiceProvider)));
+  (ref) => SendNotificationNotifier(ref.read(notificationServiceProvider)),
+);
 
 /// Нотификатор для отправки уведомлений
 class SendNotificationNotifier {

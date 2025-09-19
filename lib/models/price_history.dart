@@ -16,7 +16,7 @@ class PriceHistory {
 
   /// Создать из документа Firestore
   factory PriceHistory.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return PriceHistory(
       id: doc.id,
       bookingId: data['bookingId'] ?? '',

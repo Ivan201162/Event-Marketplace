@@ -24,7 +24,7 @@ class SupportTicket {
   });
 
   factory SupportTicket.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return SupportTicket(
       id: doc.id,
@@ -407,7 +407,7 @@ class FAQItem {
   });
 
   factory FAQItem.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return FAQItem(
       id: doc.id,

@@ -149,7 +149,8 @@ class RecordingStatusNotifier extends Notifier<bool> {
 
 /// Провайдер для статуса записи
 final recordingStatusProvider = NotifierProvider<RecordingStatusNotifier, bool>(
-    RecordingStatusNotifier.new);
+  RecordingStatusNotifier.new,
+);
 
 /// Нотификатор для статуса воспроизведения
 class PlayingStatusNotifier extends Notifier<String?> {
@@ -178,7 +179,8 @@ class CurrentPlayingMessageNotifier extends Notifier<ChatMessageExtended?> {
 /// Провайдер для текущего воспроизводимого сообщения
 final currentPlayingMessageProvider =
     NotifierProvider<CurrentPlayingMessageNotifier, ChatMessageExtended?>(
-        CurrentPlayingMessageNotifier.new);
+  CurrentPlayingMessageNotifier.new,
+);
 
 /// Нотификатор для статуса "печатает"
 class TypingStatusNotifier extends Notifier<bool> {
@@ -200,14 +202,17 @@ final activeUsersProvider = StreamProvider.family<List<String>, String>(
       .where('chatId', isEqualTo: chatId)
       .where('isActive', isEqualTo: true)
       .snapshots()
-      .map((snapshot) =>
-          snapshot.docs.map((doc) => doc.data()['userId'] as String).toList()),
+      .map(
+        (snapshot) =>
+            snapshot.docs.map((doc) => doc.data()['userId'] as String).toList(),
+      ),
 );
 
 /// Провайдер для настроек чата
 final chatSettingsProvider =
     NotifierProvider<ChatSettingsNotifier, ChatSettings>(
-        ChatSettingsNotifier.new);
+  ChatSettingsNotifier.new,
+);
 
 /// Настройки чата
 class ChatSettings {

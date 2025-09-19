@@ -82,7 +82,7 @@ class SpecialistProfile {
 
   /// Создать профиль из документа Firestore
   factory SpecialistProfile.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return SpecialistProfile(
       userId: doc.id,
       photoURL: data['photoURL'],

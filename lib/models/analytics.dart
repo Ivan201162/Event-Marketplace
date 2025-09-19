@@ -15,7 +15,7 @@ class Analytics {
   });
 
   factory Analytics.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return Analytics(
       id: doc.id,
@@ -336,7 +336,7 @@ class BudgetGoal {
   });
 
   factory BudgetGoal.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return BudgetGoal(
       id: doc.id,
@@ -423,10 +423,12 @@ class AnalyticsReport {
         generatedAt:
             (map['generatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
         stats: IncomeExpenseStatsSerializer.fromMap(
-            map['stats'] as Map<String, dynamic>? ?? {}),
+          map['stats'] as Map<String, dynamic>? ?? {},
+        ),
         chartData: (map['chartData'] as List<dynamic>?)
-                ?.map((e) =>
-                    ChartDataSerializer.fromMap(e as Map<String, dynamic>))
+                ?.map(
+                  (e) => ChartDataSerializer.fromMap(e as Map<String, dynamic>),
+                )
                 .toList() ??
             [],
         notes: map['notes'] as String?,

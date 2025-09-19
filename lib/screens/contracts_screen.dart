@@ -294,8 +294,11 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen>
                 const SizedBox(height: 8),
                 Row(
                   children: [
-                    Icon(Icons.check_circle,
-                        size: 16, color: Colors.green[600]),
+                    Icon(
+                      Icons.check_circle,
+                      size: 16,
+                      color: Colors.green[600],
+                    ),
                     const SizedBox(width: 4),
                     Text(
                       'Подписан ${_formatDate(contract.signedAt!)}',

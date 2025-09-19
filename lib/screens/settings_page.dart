@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:event_marketplace_app/core/i18n/app_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../core/i18n/app_localizations.dart';
 import '../models/user.dart';
 import '../providers/auth_providers.dart';
 import '../providers/locale_provider.dart';
@@ -315,8 +315,10 @@ class SettingsPage extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
               ListTile(
-                leading: const Icon(Icons.admin_panel_settings,
-                    color: Colors.orange),
+                leading: const Icon(
+                  Icons.admin_panel_settings,
+                  color: Colors.orange,
+                ),
                 title: const Text('Админ-панель'),
                 subtitle: const Text('Управление событиями и пользователями'),
                 trailing: const Icon(Icons.arrow_forward_ios),

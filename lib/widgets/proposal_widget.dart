@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/specialist.dart';
 import '../models/proposal.dart';
+import '../models/specialist.dart';
 import '../services/proposal_service.dart';
 import 'responsive_layout.dart';
 
@@ -194,7 +194,9 @@ class ProposalWidget extends ConsumerWidget {
       );
 
   Widget _buildSpecialistCard(
-          BuildContext context, ProposalSpecialist specialist) =>
+    BuildContext context,
+    ProposalSpecialist specialist,
+  ) =>
       Container(
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(12),
@@ -387,8 +389,10 @@ class _CreateProposalWidgetState extends ConsumerState<CreateProposalWidget> {
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(height: 8),
-              ..._selectedSpecialists.map((specialist) =>
-                  _buildSelectedSpecialistCard(context, specialist)),
+              ..._selectedSpecialists.map(
+                (specialist) =>
+                    _buildSelectedSpecialistCard(context, specialist),
+              ),
             ],
 
             // Сообщение
@@ -418,7 +422,8 @@ class _CreateProposalWidgetState extends ConsumerState<CreateProposalWidget> {
                           )
                         : const Icon(Icons.send),
                     label: Text(
-                        _isLoading ? 'Создание...' : 'Создать предложение'),
+                      _isLoading ? 'Создание...' : 'Создать предложение',
+                    ),
                   ),
                 ),
               ],
@@ -428,7 +433,9 @@ class _CreateProposalWidgetState extends ConsumerState<CreateProposalWidget> {
       );
 
   Widget _buildSelectedSpecialistCard(
-          BuildContext context, ProposalSpecialist specialist) =>
+    BuildContext context,
+    ProposalSpecialist specialist,
+  ) =>
       Container(
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(12),

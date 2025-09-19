@@ -17,7 +17,7 @@ class NotificationTemplate {
 
   /// Создать из документа Firestore
   factory NotificationTemplate.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return NotificationTemplate(
       id: doc.id,
       name: data['name'] ?? '',
@@ -202,7 +202,7 @@ class SentNotification {
 
   /// Создать из документа Firestore
   factory SentNotification.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return SentNotification(
       id: doc.id,
       templateId: data['templateId'] ?? '',

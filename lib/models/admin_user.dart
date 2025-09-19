@@ -36,7 +36,7 @@ class AdminUser {
 
   /// Создать из документа Firestore
   factory AdminUser.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return AdminUser(
       id: doc.id,
       email: data['email'] as String? ?? '',
@@ -188,7 +188,7 @@ class ManagedUser {
 
   /// Создать из документа Firestore
   factory ManagedUser.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return ManagedUser(
       id: doc.id,
       email: data['email'] as String? ?? '',
@@ -379,7 +379,7 @@ class UserReport {
 
   /// Создать из документа Firestore
   factory UserReport.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return UserReport(
       id: doc.id,
       reporterId: data['reporterId'] as String? ?? '',

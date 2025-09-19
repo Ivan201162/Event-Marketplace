@@ -21,7 +21,7 @@ class ManagedUser {
 
   /// Создать из документа Firestore
   factory ManagedUser.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return ManagedUser(
       id: doc.id,
       email: data['email'] ?? '',
@@ -226,7 +226,7 @@ class UserRoleDefinition {
 
   /// Создать из документа Firestore
   factory UserRoleDefinition.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return UserRoleDefinition(
       id: doc.id,
       name: data['name'] ?? '',
@@ -341,7 +341,7 @@ class Permission {
 
   /// Создать из документа Firestore
   factory Permission.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return Permission(
       id: doc.id,
       name: data['name'] ?? '',
@@ -452,7 +452,7 @@ class UserAction {
 
   /// Создать из документа Firestore
   factory UserAction.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return UserAction(
       id: doc.id,
       userId: data['userId'] ?? '',

@@ -4,9 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../models/customer_profile_extended.dart';
 import '../providers/customer_profile_extended_providers.dart';
-import '../services/customer_profile_extended_service.dart';
 
 /// Виджет загрузки фото
 class PhotoUploadWidget extends ConsumerStatefulWidget {

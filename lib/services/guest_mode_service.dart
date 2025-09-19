@@ -249,7 +249,7 @@ class GuestAccess {
 
   /// Создать из документа Firestore
   factory GuestAccess.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return GuestAccess(
       id: doc.id,
       eventId: data['eventId'] ?? '',

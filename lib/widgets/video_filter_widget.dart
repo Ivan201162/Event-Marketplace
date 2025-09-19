@@ -147,7 +147,9 @@ class _VideoFilterWidgetState extends State<VideoFilterWidget> {
                       const Text(
                         'Платформы',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       _buildPlatformFilters(),
@@ -158,7 +160,9 @@ class _VideoFilterWidgetState extends State<VideoFilterWidget> {
                       const Text(
                         'Теги',
                         style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.bold),
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                       const SizedBox(height: 8),
                       _buildTagFilters(),

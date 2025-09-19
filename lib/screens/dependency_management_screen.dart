@@ -67,7 +67,10 @@ class _DependencyManagementScreenState
           children: [
             Expanded(
               child: _buildTabButton(
-                  'dependencies', 'Зависимости', Icons.inventory),
+                'dependencies',
+                'Зависимости',
+                Icons.inventory,
+              ),
             ),
             Expanded(
               child:

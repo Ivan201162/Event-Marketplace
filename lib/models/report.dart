@@ -20,7 +20,7 @@ class Report {
 
   /// Создать из документа Firestore
   factory Report.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return Report(
       id: doc.id,
       name: data['name'] ?? '',
@@ -236,7 +236,7 @@ class ReportData {
 
   /// Создать из документа Firestore
   factory ReportData.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return ReportData(
       reportId: doc.id,
       rows: List<Map<String, dynamic>>.from(data['rows'] ?? []),
@@ -354,7 +354,7 @@ class ReportTemplate {
 
   /// Создать из документа Firestore
   factory ReportTemplate.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return ReportTemplate(
       id: doc.id,
       name: data['name'] ?? '',

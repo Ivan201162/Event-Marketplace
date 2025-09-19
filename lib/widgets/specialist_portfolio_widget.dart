@@ -53,8 +53,11 @@ class SpecialistPortfolioWidget extends StatelessWidget {
         ),
         child: Column(
           children: [
-            Icon(Icons.photo_library_outlined,
-                size: 64, color: Colors.grey[400]),
+            Icon(
+              Icons.photo_library_outlined,
+              size: 64,
+              color: Colors.grey[400],
+            ),
             const SizedBox(height: 16),
             Text(
               'Портфолио пока пусто',

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/recommendation.dart';
+import '../models/recommendation_interaction.dart';
 import '../models/specialist.dart';
 import '../models/specialist_recommendation.dart';
-import '../models/recommendation_interaction.dart';
-import '../providers/recommendation_providers.dart';
 import '../providers/recommendation_interaction_provider.dart';
+import '../providers/recommendation_providers.dart';
 import '../providers/subscription_providers.dart';
-import 'animated_card.dart';
 import 'animated_button.dart';
+import 'animated_card.dart';
 
 /// Виджет для отображения рекомендации специалиста
 class SpecialistRecommendationWidget extends ConsumerWidget {
@@ -348,7 +349,7 @@ class RecommendationCollectionWidget extends ConsumerWidget {
     final recommendationsAsync = ref.watch(userRecommendationsProvider(userId));
 
     return recommendationsAsync.when(
-      data: (List<SpecialistRecommendation> recommendations) {
+      data: (recommendations) {
         var filteredRecommendations = recommendations;
 
         if (type != null) {
@@ -376,33 +377,30 @@ class RecommendationCollectionWidget extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
             ],
-            ...filteredRecommendations
-                .map(
-                  (recommendation) => Padding(
-                    padding: const EdgeInsets.only(bottom: 16),
-                    child: SpecialistRecommendationWidget(
-                      recommendation: recommendation,
-                      onTap: () => _showSpecialistProfile(
-                        context,
-                        recommendation.specialist!,
-                      ),
-                      onDismiss: () => _dismissRecommendation(
-                        context,
-                        ref,
-                        recommendation,
-                      ),
-                      onSave: () =>
-                          _saveRecommendation(context, ref, recommendation),
-                    ),
+            ...filteredRecommendations.map(
+              (recommendation) => Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: SpecialistRecommendationWidget(
+                  recommendation: recommendation,
+                  onTap: () => _showSpecialistProfile(
+                    context,
+                    recommendation.specialist!,
                   ),
-                )
-                .toList(),
+                  onDismiss: () => _dismissRecommendation(
+                    context,
+                    ref,
+                    recommendation,
+                  ),
+                  onSave: () =>
+                      _saveRecommendation(context, ref, recommendation),
+                ),
+              ),
+            ),
           ],
         );
       },
       loading: () => _buildLoadingState(context),
-      error: (Object error, StackTrace stack) =>
-          _buildErrorState(context, error),
+      error: (error, stack) => _buildErrorState(context, error),
     );
   }
 
@@ -529,7 +527,7 @@ class SimilarSpecialistsWidget extends ConsumerWidget {
         ref.watch(similarSpecialistsRecommendationsProvider(specialistId));
 
     return similarAsync.when(
-      data: (List<SpecialistRecommendation> similar) {
+      data: (similar) {
         if (similar.isEmpty) {
           return const SizedBox.shrink();
         }
@@ -573,7 +571,7 @@ class SimilarSpecialistsWidget extends ConsumerWidget {
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
-      error: (Object error, StackTrace stack) => const SizedBox.shrink(),
+      error: (error, stack) => const SizedBox.shrink(),
     );
   }
 

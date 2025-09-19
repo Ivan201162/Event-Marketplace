@@ -187,7 +187,7 @@ class ProfileService {
       final querySnapshot =
           await queryRef.orderBy('rating', descending: true).limit(50).get();
 
-      List<SpecialistProfile> specialists =
+      var specialists =
           querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
 
       // Фильтр по текстовому запросу (если указан)

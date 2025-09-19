@@ -26,7 +26,7 @@ class CustomerProfileExtended {
 
   /// Создаёт расширенный профиль из документа Firestore
   factory CustomerProfileExtended.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return CustomerProfileExtended(
       id: doc.id,
@@ -300,7 +300,8 @@ class CustomerPreferences {
             List<String>.from(map['preferredLocations'] as List? ?? []),
         preferredTimeStart: map['preferredTimeStart'] != null
             ? TimeOfDay.fromMap(
-                map['preferredTimeStart'] as Map<String, dynamic>)
+                map['preferredTimeStart'] as Map<String, dynamic>,
+              )
             : null,
         preferredTimeEnd: map['preferredTimeEnd'] != null
             ? TimeOfDay.fromMap(map['preferredTimeEnd'] as Map<String, dynamic>)

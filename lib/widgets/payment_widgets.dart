@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/payment.dart';
-import '../providers/payment_providers.dart';
 
 /// Виджет для отображения платежа
 class PaymentCard extends ConsumerWidget {

@@ -103,7 +103,8 @@ class ChatsScreen extends ConsumerWidget {
                     context,
                     MaterialPageRoute(
                       builder: (context) => ChatDetailScreen(
-                          userName: 'Пользователь ${index + 1}'),
+                        userName: 'Пользователь ${index + 1}',
+                      ),
                     ),
                   );
                 },

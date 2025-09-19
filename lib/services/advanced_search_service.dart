@@ -105,7 +105,7 @@ class AdvancedSearchService {
       final results = <SpecialistSearchResult>[];
 
       for (final doc in snapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data();
         final specialist = Specialist.fromMap(data);
 
         // Фильтр по текстовому поиску

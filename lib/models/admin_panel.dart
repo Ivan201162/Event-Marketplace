@@ -14,7 +14,7 @@ class AdminPanel {
   });
 
   factory AdminPanel.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return AdminPanel(
       id: doc.id,
@@ -211,7 +211,7 @@ class AdminAction {
   });
 
   factory AdminAction.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return AdminAction(
       id: doc.id,
@@ -291,7 +291,7 @@ class AdminNotification {
   });
 
   factory AdminNotification.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
 
     return AdminNotification(
       id: doc.id,
@@ -396,7 +396,8 @@ class AdminSettings {
         paymentSettings:
             Map<String, dynamic>.from(map['paymentSettings'] as Map? ?? {}),
         notificationSettings: Map<String, dynamic>.from(
-            map['notificationSettings'] as Map? ?? {}),
+          map['notificationSettings'] as Map? ?? {},
+        ),
         lastUpdated:
             (map['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
       );

@@ -137,7 +137,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                     // Роль пользователя
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 12, vertical: 6),
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
                       decoration: BoxDecoration(
                         color: _getRoleColor(appUser.role).withOpacity(0.1),
                         borderRadius: BorderRadius.circular(20),

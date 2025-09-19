@@ -1,6 +1,4 @@
 import 'package:event_marketplace_app/main.dart';
-import 'package:event_marketplace_app/models/booking.dart';
-import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -11,7 +9,7 @@ void main() {
         (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -81,7 +79,7 @@ void main() {
     testWidgets('should handle booking confirmation flow', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -114,7 +112,7 @@ void main() {
     testWidgets('should handle booking rejection flow', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -147,7 +145,7 @@ void main() {
     testWidgets('should handle booking cancellation flow', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -180,7 +178,7 @@ void main() {
     testWidgets('should handle payment flow', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -221,7 +219,7 @@ void main() {
     testWidgets('should handle review submission flow', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -257,7 +255,7 @@ void main() {
     testWidgets('should handle chat flow', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -287,7 +285,7 @@ void main() {
     testWidgets('should handle notification flow', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -312,7 +310,7 @@ void main() {
     testWidgets('should handle analytics flow', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );
@@ -333,7 +331,7 @@ void main() {
     testWidgets('should handle profile flow', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: EventMarketplaceApp(),
         ),
       );

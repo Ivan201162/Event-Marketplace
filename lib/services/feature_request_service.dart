@@ -110,7 +110,7 @@ class FeatureRequestService {
               .map(
                 (doc) => FeatureRequest.fromMap({
                   'id': doc.id,
-                  ...doc.data() as Map<String, dynamic>,
+                  ...doc.data(),
                 }),
               )
               .toList(),
@@ -372,7 +372,7 @@ class FeatureRequestService {
           .map(
             (doc) => FeatureRequest.fromMap({
               'id': doc.id,
-              ...doc.data() as Map<String, dynamic>,
+              ...doc.data()! as Map<String, dynamic>,
             }),
           )
           .toList();

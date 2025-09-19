@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../models/notification.dart';
+import '../models/specialist_recommendation.dart';
 import '../models/subscription.dart';
 import '../models/subscription_notification.dart';
-import '../models/specialist_recommendation.dart';
-import '../models/specialist.dart';
-import '../models/notification.dart';
 
 /// Сервис для работы с подписками
 class SubscriptionService {
@@ -187,34 +187,38 @@ class SubscriptionService {
   }
 
   /// Получить уведомления пользователя
-  Stream<List<SubscriptionNotification>> getUserNotifications(String userId) {
-    return _firestore
-        .collection('subscription_notifications')
-        .where('userId', isEqualTo: userId)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => SubscriptionNotification(
-                  id: doc.id,
-                  userId: doc.data()['userId'] ?? '',
-                  specialistId: doc.data()['specialistId'] ?? '',
-                  type: NotificationType.values.firstWhere(
-                    (e) => e.toString().split('.').last == doc.data()['type'],
-                    orElse: () => NotificationType.system,
+  Stream<List<SubscriptionNotification>> getUserNotifications(String userId) =>
+      _firestore
+          .collection('subscription_notifications')
+          .where('userId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map(
+            (snapshot) => snapshot.docs
+                .map(
+                  (doc) => SubscriptionNotification(
+                    id: doc.id,
+                    userId: doc.data()['userId'] ?? '',
+                    specialistId: doc.data()['specialistId'] ?? '',
+                    type: NotificationType.values.firstWhere(
+                      (e) => e.toString().split('.').last == doc.data()['type'],
+                      orElse: () => NotificationType.system,
+                    ),
+                    title: doc.data()['title'] ?? '',
+                    body: doc.data()['body'] ?? '',
+                    data: Map<String, dynamic>.from(doc.data()['data'] ?? {}),
+                    createdAt: (doc.data()['createdAt'] as Timestamp).toDate(),
+                    isRead: doc.data()['isRead'] ?? false,
+                    specialistPhotoUrl: doc.data()['specialistPhotoUrl'],
                   ),
-                  title: doc.data()['title'] ?? '',
-                  body: doc.data()['body'] ?? '',
-                  data: Map<String, dynamic>.from(doc.data()['data'] ?? {}),
-                  createdAt: (doc.data()['createdAt'] as Timestamp).toDate(),
-                  isRead: doc.data()['isRead'] ?? false,
-                  specialistPhotoUrl: doc.data()['specialistPhotoUrl'],
-                ))
-            .toList());
-  }
+                )
+                .toList(),
+          );
 
   /// Получить похожих специалистов
   Future<List<SpecialistRecommendation>> getSimilarSpecialists(
-      String specialistId) async {
+    String specialistId,
+  ) async {
     try {
       // Это заглушка - в реальном приложении здесь была бы логика рекомендаций
       return [];
@@ -225,7 +229,9 @@ class SubscriptionService {
 
   /// Отписаться от специалиста
   Future<void> unsubscribeFromSpecialist(
-      String userId, String specialistId) async {
+    String userId,
+    String specialistId,
+  ) async {
     try {
       final querySnapshot = await _firestore
           .collection('subscriptions')

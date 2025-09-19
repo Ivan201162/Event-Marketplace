@@ -163,7 +163,8 @@ class _EventsCatalogScreenState extends ConsumerState<EventsCatalogScreen> {
                 onSelected: (selected) {
                   setState(() {
                     final categories = List<EventCategory>.from(
-                        _currentFilter.categories ?? []);
+                      _currentFilter.categories ?? [],
+                    );
                     if (selected) {
                       categories.add(category);
                     } else {

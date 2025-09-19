@@ -1,9 +1,11 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:icalendar_parser/icalendar_parser.dart';
-import '../core/stubs/stubs.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import '../core/stubs/stubs.dart';
 import '../models/calendar_event.dart';
 import '../models/specialist_schedule.dart';
 

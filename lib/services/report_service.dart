@@ -238,7 +238,7 @@ class ReportService {
       var completedBookings = 0;
 
       for (final doc in snapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data();
         final row = {
           'id': doc.id,
           'customerId': data['customerId'],
@@ -326,7 +326,7 @@ class ReportService {
       var successfulPayments = 0;
 
       for (final doc in snapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data();
         final row = {
           'id': doc.id,
           'bookingId': data['bookingId'],
@@ -388,7 +388,7 @@ class ReportService {
       var activeUsers = 0;
 
       for (final doc in snapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data();
         final row = {
           'id': doc.id,
           'name': data['name'],
@@ -459,7 +459,7 @@ class ReportService {
       double totalRating = 0;
 
       for (final doc in snapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data();
         final row = {
           'id': doc.id,
           'name': data['name'],
@@ -537,7 +537,7 @@ class ReportService {
       final eventCounts = <String, int>{};
 
       for (final doc in snapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data();
         final row = {
           'id': doc.id,
           'eventName': data['eventName'],
@@ -606,7 +606,7 @@ class ReportService {
       var readCount = 0;
 
       for (final doc in snapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data();
         final row = {
           'id': doc.id,
           'title': data['title'],
@@ -697,7 +697,7 @@ class ReportService {
       final errorTypeCounts = <String, int>{};
 
       for (final doc in snapshot.docs) {
-        final data = doc.data() as Map<String, dynamic>;
+        final data = doc.data();
         final row = {
           'id': doc.id,
           'errorType': data['errorType'],

@@ -23,7 +23,7 @@ class ExternalIntegration {
 
   /// Создать из документа Firestore
   factory ExternalIntegration.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return ExternalIntegration(
       id: doc.id,
       name: data['name'] ?? '',
@@ -239,7 +239,7 @@ class DataSync {
 
   /// Создать из документа Firestore
   factory DataSync.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return DataSync(
       id: doc.id,
       integrationId: data['integrationId'] ?? '',

@@ -22,7 +22,7 @@ class PhotoStudio {
 
   /// Создать из документа Firestore
   factory PhotoStudio.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return PhotoStudio(
       id: doc.id,
       name: data['name'] ?? '',
@@ -306,7 +306,7 @@ class StudioBooking {
 
   /// Создать из документа Firestore
   factory StudioBooking.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return StudioBooking(
       id: doc.id,
       studioId: data['studioId'] ?? '',

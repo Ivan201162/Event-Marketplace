@@ -359,7 +359,10 @@ class _NotificationManagementScreenState
                 _buildInfoChip('Тип', notification.type.name, Colors.blue),
                 const SizedBox(width: 8),
                 _buildInfoChip(
-                    'Канал', notification.channel.name, Colors.green),
+                  'Канал',
+                  notification.channel.name,
+                  Colors.green,
+                ),
                 const SizedBox(width: 8),
                 _buildInfoChip(
                   'Статус',

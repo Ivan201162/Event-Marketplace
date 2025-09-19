@@ -409,9 +409,10 @@ class SupportService {
         tickets.where((t) => t.resolvedAt != null).toList();
     if (resolvedTicketsWithTime.isNotEmpty) {
       final totalResolutionTime = resolvedTicketsWithTime.fold<int>(
-          0,
-          (sum, ticket) =>
-              sum + ticket.resolvedAt!.difference(ticket.createdAt).inHours);
+        0,
+        (sum, ticket) =>
+            sum + ticket.resolvedAt!.difference(ticket.createdAt).inHours,
+      );
       averageResolutionTime =
           totalResolutionTime / resolvedTicketsWithTime.length;
     }

@@ -379,7 +379,11 @@ class ReviewStatsWidget extends ConsumerWidget {
   }
 
   Widget _buildStatRow(
-          String label, String value, IconData icon, Color color) =>
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) =>
       Padding(
         padding: const EdgeInsets.only(bottom: 12),
         child: Row(

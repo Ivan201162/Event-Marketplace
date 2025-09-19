@@ -1,17 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
 import 'package:pointycastle/export.dart' hide Digest;
-import 'package:pointycastle/api.dart' hide Digest;
-import 'package:pointycastle/block/aes_fast.dart';
-import 'package:pointycastle/block/modes/cbc.dart';
-import 'package:pointycastle/paddings/pkcs7.dart';
-import 'package:pointycastle/padded_block_cipher/padded_block_cipher_impl.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/security_audit.dart';
@@ -638,12 +632,12 @@ class SecurityService {
     bool includeNumbers = true,
     bool includeSpecialChars = true,
   }) {
-    const String uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    const String lowercase = 'abcdefghijklmnopqrstuvwxyz';
-    const String numbers = '0123456789';
-    const String specialChars = '!@#\$%^&*()_+-=[]{}|;:,.<>?';
+    const uppercase = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const lowercase = 'abcdefghijklmnopqrstuvwxyz';
+    const numbers = '0123456789';
+    const specialChars = r'!@#$%^&*()_+-=[]{}|;:,.<>?';
 
-    String chars = '';
+    var chars = '';
     if (includeUppercase) chars += uppercase;
     if (includeLowercase) chars += lowercase;
     if (includeNumbers) chars += numbers;
@@ -653,8 +647,8 @@ class SecurityService {
       throw ArgumentError('At least one character type must be included');
     }
 
-    String password = '';
-    for (int i = 0; i < length; i++) {
+    var password = '';
+    for (var i = 0; i < length; i++) {
       password += chars[_random.nextInt(chars.length)];
     }
 

@@ -14,6 +14,21 @@ class PhotoAlbum {
     this.updatedAt,
   });
 
+  factory PhotoAlbum.fromMap(Map<String, dynamic> map) => PhotoAlbum(
+        id: map['id'] as String,
+        title: map['title'] as String,
+        coverImageUrl: map['coverImageUrl'] as String,
+        photoCount: map['photoCount'] as int,
+        description: map['description'] as String?,
+        isPrivate: map['isPrivate'] as bool? ?? false,
+        createdAt: map['createdAt'] != null
+            ? DateTime.parse(map['createdAt'] as String)
+            : null,
+        updatedAt: map['updatedAt'] != null
+            ? DateTime.parse(map['updatedAt'] as String)
+            : null,
+      );
+
   final String id;
   final String title;
   final String coverImageUrl;
@@ -44,35 +59,16 @@ class PhotoAlbum {
         updatedAt: updatedAt ?? this.updatedAt,
       );
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'title': title,
-      'coverImageUrl': coverImageUrl,
-      'photoCount': photoCount,
-      'description': description,
-      'isPrivate': isPrivate,
-      'createdAt': createdAt?.toIso8601String(),
-      'updatedAt': updatedAt?.toIso8601String(),
-    };
-  }
-
-  factory PhotoAlbum.fromMap(Map<String, dynamic> map) {
-    return PhotoAlbum(
-      id: map['id'] as String,
-      title: map['title'] as String,
-      coverImageUrl: map['coverImageUrl'] as String,
-      photoCount: map['photoCount'] as int,
-      description: map['description'] as String?,
-      isPrivate: map['isPrivate'] as bool? ?? false,
-      createdAt: map['createdAt'] != null
-          ? DateTime.parse(map['createdAt'] as String)
-          : null,
-      updatedAt: map['updatedAt'] != null
-          ? DateTime.parse(map['updatedAt'] as String)
-          : null,
-    );
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'title': title,
+        'coverImageUrl': coverImageUrl,
+        'photoCount': photoCount,
+        'description': description,
+        'isPrivate': isPrivate,
+        'createdAt': createdAt?.toIso8601String(),
+        'updatedAt': updatedAt?.toIso8601String(),
+      };
 
   @override
   bool operator ==(Object other) {

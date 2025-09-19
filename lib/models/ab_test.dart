@@ -20,7 +20,7 @@ class ABTest {
 
   /// Создать из документа Firestore
   factory ABTest.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return ABTest(
       id: doc.id,
       name: (data['name'] as String?) ?? '',
@@ -34,9 +34,11 @@ class ABTest {
               .toList() ??
           [],
       targeting: ABTestTargeting.fromMap(
-          (data['targeting'] as Map<String, dynamic>?) ?? {}),
+        (data['targeting'] as Map<String, dynamic>?) ?? {},
+      ),
       metrics: ABTestMetrics.fromMap(
-          (data['metrics'] as Map<String, dynamic>?) ?? {}),
+        (data['metrics'] as Map<String, dynamic>?) ?? {},
+      ),
       startDate: (data['startDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
       endDate: data['endDate'] != null
           ? (data['endDate'] as Timestamp?)?.toDate()
@@ -45,7 +47,8 @@ class ABTest {
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       metadata: Map<String, dynamic>.from(
-          (data['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+        (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
+      ),
     );
   }
 
@@ -63,9 +66,11 @@ class ABTest {
                 .toList() ??
             [],
         targeting: ABTestTargeting.fromMap(
-            (data['targeting'] as Map<String, dynamic>?) ?? {}),
+          (data['targeting'] as Map<String, dynamic>?) ?? {},
+        ),
         metrics: ABTestMetrics.fromMap(
-            (data['metrics'] as Map<String, dynamic>?) ?? {}),
+          (data['metrics'] as Map<String, dynamic>?) ?? {},
+        ),
         startDate:
             (data['startDate'] as Timestamp?)?.toDate() ?? DateTime.now(),
         endDate: data['endDate'] != null
@@ -77,7 +82,8 @@ class ABTest {
         updatedAt:
             (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
         metadata: Map<String, dynamic>.from(
-            (data['metadata'] as Map<dynamic, dynamic>?) ?? {}),
+          (data['metadata'] as Map<dynamic, dynamic>?) ?? {},
+        ),
       );
   final String id;
   final String name;
@@ -511,7 +517,7 @@ class ABTestParticipation {
 
   /// Создать из документа Firestore
   factory ABTestParticipation.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return ABTestParticipation(
       id: doc.id,
       testId: data['testId'] as String? ?? '',

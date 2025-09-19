@@ -67,7 +67,8 @@ final recentUserBadgesProvider =
 
 /// Провайдер для управления бейджами
 final badgeManagerProvider = Provider<BadgeManager>(
-    (ref) => BadgeManager(ref.read(badgeServiceProvider)));
+  (ref) => BadgeManager(ref.read(badgeServiceProvider)),
+);
 
 /// Менеджер бейджей
 class BadgeManager {
@@ -101,8 +102,9 @@ class BadgeManager {
       _service.getBadgeStats(userId);
 
   /// Получить таблицу лидеров
-  Future<List<badge_model.BadgeLeaderboardEntry>> getLeaderboard(
-          {int limit = 10}) async =>
+  Future<List<badge_model.BadgeLeaderboardEntry>> getLeaderboard({
+    int limit = 10,
+  }) async =>
       _service.getBadgeLeaderboard(limit: limit);
 }
 
@@ -149,8 +151,10 @@ class NewBadgeChecker extends Notifier<NewBadgeState> {
       if (_lastUserId == userId && _lastBadges.isNotEmpty) {
         // Проверяем новые бейджи
         final newBadges = currentBadges
-            .where((badge) =>
-                !_lastBadges.any((lastBadge) => lastBadge.id == badge.id))
+            .where(
+              (badge) =>
+                  !_lastBadges.any((lastBadge) => lastBadge.id == badge.id),
+            )
             .toList();
 
         if (newBadges.isNotEmpty) {

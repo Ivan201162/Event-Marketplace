@@ -38,7 +38,8 @@ class AuditLog {
         sessionId: safeStringFromDynamic(map['sessionId']),
         level: AuditLogLevel.fromString((map['level'] as String?) ?? 'info'),
         category: AuditLogCategory.fromString(
-            (map['category'] as String?) ?? 'general'),
+          (map['category'] as String?) ?? 'general',
+        ),
         description: safeStringFromDynamic(map['description']),
         metadata: safeMapFromDynamic(map['metadata'] as Map<dynamic, dynamic>?),
         timestamp: safeDateTimeFromTimestamp(map['timestamp']),

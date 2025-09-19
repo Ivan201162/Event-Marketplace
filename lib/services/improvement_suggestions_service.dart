@@ -272,7 +272,7 @@ class ImprovementSuggestion {
 
   /// Создать из документа Firestore
   factory ImprovementSuggestion.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return ImprovementSuggestion(
       id: doc.id,
       userId: data['userId'] ?? '',

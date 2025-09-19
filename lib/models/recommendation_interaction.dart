@@ -18,31 +18,28 @@ class RecommendationInteraction {
     required this.timestamp,
   });
 
+  factory RecommendationInteraction.fromMap(Map<String, dynamic> map) =>
+      RecommendationInteraction(
+        recommendationId: map['recommendationId'] as String,
+        specialistId: map['specialistId'] as String,
+        type: RecommendationInteractionType.values.firstWhere(
+          (e) => e.name == map['type'],
+          orElse: () => RecommendationInteractionType.viewed,
+        ),
+        timestamp: DateTime.parse(map['timestamp'] as String),
+      );
+
   final String recommendationId;
   final String specialistId;
   final RecommendationInteractionType type;
   final DateTime timestamp;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'recommendationId': recommendationId,
-      'specialistId': specialistId,
-      'type': type.name,
-      'timestamp': timestamp.toIso8601String(),
-    };
-  }
-
-  factory RecommendationInteraction.fromMap(Map<String, dynamic> map) {
-    return RecommendationInteraction(
-      recommendationId: map['recommendationId'] as String,
-      specialistId: map['specialistId'] as String,
-      type: RecommendationInteractionType.values.firstWhere(
-        (e) => e.name == map['type'],
-        orElse: () => RecommendationInteractionType.viewed,
-      ),
-      timestamp: DateTime.parse(map['timestamp'] as String),
-    );
-  }
+  Map<String, dynamic> toMap() => {
+        'recommendationId': recommendationId,
+        'specialistId': specialistId,
+        'type': type.name,
+        'timestamp': timestamp.toIso8601String(),
+      };
 
   @override
   bool operator ==(Object other) {

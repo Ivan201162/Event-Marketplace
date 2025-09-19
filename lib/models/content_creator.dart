@@ -20,7 +20,7 @@ class ContentCreator {
 
   /// Создать из документа Firestore
   factory ContentCreator.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return ContentCreator(
       id: doc.id,
       name: data['name'] ?? '',

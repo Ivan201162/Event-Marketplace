@@ -5,10 +5,9 @@ class AppLocalizations {
   const AppLocalizations(this.locale);
   final Locale locale;
 
-  static AppLocalizations of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations) ??
-        const AppLocalizations(Locale('en'));
-  }
+  static AppLocalizations of(BuildContext context) =>
+      Localizations.of<AppLocalizations>(context, AppLocalizations) ??
+      const AppLocalizations(Locale('en'));
 
   static const LocalizationsDelegate<AppLocalizations> delegate =
       _AppLocalizationsDelegate();
@@ -82,14 +81,12 @@ class AppLocalizations {
     },
   };
 
-  String t(String key) {
-    return _localizedValues[locale.languageCode]?[key] ?? key;
-  }
+  String t(String key) => _localizedValues[locale.languageCode]?[key] ?? key;
 
   @override
   dynamic noSuchMethod(Invocation invocation) {
     if (invocation.isGetter) {
-      final String key = invocation.memberName
+      final key = invocation.memberName
           .toString()
           .replaceFirst('Symbol("', '')
           .replaceFirst('")', '');
@@ -131,15 +128,14 @@ class _AppLocalizationsDelegate
   const _AppLocalizationsDelegate();
 
   @override
-  bool isSupported(Locale locale) {
-    return AppLocalizations.supportedLocales.any((supportedLocale) =>
-        supportedLocale.languageCode == locale.languageCode);
-  }
+  bool isSupported(Locale locale) => AppLocalizations.supportedLocales.any(
+        (supportedLocale) =>
+            supportedLocale.languageCode == locale.languageCode,
+      );
 
   @override
-  Future<AppLocalizations> load(Locale locale) async {
-    return AppLocalizations(locale);
-  }
+  Future<AppLocalizations> load(Locale locale) async =>
+      AppLocalizations(locale);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;

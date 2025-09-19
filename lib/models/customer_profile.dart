@@ -29,7 +29,7 @@ class CustomerProfile {
 
   /// Создать профиль из документа Firestore
   factory CustomerProfile.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return CustomerProfile(
       userId: doc.id,
       photoURL: data['photoURL'],

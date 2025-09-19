@@ -115,7 +115,10 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
                 Icons.public,
               ),
               _buildStatItem(
-                  'Категорий', _getCategoriesCount(), Icons.category),
+                'Категорий',
+                _getCategoriesCount(),
+                Icons.category,
+              ),
             ],
           ),
         ),

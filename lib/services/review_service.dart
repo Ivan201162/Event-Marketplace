@@ -130,7 +130,7 @@ class ReviewService {
     query = query.limit(limit);
 
     return query.snapshots().map((snapshot) {
-      List<Review> reviews = snapshot.docs.map(Review.fromDocument).toList();
+      var reviews = snapshot.docs.map(Review.fromDocument).toList();
 
       // Применяем клиентские фильтры
       if (filter != null) {
@@ -453,7 +453,7 @@ class ReviewService {
     queryBuilder = queryBuilder.limit(limit);
 
     return queryBuilder.snapshots().map((snapshot) {
-      List<Review> reviews = snapshot.docs.map(Review.fromDocument).toList();
+      var reviews = snapshot.docs.map(Review.fromDocument).toList();
 
       // Применяем клиентские фильтры
       if (filter != null) {

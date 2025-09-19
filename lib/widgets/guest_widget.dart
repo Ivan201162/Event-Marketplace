@@ -497,7 +497,9 @@ class GuestStatsWidget extends StatelessWidget {
                 ),
               if (guest.confirmedAt != null)
                 _buildInfoRow(
-                    'Подтвержден', _formatDateTime(guest.confirmedAt!)),
+                  'Подтвержден',
+                  _formatDateTime(guest.confirmedAt!),
+                ),
               if (guest.checkedInAt != null)
                 _buildInfoRow(
                   'На мероприятии',

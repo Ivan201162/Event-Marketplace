@@ -110,7 +110,9 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
                         child: Text('По типу'),
                       ),
                       DropdownMenuItem(
-                          value: 'screen', child: Text('По экрану')),
+                        value: 'screen',
+                        child: Text('По экрану'),
+                      ),
                       DropdownMenuItem(
                         value: 'severity',
                         child: Text('По критичности'),

@@ -35,16 +35,15 @@ class NotificationService {
     required String specialistName,
     required DateTime bookingDate,
     required NotificationChannel channel,
-  }) async {
-    return await sendNotification(
-      userId: userId,
-      title: 'Новое бронирование',
-      body:
-          'Ваше бронирование на $eventTitle с $specialistName подтверждено на ${bookingDate.toString()}',
-      type: NotificationType.booking,
-      channel: channel,
-    );
-  }
+  }) async =>
+      sendNotification(
+        userId: userId,
+        title: 'Новое бронирование',
+        body:
+            'Ваше бронирование на $eventTitle с $specialistName подтверждено на ${bookingDate.toString()}',
+        type: NotificationType.booking,
+        channel: channel,
+      );
 
   /// Отправить уведомление об отмене
   Future<String> sendCancellationNotification({
@@ -53,16 +52,15 @@ class NotificationService {
     required String specialistName,
     required DateTime bookingDate,
     required NotificationChannel channel,
-  }) async {
-    return await sendNotification(
-      userId: userId,
-      title: 'Бронирование отменено',
-      body:
-          'Ваше бронирование на $eventTitle с $specialistName на ${bookingDate.toString()} было отменено',
-      type: NotificationType.cancellation,
-      channel: channel,
-    );
-  }
+  }) async =>
+      sendNotification(
+        userId: userId,
+        title: 'Бронирование отменено',
+        body:
+            'Ваше бронирование на $eventTitle с $specialistName на ${bookingDate.toString()} было отменено',
+        type: NotificationType.cancellation,
+        channel: channel,
+      );
 
   final StreamController<SentNotification> _notificationController =
       StreamController<SentNotification>.broadcast();
@@ -92,15 +90,7 @@ class NotificationService {
   /// Запросить разрешения на уведомления
   Future<void> _requestPermissions() async {
     try {
-      final settings = await _messaging.requestPermission(
-        alert: true,
-        announcement: false,
-        badge: true,
-        carPlay: false,
-        criticalAlert: false,
-        provisional: false,
-        sound: true,
-      );
+      final settings = await _messaging.requestPermission();
 
       if (kDebugMode) {
         print('Разрешения на уведомления: ${settings.authorizationStatus}');
@@ -115,7 +105,7 @@ class NotificationService {
   /// Настроить обработчики уведомлений
   void _setupNotificationHandlers() {
     // Обработчик уведомлений в foreground
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    FirebaseMessaging.onMessage.listen((message) {
       if (kDebugMode) {
         print(
           'Получено уведомление в foreground: ${message.notification?.title}',
@@ -125,7 +115,7 @@ class NotificationService {
     });
 
     // Обработчик нажатия на уведомление
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
       if (kDebugMode) {
         print('Нажато на уведомление: ${message.notification?.title}');
       }
@@ -133,7 +123,7 @@ class NotificationService {
     });
 
     // Обработчик уведомления при закрытом приложении
-    FirebaseMessaging.getInitialMessage().then((RemoteMessage? message) {
+    FirebaseMessaging.getInitialMessage().then((message) {
       if (message != null) {
         if (kDebugMode) {
           print('Уведомление при запуске: ${message.notification?.title}');

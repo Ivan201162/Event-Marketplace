@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../core/responsive_utils.dart';
 import '../ui/responsive/responsive_widgets.dart' hide ResponsiveText;
-import '../models/photo_album.dart';
 
 /// Виджет для отображения фотоальбомов
 class PhotoAlbumsWidget extends ConsumerWidget {

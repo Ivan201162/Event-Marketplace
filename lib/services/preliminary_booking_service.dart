@@ -390,7 +390,7 @@ class PreliminaryBooking {
 
   /// Создать из документа Firestore
   factory PreliminaryBooking.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+    final data = doc.data()! as Map<String, dynamic>;
     return PreliminaryBooking(
       id: doc.id,
       specialistId: data['specialistId'] ?? '',

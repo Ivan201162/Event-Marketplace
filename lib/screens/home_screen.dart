@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import '../core/stubs/stubs.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/app_theme.dart';
@@ -219,7 +218,8 @@ class HomeScreen extends ConsumerWidget {
                           onPressed: () {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                  content: Text('Поиск специалистов')),
+                                content: Text('Поиск специалистов'),
+                              ),
                             );
                           },
                           child: _buildModernQuickActionCard(
@@ -266,7 +266,8 @@ class HomeScreen extends ConsumerWidget {
                           onPressed: () {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                  content: Text('Календарь событий')),
+                                content: Text('Календарь событий'),
+                              ),
                             );
                           },
                           child: _buildModernQuickActionCard(

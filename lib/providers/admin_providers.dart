@@ -121,7 +121,8 @@ class AdminActionStatusNotifier extends Notifier<String> {
 /// Провайдер для статуса админ-действий
 final adminActionStatusProvider =
     NotifierProvider<AdminActionStatusNotifier, String>(
-        AdminActionStatusNotifier.new);
+  AdminActionStatusNotifier.new,
+);
 
 /// Нотификатор для отслеживания прогресса админ-действий
 class AdminActionProgressNotifier extends Notifier<double> {
@@ -136,7 +137,8 @@ class AdminActionProgressNotifier extends Notifier<double> {
 /// Провайдер для отслеживания прогресса админ-действий
 final adminActionProgressProvider =
     NotifierProvider<AdminActionProgressNotifier, double>(
-        AdminActionProgressNotifier.new);
+  AdminActionProgressNotifier.new,
+);
 
 /// Нотификатор для последней ошибки админ-действий
 class AdminActionErrorNotifier extends Notifier<String?> {
@@ -151,7 +153,8 @@ class AdminActionErrorNotifier extends Notifier<String?> {
 /// Провайдер для последней ошибки админ-действий
 final adminActionErrorProvider =
     NotifierProvider<AdminActionErrorNotifier, String?>(
-        AdminActionErrorNotifier.new);
+  AdminActionErrorNotifier.new,
+);
 
 /// Нотификатор для истории админ-действий
 class AdminActionHistoryNotifier extends Notifier<List<Map<String, dynamic>>> {
@@ -194,7 +197,8 @@ class ActiveAdminActionsNotifier extends Notifier<Set<String>> {
 /// Провайдер для активных админ-действий
 final activeAdminActionsProvider =
     NotifierProvider<ActiveAdminActionsNotifier, Set<String>>(
-        ActiveAdminActionsNotifier.new);
+  ActiveAdminActionsNotifier.new,
+);
 
 /// Нотификатор для очереди админ-действий
 class AdminActionQueueNotifier extends Notifier<List<Map<String, dynamic>>> {
@@ -217,7 +221,8 @@ class AdminActionQueueNotifier extends Notifier<List<Map<String, dynamic>>> {
 /// Провайдер для очереди админ-действий
 final adminActionQueueProvider =
     NotifierProvider<AdminActionQueueNotifier, List<Map<String, dynamic>>>(
-        AdminActionQueueNotifier.new);
+  AdminActionQueueNotifier.new,
+);
 
 /// Провайдер для проверки, идет ли админ-действие
 final isAdminActionInProgressProvider = Provider<bool>((ref) {
@@ -280,7 +285,8 @@ class AdminActionStatsNotifier extends Notifier<Map<String, int>> {
 /// Провайдер для статистики админ-действий
 final adminActionStatsProvider =
     NotifierProvider<AdminActionStatsNotifier, Map<String, int>>(
-        AdminActionStatsNotifier.new);
+  AdminActionStatsNotifier.new,
+);
 
 /// Нотификатор для последнего админ-действия
 class LastAdminActionNotifier extends Notifier<Map<String, dynamic>?> {
@@ -295,7 +301,8 @@ class LastAdminActionNotifier extends Notifier<Map<String, dynamic>?> {
 /// Провайдер для последнего админ-действия
 final lastAdminActionProvider =
     NotifierProvider<LastAdminActionNotifier, Map<String, dynamic>?>(
-        LastAdminActionNotifier.new);
+  LastAdminActionNotifier.new,
+);
 
 /// Провайдер для получения информации об админ-панели
 final adminPanelInfoProvider = Provider<Map<String, dynamic>>((ref) {

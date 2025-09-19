@@ -32,8 +32,11 @@ class NoteCardWidget extends StatelessWidget {
                 Row(
                   children: [
                     if (note.isPinned) ...[
-                      const Icon(Icons.push_pin,
-                          color: Colors.orange, size: 16),
+                      const Icon(
+                        Icons.push_pin,
+                        color: Colors.orange,
+                        size: 16,
+                      ),
                       const SizedBox(width: 4),
                     ],
                     Expanded(
