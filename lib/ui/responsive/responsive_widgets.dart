@@ -64,77 +64,57 @@ class ResponsiveCard extends StatelessWidget {
     required this.child,
     this.padding,
     this.margin,
-    this.color,
     this.elevation,
     this.borderRadius,
-    this.onTap,
+    this.color,
+    this.shadowColor,
   });
   final Widget child;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
-  final Color? color;
   final double? elevation;
   final BorderRadiusGeometry? borderRadius;
-  final VoidCallback? onTap;
+  final Color? color;
+  final Color? shadowColor;
 
   @override
   Widget build(BuildContext context) {
-    final responsivePadding = _getResponsivePadding(context);
-    final responsiveElevation = _getResponsiveElevation(context);
-    final responsiveBorderRadius = _getResponsiveBorderRadius(context);
+    final responsivePadding = padding ??
+        context.responsive(
+          const EdgeInsets.all(16.0),
+          const EdgeInsets.all(20.0),
+          const EdgeInsets.all(24.0),
+        );
 
-    final Widget card = Card(
-      margin: margin,
+    final responsiveMargin = margin ??
+        context.responsive(
+          const EdgeInsets.all(8.0),
+          const EdgeInsets.all(12.0),
+          const EdgeInsets.all(16.0),
+        );
+
+    final responsiveElevation = elevation ?? context.responsive(2.0, 3.0, 4.0);
+
+    final responsiveBorderRadius = borderRadius ??
+        context.responsive(
+          BorderRadius.circular(8.0),
+          BorderRadius.circular(12.0),
+          BorderRadius.circular(16.0),
+        );
+
+    return Card(
+      elevation: responsiveElevation,
+      margin: responsiveMargin,
       color: color,
-      elevation: elevation ?? responsiveElevation,
+      shadowColor: shadowColor,
       shape: RoundedRectangleBorder(
-        borderRadius: borderRadius ?? responsiveBorderRadius,
+        borderRadius: responsiveBorderRadius,
       ),
       child: Padding(
-        padding: padding ?? responsivePadding,
+        padding: responsivePadding,
         child: child,
       ),
     );
-
-    if (onTap != null) {
-      return InkWell(
-        onTap: onTap,
-        borderRadius: (borderRadius ?? responsiveBorderRadius) as BorderRadius?,
-        child: card,
-      );
-    }
-
-    return card;
-  }
-
-  EdgeInsetsGeometry _getResponsivePadding(BuildContext context) {
-    if (context.isMobile) {
-      return const EdgeInsets.all(12);
-    } else if (context.isTablet) {
-      return const EdgeInsets.all(16);
-    } else {
-      return const EdgeInsets.all(20);
-    }
-  }
-
-  double _getResponsiveElevation(BuildContext context) {
-    if (context.isMobile) {
-      return 2;
-    } else if (context.isTablet) {
-      return 4;
-    } else {
-      return 6;
-    }
-  }
-
-  BorderRadiusGeometry _getResponsiveBorderRadius(BuildContext context) {
-    if (context.isMobile) {
-      return BorderRadius.circular(8);
-    } else if (context.isTablet) {
-      return BorderRadius.circular(12);
-    } else {
-      return BorderRadius.circular(16);
-    }
   }
 }
 
@@ -145,56 +125,47 @@ class ResponsiveContainer extends StatelessWidget {
     required this.child,
     this.padding,
     this.margin,
-    this.color,
     this.width,
     this.height,
+    this.constraints,
     this.decoration,
     this.alignment,
   });
   final Widget child;
   final EdgeInsetsGeometry? padding;
   final EdgeInsetsGeometry? margin;
-  final Color? color;
   final double? width;
   final double? height;
-  final BoxDecoration? decoration;
+  final BoxConstraints? constraints;
+  final Decoration? decoration;
   final AlignmentGeometry? alignment;
 
   @override
   Widget build(BuildContext context) {
-    final responsivePadding = _getResponsivePadding(context);
-    final responsiveWidth = _getResponsiveWidth(context);
+    final responsivePadding = padding ??
+        context.responsive(
+          const EdgeInsets.all(16.0),
+          const EdgeInsets.all(20.0),
+          const EdgeInsets.all(24.0),
+        );
+
+    final responsiveMargin = margin ??
+        context.responsive(
+          const EdgeInsets.all(8.0),
+          const EdgeInsets.all(12.0),
+          const EdgeInsets.all(16.0),
+        );
 
     return Container(
-      width: width ?? responsiveWidth,
+      padding: responsivePadding,
+      margin: responsiveMargin,
+      width: width,
       height: height,
-      padding: padding ?? responsivePadding,
-      margin: margin,
-      color: color,
+      constraints: constraints,
       decoration: decoration,
       alignment: alignment,
       child: child,
     );
-  }
-
-  EdgeInsetsGeometry _getResponsivePadding(BuildContext context) {
-    if (context.isMobile) {
-      return const EdgeInsets.all(8);
-    } else if (context.isTablet) {
-      return const EdgeInsets.all(12);
-    } else {
-      return const EdgeInsets.all(16);
-    }
-  }
-
-  double? _getResponsiveWidth(BuildContext context) {
-    if (context.isMobile) {
-      return null; // Полная ширина
-    } else if (context.isTablet) {
-      return context.screenWidth * 0.8;
-    } else {
-      return context.screenWidth * 0.6;
-    }
   }
 }
 
@@ -203,139 +174,39 @@ class ResponsiveGrid extends StatelessWidget {
   const ResponsiveGrid({
     super.key,
     required this.children,
-    this.spacing,
-    this.runSpacing,
     this.crossAxisCount,
+    this.crossAxisSpacing,
+    this.mainAxisSpacing,
     this.childAspectRatio,
-    this.mainAxisAlignment = MainAxisAlignment.start,
-    this.crossAxisAlignment = CrossAxisAlignment.start,
   });
   final List<Widget> children;
-  final double? spacing;
-  final double? runSpacing;
   final int? crossAxisCount;
+  final double? crossAxisSpacing;
+  final double? mainAxisSpacing;
   final double? childAspectRatio;
-  final MainAxisAlignment mainAxisAlignment;
-  final CrossAxisAlignment crossAxisAlignment;
 
   @override
   Widget build(BuildContext context) {
-    final responsiveCrossAxisCount = _getResponsiveCrossAxisCount(context);
-    final responsiveSpacing = _getResponsiveSpacing(context);
-    final responsiveChildAspectRatio = _getResponsiveChildAspectRatio(context);
+    final responsiveCrossAxisCount =
+        crossAxisCount ?? context.responsive(2, 3, 4);
+    final responsiveCrossAxisSpacing =
+        crossAxisSpacing ?? context.responsive(8.0, 12.0, 16.0);
+    final responsiveMainAxisSpacing =
+        mainAxisSpacing ?? context.responsive(8.0, 12.0, 16.0);
+    final responsiveChildAspectRatio =
+        childAspectRatio ?? context.responsive(1.0, 1.2, 1.5);
 
-    return GridView.count(
-      crossAxisCount: crossAxisCount ?? responsiveCrossAxisCount,
-      childAspectRatio: childAspectRatio ?? responsiveChildAspectRatio,
-      mainAxisSpacing: spacing ?? responsiveSpacing,
-      crossAxisSpacing: runSpacing ?? responsiveSpacing,
-      children: children,
-    );
-  }
-
-  int _getResponsiveCrossAxisCount(BuildContext context) {
-    if (context.isMobile) {
-      return 1;
-    } else if (context.isTablet) {
-      return 2;
-    } else {
-      return 3;
-    }
-  }
-
-  double _getResponsiveSpacing(BuildContext context) {
-    if (context.isMobile) {
-      return 8;
-    } else if (context.isTablet) {
-      return 12;
-    } else {
-      return 16;
-    }
-  }
-
-  double _getResponsiveChildAspectRatio(BuildContext context) {
-    if (context.isMobile) {
-      return 1.5;
-    } else if (context.isTablet) {
-      return 1.3;
-    } else {
-      return 1.2;
-    }
-  }
-}
-
-/// Адаптивный список
-class ResponsiveList extends StatelessWidget {
-  const ResponsiveList({
-    super.key,
-    required this.children,
-    this.padding,
-    this.spacing,
-    this.physics,
-    this.shrinkWrap = false,
-  });
-  final List<Widget> children;
-  final EdgeInsetsGeometry? padding;
-  final double? spacing;
-  final ScrollPhysics? physics;
-  final bool shrinkWrap;
-
-  @override
-  Widget build(BuildContext context) {
-    final responsivePadding = _getResponsivePadding(context);
-    final responsiveSpacing = _getResponsiveSpacing(context);
-
-    return ListView.separated(
-      padding: padding ?? responsivePadding,
-      physics: physics,
-      shrinkWrap: shrinkWrap,
+    return GridView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: responsiveCrossAxisCount,
+        crossAxisSpacing: responsiveCrossAxisSpacing,
+        mainAxisSpacing: responsiveMainAxisSpacing,
+        childAspectRatio: responsiveChildAspectRatio,
+      ),
       itemCount: children.length,
-      separatorBuilder: (context, index) => SizedBox(height: responsiveSpacing),
       itemBuilder: (context, index) => children[index],
     );
-  }
-
-  EdgeInsetsGeometry _getResponsivePadding(BuildContext context) {
-    if (context.isMobile) {
-      return const EdgeInsets.all(8);
-    } else if (context.isTablet) {
-      return const EdgeInsets.all(12);
-    } else {
-      return const EdgeInsets.all(16);
-    }
-  }
-
-  double _getResponsiveSpacing(BuildContext context) {
-    if (context.isMobile) {
-      return 8;
-    } else if (context.isTablet) {
-      return 12;
-    } else {
-      return 16;
-    }
-  }
-}
-
-/// Адаптивный виджет (базовый)
-class ResponsiveWidget extends StatelessWidget {
-  const ResponsiveWidget({
-    super.key,
-    required this.mobile,
-    this.tablet,
-    this.desktop,
-  });
-  final Widget mobile;
-  final Widget? tablet;
-  final Widget? desktop;
-
-  @override
-  Widget build(BuildContext context) {
-    if (context.isDesktop && desktop != null) {
-      return desktop!;
-    } else if (context.isTablet && tablet != null) {
-      return tablet!;
-    } else {
-      return mobile;
-    }
   }
 }
