@@ -29,10 +29,3 @@ final isFavoriteProvider =
   final favoritesService = ref.watch(favoritesServiceProvider);
   return favoritesService.isFavorite(params.userId, params.eventId);
 });
-
-/// Провайдер количества избранных событий
-final favoritesCountProvider =
-    StreamProvider.family<int, String>((ref, userId) {
-  final favoritesService = ref.watch(favoritesServiceProvider);
-  return favoritesService.getFavoritesCount(userId);
-});

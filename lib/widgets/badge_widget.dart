@@ -181,7 +181,7 @@ class BadgeCollectionWidget extends ConsumerWidget {
     this.showTitle = true,
   });
   final String userId;
-  final BadgeCategory? category;
+  final badge_model.BadgeCategory? category;
   final int? limit;
   final bool showTitle;
 
@@ -218,9 +218,11 @@ class BadgeCollectionWidget extends ConsumerWidget {
               const SizedBox(height: 16),
             ],
             if (category == null)
-              _buildGridLayout(context, filteredBadges)
+              _buildGridLayout(
+                  context, filteredBadges.cast<badge_model.Badge>())
             else
-              _buildListLayout(context, filteredBadges),
+              _buildListLayout(
+                  context, filteredBadges.cast<badge_model.Badge>()),
           ],
         );
       },
@@ -229,7 +231,9 @@ class BadgeCollectionWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildGridLayout(BuildContext context, List<Badge> badges) => Wrap(
+  Widget _buildGridLayout(
+          BuildContext context, List<badge_model.Badge> badges) =>
+      Wrap(
         spacing: 12,
         runSpacing: 12,
         children: badges
@@ -244,7 +248,9 @@ class BadgeCollectionWidget extends ConsumerWidget {
             .cast<Widget>(),
       );
 
-  Widget _buildListLayout(BuildContext context, List<Badge> badges) => Column(
+  Widget _buildListLayout(
+          BuildContext context, List<badge_model.Badge> badges) =>
+      Column(
         children: badges
             .map(
               (badge) => Padding(
@@ -319,16 +325,16 @@ class BadgeCollectionWidget extends ConsumerWidget {
     if (category == null) return 'Бейджи';
 
     switch (category!) {
-      case BadgeCategory.specialist:
+      case badge_model.BadgeCategory.specialist:
         return 'Бейджи специалиста';
-      case BadgeCategory.customer:
+      case badge_model.BadgeCategory.customer:
         return 'Бейджи заказчика';
-      case BadgeCategory.general:
+      case badge_model.BadgeCategory.general:
         return 'Общие бейджи';
     }
   }
 
-  void _showBadgeDetails(BuildContext context, Badge badge) {
+  void _showBadgeDetails(BuildContext context, badge_model.Badge badge) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -364,7 +370,8 @@ class BadgeStatsWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildStats(BuildContext context, BadgeStats stats) => AnimatedCard(
+  Widget _buildStats(BuildContext context, badge_model.BadgeStats stats) =>
+      AnimatedCard(
         child: Column(
           children: [
             Text(
@@ -465,7 +472,7 @@ class BadgeLeaderboardWidget extends ConsumerWidget {
 
   Widget _buildLeaderboard(
     BuildContext context,
-    List<BadgeLeaderboardEntry> leaderboard,
+    List<badge_model.BadgeLeaderboardEntry> leaderboard,
   ) {
     if (leaderboard.isEmpty) {
       return _buildEmptyState(context);
@@ -495,7 +502,7 @@ class BadgeLeaderboardWidget extends ConsumerWidget {
   Widget _buildLeaderboardItem(
     BuildContext context,
     int position,
-    BadgeLeaderboardEntry user,
+    badge_model.BadgeLeaderboardEntry user,
   ) =>
       Padding(
         padding: const EdgeInsets.only(bottom: 12),

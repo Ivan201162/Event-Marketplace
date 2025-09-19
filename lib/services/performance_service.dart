@@ -21,7 +21,7 @@ class PerformanceService {
   // Кэш для часто используемых данных
   final Map<String, dynamic> _cache = {};
   final Map<String, DateTime> _cacheTimestamps = {};
-  const Duration _cacheExpiration = Duration(minutes: 5);
+  static const Duration _cacheExpiration = Duration(minutes: 5);
 
   // Очередь для тяжелых операций
   final Queue<Future<void> Function()> _heavyOperationsQueue = Queue();
