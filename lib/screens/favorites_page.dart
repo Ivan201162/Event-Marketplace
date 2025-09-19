@@ -19,36 +19,34 @@ class FavoritesPage extends ConsumerWidget {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
           Consumer(
-            builder: (context, ref, child) {
-              return currentUser.when(
-                data: (user) {
-                  if (user == null) return const SizedBox.shrink();
+            builder: (context, ref, child) => currentUser.when(
+              data: (user) {
+                if (user == null) return const SizedBox.shrink();
 
-                  return StreamBuilder<int>(
-                    stream: ref.watch(favoritesCountProvider(user.id)),
-                    builder: (context, snapshot) {
-                      final count = snapshot.data ?? 0;
-                      if (count == 0) return const SizedBox.shrink();
+                return StreamBuilder<int>(
+                  stream: ref.watch(favoritesCountProvider(user.id)),
+                  builder: (context, snapshot) {
+                    final count = snapshot.data ?? 0;
+                    if (count == 0) return const SizedBox.shrink();
 
-                      return Padding(
-                        padding: const EdgeInsets.only(right: 16),
-                        child: Center(
-                          child: Text(
-                            '$count',
-                            style: const TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
+                    return Padding(
+                      padding: const EdgeInsets.only(right: 16),
+                      child: Center(
+                        child: Text(
+                          '$count',
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      );
-                    },
-                  );
-                },
-                loading: () => const SizedBox.shrink(),
-                error: (error, stack) => const SizedBox.shrink(),
-              );
-            },
+                      ),
+                    );
+                  },
+                );
+              },
+              loading: () => const SizedBox.shrink(),
+              error: (error, stack) => const SizedBox.shrink(),
+            ),
           ),
         ],
       ),
@@ -124,32 +122,30 @@ class FavoritesPage extends ConsumerWidget {
     );
   }
 
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.favorite_border,
-            size: 64,
-            color: Colors.grey[400],
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'У вас нет избранных событий',
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.grey[600],
+  Widget _buildEmptyState() => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.favorite_border,
+              size: 64,
+              color: Colors.grey[400],
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Добавляйте интересные мероприятия в избранное',
-            style: TextStyle(color: Colors.grey[500]),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
+            const SizedBox(height: 16),
+            Text(
+              'У вас нет избранных событий',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Добавляйте интересные мероприятия в избранное',
+              style: TextStyle(color: Colors.grey[500]),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
 }

@@ -31,26 +31,25 @@ class FavoritesService {
   }
 
   /// Получить избранные события пользователя
-  Stream<List<Event>> getUserFavorites(String userId) {
-    return _firestore
-        .collection('favorites')
-        .where('userId', isEqualTo: userId)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .asyncMap((snapshot) async {
-      final eventIds =
-          snapshot.docs.map((doc) => doc.data()['eventId'] as String).toList();
+  Stream<List<Event>> getUserFavorites(String userId) => _firestore
+          .collection('favorites')
+          .where('userId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .asyncMap((snapshot) async {
+        final eventIds = snapshot.docs
+            .map((doc) => doc.data()['eventId'] as String)
+            .toList();
 
-      if (eventIds.isEmpty) return <Event>[];
+        if (eventIds.isEmpty) return <Event>[];
 
-      final eventsSnapshot = await _firestore
-          .collection('events')
-          .where(FieldPath.documentId, whereIn: eventIds)
-          .get();
+        final eventsSnapshot = await _firestore
+            .collection('events')
+            .where(FieldPath.documentId, whereIn: eventIds)
+            .get();
 
-      return eventsSnapshot.docs.map((doc) => Event.fromDocument(doc)).toList();
-    });
-  }
+        return eventsSnapshot.docs.map(Event.fromDocument).toList();
+      });
 
   /// Проверить, добавлено ли событие в избранное
   Future<bool> isFavorite(String userId, String eventId) async {
@@ -66,13 +65,11 @@ class FavoritesService {
   }
 
   /// Получить количество избранных событий пользователя
-  Stream<int> getFavoritesCount(String userId) {
-    return _firestore
-        .collection('favorites')
-        .where('userId', isEqualTo: userId)
-        .snapshots()
-        .map((snapshot) => snapshot.docs.length);
-  }
+  Stream<int> getFavoritesCount(String userId) => _firestore
+      .collection('favorites')
+      .where('userId', isEqualTo: userId)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.length);
 
   /// Очистить все избранные события пользователя
   Future<void> clearAllFavorites(String userId) async {

@@ -1,33 +1,24 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/secure_storage_service.dart';
+
 import '../services/encryption_service.dart';
+import '../services/secure_storage_service.dart';
 
 /// Провайдер для управления безопасностью
-final securityProvider =
-    NotifierProvider<SecurityNotifier, SecurityState>((ref) {
-  return SecurityNotifier();
-});
+final securityProvider = NotifierProvider<SecurityNotifier, SecurityState>(
+    (ref) => SecurityNotifier());
 
 /// Провайдер для статистики безопасности
-final securityStatsProvider = FutureProvider<SecurityStats>((ref) async {
-  return await SecureStorageService.getSecurityStats();
-});
+final securityStatsProvider = FutureProvider<SecurityStats>(
+    (ref) async => SecureStorageService.getSecurityStats());
 
 /// Провайдер для валидации пароля
 final passwordValidationProvider =
     NotifierProvider<PasswordValidationNotifier, PasswordValidationState>(
-        (ref) {
-  return PasswordValidationNotifier();
-});
+  (ref) => PasswordValidationNotifier(),
+);
 
 /// Состояние безопасности
 class SecurityState {
-  final bool isEncryptionEnabled;
-  final bool isLoading;
-  final String? error;
-  final DateTime? lastUpdate;
-  final bool hasEncryptionKey;
-
   const SecurityState({
     this.isEncryptionEnabled = false,
     this.isLoading = false,
@@ -35,6 +26,11 @@ class SecurityState {
     this.lastUpdate,
     this.hasEncryptionKey = false,
   });
+  final bool isEncryptionEnabled;
+  final bool isLoading;
+  final String? error;
+  final DateTime? lastUpdate;
+  final bool hasEncryptionKey;
 
   SecurityState copyWith({
     bool? isEncryptionEnabled,
@@ -42,15 +38,14 @@ class SecurityState {
     String? error,
     DateTime? lastUpdate,
     bool? hasEncryptionKey,
-  }) {
-    return SecurityState(
-      isEncryptionEnabled: isEncryptionEnabled ?? this.isEncryptionEnabled,
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
-      lastUpdate: lastUpdate ?? this.lastUpdate,
-      hasEncryptionKey: hasEncryptionKey ?? this.hasEncryptionKey,
-    );
-  }
+  }) =>
+      SecurityState(
+        isEncryptionEnabled: isEncryptionEnabled ?? this.isEncryptionEnabled,
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+        lastUpdate: lastUpdate ?? this.lastUpdate,
+        hasEncryptionKey: hasEncryptionKey ?? this.hasEncryptionKey,
+      );
 
   /// Получить статус безопасности
   String get securityStatus {
@@ -69,31 +64,29 @@ class SecurityState {
 
 /// Состояние валидации пароля
 class PasswordValidationState {
-  final String password;
-  final PasswordValidation? validation;
-  final bool isVisible;
-  final String? error;
-
   const PasswordValidationState({
     this.password = '',
     this.validation,
     this.isVisible = false,
     this.error,
   });
+  final String password;
+  final PasswordValidation? validation;
+  final bool isVisible;
+  final String? error;
 
   PasswordValidationState copyWith({
     String? password,
     PasswordValidation? validation,
     bool? isVisible,
     String? error,
-  }) {
-    return PasswordValidationState(
-      password: password ?? this.password,
-      validation: validation ?? this.validation,
-      isVisible: isVisible ?? this.isVisible,
-      error: error ?? this.error,
-    );
-  }
+  }) =>
+      PasswordValidationState(
+        password: password ?? this.password,
+        validation: validation ?? this.validation,
+        isVisible: isVisible ?? this.isVisible,
+        error: error ?? this.error,
+      );
 
   /// Получить цвет силы пароля
   int get strengthColor {
@@ -109,7 +102,7 @@ class PasswordValidationState {
 
   /// Получить прогресс силы пароля
   double get strengthProgress {
-    if (validation == null) return 0.0;
+    if (validation == null) return 0;
     return validation!.strength.score / 5.0;
   }
 }
@@ -138,7 +131,6 @@ class SecurityNotifier extends Notifier<SecurityState> {
         isEncryptionEnabled: isEncryptionEnabled,
         hasEncryptionKey: hasEncryptionKey,
         lastUpdate: lastUpdate,
-        error: null,
       );
     } catch (e) {
       state = state.copyWith(error: e.toString());
@@ -147,7 +139,7 @@ class SecurityNotifier extends Notifier<SecurityState> {
 
   /// Включить шифрование
   Future<void> enableEncryption() async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       await SecureStorageService.enableEncryption();
@@ -162,7 +154,7 @@ class SecurityNotifier extends Notifier<SecurityState> {
 
   /// Отключить шифрование
   Future<void> disableEncryption() async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       await SecureStorageService.disableEncryption();
@@ -177,7 +169,7 @@ class SecurityNotifier extends Notifier<SecurityState> {
 
   /// Обновить ключ шифрования
   Future<void> updateEncryptionKey() async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       await SecureStorageService.updateEncryptionKey();
@@ -192,7 +184,7 @@ class SecurityNotifier extends Notifier<SecurityState> {
 
   /// Очистить все безопасные данные
   Future<void> clearAllSecureData() async {
-    state = state.copyWith(isLoading: true, error: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       await SecureStorageService.clearAllSecure();
@@ -212,7 +204,7 @@ class SecurityNotifier extends Notifier<SecurityState> {
 
   /// Очистить ошибки
   void clearError() {
-    state = state.copyWith(error: null);
+    state = state.copyWith();
   }
 }
 
@@ -226,7 +218,6 @@ class PasswordValidationNotifier extends Notifier<PasswordValidationState> {
     state = state.copyWith(
       password: password,
       validation: validation,
-      error: null,
     );
   }
 
@@ -239,8 +230,6 @@ class PasswordValidationNotifier extends Notifier<PasswordValidationState> {
   void clearPassword() {
     state = state.copyWith(
       password: '',
-      validation: null,
-      error: null,
     );
   }
 
@@ -251,24 +240,19 @@ class PasswordValidationNotifier extends Notifier<PasswordValidationState> {
 
   /// Очистить ошибку
   void clearError() {
-    state = state.copyWith(error: null);
+    state = state.copyWith();
   }
 
   /// Проверить, валиден ли пароль
-  bool get isValidPassword {
-    return state.validation?.isValid ?? false;
-  }
+  bool get isValidPassword => state.validation?.isValid ?? false;
 
   /// Получить ошибки валидации
-  List<String> get validationErrors {
-    return state.validation?.errors ?? [];
-  }
+  List<String> get validationErrors => state.validation?.errors ?? [];
 }
 
 /// Провайдер для проверки безопасности данных
-final dataSecurityProvider = Provider<DataSecurityChecker>((ref) {
-  return DataSecurityChecker();
-});
+final dataSecurityProvider =
+    Provider<DataSecurityChecker>((ref) => DataSecurityChecker());
 
 /// Класс для проверки безопасности данных
 class DataSecurityChecker {
@@ -344,34 +328,24 @@ enum SecurityLevel {
 }
 
 /// Провайдер для генерации безопасных токенов
-final secureTokenProvider = Provider<SecureTokenGenerator>((ref) {
-  return SecureTokenGenerator();
-});
+final secureTokenProvider =
+    Provider<SecureTokenGenerator>((ref) => SecureTokenGenerator());
 
 /// Генератор безопасных токенов
 class SecureTokenGenerator {
   /// Генерировать токен сессии
-  String generateSessionToken() {
-    return EncryptionService.generateSecureToken(32);
-  }
+  String generateSessionToken() => EncryptionService.generateSecureToken(32);
 
   /// Генерировать API ключ
-  String generateApiKey() {
-    return EncryptionService.generateSecureToken(64);
-  }
+  String generateApiKey() => EncryptionService.generateSecureToken(64);
 
   /// Генерировать UUID
-  String generateUUID() {
-    return EncryptionService.generateUUID();
-  }
+  String generateUUID() => EncryptionService.generateUUID();
 
   /// Генерировать хеш для данных
-  String generateHash(String data) {
-    return EncryptionService.hashData(data);
-  }
+  String generateHash(String data) => EncryptionService.hashData(data);
 
   /// Генерировать хеш с солью
-  String generateHashWithSalt(String data, String salt) {
-    return EncryptionService.hashDataWithSalt(data, salt);
-  }
+  String generateHashWithSalt(String data, String salt) =>
+      EncryptionService.hashDataWithSalt(data, salt);
 }

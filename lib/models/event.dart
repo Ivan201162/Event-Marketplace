@@ -3,30 +3,6 @@ import 'package:flutter/material.dart';
 
 /// Модель события/мероприятия
 class Event {
-  final String id;
-  final String title;
-  final String description;
-  final DateTime date;
-  final DateTime? endDate;
-  final String location;
-  final double price;
-  final String organizerId; // ID создателя события
-  final String organizerName;
-  final String? organizerPhoto;
-  final EventCategory category;
-  final EventStatus status;
-  final int maxParticipants;
-  final int currentParticipants;
-  final List<String> imageUrls;
-  final List<String> tags;
-  final Map<String, dynamic> additionalInfo;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final bool isPublic;
-  final String? contactInfo;
-  final String? requirements;
-  final int? participantsCount;
-
   const Event({
     required this.id,
     required this.title,
@@ -89,34 +65,55 @@ class Event {
       participantsCount: data['participantsCount'],
     );
   }
+  final String id;
+  final String title;
+  final String description;
+  final DateTime date;
+  final DateTime? endDate;
+  final String location;
+  final double price;
+  final String organizerId; // ID создателя события
+  final String organizerName;
+  final String? organizerPhoto;
+  final EventCategory category;
+  final EventStatus status;
+  final int maxParticipants;
+  final int currentParticipants;
+  final List<String> imageUrls;
+  final List<String> tags;
+  final Map<String, dynamic> additionalInfo;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final bool isPublic;
+  final String? contactInfo;
+  final String? requirements;
+  final int? participantsCount;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'title': title,
-      'description': description,
-      'date': Timestamp.fromDate(date),
-      'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
-      'location': location,
-      'price': price,
-      'organizerId': organizerId,
-      'organizerName': organizerName,
-      'organizerPhoto': organizerPhoto,
-      'category': category.name,
-      'status': status.name,
-      'maxParticipants': maxParticipants,
-      'currentParticipants': currentParticipants,
-      'imageUrls': imageUrls,
-      'tags': tags,
-      'additionalInfo': additionalInfo,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'isPublic': isPublic,
-      'contactInfo': contactInfo,
-      'requirements': requirements,
-      'participantsCount': participantsCount,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'title': title,
+        'description': description,
+        'date': Timestamp.fromDate(date),
+        'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
+        'location': location,
+        'price': price,
+        'organizerId': organizerId,
+        'organizerName': organizerName,
+        'organizerPhoto': organizerPhoto,
+        'category': category.name,
+        'status': status.name,
+        'maxParticipants': maxParticipants,
+        'currentParticipants': currentParticipants,
+        'imageUrls': imageUrls,
+        'tags': tags,
+        'additionalInfo': additionalInfo,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'isPublic': isPublic,
+        'contactInfo': contactInfo,
+        'requirements': requirements,
+        'participantsCount': participantsCount,
+      };
 
   /// Копировать с изменениями
   Event copyWith({
@@ -143,33 +140,32 @@ class Event {
     String? contactInfo,
     String? requirements,
     int? participantsCount,
-  }) {
-    return Event(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      date: date ?? this.date,
-      endDate: endDate ?? this.endDate,
-      location: location ?? this.location,
-      price: price ?? this.price,
-      organizerId: organizerId ?? this.organizerId,
-      organizerName: organizerName ?? this.organizerName,
-      organizerPhoto: organizerPhoto ?? this.organizerPhoto,
-      category: category ?? this.category,
-      status: status ?? this.status,
-      maxParticipants: maxParticipants ?? this.maxParticipants,
-      currentParticipants: currentParticipants ?? this.currentParticipants,
-      imageUrls: imageUrls ?? this.imageUrls,
-      tags: tags ?? this.tags,
-      additionalInfo: additionalInfo ?? this.additionalInfo,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      isPublic: isPublic ?? this.isPublic,
-      contactInfo: contactInfo ?? this.contactInfo,
-      requirements: requirements ?? this.requirements,
-      participantsCount: participantsCount ?? this.participantsCount,
-    );
-  }
+  }) =>
+      Event(
+        id: id ?? this.id,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        date: date ?? this.date,
+        endDate: endDate ?? this.endDate,
+        location: location ?? this.location,
+        price: price ?? this.price,
+        organizerId: organizerId ?? this.organizerId,
+        organizerName: organizerName ?? this.organizerName,
+        organizerPhoto: organizerPhoto ?? this.organizerPhoto,
+        category: category ?? this.category,
+        status: status ?? this.status,
+        maxParticipants: maxParticipants ?? this.maxParticipants,
+        currentParticipants: currentParticipants ?? this.currentParticipants,
+        imageUrls: imageUrls ?? this.imageUrls,
+        tags: tags ?? this.tags,
+        additionalInfo: additionalInfo ?? this.additionalInfo,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        isPublic: isPublic ?? this.isPublic,
+        contactInfo: contactInfo ?? this.contactInfo,
+        requirements: requirements ?? this.requirements,
+        participantsCount: participantsCount ?? this.participantsCount,
+      );
 
   /// Проверить, является ли событие сегодняшним
   bool get isToday {
@@ -224,9 +220,8 @@ class Event {
   }
 
   /// Получить отображаемое время
-  String get formattedTime {
-    return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
-  }
+  String get formattedTime =>
+      '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
 
   /// Получить цвет статуса
   Color get statusColor {
@@ -322,9 +317,8 @@ class Event {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'Event(id: $id, title: $title, date: $date, status: $status)';
-  }
+  String toString() =>
+      'Event(id: $id, title: $title, date: $date, status: $status)';
 }
 
 /// Категории событий

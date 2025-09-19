@@ -3,11 +3,6 @@ import '../core/responsive_utils.dart';
 
 /// Адаптивный layout для разных размеров экранов
 class ResponsiveLayout extends StatelessWidget {
-  final Widget mobile;
-  final Widget? tablet;
-  final Widget? desktop;
-  final Widget? largeDesktop;
-
   const ResponsiveLayout({
     super.key,
     required this.mobile,
@@ -15,6 +10,10 @@ class ResponsiveLayout extends StatelessWidget {
     this.desktop,
     this.largeDesktop,
   });
+  final Widget mobile;
+  final Widget? tablet;
+  final Widget? desktop;
+  final Widget? largeDesktop;
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +34,6 @@ class ResponsiveLayout extends StatelessWidget {
 
 /// Адаптивный Scaffold с поддержкой разных размеров экранов
 class ResponsiveScaffold extends StatelessWidget {
-  final Widget body;
-  final PreferredSizeWidget? appBar;
-  final Widget? bottomNavigationBar;
-  final Widget? drawer;
-  final Widget? endDrawer;
-  final FloatingActionButton? floatingActionButton;
-  final FloatingActionButtonLocation? floatingActionButtonLocation;
-  final Color? backgroundColor;
-  final bool extendBody;
-  final bool extendBodyBehindAppBar;
-
   const ResponsiveScaffold({
     super.key,
     required this.body,
@@ -59,6 +47,16 @@ class ResponsiveScaffold extends StatelessWidget {
     this.extendBody = false,
     this.extendBodyBehindAppBar = false,
   });
+  final Widget body;
+  final PreferredSizeWidget? appBar;
+  final Widget? bottomNavigationBar;
+  final Widget? drawer;
+  final Widget? endDrawer;
+  final FloatingActionButton? floatingActionButton;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
+  final Color? backgroundColor;
+  final bool extendBody;
+  final bool extendBodyBehindAppBar;
 
   @override
   Widget build(BuildContext context) {
@@ -85,45 +83,36 @@ class ResponsiveScaffold extends StatelessWidget {
     );
   }
 
-  Widget _buildDesktopLayout(BuildContext context) {
-    return Scaffold(
-      appBar: appBar,
-      body: Row(
-        children: [
-          // Боковая панель навигации
-          if (drawer != null)
-            SizedBox(
-              width: 280,
-              child: drawer!,
+  Widget _buildDesktopLayout(BuildContext context) => Scaffold(
+        appBar: appBar,
+        body: Row(
+          children: [
+            // Боковая панель навигации
+            if (drawer != null)
+              SizedBox(
+                width: 280,
+                child: drawer,
+              ),
+            // Основной контент
+            Expanded(
+              child: body,
             ),
-          // Основной контент
-          Expanded(
-            child: body,
-          ),
-          // Правая панель (если есть)
-          if (endDrawer != null)
-            SizedBox(
-              width: 280,
-              child: endDrawer!,
-            ),
-        ],
-      ),
-      floatingActionButton: floatingActionButton,
-      floatingActionButtonLocation: floatingActionButtonLocation,
-      backgroundColor: backgroundColor,
-    );
-  }
+            // Правая панель (если есть)
+            if (endDrawer != null)
+              SizedBox(
+                width: 280,
+                child: endDrawer,
+              ),
+          ],
+        ),
+        floatingActionButton: floatingActionButton,
+        floatingActionButtonLocation: floatingActionButtonLocation,
+        backgroundColor: backgroundColor,
+      );
 }
 
 /// Адаптивная навигационная панель
 class ResponsiveNavigationBar extends StatelessWidget {
-  final int currentIndex;
-  final ValueChanged<int>? onTap;
-  final List<NavigationBarItem> items;
-  final Color? backgroundColor;
-  final Color? selectedItemColor;
-  final Color? unselectedItemColor;
-
   const ResponsiveNavigationBar({
     super.key,
     required this.currentIndex,
@@ -133,6 +122,12 @@ class ResponsiveNavigationBar extends StatelessWidget {
     this.selectedItemColor,
     this.unselectedItemColor,
   });
+  final int currentIndex;
+  final ValueChanged<int>? onTap;
+  final List<NavigationBarItem> items;
+  final Color? backgroundColor;
+  final Color? selectedItemColor;
+  final Color? unselectedItemColor;
 
   @override
   Widget build(BuildContext context) {
@@ -146,63 +141,54 @@ class ResponsiveNavigationBar extends StatelessWidget {
     }
   }
 
-  Widget _buildBottomNavigationBar(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: currentIndex,
-      onTap: onTap,
-      type: BottomNavigationBarType.fixed,
-      backgroundColor: backgroundColor,
-      selectedItemColor: selectedItemColor,
-      unselectedItemColor: unselectedItemColor,
-      items: items
-          .map((item) => BottomNavigationBarItem(
+  Widget _buildBottomNavigationBar(BuildContext context) => BottomNavigationBar(
+        currentIndex: currentIndex,
+        onTap: onTap,
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: backgroundColor,
+        selectedItemColor: selectedItemColor,
+        unselectedItemColor: unselectedItemColor,
+        items: items
+            .map(
+              (item) => BottomNavigationBarItem(
                 icon: item.icon,
                 label: item.label,
-              ))
-          .toList(),
-    );
-  }
+              ),
+            )
+            .toList(),
+      );
 
-  Widget _buildNavigationRail(BuildContext context) {
-    return NavigationRail(
-      selectedIndex: currentIndex,
-      onDestinationSelected: onTap,
-      backgroundColor: backgroundColor,
-      selectedIconTheme: IconThemeData(color: selectedItemColor),
-      unselectedIconTheme: IconThemeData(color: unselectedItemColor),
-      selectedLabelTextStyle: TextStyle(color: selectedItemColor),
-      unselectedLabelTextStyle: TextStyle(color: unselectedItemColor),
-      destinations: items
-          .map((item) => NavigationRailDestination(
+  Widget _buildNavigationRail(BuildContext context) => NavigationRail(
+        selectedIndex: currentIndex,
+        onDestinationSelected: onTap,
+        backgroundColor: backgroundColor,
+        selectedIconTheme: IconThemeData(color: selectedItemColor),
+        unselectedIconTheme: IconThemeData(color: unselectedItemColor),
+        selectedLabelTextStyle: TextStyle(color: selectedItemColor),
+        unselectedLabelTextStyle: TextStyle(color: unselectedItemColor),
+        destinations: items
+            .map(
+              (item) => NavigationRailDestination(
                 icon: item.icon,
                 label: Text(item.label),
-              ))
-          .toList(),
-    );
-  }
+              ),
+            )
+            .toList(),
+      );
 }
 
 /// Элемент навигации
 class NavigationBarItem {
-  final Widget icon;
-  final String label;
-
   const NavigationBarItem({
     required this.icon,
     required this.label,
   });
+  final Widget icon;
+  final String label;
 }
 
 /// Адаптивная карточка
 class ResponsiveCard extends StatelessWidget {
-  final Widget child;
-  final EdgeInsets? padding;
-  final EdgeInsets? margin;
-  final Color? color;
-  final double? elevation;
-  final BorderRadius? borderRadius;
-  final BoxShadow? shadow;
-
   const ResponsiveCard({
     super.key,
     required this.child,
@@ -213,6 +199,13 @@ class ResponsiveCard extends StatelessWidget {
     this.borderRadius,
     this.shadow,
   });
+  final Widget child;
+  final EdgeInsets? padding;
+  final EdgeInsets? margin;
+  final Color? color;
+  final double? elevation;
+  final BorderRadius? borderRadius;
+  final BoxShadow? shadow;
 
   @override
   Widget build(BuildContext context) {
@@ -276,16 +269,15 @@ class ResponsiveCard extends StatelessWidget {
 
 /// Адаптивный список
 class ResponsiveList extends StatelessWidget {
-  final List<Widget> children;
-  final EdgeInsets? padding;
-  final double? spacing;
-
   const ResponsiveList({
     super.key,
     required this.children,
     this.padding,
     this.spacing,
   });
+  final List<Widget> children;
+  final EdgeInsets? padding;
+  final double? spacing;
 
   @override
   Widget build(BuildContext context) {
@@ -299,11 +291,12 @@ class ResponsiveList extends StatelessWidget {
       padding: effectivePadding,
       child: Column(
         children: children
-            .expand((child) => [
-                  child,
-                  if (child != children.last)
-                    SizedBox(height: effectiveSpacing),
-                ])
+            .expand(
+              (child) => [
+                child,
+                if (child != children.last) SizedBox(height: effectiveSpacing),
+              ],
+            )
             .toList(),
       ),
     );
@@ -312,11 +305,6 @@ class ResponsiveList extends StatelessWidget {
 
 /// Адаптивная кнопка
 class ResponsiveButton extends StatelessWidget {
-  final Widget child;
-  final VoidCallback? onPressed;
-  final ButtonStyle? style;
-  final EdgeInsets? padding;
-
   const ResponsiveButton({
     super.key,
     required this.child,
@@ -324,6 +312,10 @@ class ResponsiveButton extends StatelessWidget {
     this.style,
     this.padding,
   });
+  final Widget child;
+  final VoidCallback? onPressed;
+  final ButtonStyle? style;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -372,11 +364,6 @@ class ResponsiveButton extends StatelessWidget {
 
 /// Адаптивный диалог
 class ResponsiveDialog extends StatelessWidget {
-  final Widget child;
-  final String? title;
-  final List<Widget>? actions;
-  final EdgeInsets? contentPadding;
-
   const ResponsiveDialog({
     super.key,
     required this.child,
@@ -384,6 +371,10 @@ class ResponsiveDialog extends StatelessWidget {
     this.actions,
     this.contentPadding,
   });
+  final Widget child;
+  final String? title;
+  final List<Widget>? actions;
+  final EdgeInsets? contentPadding;
 
   @override
   Widget build(BuildContext context) {

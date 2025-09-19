@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:event_marketplace_app/models/booking.dart';
-import 'package:event_marketplace_app/models/specialist.dart';
-import 'package:event_marketplace_app/models/user.dart';
-import 'package:event_marketplace_app/models/contract.dart';
-import 'package:event_marketplace_app/core/feature_flags.dart';
+
+import '../core/feature_flags.dart';
+import '../models/booking.dart';
+import '../models/contract.dart';
+import '../models/specialist.dart';
+import '../models/user.dart';
 
 /// Сервис для автоматического формирования договоров
 class ContractService {
@@ -62,7 +63,6 @@ class ContractService {
         terms: _generateDefaultTerms(booking, customTerms),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        signedAt: null,
         expiresAt: booking.eventDate.add(const Duration(days: 30)),
         metadata: {
           'eventTitle': booking.eventTitle,
@@ -118,9 +118,8 @@ class ContractService {
   }
 
   /// Получить договор по ID
-  Future<Contract?> getContract(String contractId) async {
-    return await _getContract(contractId);
-  }
+  Future<Contract?> getContract(String contractId) async =>
+      _getContract(contractId);
 
   /// Получить договоры по бронированию
   Future<List<Contract>> getContractsByBooking(String bookingId) async {
@@ -131,7 +130,7 @@ class ContractService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => Contract.fromDocument(doc)).toList();
+      return snapshot.docs.map(Contract.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения договоров: $e');
     }
@@ -206,8 +205,8 @@ class ContractService {
     required User customer,
     required Specialist specialist,
     Map<String, dynamic>? customTerms,
-  }) {
-    return '''
+  }) =>
+      '''
 ДОГОВОР НА ОКАЗАНИЕ УСЛУГ № $contractNumber
 
 г. Москва                                    ${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year} г.
@@ -262,10 +261,11 @@ Email: ${customer.email ?? 'Не указан'}
 
 Заказчик: _________________ ${customer.name}
 ''';
-  }
 
   Map<String, dynamic> _generateDefaultTerms(
-      Booking booking, Map<String, dynamic>? customTerms) {
+    Booking booking,
+    Map<String, dynamic>? customTerms,
+  ) {
     final defaultTerms = {
       'paymentTerms': {
         'advanceRequired': true,
@@ -288,7 +288,7 @@ Email: ${customer.email ?? 'Не указан'}
         'includes': [
           'natural_disasters',
           'government_restrictions',
-          'pandemics'
+          'pandemics',
         ],
         'resolution': 'reschedule_or_refund',
       },

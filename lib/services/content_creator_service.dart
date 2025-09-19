@@ -13,7 +13,7 @@ class ContentCreatorService {
     int limit = 20,
   }) async {
     try {
-      Query query = _firestore
+      var query = _firestore
           .collection('contentCreators')
           .where('isActive', isEqualTo: true);
 
@@ -29,13 +29,14 @@ class ContentCreatorService {
           await query.orderBy('rating', descending: true).limit(limit).get();
 
       List<ContentCreator> creators =
-          snapshot.docs.map((doc) => ContentCreator.fromDocument(doc)).toList();
+          snapshot.docs.map(ContentCreator.fromDocument).toList();
 
       // Фильтрация по форматам на клиенте (если указаны)
       if (formats != null && formats.isNotEmpty) {
-        creators = creators.where((creator) {
-          return creator.formats.any((format) => formats.contains(format.name));
-        }).toList();
+        creators = creators
+            .where((creator) =>
+                creator.formats.any((format) => formats.contains(format.name)))
+            .toList();
       }
 
       return creators;
@@ -94,7 +95,9 @@ class ContentCreatorService {
 
   /// Добавить медиа в портфолио
   Future<void> addMediaToPortfolio(
-      String creatorId, MediaShowcase media) async {
+    String creatorId,
+    MediaShowcase media,
+  ) async {
     try {
       await _firestore.collection('contentCreators').doc(creatorId).update({
         'mediaShowcase': FieldValue.arrayUnion([media.toMap()]),
@@ -107,7 +110,9 @@ class ContentCreatorService {
 
   /// Удалить медиа из портфолио
   Future<void> removeMediaFromPortfolio(
-      String creatorId, String mediaId) async {
+    String creatorId,
+    String mediaId,
+  ) async {
     try {
       // Получаем текущий контент-мейкер
       final doc =
@@ -162,14 +167,19 @@ class ContentCreatorService {
 
       // Фильтруем по поисковому запросу
       final searchQuery = query.toLowerCase();
-      final filteredCreators = creators.where((creator) {
-        return creator.name.toLowerCase().contains(searchQuery) ||
-            creator.description.toLowerCase().contains(searchQuery) ||
-            creator.categories.any(
-                (category) => category.toLowerCase().contains(searchQuery)) ||
-            creator.formats.any(
-                (format) => format.name.toLowerCase().contains(searchQuery));
-      }).toList();
+      final filteredCreators = creators
+          .where(
+            (creator) =>
+                creator.name.toLowerCase().contains(searchQuery) ||
+                creator.description.toLowerCase().contains(searchQuery) ||
+                creator.categories.any(
+                  (category) => category.toLowerCase().contains(searchQuery),
+                ) ||
+                creator.formats.any(
+                  (format) => format.name.toLowerCase().contains(searchQuery),
+                ),
+          )
+          .toList();
 
       return filteredCreators.take(limit).toList();
     } catch (e) {

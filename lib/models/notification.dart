@@ -20,17 +20,6 @@ enum NotificationPriority {
 
 /// Модель уведомления
 class AppNotification {
-  final String id;
-  final String userId;
-  final String type;
-  final String title;
-  final String body;
-  final Map<String, dynamic> data;
-  final bool isRead;
-  final DateTime createdAt;
-  final DateTime? readAt;
-  final NotificationPriority priority;
-
   const AppNotification({
     required this.id,
     required this.userId,
@@ -66,21 +55,29 @@ class AppNotification {
       ),
     );
   }
+  final String id;
+  final String userId;
+  final String type;
+  final String title;
+  final String body;
+  final Map<String, dynamic> data;
+  final bool isRead;
+  final DateTime createdAt;
+  final DateTime? readAt;
+  final NotificationPriority priority;
 
   /// Преобразует уведомление в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'type': type,
-      'title': title,
-      'body': body,
-      'data': data,
-      'isRead': isRead,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
-      'priority': priority.name,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'userId': userId,
+        'type': type,
+        'title': title,
+        'body': body,
+        'data': data,
+        'isRead': isRead,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
+        'priority': priority.name,
+      };
 
   /// Создаёт копию уведомления с обновлёнными полями
   AppNotification copyWith({
@@ -94,20 +91,19 @@ class AppNotification {
     DateTime? createdAt,
     DateTime? readAt,
     NotificationPriority? priority,
-  }) {
-    return AppNotification(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      type: type ?? this.type,
-      title: title ?? this.title,
-      body: body ?? this.body,
-      data: data ?? this.data,
-      isRead: isRead ?? this.isRead,
-      createdAt: createdAt ?? this.createdAt,
-      readAt: readAt ?? this.readAt,
-      priority: priority ?? this.priority,
-    );
-  }
+  }) =>
+      AppNotification(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        type: type ?? this.type,
+        title: title ?? this.title,
+        body: body ?? this.body,
+        data: data ?? this.data,
+        isRead: isRead ?? this.isRead,
+        createdAt: createdAt ?? this.createdAt,
+        readAt: readAt ?? this.readAt,
+        priority: priority ?? this.priority,
+      );
 
   /// Типы уведомлений
   static const String typeReview = 'review';
@@ -175,9 +171,8 @@ class AppNotification {
   bool get isUnread => !isRead;
 
   @override
-  String toString() {
-    return 'AppNotification(id: $id, type: $type, title: $title, isRead: $isRead)';
-  }
+  String toString() =>
+      'AppNotification(id: $id, type: $type, title: $title, isRead: $isRead)';
 }
 
 /// Расширение для работы с уведомлениями
@@ -195,7 +190,7 @@ extension NotificationExtension on List<AppNotification> {
 
   /// Группирует уведомления по типу
   Map<String, List<AppNotification>> get groupedByType {
-    final Map<String, List<AppNotification>> grouped = {};
+    final grouped = <String, List<AppNotification>>{};
     for (final notification in this) {
       grouped.putIfAbsent(notification.type, () => []).add(notification);
     }

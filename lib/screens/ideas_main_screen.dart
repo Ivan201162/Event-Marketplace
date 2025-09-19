@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/idea.dart';
 import '../services/idea_service.dart';
 import '../widgets/idea_widget.dart';
 import 'create_idea_screen.dart';
-import 'idea_detail_screen.dart';
+import 'idea_categories_screen.dart';
 import 'idea_collections_screen.dart';
+import 'idea_detail_screen.dart';
+import 'idea_search_screen.dart';
 import 'saved_ideas_screen.dart';
 import 'top_ideas_screen.dart';
-import 'idea_categories_screen.dart';
-import 'idea_search_screen.dart';
 
 /// Главный экран идей
 class IdeasMainScreen extends ConsumerStatefulWidget {
-  final String? userId;
-
   const IdeasMainScreen({
     super.key,
     this.userId,
   });
+  final String? userId;
 
   @override
   ConsumerState<IdeasMainScreen> createState() => _IdeasMainScreenState();
@@ -28,314 +28,299 @@ class _IdeasMainScreenState extends ConsumerState<IdeasMainScreen> {
   final IdeaService _ideaService = IdeaService();
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Идеи'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: () => _showSearchScreen(),
-          ),
-          IconButton(
-            icon: const Icon(Icons.collections_bookmark),
-            onPressed: () => _showCollectionsScreen(),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Быстрые действия
-          _buildQuickActions(),
-
-          // Топ идеи недели
-          _buildTopIdeasSection(),
-
-          // Категории
-          _buildCategoriesSection(),
-
-          // Последние идеи
-          Expanded(
-            child: _buildRecentIdeasSection(),
-          ),
-        ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _createIdea,
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
-
-  Widget _buildQuickActions() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildQuickActionCard(
-              icon: Icons.trending_up,
-              title: 'Топ идеи',
-              color: Colors.orange,
-              onTap: () => _showTopIdeasScreen(),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Идеи'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: _showSearchScreen,
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: _buildQuickActionCard(
-              icon: Icons.bookmark,
-              title: 'Сохраненные',
-              color: Colors.blue,
-              onTap: () => _showSavedIdeasScreen(),
+            IconButton(
+              icon: const Icon(Icons.collections_bookmark),
+              onPressed: _showCollectionsScreen,
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: _buildQuickActionCard(
-              icon: Icons.collections_bookmark,
-              title: 'Коллекции',
-              color: Colors.green,
-              onTap: () => _showCollectionsScreen(),
+          ],
+        ),
+        body: Column(
+          children: [
+            // Быстрые действия
+            _buildQuickActions(),
+
+            // Топ идеи недели
+            _buildTopIdeasSection(),
+
+            // Категории
+            _buildCategoriesSection(),
+
+            // Последние идеи
+            Expanded(
+              child: _buildRecentIdeasSection(),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _createIdea,
+          child: const Icon(Icons.add),
+        ),
+      );
+
+  Widget _buildQuickActions() => Container(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Expanded(
+              child: _buildQuickActionCard(
+                icon: Icons.trending_up,
+                title: 'Топ идеи',
+                color: Colors.orange,
+                onTap: _showTopIdeasScreen,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildQuickActionCard(
+                icon: Icons.bookmark,
+                title: 'Сохраненные',
+                color: Colors.blue,
+                onTap: _showSavedIdeasScreen,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildQuickActionCard(
+                icon: Icons.collections_bookmark,
+                title: 'Коллекции',
+                color: Colors.green,
+                onTap: _showCollectionsScreen,
+              ),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildQuickActionCard({
     required IconData icon,
     required String title,
     required Color color,
     required VoidCallback onTap,
-  }) {
-    return Card(
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Icon(icon, color: color, size: 32),
-              const SizedBox(height: 8),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
+  }) =>
+      Card(
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Icon(icon, color: color, size: 32),
+                const SizedBox(height: 8),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildTopIdeasSection() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Text(
-                'Топ идеи недели',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+  Widget _buildTopIdeasSection() => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Text(
+                  'Топ идеи недели',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              const Spacer(),
-              TextButton(
-                onPressed: () => _showTopIdeasScreen(),
-                child: const Text('Все'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            height: 200,
-            child: StreamBuilder<List<Idea>>(
-              stream: _ideaService.getTopIdeasOfWeek(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+                const Spacer(),
+                TextButton(
+                  onPressed: _showTopIdeasScreen,
+                  child: const Text('Все'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 200,
+              child: StreamBuilder<List<Idea>>(
+                stream: _ideaService.getTopIdeasOfWeek(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                final ideas = snapshot.data ?? [];
-                if (ideas.isEmpty) {
-                  return const Center(
-                    child: Text('Нет топ идей'),
+                  final ideas = snapshot.data ?? [];
+                  if (ideas.isEmpty) {
+                    return const Center(
+                      child: Text('Нет топ идей'),
+                    );
+                  }
+
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: ideas.length,
+                    itemBuilder: (context, index) {
+                      final idea = ideas[index];
+                      return Container(
+                        width: 300,
+                        margin: const EdgeInsets.only(right: 12),
+                        child: IdeaWidget(
+                          idea: idea,
+                          onTap: () => _showIdeaDetail(idea),
+                          onLike: () => _likeIdea(idea),
+                          onSave: () => _saveIdea(idea),
+                          onShare: () => _shareIdea(idea),
+                        ),
+                      );
+                    },
                   );
-                }
+                },
+              ),
+            ),
+          ],
+        ),
+      );
 
-                return ListView.builder(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: ideas.length,
-                  itemBuilder: (context, index) {
-                    final idea = ideas[index];
-                    return Container(
-                      width: 300,
-                      margin: const EdgeInsets.only(right: 12),
-                      child: IdeaWidget(
+  Widget _buildCategoriesSection() => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Text(
+                  'Категории',
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Spacer(),
+                TextButton(
+                  onPressed: _showCategoriesScreen,
+                  child: const Text('Все'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            SizedBox(
+              height: 100,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: _getCategories().length,
+                itemBuilder: (context, index) {
+                  final category = _getCategories()[index];
+                  return Container(
+                    width: 80,
+                    margin: const EdgeInsets.only(right: 12),
+                    child: _buildCategoryCard(category),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildCategoryCard(String category) => Card(
+        child: InkWell(
+          onTap: () => _showCategoryIdeas(category),
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  _getCategoryIcon(category),
+                  color: _getCategoryColor(category),
+                  size: 24,
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  category,
+                  style: const TextStyle(
+                    fontSize: 10,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+  Widget _buildRecentIdeasSection() => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Последние идеи',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 8),
+            Expanded(
+              child: StreamBuilder<List<Idea>>(
+                stream: _ideaService.getIdeas(const IdeaFilter()),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  final ideas = snapshot.data ?? [];
+                  if (ideas.isEmpty) {
+                    return const Center(
+                      child: Text('Нет идей'),
+                    );
+                  }
+
+                  return ListView.builder(
+                    itemCount: ideas.length,
+                    itemBuilder: (context, index) {
+                      final idea = ideas[index];
+                      return IdeaWidget(
                         idea: idea,
                         onTap: () => _showIdeaDetail(idea),
                         onLike: () => _likeIdea(idea),
                         onSave: () => _saveIdea(idea),
                         onShare: () => _shareIdea(idea),
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCategoriesSection() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Text(
-                'Категории',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Spacer(),
-              TextButton(
-                onPressed: () => _showCategoriesScreen(),
-                child: const Text('Все'),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          SizedBox(
-            height: 100,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: _getCategories().length,
-              itemBuilder: (context, index) {
-                final category = _getCategories()[index];
-                return Container(
-                  width: 80,
-                  margin: const EdgeInsets.only(right: 12),
-                  child: _buildCategoryCard(category),
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildCategoryCard(String category) {
-    return Card(
-      child: InkWell(
-        onTap: () => _showCategoryIdeas(category),
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                _getCategoryIcon(category),
-                color: _getCategoryColor(category),
-                size: 24,
-              ),
-              const SizedBox(height: 4),
-              Text(
-                category,
-                style: const TextStyle(
-                  fontSize: 10,
-                  fontWeight: FontWeight.w500,
-                ),
-                textAlign: TextAlign.center,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRecentIdeasSection() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Последние идеи',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Expanded(
-            child: StreamBuilder<List<Idea>>(
-              stream: _ideaService.getIdeas(const IdeaFilter()),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                final ideas = snapshot.data ?? [];
-                if (ideas.isEmpty) {
-                  return const Center(
-                    child: Text('Нет идей'),
+                      );
+                    },
                   );
-                }
-
-                return ListView.builder(
-                  itemCount: ideas.length,
-                  itemBuilder: (context, index) {
-                    final idea = ideas[index];
-                    return IdeaWidget(
-                      idea: idea,
-                      onTap: () => _showIdeaDetail(idea),
-                      onLike: () => _likeIdea(idea),
-                      onSave: () => _saveIdea(idea),
-                      onShare: () => _shareIdea(idea),
-                    );
-                  },
-                );
-              },
+                },
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
-  List<String> _getCategories() {
-    return [
-      'Декор',
-      'Еда',
-      'Развлечения',
-      'Фото',
-      'Музыка',
-      'Одежда',
-      'Подарки',
-    ];
-  }
+  List<String> _getCategories() => [
+        'Декор',
+        'Еда',
+        'Развлечения',
+        'Фото',
+        'Музыка',
+        'Одежда',
+        'Подарки',
+      ];
 
   IconData _getCategoryIcon(String category) {
     switch (category.toLowerCase()) {

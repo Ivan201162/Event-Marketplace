@@ -7,14 +7,13 @@ import '../widgets/payment_type_selector.dart';
 
 /// Расширенный экран управления платежами
 class PaymentsExtendedScreen extends ConsumerStatefulWidget {
-  final String userId;
-  final bool isCustomer;
-
   const PaymentsExtendedScreen({
     super.key,
     required this.userId,
     this.isCustomer = true,
   });
+  final String userId;
+  final bool isCustomer;
 
   @override
   ConsumerState<PaymentsExtendedScreen> createState() =>
@@ -41,305 +40,320 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.isCustomer ? 'Мои платежи' : 'Платежи клиентов'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Все', icon: Icon(Icons.list)),
-            Tab(text: 'Ожидают', icon: Icon(Icons.pending)),
-            Tab(text: 'Статистика', icon: Icon(Icons.analytics)),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: Text(widget.isCustomer ? 'Мои платежи' : 'Платежи клиентов'),
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Все', icon: Icon(Icons.list)),
+              Tab(text: 'Ожидают', icon: Icon(Icons.pending)),
+              Tab(text: 'Статистика', icon: Icon(Icons.analytics)),
+            ],
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: _showCreatePaymentDialog,
+            ),
+            if (!widget.isCustomer)
+              IconButton(
+                icon: const Icon(Icons.settings),
+                onPressed: _showSettingsDialog,
+              ),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: _showCreatePaymentDialog,
-          ),
-          if (!widget.isCustomer)
-            IconButton(
-              icon: const Icon(Icons.settings),
-              onPressed: _showSettingsDialog,
-            ),
-        ],
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildAllPaymentsTab(),
-          _buildPendingPaymentsTab(),
-          _buildStatsTab(),
-        ],
-      ),
-    );
-  }
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            _buildAllPaymentsTab(),
+            _buildPendingPaymentsTab(),
+            _buildStatsTab(),
+          ],
+        ),
+      );
 
-  Widget _buildAllPaymentsTab() {
-    return StreamBuilder<List<PaymentExtended>>(
-      stream: _paymentService.getUserPayments(widget.userId,
-          isCustomer: widget.isCustomer),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+  Widget _buildAllPaymentsTab() => StreamBuilder<List<PaymentExtended>>(
+        stream: _paymentService.getUserPayments(
+          widget.userId,
+          isCustomer: widget.isCustomer,
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-        if (snapshot.hasError) {
-          return Center(
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text('Ошибка: ${snapshot.error}'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => setState(() {}),
+                    child: const Text('Повторить'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          final payments = snapshot.data ?? [];
+
+          if (payments.isEmpty) {
+            return _buildEmptyState(
+              'Нет платежей',
+              'Создайте первый платеж для начала работы',
+              Icons.payment,
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(8),
+            itemCount: payments.length,
+            itemBuilder: (context, index) {
+              final payment = payments[index];
+              return PaymentCardWidget(
+                payment: payment,
+                onTap: () => _showPaymentDetails(payment),
+                onPay: payment.remainingAmount > 0
+                    ? () => _showPaymentDialog(payment)
+                    : null,
+                onDownloadReceipt: payment.receiptPdfUrl != null
+                    ? () => _downloadReceipt(payment)
+                    : null,
+                onDownloadInvoice: payment.invoicePdfUrl != null
+                    ? () => _downloadInvoice(payment)
+                    : null,
+              );
+            },
+          );
+        },
+      );
+
+  Widget _buildPendingPaymentsTab() => StreamBuilder<List<PaymentExtended>>(
+        stream: _paymentService.getUserPayments(
+          widget.userId,
+          isCustomer: widget.isCustomer,
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final allPayments = snapshot.data ?? [];
+          final pendingPayments = allPayments
+              .where(
+                (p) =>
+                    p.status == PaymentStatus.pending ||
+                    p.status == PaymentStatus.processing,
+              )
+              .toList();
+
+          if (pendingPayments.isEmpty) {
+            return _buildEmptyState(
+              'Нет ожидающих платежей',
+              'Все платежи обработаны',
+              Icons.check_circle,
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(8),
+            itemCount: pendingPayments.length,
+            itemBuilder: (context, index) {
+              final payment = pendingPayments[index];
+              return PaymentCardWidget(
+                payment: payment,
+                onTap: () => _showPaymentDetails(payment),
+                onPay: () => _showPaymentDialog(payment),
+                onDownloadReceipt: payment.receiptPdfUrl != null
+                    ? () => _downloadReceipt(payment)
+                    : null,
+                onDownloadInvoice: payment.invoicePdfUrl != null
+                    ? () => _downloadInvoice(payment)
+                    : null,
+              );
+            },
+          );
+        },
+      );
+
+  Widget _buildStatsTab() => FutureBuilder<PaymentStats>(
+        future: _paymentService.getPaymentStats(
+          widget.userId,
+          isCustomer: widget.isCustomer,
+        ),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final stats = snapshot.data ?? PaymentStats.empty();
+
+          return SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Icon(Icons.error, size: 64, color: Colors.red),
+                // Общая статистика
+                _buildStatsCard('Общая статистика', [
+                  _buildStatItem(
+                    'Всего платежей',
+                    stats.totalPayments.toString(),
+                    Icons.payment,
+                  ),
+                  _buildStatItem(
+                    'Завершено',
+                    stats.completedPayments.toString(),
+                    Icons.check_circle,
+                  ),
+                  _buildStatItem(
+                    'Ожидают',
+                    stats.pendingPayments.toString(),
+                    Icons.pending,
+                  ),
+                  _buildStatItem(
+                    'Ошибки',
+                    stats.failedPayments.toString(),
+                    Icons.error,
+                  ),
+                ]),
+
                 const SizedBox(height: 16),
-                Text('Ошибка: ${snapshot.error}'),
+
+                // Финансовая статистика
+                _buildStatsCard('Финансовая статистика', [
+                  _buildStatItem(
+                    'Общая сумма',
+                    '${stats.totalAmount.toStringAsFixed(2)} ₽',
+                    Icons.account_balance_wallet,
+                  ),
+                  _buildStatItem(
+                    'Оплачено',
+                    '${stats.paidAmount.toStringAsFixed(2)} ₽',
+                    Icons.check_circle,
+                  ),
+                  _buildStatItem(
+                    'Остаток',
+                    '${stats.pendingAmount.toStringAsFixed(2)} ₽',
+                    Icons.pending,
+                  ),
+                  _buildStatItem(
+                    'Успешность',
+                    '${stats.successRate.toStringAsFixed(1)}%',
+                    Icons.trending_up,
+                  ),
+                ]),
+
                 const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () => setState(() {}),
-                  child: const Text('Повторить'),
-                ),
+
+                // Типы платежей
+                if (stats.paymentsByType.isNotEmpty) ...[
+                  _buildStatsCard(
+                    'По типам платежей',
+                    stats.paymentsByType.entries
+                        .map(
+                          (entry) => _buildStatItem(
+                            _getPaymentTypeText(entry.key),
+                            entry.value.toString(),
+                            _getPaymentTypeIcon(entry.key),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                  const SizedBox(height: 16),
+                ],
+
+                // Статусы платежей
+                if (stats.paymentsByStatus.isNotEmpty) ...[
+                  _buildStatsCard(
+                    'По статусам',
+                    stats.paymentsByStatus.entries
+                        .map(
+                          (entry) => _buildStatItem(
+                            _getStatusText(entry.key),
+                            entry.value.toString(),
+                            _getStatusIcon(entry.key),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ],
               ],
             ),
           );
-        }
+        },
+      );
 
-        final payments = snapshot.data ?? [];
+  Widget _buildEmptyState(String title, String subtitle, IconData icon) =>
+      Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              subtitle,
+              style: const TextStyle(color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
 
-        if (payments.isEmpty) {
-          return _buildEmptyState(
-            'Нет платежей',
-            'Создайте первый платеж для начала работы',
-            Icons.payment,
-          );
-        }
-
-        return ListView.builder(
-          padding: const EdgeInsets.all(8.0),
-          itemCount: payments.length,
-          itemBuilder: (context, index) {
-            final payment = payments[index];
-            return PaymentCardWidget(
-              payment: payment,
-              onTap: () => _showPaymentDetails(payment),
-              onPay: payment.remainingAmount > 0
-                  ? () => _showPaymentDialog(payment)
-                  : null,
-              onDownloadReceipt: payment.receiptPdfUrl != null
-                  ? () => _downloadReceipt(payment)
-                  : null,
-              onDownloadInvoice: payment.invoicePdfUrl != null
-                  ? () => _downloadInvoice(payment)
-                  : null,
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildPendingPaymentsTab() {
-    return StreamBuilder<List<PaymentExtended>>(
-      stream: _paymentService.getUserPayments(widget.userId,
-          isCustomer: widget.isCustomer),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        final allPayments = snapshot.data ?? [];
-        final pendingPayments = allPayments
-            .where((p) =>
-                p.status == PaymentStatus.pending ||
-                p.status == PaymentStatus.processing)
-            .toList();
-
-        if (pendingPayments.isEmpty) {
-          return _buildEmptyState(
-            'Нет ожидающих платежей',
-            'Все платежи обработаны',
-            Icons.check_circle,
-          );
-        }
-
-        return ListView.builder(
-          padding: const EdgeInsets.all(8.0),
-          itemCount: pendingPayments.length,
-          itemBuilder: (context, index) {
-            final payment = pendingPayments[index];
-            return PaymentCardWidget(
-              payment: payment,
-              onTap: () => _showPaymentDetails(payment),
-              onPay: () => _showPaymentDialog(payment),
-              onDownloadReceipt: payment.receiptPdfUrl != null
-                  ? () => _downloadReceipt(payment)
-                  : null,
-              onDownloadInvoice: payment.invoicePdfUrl != null
-                  ? () => _downloadInvoice(payment)
-                  : null,
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildStatsTab() {
-    return FutureBuilder<PaymentStats>(
-      future: _paymentService.getPaymentStats(widget.userId,
-          isCustomer: widget.isCustomer),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        final stats = snapshot.data ?? PaymentStats.empty();
-
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16.0),
+  Widget _buildStatsCard(String title, List<Widget> children) => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Общая статистика
-              _buildStatsCard('Общая статистика', [
-                _buildStatItem('Всего платежей', stats.totalPayments.toString(),
-                    Icons.payment),
-                _buildStatItem('Завершено', stats.completedPayments.toString(),
-                    Icons.check_circle),
-                _buildStatItem(
-                    'Ожидают', stats.pendingPayments.toString(), Icons.pending),
-                _buildStatItem(
-                    'Ошибки', stats.failedPayments.toString(), Icons.error),
-              ]),
-
-              const SizedBox(height: 16),
-
-              // Финансовая статистика
-              _buildStatsCard('Финансовая статистика', [
-                _buildStatItem(
-                    'Общая сумма',
-                    '${stats.totalAmount.toStringAsFixed(2)} ₽',
-                    Icons.account_balance_wallet),
-                _buildStatItem(
-                    'Оплачено',
-                    '${stats.paidAmount.toStringAsFixed(2)} ₽',
-                    Icons.check_circle),
-                _buildStatItem(
-                    'Остаток',
-                    '${stats.pendingAmount.toStringAsFixed(2)} ₽',
-                    Icons.pending),
-                _buildStatItem(
-                    'Успешность',
-                    '${stats.successRate.toStringAsFixed(1)}%',
-                    Icons.trending_up),
-              ]),
-
-              const SizedBox(height: 16),
-
-              // Типы платежей
-              if (stats.paymentsByType.isNotEmpty) ...[
-                _buildStatsCard(
-                  'По типам платежей',
-                  stats.paymentsByType.entries.map((entry) {
-                    return _buildStatItem(
-                      _getPaymentTypeText(entry.key),
-                      entry.value.toString(),
-                      _getPaymentTypeIcon(entry.key),
-                    );
-                  }).toList(),
+              Text(
+                title,
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
                 ),
-                const SizedBox(height: 16),
-              ],
-
-              // Статусы платежей
-              if (stats.paymentsByStatus.isNotEmpty) ...[
-                _buildStatsCard(
-                  'По статусам',
-                  stats.paymentsByStatus.entries.map((entry) {
-                    return _buildStatItem(
-                      _getStatusText(entry.key),
-                      entry.value.toString(),
-                      _getStatusIcon(entry.key),
-                    );
-                  }).toList(),
-                ),
-              ],
+              ),
+              const SizedBox(height: 12),
+              ...children,
             ],
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
 
-  Widget _buildEmptyState(String title, String subtitle, IconData icon) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 64, color: Colors.grey),
-          const SizedBox(height: 16),
-          Text(
-            title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            subtitle,
-            style: const TextStyle(color: Colors.grey),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatsCard(String title, List<Widget> children) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildStatItem(String label, String value, IconData icon) => Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
           children: [
+            Icon(icon, size: 20, color: Colors.grey[600]),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                label,
+                style: const TextStyle(fontSize: 14),
+              ),
+            ),
             Text(
-              title,
+              value,
               style: const TextStyle(
-                fontSize: 16,
+                fontSize: 14,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 12),
-            ...children,
           ],
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildStatItem(String label, String value, IconData icon) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          Icon(icon, size: 20, color: Colors.grey[600]),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Text(
-              label,
-              style: const TextStyle(fontSize: 14),
-            ),
-          ),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _loadSettings() async {
+  Future<void> _loadSettings() async {
     final settings = await _paymentService.getAdvancePaymentSettings();
     setState(() {
       _settings = settings;
@@ -354,7 +368,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
         content: SizedBox(
           width: double.maxFinite,
           child: PaymentTypeSelector(
-            totalAmount: 50000.0, // TODO: Получить из контекста
+            totalAmount: 50000, // TODO: Получить из контекста
             settings: _settings,
             onPaymentTypeSelected:
                 (type, advancePercentage, installments) async {
@@ -383,15 +397,17 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
               Text('Оплачено: ${payment.paidAmount.toStringAsFixed(2)} ₽'),
               Text('Остаток: ${payment.remainingAmount.toStringAsFixed(2)} ₽'),
               const SizedBox(height: 16),
-              const Text('Взносы:',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
-              ...payment.installments.map((installment) {
-                return ListTile(
+              const Text(
+                'Взносы:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              ...payment.installments.map(
+                (installment) => ListTile(
                   title: Text(_formatDate(installment.dueDate)),
                   subtitle: Text('${installment.amount.toStringAsFixed(2)} ₽'),
                   trailing: Text(_getStatusText(installment.status.name)),
-                );
-              }),
+                ),
+              ),
             ],
           ),
         ),
@@ -411,7 +427,8 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
       builder: (context) => AlertDialog(
         title: const Text('Оплата'),
         content: const Text(
-            'Функция оплаты будет интегрирована с платежными системами.'),
+          'Функция оплаты будет интегрирована с платежными системами.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -435,7 +452,8 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
       builder: (context) => AlertDialog(
         title: const Text('Настройки предоплаты'),
         content: const Text(
-            'Настройки предоплаты будут доступны в следующих версиях.'),
+          'Настройки предоплаты будут доступны в следующих версиях.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -447,12 +465,15 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
   }
 
   Future<void> _createPayment(
-      PaymentType type, double? advancePercentage, int? installments) async {
+    PaymentType type,
+    double? advancePercentage,
+    int? installments,
+  ) async {
     final paymentId = await _paymentService.createPayment(
       bookingId: 'demo_booking_${DateTime.now().millisecondsSinceEpoch}',
       customerId: widget.userId,
       specialistId: 'demo_specialist',
-      totalAmount: 50000.0,
+      totalAmount: 50000,
       type: type,
       advancePercentage: advancePercentage,
       installmentsCount: installments,
@@ -471,7 +492,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
     }
   }
 
-  void _simulatePayment(PaymentExtended payment) async {
+  Future<void> _simulatePayment(PaymentExtended payment) async {
     // Симуляция оплаты
     final success = await _paymentService.payInstallment(
       paymentId: payment.id,
@@ -493,7 +514,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
     }
   }
 
-  void _downloadReceipt(PaymentExtended payment) async {
+  Future<void> _downloadReceipt(PaymentExtended payment) async {
     if (payment.receiptPdfUrl == null) {
       final url = await _paymentService.generateReceiptPdf(payment);
       if (url != null && mounted) {
@@ -508,7 +529,7 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
     }
   }
 
-  void _downloadInvoice(PaymentExtended payment) async {
+  Future<void> _downloadInvoice(PaymentExtended payment) async {
     if (payment.invoicePdfUrl == null) {
       final url = await _paymentService.generateInvoicePdf(payment);
       if (url != null && mounted) {
@@ -591,7 +612,5 @@ class _PaymentsExtendedScreenState extends ConsumerState<PaymentsExtendedScreen>
     }
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day}.${date.month}.${date.year}';
-  }
+  String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 }

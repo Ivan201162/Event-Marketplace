@@ -1,6 +1,8 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'dart:io';
+
 import '../models/customer_profile_extended.dart';
 
 /// Сервис для работы с расширенным профилем заказчика
@@ -62,7 +64,7 @@ class CustomerProfileExtendedService {
         notes: [],
         favoriteSpecialists: [],
         savedEvents: [],
-        extendedPreferences: CustomerPreferences(),
+        extendedPreferences: const CustomerPreferences(),
         lastUpdated: DateTime.now(),
       );
 
@@ -231,11 +233,13 @@ class CustomerProfileExtendedService {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return;
 
-      final updatedNotes = profile.notes.map((note) {
-        return note.id == updatedNote.id
-            ? updatedNote.copyWith(updatedAt: DateTime.now())
-            : note;
-      }).toList();
+      final updatedNotes = profile.notes
+          .map(
+            (note) => note.id == updatedNote.id
+                ? updatedNote.copyWith(updatedAt: DateTime.now())
+                : note,
+          )
+          .toList();
 
       final updatedProfile = profile.copyWith(notes: updatedNotes);
       await updateExtendedProfile(updatedProfile);
@@ -331,7 +335,9 @@ class CustomerProfileExtendedService {
 
   /// Обновить предпочтения
   Future<void> updatePreferences(
-      String userId, CustomerPreferences preferences) async {
+    String userId,
+    CustomerPreferences preferences,
+  ) async {
     try {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return;
@@ -368,7 +374,9 @@ class CustomerProfileExtendedService {
 
   /// Получить фото по тегу
   Future<List<InspirationPhoto>> getPhotosByTag(
-      String userId, String tag) async {
+    String userId,
+    String tag,
+  ) async {
     try {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return [];
@@ -387,11 +395,15 @@ class CustomerProfileExtendedService {
       if (profile == null) return [];
 
       final lowercaseQuery = query.toLowerCase();
-      return profile.notes.where((note) {
-        return note.title.toLowerCase().contains(lowercaseQuery) ||
-            note.content.toLowerCase().contains(lowercaseQuery) ||
-            note.tags.any((tag) => tag.toLowerCase().contains(lowercaseQuery));
-      }).toList();
+      return profile.notes
+          .where(
+            (note) =>
+                note.title.toLowerCase().contains(lowercaseQuery) ||
+                note.content.toLowerCase().contains(lowercaseQuery) ||
+                note.tags
+                    .any((tag) => tag.toLowerCase().contains(lowercaseQuery)),
+          )
+          .toList();
     } catch (e) {
       print('Error searching notes: $e');
       return [];
@@ -400,17 +412,23 @@ class CustomerProfileExtendedService {
 
   /// Поиск по фото
   Future<List<InspirationPhoto>> searchPhotos(
-      String userId, String query) async {
+    String userId,
+    String query,
+  ) async {
     try {
       final profile = await getExtendedProfile(userId);
       if (profile == null) return [];
 
       final lowercaseQuery = query.toLowerCase();
-      return profile.inspirationPhotos.where((photo) {
-        return (photo.caption?.toLowerCase().contains(lowercaseQuery) ??
-                false) ||
-            photo.tags.any((tag) => tag.toLowerCase().contains(lowercaseQuery));
-      }).toList();
+      return profile.inspirationPhotos
+          .where(
+            (photo) =>
+                (photo.caption?.toLowerCase().contains(lowercaseQuery) ??
+                    false) ||
+                photo.tags
+                    .any((tag) => tag.toLowerCase().contains(lowercaseQuery)),
+          )
+          .toList();
     } catch (e) {
       print('Error searching photos: $e');
       return [];
@@ -444,15 +462,6 @@ class CustomerProfileExtendedService {
 
 /// Статистика профиля заказчика
 class CustomerProfileStats {
-  final int totalPhotos;
-  final int publicPhotos;
-  final int totalNotes;
-  final int pinnedNotes;
-  final int favoriteSpecialists;
-  final int savedEvents;
-  final int totalTags;
-  final DateTime lastActivity;
-
   const CustomerProfileStats({
     required this.totalPhotos,
     required this.publicPhotos,
@@ -464,16 +473,22 @@ class CustomerProfileStats {
     required this.lastActivity,
   });
 
-  factory CustomerProfileStats.empty() {
-    return CustomerProfileStats(
-      totalPhotos: 0,
-      publicPhotos: 0,
-      totalNotes: 0,
-      pinnedNotes: 0,
-      favoriteSpecialists: 0,
-      savedEvents: 0,
-      totalTags: 0,
-      lastActivity: DateTime.now(),
-    );
-  }
+  factory CustomerProfileStats.empty() => CustomerProfileStats(
+        totalPhotos: 0,
+        publicPhotos: 0,
+        totalNotes: 0,
+        pinnedNotes: 0,
+        favoriteSpecialists: 0,
+        savedEvents: 0,
+        totalTags: 0,
+        lastActivity: DateTime.now(),
+      );
+  final int totalPhotos;
+  final int publicPhotos;
+  final int totalNotes;
+  final int pinnedNotes;
+  final int favoriteSpecialists;
+  final int savedEvents;
+  final int totalTags;
+  final DateTime lastActivity;
 }

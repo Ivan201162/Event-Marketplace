@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/specialist_providers.dart';
-import '../models/specialist.dart';
-import '../widgets/specialist_card.dart';
-import '../widgets/search_filters_widget.dart';
+
 import '../core/app_theme.dart';
+import '../models/specialist.dart';
+import '../providers/specialist_providers.dart';
+import '../widgets/search_filters_widget.dart';
+import '../widgets/specialist_card.dart';
 import 'specialist_profile_screen.dart';
 
 class SearchScreen extends ConsumerStatefulWidget {
@@ -36,11 +37,10 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
           // Современный AppBar с градиентом
           SliverAppBar(
             expandedHeight: 120,
-            floating: false,
             pinned: true,
             flexibleSpace: FlexibleSpaceBar(
               title: const Text(
-                "Поиск специалистов",
+                'Поиск специалистов',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
@@ -58,7 +58,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         const Text(
-                          "Поиск специалистов",
+                          'Поиск специалистов',
                           style: TextStyle(
                             fontSize: 24,
                             fontWeight: FontWeight.bold,
@@ -119,53 +119,51 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   /// Построить поисковую строку
-  Widget _buildSearchBar() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          TextField(
-            controller: _searchController,
-            decoration: InputDecoration(
-              hintText: "Поиск специалистов...",
-              prefixIcon: const Icon(Icons.search),
-              suffixIcon: _searchController.text.isNotEmpty
-                  ? IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        _searchController.clear();
-                        _performSearch();
-                      },
-                    )
-                  : null,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(12),
+  Widget _buildSearchBar() => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                hintText: 'Поиск специалистов...',
+                prefixIcon: const Icon(Icons.search),
+                suffixIcon: _searchController.text.isNotEmpty
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          _searchController.clear();
+                          _performSearch();
+                        },
+                      )
+                    : null,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                filled: true,
+                fillColor: Colors.grey[100],
               ),
-              filled: true,
-              fillColor: Colors.grey[100],
+              onChanged: (value) {
+                setState(() {});
+                if (value.length >= 2) {
+                  _performSearch();
+                }
+              },
+              onSubmitted: (value) {
+                if (value.isNotEmpty) {
+                  ref.read(searchHistoryProvider.notifier).addToHistory(value);
+                  _performSearch();
+                }
+              },
             ),
-            onChanged: (value) {
-              setState(() {});
-              if (value.length >= 2) {
-                _performSearch();
-              }
-            },
-            onSubmitted: (value) {
-              if (value.isNotEmpty) {
-                ref.read(searchHistoryProvider.notifier).addToHistory(value);
-                _performSearch();
-              }
-            },
-          ),
 
-          // История поиска
-          if (_searchController.text.isEmpty &&
-              ref.watch(searchHistoryProvider).isNotEmpty)
-            _buildSearchHistory(),
-        ],
-      ),
-    );
-  }
+            // История поиска
+            if (_searchController.text.isEmpty &&
+                ref.watch(searchHistoryProvider).isNotEmpty)
+              _buildSearchHistory(),
+          ],
+        ),
+      );
 
   /// Построить историю поиска
   Widget _buildSearchHistory() {
@@ -200,161 +198,159 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
   }
 
   /// Построить статистику поиска
-  Widget _buildSearchStats(SearchStats stats) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      child: Row(
-        children: [
-          Icon(Icons.info_outline, size: 16, color: Colors.grey[600]),
-          const SizedBox(width: 8),
-          Text(
-            'Найдено: ${stats.totalResults} специалистов',
-            style: TextStyle(
-              fontSize: 14,
-              color: Colors.grey[600],
+  Widget _buildSearchStats(SearchStats stats) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          children: [
+            Icon(Icons.info_outline, size: 16, color: Colors.grey[600]),
+            const SizedBox(width: 8),
+            Text(
+              'Найдено: ${stats.totalResults} специалистов',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey[600],
+              ),
             ),
-          ),
-          const Spacer(),
-          if (stats.hasActiveFilters)
-            TextButton(
-              onPressed: () {
-                ref.read(specialistFiltersProvider.notifier).state =
-                    const SpecialistFilters();
-                _performSearch();
-              },
-              child: const Text('Сбросить фильтры'),
-            ),
-        ],
-      ),
-    );
-  }
+            const Spacer(),
+            if (stats.hasActiveFilters)
+              TextButton(
+                onPressed: () {
+                  ref.read(specialistFiltersProvider.notifier).state =
+                      const SpecialistFilters();
+                  _performSearch();
+                },
+                child: const Text('Сбросить фильтры'),
+              ),
+          ],
+        ),
+      );
 
   /// Построить секцию фильтров
-  Widget _buildFiltersSection() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        border: Border(
-          top: BorderSide(color: Colors.grey[300]!),
-          bottom: BorderSide(color: Colors.grey[300]!),
+  Widget _buildFiltersSection() => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          border: Border(
+            top: BorderSide(color: Colors.grey[300]!),
+            bottom: BorderSide(color: Colors.grey[300]!),
+          ),
         ),
-      ),
-      child: SearchFiltersWidget(
-        onFiltersChanged: (filters) {
-          ref.read(specialistFiltersProvider.notifier).state = filters;
-          _performSearch();
-        },
-      ),
-    );
-  }
+        child: SearchFiltersWidget(
+          onFiltersChanged: (filters) {
+            ref.read(specialistFiltersProvider.notifier).state = filters;
+            _performSearch();
+          },
+        ),
+      );
 
   /// Построить результаты поиска
   Widget _buildSearchResults(
-      AsyncValue<List<Specialist>> searchResults, List<String> searchHistory) {
-    return searchResults.when(
-      data: (specialists) {
-        if (specialists.isEmpty) {
-          return SliverFillRemaining(
-            child: _buildEmptyState(searchHistory),
-          );
-        }
+    AsyncValue<List<Specialist>> searchResults,
+    List<String> searchHistory,
+  ) =>
+      searchResults.when(
+        data: (specialists) {
+          if (specialists.isEmpty) {
+            return SliverFillRemaining(
+              child: _buildEmptyState(searchHistory),
+            );
+          }
 
-        return SliverPadding(
-          padding: const EdgeInsets.all(16),
-          sliver: SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (context, index) {
-                final specialist = specialists[index];
-                return Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: SpecialistCard(
-                    specialist: specialist,
-                    onTap: () => _navigateToSpecialistProfile(specialist),
-                  ),
-                );
-              },
-              childCount: specialists.length,
+          return SliverPadding(
+            padding: const EdgeInsets.all(16),
+            sliver: SliverList(
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  final specialist = specialists[index];
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: SpecialistCard(
+                      specialist: specialist,
+                      onTap: () => _navigateToSpecialistProfile(specialist),
+                    ),
+                  );
+                },
+                childCount: specialists.length,
+              ),
+            ),
+          );
+        },
+        loading: () => const SliverFillRemaining(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                CircularProgressIndicator(),
+                SizedBox(height: 16),
+                Text('Поиск специалистов...'),
+              ],
             ),
           ),
-        );
-      },
-      loading: () => SliverFillRemaining(
-        child: const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 16),
-              Text('Поиск специалистов...'),
-            ],
+        ),
+        error: (error, stack) => SliverFillRemaining(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Icons.error_outline, size: 64, color: Colors.red),
+                const SizedBox(height: 16),
+                Text('Ошибка поиска: $error'),
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: _performSearch,
+                  child: const Text('Повторить'),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-      error: (error, stack) => SliverFillRemaining(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.error_outline, size: 64, color: Colors.red),
-              const SizedBox(height: 16),
-              Text('Ошибка поиска: $error'),
-              const SizedBox(height: 16),
-              ElevatedButton(
-                onPressed: _performSearch,
-                child: const Text('Повторить'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+      );
 
   /// Построить пустое состояние
-  Widget _buildEmptyState(List<String> searchHistory) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.search_off,
-            size: 64,
-            color: Colors.grey[400],
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Специалисты не найдены',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  color: Colors.grey[600],
-                ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Попробуйте изменить параметры поиска',
-            style: TextStyle(color: Colors.grey[500]),
-          ),
-          const SizedBox(height: 24),
-          if (searchHistory.isNotEmpty) ...[
-            const Text('Недавние поиски:'),
-            const SizedBox(height: 8),
-            Wrap(
-              spacing: 8,
-              children: searchHistory.take(5).map((query) {
-                return ActionChip(
-                  label: Text(query),
-                  onPressed: () {
-                    _searchController.text = query;
-                    _performSearch();
-                  },
-                );
-              }).toList(),
+  Widget _buildEmptyState(List<String> searchHistory) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.search_off,
+              size: 64,
+              color: Colors.grey[400],
             ),
+            const SizedBox(height: 16),
+            Text(
+              'Специалисты не найдены',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Попробуйте изменить параметры поиска',
+              style: TextStyle(color: Colors.grey[500]),
+            ),
+            const SizedBox(height: 24),
+            if (searchHistory.isNotEmpty) ...[
+              const Text('Недавние поиски:'),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                children: searchHistory
+                    .take(5)
+                    .map(
+                      (query) => ActionChip(
+                        label: Text(query),
+                        onPressed: () {
+                          _searchController.text = query;
+                          _performSearch();
+                        },
+                      ),
+                    )
+                    .toList(),
+              ),
+            ],
           ],
-        ],
-      ),
-    );
-  }
+        ),
+      );
 
   /// Выполнить поиск
   void _performSearch() {

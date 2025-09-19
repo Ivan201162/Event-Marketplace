@@ -42,8 +42,8 @@ class AppConstants {
   static const int backupIntervalHours = 24;
 
   // Цены и лимиты
-  static const double minPrice = 0.0;
-  static const double maxPrice = 1000000.0;
+  static const double minPrice = 0;
+  static const double maxPrice = 1000000;
   static const int maxBookingsPerDay = 10;
   static const int maxReviewsPerUser = 100;
 
@@ -96,7 +96,7 @@ class AppConstants {
     'png',
     'gif',
     'webp',
-    'bmp'
+    'bmp',
   ];
   static const List<String> supportedVideoFormats = [
     'mp4',
@@ -104,21 +104,21 @@ class AppConstants {
     'mov',
     'wmv',
     'flv',
-    'webm'
+    'webm',
   ];
   static const List<String> supportedAudioFormats = [
     'mp3',
     'wav',
     'ogg',
     'aac',
-    'm4a'
+    'm4a',
   ];
   static const List<String> supportedDocumentFormats = [
     'pdf',
     'doc',
     'docx',
     'txt',
-    'rtf'
+    'rtf',
   ];
 
   // Размеры изображений
@@ -136,8 +136,8 @@ class AppConstants {
   // Геолокация
   static const double defaultLatitude = 55.7558; // Москва
   static const double defaultLongitude = 37.6176;
-  static const double defaultRadiusKm = 50.0;
-  static const double maxRadiusKm = 500.0;
+  static const double defaultRadiusKm = 50;
+  static const double maxRadiusKm = 500;
 
   // Валюты
   static const String defaultCurrency = 'RUB';
@@ -153,7 +153,7 @@ class AppConstants {
     'Europe/Moscow',
     'Europe/London',
     'America/New_York',
-    'Asia/Almaty'
+    'Asia/Almaty',
   ];
 
   // Статусы
@@ -163,7 +163,7 @@ class AppConstants {
     'in_progress',
     'completed',
     'cancelled',
-    'disputed'
+    'disputed',
   ];
 
   static const List<String> userStatuses = [
@@ -171,7 +171,7 @@ class AppConstants {
     'inactive',
     'blocked',
     'pending',
-    'suspended'
+    'suspended',
   ];
 
   static const List<String> specialistCategories = [
@@ -181,7 +181,7 @@ class AppConstants {
     'musician',
     'content_creator',
     'photo_studio',
-    'other'
+    'other',
   ];
 
   // Роли пользователей
@@ -191,7 +191,7 @@ class AppConstants {
     'specialist',
     'organizer',
     'customer',
-    'guest'
+    'guest',
   ];
 
   // Разрешения
@@ -213,7 +213,7 @@ class AppConstants {
     'proposals.create',
     'bookings.create',
     'reviews.create',
-    'content.view'
+    'content.view',
   ];
 
   // Типы уведомлений
@@ -224,7 +224,7 @@ class AppConstants {
     'price_reminder',
     'system',
     'chat_message',
-    'other'
+    'other',
   ];
 
   // Каналы уведомлений
@@ -232,7 +232,7 @@ class AppConstants {
     'in_app',
     'push',
     'email',
-    'sms'
+    'sms',
   ];
 
   // Типы отчетов
@@ -242,7 +242,7 @@ class AppConstants {
     'performance',
     'booking_summary',
     'specialist_earnings',
-    'other'
+    'other',
   ];
 
   // Форматы отчетов
@@ -261,7 +261,7 @@ class AppConstants {
     'analytics',
     'crm',
     'erp',
-    'other'
+    'other',
   ];
 
   // Типы аутентификации
@@ -271,7 +271,7 @@ class AppConstants {
     'basic',
     'bearer',
     'oauth2',
-    'custom'
+    'custom',
   ];
 
   // Статусы интеграций
@@ -280,14 +280,14 @@ class AppConstants {
     'inactive',
     'error',
     'maintenance',
-    'deprecated'
+    'deprecated',
   ];
 
   // Направления синхронизации
   static const List<String> syncDirections = [
     'inbound',
     'outbound',
-    'bidirectional'
+    'bidirectional',
   ];
 
   // Статусы синхронизации
@@ -296,7 +296,7 @@ class AppConstants {
     'in_progress',
     'completed',
     'failed',
-    'cancelled'
+    'cancelled',
   ];
 
   // Типы медиа
@@ -305,7 +305,7 @@ class AppConstants {
     'video',
     'audio',
     'document',
-    'other'
+    'other',
   ];
 
   // Статусы контента
@@ -315,7 +315,7 @@ class AppConstants {
     'processed',
     'published',
     'archived',
-    'error'
+    'error',
   ];
 
   // Типы галерей
@@ -324,7 +324,7 @@ class AppConstants {
     'event',
     'showcase',
     'archive',
-    'temporary'
+    'temporary',
   ];
 
   // Типы обработки
@@ -336,7 +336,7 @@ class AppConstants {
     'filter',
     'crop',
     'rotate',
-    'convert'
+    'convert',
   ];
 
   // Статусы обработки
@@ -345,7 +345,7 @@ class AppConstants {
     'in_progress',
     'completed',
     'failed',
-    'cancelled'
+    'cancelled',
   ];
 
   // Типы настроек
@@ -359,7 +359,7 @@ class AppConstants {
     'url',
     'email',
     'date',
-    'json'
+    'json',
   ];
 
   // Типы конфигураций
@@ -373,7 +373,7 @@ class AppConstants {
     'payments',
     'integrations',
     'features',
-    'environment'
+    'environment',
   ];
 
   // Категории настроек
@@ -391,7 +391,7 @@ class AppConstants {
     'analytics',
     'backup',
     'cache',
-    'logging'
+    'logging',
   ];
 
   // Уровни логирования
@@ -400,7 +400,7 @@ class AppConstants {
     'info',
     'warning',
     'error',
-    'critical'
+    'critical',
   ];
 
   // Типы разрешений
@@ -409,7 +409,7 @@ class AppConstants {
     'write',
     'delete',
     'manage',
-    'moderate'
+    'moderate',
   ];
 
   // Окружения
@@ -417,7 +417,7 @@ class AppConstants {
     'development',
     'staging',
     'production',
-    'testing'
+    'testing',
   ];
 
   // Режимы темы
@@ -434,28 +434,28 @@ class AppConstants {
   static const Duration longAnimationDuration = Duration(milliseconds: 500);
 
   // Отступы
-  static const double smallPadding = 8.0;
-  static const double mediumPadding = 16.0;
-  static const double largePadding = 24.0;
-  static const double extraLargePadding = 32.0;
+  static const double smallPadding = 8;
+  static const double mediumPadding = 16;
+  static const double largePadding = 24;
+  static const double extraLargePadding = 32;
 
   // Радиусы
-  static const double smallRadius = 4.0;
-  static const double mediumRadius = 8.0;
-  static const double largeRadius = 12.0;
-  static const double extraLargeRadius = 16.0;
+  static const double smallRadius = 4;
+  static const double mediumRadius = 8;
+  static const double largeRadius = 12;
+  static const double extraLargeRadius = 16;
 
   // Высоты
-  static const double smallHeight = 32.0;
-  static const double mediumHeight = 48.0;
-  static const double largeHeight = 64.0;
-  static const double extraLargeHeight = 80.0;
+  static const double smallHeight = 32;
+  static const double mediumHeight = 48;
+  static const double largeHeight = 64;
+  static const double extraLargeHeight = 80;
 
   // Ширины
-  static const double smallWidth = 100.0;
-  static const double mediumWidth = 200.0;
-  static const double largeWidth = 300.0;
-  static const double extraLargeWidth = 400.0;
+  static const double smallWidth = 100;
+  static const double mediumWidth = 200;
+  static const double largeWidth = 300;
+  static const double extraLargeWidth = 400;
 
   // Z-индексы
   static const int bottomSheetZIndex = 1000;

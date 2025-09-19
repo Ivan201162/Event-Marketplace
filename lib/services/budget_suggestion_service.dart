@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import '../models/budget_suggestion.dart';
+
 import '../models/booking.dart';
+import '../models/budget_suggestion.dart';
 import '../models/specialist.dart';
 
 /// Сервис для работы с предложениями по увеличению бюджета
@@ -85,7 +86,9 @@ class BudgetSuggestionService {
 
       // Отправляем уведомление специалисту
       await _sendBudgetSuggestionAcceptedNotification(
-          suggestion.specialistId, suggestion);
+        suggestion.specialistId,
+        suggestion,
+      );
 
       // Логируем принятие предложения
       await _logBudgetSuggestionAction(suggestionId, 'accepted', customerId);
@@ -124,7 +127,10 @@ class BudgetSuggestionService {
 
       // Отправляем уведомление специалисту
       await _sendBudgetSuggestionRejectedNotification(
-          suggestion.specialistId, suggestion, reason);
+        suggestion.specialistId,
+        suggestion,
+        reason,
+      );
 
       // Логируем отклонение предложения
       await _logBudgetSuggestionAction(suggestionId, 'rejected', customerId);
@@ -150,7 +156,8 @@ class BudgetSuggestionService {
 
   /// Получить предложения по бюджету для клиента
   Future<List<BudgetSuggestion>> getCustomerSuggestions(
-      String customerId) async {
+    String customerId,
+  ) async {
     try {
       final snapshot = await _firestore
           .collection('budgetSuggestions')
@@ -158,9 +165,7 @@ class BudgetSuggestionService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => BudgetSuggestion.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(BudgetSuggestion.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения предложений по бюджету клиента: $e');
     }
@@ -168,7 +173,8 @@ class BudgetSuggestionService {
 
   /// Получить предложения по бюджету для специалиста
   Future<List<BudgetSuggestion>> getSpecialistSuggestions(
-      String specialistId) async {
+    String specialistId,
+  ) async {
     try {
       final snapshot = await _firestore
           .collection('budgetSuggestions')
@@ -176,12 +182,11 @@ class BudgetSuggestionService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => BudgetSuggestion.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(BudgetSuggestion.fromDocument).toList();
     } catch (e) {
       throw Exception(
-          'Ошибка получения предложений по бюджету специалиста: $e');
+        'Ошибка получения предложений по бюджету специалиста: $e',
+      );
     }
   }
 
@@ -240,17 +245,18 @@ class BudgetSuggestionService {
 
   /// Получить статистику предложений по бюджету
   Future<Map<String, dynamic>> getBudgetSuggestionStats(
-      String specialistId) async {
+    String specialistId,
+  ) async {
     try {
       final snapshot = await _firestore
           .collection('budgetSuggestions')
           .where('specialistId', isEqualTo: specialistId)
           .get();
 
-      int totalSuggestions = 0;
-      int acceptedSuggestions = 0;
-      int rejectedSuggestions = 0;
-      int viewedSuggestions = 0;
+      var totalSuggestions = 0;
+      var acceptedSuggestions = 0;
+      var rejectedSuggestions = 0;
+      var viewedSuggestions = 0;
       double totalRevenue = 0;
 
       for (final doc in snapshot.docs) {
@@ -293,13 +299,15 @@ class BudgetSuggestionService {
 
   /// Создать бронирование из предложения по бюджету
   Future<void> _createBookingFromBudgetSuggestion(
-      BudgetSuggestion suggestion, BudgetSuggestionItem item) async {
+    BudgetSuggestion suggestion,
+    BudgetSuggestionItem item,
+  ) async {
     try {
       final now = DateTime.now();
 
       final booking = {
         'customerId': suggestion.customerId,
-        'specialistId': item.specialistId!,
+        'specialistId': item.specialistId,
         'categoryId': item.categoryId,
         'status': 'pending',
         'totalPrice': item.estimatedPrice,
@@ -316,20 +324,23 @@ class BudgetSuggestionService {
       await _firestore.collection('bookings').add(booking);
     } catch (e) {
       throw Exception(
-          'Ошибка создания бронирования из предложения по бюджету: $e');
+        'Ошибка создания бронирования из предложения по бюджету: $e',
+      );
     }
   }
 
   /// Отправить уведомление о предложении по бюджету
   Future<void> _sendBudgetSuggestionNotification(
-      String customerId, BudgetSuggestion suggestion) async {
+    String customerId,
+    BudgetSuggestion suggestion,
+  ) async {
     try {
       // Получаем FCM токены клиента
       final customerDoc =
           await _firestore.collection('users').doc(customerId).get();
       if (!customerDoc.exists) return;
 
-      final customerData = customerDoc.data()!;
+      final customerData = customerDoc.data();
       final fcmTokens = List<String>.from(customerData['fcmTokens'] ?? []);
 
       if (fcmTokens.isEmpty) return;
@@ -363,14 +374,16 @@ class BudgetSuggestionService {
 
   /// Отправить уведомление о принятии предложения по бюджету
   Future<void> _sendBudgetSuggestionAcceptedNotification(
-      String specialistId, BudgetSuggestion suggestion) async {
+    String specialistId,
+    BudgetSuggestion suggestion,
+  ) async {
     try {
       // Получаем FCM токены специалиста
       final specialistDoc =
           await _firestore.collection('users').doc(specialistId).get();
       if (!specialistDoc.exists) return;
 
-      final specialistData = specialistDoc.data()!;
+      final specialistData = specialistDoc.data();
       final fcmTokens = List<String>.from(specialistData['fcmTokens'] ?? []);
 
       if (fcmTokens.isEmpty) return;
@@ -398,20 +411,24 @@ class BudgetSuggestionService {
       }
     } catch (e) {
       print(
-          'Ошибка отправки уведомления о принятии предложения по бюджету: $e');
+        'Ошибка отправки уведомления о принятии предложения по бюджету: $e',
+      );
     }
   }
 
   /// Отправить уведомление об отклонении предложения по бюджету
   Future<void> _sendBudgetSuggestionRejectedNotification(
-      String specialistId, BudgetSuggestion suggestion, String? reason) async {
+    String specialistId,
+    BudgetSuggestion suggestion,
+    String? reason,
+  ) async {
     try {
       // Получаем FCM токены специалиста
       final specialistDoc =
           await _firestore.collection('users').doc(specialistId).get();
       if (!specialistDoc.exists) return;
 
-      final specialistData = specialistDoc.data()!;
+      final specialistData = specialistDoc.data();
       final fcmTokens = List<String>.from(specialistData['fcmTokens'] ?? []);
 
       if (fcmTokens.isEmpty) return;
@@ -438,13 +455,17 @@ class BudgetSuggestionService {
       }
     } catch (e) {
       print(
-          'Ошибка отправки уведомления об отклонении предложения по бюджету: $e');
+        'Ошибка отправки уведомления об отклонении предложения по бюджету: $e',
+      );
     }
   }
 
   /// Логировать действие с предложением по бюджету
   Future<void> _logBudgetSuggestionAction(
-      String suggestionId, String action, String userId) async {
+    String suggestionId,
+    String action,
+    String userId,
+  ) async {
     try {
       await _firestore.collection('budgetSuggestionLogs').add({
         'suggestionId': suggestionId,
@@ -490,7 +511,9 @@ class BudgetSuggestionService {
         'currentBudget': currentBudget,
         'recommendedBudget': currentBudget +
             missingCategories.fold(
-                0.0, (sum, cat) => sum + (categoryPrices[cat] ?? 0)),
+              0,
+              (sum, cat) => sum + (categoryPrices[cat] ?? 0),
+            ),
       };
     } catch (e) {
       throw Exception('Ошибка анализа бюджета: $e');
@@ -588,9 +611,11 @@ class BudgetSuggestionService {
 
   /// Получить рекомендуемого специалиста
   Future<Specialist?> _getRecommendedSpecialist(
-      String categoryId, String? location) async {
+    String categoryId,
+    String? location,
+  ) async {
     try {
-      Query query = _firestore
+      var query = _firestore
           .collection('specialists')
           .where('categories', arrayContains: categoryId)
           .where('isActive', isEqualTo: true);

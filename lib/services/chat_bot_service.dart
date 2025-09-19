@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:event_marketplace_app/models/support_ticket.dart';
-import 'package:event_marketplace_app/core/feature_flags.dart';
+
+import '../core/feature_flags.dart';
+import '../models/support_ticket.dart';
 
 /// Сервис бота-помощника в чате поддержки
 class ChatBotService {
@@ -13,7 +14,7 @@ class ChatBotService {
     required String chatId,
   }) async {
     if (!FeatureFlags.chatBotEnabled) {
-      return BotResponse(
+      return const BotResponse(
         type: BotResponseType.text,
         content: 'Бот-помощник временно недоступен',
         suggestions: [],
@@ -36,13 +37,13 @@ class ChatBotService {
           faqItems: faqSuggestions,
         );
       } else if (analysis.needsHumanSupport) {
-        return BotResponse(
+        return const BotResponse(
           type: BotResponseType.escalateToHuman,
           content:
               'Понимаю, что у вас сложная проблема. Сейчас передам ваш запрос специалисту поддержки.',
           suggestions: [
             'Дождаться ответа специалиста',
-            'Оставить дополнительную информацию'
+            'Оставить дополнительную информацию',
           ],
         );
       } else {
@@ -53,7 +54,7 @@ class ChatBotService {
         );
       }
     } catch (e) {
-      return BotResponse(
+      return const BotResponse(
         type: BotResponseType.text,
         content:
             'Извините, произошла ошибка. Попробуйте переформулировать вопрос.',
@@ -66,7 +67,7 @@ class ChatBotService {
   MessageAnalysis _analyzeMessage(String message) {
     final lowerMessage = message.toLowerCase();
     final keywords = <String>[];
-    bool needsHumanSupport = false;
+    var needsHumanSupport = false;
 
     // Ключевые слова для разных категорий
     final categories = {
@@ -77,7 +78,7 @@ class ChatBotService {
         'возврат',
         'списание',
         'карта',
-        'банк'
+        'банк',
       ],
       'booking': [
         'бронирование',
@@ -85,7 +86,7 @@ class ChatBotService {
         'отмена',
         'изменение',
         'дата',
-        'время'
+        'время',
       ],
       'account': [
         'аккаунт',
@@ -93,7 +94,7 @@ class ChatBotService {
         'регистрация',
         'вход',
         'пароль',
-        'email'
+        'email',
       ],
       'technical': [
         'ошибка',
@@ -101,7 +102,7 @@ class ChatBotService {
         'глюк',
         'баг',
         'зависает',
-        'медленно'
+        'медленно',
       ],
       'refund': ['возврат', 'отмена', 'деньги назад', 'компенсация'],
       'urgent': ['срочно', 'сейчас', 'немедленно', 'критично', 'не могу'],
@@ -137,7 +138,7 @@ class ChatBotService {
       'хорошо',
       'отлично',
       'понятно',
-      'помогло'
+      'помогло',
     ];
     final negativeWords = [
       'плохо',
@@ -145,12 +146,12 @@ class ChatBotService {
       'не работает',
       'проблема',
       'ошибка',
-      'злой'
+      'злой',
     ];
 
-    int positiveCount =
+    final positiveCount =
         positiveWords.where((word) => message.contains(word)).length;
-    int negativeCount =
+    final negativeCount =
         negativeWords.where((word) => message.contains(word)).length;
 
     if (positiveCount > negativeCount) {
@@ -173,7 +174,7 @@ class ChatBotService {
           .limit(3)
           .get();
 
-      return snapshot.docs.map((doc) => FAQItem.fromDocument(doc)).toList();
+      return snapshot.docs.map(FAQItem.fromDocument).toList();
     } catch (e) {
       return [];
     }
@@ -191,13 +192,11 @@ class ChatBotService {
   }
 
   /// Получить общие предложения
-  List<String> _getGenericSuggestions() {
-    return [
-      'Посмотреть FAQ',
-      'Обратиться к специалисту',
-      'Оставить отзыв',
-    ];
-  }
+  List<String> _getGenericSuggestions() => [
+        'Посмотреть FAQ',
+        'Обратиться к специалисту',
+        'Оставить отзыв',
+      ];
 
   /// Создать тикет поддержки
   Future<String> createSupportTicket({
@@ -217,7 +216,6 @@ class ChatBotService {
         status: SupportTicketStatus.open,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        assignedTo: null,
         chatId: chatId,
         tags: keywords,
       );
@@ -271,38 +269,35 @@ class ChatBotService {
           .limit(5)
           .get();
 
-      return snapshot.docs.map((doc) => FAQItem.fromDocument(doc)).toList();
+      return snapshot.docs.map(FAQItem.fromDocument).toList();
     } catch (e) {
       return [];
     }
   }
 
   /// Получить приветственное сообщение
-  BotResponse getWelcomeMessage() {
-    return BotResponse(
-      type: BotResponseType.text,
-      content: 'Привет! Я бот-помощник службы поддержки. Чем могу помочь?',
-      suggestions: [
-        'Проблемы с оплатой',
-        'Вопросы по бронированию',
-        'Технические проблемы',
-        'Общие вопросы',
-      ],
-    );
-  }
+  BotResponse getWelcomeMessage() => const BotResponse(
+        type: BotResponseType.text,
+        content: 'Привет! Я бот-помощник службы поддержки. Чем могу помочь?',
+        suggestions: [
+          'Проблемы с оплатой',
+          'Вопросы по бронированию',
+          'Технические проблемы',
+          'Общие вопросы',
+        ],
+      );
 }
 
 /// Анализ сообщения пользователя
 class MessageAnalysis {
-  final List<String> keywords;
-  final bool needsHumanSupport;
-  final Sentiment sentiment;
-
   const MessageAnalysis({
     required this.keywords,
     required this.needsHumanSupport,
     required this.sentiment,
   });
+  final List<String> keywords;
+  final bool needsHumanSupport;
+  final Sentiment sentiment;
 }
 
 /// Тональность сообщения
@@ -314,12 +309,6 @@ enum Sentiment {
 
 /// Ответ бота
 class BotResponse {
-  final BotResponseType type;
-  final String content;
-  final List<String> suggestions;
-  final List<FAQItem>? faqItems;
-  final String? ticketId;
-
   const BotResponse({
     required this.type,
     required this.content,
@@ -327,6 +316,11 @@ class BotResponse {
     this.faqItems,
     this.ticketId,
   });
+  final BotResponseType type;
+  final String content;
+  final List<String> suggestions;
+  final List<FAQItem>? faqItems;
+  final String? ticketId;
 }
 
 /// Типы ответов бота

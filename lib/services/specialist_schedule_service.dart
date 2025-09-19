@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:event_marketplace_app/models/booking.dart';
-import 'package:event_marketplace_app/models/specialist_schedule.dart';
-import 'package:event_marketplace_app/core/feature_flags.dart';
+
+import '../core/feature_flags.dart';
+import '../models/booking.dart';
+import '../models/specialist_schedule.dart';
 
 /// Сервис для управления календарем занятости специалистов
 class SpecialistScheduleService {
@@ -158,37 +159,45 @@ class SpecialistScheduleService {
   // Приватные методы
 
   Future<List<Booking>> _getSpecialistBookings(
-      String specialistId, DateTime startDate, DateTime endDate) async {
+    String specialistId,
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
     try {
       final snapshot = await _firestore
           .collection('bookings')
           .where('specialistId', isEqualTo: specialistId)
           .where('eventDate', isGreaterThanOrEqualTo: startDate)
           .where('eventDate', isLessThanOrEqualTo: endDate)
-          .where('status',
-              whereIn: ['confirmed', 'paid', 'advance_paid']).get();
+          .where(
+        'status',
+        whereIn: ['confirmed', 'paid', 'advance_paid'],
+      ).get();
 
-      return snapshot.docs.map((doc) => Booking.fromDocument(doc)).toList();
+      return snapshot.docs.map(Booking.fromDocument).toList();
     } catch (e) {
       return [];
     }
   }
 
   Future<Map<int, WorkingHours>> _getSpecialistWorkingHours(
-      String specialistId) async {
+    String specialistId,
+  ) async {
     try {
       final doc = await _firestore
           .collection('specialist_working_hours')
           .doc(specialistId)
           .get();
       if (doc.exists) {
-        final data = doc.data()!;
+        final data = doc.data();
         final workingHoursData = data['workingHours'] as Map<String, dynamic>;
 
-        return workingHoursData.map((key, value) => MapEntry(
-              int.parse(key),
-              WorkingHours.fromMap(Map<String, dynamic>.from(value)),
-            ));
+        return workingHoursData.map(
+          (key, value) => MapEntry(
+            int.parse(key),
+            WorkingHours.fromMap(Map<String, dynamic>.from(value)),
+          ),
+        );
       }
 
       // Возвращаем стандартные рабочие часы (пн-пт 9:00-18:00)
@@ -199,7 +208,10 @@ class SpecialistScheduleService {
   }
 
   Future<List<ScheduleException>> _getSpecialistExceptions(
-      String specialistId, DateTime startDate, DateTime endDate) async {
+    String specialistId,
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
     try {
       final snapshot = await _firestore
           .collection('schedule_exceptions')
@@ -208,40 +220,54 @@ class SpecialistScheduleService {
           .where('endDate', isLessThanOrEqualTo: endDate)
           .get();
 
-      return snapshot.docs
-          .map((doc) => ScheduleException.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(ScheduleException.fromDocument).toList();
     } catch (e) {
       return [];
     }
   }
 
-  Map<int, WorkingHours> _getDefaultWorkingHours() {
-    return {
-      1: WorkingHours(
-          isWorking: true, startHour: 9.0, endHour: 18.0), // Понедельник
-      2: WorkingHours(
-          isWorking: true, startHour: 9.0, endHour: 18.0), // Вторник
-      3: WorkingHours(isWorking: true, startHour: 9.0, endHour: 18.0), // Среда
-      4: WorkingHours(
-          isWorking: true, startHour: 9.0, endHour: 18.0), // Четверг
-      5: WorkingHours(
-          isWorking: true, startHour: 9.0, endHour: 18.0), // Пятница
-      6: WorkingHours(
-          isWorking: false, startHour: 0.0, endHour: 0.0), // Суббота
-      7: WorkingHours(
-          isWorking: false, startHour: 0.0, endHour: 0.0), // Воскресенье
-    };
-  }
+  Map<int, WorkingHours> _getDefaultWorkingHours() => {
+        1: const WorkingHours(
+          isWorking: true,
+          startHour: 9,
+          endHour: 18,
+        ), // Понедельник
+        2: const WorkingHours(
+          isWorking: true,
+          startHour: 9,
+          endHour: 18,
+        ), // Вторник
+        3: const WorkingHours(
+            isWorking: true, startHour: 9, endHour: 18), // Среда
+        4: const WorkingHours(
+          isWorking: true,
+          startHour: 9,
+          endHour: 18,
+        ), // Четверг
+        5: const WorkingHours(
+          isWorking: true,
+          startHour: 9,
+          endHour: 18,
+        ), // Пятница
+        6: const WorkingHours(
+          isWorking: false,
+          startHour: 0,
+          endHour: 0,
+        ), // Суббота
+        7: const WorkingHours(
+          isWorking: false,
+          startHour: 0,
+          endHour: 0,
+        ), // Воскресенье
+      };
 
   bool _isTimeOverlapping({
     required DateTime start1,
     required DateTime end1,
     required DateTime start2,
     required DateTime end2,
-  }) {
-    return start1.isBefore(end2) && end1.isAfter(start2);
-  }
+  }) =>
+      start1.isBefore(end2) && end1.isAfter(start2);
 
   Map<DateTime, AvailabilityStatus> _calculateAvailability({
     required DateTime startDate,
@@ -261,10 +287,11 @@ class SpecialistScheduleService {
         availability[currentDate] = AvailabilityStatus.unavailable;
       } else {
         // Проверяем исключения
-        bool hasException = false;
+        var hasException = false;
         for (final exception in exceptions) {
           if (currentDate.isAfter(
-                  exception.startDate.subtract(const Duration(days: 1))) &&
+                exception.startDate.subtract(const Duration(days: 1)),
+              ) &&
               currentDate
                   .isBefore(exception.endDate.add(const Duration(days: 1)))) {
             availability[currentDate] = AvailabilityStatus.blocked;
@@ -276,10 +303,12 @@ class SpecialistScheduleService {
         if (!hasException) {
           // Проверяем бронирования
           final dayBookings = bookings
-              .where((b) =>
-                  b.eventDate.year == currentDate.year &&
-                  b.eventDate.month == currentDate.month &&
-                  b.eventDate.day == currentDate.day)
+              .where(
+                (b) =>
+                    b.eventDate.year == currentDate.year &&
+                    b.eventDate.month == currentDate.month &&
+                    b.eventDate.day == currentDate.day,
+              )
               .toList();
 
           if (dayBookings.isNotEmpty) {

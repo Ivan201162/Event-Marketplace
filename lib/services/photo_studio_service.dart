@@ -13,7 +13,7 @@ class PhotoStudioService {
     int limit = 20,
   }) async {
     try {
-      Query query = _firestore
+      var query = _firestore
           .collection('photoStudios')
           .where('isActive', isEqualTo: true);
 
@@ -25,7 +25,7 @@ class PhotoStudioService {
           await query.orderBy('rating', descending: true).limit(limit).get();
 
       List<PhotoStudio> studios =
-          snapshot.docs.map((doc) => PhotoStudio.fromDocument(doc)).toList();
+          snapshot.docs.map(PhotoStudio.fromDocument).toList();
 
       // Фильтрация по цене на клиенте
       if (minPrice != null || maxPrice != null) {
@@ -115,12 +115,15 @@ class PhotoStudioService {
 
       // Фильтруем по поисковому запросу
       final searchQuery = query.toLowerCase();
-      final filteredStudios = studios.where((studio) {
-        return studio.name.toLowerCase().contains(searchQuery) ||
-            studio.description.toLowerCase().contains(searchQuery) ||
-            studio.address.toLowerCase().contains(searchQuery) ||
-            studio.location.toLowerCase().contains(searchQuery);
-      }).toList();
+      final filteredStudios = studios
+          .where(
+            (studio) =>
+                studio.name.toLowerCase().contains(searchQuery) ||
+                studio.description.toLowerCase().contains(searchQuery) ||
+                studio.address.toLowerCase().contains(searchQuery) ||
+                studio.location.toLowerCase().contains(searchQuery),
+          )
+          .toList();
 
       return filteredStudios.take(limit).toList();
     } catch (e) {
@@ -130,7 +133,10 @@ class PhotoStudioService {
 
   /// Получить доступные даты для фотостудии
   Future<List<DateTime>> getAvailableDates(
-      String studioId, DateTime startDate, DateTime endDate) async {
+    String studioId,
+    DateTime startDate,
+    DateTime endDate,
+  ) async {
     try {
       final studio = await getPhotoStudio(studioId);
       if (studio == null) return [];
@@ -143,7 +149,8 @@ class PhotoStudioService {
         final dateString = currentDate.toIso8601String().split('T')[0];
         if (studio.availableDates.contains(dateString)) {
           availableDates.add(
-              DateTime(currentDate.year, currentDate.month, currentDate.day));
+            DateTime(currentDate.year, currentDate.month, currentDate.day),
+          );
         }
         currentDate = currentDate.add(const Duration(days: 1));
       }
@@ -252,9 +259,7 @@ class PhotoStudioService {
           .orderBy('startTime', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => StudioBooking.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(StudioBooking.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения бронирований фотостудии: $e');
     }
@@ -269,9 +274,7 @@ class PhotoStudioService {
           .orderBy('startTime', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => StudioBooking.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(StudioBooking.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения бронирований клиента: $e');
     }
@@ -306,8 +309,8 @@ class PhotoStudioService {
           .where('studioId', isEqualTo: studioId)
           .get();
 
-      int totalBookings = 0;
-      int completedBookings = 0;
+      var totalBookings = 0;
+      var completedBookings = 0;
       double totalRevenue = 0;
       double totalHours = 0;
 

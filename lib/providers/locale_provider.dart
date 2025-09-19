@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Провайдер для управления локализацией
-final localeProvider = NotifierProvider<LocaleNotifier, Locale>(() {
-  return LocaleNotifier();
-});
+final localeProvider =
+    NotifierProvider<LocaleNotifier, Locale>(LocaleNotifier.new);
 
 /// Нотификатор для управления локалью
 class LocaleNotifier extends Notifier<Locale> {

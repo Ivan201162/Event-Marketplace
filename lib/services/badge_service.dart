@@ -17,7 +17,7 @@ class BadgeService {
           .orderBy('earnedAt', descending: true)
           .get();
 
-      return querySnapshot.docs.map((doc) => Badge.fromDocument(doc)).toList();
+      return querySnapshot.docs.map(Badge.fromDocument).toList();
     } catch (e) {
       print('Error getting user badges: $e');
       return [];
@@ -26,7 +26,9 @@ class BadgeService {
 
   /// Проверить и выдать бейджи после создания бронирования
   Future<void> checkBookingBadges(
-      String customerId, String specialistId) async {
+    String customerId,
+    String specialistId,
+  ) async {
     try {
       // Проверяем бейджи для заказчика
       await _checkCustomerBookingBadges(customerId);
@@ -40,7 +42,10 @@ class BadgeService {
 
   /// Проверить и выдать бейджи после создания отзыва
   Future<void> checkReviewBadges(
-      String customerId, String specialistId, int rating) async {
+    String customerId,
+    String specialistId,
+    int rating,
+  ) async {
     try {
       // Проверяем бейджи для заказчика
       await _checkCustomerReviewBadges(customerId);
@@ -72,9 +77,8 @@ class BadgeService {
     }
 
     // Проверяем бейдж "Ранняя пташка" (бронирование за месяц)
-    final recentBookings = bookingsSnapshot.docs
-        .map((doc) => Booking.fromDocument(doc))
-        .where((booking) {
+    final recentBookings =
+        bookingsSnapshot.docs.map(Booking.fromDocument).where((booking) {
       final daysUntilEvent =
           booking.eventDate.difference(DateTime.now()).inDays;
       return daysUntilEvent >= 30;
@@ -136,7 +140,9 @@ class BadgeService {
 
   /// Проверить бейджи специалиста после отзыва
   Future<void> _checkSpecialistReviewBadges(
-      String specialistId, int rating) async {
+    String specialistId,
+    int rating,
+  ) async {
     // Получаем средний рейтинг специалиста
     final reviewsSnapshot = await _db
         .collection('reviews')
@@ -216,7 +222,6 @@ class BadgeService {
         icon: badgeInfo.icon,
         color: badgeInfo.color,
         earnedAt: DateTime.now(),
-        isVisible: true,
         metadata: {},
       );
 
@@ -247,8 +252,9 @@ class BadgeService {
   }
 
   /// Получить топ пользователей по бейджам
-  Future<List<BadgeLeaderboardEntry>> getBadgeLeaderboard(
-      {int limit = 10}) async {
+  Future<List<BadgeLeaderboardEntry>> getBadgeLeaderboard({
+    int limit = 10,
+  }) async {
     try {
       // Получаем всех пользователей с бейджами
       final badgesSnapshot = await _db.collection('badges').get();
@@ -271,13 +277,15 @@ class BadgeService {
         try {
           final userDoc = await _db.collection('users').doc(entry.key).get();
           if (userDoc.exists) {
-            final userData = userDoc.data()!;
-            leaderboard.add(BadgeLeaderboardEntry(
-              userId: entry.key,
-              userName: userData['name'] as String? ?? 'Пользователь',
-              userAvatar: userData['avatarUrl'] as String?,
-              badgeCount: entry.value,
-            ));
+            final userData = userDoc.data();
+            leaderboard.add(
+              BadgeLeaderboardEntry(
+                userId: entry.key,
+                userName: userData['name'] as String? ?? 'Пользователь',
+                userAvatar: userData['avatarUrl'] as String?,
+                badgeCount: entry.value,
+              ),
+            );
           }
         } catch (e) {
           print('Error getting user info for leaderboard: $e');
@@ -305,12 +313,6 @@ class BadgeService {
 
 /// Статистика бейджей
 class BadgeStats {
-  final int totalBadges;
-  final int specialistBadges;
-  final int customerBadges;
-  final int generalBadges;
-  final List<Badge> recentBadges;
-
   const BadgeStats({
     required this.totalBadges,
     required this.specialistBadges,
@@ -319,28 +321,30 @@ class BadgeStats {
     required this.recentBadges,
   });
 
-  factory BadgeStats.empty() {
-    return const BadgeStats(
-      totalBadges: 0,
-      specialistBadges: 0,
-      customerBadges: 0,
-      generalBadges: 0,
-      recentBadges: [],
-    );
-  }
+  factory BadgeStats.empty() => const BadgeStats(
+        totalBadges: 0,
+        specialistBadges: 0,
+        customerBadges: 0,
+        generalBadges: 0,
+        recentBadges: [],
+      );
+  final int totalBadges;
+  final int specialistBadges;
+  final int customerBadges;
+  final int generalBadges;
+  final List<Badge> recentBadges;
 }
 
 /// Запись в таблице лидеров по бейджам
 class BadgeLeaderboardEntry {
-  final String userId;
-  final String userName;
-  final String? userAvatar;
-  final int badgeCount;
-
   const BadgeLeaderboardEntry({
     required this.userId,
     required this.userName,
     this.userAvatar,
     required this.badgeCount,
   });
+  final String userId;
+  final String userName;
+  final String? userAvatar;
+  final int badgeCount;
 }

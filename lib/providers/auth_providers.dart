@@ -1,12 +1,11 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import '../services/auth_service.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/user.dart';
+import '../services/auth_service.dart';
 
 /// Провайдер сервиса аутентификации
-final authServiceProvider = Provider<AuthService>((ref) {
-  return AuthService();
-});
+final authServiceProvider = Provider<AuthService>((ref) => AuthService());
 
 /// Провайдер текущего пользователя Firebase
 final currentFirebaseUserProvider = StreamProvider<User?>((ref) {
@@ -55,13 +54,13 @@ final isCustomerProvider = Provider<bool>((ref) {
 /// Провайдер для восстановления сессии
 final sessionRestoreProvider = FutureProvider<AppUser?>((ref) async {
   final authService = ref.watch(authServiceProvider);
-  return await authService.restoreSession();
+  return authService.restoreSession();
 });
 
 /// Провайдер для проверки валидности сессии
 final sessionValidProvider = FutureProvider<bool>((ref) async {
   final authService = ref.watch(authServiceProvider);
-  return await authService.isSessionValid();
+  return authService.isSessionValid();
 });
 
 /// Провайдер для проверки, является ли пользователь гостем
@@ -98,18 +97,10 @@ enum AuthState {
 
 /// Провайдер для управления состоянием формы входа
 final loginFormProvider =
-    NotifierProvider<LoginFormNotifier, LoginFormState>(() {
-  return LoginFormNotifier();
-});
+    NotifierProvider<LoginFormNotifier, LoginFormState>(LoginFormNotifier.new);
 
 /// Состояние формы входа
 class LoginFormState {
-  final String email;
-  final String password;
-  final String? errorMessage;
-  final bool isLoading;
-  final bool isSignUpMode;
-
   const LoginFormState({
     this.email = '',
     this.password = '',
@@ -117,6 +108,11 @@ class LoginFormState {
     this.isLoading = false,
     this.isSignUpMode = false,
   });
+  final String email;
+  final String password;
+  final String? errorMessage;
+  final bool isLoading;
+  final bool isSignUpMode;
 
   LoginFormState copyWith({
     String? email,
@@ -124,15 +120,14 @@ class LoginFormState {
     String? errorMessage,
     bool? isLoading,
     bool? isSignUpMode,
-  }) {
-    return LoginFormState(
-      email: email ?? this.email,
-      password: password ?? this.password,
-      errorMessage: errorMessage,
-      isLoading: isLoading ?? this.isLoading,
-      isSignUpMode: isSignUpMode ?? this.isSignUpMode,
-    );
-  }
+  }) =>
+      LoginFormState(
+        email: email ?? this.email,
+        password: password ?? this.password,
+        errorMessage: errorMessage,
+        isLoading: isLoading ?? this.isLoading,
+        isSignUpMode: isSignUpMode ?? this.isSignUpMode,
+      );
 }
 
 /// Нотификатор для управления формой входа
@@ -147,19 +142,18 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
 
   /// Обновить email
   void updateEmail(String email) {
-    state = state.copyWith(email: email, errorMessage: null);
+    state = state.copyWith(email: email);
   }
 
   /// Обновить пароль
   void updatePassword(String password) {
-    state = state.copyWith(password: password, errorMessage: null);
+    state = state.copyWith(password: password);
   }
 
   /// Переключить режим регистрации/входа
   void toggleSignUpMode() {
     state = state.copyWith(
       isSignUpMode: !state.isSignUpMode,
-      errorMessage: null,
     );
   }
 
@@ -170,7 +164,7 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
       return;
     }
 
-    state = state.copyWith(isLoading: true, errorMessage: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       await _authService.signInWithEmailAndPassword(
@@ -195,7 +189,7 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
       return;
     }
 
-    state = state.copyWith(isLoading: true, errorMessage: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       await _authService.signUpWithEmailAndPassword(
@@ -214,7 +208,7 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
 
   /// Войти как гость
   Future<void> signInAsGuest() async {
-    state = state.copyWith(isLoading: true, errorMessage: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       await _authService.signInAsGuest();
@@ -233,7 +227,7 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
       return;
     }
 
-    state = state.copyWith(isLoading: true, errorMessage: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       await _authService.resetPassword(state.email);
@@ -251,6 +245,6 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
 
   /// Очистить ошибку
   void clearError() {
-    state = state.copyWith(errorMessage: null);
+    state = state.copyWith();
   }
 }

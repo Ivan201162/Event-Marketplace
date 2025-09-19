@@ -2,18 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель кросс-селл предложения
 class CrossSellSuggestion {
-  final String id;
-  final String bookingId;
-  final String customerId;
-  final String specialistId;
-  final List<CrossSellItem> suggestedItems;
-  final CrossSellStatus status;
-  final String? message;
-  final DateTime createdAt;
-  final DateTime? viewedAt;
-  final DateTime? respondedAt;
-  final Map<String, dynamic>? metadata;
-
   const CrossSellSuggestion({
     required this.id,
     required this.bookingId,
@@ -38,7 +26,8 @@ class CrossSellSuggestion {
       specialistId: data['specialistId'] ?? '',
       suggestedItems: (data['suggestedItems'] as List<dynamic>?)
               ?.map(
-                  (item) => CrossSellItem.fromMap(item as Map<String, dynamic>))
+                (item) => CrossSellItem.fromMap(item as Map<String, dynamic>),
+              )
               .toList() ??
           [],
       status: CrossSellStatus.values.firstWhere(
@@ -60,51 +49,60 @@ class CrossSellSuggestion {
   }
 
   /// Создать из Map
-  factory CrossSellSuggestion.fromMap(Map<String, dynamic> data) {
-    return CrossSellSuggestion(
-      id: data['id'] ?? '',
-      bookingId: data['bookingId'] ?? '',
-      customerId: data['customerId'] ?? '',
-      specialistId: data['specialistId'] ?? '',
-      suggestedItems: (data['suggestedItems'] as List<dynamic>?)
-              ?.map(
-                  (item) => CrossSellItem.fromMap(item as Map<String, dynamic>))
-              .toList() ??
-          [],
-      status: CrossSellStatus.values.firstWhere(
-        (e) => e.name == data['status'],
-        orElse: () => CrossSellStatus.pending,
-      ),
-      message: data['message'],
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      viewedAt: data['viewedAt'] != null
-          ? (data['viewedAt'] as Timestamp).toDate()
-          : null,
-      respondedAt: data['respondedAt'] != null
-          ? (data['respondedAt'] as Timestamp).toDate()
-          : null,
-      metadata: data['metadata'] != null
-          ? Map<String, dynamic>.from(data['metadata'])
-          : null,
-    );
-  }
+  factory CrossSellSuggestion.fromMap(Map<String, dynamic> data) =>
+      CrossSellSuggestion(
+        id: data['id'] ?? '',
+        bookingId: data['bookingId'] ?? '',
+        customerId: data['customerId'] ?? '',
+        specialistId: data['specialistId'] ?? '',
+        suggestedItems: (data['suggestedItems'] as List<dynamic>?)
+                ?.map(
+                  (item) => CrossSellItem.fromMap(item as Map<String, dynamic>),
+                )
+                .toList() ??
+            [],
+        status: CrossSellStatus.values.firstWhere(
+          (e) => e.name == data['status'],
+          orElse: () => CrossSellStatus.pending,
+        ),
+        message: data['message'],
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        viewedAt: data['viewedAt'] != null
+            ? (data['viewedAt'] as Timestamp).toDate()
+            : null,
+        respondedAt: data['respondedAt'] != null
+            ? (data['respondedAt'] as Timestamp).toDate()
+            : null,
+        metadata: data['metadata'] != null
+            ? Map<String, dynamic>.from(data['metadata'])
+            : null,
+      );
+  final String id;
+  final String bookingId;
+  final String customerId;
+  final String specialistId;
+  final List<CrossSellItem> suggestedItems;
+  final CrossSellStatus status;
+  final String? message;
+  final DateTime createdAt;
+  final DateTime? viewedAt;
+  final DateTime? respondedAt;
+  final Map<String, dynamic>? metadata;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'bookingId': bookingId,
-      'customerId': customerId,
-      'specialistId': specialistId,
-      'suggestedItems': suggestedItems.map((item) => item.toMap()).toList(),
-      'status': status.name,
-      'message': message,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'viewedAt': viewedAt != null ? Timestamp.fromDate(viewedAt!) : null,
-      'respondedAt':
-          respondedAt != null ? Timestamp.fromDate(respondedAt!) : null,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'bookingId': bookingId,
+        'customerId': customerId,
+        'specialistId': specialistId,
+        'suggestedItems': suggestedItems.map((item) => item.toMap()).toList(),
+        'status': status.name,
+        'message': message,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'viewedAt': viewedAt != null ? Timestamp.fromDate(viewedAt!) : null,
+        'respondedAt':
+            respondedAt != null ? Timestamp.fromDate(respondedAt!) : null,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   CrossSellSuggestion copyWith({
@@ -119,21 +117,20 @@ class CrossSellSuggestion {
     DateTime? viewedAt,
     DateTime? respondedAt,
     Map<String, dynamic>? metadata,
-  }) {
-    return CrossSellSuggestion(
-      id: id ?? this.id,
-      bookingId: bookingId ?? this.bookingId,
-      customerId: customerId ?? this.customerId,
-      specialistId: specialistId ?? this.specialistId,
-      suggestedItems: suggestedItems ?? this.suggestedItems,
-      status: status ?? this.status,
-      message: message ?? this.message,
-      createdAt: createdAt ?? this.createdAt,
-      viewedAt: viewedAt ?? this.viewedAt,
-      respondedAt: respondedAt ?? this.respondedAt,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      CrossSellSuggestion(
+        id: id ?? this.id,
+        bookingId: bookingId ?? this.bookingId,
+        customerId: customerId ?? this.customerId,
+        specialistId: specialistId ?? this.specialistId,
+        suggestedItems: suggestedItems ?? this.suggestedItems,
+        status: status ?? this.status,
+        message: message ?? this.message,
+        createdAt: createdAt ?? this.createdAt,
+        viewedAt: viewedAt ?? this.viewedAt,
+        respondedAt: respondedAt ?? this.respondedAt,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Проверить, можно ли ответить на предложение
   bool get canRespond => status == CrossSellStatus.pending;
@@ -145,10 +142,10 @@ class CrossSellSuggestion {
   bool get isRejected => status == CrossSellStatus.rejected;
 
   /// Получить общую стоимость предложения
-  double get totalCost {
-    return suggestedItems.fold(
-        0.0, (sum, item) => sum + (item.estimatedPrice ?? 0));
-  }
+  double get totalCost => suggestedItems.fold(
+        0,
+        (sum, item) => sum + (item.estimatedPrice ?? 0),
+      );
 
   /// Получить количество предложенных услуг
   int get itemCount => suggestedItems.length;
@@ -170,39 +167,26 @@ class CrossSellSuggestion {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      bookingId,
-      customerId,
-      specialistId,
-      suggestedItems,
-      status,
-      message,
-      createdAt,
-      viewedAt,
-      respondedAt,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        bookingId,
+        customerId,
+        specialistId,
+        suggestedItems,
+        status,
+        message,
+        createdAt,
+        viewedAt,
+        respondedAt,
+      );
 
   @override
-  String toString() {
-    return 'CrossSellSuggestion(id: $id, bookingId: $bookingId, status: $status, itemCount: $itemCount)';
-  }
+  String toString() =>
+      'CrossSellSuggestion(id: $id, bookingId: $bookingId, status: $status, itemCount: $itemCount)';
 }
 
 /// Элемент кросс-селл предложения
 class CrossSellItem {
-  final String id;
-  final String specialistId;
-  final String specialistName;
-  final String categoryId;
-  final String categoryName;
-  final String? description;
-  final double? estimatedPrice;
-  final String? imageUrl;
-  final Map<String, dynamic>? metadata;
-
   const CrossSellItem({
     required this.id,
     required this.specialistId,
@@ -216,36 +200,41 @@ class CrossSellItem {
   });
 
   /// Создать из Map
-  factory CrossSellItem.fromMap(Map<String, dynamic> data) {
-    return CrossSellItem(
-      id: data['id'] ?? '',
-      specialistId: data['specialistId'] ?? '',
-      specialistName: data['specialistName'] ?? '',
-      categoryId: data['categoryId'] ?? '',
-      categoryName: data['categoryName'] ?? '',
-      description: data['description'],
-      estimatedPrice: data['estimatedPrice']?.toDouble(),
-      imageUrl: data['imageUrl'],
-      metadata: data['metadata'] != null
-          ? Map<String, dynamic>.from(data['metadata'])
-          : null,
-    );
-  }
+  factory CrossSellItem.fromMap(Map<String, dynamic> data) => CrossSellItem(
+        id: data['id'] ?? '',
+        specialistId: data['specialistId'] ?? '',
+        specialistName: data['specialistName'] ?? '',
+        categoryId: data['categoryId'] ?? '',
+        categoryName: data['categoryName'] ?? '',
+        description: data['description'],
+        estimatedPrice: data['estimatedPrice']?.toDouble(),
+        imageUrl: data['imageUrl'],
+        metadata: data['metadata'] != null
+            ? Map<String, dynamic>.from(data['metadata'])
+            : null,
+      );
+  final String id;
+  final String specialistId;
+  final String specialistName;
+  final String categoryId;
+  final String categoryName;
+  final String? description;
+  final double? estimatedPrice;
+  final String? imageUrl;
+  final Map<String, dynamic>? metadata;
 
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'specialistId': specialistId,
-      'specialistName': specialistName,
-      'categoryId': categoryId,
-      'categoryName': categoryName,
-      'description': description,
-      'estimatedPrice': estimatedPrice,
-      'imageUrl': imageUrl,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'specialistId': specialistId,
+        'specialistName': specialistName,
+        'categoryId': categoryId,
+        'categoryName': categoryName,
+        'description': description,
+        'estimatedPrice': estimatedPrice,
+        'imageUrl': imageUrl,
+        'metadata': metadata,
+      };
 
   @override
   bool operator ==(Object other) {
@@ -262,23 +251,20 @@ class CrossSellItem {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      specialistId,
-      specialistName,
-      categoryId,
-      categoryName,
-      description,
-      estimatedPrice,
-      imageUrl,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        specialistId,
+        specialistName,
+        categoryId,
+        categoryName,
+        description,
+        estimatedPrice,
+        imageUrl,
+      );
 
   @override
-  String toString() {
-    return 'CrossSellItem(id: $id, specialistName: $specialistName, categoryName: $categoryName)';
-  }
+  String toString() =>
+      'CrossSellItem(id: $id, specialistName: $specialistName, categoryName: $categoryName)';
 }
 
 /// Статус кросс-селл предложения

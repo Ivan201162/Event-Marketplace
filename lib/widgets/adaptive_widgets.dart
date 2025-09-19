@@ -3,12 +3,6 @@ import 'package:flutter/services.dart';
 
 /// Адаптивный контейнер, который изменяет размер в зависимости от экрана
 class AdaptiveContainer extends StatelessWidget {
-  final Widget child;
-  final EdgeInsets? padding;
-  final EdgeInsets? margin;
-  final double? maxWidth;
-  final bool centerContent;
-
   const AdaptiveContainer({
     super.key,
     required this.child,
@@ -17,6 +11,11 @@ class AdaptiveContainer extends StatelessWidget {
     this.maxWidth,
     this.centerContent = true,
   });
+  final Widget child;
+  final EdgeInsets? padding;
+  final EdgeInsets? margin;
+  final double? maxWidth;
+  final bool centerContent;
 
   @override
   Widget build(BuildContext context) {
@@ -25,7 +24,7 @@ class AdaptiveContainer extends StatelessWidget {
     final isDesktop = screenWidth > 1200;
 
     // Определяем максимальную ширину контента
-    double contentMaxWidth = maxWidth ??
+    final contentMaxWidth = maxWidth ??
         (isDesktop
             ? 1200
             : isTablet
@@ -33,7 +32,7 @@ class AdaptiveContainer extends StatelessWidget {
                 : double.infinity);
 
     // Определяем отступы
-    EdgeInsets contentPadding = padding ??
+    final contentPadding = padding ??
         EdgeInsets.symmetric(
           horizontal: isTablet ? 32 : 16,
           vertical: isTablet ? 24 : 16,
@@ -56,12 +55,6 @@ class AdaptiveContainer extends StatelessWidget {
 
 /// Адаптивная сетка, которая изменяет количество колонок в зависимости от размера экрана
 class AdaptiveGrid extends StatelessWidget {
-  final List<Widget> children;
-  final double childAspectRatio;
-  final double spacing;
-  final double runSpacing;
-  final int? maxColumns;
-
   const AdaptiveGrid({
     super.key,
     required this.children,
@@ -70,6 +63,11 @@ class AdaptiveGrid extends StatelessWidget {
     this.runSpacing = 16.0,
     this.maxColumns,
   });
+  final List<Widget> children;
+  final double childAspectRatio;
+  final double spacing;
+  final double runSpacing;
+  final int? maxColumns;
 
   @override
   Widget build(BuildContext context) {
@@ -106,16 +104,15 @@ class AdaptiveGrid extends StatelessWidget {
 
 /// Адаптивный список, который изменяет отображение в зависимости от размера экрана
 class AdaptiveList extends StatelessWidget {
-  final List<Widget> children;
-  final bool useCardLayout;
-  final double? itemHeight;
-
   const AdaptiveList({
     super.key,
     required this.children,
     this.useCardLayout = true,
     this.itemHeight,
   });
+  final List<Widget> children;
+  final bool useCardLayout;
+  final double? itemHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -125,8 +122,8 @@ class AdaptiveList extends StatelessWidget {
     if (isTablet && useCardLayout) {
       // На планшетах используем сетку карточек
       return AdaptiveGrid(
-        children: children,
         childAspectRatio: 1.2,
+        children: children,
       );
     } else {
       // На телефонах используем обычный список
@@ -142,12 +139,6 @@ class AdaptiveList extends StatelessWidget {
 
 /// Адаптивная кнопка, которая изменяет размер в зависимости от экрана
 class AdaptiveButton extends StatelessWidget {
-  final Widget child;
-  final VoidCallback? onPressed;
-  final ButtonStyle? style;
-  final bool isFullWidth;
-  final double? minHeight;
-
   const AdaptiveButton({
     super.key,
     required this.child,
@@ -156,6 +147,11 @@ class AdaptiveButton extends StatelessWidget {
     this.isFullWidth = false,
     this.minHeight,
   });
+  final Widget child;
+  final VoidCallback? onPressed;
+  final ButtonStyle? style;
+  final bool isFullWidth;
+  final double? minHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -188,12 +184,6 @@ class AdaptiveButton extends StatelessWidget {
 
 /// Адаптивный текст, который изменяет размер шрифта в зависимости от экрана
 class AdaptiveText extends StatelessWidget {
-  final String text;
-  final TextStyle? style;
-  final TextAlign? textAlign;
-  final int? maxLines;
-  final TextOverflow? overflow;
-
   const AdaptiveText(
     this.text, {
     super.key,
@@ -202,6 +192,11 @@ class AdaptiveText extends StatelessWidget {
     this.maxLines,
     this.overflow,
   });
+  final String text;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final int? maxLines;
+  final TextOverflow? overflow;
 
   @override
   Widget build(BuildContext context) {
@@ -233,14 +228,6 @@ class AdaptiveText extends StatelessWidget {
 
 /// Адаптивный AppBar с улучшенным дизайном
 class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
-  final String title;
-  final List<Widget>? actions;
-  final Widget? leading;
-  final bool centerTitle;
-  final Color? backgroundColor;
-  final Color? foregroundColor;
-  final double? elevation;
-
   const AdaptiveAppBar({
     super.key,
     required this.title,
@@ -251,6 +238,13 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.foregroundColor,
     this.elevation,
   });
+  final String title;
+  final List<Widget>? actions;
+  final Widget? leading;
+  final bool centerTitle;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final double? elevation;
 
   @override
   Widget build(BuildContext context) {
@@ -281,14 +275,6 @@ class AdaptiveAppBar extends StatelessWidget implements PreferredSizeWidget {
 
 /// Адаптивная карточка с улучшенным дизайном
 class AdaptiveCard extends StatelessWidget {
-  final Widget child;
-  final EdgeInsets? padding;
-  final EdgeInsets? margin;
-  final double? elevation;
-  final Color? color;
-  final BorderRadius? borderRadius;
-  final VoidCallback? onTap;
-
   const AdaptiveCard({
     super.key,
     required this.child,
@@ -299,6 +285,13 @@ class AdaptiveCard extends StatelessWidget {
     this.borderRadius,
     this.onTap,
   });
+  final Widget child;
+  final EdgeInsets? padding;
+  final EdgeInsets? margin;
+  final double? elevation;
+  final Color? color;
+  final BorderRadius? borderRadius;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -332,11 +325,6 @@ class AdaptiveCard extends StatelessWidget {
 
 /// Адаптивный диалог с улучшенным дизайном
 class AdaptiveDialog extends StatelessWidget {
-  final String title;
-  final Widget content;
-  final List<Widget>? actions;
-  final bool scrollable;
-
   const AdaptiveDialog({
     super.key,
     required this.title,
@@ -344,13 +332,17 @@ class AdaptiveDialog extends StatelessWidget {
     this.actions,
     this.scrollable = false,
   });
+  final String title;
+  final Widget content;
+  final List<Widget>? actions;
+  final bool scrollable;
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth > 600;
 
-    Widget dialogContent = content;
+    var dialogContent = content;
     if (scrollable) {
       dialogContent = SingleChildScrollView(child: content);
     }
@@ -375,11 +367,6 @@ class AdaptiveDialog extends StatelessWidget {
 
 /// Адаптивный BottomSheet с улучшенным дизайном
 class AdaptiveBottomSheet extends StatelessWidget {
-  final Widget child;
-  final String? title;
-  final List<Widget>? actions;
-  final bool isScrollControlled;
-
   const AdaptiveBottomSheet({
     super.key,
     required this.child,
@@ -387,13 +374,17 @@ class AdaptiveBottomSheet extends StatelessWidget {
     this.actions,
     this.isScrollControlled = true,
   });
+  final Widget child;
+  final String? title;
+  final List<Widget>? actions;
+  final bool isScrollControlled;
 
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final isTablet = screenWidth > 600;
 
-    Widget content = child;
+    var content = child;
 
     if (title != null || actions != null) {
       content = Column(
@@ -438,14 +429,13 @@ class AdaptiveBottomSheet extends StatelessWidget {
 
 /// Адаптивный индикатор загрузки
 class AdaptiveLoadingIndicator extends StatelessWidget {
-  final String? message;
-  final double? size;
-
   const AdaptiveLoadingIndicator({
     super.key,
     this.message,
     this.size,
   });
+  final String? message;
+  final double? size;
 
   @override
   Widget build(BuildContext context) {
@@ -479,16 +469,15 @@ class AdaptiveLoadingIndicator extends StatelessWidget {
 
 /// Адаптивное сообщение об ошибке
 class AdaptiveErrorMessage extends StatelessWidget {
-  final String message;
-  final VoidCallback? onRetry;
-  final IconData? icon;
-
   const AdaptiveErrorMessage({
     super.key,
     required this.message,
     this.onRetry,
     this.icon,
   });
+  final String message;
+  final VoidCallback? onRetry;
+  final IconData? icon;
 
   @override
   Widget build(BuildContext context) {

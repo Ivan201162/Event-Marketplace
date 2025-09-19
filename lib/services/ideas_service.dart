@@ -16,7 +16,7 @@ class IdeasService {
     int limit = 20,
     DocumentSnapshot? startAfter,
   }) async {
-    Query query = _db
+    var query = _db
         .collection('event_ideas')
         .where('isPublic', isEqualTo: true)
         .orderBy('createdAt', descending: true)
@@ -44,9 +44,7 @@ class IdeasService {
     }
 
     final querySnapshot = await query.get();
-    return querySnapshot.docs
-        .map((doc) => EventIdea.fromDocument(doc))
-        .toList();
+    return querySnapshot.docs.map(EventIdea.fromDocument).toList();
   }
 
   /// Получить идеи по автору
@@ -57,9 +55,7 @@ class IdeasService {
         .orderBy('createdAt', descending: true)
         .get();
 
-    return querySnapshot.docs
-        .map((doc) => EventIdea.fromDocument(doc))
-        .toList();
+    return querySnapshot.docs.map(EventIdea.fromDocument).toList();
   }
 
   /// Получить сохраненные идеи пользователя
@@ -75,9 +71,7 @@ class IdeasService {
         .where(FieldPath.documentId, whereIn: savedIdeaIds)
         .get();
 
-    return querySnapshot.docs
-        .map((doc) => EventIdea.fromDocument(doc))
-        .toList();
+    return querySnapshot.docs.map(EventIdea.fromDocument).toList();
   }
 
   /// Создать новую идею
@@ -209,16 +203,18 @@ class IdeasService {
         .where('isPublic', isEqualTo: true)
         .get();
 
-    final ideas =
-        querySnapshot.docs.map((doc) => EventIdea.fromDocument(doc)).toList();
+    final ideas = querySnapshot.docs.map(EventIdea.fromDocument).toList();
 
     // Фильтруем на клиенте
     final searchLower = searchText.toLowerCase();
-    return ideas.where((idea) {
-      return idea.title.toLowerCase().contains(searchLower) ||
-          idea.description.toLowerCase().contains(searchLower) ||
-          idea.tags.any((tag) => tag.toLowerCase().contains(searchLower));
-    }).toList();
+    return ideas
+        .where(
+          (idea) =>
+              idea.title.toLowerCase().contains(searchLower) ||
+              idea.description.toLowerCase().contains(searchLower) ||
+              idea.tags.any((tag) => tag.toLowerCase().contains(searchLower)),
+        )
+        .toList();
   }
 
   /// Получить популярные идеи
@@ -231,9 +227,7 @@ class IdeasService {
         .limit(limit)
         .get();
 
-    return querySnapshot.docs
-        .map((doc) => EventIdea.fromDocument(doc))
-        .toList();
+    return querySnapshot.docs.map(EventIdea.fromDocument).toList();
   }
 
   /// Получить последние идеи
@@ -245,8 +239,6 @@ class IdeasService {
         .limit(limit)
         .get();
 
-    return querySnapshot.docs
-        .map((doc) => EventIdea.fromDocument(doc))
-        .toList();
+    return querySnapshot.docs.map(EventIdea.fromDocument).toList();
   }
 }

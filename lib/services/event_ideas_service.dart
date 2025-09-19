@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:event_marketplace_app/core/feature_flags.dart';
+import '../core/feature_flags.dart';
 
 /// Сервис для раздела идей мероприятий
 class EventIdeasService {
@@ -46,7 +46,6 @@ class EventIdeasService {
         views: 0,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        publishedAt: null,
         metadata: {},
       );
 
@@ -82,7 +81,7 @@ class EventIdeasService {
     String? lastDocumentId,
   }) async {
     try {
-      Query query = _firestore.collection('event_ideas');
+      var query = _firestore.collection('event_ideas');
 
       if (status != null) {
         query = query.where('status', isEqualTo: status.name);
@@ -110,17 +109,19 @@ class EventIdeasService {
       }
 
       final snapshot = await query.get();
-      var ideas =
-          snapshot.docs.map((doc) => EventIdea.fromDocument(doc)).toList();
+      var ideas = snapshot.docs.map(EventIdea.fromDocument).toList();
 
       // Фильтрация по поисковому запросу
       if (searchQuery != null && searchQuery.isNotEmpty) {
         final queryLower = searchQuery.toLowerCase();
         ideas = ideas
-            .where((idea) =>
-                idea.title.toLowerCase().contains(queryLower) ||
-                idea.description.toLowerCase().contains(queryLower) ||
-                idea.tags.any((tag) => tag.toLowerCase().contains(queryLower)))
+            .where(
+              (idea) =>
+                  idea.title.toLowerCase().contains(queryLower) ||
+                  idea.description.toLowerCase().contains(queryLower) ||
+                  idea.tags
+                      .any((tag) => tag.toLowerCase().contains(queryLower)),
+            )
             .toList();
       }
 
@@ -140,7 +141,7 @@ class EventIdeasService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => EventIdea.fromDocument(doc)).toList();
+      return snapshot.docs.map(EventIdea.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения популярных идей: $e');
     }
@@ -155,7 +156,7 @@ class EventIdeasService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => EventIdea.fromDocument(doc)).toList();
+      return snapshot.docs.map(EventIdea.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения идей пользователя: $e');
     }
@@ -274,7 +275,7 @@ class EventIdeasService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => EventIdea.fromDocument(doc)).toList();
+      return snapshot.docs.map(EventIdea.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения похожих идей: $e');
     }
@@ -284,8 +285,7 @@ class EventIdeasService {
   Future<EventIdeasStatistics> getEventIdeasStatistics() async {
     try {
       final snapshot = await _firestore.collection('event_ideas').get();
-      final ideas =
-          snapshot.docs.map((doc) => EventIdea.fromDocument(doc)).toList();
+      final ideas = snapshot.docs.map(EventIdea.fromDocument).toList();
 
       final totalIdeas = ideas.length;
       final publishedIdeas =
@@ -318,28 +318,6 @@ class EventIdeasService {
 
 /// Модель идеи мероприятия
 class EventIdea {
-  final String id;
-  final String userId;
-  final String title;
-  final String description;
-  final EventIdeaCategory category;
-  final EventIdeaType type;
-  final List<String> tags;
-  final String? targetAudience;
-  final int? estimatedParticipants;
-  final Duration? estimatedDuration;
-  final String? location;
-  final double? estimatedBudget;
-  final List<String> requiredServices;
-  final String? inspiration;
-  final EventIdeaStatus status;
-  final int likes;
-  final int views;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final DateTime? publishedAt;
-  final Map<String, dynamic> metadata;
-
   const EventIdea({
     required this.id,
     required this.userId,
@@ -404,33 +382,52 @@ class EventIdea {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
+  final String id;
+  final String userId;
+  final String title;
+  final String description;
+  final EventIdeaCategory category;
+  final EventIdeaType type;
+  final List<String> tags;
+  final String? targetAudience;
+  final int? estimatedParticipants;
+  final Duration? estimatedDuration;
+  final String? location;
+  final double? estimatedBudget;
+  final List<String> requiredServices;
+  final String? inspiration;
+  final EventIdeaStatus status;
+  final int likes;
+  final int views;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? publishedAt;
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'title': title,
-      'description': description,
-      'category': category.name,
-      'type': type.name,
-      'tags': tags,
-      'targetAudience': targetAudience,
-      'estimatedParticipants': estimatedParticipants,
-      'estimatedDuration': estimatedDuration?.inSeconds,
-      'location': location,
-      'estimatedBudget': estimatedBudget,
-      'requiredServices': requiredServices,
-      'inspiration': inspiration,
-      'status': status.name,
-      'likes': likes,
-      'views': views,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'publishedAt':
-          publishedAt != null ? Timestamp.fromDate(publishedAt!) : null,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'userId': userId,
+        'title': title,
+        'description': description,
+        'category': category.name,
+        'type': type.name,
+        'tags': tags,
+        'targetAudience': targetAudience,
+        'estimatedParticipants': estimatedParticipants,
+        'estimatedDuration': estimatedDuration?.inSeconds,
+        'location': location,
+        'estimatedBudget': estimatedBudget,
+        'requiredServices': requiredServices,
+        'inspiration': inspiration,
+        'status': status.name,
+        'likes': likes,
+        'views': views,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'publishedAt':
+            publishedAt != null ? Timestamp.fromDate(publishedAt!) : null,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   EventIdea copyWith({
@@ -455,43 +452,35 @@ class EventIdea {
     DateTime? updatedAt,
     DateTime? publishedAt,
     Map<String, dynamic>? metadata,
-  }) {
-    return EventIdea(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      category: category ?? this.category,
-      type: type ?? this.type,
-      tags: tags ?? this.tags,
-      targetAudience: targetAudience ?? this.targetAudience,
-      estimatedParticipants:
-          estimatedParticipants ?? this.estimatedParticipants,
-      estimatedDuration: estimatedDuration ?? this.estimatedDuration,
-      location: location ?? this.location,
-      estimatedBudget: estimatedBudget ?? this.estimatedBudget,
-      requiredServices: requiredServices ?? this.requiredServices,
-      inspiration: inspiration ?? this.inspiration,
-      status: status ?? this.status,
-      likes: likes ?? this.likes,
-      views: views ?? this.views,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      publishedAt: publishedAt ?? this.publishedAt,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      EventIdea(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        category: category ?? this.category,
+        type: type ?? this.type,
+        tags: tags ?? this.tags,
+        targetAudience: targetAudience ?? this.targetAudience,
+        estimatedParticipants:
+            estimatedParticipants ?? this.estimatedParticipants,
+        estimatedDuration: estimatedDuration ?? this.estimatedDuration,
+        location: location ?? this.location,
+        estimatedBudget: estimatedBudget ?? this.estimatedBudget,
+        requiredServices: requiredServices ?? this.requiredServices,
+        inspiration: inspiration ?? this.inspiration,
+        status: status ?? this.status,
+        likes: likes ?? this.likes,
+        views: views ?? this.views,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        publishedAt: publishedAt ?? this.publishedAt,
+        metadata: metadata ?? this.metadata,
+      );
 }
 
 /// Статистика идей мероприятий
 class EventIdeasStatistics {
-  final int totalIdeas;
-  final int publishedIdeas;
-  final int draftIdeas;
-  final Map<EventIdeaCategory, int> categoryStatistics;
-  final int totalLikes;
-  final int totalViews;
-
   const EventIdeasStatistics({
     required this.totalIdeas,
     required this.publishedIdeas,
@@ -500,6 +489,12 @@ class EventIdeasStatistics {
     required this.totalLikes,
     required this.totalViews,
   });
+  final int totalIdeas;
+  final int publishedIdeas;
+  final int draftIdeas;
+  final Map<EventIdeaCategory, int> categoryStatistics;
+  final int totalLikes;
+  final int totalViews;
 }
 
 /// Категории идей мероприятий

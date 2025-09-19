@@ -2,13 +2,11 @@ import 'package:flutter/material.dart';
 
 /// Локализация приложения
 class AppLocalizations {
+  AppLocalizations(this.locale);
   final Locale locale;
 
-  AppLocalizations(this.locale);
-
-  static AppLocalizations of(BuildContext context) {
-    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
-  }
+  static AppLocalizations of(BuildContext context) =>
+      Localizations.of<AppLocalizations>(context, AppLocalizations)!;
 
   static const LocalizationsDelegate<AppLocalizations> delegate =
       _AppLocalizationsDelegate();
@@ -733,14 +731,12 @@ class _AppLocalizationsDelegate
   const _AppLocalizationsDelegate();
 
   @override
-  bool isSupported(Locale locale) {
-    return ['en', 'ru', 'kk'].contains(locale.languageCode);
-  }
+  bool isSupported(Locale locale) =>
+      ['en', 'ru', 'kk'].contains(locale.languageCode);
 
   @override
-  Future<AppLocalizations> load(Locale locale) async {
-    return AppLocalizations(locale);
-  }
+  Future<AppLocalizations> load(Locale locale) async =>
+      AppLocalizations(locale);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;

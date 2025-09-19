@@ -7,27 +7,25 @@ class EventService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Получить все события
-  Stream<List<Event>> getAllEvents() {
-    return _firestore
-        .collection('events')
-        .where('isPublic', isEqualTo: true)
-        .where('status', isEqualTo: 'active')
-        .orderBy('date')
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Event.fromDocument(doc)).toList());
-  }
+  Stream<List<Event>> getAllEvents() => _firestore
+      .collection('events')
+      .where('isPublic', isEqualTo: true)
+      .where('status', isEqualTo: 'active')
+      .orderBy('date')
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
+      );
 
   /// Получить события пользователя
-  Stream<List<Event>> getUserEvents(String userId) {
-    return _firestore
-        .collection('events')
-        .where('organizerId', isEqualTo: userId)
-        .orderBy('date', descending: true)
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Event.fromDocument(doc)).toList());
-  }
+  Stream<List<Event>> getUserEvents(String userId) => _firestore
+      .collection('events')
+      .where('organizerId', isEqualTo: userId)
+      .orderBy('date', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
+      );
 
   /// Получить событие по ID
   Future<Event?> getEventById(String eventId) async {
@@ -71,31 +69,29 @@ class EventService {
   }
 
   /// Поиск событий
-  Stream<List<Event>> searchEvents(String query) {
-    return _firestore
-        .collection('events')
-        .where('isPublic', isEqualTo: true)
-        .where('status', isEqualTo: 'active')
-        .orderBy('title')
-        .startAt([query])
-        .endAt([query + '\uf8ff'])
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Event.fromDocument(doc)).toList());
-  }
+  Stream<List<Event>> searchEvents(String query) => _firestore
+      .collection('events')
+      .where('isPublic', isEqualTo: true)
+      .where('status', isEqualTo: 'active')
+      .orderBy('title')
+      .startAt([query])
+      .endAt(['$query\uf8ff'])
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
+      );
 
   /// Получить события по категории
-  Stream<List<Event>> getEventsByCategory(EventCategory category) {
-    return _firestore
-        .collection('events')
-        .where('isPublic', isEqualTo: true)
-        .where('status', isEqualTo: 'active')
-        .where('category', isEqualTo: category.name)
-        .orderBy('date')
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Event.fromDocument(doc)).toList());
-  }
+  Stream<List<Event>> getEventsByCategory(EventCategory category) => _firestore
+      .collection('events')
+      .where('isPublic', isEqualTo: true)
+      .where('status', isEqualTo: 'active')
+      .where('category', isEqualTo: category.name)
+      .orderBy('date')
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
+      );
 
   /// Получить события по дате
   Stream<List<Event>> getEventsByDate(DateTime date) {
@@ -110,37 +106,39 @@ class EventService {
         .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endOfDay))
         .orderBy('date')
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Event.fromDocument(doc)).toList());
+        .map(
+          (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
+        );
   }
 
   /// Получить события в диапазоне дат
   Stream<List<Event>> getEventsByDateRange(
-      DateTime startDate, DateTime endDate) {
-    return _firestore
-        .collection('events')
-        .where('isPublic', isEqualTo: true)
-        .where('status', isEqualTo: 'active')
-        .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
-        .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
-        .orderBy('date')
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Event.fromDocument(doc)).toList());
-  }
+    DateTime startDate,
+    DateTime endDate,
+  ) =>
+      _firestore
+          .collection('events')
+          .where('isPublic', isEqualTo: true)
+          .where('status', isEqualTo: 'active')
+          .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+          .where('date', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
+          .orderBy('date')
+          .snapshots()
+          .map(
+            (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
+          );
 
   /// Получить популярные события
-  Stream<List<Event>> getPopularEvents({int limit = 10}) {
-    return _firestore
-        .collection('events')
-        .where('isPublic', isEqualTo: true)
-        .where('status', isEqualTo: 'active')
-        .orderBy('currentParticipants', descending: true)
-        .limit(limit)
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Event.fromDocument(doc)).toList());
-  }
+  Stream<List<Event>> getPopularEvents({int limit = 10}) => _firestore
+      .collection('events')
+      .where('isPublic', isEqualTo: true)
+      .where('status', isEqualTo: 'active')
+      .orderBy('currentParticipants', descending: true)
+      .limit(limit)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
+      );
 
   /// Получить ближайшие события
   Stream<List<Event>> getUpcomingEvents({int limit = 10}) {
@@ -154,8 +152,9 @@ class EventService {
         .orderBy('date')
         .limit(limit)
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Event.fromDocument(doc)).toList());
+        .map(
+          (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
+        );
   }
 
   /// Обновить количество участников
@@ -190,10 +189,10 @@ class EventService {
           .where('organizerId', isEqualTo: userId)
           .get();
 
-      int total = 0;
-      int active = 0;
-      int completed = 0;
-      int cancelled = 0;
+      var total = 0;
+      var active = 0;
+      var completed = 0;
+      var cancelled = 0;
 
       for (final doc in snapshot.docs) {
         final event = Event.fromDocument(doc);
@@ -227,25 +226,31 @@ class EventService {
 
   /// Получить события с фильтрацией
   Stream<List<Event>> getFilteredEvents(EventFilter filter) {
-    Query query = _firestore
+    var query = _firestore
         .collection('events')
         .where('isPublic', isEqualTo: true)
         .where('status', isEqualTo: 'active');
 
     // Фильтр по дате
     if (filter.startDate != null) {
-      query = query.where('date',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!));
+      query = query.where(
+        'date',
+        isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!),
+      );
     }
     if (filter.endDate != null) {
-      query = query.where('date',
-          isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
+      query = query.where(
+        'date',
+        isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!),
+      );
     }
 
     // Фильтр по категории
     if (filter.categories != null && filter.categories!.isNotEmpty) {
-      query = query.where('category',
-          whereIn: filter.categories!.map((c) => c.name).toList());
+      query = query.where(
+        'category',
+        whereIn: filter.categories!.map((c) => c.name).toList(),
+      );
     }
 
     // Фильтр по цене
@@ -261,7 +266,8 @@ class EventService {
       query = query.where('organizerId', isEqualTo: filter.organizerId!);
     }
 
-    return query.orderBy('date').snapshots().map((snapshot) =>
-        snapshot.docs.map((doc) => Event.fromDocument(doc)).toList());
+    return query.orderBy('date').snapshots().map(
+          (snapshot) => snapshot.docs.map(Event.fromDocument).toList(),
+        );
   }
 }

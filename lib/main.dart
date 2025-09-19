@@ -1,54 +1,51 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
+import 'core/constants/app_constants.dart';
+import 'core/constants/app_routes.dart';
+import 'core/error_handler.dart';
+import 'core/extensions/build_context_extensions.dart';
+import 'core/feature_flags.dart';
 import 'core/theme/app_theme.dart';
 import 'core/theme/theme_provider.dart';
-import 'core/feature_flags.dart';
-import 'core/error_handler.dart';
-import 'core/constants/app_constants.dart';
-import 'core/extensions/build_context_extensions.dart';
-import 'core/constants/app_routes.dart';
-
-import 'services/auth_service.dart';
-import 'services/notification_service.dart';
-import 'services/analytics_service.dart';
-import 'services/performance_service.dart';
-import 'services/security_service.dart';
-import 'services/integration_service.dart';
-import 'services/content_management_service.dart';
-import 'services/user_management_service.dart';
-import 'services/settings_service.dart';
-import 'services/caching_service.dart';
-import 'services/backup_service.dart';
-import 'services/reporting_service.dart';
-import 'services/ab_testing_service.dart';
-
-import 'screens/home_screen.dart';
+import 'firebase_options.dart';
+import 'screens/admin_panel_screen.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_screen.dart';
-import 'screens/profile_screen.dart';
-import 'screens/specialist_profile_screen.dart';
 import 'screens/booking_screen.dart';
 import 'screens/chat_screen.dart';
-import 'screens/search_screen.dart';
-import 'screens/favorites_screen.dart';
-import 'screens/notifications_screen.dart';
-import 'screens/settings_screen.dart';
-import 'screens/admin_panel_screen.dart';
-import 'screens/security_management_screen.dart';
-import 'screens/integration_management_screen.dart';
 import 'screens/content_management_screen.dart';
-import 'screens/user_management_screen.dart';
+import 'screens/favorites_screen.dart';
+import 'screens/home_screen.dart';
+import 'screens/integration_management_screen.dart';
+import 'screens/notifications_screen.dart';
+import 'screens/profile_screen.dart';
+import 'screens/search_screen.dart';
+import 'screens/security_management_screen.dart';
 import 'screens/settings_management_screen.dart';
-
-import 'firebase_options.dart';
+import 'screens/settings_screen.dart';
+import 'screens/specialist_profile_screen.dart';
+import 'screens/user_management_screen.dart';
+import 'services/ab_testing_service.dart';
+import 'services/analytics_service.dart';
+import 'services/auth_service.dart';
+import 'services/backup_service.dart';
+import 'services/caching_service.dart';
+import 'services/content_management_service.dart';
+import 'services/integration_service.dart';
+import 'services/notification_service.dart';
+import 'services/performance_service.dart';
+import 'services/reporting_service.dart';
+import 'services/security_service.dart';
+import 'services/settings_service.dart';
+import 'services/user_management_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,9 +56,7 @@ void main() async {
   );
 
   // Инициализация Crashlytics
-  FlutterError.onError = (errorDetails) {
-    FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-  };
+  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
 
   // Инициализация Performance Monitoring
   await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
@@ -86,7 +81,7 @@ Future<void> _initializeServices() async {
     await AuthService().initialize();
     await NotificationService().initialize();
     await AnalyticsService().initialize();
-    await PerformanceService().initialize();
+    PerformanceService().initialize();
 
     // Сервисы управления
     await SecurityService().initialize();
@@ -109,12 +104,11 @@ Future<void> _initializeServices() async {
 }
 
 class EventMarketplaceApp extends ConsumerWidget {
-  final SharedPreferences prefs;
-
   const EventMarketplaceApp({
     super.key,
     required this.prefs,
   });
+  final SharedPreferences prefs;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -148,11 +142,9 @@ class EventMarketplaceApp extends ConsumerWidget {
       routerConfig: router,
 
       // Обработка ошибок
-      builder: (context, child) {
-        return ErrorHandler(
-          child: child ?? const SizedBox.shrink(),
-        );
-      },
+      builder: (context, child) => ErrorHandler(
+        child: child ?? const SizedBox.shrink(),
+      ),
     );
   }
 }
@@ -207,7 +199,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '${AppRoutes.specialistProfile}/:id',
         name: 'specialist-profile',
         builder: (context, state) {
-          final specialistId = state.pathParameters['id']!;
+          final specialistId = state.pathParameters['id'];
           return SpecialistProfileScreen(specialistId: specialistId);
         },
       ),
@@ -217,7 +209,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '${AppRoutes.booking}/:specialistId',
         name: 'booking',
         builder: (context, state) {
-          final specialistId = state.pathParameters['specialistId']!;
+          final specialistId = state.pathParameters['specialistId'];
           return BookingScreen(specialistId: specialistId);
         },
       ),
@@ -227,7 +219,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: '${AppRoutes.chat}/:chatId',
         name: 'chat',
         builder: (context, state) {
-          final chatId = state.pathParameters['chatId']!;
+          final chatId = state.pathParameters['chatId'];
           return ChatScreen(chatId: chatId);
         },
       ),
@@ -324,78 +316,58 @@ final routerProvider = Provider<GoRouter>((ref) {
 });
 
 /// Провайдер сервиса аутентификации
-final authServiceProvider = Provider<AuthService>((ref) {
-  return AuthService();
-});
+final authServiceProvider = Provider<AuthService>((ref) => AuthService());
 
 /// Провайдер режима темы
-final themeModeProvider =
-    StateNotifierProvider<ThemeModeNotifier, ThemeMode>((ref) {
-  return ThemeModeNotifier();
-});
+final themeModeProvider = StateNotifierProvider<ThemeModeNotifier, ThemeMode>(
+    (ref) => ThemeModeNotifier());
 
 /// Провайдер флагов функций
-final featureFlagsProvider = Provider<FeatureFlags>((ref) {
-  return FeatureFlags();
-});
+final featureFlagsProvider = Provider<FeatureFlags>((ref) => FeatureFlags());
 
 /// Провайдер сервиса уведомлений
-final notificationServiceProvider = Provider<NotificationService>((ref) {
-  return NotificationService();
-});
+final notificationServiceProvider =
+    Provider<NotificationService>((ref) => NotificationService());
 
 /// Провайдер сервиса аналитики
-final analyticsServiceProvider = Provider<AnalyticsService>((ref) {
-  return AnalyticsService();
-});
+final analyticsServiceProvider =
+    Provider<AnalyticsService>((ref) => AnalyticsService());
 
 /// Провайдер сервиса производительности
-final performanceServiceProvider = Provider<PerformanceService>((ref) {
-  return PerformanceService();
-});
+final performanceServiceProvider =
+    Provider<PerformanceService>((ref) => PerformanceService());
 
 /// Провайдер сервиса безопасности
-final securityServiceProvider = Provider<SecurityService>((ref) {
-  return SecurityService();
-});
+final securityServiceProvider =
+    Provider<SecurityService>((ref) => SecurityService());
 
 /// Провайдер сервиса интеграций
-final integrationServiceProvider = Provider<IntegrationService>((ref) {
-  return IntegrationService();
-});
+final integrationServiceProvider =
+    Provider<IntegrationService>((ref) => IntegrationService());
 
 /// Провайдер сервиса управления контентом
 final contentManagementServiceProvider =
-    Provider<ContentManagementService>((ref) {
-  return ContentManagementService();
-});
+    Provider<ContentManagementService>((ref) => ContentManagementService());
 
 /// Провайдер сервиса управления пользователями
-final userManagementServiceProvider = Provider<UserManagementService>((ref) {
-  return UserManagementService();
-});
+final userManagementServiceProvider =
+    Provider<UserManagementService>((ref) => UserManagementService());
 
 /// Провайдер сервиса настроек
-final settingsServiceProvider = Provider<SettingsService>((ref) {
-  return SettingsService();
-});
+final settingsServiceProvider =
+    Provider<SettingsService>((ref) => SettingsService());
 
 /// Провайдер сервиса кэширования
-final cachingServiceProvider = Provider<CachingService>((ref) {
-  return CachingService();
-});
+final cachingServiceProvider =
+    Provider<CachingService>((ref) => CachingService());
 
 /// Провайдер сервиса бэкапов
-final backupServiceProvider = Provider<BackupService>((ref) {
-  return BackupService();
-});
+final backupServiceProvider = Provider<BackupService>((ref) => BackupService());
 
 /// Провайдер сервиса отчетов
-final reportingServiceProvider = Provider<ReportingService>((ref) {
-  return ReportingService();
-});
+final reportingServiceProvider =
+    Provider<ReportingService>((ref) => ReportingService());
 
 /// Провайдер сервиса A/B тестирования
-final abTestingServiceProvider = Provider<ABTestingService>((ref) {
-  return ABTestingService();
-});
+final abTestingServiceProvider =
+    Provider<ABTestingService>((ref) => ABTestingService());

@@ -3,16 +3,15 @@ import '../models/payment_extended.dart';
 
 /// Виджет для выбора типа оплаты
 class PaymentTypeSelector extends StatefulWidget {
-  final double totalAmount;
-  final AdvancePaymentSettings settings;
-  final Function(PaymentType, double?, int?) onPaymentTypeSelected;
-
   const PaymentTypeSelector({
     super.key,
     required this.totalAmount,
     required this.settings,
     required this.onPaymentTypeSelected,
   });
+  final double totalAmount;
+  final AdvancePaymentSettings settings;
+  final Function(PaymentType, double?, int?) onPaymentTypeSelected;
 
   @override
   State<PaymentTypeSelector> createState() => _PaymentTypeSelectorState();
@@ -20,7 +19,7 @@ class PaymentTypeSelector extends StatefulWidget {
 
 class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
   PaymentType _selectedType = PaymentType.full;
-  double _selectedAdvancePercentage = 30.0;
+  double _selectedAdvancePercentage = 30;
   int _selectedInstallments = 3;
   final TextEditingController _customAmountController = TextEditingController();
 
@@ -31,87 +30,83 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Выберите тип оплаты',
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Выберите тип оплаты',
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        // Типы оплаты
-        _buildPaymentTypeOptions(),
+          // Типы оплаты
+          _buildPaymentTypeOptions(),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        // Дополнительные настройки
-        if (_selectedType == PaymentType.advance) ...[
-          _buildAdvanceSettings(),
-        ] else if (_selectedType == PaymentType.installment) ...[
-          _buildInstallmentSettings(),
+          // Дополнительные настройки
+          if (_selectedType == PaymentType.advance) ...[
+            _buildAdvanceSettings(),
+          ] else if (_selectedType == PaymentType.installment) ...[
+            _buildInstallmentSettings(),
+          ],
+
+          const SizedBox(height: 16),
+
+          // Сводка
+          _buildPaymentSummary(),
+
+          const SizedBox(height: 16),
+
+          // Кнопка подтверждения
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _confirmSelection,
+              child: const Text('Подтвердить'),
+            ),
+          ),
         ],
+      );
 
-        const SizedBox(height: 16),
-
-        // Сводка
-        _buildPaymentSummary(),
-
-        const SizedBox(height: 16),
-
-        // Кнопка подтверждения
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed: _confirmSelection,
-            child: const Text('Подтвердить'),
+  Widget _buildPaymentTypeOptions() => Column(
+        children: [
+          _buildPaymentTypeOption(
+            type: PaymentType.full,
+            title: 'Полная оплата',
+            subtitle: 'Оплатить всю сумму сразу',
+            icon: Icons.payment,
+            amount: widget.totalAmount,
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPaymentTypeOptions() {
-    return Column(
-      children: [
-        _buildPaymentTypeOption(
-          type: PaymentType.full,
-          title: 'Полная оплата',
-          subtitle: 'Оплатить всю сумму сразу',
-          icon: Icons.payment,
-          amount: widget.totalAmount,
-        ),
-        const SizedBox(height: 8),
-        _buildPaymentTypeOption(
-          type: PaymentType.advance,
-          title: 'Предоплата',
-          subtitle: 'Оплатить часть суммы сейчас, остальное позже',
-          icon: Icons.account_balance_wallet,
-          amount: _calculateAdvanceAmount(),
-        ),
-        const SizedBox(height: 8),
-        _buildPaymentTypeOption(
-          type: PaymentType.installment,
-          title: 'Рассрочка',
-          subtitle: 'Разделить оплату на несколько частей',
-          icon: Icons.schedule,
-          amount: _calculateInstallmentAmount(),
-        ),
-        const SizedBox(height: 8),
-        _buildPaymentTypeOption(
-          type: PaymentType.partial,
-          title: 'Частичная оплата',
-          subtitle: 'Оплатить 50% сейчас, 50% позже',
-          icon: Icons.percent,
-          amount: widget.totalAmount * 0.5,
-        ),
-      ],
-    );
-  }
+          const SizedBox(height: 8),
+          _buildPaymentTypeOption(
+            type: PaymentType.advance,
+            title: 'Предоплата',
+            subtitle: 'Оплатить часть суммы сейчас, остальное позже',
+            icon: Icons.account_balance_wallet,
+            amount: _calculateAdvanceAmount(),
+          ),
+          const SizedBox(height: 8),
+          _buildPaymentTypeOption(
+            type: PaymentType.installment,
+            title: 'Рассрочка',
+            subtitle: 'Разделить оплату на несколько частей',
+            icon: Icons.schedule,
+            amount: _calculateInstallmentAmount(),
+          ),
+          const SizedBox(height: 8),
+          _buildPaymentTypeOption(
+            type: PaymentType.partial,
+            title: 'Частичная оплата',
+            subtitle: 'Оплатить 50% сейчас, 50% позже',
+            icon: Icons.percent,
+            amount: widget.totalAmount * 0.5,
+          ),
+        ],
+      );
 
   Widget _buildPaymentTypeOption({
     required PaymentType type,
@@ -198,228 +193,220 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
     );
   }
 
-  Widget _buildAdvanceSettings() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.blue[50],
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.blue[200]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Настройки предоплаты',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 12),
-
-          // Проценты предоплаты
-          const Text(
-            'Размер предоплаты:',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 8),
-
-          Wrap(
-            spacing: 8,
-            children: widget.settings.availablePercentages.map((percentage) {
-              final isSelected = _selectedAdvancePercentage == percentage;
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedAdvancePercentage = percentage;
-                  });
-                },
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? Theme.of(context).primaryColor
-                        : Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: isSelected
-                          ? Theme.of(context).primaryColor
-                          : Colors.grey[300]!,
-                    ),
-                  ),
-                  child: Text(
-                    '${percentage.toInt()}%',
-                    style: TextStyle(
-                      color: isSelected ? Colors.white : Colors.black87,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              );
-            }).toList(),
-          ),
-
-          if (widget.settings.allowCustomAmount) ...[
-            const SizedBox(height: 12),
-            TextField(
-              controller: _customAmountController,
-              decoration: const InputDecoration(
-                labelText: 'Или введите сумму',
-                hintText: 'Введите сумму предоплаты',
-                prefixText: '₽ ',
-                border: OutlineInputBorder(),
+  Widget _buildAdvanceSettings() => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.blue[50],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.blue[200]!),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Настройки предоплаты',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                final amount = double.tryParse(value);
-                if (amount != null && amount > 0) {
-                  setState(() {
-                    _selectedAdvancePercentage =
-                        (amount / widget.totalAmount) * 100;
-                  });
-                }
-              },
             ),
-          ],
-        ],
-      ),
-    );
-  }
+            const SizedBox(height: 12),
 
-  Widget _buildInstallmentSettings() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.green[50],
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.green[200]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Настройки рассрочки',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+            // Проценты предоплаты
+            const Text(
+              'Размер предоплаты:',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
             ),
-          ),
-          const SizedBox(height: 12),
+            const SizedBox(height: 8),
 
-          // Количество взносов
-          const Text(
-            'Количество взносов:',
-            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
-          ),
-          const SizedBox(height: 8),
-
-          Wrap(
-            spacing: 8,
-            children: List.generate(widget.settings.maxInstallments, (index) {
-              final count = index + 1;
-              final isSelected = _selectedInstallments == count;
-              return GestureDetector(
-                onTap: () {
-                  setState(() {
-                    _selectedInstallments = count;
-                  });
-                },
-                child: Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: isSelected
-                        ? Theme.of(context).primaryColor
-                        : Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
+            Wrap(
+              spacing: 8,
+              children: widget.settings.availablePercentages.map((percentage) {
+                final isSelected = _selectedAdvancePercentage == percentage;
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedAdvancePercentage = percentage;
+                    });
+                  },
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
                       color: isSelected
                           ? Theme.of(context).primaryColor
-                          : Colors.grey[300]!,
+                          : Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: isSelected
+                            ? Theme.of(context).primaryColor
+                            : Colors.grey[300]!,
+                      ),
+                    ),
+                    child: Text(
+                      '${percentage.toInt()}%',
+                      style: TextStyle(
+                        color: isSelected ? Colors.white : Colors.black87,
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                   ),
-                  child: Text(
-                    '$count',
-                    style: TextStyle(
-                      color: isSelected ? Colors.white : Colors.black87,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              );
-            }),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPaymentSummary() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Сводка платежа',
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
+                );
+              }).toList(),
             ),
-          ),
-          const SizedBox(height: 12),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Общая сумма:'),
-              Text(
-                '${widget.totalAmount.toStringAsFixed(2)} ₽',
-                style: const TextStyle(fontWeight: FontWeight.bold),
+
+            if (widget.settings.allowCustomAmount) ...[
+              const SizedBox(height: 12),
+              TextField(
+                controller: _customAmountController,
+                decoration: const InputDecoration(
+                  labelText: 'Или введите сумму',
+                  hintText: 'Введите сумму предоплаты',
+                  prefixText: '₽ ',
+                  border: OutlineInputBorder(),
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  final amount = double.tryParse(value);
+                  if (amount != null && amount > 0) {
+                    setState(() {
+                      _selectedAdvancePercentage =
+                          (amount / widget.totalAmount) * 100;
+                    });
+                  }
+                },
               ),
             ],
-          ),
-          if (_selectedType != PaymentType.full) ...[
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Первый платеж:'),
-                Text(
-                  '${_getFirstPaymentAmount().toStringAsFixed(2)} ₽',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
+          ],
+        ),
+      );
+
+  Widget _buildInstallmentSettings() => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.green[50],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.green[200]!),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Настройки рассрочки',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 12),
+
+            // Количество взносов
+            const Text(
+              'Количество взносов:',
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
             ),
             const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Остаток:'),
-                Text(
-                  '${_getRemainingAmount().toStringAsFixed(2)} ₽',
-                  style: const TextStyle(fontWeight: FontWeight.bold),
-                ),
-              ],
+
+            Wrap(
+              spacing: 8,
+              children: List.generate(widget.settings.maxInstallments, (index) {
+                final count = index + 1;
+                final isSelected = _selectedInstallments == count;
+                return GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _selectedInstallments = count;
+                    });
+                  },
+                  child: Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: isSelected
+                          ? Theme.of(context).primaryColor
+                          : Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: isSelected
+                            ? Theme.of(context).primaryColor
+                            : Colors.grey[300]!,
+                      ),
+                    ),
+                    child: Text(
+                      '$count',
+                      style: TextStyle(
+                        color: isSelected ? Colors.white : Colors.black87,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                );
+              }),
             ),
           ],
-        ],
-      ),
-    );
-  }
+        ),
+      );
 
-  double _calculateAdvanceAmount() {
-    return widget.totalAmount * (_selectedAdvancePercentage / 100);
-  }
+  Widget _buildPaymentSummary() => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Сводка платежа',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Общая сумма:'),
+                Text(
+                  '${widget.totalAmount.toStringAsFixed(2)} ₽',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+              ],
+            ),
+            if (_selectedType != PaymentType.full) ...[
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Первый платеж:'),
+                  Text(
+                    '${_getFirstPaymentAmount().toStringAsFixed(2)} ₽',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Остаток:'),
+                  Text(
+                    '${_getRemainingAmount().toStringAsFixed(2)} ₽',
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ],
+          ],
+        ),
+      );
 
-  double _calculateInstallmentAmount() {
-    return widget.totalAmount / _selectedInstallments;
-  }
+  double _calculateAdvanceAmount() =>
+      widget.totalAmount * (_selectedAdvancePercentage / 100);
+
+  double _calculateInstallmentAmount() =>
+      widget.totalAmount / _selectedInstallments;
 
   double _getFirstPaymentAmount() {
     switch (_selectedType) {
@@ -434,9 +421,7 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
     }
   }
 
-  double _getRemainingAmount() {
-    return widget.totalAmount - _getFirstPaymentAmount();
-  }
+  double _getRemainingAmount() => widget.totalAmount - _getFirstPaymentAmount();
 
   void _confirmSelection() {
     double? advancePercentage;
@@ -449,6 +434,9 @@ class _PaymentTypeSelectorState extends State<PaymentTypeSelector> {
     }
 
     widget.onPaymentTypeSelected(
-        _selectedType, advancePercentage, installments);
+      _selectedType,
+      advancePercentage,
+      installments,
+    );
   }
 }

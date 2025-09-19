@@ -55,22 +55,19 @@ extension ContextExtensions on BuildContext {
   Future<T?> showDialog<T>({
     required Widget child,
     bool barrierDismissible = true,
-  }) {
-    return showGeneralDialog<T>(
-      context: this,
-      barrierDismissible: barrierDismissible,
-      barrierLabel: '',
-      barrierColor: Colors.black54,
-      transitionDuration: const Duration(milliseconds: 200),
-      pageBuilder: (context, animation, secondaryAnimation) => child,
-      transitionBuilder: (context, animation, secondaryAnimation, child) {
-        return FadeTransition(
+  }) =>
+      showGeneralDialog<T>(
+        context: this,
+        barrierDismissible: barrierDismissible,
+        barrierLabel: '',
+        barrierColor: Colors.black54,
+        pageBuilder: (context, animation, secondaryAnimation) => child,
+        transitionBuilder: (context, animation, secondaryAnimation, child) =>
+            FadeTransition(
           opacity: animation,
           child: child,
-        );
-      },
-    );
-  }
+        ),
+      );
 
   /// Получить локализацию
   Locale get locale => Localizations.localeOf(this);

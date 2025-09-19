@@ -1,13 +1,14 @@
 import 'package:flutter/foundation.dart';
+
 import '../core/feature_flags.dart';
-import '../models/event.dart';
 import '../models/booking.dart';
+import '../models/event.dart';
 
 /// Сервис для синхронизации с внешними календарями
 class CalendarSyncService {
-  static final CalendarSyncService _instance = CalendarSyncService._internal();
   factory CalendarSyncService() => _instance;
   CalendarSyncService._internal();
+  static final CalendarSyncService _instance = CalendarSyncService._internal();
 
   /// Экспорт события в Google Calendar
   Future<bool> exportToGoogleCalendar(Event event) async {
@@ -166,12 +167,10 @@ class CalendarSyncService {
   }
 
   /// Получить статус синхронизации
-  Future<Map<String, dynamic>> getSyncStatus() async {
-    return {
-      'enabled': FeatureFlags.calendarSyncEnabled,
-      'googleConnected': false, // TODO: Проверить реальное подключение
-      'outlookConnected': false, // TODO: Проверить реальное подключение
-      'lastSync': null, // TODO: Получить время последней синхронизации
-    };
-  }
+  Future<Map<String, dynamic>> getSyncStatus() async => {
+        'enabled': FeatureFlags.calendarSyncEnabled,
+        'googleConnected': false, // TODO: Проверить реальное подключение
+        'outlookConnected': false, // TODO: Проверить реальное подключение
+        'lastSync': null, // TODO: Получить время последней синхронизации
+      };
 }

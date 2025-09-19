@@ -12,7 +12,7 @@ class AdminService {
     UserStatus? statusFilter,
   }) async {
     try {
-      Query query = _firestore
+      var query = _firestore
           .collection('users')
           .orderBy('createdAt', descending: true)
           .limit(limit);
@@ -26,7 +26,7 @@ class AdminService {
       }
 
       final snapshot = await query.get();
-      return snapshot.docs.map((doc) => ManagedUser.fromDocument(doc)).toList();
+      return snapshot.docs.map(ManagedUser.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения пользователей: $e');
     }

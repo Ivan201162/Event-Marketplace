@@ -11,20 +11,6 @@ enum MaritalStatus {
 
 /// Профиль заказчика
 class CustomerProfile {
-  final String userId;
-  final String? photoURL;
-  final String? bio;
-  final MaritalStatus? maritalStatus;
-  final DateTime? weddingDate;
-  final DateTime? anniversaryDate;
-  final String? phoneNumber;
-  final String? location;
-  final List<String> interests;
-  final List<String> eventTypes; // Типы мероприятий, которые планирует
-  final Map<String, dynamic>? preferences;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
   const CustomerProfile({
     required this.userId,
     this.photoURL,
@@ -68,26 +54,38 @@ class CustomerProfile {
           : DateTime.now(),
     );
   }
+  final String userId;
+  final String? photoURL;
+  final String? bio;
+  final MaritalStatus? maritalStatus;
+  final DateTime? weddingDate;
+  final DateTime? anniversaryDate;
+  final String? phoneNumber;
+  final String? location;
+  final List<String> interests;
+  final List<String> eventTypes; // Типы мероприятий, которые планирует
+  final Map<String, dynamic>? preferences;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'photoURL': photoURL,
-      'bio': bio,
-      'maritalStatus': maritalStatus?.name,
-      'weddingDate':
-          weddingDate != null ? Timestamp.fromDate(weddingDate!) : null,
-      'anniversaryDate':
-          anniversaryDate != null ? Timestamp.fromDate(anniversaryDate!) : null,
-      'phoneNumber': phoneNumber,
-      'location': location,
-      'interests': interests,
-      'eventTypes': eventTypes,
-      'preferences': preferences,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'photoURL': photoURL,
+        'bio': bio,
+        'maritalStatus': maritalStatus?.name,
+        'weddingDate':
+            weddingDate != null ? Timestamp.fromDate(weddingDate!) : null,
+        'anniversaryDate': anniversaryDate != null
+            ? Timestamp.fromDate(anniversaryDate!)
+            : null,
+        'phoneNumber': phoneNumber,
+        'location': location,
+        'interests': interests,
+        'eventTypes': eventTypes,
+        'preferences': preferences,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   /// Копировать с изменениями
   CustomerProfile copyWith({
@@ -104,23 +102,22 @@ class CustomerProfile {
     Map<String, dynamic>? preferences,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) {
-    return CustomerProfile(
-      userId: userId ?? this.userId,
-      photoURL: photoURL ?? this.photoURL,
-      bio: bio ?? this.bio,
-      maritalStatus: maritalStatus ?? this.maritalStatus,
-      weddingDate: weddingDate ?? this.weddingDate,
-      anniversaryDate: anniversaryDate ?? this.anniversaryDate,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      location: location ?? this.location,
-      interests: interests ?? this.interests,
-      eventTypes: eventTypes ?? this.eventTypes,
-      preferences: preferences ?? this.preferences,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
+  }) =>
+      CustomerProfile(
+        userId: userId ?? this.userId,
+        photoURL: photoURL ?? this.photoURL,
+        bio: bio ?? this.bio,
+        maritalStatus: maritalStatus ?? this.maritalStatus,
+        weddingDate: weddingDate ?? this.weddingDate,
+        anniversaryDate: anniversaryDate ?? this.anniversaryDate,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        location: location ?? this.location,
+        interests: interests ?? this.interests,
+        eventTypes: eventTypes ?? this.eventTypes,
+        preferences: preferences ?? this.preferences,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Получить русское название семейного положения
   String get maritalStatusDisplayName {
@@ -170,7 +167,10 @@ class CustomerProfile {
         }
       } else {
         final nextAnniversary = DateTime(
-            currentYear + 1, anniversaryDate!.month, anniversaryDate!.day);
+          currentYear + 1,
+          anniversaryDate!.month,
+          anniversaryDate!.day,
+        );
         if (nextDate == null || nextAnniversary.isBefore(nextDate)) {
           nextDate = nextAnniversary;
         }
@@ -181,7 +181,7 @@ class CustomerProfile {
   }
 
   /// Парсинг семейного положения из строки
-  static MaritalStatus? _parseMaritalStatus(dynamic statusData) {
+  static MaritalStatus? _parseMaritalStatus(statusData) {
     if (statusData == null) return null;
 
     final statusString = statusData.toString().toLowerCase();
@@ -211,7 +211,6 @@ class CustomerProfile {
   int get hashCode => userId.hashCode;
 
   @override
-  String toString() {
-    return 'CustomerProfile(userId: $userId, maritalStatus: $maritalStatus, interests: $interests)';
-  }
+  String toString() =>
+      'CustomerProfile(userId: $userId, maritalStatus: $maritalStatus, interests: $interests)';
 }

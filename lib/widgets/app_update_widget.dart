@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../core/responsive_utils.dart';
 import '../providers/app_update_provider.dart';
 import '../services/app_update_service.dart';
 import '../widgets/responsive_layout.dart';
-import '../core/responsive_utils.dart';
 
 /// Виджет для отображения уведомления об обновлении
 class AppUpdateNotificationWidget extends ConsumerWidget {
-  final VoidCallback? onDismiss;
-  final VoidCallback? onUpdate;
-
   const AppUpdateNotificationWidget({
     super.key,
     this.onDismiss,
     this.onUpdate,
   });
+  final VoidCallback? onDismiss;
+  final VoidCallback? onUpdate;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -35,7 +35,6 @@ class AppUpdateNotificationWidget extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: Color(updateInfo.updateTypeColor),
-          width: 1,
         ),
       ),
       child: Column(
@@ -134,7 +133,7 @@ class AppUpdateSettingsWidget extends ConsumerWidget {
             children: [
               const Icon(Icons.system_update),
               const SizedBox(width: 12),
-              Expanded(
+              const Expanded(
                 child: ResponsiveText(
                   'Обновления приложения',
                   isTitle: true,
@@ -264,60 +263,56 @@ class AppUpdateSettingsWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildInfoRow(String label, String value, IconData icon) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            size: 20,
-            color: Colors.grey[600],
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: ResponsiveText(
-              label,
-              isSubtitle: true,
+  Widget _buildInfoRow(String label, String value, IconData icon) => Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 20,
+              color: Colors.grey[600],
             ),
-          ),
-          ResponsiveText(
-            value,
-            style: const TextStyle(fontWeight: FontWeight.w500),
-          ),
-        ],
-      ),
-    );
-  }
+            const SizedBox(width: 12),
+            Expanded(
+              child: ResponsiveText(
+                label,
+                isSubtitle: true,
+              ),
+            ),
+            ResponsiveText(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      );
 
-  Widget _buildStatusRow(String label, String value, Color color) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          Icon(
-            Icons.status,
-            size: 20,
-            color: color,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: ResponsiveText(
-              label,
-              isSubtitle: true,
-            ),
-          ),
-          ResponsiveText(
-            value,
-            style: TextStyle(
+  Widget _buildStatusRow(String label, String value, Color color) => Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          children: [
+            Icon(
+              Icons.status,
+              size: 20,
               color: color,
-              fontWeight: FontWeight.w500,
             ),
-          ),
-        ],
-      ),
-    );
-  }
+            const SizedBox(width: 12),
+            Expanded(
+              child: ResponsiveText(
+                label,
+                isSubtitle: true,
+              ),
+            ),
+            ResponsiveText(
+              value,
+              style: TextStyle(
+                color: color,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      );
 }
 
 /// Виджет для отображения информации о версии
@@ -336,10 +331,10 @@ class VersionInfoWidget extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             children: [
-              const Icon(Icons.info_outline),
-              const SizedBox(width: 12),
+              Icon(Icons.info_outline),
+              SizedBox(width: 12),
               ResponsiveText(
                 'Информация о версии',
                 isTitle: true,
@@ -393,38 +388,36 @@ class VersionInfoWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildInfoRow(String label, String value, IconData icon) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            icon,
-            size: 20,
-            color: Colors.grey[600],
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ResponsiveText(
-                  label,
-                  isSubtitle: true,
-                ),
-                const SizedBox(height: 4),
-                ResponsiveText(
-                  value,
-                  style: const TextStyle(fontWeight: FontWeight.w500),
-                ),
-              ],
+  Widget _buildInfoRow(String label, String value, IconData icon) => Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Icon(
+              icon,
+              size: 20,
+              color: Colors.grey[600],
             ),
-          ),
-        ],
-      ),
-    );
-  }
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ResponsiveText(
+                    label,
+                    isSubtitle: true,
+                  ),
+                  const SizedBox(height: 4),
+                  ResponsiveText(
+                    value,
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
 
   String _getUpdateTypeDescription(UpdateType type) {
     switch (type) {
@@ -446,7 +439,7 @@ class ReleaseNotesWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final updateState = ref.watch(appUpdateProvider);
 
-    if (updateState.updateInfo?.releaseNotes.isEmpty != false) {
+    if (updateState.updateInfo?.releaseNotes.isEmpty ?? true) {
       return const SizedBox.shrink();
     }
 
@@ -454,10 +447,10 @@ class ReleaseNotesWidget extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             children: [
-              const Icon(Icons.notes),
-              const SizedBox(width: 12),
+              Icon(Icons.notes),
+              SizedBox(width: 12),
               ResponsiveText(
                 'Заметки о релизе',
                 isTitle: true,

@@ -3,14 +3,12 @@ import '../analytics/analytics_service.dart';
 import '../core/feature_flags.dart';
 
 /// Провайдер сервиса аналитики
-final analyticsServiceProvider = Provider<AnalyticsService>((ref) {
-  return AnalyticsService();
-});
+final analyticsServiceProvider =
+    Provider<AnalyticsService>((ref) => AnalyticsService());
 
 /// Провайдер для проверки доступности аналитики
-final analyticsAvailableProvider = Provider<bool>((ref) {
-  return FeatureFlags.analyticsEnabled;
-});
+final analyticsAvailableProvider =
+    Provider<bool>((ref) => FeatureFlags.analyticsEnabled);
 
 /// Провайдер для инициализации аналитики
 final analyticsInitializationProvider = FutureProvider<void>((ref) async {

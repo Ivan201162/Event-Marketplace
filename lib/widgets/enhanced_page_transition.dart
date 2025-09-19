@@ -3,13 +3,6 @@ import '../core/navigation_animations.dart';
 
 /// Улучшенные переходы между страницами с поддержкой жестов
 class EnhancedPageTransition extends StatefulWidget {
-  final Widget child;
-  final bool enableSwipeBack;
-  final bool enableSwipeDown;
-  final VoidCallback? onSwipeBack;
-  final VoidCallback? onSwipeDown;
-  final double swipeThreshold;
-
   const EnhancedPageTransition({
     super.key,
     required this.child,
@@ -19,6 +12,12 @@ class EnhancedPageTransition extends StatefulWidget {
     this.onSwipeDown,
     this.swipeThreshold = 50.0,
   });
+  final Widget child;
+  final bool enableSwipeBack;
+  final bool enableSwipeDown;
+  final VoidCallback? onSwipeBack;
+  final VoidCallback? onSwipeDown;
+  final double swipeThreshold;
 
   @override
   State<EnhancedPageTransition> createState() => _EnhancedPageTransitionState();
@@ -39,20 +38,24 @@ class _EnhancedPageTransitionState extends State<EnhancedPageTransition>
     );
 
     _fadeAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
+      begin: 0,
+      end: 1,
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeInOut,
+      ),
+    );
 
     _slideAnimation = Tween<Offset>(
-      begin: const Offset(0.0, 0.1),
+      begin: const Offset(0, 0.1),
       end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOutCubic,
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _animationController,
+        curve: Curves.easeOutCubic,
+      ),
+    );
 
     _animationController.forward();
   }
@@ -95,12 +98,6 @@ class _EnhancedPageTransitionState extends State<EnhancedPageTransition>
 
 /// Виджет для анимированного появления контента
 class AnimatedContent extends StatefulWidget {
-  final Widget child;
-  final Duration delay;
-  final Duration duration;
-  final Curve curve;
-  final AnimationType type;
-
   const AnimatedContent({
     super.key,
     required this.child,
@@ -109,6 +106,11 @@ class AnimatedContent extends StatefulWidget {
     this.curve = Curves.easeInOut,
     this.type = AnimationType.fadeIn,
   });
+  final Widget child;
+  final Duration delay;
+  final Duration duration;
+  final Curve curve;
+  final AnimationType type;
 
   @override
   State<AnimatedContent> createState() => _AnimatedContentState();
@@ -156,7 +158,7 @@ class _AnimatedContentState extends State<AnimatedContent>
       case AnimationType.slideUp:
         return SlideTransition(
           position: Tween<Offset>(
-            begin: const Offset(0.0, 0.3),
+            begin: const Offset(0, 0.3),
             end: Offset.zero,
           ).animate(_animation),
           child: FadeTransition(
@@ -167,7 +169,7 @@ class _AnimatedContentState extends State<AnimatedContent>
       case AnimationType.slideDown:
         return SlideTransition(
           position: Tween<Offset>(
-            begin: const Offset(0.0, -0.3),
+            begin: const Offset(0, -0.3),
             end: Offset.zero,
           ).animate(_animation),
           child: FadeTransition(
@@ -178,7 +180,7 @@ class _AnimatedContentState extends State<AnimatedContent>
       case AnimationType.slideLeft:
         return SlideTransition(
           position: Tween<Offset>(
-            begin: const Offset(0.3, 0.0),
+            begin: const Offset(0.3, 0),
             end: Offset.zero,
           ).animate(_animation),
           child: FadeTransition(
@@ -189,7 +191,7 @@ class _AnimatedContentState extends State<AnimatedContent>
       case AnimationType.slideRight:
         return SlideTransition(
           position: Tween<Offset>(
-            begin: const Offset(-0.3, 0.0),
+            begin: const Offset(-0.3, 0),
             end: Offset.zero,
           ).animate(_animation),
           child: FadeTransition(
@@ -230,12 +232,6 @@ enum AnimationType {
 
 /// Виджет для анимированного списка
 class AnimatedList extends StatefulWidget {
-  final List<Widget> children;
-  final Duration itemDelay;
-  final Duration itemDuration;
-  final Curve curve;
-  final AnimationType itemType;
-
   const AnimatedList({
     super.key,
     required this.children,
@@ -244,6 +240,11 @@ class AnimatedList extends StatefulWidget {
     this.curve = Curves.easeInOut,
     this.itemType = AnimationType.slideUp,
   });
+  final List<Widget> children;
+  final Duration itemDelay;
+  final Duration itemDuration;
+  final Curve curve;
+  final AnimationType itemType;
 
   @override
   State<AnimatedList> createState() => _AnimatedListState();
@@ -251,36 +252,25 @@ class AnimatedList extends StatefulWidget {
 
 class _AnimatedListState extends State<AnimatedList> {
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: widget.children.asMap().entries.map((entry) {
-        final index = entry.key;
-        final child = entry.value;
+  Widget build(BuildContext context) => Column(
+        children: widget.children.asMap().entries.map((entry) {
+          final index = entry.key;
+          final child = entry.value;
 
-        return AnimatedContent(
-          delay:
-              Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
-          duration: widget.itemDuration,
-          curve: widget.curve,
-          type: widget.itemType,
-          child: child,
-        );
-      }).toList(),
-    );
-  }
+          return AnimatedContent(
+            delay:
+                Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
+            duration: widget.itemDuration,
+            curve: widget.curve,
+            type: widget.itemType,
+            child: child,
+          );
+        }).toList(),
+      );
 }
 
 /// Виджет для анимированной сетки
 class AnimatedGrid extends StatefulWidget {
-  final List<Widget> children;
-  final int crossAxisCount;
-  final double crossAxisSpacing;
-  final double mainAxisSpacing;
-  final Duration itemDelay;
-  final Duration itemDuration;
-  final Curve curve;
-  final AnimationType itemType;
-
   const AnimatedGrid({
     super.key,
     required this.children,
@@ -292,6 +282,14 @@ class AnimatedGrid extends StatefulWidget {
     this.curve = Curves.easeInOut,
     this.itemType = AnimationType.scale,
   });
+  final List<Widget> children;
+  final int crossAxisCount;
+  final double crossAxisSpacing;
+  final double mainAxisSpacing;
+  final Duration itemDelay;
+  final Duration itemDuration;
+  final Curve curve;
+  final AnimationType itemType;
 
   @override
   State<AnimatedGrid> createState() => _AnimatedGridState();
@@ -299,38 +297,28 @@ class AnimatedGrid extends StatefulWidget {
 
 class _AnimatedGridState extends State<AnimatedGrid> {
   @override
-  Widget build(BuildContext context) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: widget.crossAxisCount,
-        crossAxisSpacing: widget.crossAxisSpacing,
-        mainAxisSpacing: widget.mainAxisSpacing,
-      ),
-      itemCount: widget.children.length,
-      itemBuilder: (context, index) {
-        return AnimatedContent(
+  Widget build(BuildContext context) => GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: widget.crossAxisCount,
+          crossAxisSpacing: widget.crossAxisSpacing,
+          mainAxisSpacing: widget.mainAxisSpacing,
+        ),
+        itemCount: widget.children.length,
+        itemBuilder: (context, index) => AnimatedContent(
           delay:
               Duration(milliseconds: index * widget.itemDelay.inMilliseconds),
           duration: widget.itemDuration,
           curve: widget.curve,
           type: widget.itemType,
           child: widget.children[index],
-        );
-      },
-    );
-  }
+        ),
+      );
 }
 
 /// Виджет для анимированной кнопки
 class AnimatedButton extends StatefulWidget {
-  final Widget child;
-  final VoidCallback? onPressed;
-  final Duration duration;
-  final Curve curve;
-  final double scale;
-
   const AnimatedButton({
     super.key,
     required this.child,
@@ -339,6 +327,11 @@ class AnimatedButton extends StatefulWidget {
     this.curve = Curves.easeInOut,
     this.scale = 0.95,
   });
+  final Widget child;
+  final VoidCallback? onPressed;
+  final Duration duration;
+  final Curve curve;
+  final double scale;
 
   @override
   State<AnimatedButton> createState() => _AnimatedButtonState();
@@ -358,12 +351,14 @@ class _AnimatedButtonState extends State<AnimatedButton>
     );
 
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: widget.scale,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: widget.curve,
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: widget.curve,
+      ),
+    );
   }
 
   @override
@@ -373,16 +368,14 @@ class _AnimatedButtonState extends State<AnimatedButton>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: (_) => _controller.forward(),
-      onTapUp: (_) => _controller.reverse(),
-      onTapCancel: () => _controller.reverse(),
-      onTap: widget.onPressed,
-      child: ScaleTransition(
-        scale: _scaleAnimation,
-        child: widget.child,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => GestureDetector(
+        onTapDown: (_) => _controller.forward(),
+        onTapUp: (_) => _controller.reverse(),
+        onTapCancel: () => _controller.reverse(),
+        onTap: widget.onPressed,
+        child: ScaleTransition(
+          scale: _scaleAnimation,
+          child: widget.child,
+        ),
+      );
 }

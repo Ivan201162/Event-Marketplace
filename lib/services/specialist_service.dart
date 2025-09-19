@@ -22,18 +22,13 @@ class SpecialistService {
   }
 
   /// Поток специалиста по ID
-  Stream<Specialist?> getSpecialistStream(String specialistId) {
-    return _db
-        .collection('specialists')
-        .doc(specialistId)
-        .snapshots()
-        .map((doc) {
-      if (doc.exists) {
-        return Specialist.fromDocument(doc);
-      }
-      return null;
-    });
-  }
+  Stream<Specialist?> getSpecialistStream(String specialistId) =>
+      _db.collection('specialists').doc(specialistId).snapshots().map((doc) {
+        if (doc.exists) {
+          return Specialist.fromDocument(doc);
+        }
+        return null;
+      });
 
   /// Получить специалиста по ID пользователя
   Future<Specialist?> getSpecialistByUserId(String userId) async {
@@ -55,19 +50,17 @@ class SpecialistService {
   }
 
   /// Поток специалиста по ID пользователя
-  Stream<Specialist?> getSpecialistByUserIdStream(String userId) {
-    return _db
-        .collection('specialists')
-        .where('userId', isEqualTo: userId)
-        .limit(1)
-        .snapshots()
-        .map((querySnapshot) {
-      if (querySnapshot.docs.isNotEmpty) {
-        return Specialist.fromDocument(querySnapshot.docs.first);
-      }
-      return null;
-    });
-  }
+  Stream<Specialist?> getSpecialistByUserIdStream(String userId) => _db
+          .collection('specialists')
+          .where('userId', isEqualTo: userId)
+          .limit(1)
+          .snapshots()
+          .map((querySnapshot) {
+        if (querySnapshot.docs.isNotEmpty) {
+          return Specialist.fromDocument(querySnapshot.docs.first);
+        }
+        return null;
+      });
 
   /// Получить всех специалистов
   Future<List<Specialist>> getAllSpecialists({int limit = 50}) async {
@@ -79,9 +72,7 @@ class SpecialistService {
           .limit(limit)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => Specialist.fromDocument(doc))
-          .toList();
+      return querySnapshot.docs.map(Specialist.fromDocument).toList();
     } catch (e) {
       print('Ошибка получения специалистов: $e');
       return [];
@@ -89,23 +80,24 @@ class SpecialistService {
   }
 
   /// Поток всех специалистов
-  Stream<List<Specialist>> getAllSpecialistsStream({int limit = 50}) {
-    return _db
-        .collection('specialists')
-        .where('isAvailable', isEqualTo: true)
-        .orderBy('rating', descending: true)
-        .limit(limit)
-        .snapshots()
-        .map((querySnapshot) => querySnapshot.docs
-            .map((doc) => Specialist.fromDocument(doc))
-            .toList());
-  }
+  Stream<List<Specialist>> getAllSpecialistsStream({int limit = 50}) => _db
+      .collection('specialists')
+      .where('isAvailable', isEqualTo: true)
+      .orderBy('rating', descending: true)
+      .limit(limit)
+      .snapshots()
+      .map(
+        (querySnapshot) =>
+            querySnapshot.docs.map(Specialist.fromDocument).toList(),
+      );
 
   /// Поиск специалистов с фильтрами
-  Future<List<Specialist>> searchSpecialists(SpecialistFilters filters,
-      {int limit = 50}) async {
+  Future<List<Specialist>> searchSpecialists(
+    SpecialistFilters filters, {
+    int limit = 50,
+  }) async {
     try {
-      Query query = _db.collection('specialists');
+      var query = _db.collection('specialists');
 
       // Фильтр по доступности
       if (filters.isAvailable != null) {
@@ -130,8 +122,10 @@ class SpecialistService {
 
       // Фильтр по максимальной ставке
       if (filters.maxHourlyRate != null) {
-        query = query.where('hourlyRate',
-            isLessThanOrEqualTo: filters.maxHourlyRate);
+        query = query.where(
+          'hourlyRate',
+          isLessThanOrEqualTo: filters.maxHourlyRate,
+        );
       }
 
       // Сортировка
@@ -144,8 +138,10 @@ class SpecialistService {
               query.orderBy('hourlyRate', descending: !filters.sortAscending);
           break;
         case 'experience':
-          query = query.orderBy('yearsOfExperience',
-              descending: !filters.sortAscending);
+          query = query.orderBy(
+            'yearsOfExperience',
+            descending: !filters.sortAscending,
+          );
           break;
         case 'reviews':
           query =
@@ -158,9 +154,8 @@ class SpecialistService {
       query = query.limit(limit);
 
       final querySnapshot = await query.get();
-      List<Specialist> specialists = querySnapshot.docs
-          .map((doc) => Specialist.fromDocument(doc))
-          .toList();
+      List<Specialist> specialists =
+          querySnapshot.docs.map(Specialist.fromDocument).toList();
 
       // Дополнительная фильтрация на клиенте
       specialists = _applyClientSideFilters(specialists, filters);
@@ -173,9 +168,11 @@ class SpecialistService {
   }
 
   /// Поток поиска специалистов с фильтрами
-  Stream<List<Specialist>> searchSpecialistsStream(SpecialistFilters filters,
-      {int limit = 50}) {
-    Query query = _db.collection('specialists');
+  Stream<List<Specialist>> searchSpecialistsStream(
+    SpecialistFilters filters, {
+    int limit = 50,
+  }) {
+    var query = _db.collection('specialists');
 
     // Фильтр по доступности
     if (filters.isAvailable != null) {
@@ -212,8 +209,10 @@ class SpecialistService {
         query = query.orderBy('hourlyRate', descending: !filters.sortAscending);
         break;
       case 'experience':
-        query = query.orderBy('experienceYears',
-            descending: !filters.sortAscending);
+        query = query.orderBy(
+          'experienceYears',
+          descending: !filters.sortAscending,
+        );
         break;
       case 'reviews':
         query =
@@ -226,9 +225,8 @@ class SpecialistService {
     query = query.limit(limit);
 
     return query.snapshots().map((querySnapshot) {
-      List<Specialist> specialists = querySnapshot.docs
-          .map((doc) => Specialist.fromDocument(doc))
-          .toList();
+      List<Specialist> specialists =
+          querySnapshot.docs.map(Specialist.fromDocument).toList();
 
       // Дополнительная фильтрация на клиенте
       specialists = _applyClientSideFilters(specialists, filters);
@@ -239,81 +237,85 @@ class SpecialistService {
 
   /// Применить фильтры на клиенте
   List<Specialist> _applyClientSideFilters(
-      List<Specialist> specialists, SpecialistFilters filters) {
-    return specialists.where((specialist) {
-      // Поиск по тексту
-      if (filters.searchQuery != null && filters.searchQuery!.isNotEmpty) {
-        final query = filters.searchQuery!.toLowerCase();
-        final matchesName = specialist.name.toLowerCase().contains(query);
-        final matchesDescription =
-            specialist.description?.toLowerCase().contains(query) ?? false;
-        final matchesSubcategories = specialist.subcategories
-            .any((sub) => sub.toLowerCase().contains(query));
+    List<Specialist> specialists,
+    SpecialistFilters filters,
+  ) =>
+      specialists.where((specialist) {
+        // Поиск по тексту
+        if (filters.searchQuery != null && filters.searchQuery!.isNotEmpty) {
+          final query = filters.searchQuery!.toLowerCase();
+          final matchesName = specialist.name.toLowerCase().contains(query);
+          final matchesDescription =
+              specialist.description?.toLowerCase().contains(query) ?? false;
+          final matchesSubcategories = specialist.subcategories
+              .any((sub) => sub.toLowerCase().contains(query));
 
-        if (!matchesName && !matchesDescription && !matchesSubcategories) {
-          return false;
+          if (!matchesName && !matchesDescription && !matchesSubcategories) {
+            return false;
+          }
         }
-      }
 
-      // Фильтр по подкатегориям
-      if (filters.subcategories != null && filters.subcategories!.isNotEmpty) {
-        final hasMatchingSubcategory = specialist.subcategories
-            .any((sub) => filters.subcategories!.contains(sub));
-        if (!hasMatchingSubcategory) {
-          return false;
+        // Фильтр по подкатегориям
+        if (filters.subcategories != null &&
+            filters.subcategories!.isNotEmpty) {
+          final hasMatchingSubcategory = specialist.subcategories
+              .any((sub) => filters.subcategories!.contains(sub));
+          if (!hasMatchingSubcategory) {
+            return false;
+          }
         }
-      }
 
-      // Фильтр по минимальному уровню опыта
-      if (filters.minExperienceLevel != null) {
-        final experienceLevels = [
-          ExperienceLevel.beginner,
-          ExperienceLevel.intermediate,
-          ExperienceLevel.advanced,
-          ExperienceLevel.expert,
-        ];
-        final specialistLevelIndex =
-            experienceLevels.indexOf(specialist.experienceLevel);
-        final minLevelIndex =
-            experienceLevels.indexOf(filters.minExperienceLevel!);
+        // Фильтр по минимальному уровню опыта
+        if (filters.minExperienceLevel != null) {
+          final experienceLevels = [
+            ExperienceLevel.beginner,
+            ExperienceLevel.intermediate,
+            ExperienceLevel.advanced,
+            ExperienceLevel.expert,
+          ];
+          final specialistLevelIndex =
+              experienceLevels.indexOf(specialist.experienceLevel);
+          final minLevelIndex =
+              experienceLevels.indexOf(filters.minExperienceLevel!);
 
-        if (specialistLevelIndex < minLevelIndex) {
-          return false;
+          if (specialistLevelIndex < minLevelIndex) {
+            return false;
+          }
         }
-      }
 
-      // Фильтр по областям обслуживания
-      if (filters.serviceAreas != null && filters.serviceAreas!.isNotEmpty) {
-        final hasMatchingArea = specialist.serviceAreas
-            .any((area) => filters.serviceAreas!.contains(area));
-        if (!hasMatchingArea) {
-          return false;
+        // Фильтр по областям обслуживания
+        if (filters.serviceAreas != null && filters.serviceAreas!.isNotEmpty) {
+          final hasMatchingArea = specialist.serviceAreas
+              .any((area) => filters.serviceAreas!.contains(area));
+          if (!hasMatchingArea) {
+            return false;
+          }
         }
-      }
 
-      // Фильтр по языкам
-      if (filters.languages != null && filters.languages!.isNotEmpty) {
-        final hasMatchingLanguage = specialist.languages
-            .any((lang) => filters.languages!.contains(lang));
-        if (!hasMatchingLanguage) {
-          return false;
+        // Фильтр по языкам
+        if (filters.languages != null && filters.languages!.isNotEmpty) {
+          final hasMatchingLanguage = specialist.languages
+              .any((lang) => filters.languages!.contains(lang));
+          if (!hasMatchingLanguage) {
+            return false;
+          }
         }
-      }
 
-      // Фильтр по доступности на дату
-      if (filters.availableDate != null) {
-        if (!specialist.isAvailableOnDate(filters.availableDate!)) {
-          return false;
+        // Фильтр по доступности на дату
+        if (filters.availableDate != null) {
+          if (!specialist.isAvailableOnDate(filters.availableDate!)) {
+            return false;
+          }
         }
-      }
 
-      return true;
-    }).toList();
-  }
+        return true;
+      }).toList();
 
   /// Получить специалистов по категории
-  Future<List<Specialist>> getSpecialistsByCategory(SpecialistCategory category,
-      {int limit = 20}) async {
+  Future<List<Specialist>> getSpecialistsByCategory(
+    SpecialistCategory category, {
+    int limit = 20,
+  }) async {
     try {
       final querySnapshot = await _db
           .collection('specialists')
@@ -323,9 +325,7 @@ class SpecialistService {
           .limit(limit)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => Specialist.fromDocument(doc))
-          .toList();
+      return querySnapshot.docs.map(Specialist.fromDocument).toList();
     } catch (e) {
       print('Ошибка получения специалистов по категории: $e');
       return [];
@@ -344,9 +344,7 @@ class SpecialistService {
           .limit(limit)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => Specialist.fromDocument(doc))
-          .toList();
+      return querySnapshot.docs.map(Specialist.fromDocument).toList();
     } catch (e) {
       print('Ошибка получения топ специалистов: $e');
       return [];
@@ -391,10 +389,6 @@ class SpecialistService {
         portfolio: portfolio,
         contactInfo: contactInfo,
         businessInfo: businessInfo,
-        isAvailable: true,
-        isVerified: false,
-        rating: 0.0,
-        reviewCount: 0,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
@@ -412,7 +406,9 @@ class SpecialistService {
 
   /// Обновить профиль специалиста
   Future<void> updateSpecialist(
-      String specialistId, Map<String, dynamic> updates) async {
+    String specialistId,
+    Map<String, dynamic> updates,
+  ) async {
     try {
       updates['updatedAt'] = Timestamp.fromDate(DateTime.now());
       await _db.collection('specialists').doc(specialistId).update(updates);
@@ -424,7 +420,10 @@ class SpecialistService {
 
   /// Обновить рейтинг специалиста
   Future<void> updateSpecialistRating(
-      String specialistId, double newRating, int newReviewCount) async {
+    String specialistId,
+    double newRating,
+    int newReviewCount,
+  ) async {
     try {
       await _db.collection('specialists').doc(specialistId).update({
         'rating': newRating,
@@ -439,7 +438,9 @@ class SpecialistService {
 
   /// Проверить доступность специалиста на дату
   Future<bool> isSpecialistAvailableOnDate(
-      String specialistId, DateTime date) async {
+    String specialistId,
+    DateTime date,
+  ) async {
     try {
       return await _calendarService.isDateAvailable(specialistId, date);
     } catch (e) {
@@ -450,7 +451,9 @@ class SpecialistService {
 
   /// Проверить доступность специалиста на дату и время
   Future<bool> isSpecialistAvailableOnDateTime(
-      String specialistId, DateTime dateTime) async {
+    String specialistId,
+    DateTime dateTime,
+  ) async {
     try {
       return await _calendarService.isDateTimeAvailable(specialistId, dateTime);
     } catch (e) {
@@ -461,11 +464,16 @@ class SpecialistService {
 
   /// Получить доступные временные слоты специалиста
   Future<List<DateTime>> getAvailableTimeSlots(
-      String specialistId, DateTime date,
-      {Duration slotDuration = const Duration(hours: 1)}) async {
+    String specialistId,
+    DateTime date, {
+    Duration slotDuration = const Duration(hours: 1),
+  }) async {
     try {
       return await _calendarService.getAvailableTimeSlots(
-          specialistId, date, slotDuration);
+        specialistId,
+        date,
+        slotDuration,
+      );
     } catch (e) {
       print('Ошибка получения временных слотов: $e');
       return [];
@@ -485,7 +493,7 @@ class SpecialistService {
           'subcategories': [
             'свадебная фотография',
             'портретная съемка',
-            'корпоративные мероприятия'
+            'корпоративные мероприятия',
           ],
           'experienceLevel': 'advanced',
           'yearsOfExperience': 5,
@@ -497,11 +505,11 @@ class SpecialistService {
           'equipment': [
             'Canon EOS R5',
             'Canon 24-70mm f/2.8',
-            'Студийное освещение'
+            'Студийное освещение',
           ],
           'portfolio': [
             'https://example.com/portfolio1',
-            'https://example.com/portfolio2'
+            'https://example.com/portfolio2',
           ],
           'isAvailable': true,
           'isVerified': true,
@@ -517,7 +525,7 @@ class SpecialistService {
           'subcategories': [
             'свадебные торжества',
             'корпоративные мероприятия',
-            'частные вечеринки'
+            'частные вечеринки',
           ],
           'experienceLevel': 'expert',
           'yearsOfExperience': 8,
@@ -529,7 +537,7 @@ class SpecialistService {
           'equipment': [
             'Pioneer DJM-900NXS2',
             'Pioneer CDJ-2000NXS2',
-            'JBL EON615'
+            'JBL EON615',
           ],
           'portfolio': ['https://example.com/dj-portfolio'],
           'isAvailable': true,
@@ -546,7 +554,7 @@ class SpecialistService {
           'subcategories': [
             'свадебные торжества',
             'дни рождения',
-            'корпоративные мероприятия'
+            'корпоративные мероприятия',
           ],
           'experienceLevel': 'advanced',
           'yearsOfExperience': 6,
@@ -571,7 +579,7 @@ class SpecialistService {
           'subcategories': [
             'свадебное оформление',
             'корпоративные мероприятия',
-            'детские праздники'
+            'детские праздники',
           ],
           'experienceLevel': 'intermediate',
           'yearsOfExperience': 3,
@@ -596,7 +604,7 @@ class SpecialistService {
           'subcategories': [
             'свадебная видеосъемка',
             'корпоративные видео',
-            'рекламные ролики'
+            'рекламные ролики',
           ],
           'experienceLevel': 'advanced',
           'yearsOfExperience': 4,
@@ -617,32 +625,32 @@ class SpecialistService {
       for (final specialistData in testSpecialists) {
         final specialist = Specialist(
           id: _generateSpecialistId(),
-          userId: specialistData['userId'] as String,
-          name: specialistData['name'] as String,
+          userId: specialistData['userId']! as String,
+          name: specialistData['name']! as String,
           description: specialistData['description'] as String?,
           category: SpecialistCategory.values
               .firstWhere((e) => e.name == specialistData['category']),
           subcategories:
-              List<String>.from(specialistData['subcategories'] as List),
+              List<String>.from(specialistData['subcategories']! as List),
           experienceLevel: ExperienceLevel.values
               .firstWhere((e) => e.name == specialistData['experienceLevel']),
-          yearsOfExperience: specialistData['yearsOfExperience'] as int,
-          hourlyRate: (specialistData['hourlyRate'] as num).toDouble(),
+          yearsOfExperience: specialistData['yearsOfExperience']! as int,
+          hourlyRate: (specialistData['hourlyRate']! as num).toDouble(),
           minBookingHours: specialistData['minBookingHours'] != null
-              ? (specialistData['minBookingHours'] as num).toDouble()
+              ? (specialistData['minBookingHours']! as num).toDouble()
               : null,
           maxBookingHours: specialistData['maxBookingHours'] != null
-              ? (specialistData['maxBookingHours'] as num).toDouble()
+              ? (specialistData['maxBookingHours']! as num).toDouble()
               : null,
           serviceAreas:
-              List<String>.from(specialistData['serviceAreas'] as List),
-          languages: List<String>.from(specialistData['languages'] as List),
-          equipment: List<String>.from(specialistData['equipment'] as List),
-          portfolio: List<String>.from(specialistData['portfolio'] as List),
-          isAvailable: specialistData['isAvailable'] as bool,
-          isVerified: specialistData['isVerified'] as bool,
-          rating: (specialistData['rating'] as num).toDouble(),
-          reviewCount: specialistData['reviewCount'] as int,
+              List<String>.from(specialistData['serviceAreas']! as List),
+          languages: List<String>.from(specialistData['languages']! as List),
+          equipment: List<String>.from(specialistData['equipment']! as List),
+          portfolio: List<String>.from(specialistData['portfolio']! as List),
+          isAvailable: specialistData['isAvailable']! as bool,
+          isVerified: specialistData['isVerified']! as bool,
+          rating: (specialistData['rating']! as num).toDouble(),
+          reviewCount: specialistData['reviewCount']! as int,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         );
@@ -660,7 +668,6 @@ class SpecialistService {
   }
 
   /// Генерация ID специалиста
-  String _generateSpecialistId() {
-    return 'specialist_${DateTime.now().millisecondsSinceEpoch}_${(DateTime.now().microsecond % 1000).toString().padLeft(3, '0')}';
-  }
+  String _generateSpecialistId() =>
+      'specialist_${DateTime.now().millisecondsSinceEpoch}_${(DateTime.now().microsecond % 1000).toString().padLeft(3, '0')}';
 }

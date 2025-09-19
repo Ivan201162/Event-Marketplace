@@ -1,20 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/chat_message_extended.dart';
+import '../widgets/message_reactions_widget.dart';
+import '../widgets/voice_player_widget.dart';
 // import '../models/user.dart';
 import '../widgets/voice_recorder_widget.dart';
-import '../widgets/voice_player_widget.dart';
-import '../widgets/message_reactions_widget.dart';
 
 /// Расширенный экран чата с голосовыми сообщениями и реакциями
 class ChatExtendedScreen extends ConsumerStatefulWidget {
-  final String chatId;
-  final String currentUserId;
-  final String currentUserName;
-  final String? currentUserAvatar;
-  final String otherUserName;
-  final String? otherUserAvatar;
-
   const ChatExtendedScreen({
     super.key,
     required this.chatId,
@@ -24,6 +18,12 @@ class ChatExtendedScreen extends ConsumerStatefulWidget {
     required this.otherUserName,
     this.otherUserAvatar,
   });
+  final String chatId;
+  final String currentUserId;
+  final String currentUserName;
+  final String? currentUserAvatar;
+  final String otherUserName;
+  final String? otherUserAvatar;
 
   @override
   ConsumerState<ChatExtendedScreen> createState() => _ChatExtendedScreenState();
@@ -51,317 +51,320 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: [
-            CircleAvatar(
-              radius: 16,
-              backgroundImage: widget.otherUserAvatar != null
-                  ? NetworkImage(widget.otherUserAvatar!)
-                  : null,
-              child: widget.otherUserAvatar == null
-                  ? Text(widget.otherUserName.isNotEmpty
-                      ? widget.otherUserName[0].toUpperCase()
-                      : '?')
-                  : null,
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.otherUserName,
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  if (_isTyping)
-                    const Text(
-                      'печатает...',
-                      style: TextStyle(fontSize: 12, color: Colors.grey),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: Row(
+            children: [
+              CircleAvatar(
+                radius: 16,
+                backgroundImage: widget.otherUserAvatar != null
+                    ? NetworkImage(widget.otherUserAvatar!)
+                    : null,
+                child: widget.otherUserAvatar == null
+                    ? Text(
+                        widget.otherUserName.isNotEmpty
+                            ? widget.otherUserName[0].toUpperCase()
+                            : '?',
+                      )
+                    : null,
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.otherUserName,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.videocam),
-            onPressed: _startVideoCall,
-          ),
-          IconButton(
-            icon: const Icon(Icons.phone),
-            onPressed: _startVoiceCall,
-          ),
-          PopupMenuButton<String>(
-            onSelected: _handleMenuAction,
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'info',
-                child: Row(
-                  children: [
-                    Icon(Icons.info_outline),
-                    SizedBox(width: 8),
-                    Text('Информация о чате'),
-                  ],
-                ),
-              ),
-              const PopupMenuItem(
-                value: 'media',
-                child: Row(
-                  children: [
-                    Icon(Icons.photo_library),
-                    SizedBox(width: 8),
-                    Text('Медиафайлы'),
-                  ],
-                ),
-              ),
-              const PopupMenuItem(
-                value: 'search',
-                child: Row(
-                  children: [
-                    Icon(Icons.search),
-                    SizedBox(width: 8),
-                    Text('Поиск'),
+                    if (_isTyping)
+                      const Text(
+                        'печатает...',
+                        style: TextStyle(fontSize: 12, color: Colors.grey),
+                      ),
                   ],
                 ),
               ),
             ],
           ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Список сообщений
-          Expanded(
-            child: ListView.builder(
-              controller: _scrollController,
-              padding: const EdgeInsets.all(16),
-              itemCount: _messages.length,
-              itemBuilder: (context, index) {
-                final message = _messages[index];
-                final isOwnMessage = message.senderId == widget.currentUserId;
-
-                return _buildMessageBubble(message, isOwnMessage);
-              },
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.videocam),
+              onPressed: _startVideoCall,
             ),
-          ),
-
-          // Голосовой рекордер
-          if (_showVoiceRecorder)
-            VoiceRecorderWidget(
-              chatId: widget.chatId,
-              senderId: widget.currentUserId,
-              senderName: widget.currentUserName,
-              senderAvatar: widget.currentUserAvatar,
-              onVoiceMessageSent: _onVoiceMessageSent,
+            IconButton(
+              icon: const Icon(Icons.phone),
+              onPressed: _startVoiceCall,
             ),
-
-          // Поле ввода сообщения
-          _buildMessageInput(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildMessageBubble(ChatMessageExtended message, bool isOwnMessage) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        mainAxisAlignment:
-            isOwnMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          if (!isOwnMessage) ...[
-            CircleAvatar(
-              radius: 16,
-              backgroundImage: widget.otherUserAvatar != null
-                  ? NetworkImage(widget.otherUserAvatar!)
-                  : null,
-              child: widget.otherUserAvatar == null
-                  ? Text(widget.otherUserName.isNotEmpty
-                      ? widget.otherUserName[0].toUpperCase()
-                      : '?')
-                  : null,
-            ),
-            const SizedBox(width: 8),
-          ],
-          Flexible(
-            child: Container(
-              constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.width * 0.7,
-              ),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: isOwnMessage
-                    ? Theme.of(context).primaryColor
-                    : Colors.grey[200],
-                borderRadius: BorderRadius.circular(16).copyWith(
-                  bottomLeft: isOwnMessage
-                      ? const Radius.circular(16)
-                      : const Radius.circular(4),
-                  bottomRight: isOwnMessage
-                      ? const Radius.circular(4)
-                      : const Radius.circular(16),
-                ),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Содержимое сообщения
-                  if (message.type == MessageType.voice)
-                    VoicePlayerWidget(
-                      message: message,
-                      isOwnMessage: isOwnMessage,
-                    )
-                  else
-                    Text(
-                      message.content,
-                      style: TextStyle(
-                        color: isOwnMessage ? Colors.white : Colors.black87,
-                        fontSize: 16,
-                      ),
-                    ),
-
-                  const SizedBox(height: 8),
-
-                  // Время и статус
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
+            PopupMenuButton<String>(
+              onSelected: _handleMenuAction,
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: 'info',
+                  child: Row(
                     children: [
-                      Text(
-                        _formatTime(message.timestamp),
-                        style: TextStyle(
-                          color: isOwnMessage
-                              ? Colors.white.withValues(alpha: 0.7)
-                              : Colors.grey[600],
-                          fontSize: 12,
-                        ),
-                      ),
-                      if (isOwnMessage) ...[
-                        const SizedBox(width: 4),
-                        Icon(
-                          message.isRead ? Icons.done_all : Icons.done,
-                          size: 16,
-                          color: message.isRead
-                              ? Colors.blue[300]
-                              : Colors.white.withValues(alpha: 0.7),
-                        ),
-                      ],
+                      Icon(Icons.info_outline),
+                      SizedBox(width: 8),
+                      Text('Информация о чате'),
                     ],
                   ),
-
-                  // Реакции
-                  if (message.reactions.isNotEmpty) ...[
-                    const SizedBox(height: 8),
-                    MessageReactionsWidget(
-                      message: message,
-                      currentUserId: widget.currentUserId,
-                      currentUserName: widget.currentUserName,
-                      isOwnMessage: isOwnMessage,
-                    ),
-                  ],
-                ],
-              ),
-            ),
-          ),
-          if (isOwnMessage) ...[
-            const SizedBox(width: 8),
-            CircleAvatar(
-              radius: 16,
-              backgroundImage: widget.currentUserAvatar != null
-                  ? NetworkImage(widget.currentUserAvatar!)
-                  : null,
-              child: widget.currentUserAvatar == null
-                  ? Text(widget.currentUserName.isNotEmpty
-                      ? widget.currentUserName[0].toUpperCase()
-                      : '?')
-                  : null,
+                ),
+                const PopupMenuItem(
+                  value: 'media',
+                  child: Row(
+                    children: [
+                      Icon(Icons.photo_library),
+                      SizedBox(width: 8),
+                      Text('Медиафайлы'),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem(
+                  value: 'search',
+                  child: Row(
+                    children: [
+                      Icon(Icons.search),
+                      SizedBox(width: 8),
+                      Text('Поиск'),
+                    ],
+                  ),
+                ),
+              ],
             ),
           ],
-        ],
-      ),
-    );
-  }
+        ),
+        body: Column(
+          children: [
+            // Список сообщений
+            Expanded(
+              child: ListView.builder(
+                controller: _scrollController,
+                padding: const EdgeInsets.all(16),
+                itemCount: _messages.length,
+                itemBuilder: (context, index) {
+                  final message = _messages[index];
+                  final isOwnMessage = message.senderId == widget.currentUserId;
 
-  Widget _buildMessageInput() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).cardColor,
-        border: Border(
-          top: BorderSide(
-            color: Colors.grey.withValues(alpha: 0.3),
+                  return _buildMessageBubble(message, isOwnMessage);
+                },
+              ),
+            ),
+
+            // Голосовой рекордер
+            if (_showVoiceRecorder)
+              VoiceRecorderWidget(
+                chatId: widget.chatId,
+                senderId: widget.currentUserId,
+                senderName: widget.currentUserName,
+                senderAvatar: widget.currentUserAvatar,
+                onVoiceMessageSent: _onVoiceMessageSent,
+              ),
+
+            // Поле ввода сообщения
+            _buildMessageInput(),
+          ],
+        ),
+      );
+
+  Widget _buildMessageBubble(ChatMessageExtended message, bool isOwnMessage) =>
+      Container(
+        margin: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          mainAxisAlignment:
+              isOwnMessage ? MainAxisAlignment.end : MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            if (!isOwnMessage) ...[
+              CircleAvatar(
+                radius: 16,
+                backgroundImage: widget.otherUserAvatar != null
+                    ? NetworkImage(widget.otherUserAvatar!)
+                    : null,
+                child: widget.otherUserAvatar == null
+                    ? Text(
+                        widget.otherUserName.isNotEmpty
+                            ? widget.otherUserName[0].toUpperCase()
+                            : '?',
+                      )
+                    : null,
+              ),
+              const SizedBox(width: 8),
+            ],
+            Flexible(
+              child: Container(
+                constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.width * 0.7,
+                ),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: isOwnMessage
+                      ? Theme.of(context).primaryColor
+                      : Colors.grey[200],
+                  borderRadius: BorderRadius.circular(16).copyWith(
+                    bottomLeft: isOwnMessage
+                        ? const Radius.circular(16)
+                        : const Radius.circular(4),
+                    bottomRight: isOwnMessage
+                        ? const Radius.circular(4)
+                        : const Radius.circular(16),
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Содержимое сообщения
+                    if (message.type == MessageType.voice)
+                      VoicePlayerWidget(
+                        message: message,
+                        isOwnMessage: isOwnMessage,
+                      )
+                    else
+                      Text(
+                        message.content,
+                        style: TextStyle(
+                          color: isOwnMessage ? Colors.white : Colors.black87,
+                          fontSize: 16,
+                        ),
+                      ),
+
+                    const SizedBox(height: 8),
+
+                    // Время и статус
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          _formatTime(message.timestamp),
+                          style: TextStyle(
+                            color: isOwnMessage
+                                ? Colors.white.withValues(alpha: 0.7)
+                                : Colors.grey[600],
+                            fontSize: 12,
+                          ),
+                        ),
+                        if (isOwnMessage) ...[
+                          const SizedBox(width: 4),
+                          Icon(
+                            message.isRead ? Icons.done_all : Icons.done,
+                            size: 16,
+                            color: message.isRead
+                                ? Colors.blue[300]
+                                : Colors.white.withValues(alpha: 0.7),
+                          ),
+                        ],
+                      ],
+                    ),
+
+                    // Реакции
+                    if (message.reactions.isNotEmpty) ...[
+                      const SizedBox(height: 8),
+                      MessageReactionsWidget(
+                        message: message,
+                        currentUserId: widget.currentUserId,
+                        currentUserName: widget.currentUserName,
+                        isOwnMessage: isOwnMessage,
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+            if (isOwnMessage) ...[
+              const SizedBox(width: 8),
+              CircleAvatar(
+                radius: 16,
+                backgroundImage: widget.currentUserAvatar != null
+                    ? NetworkImage(widget.currentUserAvatar!)
+                    : null,
+                child: widget.currentUserAvatar == null
+                    ? Text(
+                        widget.currentUserName.isNotEmpty
+                            ? widget.currentUserName[0].toUpperCase()
+                            : '?',
+                      )
+                    : null,
+              ),
+            ],
+          ],
+        ),
+      );
+
+  Widget _buildMessageInput() => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).cardColor,
+          border: Border(
+            top: BorderSide(
+              color: Colors.grey.withValues(alpha: 0.3),
+            ),
           ),
         ),
-      ),
-      child: Row(
-        children: [
-          // Кнопка голосового сообщения
-          IconButton(
-            icon: Icon(
-              _showVoiceRecorder ? Icons.keyboard : Icons.mic,
-              color: _showVoiceRecorder
-                  ? Theme.of(context).primaryColor
-                  : Colors.grey[600],
+        child: Row(
+          children: [
+            // Кнопка голосового сообщения
+            IconButton(
+              icon: Icon(
+                _showVoiceRecorder ? Icons.keyboard : Icons.mic,
+                color: _showVoiceRecorder
+                    ? Theme.of(context).primaryColor
+                    : Colors.grey[600],
+              ),
+              onPressed: () {
+                setState(() {
+                  _showVoiceRecorder = !_showVoiceRecorder;
+                });
+              },
             ),
-            onPressed: () {
-              setState(() {
-                _showVoiceRecorder = !_showVoiceRecorder;
-              });
-            },
-          ),
 
-          // Поле ввода текста
-          Expanded(
-            child: TextField(
-              controller: _messageController,
-              decoration: InputDecoration(
-                hintText: 'Напишите сообщение...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
-                  borderSide: BorderSide.none,
+            // Поле ввода текста
+            Expanded(
+              child: TextField(
+                controller: _messageController,
+                decoration: InputDecoration(
+                  hintText: 'Напишите сообщение...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                    borderSide: BorderSide.none,
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                 ),
-                filled: true,
-                fillColor: Colors.grey[100],
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
+                maxLines: null,
+                textCapitalization: TextCapitalization.sentences,
+                onChanged: _onTextChanged,
+                onSubmitted: (value) => _sendTextMessage(),
+              ),
+            ),
+
+            const SizedBox(width: 8),
+
+            // Кнопка отправки
+            GestureDetector(
+              onTap: _sendTextMessage,
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.send,
+                  color: Colors.white,
+                  size: 20,
                 ),
               ),
-              maxLines: null,
-              textCapitalization: TextCapitalization.sentences,
-              onChanged: _onTextChanged,
-              onSubmitted: (value) => _sendTextMessage(),
             ),
-          ),
-
-          const SizedBox(width: 8),
-
-          // Кнопка отправки
-          GestureDetector(
-            onTap: _sendTextMessage,
-            child: Container(
-              width: 40,
-              height: 40,
-              decoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                shape: BoxShape.circle,
-              ),
-              child: const Icon(
-                Icons.send,
-                color: Colors.white,
-                size: 20,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   void _loadMessages() {
     // TODO: Загрузить сообщения из Firestore
@@ -375,7 +378,6 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
           senderName: widget.otherUserName,
           content: 'Привет! Как дела?',
           timestamp: DateTime.now().subtract(const Duration(minutes: 5)),
-          type: MessageType.text,
         ),
         ChatMessageExtended(
           id: '2',
@@ -384,7 +386,6 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
           senderName: widget.currentUserName,
           content: 'Привет! Всё отлично, спасибо!',
           timestamp: DateTime.now().subtract(const Duration(minutes: 3)),
-          type: MessageType.text,
         ),
       ]);
     });
@@ -401,7 +402,6 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
       senderName: widget.currentUserName,
       content: text,
       timestamp: DateTime.now(),
-      type: MessageType.text,
     );
 
     setState(() {
@@ -484,9 +484,11 @@ class _ChatExtendedScreenState extends ConsumerState<ChatExtendedScreen> {
                     ? NetworkImage(widget.otherUserAvatar!)
                     : null,
                 child: widget.otherUserAvatar == null
-                    ? Text(widget.otherUserName.isNotEmpty
-                        ? widget.otherUserName[0].toUpperCase()
-                        : '?')
+                    ? Text(
+                        widget.otherUserName.isNotEmpty
+                            ? widget.otherUserName[0].toUpperCase()
+                            : '?',
+                      )
                     : null,
               ),
               title: Text(widget.otherUserName),

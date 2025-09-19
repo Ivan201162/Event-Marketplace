@@ -2,16 +2,6 @@ import 'event.dart';
 
 /// Модель фильтра для поиска событий
 class EventFilter {
-  final String? searchQuery;
-  final List<EventCategory>? categories;
-  final double? minPrice;
-  final double? maxPrice;
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final bool? isPublic;
-  final EventStatus? status;
-  final String? organizerId;
-
   const EventFilter({
     this.searchQuery,
     this.categories,
@@ -23,6 +13,15 @@ class EventFilter {
     this.status,
     this.organizerId,
   });
+  final String? searchQuery;
+  final List<EventCategory>? categories;
+  final double? minPrice;
+  final double? maxPrice;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final bool? isPublic;
+  final EventStatus? status;
+  final String? organizerId;
 
   /// Создать копию с изменениями
   EventFilter copyWith({
@@ -35,32 +34,30 @@ class EventFilter {
     bool? isPublic,
     EventStatus? status,
     String? organizerId,
-  }) {
-    return EventFilter(
-      searchQuery: searchQuery ?? this.searchQuery,
-      categories: categories ?? this.categories,
-      minPrice: minPrice ?? this.minPrice,
-      maxPrice: maxPrice ?? this.maxPrice,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
-      isPublic: isPublic ?? this.isPublic,
-      status: status ?? this.status,
-      organizerId: organizerId ?? this.organizerId,
-    );
-  }
+  }) =>
+      EventFilter(
+        searchQuery: searchQuery ?? this.searchQuery,
+        categories: categories ?? this.categories,
+        minPrice: minPrice ?? this.minPrice,
+        maxPrice: maxPrice ?? this.maxPrice,
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+        isPublic: isPublic ?? this.isPublic,
+        status: status ?? this.status,
+        organizerId: organizerId ?? this.organizerId,
+      );
 
   /// Проверить, есть ли активные фильтры
-  bool get hasActiveFilters {
-    return searchQuery != null ||
-        (categories != null && categories!.isNotEmpty) ||
-        minPrice != null ||
-        maxPrice != null ||
-        startDate != null ||
-        endDate != null ||
-        isPublic != null ||
-        status != null ||
-        organizerId != null;
-  }
+  bool get hasActiveFilters =>
+      searchQuery != null ||
+      (categories != null && categories!.isNotEmpty) ||
+      minPrice != null ||
+      maxPrice != null ||
+      startDate != null ||
+      endDate != null ||
+      isPublic != null ||
+      status != null ||
+      organizerId != null;
 
   /// Проверить, соответствует ли событие фильтру
   bool matches(Event event) {
@@ -131,25 +128,23 @@ class EventFilter {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      searchQuery,
-      categories,
-      minPrice,
-      maxPrice,
-      startDate,
-      endDate,
-      isPublic,
-      status,
-      organizerId,
-    );
-  }
+  int get hashCode => Object.hash(
+        searchQuery,
+        categories,
+        minPrice,
+        maxPrice,
+        startDate,
+        endDate,
+        isPublic,
+        status,
+        organizerId,
+      );
 
   /// Сравнить два списка на равенство
   bool _listEquals<T>(List<T>? a, List<T>? b) {
     if (a == null) return b == null;
     if (b == null || a.length != b.length) return false;
-    for (int index = 0; index < a.length; index += 1) {
+    for (var index = 0; index < a.length; index += 1) {
       if (a[index] != b[index]) return false;
     }
     return true;

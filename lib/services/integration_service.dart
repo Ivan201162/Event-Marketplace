@@ -1,19 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:uuid/uuid.dart';
+
 import '../models/external_integration.dart';
 
 /// Сервис интеграций с внешними сервисами
 class IntegrationService {
+  factory IntegrationService() => _instance;
+  IntegrationService._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
 
   static final IntegrationService _instance = IntegrationService._internal();
-  factory IntegrationService() => _instance;
-  IntegrationService._internal();
 
   final Map<String, ExternalIntegration> _integrations = {};
   final Map<String, Timer> _syncTimers = {};
@@ -99,7 +101,6 @@ class IntegrationService {
       final updatedIntegration = integration.copyWith(
         status: IntegrationStatus.active,
         updatedAt: DateTime.now(),
-        lastError: null,
       );
 
       await _firestore
@@ -184,7 +185,9 @@ class IntegrationService {
 
   /// Добавить аутентификацию в заголовки
   void _addAuthentication(
-      Map<String, String> headers, ExternalIntegration integration) {
+    Map<String, String> headers,
+    ExternalIntegration integration,
+  ) {
     switch (integration.authType) {
       case AuthenticationType.apiKey:
         final apiKey = integration.credentials['apiKey'];
@@ -423,7 +426,7 @@ class IntegrationService {
   Future<void> _processJsonData(
     ExternalIntegration integration,
     Map<String, dynamic> endpointData,
-    dynamic data,
+    data,
     String syncDirection,
   ) async {
     try {
@@ -633,32 +636,28 @@ class IntegrationService {
   }
 
   /// Получить интеграции
-  List<ExternalIntegration> getIntegrations() {
-    return _integrations.values.toList();
-  }
+  List<ExternalIntegration> getIntegrations() => _integrations.values.toList();
 
   /// Получить интеграцию по ID
-  ExternalIntegration? getIntegration(String integrationId) {
-    return _integrations[integrationId];
-  }
+  ExternalIntegration? getIntegration(String integrationId) =>
+      _integrations[integrationId];
 
   /// Получить активные интеграции
-  List<ExternalIntegration> getActiveIntegrations() {
-    return _integrations.values
-        .where((integration) => integration.isActive)
-        .toList();
-  }
+  List<ExternalIntegration> getActiveIntegrations() => _integrations.values
+      .where((integration) => integration.isActive)
+      .toList();
 
   /// Получить интеграции по типу
-  List<ExternalIntegration> getIntegrationsByType(IntegrationType type) {
-    return _integrations.values
-        .where((integration) => integration.type == type)
-        .toList();
-  }
+  List<ExternalIntegration> getIntegrationsByType(IntegrationType type) =>
+      _integrations.values
+          .where((integration) => integration.type == type)
+          .toList();
 
   /// Обновить интеграцию
   Future<void> updateIntegration(
-      String integrationId, ExternalIntegration updatedIntegration) async {
+    String integrationId,
+    ExternalIntegration updatedIntegration,
+  ) async {
     try {
       await _firestore
           .collection('externalIntegrations')
@@ -723,8 +722,10 @@ class IntegrationService {
   }
 
   /// Получить статистику синхронизации
-  Future<List<DataSync>> getSyncHistory(String integrationId,
-      {int limit = 50}) async {
+  Future<List<DataSync>> getSyncHistory(
+    String integrationId, {
+    int limit = 50,
+  }) async {
     try {
       final snapshot = await _firestore
           .collection('dataSyncs')
@@ -733,7 +734,7 @@ class IntegrationService {
           .limit(limit)
           .get();
 
-      return snapshot.docs.map((doc) => DataSync.fromDocument(doc)).toList();
+      return snapshot.docs.map(DataSync.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка получения истории синхронизации: $e');

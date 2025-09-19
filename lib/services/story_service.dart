@@ -6,31 +6,29 @@ class StoryService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Получить истории специалиста
-  Stream<List<Story>> getSpecialistStories(String specialistId) {
-    return _firestore
-        .collection('stories')
-        .where('specialistId', isEqualTo: specialistId)
-        .where('isActive', isEqualTo: true)
-        .where('expiresAt', isGreaterThan: Timestamp.fromDate(DateTime.now()))
-        .orderBy('expiresAt')
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Story.fromDocument(doc)).toList());
-  }
+  Stream<List<Story>> getSpecialistStories(String specialistId) => _firestore
+      .collection('stories')
+      .where('specialistId', isEqualTo: specialistId)
+      .where('isActive', isEqualTo: true)
+      .where('expiresAt', isGreaterThan: Timestamp.fromDate(DateTime.now()))
+      .orderBy('expiresAt')
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(Story.fromDocument).toList(),
+      );
 
   /// Получить все активные истории
-  Stream<List<Story>> getAllStories() {
-    return _firestore
-        .collection('stories')
-        .where('isActive', isEqualTo: true)
-        .where('expiresAt', isGreaterThan: Timestamp.fromDate(DateTime.now()))
-        .orderBy('expiresAt')
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Story.fromDocument(doc)).toList());
-  }
+  Stream<List<Story>> getAllStories() => _firestore
+      .collection('stories')
+      .where('isActive', isEqualTo: true)
+      .where('expiresAt', isGreaterThan: Timestamp.fromDate(DateTime.now()))
+      .orderBy('expiresAt')
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(Story.fromDocument).toList(),
+      );
 
   /// Создать историю
   Future<String> createStory(Story story) async {
@@ -76,7 +74,7 @@ class StoryService {
         throw Exception('История не найдена');
       }
 
-      final storyData = storyDoc.data()!;
+      final storyData = storyDoc.data();
       final viewedBy = List<String>.from(storyData['viewedBy'] ?? []);
 
       if (!viewedBy.contains(userId)) {
@@ -106,8 +104,9 @@ class StoryService {
         .orderBy('expiresAt')
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Story.fromDocument(doc)).toList());
+        .map(
+          (snapshot) => snapshot.docs.map(Story.fromDocument).toList(),
+        );
   }
 
   /// Очистить истекшие истории
@@ -133,16 +132,17 @@ class StoryService {
 
   /// Получить статистику историй специалиста
   Future<Map<String, dynamic>> getSpecialistStoryStats(
-      String specialistId) async {
+    String specialistId,
+  ) async {
     try {
       final querySnapshot = await _firestore
           .collection('stories')
           .where('specialistId', isEqualTo: specialistId)
           .get();
 
-      int totalStories = querySnapshot.docs.length;
-      int activeStories = 0;
-      int totalViews = 0;
+      final int totalStories = querySnapshot.docs.length;
+      var activeStories = 0;
+      var totalViews = 0;
 
       for (final doc in querySnapshot.docs) {
         final data = doc.data();
@@ -160,6 +160,37 @@ class StoryService {
       };
     } catch (e) {
       throw Exception('Ошибка получения статистики историй: $e');
+    }
+  }
+
+  /// Отметить историю как просмотренную (алиас для markAsViewed)
+  Future<void> markStoryAsViewed(String storyId, String userId) async {
+    return markAsViewed(storyId, userId);
+  }
+
+  /// Лайкнуть историю
+  Future<void> likeStory(String storyId, String userId) async {
+    try {
+      final storyRef = _firestore.collection('stories').doc(storyId);
+      final storyDoc = await storyRef.get();
+
+      if (!storyDoc.exists) {
+        throw Exception('История не найдена');
+      }
+
+      final storyData = storyDoc.data();
+      final likedBy = List<String>.from(storyData['likedBy'] ?? []);
+
+      if (!likedBy.contains(userId)) {
+        likedBy.add(userId);
+        await storyRef.update({
+          'likedBy': likedBy,
+          'likesCount': likedBy.length,
+          'updatedAt': Timestamp.fromDate(DateTime.now()),
+        });
+      }
+    } catch (e) {
+      throw Exception('Ошибка лайка истории: $e');
     }
   }
 }

@@ -20,269 +20,266 @@ class _TranslationManagementScreenState
   String _selectedCategory = 'all';
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Управление переводами'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: _addTranslation,
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Фильтры
-          _buildFilters(),
-
-          // Список переводов
-          Expanded(
-            child: _buildTranslationsList(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFilters() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          // Выбор языка
-          Row(
-            children: [
-              const Text('Язык: '),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Consumer(
-                  builder: (context, ref, child) {
-                    final supportedLanguages =
-                        ref.watch(supportedLanguagesProvider);
-
-                    return DropdownButton<String>(
-                      value: _selectedLanguage,
-                      isExpanded: true,
-                      items: supportedLanguages.map((language) {
-                        return DropdownMenuItem<String>(
-                          value: language.languageCode,
-                          child: Text(language.displayName),
-                        );
-                      }).toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedLanguage = value ?? 'ru';
-                        });
-                      },
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 16),
-
-          // Поиск и категория
-          Row(
-            children: [
-              // Поиск
-              Expanded(
-                child: TextField(
-                  decoration: const InputDecoration(
-                    hintText: 'Поиск по ключу или значению...',
-                    prefixIcon: Icon(Icons.search),
-                    border: OutlineInputBorder(),
-                  ),
-                  onChanged: (value) {
-                    setState(() {
-                      _searchQuery = value;
-                    });
-                  },
-                ),
-              ),
-
-              const SizedBox(width: 16),
-
-              // Категория
-              Expanded(
-                child: DropdownButton<String>(
-                  value: _selectedCategory,
-                  isExpanded: true,
-                  items: const [
-                    DropdownMenuItem(value: 'all', child: Text('Все')),
-                    DropdownMenuItem(value: 'general', child: Text('Общие')),
-                    DropdownMenuItem(
-                        value: 'navigation', child: Text('Навигация')),
-                    DropdownMenuItem(value: 'events', child: Text('События')),
-                    DropdownMenuItem(value: 'profile', child: Text('Профиль')),
-                    DropdownMenuItem(
-                        value: 'settings', child: Text('Настройки')),
-                    DropdownMenuItem(
-                        value: 'notifications', child: Text('Уведомления')),
-                    DropdownMenuItem(value: 'errors', child: Text('Ошибки')),
-                    DropdownMenuItem(value: 'success', child: Text('Успех')),
-                  ],
-                  onChanged: (value) {
-                    setState(() {
-                      _selectedCategory = value ?? 'all';
-                    });
-                  },
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTranslationsList() {
-    return Consumer(
-      builder: (context, ref, child) {
-        final currentLocalization = ref.watch(currentLocalizationProvider);
-
-        if (currentLocalization == null) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        final translations =
-            _filterTranslations(currentLocalization.translations);
-
-        if (translations.isEmpty) {
-          return _buildEmptyState();
-        }
-
-        return ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          itemCount: translations.length,
-          itemBuilder: (context, index) {
-            final entry = translations.entries.elementAt(index);
-            return _buildTranslationItem(entry.key, entry.value);
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(
-            Icons.translate,
-            size: 64,
-            color: Colors.grey,
-          ),
-          const SizedBox(height: 16),
-          const Text(
-            'Нет переводов',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Управление переводами'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: _addTranslation,
             ),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Попробуйте изменить фильтры или добавить новые переводы',
-            style: TextStyle(color: Colors.grey),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+        body: Column(
+          children: [
+            // Фильтры
+            _buildFilters(),
 
-  Widget _buildTranslationItem(String key, String value) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ExpansionTile(
-        title: Text(
-          key,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
+            // Список переводов
+            Expanded(
+              child: _buildTranslationsList(),
+            ),
+          ],
         ),
-        subtitle: Text(
-          value,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
-        ),
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+      );
+
+  Widget _buildFilters() => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          children: [
+            // Выбор языка
+            Row(
               children: [
-                // Ключ
-                _buildInfoRow('Ключ', key),
+                const Text('Язык: '),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Consumer(
+                    builder: (context, ref, child) {
+                      final supportedLanguages =
+                          ref.watch(supportedLanguagesProvider);
 
-                const SizedBox(height: 8),
-
-                // Значение
-                _buildInfoRow('Значение', value),
-
-                const SizedBox(height: 8),
-
-                // Категория
-                _buildInfoRow('Категория', _getCategoryFromKey(key)),
-
-                const SizedBox(height: 16),
-
-                // Действия
-                Row(
-                  children: [
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () => _editTranslation(key, value),
-                        icon: const Icon(Icons.edit),
-                        label: const Text('Редактировать'),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: OutlinedButton.icon(
-                        onPressed: () => _copyTranslation(key, value),
-                        icon: const Icon(Icons.copy),
-                        label: const Text('Копировать'),
-                      ),
-                    ),
-                  ],
+                      return DropdownButton<String>(
+                        value: _selectedLanguage,
+                        isExpanded: true,
+                        items: supportedLanguages
+                            .map(
+                              (language) => DropdownMenuItem<String>(
+                                value: language.languageCode,
+                                child: Text(language.displayName),
+                              ),
+                            )
+                            .toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedLanguage = value ?? 'ru';
+                          });
+                        },
+                      );
+                    },
+                  ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildInfoRow(String label, String value) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 80,
-          child: Text(
-            label,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              color: Colors.grey[600],
+            const SizedBox(height: 16),
+
+            // Поиск и категория
+            Row(
+              children: [
+                // Поиск
+                Expanded(
+                  child: TextField(
+                    decoration: const InputDecoration(
+                      hintText: 'Поиск по ключу или значению...',
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _searchQuery = value;
+                      });
+                    },
+                  ),
+                ),
+
+                const SizedBox(width: 16),
+
+                // Категория
+                Expanded(
+                  child: DropdownButton<String>(
+                    value: _selectedCategory,
+                    isExpanded: true,
+                    items: const [
+                      DropdownMenuItem(value: 'all', child: Text('Все')),
+                      DropdownMenuItem(value: 'general', child: Text('Общие')),
+                      DropdownMenuItem(
+                        value: 'navigation',
+                        child: Text('Навигация'),
+                      ),
+                      DropdownMenuItem(value: 'events', child: Text('События')),
+                      DropdownMenuItem(
+                          value: 'profile', child: Text('Профиль')),
+                      DropdownMenuItem(
+                        value: 'settings',
+                        child: Text('Настройки'),
+                      ),
+                      DropdownMenuItem(
+                        value: 'notifications',
+                        child: Text('Уведомления'),
+                      ),
+                      DropdownMenuItem(value: 'errors', child: Text('Ошибки')),
+                      DropdownMenuItem(value: 'success', child: Text('Успех')),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedCategory = value ?? 'all';
+                      });
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildTranslationsList() => Consumer(
+        builder: (context, ref, child) {
+          final currentLocalization = ref.watch(currentLocalizationProvider);
+
+          if (currentLocalization == null) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final translations =
+              _filterTranslations(currentLocalization.translations);
+
+          if (translations.isEmpty) {
+            return _buildEmptyState();
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            itemCount: translations.length,
+            itemBuilder: (context, index) {
+              final entry = translations.entries.elementAt(index);
+              return _buildTranslationItem(entry.key, entry.value);
+            },
+          );
+        },
+      );
+
+  Widget _buildEmptyState() => const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.translate,
+              size: 64,
+              color: Colors.grey,
+            ),
+            SizedBox(height: 16),
+            Text(
+              'Нет переводов',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Попробуйте изменить фильтры или добавить новые переводы',
+              style: TextStyle(color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildTranslationItem(String key, String value) => Card(
+        margin: const EdgeInsets.only(bottom: 8),
+        child: ExpansionTile(
+          title: Text(
+            key,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
             ),
           ),
-        ),
-        const Text(': '),
-        Expanded(
-          child: Text(
+          subtitle: Text(
             value,
-            style: const TextStyle(fontWeight: FontWeight.w500),
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
           ),
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Ключ
+                  _buildInfoRow('Ключ', key),
+
+                  const SizedBox(height: 8),
+
+                  // Значение
+                  _buildInfoRow('Значение', value),
+
+                  const SizedBox(height: 8),
+
+                  // Категория
+                  _buildInfoRow('Категория', _getCategoryFromKey(key)),
+
+                  const SizedBox(height: 16),
+
+                  // Действия
+                  Row(
+                    children: [
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => _editTranslation(key, value),
+                          icon: const Icon(Icons.edit),
+                          label: const Text('Редактировать'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: OutlinedButton.icon(
+                          onPressed: () => _copyTranslation(key, value),
+                          icon: const Icon(Icons.copy),
+                          label: const Text('Копировать'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
-      ],
-    );
-  }
+      );
+
+  Widget _buildInfoRow(String label, String value) => Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 80,
+            child: Text(
+              label,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: Colors.grey[600],
+              ),
+            ),
+          ),
+          const Text(': '),
+          Expanded(
+            child: Text(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ),
+        ],
+      );
 
   Map<String, String> _filterTranslations(Map<String, String> translations) {
     var filtered = translations;
@@ -291,19 +288,19 @@ class _TranslationManagementScreenState
     if (_searchQuery.isNotEmpty) {
       final query = _searchQuery.toLowerCase();
       filtered = Map.fromEntries(
-        filtered.entries.where((entry) {
-          return entry.key.toLowerCase().contains(query) ||
-              entry.value.toLowerCase().contains(query);
-        }),
+        filtered.entries.where(
+          (entry) =>
+              entry.key.toLowerCase().contains(query) ||
+              entry.value.toLowerCase().contains(query),
+        ),
       );
     }
 
     // Фильтр по категории
     if (_selectedCategory != 'all') {
       filtered = Map.fromEntries(
-        filtered.entries.where((entry) {
-          return _getCategoryFromKey(entry.key) == _selectedCategory;
-        }),
+        filtered.entries.where(
+            (entry) => _getCategoryFromKey(entry.key) == _selectedCategory),
       );
     }
 
@@ -351,8 +348,10 @@ class _TranslationManagementScreenState
           // TODO: Реализовать добавление перевода
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-                content: Text(
-                    'Функция добавления перевода будет доступна в следующих обновлениях')),
+              content: Text(
+                'Функция добавления перевода будет доступна в следующих обновлениях',
+              ),
+            ),
           );
         },
       ),
@@ -370,8 +369,10 @@ class _TranslationManagementScreenState
           // TODO: Реализовать редактирование перевода
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-                content: Text(
-                    'Функция редактирования перевода будет доступна в следующих обновлениях')),
+              content: Text(
+                'Функция редактирования перевода будет доступна в следующих обновлениях',
+              ),
+            ),
           );
         },
       ),
@@ -382,25 +383,26 @@ class _TranslationManagementScreenState
     // TODO: Реализовать копирование перевода
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text(
-              'Функция копирования перевода будет доступна в следующих обновлениях')),
+        content: Text(
+          'Функция копирования перевода будет доступна в следующих обновлениях',
+        ),
+      ),
     );
   }
 }
 
 /// Диалог для добавления/редактирования перевода
 class _TranslationDialog extends StatefulWidget {
-  final String language;
-  final String? initialKey;
-  final String? initialValue;
-  final Function(String key, String value) onSave;
-
   const _TranslationDialog({
     required this.language,
     this.initialKey,
     this.initialValue,
     required this.onSave,
   });
+  final String language;
+  final String? initialKey;
+  final String? initialValue;
+  final Function(String key, String value) onSave;
 
   @override
   State<_TranslationDialog> createState() => _TranslationDialogState();
@@ -427,92 +429,95 @@ class _TranslationDialogState extends State<_TranslationDialog> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text(widget.initialKey == null
-          ? 'Добавить перевод'
-          : 'Редактировать перевод'),
-      content: Form(
-        key: _formKey,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            // Категория
-            DropdownButtonFormField<String>(
-              initialValue: _selectedCategory,
-              decoration: const InputDecoration(
-                labelText: 'Категория',
-                border: OutlineInputBorder(),
-              ),
-              items: const [
-                DropdownMenuItem(value: 'general', child: Text('Общие')),
-                DropdownMenuItem(value: 'navigation', child: Text('Навигация')),
-                DropdownMenuItem(value: 'events', child: Text('События')),
-                DropdownMenuItem(value: 'profile', child: Text('Профиль')),
-                DropdownMenuItem(value: 'settings', child: Text('Настройки')),
-                DropdownMenuItem(
-                    value: 'notifications', child: Text('Уведомления')),
-                DropdownMenuItem(value: 'errors', child: Text('Ошибки')),
-                DropdownMenuItem(value: 'success', child: Text('Успех')),
-              ],
-              onChanged: (value) {
-                setState(() {
-                  _selectedCategory = value ?? 'general';
-                });
-              },
-            ),
-
-            const SizedBox(height: 16),
-
-            // Ключ
-            TextFormField(
-              controller: _keyController,
-              decoration: const InputDecoration(
-                labelText: 'Ключ',
-                border: OutlineInputBorder(),
-                hintText: 'например: button_save',
-              ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Введите ключ';
-                }
-                return null;
-              },
-            ),
-
-            const SizedBox(height: 16),
-
-            // Значение
-            TextFormField(
-              controller: _valueController,
-              decoration: const InputDecoration(
-                labelText: 'Значение',
-                border: OutlineInputBorder(),
-                hintText: 'Текст перевода',
-              ),
-              maxLines: 3,
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Введите значение';
-                }
-                return null;
-              },
-            ),
-          ],
+  Widget build(BuildContext context) => AlertDialog(
+        title: Text(
+          widget.initialKey == null
+              ? 'Добавить перевод'
+              : 'Редактировать перевод',
         ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Отмена'),
+        content: Form(
+          key: _formKey,
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              // Категория
+              DropdownButtonFormField<String>(
+                initialValue: _selectedCategory,
+                decoration: const InputDecoration(
+                  labelText: 'Категория',
+                  border: OutlineInputBorder(),
+                ),
+                items: const [
+                  DropdownMenuItem(value: 'general', child: Text('Общие')),
+                  DropdownMenuItem(
+                      value: 'navigation', child: Text('Навигация')),
+                  DropdownMenuItem(value: 'events', child: Text('События')),
+                  DropdownMenuItem(value: 'profile', child: Text('Профиль')),
+                  DropdownMenuItem(value: 'settings', child: Text('Настройки')),
+                  DropdownMenuItem(
+                    value: 'notifications',
+                    child: Text('Уведомления'),
+                  ),
+                  DropdownMenuItem(value: 'errors', child: Text('Ошибки')),
+                  DropdownMenuItem(value: 'success', child: Text('Успех')),
+                ],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedCategory = value ?? 'general';
+                  });
+                },
+              ),
+
+              const SizedBox(height: 16),
+
+              // Ключ
+              TextFormField(
+                controller: _keyController,
+                decoration: const InputDecoration(
+                  labelText: 'Ключ',
+                  border: OutlineInputBorder(),
+                  hintText: 'например: button_save',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Введите ключ';
+                  }
+                  return null;
+                },
+              ),
+
+              const SizedBox(height: 16),
+
+              // Значение
+              TextFormField(
+                controller: _valueController,
+                decoration: const InputDecoration(
+                  labelText: 'Значение',
+                  border: OutlineInputBorder(),
+                  hintText: 'Текст перевода',
+                ),
+                maxLines: 3,
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Введите значение';
+                  }
+                  return null;
+                },
+              ),
+            ],
+          ),
         ),
-        ElevatedButton(
-          onPressed: _saveTranslation,
-          child: const Text('Сохранить'),
-        ),
-      ],
-    );
-  }
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: _saveTranslation,
+            child: const Text('Сохранить'),
+          ),
+        ],
+      );
 
   void _saveTranslation() {
     if (_formKey.currentState!.validate()) {

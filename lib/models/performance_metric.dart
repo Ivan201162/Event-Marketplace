@@ -2,18 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель метрики производительности
 class PerformanceMetric {
-  final String id;
-  final String name;
-  final String category;
-  final double value;
-  final String unit;
-  final String? description;
-  final Map<String, dynamic> metadata;
-  final DateTime timestamp;
-  final String? sessionId;
-  final String? userId;
-  final String? deviceId;
-
   const PerformanceMetric({
     required this.id,
     required this.name,
@@ -47,37 +35,45 @@ class PerformanceMetric {
   }
 
   /// Создать из Map
-  factory PerformanceMetric.fromMap(Map<String, dynamic> data) {
-    return PerformanceMetric(
-      id: data['id'] ?? '',
-      name: data['name'] ?? '',
-      category: data['category'] ?? '',
-      value: (data['value'] as num).toDouble(),
-      unit: data['unit'] ?? '',
-      description: data['description'],
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-      timestamp: (data['timestamp'] as Timestamp).toDate(),
-      sessionId: data['sessionId'],
-      userId: data['userId'],
-      deviceId: data['deviceId'],
-    );
-  }
+  factory PerformanceMetric.fromMap(Map<String, dynamic> data) =>
+      PerformanceMetric(
+        id: data['id'] ?? '',
+        name: data['name'] ?? '',
+        category: data['category'] ?? '',
+        value: (data['value'] as num).toDouble(),
+        unit: data['unit'] ?? '',
+        description: data['description'],
+        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+        timestamp: (data['timestamp'] as Timestamp).toDate(),
+        sessionId: data['sessionId'],
+        userId: data['userId'],
+        deviceId: data['deviceId'],
+      );
+  final String id;
+  final String name;
+  final String category;
+  final double value;
+  final String unit;
+  final String? description;
+  final Map<String, dynamic> metadata;
+  final DateTime timestamp;
+  final String? sessionId;
+  final String? userId;
+  final String? deviceId;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'category': category,
-      'value': value,
-      'unit': unit,
-      'description': description,
-      'metadata': metadata,
-      'timestamp': Timestamp.fromDate(timestamp),
-      'sessionId': sessionId,
-      'userId': userId,
-      'deviceId': deviceId,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'category': category,
+        'value': value,
+        'unit': unit,
+        'description': description,
+        'metadata': metadata,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'sessionId': sessionId,
+        'userId': userId,
+        'deviceId': deviceId,
+      };
 
   /// Создать копию с изменениями
   PerformanceMetric copyWith({
@@ -92,21 +88,20 @@ class PerformanceMetric {
     String? sessionId,
     String? userId,
     String? deviceId,
-  }) {
-    return PerformanceMetric(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      category: category ?? this.category,
-      value: value ?? this.value,
-      unit: unit ?? this.unit,
-      description: description ?? this.description,
-      metadata: metadata ?? this.metadata,
-      timestamp: timestamp ?? this.timestamp,
-      sessionId: sessionId ?? this.sessionId,
-      userId: userId ?? this.userId,
-      deviceId: deviceId ?? this.deviceId,
-    );
-  }
+  }) =>
+      PerformanceMetric(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        category: category ?? this.category,
+        value: value ?? this.value,
+        unit: unit ?? this.unit,
+        description: description ?? this.description,
+        metadata: metadata ?? this.metadata,
+        timestamp: timestamp ?? this.timestamp,
+        sessionId: sessionId ?? this.sessionId,
+        userId: userId ?? this.userId,
+        deviceId: deviceId ?? this.deviceId,
+      );
 
   /// Получить значение в читаемом формате
   String get formattedValue {
@@ -117,8 +112,8 @@ class PerformanceMetric {
       return '${value.toStringAsFixed(0)}ms';
     } else if (unit == 'bytes') {
       const units = ['B', 'KB', 'MB', 'GB'];
-      int size = value.toInt();
-      int unitIndex = 0;
+      var size = value.toInt();
+      var unitIndex = 0;
 
       while (size >= 1024 && unitIndex < units.length - 1) {
         size ~/= 1024;
@@ -195,43 +190,27 @@ class PerformanceMetric {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      name,
-      category,
-      value,
-      unit,
-      description,
-      metadata,
-      timestamp,
-      sessionId,
-      userId,
-      deviceId,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        name,
+        category,
+        value,
+        unit,
+        description,
+        metadata,
+        timestamp,
+        sessionId,
+        userId,
+        deviceId,
+      );
 
   @override
-  String toString() {
-    return 'PerformanceMetric(id: $id, name: $name, value: $formattedValue)';
-  }
+  String toString() =>
+      'PerformanceMetric(id: $id, name: $name, value: $formattedValue)';
 }
 
 /// Модель статистики производительности
 class PerformanceStatistics {
-  final String metricName;
-  final String category;
-  final int totalSamples;
-  final double minValue;
-  final double maxValue;
-  final double avgValue;
-  final double medianValue;
-  final double p95Value;
-  final double p99Value;
-  final DateTime periodStart;
-  final DateTime periodEnd;
-  final List<PerformanceMetric> samples;
-
   const PerformanceStatistics({
     required this.metricName,
     required this.category,
@@ -307,6 +286,18 @@ class PerformanceStatistics {
       samples: metrics,
     );
   }
+  final String metricName;
+  final String category;
+  final int totalSamples;
+  final double minValue;
+  final double maxValue;
+  final double avgValue;
+  final double medianValue;
+  final double p95Value;
+  final double p99Value;
+  final DateTime periodStart;
+  final DateTime periodEnd;
+  final List<PerformanceMetric> samples;
 
   /// Получить тренд (улучшение/ухудшение)
   String get trend {
@@ -328,9 +319,7 @@ class PerformanceStatistics {
   }
 
   /// Проверить, есть ли проблемы с производительностью
-  bool get hasPerformanceIssues {
-    return p95Value > _getCriticalThreshold();
-  }
+  bool get hasPerformanceIssues => p95Value > _getCriticalThreshold();
 
   double _getCriticalThreshold() {
     switch (category) {
@@ -350,25 +339,12 @@ class PerformanceStatistics {
   }
 
   @override
-  String toString() {
-    return 'PerformanceStatistics(metricName: $metricName, avgValue: ${avgValue.toStringAsFixed(2)}, totalSamples: $totalSamples)';
-  }
+  String toString() =>
+      'PerformanceStatistics(metricName: $metricName, avgValue: ${avgValue.toStringAsFixed(2)}, totalSamples: $totalSamples)';
 }
 
 /// Модель алерта производительности
 class PerformanceAlert {
-  final String id;
-  final String metricName;
-  final String category;
-  final double threshold;
-  final double currentValue;
-  final AlertSeverity severity;
-  final String message;
-  final DateTime triggeredAt;
-  final DateTime? resolvedAt;
-  final bool isActive;
-  final Map<String, dynamic> metadata;
-
   const PerformanceAlert({
     required this.id,
     required this.metricName,
@@ -393,8 +369,9 @@ class PerformanceAlert {
       threshold: (data['threshold'] as num).toDouble(),
       currentValue: (data['currentValue'] as num).toDouble(),
       severity: AlertSeverity.values.firstWhere(
-          (e) => e.toString().split('.').last == data['severity'],
-          orElse: () => AlertSeverity.warning),
+        (e) => e.toString().split('.').last == data['severity'],
+        orElse: () => AlertSeverity.warning,
+      ),
       message: data['message'] ?? '',
       triggeredAt: (data['triggeredAt'] as Timestamp).toDate(),
       resolvedAt: data['resolvedAt'] != null
@@ -406,41 +383,51 @@ class PerformanceAlert {
   }
 
   /// Создать из Map
-  factory PerformanceAlert.fromMap(Map<String, dynamic> data) {
-    return PerformanceAlert(
-      id: data['id'] ?? '',
-      metricName: data['metricName'] ?? '',
-      category: data['category'] ?? '',
-      threshold: (data['threshold'] as num).toDouble(),
-      currentValue: (data['currentValue'] as num).toDouble(),
-      severity: AlertSeverity.values.firstWhere(
+  factory PerformanceAlert.fromMap(Map<String, dynamic> data) =>
+      PerformanceAlert(
+        id: data['id'] ?? '',
+        metricName: data['metricName'] ?? '',
+        category: data['category'] ?? '',
+        threshold: (data['threshold'] as num).toDouble(),
+        currentValue: (data['currentValue'] as num).toDouble(),
+        severity: AlertSeverity.values.firstWhere(
           (e) => e.toString().split('.').last == data['severity'],
-          orElse: () => AlertSeverity.warning),
-      message: data['message'] ?? '',
-      triggeredAt: (data['triggeredAt'] as Timestamp).toDate(),
-      resolvedAt: data['resolvedAt'] != null
-          ? (data['resolvedAt'] as Timestamp).toDate()
-          : null,
-      isActive: data['isActive'] ?? true,
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-    );
-  }
+          orElse: () => AlertSeverity.warning,
+        ),
+        message: data['message'] ?? '',
+        triggeredAt: (data['triggeredAt'] as Timestamp).toDate(),
+        resolvedAt: data['resolvedAt'] != null
+            ? (data['resolvedAt'] as Timestamp).toDate()
+            : null,
+        isActive: data['isActive'] ?? true,
+        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      );
+  final String id;
+  final String metricName;
+  final String category;
+  final double threshold;
+  final double currentValue;
+  final AlertSeverity severity;
+  final String message;
+  final DateTime triggeredAt;
+  final DateTime? resolvedAt;
+  final bool isActive;
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'metricName': metricName,
-      'category': category,
-      'threshold': threshold,
-      'currentValue': currentValue,
-      'severity': severity.toString().split('.').last,
-      'message': message,
-      'triggeredAt': Timestamp.fromDate(triggeredAt),
-      'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
-      'isActive': isActive,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'metricName': metricName,
+        'category': category,
+        'threshold': threshold,
+        'currentValue': currentValue,
+        'severity': severity.toString().split('.').last,
+        'message': message,
+        'triggeredAt': Timestamp.fromDate(triggeredAt),
+        'resolvedAt':
+            resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+        'isActive': isActive,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   PerformanceAlert copyWith({
@@ -455,21 +442,20 @@ class PerformanceAlert {
     DateTime? resolvedAt,
     bool? isActive,
     Map<String, dynamic>? metadata,
-  }) {
-    return PerformanceAlert(
-      id: id ?? this.id,
-      metricName: metricName ?? this.metricName,
-      category: category ?? this.category,
-      threshold: threshold ?? this.threshold,
-      currentValue: currentValue ?? this.currentValue,
-      severity: severity ?? this.severity,
-      message: message ?? this.message,
-      triggeredAt: triggeredAt ?? this.triggeredAt,
-      resolvedAt: resolvedAt ?? this.resolvedAt,
-      isActive: isActive ?? this.isActive,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      PerformanceAlert(
+        id: id ?? this.id,
+        metricName: metricName ?? this.metricName,
+        category: category ?? this.category,
+        threshold: threshold ?? this.threshold,
+        currentValue: currentValue ?? this.currentValue,
+        severity: severity ?? this.severity,
+        message: message ?? this.message,
+        triggeredAt: triggeredAt ?? this.triggeredAt,
+        resolvedAt: resolvedAt ?? this.resolvedAt,
+        isActive: isActive ?? this.isActive,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Проверить, решен ли алерт
   bool get isResolved => resolvedAt != null;
@@ -498,26 +484,23 @@ class PerformanceAlert {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      metricName,
-      category,
-      threshold,
-      currentValue,
-      severity,
-      message,
-      triggeredAt,
-      resolvedAt,
-      isActive,
-      metadata,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        metricName,
+        category,
+        threshold,
+        currentValue,
+        severity,
+        message,
+        triggeredAt,
+        resolvedAt,
+        isActive,
+        metadata,
+      );
 
   @override
-  String toString() {
-    return 'PerformanceAlert(id: $id, metricName: $metricName, severity: $severity)';
-  }
+  String toString() =>
+      'PerformanceAlert(id: $id, metricName: $metricName, severity: $severity)';
 }
 
 /// Уровни серьезности алертов

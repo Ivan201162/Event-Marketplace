@@ -2,32 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель для управления релизами
 class Release {
-  final String id;
-  final String version;
-  final String name;
-  final String? description;
-  final ReleaseType type;
-  final ReleaseStatus status;
-  final String? branch;
-  final String? commitHash;
-  final List<String> features;
-  final List<String> bugFixes;
-  final List<String> breakingChanges;
-  final List<String> dependencies;
-  final Map<String, dynamic> metadata;
-  final List<String> tags;
-  final bool isPreRelease;
-  final bool isDraft;
-  final String? releaseNotes;
-  final String? downloadUrl;
-  final String? changelogUrl;
-  final DateTime? scheduledDate;
-  final DateTime? releasedDate;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String createdBy;
-  final String updatedBy;
-
   const Release({
     required this.id,
     required this.version,
@@ -56,71 +30,92 @@ class Release {
     required this.updatedBy,
   });
 
-  factory Release.fromMap(Map<String, dynamic> map) {
-    return Release(
-      id: map['id'] ?? '',
-      version: map['version'] ?? '',
-      name: map['name'] ?? '',
-      description: map['description'],
-      type: ReleaseType.fromString(map['type'] ?? 'patch'),
-      status: ReleaseStatus.fromString(map['status'] ?? 'draft'),
-      branch: map['branch'],
-      commitHash: map['commitHash'],
-      features: List<String>.from(map['features'] ?? []),
-      bugFixes: List<String>.from(map['bugFixes'] ?? []),
-      breakingChanges: List<String>.from(map['breakingChanges'] ?? []),
-      dependencies: List<String>.from(map['dependencies'] ?? []),
-      metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-      tags: List<String>.from(map['tags'] ?? []),
-      isPreRelease: map['isPreRelease'] ?? false,
-      isDraft: map['isDraft'] ?? true,
-      releaseNotes: map['releaseNotes'],
-      downloadUrl: map['downloadUrl'],
-      changelogUrl: map['changelogUrl'],
-      scheduledDate: map['scheduledDate'] != null
-          ? (map['scheduledDate'] as Timestamp).toDate()
-          : null,
-      releasedDate: map['releasedDate'] != null
-          ? (map['releasedDate'] as Timestamp).toDate()
-          : null,
-      createdAt: (map['createdAt'] as Timestamp).toDate(),
-      updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-      createdBy: map['createdBy'] ?? '',
-      updatedBy: map['updatedBy'] ?? '',
-    );
-  }
+  factory Release.fromMap(Map<String, dynamic> map) => Release(
+        id: map['id'] ?? '',
+        version: map['version'] ?? '',
+        name: map['name'] ?? '',
+        description: map['description'],
+        type: ReleaseType.fromString(map['type'] ?? 'patch'),
+        status: ReleaseStatus.fromString(map['status'] ?? 'draft'),
+        branch: map['branch'],
+        commitHash: map['commitHash'],
+        features: List<String>.from(map['features'] ?? []),
+        bugFixes: List<String>.from(map['bugFixes'] ?? []),
+        breakingChanges: List<String>.from(map['breakingChanges'] ?? []),
+        dependencies: List<String>.from(map['dependencies'] ?? []),
+        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+        tags: List<String>.from(map['tags'] ?? []),
+        isPreRelease: map['isPreRelease'] ?? false,
+        isDraft: map['isDraft'] ?? true,
+        releaseNotes: map['releaseNotes'],
+        downloadUrl: map['downloadUrl'],
+        changelogUrl: map['changelogUrl'],
+        scheduledDate: map['scheduledDate'] != null
+            ? (map['scheduledDate'] as Timestamp).toDate()
+            : null,
+        releasedDate: map['releasedDate'] != null
+            ? (map['releasedDate'] as Timestamp).toDate()
+            : null,
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        createdBy: map['createdBy'] ?? '',
+        updatedBy: map['updatedBy'] ?? '',
+      );
+  final String id;
+  final String version;
+  final String name;
+  final String? description;
+  final ReleaseType type;
+  final ReleaseStatus status;
+  final String? branch;
+  final String? commitHash;
+  final List<String> features;
+  final List<String> bugFixes;
+  final List<String> breakingChanges;
+  final List<String> dependencies;
+  final Map<String, dynamic> metadata;
+  final List<String> tags;
+  final bool isPreRelease;
+  final bool isDraft;
+  final String? releaseNotes;
+  final String? downloadUrl;
+  final String? changelogUrl;
+  final DateTime? scheduledDate;
+  final DateTime? releasedDate;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String createdBy;
+  final String updatedBy;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'version': version,
-      'name': name,
-      'description': description,
-      'type': type.value,
-      'status': status.value,
-      'branch': branch,
-      'commitHash': commitHash,
-      'features': features,
-      'bugFixes': bugFixes,
-      'breakingChanges': breakingChanges,
-      'dependencies': dependencies,
-      'metadata': metadata,
-      'tags': tags,
-      'isPreRelease': isPreRelease,
-      'isDraft': isDraft,
-      'releaseNotes': releaseNotes,
-      'downloadUrl': downloadUrl,
-      'changelogUrl': changelogUrl,
-      'scheduledDate':
-          scheduledDate != null ? Timestamp.fromDate(scheduledDate!) : null,
-      'releasedDate':
-          releasedDate != null ? Timestamp.fromDate(releasedDate!) : null,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'createdBy': createdBy,
-      'updatedBy': updatedBy,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'version': version,
+        'name': name,
+        'description': description,
+        'type': type.value,
+        'status': status.value,
+        'branch': branch,
+        'commitHash': commitHash,
+        'features': features,
+        'bugFixes': bugFixes,
+        'breakingChanges': breakingChanges,
+        'dependencies': dependencies,
+        'metadata': metadata,
+        'tags': tags,
+        'isPreRelease': isPreRelease,
+        'isDraft': isDraft,
+        'releaseNotes': releaseNotes,
+        'downloadUrl': downloadUrl,
+        'changelogUrl': changelogUrl,
+        'scheduledDate':
+            scheduledDate != null ? Timestamp.fromDate(scheduledDate!) : null,
+        'releasedDate':
+            releasedDate != null ? Timestamp.fromDate(releasedDate!) : null,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'createdBy': createdBy,
+        'updatedBy': updatedBy,
+      };
 
   Release copyWith({
     String? id,
@@ -148,40 +143,38 @@ class Release {
     DateTime? updatedAt,
     String? createdBy,
     String? updatedBy,
-  }) {
-    return Release(
-      id: id ?? this.id,
-      version: version ?? this.version,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      type: type ?? this.type,
-      status: status ?? this.status,
-      branch: branch ?? this.branch,
-      commitHash: commitHash ?? this.commitHash,
-      features: features ?? this.features,
-      bugFixes: bugFixes ?? this.bugFixes,
-      breakingChanges: breakingChanges ?? this.breakingChanges,
-      dependencies: dependencies ?? this.dependencies,
-      metadata: metadata ?? this.metadata,
-      tags: tags ?? this.tags,
-      isPreRelease: isPreRelease ?? this.isPreRelease,
-      isDraft: isDraft ?? this.isDraft,
-      releaseNotes: releaseNotes ?? this.releaseNotes,
-      downloadUrl: downloadUrl ?? this.downloadUrl,
-      changelogUrl: changelogUrl ?? this.changelogUrl,
-      scheduledDate: scheduledDate ?? this.scheduledDate,
-      releasedDate: releasedDate ?? this.releasedDate,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      createdBy: createdBy ?? this.createdBy,
-      updatedBy: updatedBy ?? this.updatedBy,
-    );
-  }
+  }) =>
+      Release(
+        id: id ?? this.id,
+        version: version ?? this.version,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        type: type ?? this.type,
+        status: status ?? this.status,
+        branch: branch ?? this.branch,
+        commitHash: commitHash ?? this.commitHash,
+        features: features ?? this.features,
+        bugFixes: bugFixes ?? this.bugFixes,
+        breakingChanges: breakingChanges ?? this.breakingChanges,
+        dependencies: dependencies ?? this.dependencies,
+        metadata: metadata ?? this.metadata,
+        tags: tags ?? this.tags,
+        isPreRelease: isPreRelease ?? this.isPreRelease,
+        isDraft: isDraft ?? this.isDraft,
+        releaseNotes: releaseNotes ?? this.releaseNotes,
+        downloadUrl: downloadUrl ?? this.downloadUrl,
+        changelogUrl: changelogUrl ?? this.changelogUrl,
+        scheduledDate: scheduledDate ?? this.scheduledDate,
+        releasedDate: releasedDate ?? this.releasedDate,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        createdBy: createdBy ?? this.createdBy,
+        updatedBy: updatedBy ?? this.updatedBy,
+      );
 
   @override
-  String toString() {
-    return 'Release(id: $id, version: $version, name: $name, status: $status)';
-  }
+  String toString() =>
+      'Release(id: $id, version: $version, name: $name, status: $status)';
 
   @override
   bool operator ==(Object other) {
@@ -208,12 +201,10 @@ enum ReleaseType {
   final String value;
   final String displayName;
 
-  static ReleaseType fromString(String value) {
-    return ReleaseType.values.firstWhere(
-      (type) => type.value == value,
-      orElse: () => ReleaseType.patch,
-    );
-  }
+  static ReleaseType fromString(String value) => ReleaseType.values.firstWhere(
+        (type) => type.value == value,
+        orElse: () => ReleaseType.patch,
+      );
 
   String get icon {
     switch (this) {
@@ -270,12 +261,11 @@ enum ReleaseStatus {
   final String value;
   final String displayName;
 
-  static ReleaseStatus fromString(String value) {
-    return ReleaseStatus.values.firstWhere(
-      (status) => status.value == value,
-      orElse: () => ReleaseStatus.draft,
-    );
-  }
+  static ReleaseStatus fromString(String value) =>
+      ReleaseStatus.values.firstWhere(
+        (status) => status.value == value,
+        orElse: () => ReleaseStatus.draft,
+      );
 
   String get icon {
     switch (this) {
@@ -322,23 +312,6 @@ enum ReleaseStatus {
 
 /// Модель для плана релиза
 class ReleasePlan {
-  final String id;
-  final String name;
-  final String description;
-  final String version;
-  final ReleaseType type;
-  final List<String> releaseIds;
-  final List<String> milestones;
-  final Map<String, dynamic> requirements;
-  final DateTime? targetDate;
-  final DateTime? actualDate;
-  final PlanStatus status;
-  final String? notes;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String createdBy;
-  final String updatedBy;
-
   const ReleasePlan({
     required this.id,
     required this.name,
@@ -358,51 +331,65 @@ class ReleasePlan {
     required this.updatedBy,
   });
 
-  factory ReleasePlan.fromMap(Map<String, dynamic> map) {
-    return ReleasePlan(
-      id: map['id'] ?? '',
-      name: map['name'] ?? '',
-      description: map['description'] ?? '',
-      version: map['version'] ?? '',
-      type: ReleaseType.fromString(map['type'] ?? 'patch'),
-      releaseIds: List<String>.from(map['releaseIds'] ?? []),
-      milestones: List<String>.from(map['milestones'] ?? []),
-      requirements: Map<String, dynamic>.from(map['requirements'] ?? {}),
-      targetDate: map['targetDate'] != null
-          ? (map['targetDate'] as Timestamp).toDate()
-          : null,
-      actualDate: map['actualDate'] != null
-          ? (map['actualDate'] as Timestamp).toDate()
-          : null,
-      status: PlanStatus.fromString(map['status'] ?? 'draft'),
-      notes: map['notes'],
-      createdAt: (map['createdAt'] as Timestamp).toDate(),
-      updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-      createdBy: map['createdBy'] ?? '',
-      updatedBy: map['updatedBy'] ?? '',
-    );
-  }
+  factory ReleasePlan.fromMap(Map<String, dynamic> map) => ReleasePlan(
+        id: map['id'] ?? '',
+        name: map['name'] ?? '',
+        description: map['description'] ?? '',
+        version: map['version'] ?? '',
+        type: ReleaseType.fromString(map['type'] ?? 'patch'),
+        releaseIds: List<String>.from(map['releaseIds'] ?? []),
+        milestones: List<String>.from(map['milestones'] ?? []),
+        requirements: Map<String, dynamic>.from(map['requirements'] ?? {}),
+        targetDate: map['targetDate'] != null
+            ? (map['targetDate'] as Timestamp).toDate()
+            : null,
+        actualDate: map['actualDate'] != null
+            ? (map['actualDate'] as Timestamp).toDate()
+            : null,
+        status: PlanStatus.fromString(map['status'] ?? 'draft'),
+        notes: map['notes'],
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        createdBy: map['createdBy'] ?? '',
+        updatedBy: map['updatedBy'] ?? '',
+      );
+  final String id;
+  final String name;
+  final String description;
+  final String version;
+  final ReleaseType type;
+  final List<String> releaseIds;
+  final List<String> milestones;
+  final Map<String, dynamic> requirements;
+  final DateTime? targetDate;
+  final DateTime? actualDate;
+  final PlanStatus status;
+  final String? notes;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String createdBy;
+  final String updatedBy;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'version': version,
-      'type': type.value,
-      'releaseIds': releaseIds,
-      'milestones': milestones,
-      'requirements': requirements,
-      'targetDate': targetDate != null ? Timestamp.fromDate(targetDate!) : null,
-      'actualDate': actualDate != null ? Timestamp.fromDate(actualDate!) : null,
-      'status': status.value,
-      'notes': notes,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'createdBy': createdBy,
-      'updatedBy': updatedBy,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'name': name,
+        'description': description,
+        'version': version,
+        'type': type.value,
+        'releaseIds': releaseIds,
+        'milestones': milestones,
+        'requirements': requirements,
+        'targetDate':
+            targetDate != null ? Timestamp.fromDate(targetDate!) : null,
+        'actualDate':
+            actualDate != null ? Timestamp.fromDate(actualDate!) : null,
+        'status': status.value,
+        'notes': notes,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'createdBy': createdBy,
+        'updatedBy': updatedBy,
+      };
 
   ReleasePlan copyWith({
     String? id,
@@ -421,31 +408,29 @@ class ReleasePlan {
     DateTime? updatedAt,
     String? createdBy,
     String? updatedBy,
-  }) {
-    return ReleasePlan(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      version: version ?? this.version,
-      type: type ?? this.type,
-      releaseIds: releaseIds ?? this.releaseIds,
-      milestones: milestones ?? this.milestones,
-      requirements: requirements ?? this.requirements,
-      targetDate: targetDate ?? this.targetDate,
-      actualDate: actualDate ?? this.actualDate,
-      status: status ?? this.status,
-      notes: notes ?? this.notes,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      createdBy: createdBy ?? this.createdBy,
-      updatedBy: updatedBy ?? this.updatedBy,
-    );
-  }
+  }) =>
+      ReleasePlan(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        version: version ?? this.version,
+        type: type ?? this.type,
+        releaseIds: releaseIds ?? this.releaseIds,
+        milestones: milestones ?? this.milestones,
+        requirements: requirements ?? this.requirements,
+        targetDate: targetDate ?? this.targetDate,
+        actualDate: actualDate ?? this.actualDate,
+        status: status ?? this.status,
+        notes: notes ?? this.notes,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        createdBy: createdBy ?? this.createdBy,
+        updatedBy: updatedBy ?? this.updatedBy,
+      );
 
   @override
-  String toString() {
-    return 'ReleasePlan(id: $id, name: $name, version: $version, status: $status)';
-  }
+  String toString() =>
+      'ReleasePlan(id: $id, name: $name, version: $version, status: $status)';
 
   @override
   bool operator ==(Object other) {
@@ -470,12 +455,10 @@ enum PlanStatus {
   final String value;
   final String displayName;
 
-  static PlanStatus fromString(String value) {
-    return PlanStatus.values.firstWhere(
-      (status) => status.value == value,
-      orElse: () => PlanStatus.draft,
-    );
-  }
+  static PlanStatus fromString(String value) => PlanStatus.values.firstWhere(
+        (status) => status.value == value,
+        orElse: () => PlanStatus.draft,
+      );
 
   String get icon {
     switch (this) {
@@ -510,22 +493,6 @@ enum PlanStatus {
 
 /// Модель для деплоя
 class Deployment {
-  final String id;
-  final String releaseId;
-  final String environment;
-  final DeploymentStatus status;
-  final String? buildUrl;
-  final String? deployUrl;
-  final Map<String, dynamic> config;
-  final List<String> logs;
-  final DateTime? startedAt;
-  final DateTime? completedAt;
-  final String? errorMessage;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String createdBy;
-  final String updatedBy;
-
   const Deployment({
     required this.id,
     required this.releaseId,
@@ -544,50 +511,61 @@ class Deployment {
     required this.updatedBy,
   });
 
-  factory Deployment.fromMap(Map<String, dynamic> map) {
-    return Deployment(
-      id: map['id'] ?? '',
-      releaseId: map['releaseId'] ?? '',
-      environment: map['environment'] ?? '',
-      status: DeploymentStatus.fromString(map['status'] ?? 'pending'),
-      buildUrl: map['buildUrl'],
-      deployUrl: map['deployUrl'],
-      config: Map<String, dynamic>.from(map['config'] ?? {}),
-      logs: List<String>.from(map['logs'] ?? []),
-      startedAt: map['startedAt'] != null
-          ? (map['startedAt'] as Timestamp).toDate()
-          : null,
-      completedAt: map['completedAt'] != null
-          ? (map['completedAt'] as Timestamp).toDate()
-          : null,
-      errorMessage: map['errorMessage'],
-      createdAt: (map['createdAt'] as Timestamp).toDate(),
-      updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-      createdBy: map['createdBy'] ?? '',
-      updatedBy: map['updatedBy'] ?? '',
-    );
-  }
+  factory Deployment.fromMap(Map<String, dynamic> map) => Deployment(
+        id: map['id'] ?? '',
+        releaseId: map['releaseId'] ?? '',
+        environment: map['environment'] ?? '',
+        status: DeploymentStatus.fromString(map['status'] ?? 'pending'),
+        buildUrl: map['buildUrl'],
+        deployUrl: map['deployUrl'],
+        config: Map<String, dynamic>.from(map['config'] ?? {}),
+        logs: List<String>.from(map['logs'] ?? []),
+        startedAt: map['startedAt'] != null
+            ? (map['startedAt'] as Timestamp).toDate()
+            : null,
+        completedAt: map['completedAt'] != null
+            ? (map['completedAt'] as Timestamp).toDate()
+            : null,
+        errorMessage: map['errorMessage'],
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+        createdBy: map['createdBy'] ?? '',
+        updatedBy: map['updatedBy'] ?? '',
+      );
+  final String id;
+  final String releaseId;
+  final String environment;
+  final DeploymentStatus status;
+  final String? buildUrl;
+  final String? deployUrl;
+  final Map<String, dynamic> config;
+  final List<String> logs;
+  final DateTime? startedAt;
+  final DateTime? completedAt;
+  final String? errorMessage;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String createdBy;
+  final String updatedBy;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'releaseId': releaseId,
-      'environment': environment,
-      'status': status.value,
-      'buildUrl': buildUrl,
-      'deployUrl': deployUrl,
-      'config': config,
-      'logs': logs,
-      'startedAt': startedAt != null ? Timestamp.fromDate(startedAt!) : null,
-      'completedAt':
-          completedAt != null ? Timestamp.fromDate(completedAt!) : null,
-      'errorMessage': errorMessage,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'createdBy': createdBy,
-      'updatedBy': updatedBy,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'releaseId': releaseId,
+        'environment': environment,
+        'status': status.value,
+        'buildUrl': buildUrl,
+        'deployUrl': deployUrl,
+        'config': config,
+        'logs': logs,
+        'startedAt': startedAt != null ? Timestamp.fromDate(startedAt!) : null,
+        'completedAt':
+            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'errorMessage': errorMessage,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'createdBy': createdBy,
+        'updatedBy': updatedBy,
+      };
 
   Deployment copyWith({
     String? id,
@@ -605,30 +583,28 @@ class Deployment {
     DateTime? updatedAt,
     String? createdBy,
     String? updatedBy,
-  }) {
-    return Deployment(
-      id: id ?? this.id,
-      releaseId: releaseId ?? this.releaseId,
-      environment: environment ?? this.environment,
-      status: status ?? this.status,
-      buildUrl: buildUrl ?? this.buildUrl,
-      deployUrl: deployUrl ?? this.deployUrl,
-      config: config ?? this.config,
-      logs: logs ?? this.logs,
-      startedAt: startedAt ?? this.startedAt,
-      completedAt: completedAt ?? this.completedAt,
-      errorMessage: errorMessage ?? this.errorMessage,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      createdBy: createdBy ?? this.createdBy,
-      updatedBy: updatedBy ?? this.updatedBy,
-    );
-  }
+  }) =>
+      Deployment(
+        id: id ?? this.id,
+        releaseId: releaseId ?? this.releaseId,
+        environment: environment ?? this.environment,
+        status: status ?? this.status,
+        buildUrl: buildUrl ?? this.buildUrl,
+        deployUrl: deployUrl ?? this.deployUrl,
+        config: config ?? this.config,
+        logs: logs ?? this.logs,
+        startedAt: startedAt ?? this.startedAt,
+        completedAt: completedAt ?? this.completedAt,
+        errorMessage: errorMessage ?? this.errorMessage,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        createdBy: createdBy ?? this.createdBy,
+        updatedBy: updatedBy ?? this.updatedBy,
+      );
 
   @override
-  String toString() {
-    return 'Deployment(id: $id, releaseId: $releaseId, environment: $environment, status: $status)';
-  }
+  String toString() =>
+      'Deployment(id: $id, releaseId: $releaseId, environment: $environment, status: $status)';
 
   @override
   bool operator ==(Object other) {
@@ -654,12 +630,11 @@ enum DeploymentStatus {
   final String value;
   final String displayName;
 
-  static DeploymentStatus fromString(String value) {
-    return DeploymentStatus.values.firstWhere(
-      (status) => status.value == value,
-      orElse: () => DeploymentStatus.pending,
-    );
-  }
+  static DeploymentStatus fromString(String value) =>
+      DeploymentStatus.values.firstWhere(
+        (status) => status.value == value,
+        orElse: () => DeploymentStatus.pending,
+      );
 
   String get icon {
     switch (this) {

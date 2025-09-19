@@ -1,15 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../models/admin_panel.dart';
-import '../models/user.dart';
 import '../models/booking.dart';
 import '../models/payment_extended.dart';
 import '../models/review.dart';
+import '../models/user.dart';
 
 /// Сервис для админ-панели
 class AdminPanelService {
-  static final AdminPanelService _instance = AdminPanelService._internal();
   factory AdminPanelService() => _instance;
   AdminPanelService._internal();
+  static final AdminPanelService _instance = AdminPanelService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -73,43 +74,43 @@ class AdminPanelService {
       final reviewsSnapshot = futures[4] as QuerySnapshot;
 
       // Подсчитываем статистику
-      int totalUsers = usersSnapshot.docs.length;
-      int totalSpecialists = specialistsSnapshot.docs.length;
-      int totalBookings = bookingsSnapshot.docs.length;
-      int totalPayments = paymentsSnapshot.docs.length;
-      int totalReviews = reviewsSnapshot.docs.length;
+      final int totalUsers = usersSnapshot.docs.length;
+      final int totalSpecialists = specialistsSnapshot.docs.length;
+      final int totalBookings = bookingsSnapshot.docs.length;
+      final int totalPayments = paymentsSnapshot.docs.length;
+      final int totalReviews = reviewsSnapshot.docs.length;
 
       // Активные пользователи (за последние 30 дней)
       final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
-      int activeUsers = usersSnapshot.docs.where((doc) {
+      final int activeUsers = usersSnapshot.docs.where((doc) {
         final lastLogin =
             (doc.data() as Map<String, dynamic>)['lastLogin'] as Timestamp?;
         return lastLogin != null && lastLogin.toDate().isAfter(thirtyDaysAgo);
       }).length;
 
       // Ожидающие бронирования
-      int pendingBookings = bookingsSnapshot.docs.where((doc) {
+      final int pendingBookings = bookingsSnapshot.docs.where((doc) {
         final status =
             (doc.data() as Map<String, dynamic>)['status'] as String?;
         return status == 'pending';
       }).length;
 
       // Ожидающие отзывы (не модерированные)
-      int pendingReviews = reviewsSnapshot.docs.where((doc) {
+      final int pendingReviews = reviewsSnapshot.docs.where((doc) {
         final isModerated =
             (doc.data() as Map<String, dynamic>)['isModerated'] as bool?;
         return isModerated != true;
       }).length;
 
       // Заблокированные пользователи
-      int bannedUsers = usersSnapshot.docs.where((doc) {
+      final int bannedUsers = usersSnapshot.docs.where((doc) {
         final isBanned =
             (doc.data() as Map<String, dynamic>)['isBanned'] as bool?;
-        return isBanned == true;
+        return isBanned ?? false;
       }).length;
 
       // Общий доход
-      double totalRevenue = 0.0;
+      var totalRevenue = 0;
       for (final doc in paymentsSnapshot.docs) {
         final data = doc.data() as Map<String, dynamic>;
         final status = data['status'] as String?;
@@ -139,62 +140,42 @@ class AdminPanelService {
   }
 
   /// Получить всех пользователей
-  Stream<List<AppUser>> getAllUsers() {
-    return _firestore
-        .collection('users')
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) => AppUser.fromDocument(doc)).toList();
-    });
-  }
+  Stream<List<AppUser>> getAllUsers() => _firestore
+      .collection('users')
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map(AppUser.fromDocument).toList());
 
   /// Получить всех специалистов
-  Stream<List<AppUser>> getAllSpecialists() {
-    return _firestore
-        .collection('users')
-        .where('role', isEqualTo: 'specialist')
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) => AppUser.fromDocument(doc)).toList();
-    });
-  }
+  Stream<List<AppUser>> getAllSpecialists() => _firestore
+      .collection('users')
+      .where('role', isEqualTo: 'specialist')
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map(AppUser.fromDocument).toList());
 
   /// Получить все бронирования
-  Stream<List<Booking>> getAllBookings() {
-    return _firestore
-        .collection('bookings')
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) => Booking.fromDocument(doc)).toList();
-    });
-  }
+  Stream<List<Booking>> getAllBookings() => _firestore
+      .collection('bookings')
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map(Booking.fromDocument).toList());
 
   /// Получить все платежи
-  Stream<List<PaymentExtended>> getAllPayments() {
-    return _firestore
-        .collection('payments')
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => PaymentExtended.fromDocument(doc))
-          .toList();
-    });
-  }
+  Stream<List<PaymentExtended>> getAllPayments() => _firestore
+      .collection('payments')
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(PaymentExtended.fromDocument).toList(),
+      );
 
   /// Получить все отзывы
-  Stream<List<Review>> getAllReviews() {
-    return _firestore
-        .collection('reviews')
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) => Review.fromDocument(doc)).toList();
-    });
-  }
+  Stream<List<Review>> getAllReviews() => _firestore
+      .collection('reviews')
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map(Review.fromDocument).toList());
 
   /// Заблокировать пользователя
   Future<bool> banUser(String userId, String adminId, String reason) async {
@@ -272,7 +253,10 @@ class AdminPanelService {
 
   /// Отменить верификацию специалиста
   Future<bool> unverifySpecialist(
-      String specialistId, String adminId, String reason) async {
+    String specialistId,
+    String adminId,
+    String reason,
+  ) async {
     try {
       await _firestore.collection('specialists').doc(specialistId).update({
         'isVerified': false,
@@ -298,7 +282,11 @@ class AdminPanelService {
 
   /// Модерировать отзыв
   Future<bool> moderateReview(
-      String reviewId, String adminId, bool approved, String? comment) async {
+    String reviewId,
+    String adminId,
+    bool approved,
+    String? comment,
+  ) async {
     try {
       await _firestore.collection('reviews').doc(reviewId).update({
         'isModerated': true,
@@ -326,7 +314,10 @@ class AdminPanelService {
 
   /// Отменить бронирование
   Future<bool> cancelBooking(
-      String bookingId, String adminId, String reason) async {
+    String bookingId,
+    String adminId,
+    String reason,
+  ) async {
     try {
       await _firestore.collection('bookings').doc(bookingId).update({
         'status': 'cancelled',
@@ -351,29 +342,22 @@ class AdminPanelService {
   }
 
   /// Получить действия администратора
-  Stream<List<AdminAction>> getAdminActions({int limit = 100}) {
-    return _firestore
-        .collection('admin_actions')
-        .orderBy('timestamp', descending: true)
-        .limit(limit)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) => AdminAction.fromDocument(doc)).toList();
-    });
-  }
+  Stream<List<AdminAction>> getAdminActions({int limit = 100}) => _firestore
+      .collection('admin_actions')
+      .orderBy('timestamp', descending: true)
+      .limit(limit)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map(AdminAction.fromDocument).toList());
 
   /// Получить уведомления администратора
-  Stream<List<AdminNotification>> getAdminNotifications() {
-    return _firestore
-        .collection('admin_notifications')
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => AdminNotification.fromDocument(doc))
-          .toList();
-    });
-  }
+  Stream<List<AdminNotification>> getAdminNotifications() => _firestore
+      .collection('admin_notifications')
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) =>
+            snapshot.docs.map(AdminNotification.fromDocument).toList(),
+      );
 
   /// Отметить уведомление как прочитанное
   Future<bool> markNotificationAsRead(String notificationId) async {
@@ -408,7 +392,9 @@ class AdminPanelService {
 
   /// Обновить настройки админ-панели
   Future<bool> updateAdminSettings(
-      AdminSettings settings, String adminId) async {
+    AdminSettings settings,
+    String adminId,
+  ) async {
     try {
       final updatedSettings = settings.copyWith(lastUpdated: DateTime.now());
       await _firestore
@@ -508,16 +494,20 @@ class AdminPanelService {
       final exportData = <String, dynamic>{};
 
       for (final collection in collections) {
-        Query query = _firestore.collection(collection);
+        var query = _firestore.collection(collection);
 
         if (startDate != null) {
-          query = query.where('createdAt',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+          query = query.where(
+            'createdAt',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+          );
         }
 
         if (endDate != null) {
-          query = query.where('createdAt',
-              isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+          query = query.where(
+            'createdAt',
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate),
+          );
         }
 
         final snapshot = await query.get();

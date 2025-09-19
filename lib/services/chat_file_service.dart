@@ -1,9 +1,11 @@
 import 'dart:io';
 import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:event_marketplace_app/core/feature_flags.dart';
-import 'package:event_marketplace_app/core/app_constants.dart';
+
+import '../core/app_constants.dart';
+import '../core/feature_flags.dart';
 
 /// Сервис для работы с файлами в чате
 class ChatFileService {
@@ -51,7 +53,8 @@ class ChatFileService {
       if (thumbnailPath != null) {
         final thumbnailFile = File(thumbnailPath);
         final thumbnailRef = _storage.ref().child(
-            'chat_files/$chatId/thumbnails/${timestamp}_${fileName.split('.').first}_thumb.jpg');
+              'chat_files/$chatId/thumbnails/${timestamp}_${fileName.split('.').first}_thumb.jpg',
+            );
         final thumbnailUploadTask = thumbnailRef.putFile(thumbnailFile);
         final thumbnailSnapshot = await thumbnailUploadTask;
         thumbnailUrl = await thumbnailSnapshot.ref.getDownloadURL();
@@ -102,7 +105,8 @@ class ChatFileService {
       String? thumbnailUrl;
       if (thumbnailBytes != null) {
         final thumbnailRef = _storage.ref().child(
-            'chat_files/$chatId/thumbnails/${timestamp}_${fileName.split('.').first}_thumb.jpg');
+              'chat_files/$chatId/thumbnails/${timestamp}_${fileName.split('.').first}_thumb.jpg',
+            );
         final thumbnailUploadTask = thumbnailRef.putData(thumbnailBytes);
         final thumbnailSnapshot = await thumbnailUploadTask;
         thumbnailUrl = await thumbnailSnapshot.ref.getDownloadURL();
@@ -171,14 +175,12 @@ class ChatFileService {
   }
 
   /// Получить поддерживаемые типы файлов
-  Map<String, List<String>> getSupportedFileTypes() {
-    return {
-      'Изображения': AppConstants.supportedImageFormats,
-      'Видео': AppConstants.supportedVideoFormats,
-      'Аудио': AppConstants.supportedAudioFormats,
-      'Документы': AppConstants.supportedDocumentFormats,
-    };
-  }
+  Map<String, List<String>> getSupportedFileTypes() => {
+        'Изображения': AppConstants.supportedImageFormats,
+        'Видео': AppConstants.supportedVideoFormats,
+        'Аудио': AppConstants.supportedAudioFormats,
+        'Документы': AppConstants.supportedDocumentFormats,
+      };
 
   /// Получить максимальный размер файла для типа
   int getMaxFileSizeForType(String fileName) {
@@ -228,6 +230,6 @@ class ChatFileService {
 
     // TODO: Реализовать отслеживание прогресса загрузки
     // Пока возвращаем заглушку
-    return Stream.value(1.0);
+    return Stream.value(1);
   }
 }

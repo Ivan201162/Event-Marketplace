@@ -54,24 +54,6 @@ extension UserRoleExtension on UserRole {
 
 /// Модель пользователя
 class AppUser {
-  final String id;
-  final String email;
-  final String? displayName;
-  final String? photoURL;
-  final UserRole role;
-  final DateTime createdAt;
-  final DateTime? lastLoginAt;
-  final bool isActive;
-  final String? socialProvider; // 'google', 'vk', 'email'
-  final String? socialId; // ID в социальной сети
-  final Map<String, dynamic>? additionalData;
-
-  // Семейная информация
-  final MaritalStatus? maritalStatus;
-  final DateTime? weddingDate;
-  final String? partnerName;
-  final bool anniversaryRemindersEnabled;
-
   const AppUser({
     required this.id,
     required this.email,
@@ -132,41 +114,55 @@ class AppUser {
     UserRole role = UserRole.customer,
     String? socialProvider,
     String? socialId,
-  }) {
-    return AppUser(
-      id: uid,
-      email: email,
-      displayName: displayName,
-      photoURL: photoURL,
-      role: role,
-      createdAt: DateTime.now(),
-      lastLoginAt: DateTime.now(),
-      socialProvider: socialProvider,
-      socialId: socialId,
-    );
-  }
+  }) =>
+      AppUser(
+        id: uid,
+        email: email,
+        displayName: displayName,
+        photoURL: photoURL,
+        role: role,
+        createdAt: DateTime.now(),
+        lastLoginAt: DateTime.now(),
+        socialProvider: socialProvider,
+        socialId: socialId,
+      );
+  final String id;
+  final String email;
+  final String? displayName;
+  final String? photoURL;
+  final UserRole role;
+  final DateTime createdAt;
+  final DateTime? lastLoginAt;
+  final bool isActive;
+  final String? socialProvider; // 'google', 'vk', 'email'
+  final String? socialId; // ID в социальной сети
+  final Map<String, dynamic>? additionalData;
+
+  // Семейная информация
+  final MaritalStatus? maritalStatus;
+  final DateTime? weddingDate;
+  final String? partnerName;
+  final bool anniversaryRemindersEnabled;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'email': email,
-      'displayName': displayName,
-      'photoURL': photoURL,
-      'role': role.name,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'lastLoginAt':
-          lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
-      'isActive': isActive,
-      'socialProvider': socialProvider,
-      'socialId': socialId,
-      'additionalData': additionalData,
-      'maritalStatus': maritalStatus?.name,
-      'weddingDate':
-          weddingDate != null ? Timestamp.fromDate(weddingDate!) : null,
-      'partnerName': partnerName,
-      'anniversaryRemindersEnabled': anniversaryRemindersEnabled,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'email': email,
+        'displayName': displayName,
+        'photoURL': photoURL,
+        'role': role.name,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'lastLoginAt':
+            lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
+        'isActive': isActive,
+        'socialProvider': socialProvider,
+        'socialId': socialId,
+        'additionalData': additionalData,
+        'maritalStatus': maritalStatus?.name,
+        'weddingDate':
+            weddingDate != null ? Timestamp.fromDate(weddingDate!) : null,
+        'partnerName': partnerName,
+        'anniversaryRemindersEnabled': anniversaryRemindersEnabled,
+      };
 
   /// Копировать с изменениями
   AppUser copyWith({
@@ -185,26 +181,25 @@ class AppUser {
     DateTime? weddingDate,
     String? partnerName,
     bool? anniversaryRemindersEnabled,
-  }) {
-    return AppUser(
-      id: id ?? this.id,
-      email: email ?? this.email,
-      displayName: displayName ?? this.displayName,
-      photoURL: photoURL ?? this.photoURL,
-      role: role ?? this.role,
-      createdAt: createdAt ?? this.createdAt,
-      lastLoginAt: lastLoginAt ?? this.lastLoginAt,
-      isActive: isActive ?? this.isActive,
-      socialProvider: socialProvider ?? this.socialProvider,
-      socialId: socialId ?? this.socialId,
-      additionalData: additionalData ?? this.additionalData,
-      maritalStatus: maritalStatus ?? this.maritalStatus,
-      weddingDate: weddingDate ?? this.weddingDate,
-      partnerName: partnerName ?? this.partnerName,
-      anniversaryRemindersEnabled:
-          anniversaryRemindersEnabled ?? this.anniversaryRemindersEnabled,
-    );
-  }
+  }) =>
+      AppUser(
+        id: id ?? this.id,
+        email: email ?? this.email,
+        displayName: displayName ?? this.displayName,
+        photoURL: photoURL ?? this.photoURL,
+        role: role ?? this.role,
+        createdAt: createdAt ?? this.createdAt,
+        lastLoginAt: lastLoginAt ?? this.lastLoginAt,
+        isActive: isActive ?? this.isActive,
+        socialProvider: socialProvider ?? this.socialProvider,
+        socialId: socialId ?? this.socialId,
+        additionalData: additionalData ?? this.additionalData,
+        maritalStatus: maritalStatus ?? this.maritalStatus,
+        weddingDate: weddingDate ?? this.weddingDate,
+        partnerName: partnerName ?? this.partnerName,
+        anniversaryRemindersEnabled:
+            anniversaryRemindersEnabled ?? this.anniversaryRemindersEnabled,
+      );
 
   /// Получить отображаемое имя
   String get displayNameOrEmail => displayName ?? email.split('@').first;
@@ -273,7 +268,7 @@ class AppUser {
   }
 
   /// Парсинг роли из строки
-  static UserRole _parseUserRole(dynamic roleData) {
+  static UserRole _parseUserRole(roleData) {
     if (roleData == null) return UserRole.customer;
 
     final roleString = roleData.toString().toLowerCase();
@@ -300,7 +295,6 @@ class AppUser {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'AppUser(id: $id, email: $email, role: $role, displayName: $displayName)';
-  }
+  String toString() =>
+      'AppUser(id: $id, email: $email, role: $role, displayName: $displayName)';
 }

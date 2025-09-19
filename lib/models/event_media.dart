@@ -19,28 +19,6 @@ enum MediaStatus {
 
 /// Медиафайл мероприятия
 class EventMedia {
-  final String id;
-  final String eventId;
-  final String uploadedBy;
-  final String uploadedByName;
-  final String? uploadedByPhoto;
-  final String fileName;
-  final String fileUrl;
-  final String? thumbnailUrl;
-  final MediaType type;
-  final MediaStatus status;
-  final int fileSize;
-  final String? mimeType;
-  final Duration? duration; // Для видео/аудио
-  final Map<String, dynamic>? metadata;
-  final List<String> tags;
-  final bool isPublic;
-  final bool isFeatured;
-  final int likesCount;
-  final List<String> likedBy;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
   const EventMedia({
     required this.id,
     required this.eventId,
@@ -66,66 +44,83 @@ class EventMedia {
   });
 
   /// Создать из Map
-  factory EventMedia.fromMap(Map<String, dynamic> data) {
-    return EventMedia(
-      id: data['id'] ?? '',
-      eventId: data['eventId'] ?? '',
-      uploadedBy: data['uploadedBy'] ?? '',
-      uploadedByName: data['uploadedByName'] ?? '',
-      uploadedByPhoto: data['uploadedByPhoto'],
-      fileName: data['fileName'] ?? '',
-      fileUrl: data['fileUrl'] ?? '',
-      thumbnailUrl: data['thumbnailUrl'],
-      type: MediaType.values.firstWhere(
-        (e) => e.name == data['type'],
-        orElse: () => MediaType.image,
-      ),
-      status: MediaStatus.values.firstWhere(
-        (e) => e.name == data['status'],
-        orElse: () => MediaStatus.ready,
-      ),
-      fileSize: data['fileSize'] ?? 0,
-      mimeType: data['mimeType'],
-      duration: data['duration'] != null
-          ? Duration(milliseconds: data['duration'])
-          : null,
-      metadata: data['metadata'],
-      tags: List<String>.from(data['tags'] ?? []),
-      isPublic: data['isPublic'] ?? true,
-      isFeatured: data['isFeatured'] ?? false,
-      likesCount: data['likesCount'] ?? 0,
-      likedBy: List<String>.from(data['likedBy'] ?? []),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-    );
-  }
+  factory EventMedia.fromMap(Map<String, dynamic> data) => EventMedia(
+        id: data['id'] ?? '',
+        eventId: data['eventId'] ?? '',
+        uploadedBy: data['uploadedBy'] ?? '',
+        uploadedByName: data['uploadedByName'] ?? '',
+        uploadedByPhoto: data['uploadedByPhoto'],
+        fileName: data['fileName'] ?? '',
+        fileUrl: data['fileUrl'] ?? '',
+        thumbnailUrl: data['thumbnailUrl'],
+        type: MediaType.values.firstWhere(
+          (e) => e.name == data['type'],
+          orElse: () => MediaType.image,
+        ),
+        status: MediaStatus.values.firstWhere(
+          (e) => e.name == data['status'],
+          orElse: () => MediaStatus.ready,
+        ),
+        fileSize: data['fileSize'] ?? 0,
+        mimeType: data['mimeType'],
+        duration: data['duration'] != null
+            ? Duration(milliseconds: data['duration'])
+            : null,
+        metadata: data['metadata'],
+        tags: List<String>.from(data['tags'] ?? []),
+        isPublic: data['isPublic'] ?? true,
+        isFeatured: data['isFeatured'] ?? false,
+        likesCount: data['likesCount'] ?? 0,
+        likedBy: List<String>.from(data['likedBy'] ?? []),
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      );
+  final String id;
+  final String eventId;
+  final String uploadedBy;
+  final String uploadedByName;
+  final String? uploadedByPhoto;
+  final String fileName;
+  final String fileUrl;
+  final String? thumbnailUrl;
+  final MediaType type;
+  final MediaStatus status;
+  final int fileSize;
+  final String? mimeType;
+  final Duration? duration; // Для видео/аудио
+  final Map<String, dynamic>? metadata;
+  final List<String> tags;
+  final bool isPublic;
+  final bool isFeatured;
+  final int likesCount;
+  final List<String> likedBy;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'eventId': eventId,
-      'uploadedBy': uploadedBy,
-      'uploadedByName': uploadedByName,
-      'uploadedByPhoto': uploadedByPhoto,
-      'fileName': fileName,
-      'fileUrl': fileUrl,
-      'thumbnailUrl': thumbnailUrl,
-      'type': type.name,
-      'status': status.name,
-      'fileSize': fileSize,
-      'mimeType': mimeType,
-      'duration': duration?.inMilliseconds,
-      'metadata': metadata,
-      'tags': tags,
-      'isPublic': isPublic,
-      'isFeatured': isFeatured,
-      'likesCount': likesCount,
-      'likedBy': likedBy,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'eventId': eventId,
+        'uploadedBy': uploadedBy,
+        'uploadedByName': uploadedByName,
+        'uploadedByPhoto': uploadedByPhoto,
+        'fileName': fileName,
+        'fileUrl': fileUrl,
+        'thumbnailUrl': thumbnailUrl,
+        'type': type.name,
+        'status': status.name,
+        'fileSize': fileSize,
+        'mimeType': mimeType,
+        'duration': duration?.inMilliseconds,
+        'metadata': metadata,
+        'tags': tags,
+        'isPublic': isPublic,
+        'isFeatured': isFeatured,
+        'likesCount': likesCount,
+        'likedBy': likedBy,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   /// Создать копию с изменениями
   EventMedia copyWith({
@@ -150,36 +145,33 @@ class EventMedia {
     List<String>? likedBy,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) {
-    return EventMedia(
-      id: id ?? this.id,
-      eventId: eventId ?? this.eventId,
-      uploadedBy: uploadedBy ?? this.uploadedBy,
-      uploadedByName: uploadedByName ?? this.uploadedByName,
-      uploadedByPhoto: uploadedByPhoto ?? this.uploadedByPhoto,
-      fileName: fileName ?? this.fileName,
-      fileUrl: fileUrl ?? this.fileUrl,
-      thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-      type: type ?? this.type,
-      status: status ?? this.status,
-      fileSize: fileSize ?? this.fileSize,
-      mimeType: mimeType ?? this.mimeType,
-      duration: duration ?? this.duration,
-      metadata: metadata ?? this.metadata,
-      tags: tags ?? this.tags,
-      isPublic: isPublic ?? this.isPublic,
-      isFeatured: isFeatured ?? this.isFeatured,
-      likesCount: likesCount ?? this.likesCount,
-      likedBy: likedBy ?? this.likedBy,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
+  }) =>
+      EventMedia(
+        id: id ?? this.id,
+        eventId: eventId ?? this.eventId,
+        uploadedBy: uploadedBy ?? this.uploadedBy,
+        uploadedByName: uploadedByName ?? this.uploadedByName,
+        uploadedByPhoto: uploadedByPhoto ?? this.uploadedByPhoto,
+        fileName: fileName ?? this.fileName,
+        fileUrl: fileUrl ?? this.fileUrl,
+        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+        type: type ?? this.type,
+        status: status ?? this.status,
+        fileSize: fileSize ?? this.fileSize,
+        mimeType: mimeType ?? this.mimeType,
+        duration: duration ?? this.duration,
+        metadata: metadata ?? this.metadata,
+        tags: tags ?? this.tags,
+        isPublic: isPublic ?? this.isPublic,
+        isFeatured: isFeatured ?? this.isFeatured,
+        likesCount: likesCount ?? this.likesCount,
+        likedBy: likedBy ?? this.likedBy,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Проверить, лайкнул ли пользователь файл
-  bool isLikedBy(String userId) {
-    return likedBy.contains(userId);
-  }
+  bool isLikedBy(String userId) => likedBy.contains(userId);
 
   /// Получить размер файла в читаемом формате
   String get fileSizeFormatted {
@@ -223,14 +215,6 @@ class EventMedia {
 
 /// Коллекция медиафайлов мероприятия
 class EventMediaCollection {
-  final String eventId;
-  final List<EventMedia> media;
-  final int totalCount;
-  final int publicCount;
-  final int featuredCount;
-  final Map<MediaType, int> typeCounts;
-  final DateTime lastUpdated;
-
   const EventMediaCollection({
     required this.eventId,
     required this.media,
@@ -240,31 +224,31 @@ class EventMediaCollection {
     required this.typeCounts,
     required this.lastUpdated,
   });
+  final String eventId;
+  final List<EventMedia> media;
+  final int totalCount;
+  final int publicCount;
+  final int featuredCount;
+  final Map<MediaType, int> typeCounts;
+  final DateTime lastUpdated;
 
   /// Получить медиафайлы по типу
-  List<EventMedia> getMediaByType(MediaType type) {
-    return media.where((m) => m.type == type).toList();
-  }
+  List<EventMedia> getMediaByType(MediaType type) =>
+      media.where((m) => m.type == type).toList();
 
   /// Получить публичные медиафайлы
-  List<EventMedia> get publicMedia {
-    return media.where((m) => m.isPublic).toList();
-  }
+  List<EventMedia> get publicMedia => media.where((m) => m.isPublic).toList();
 
   /// Получить рекомендуемые медиафайлы
-  List<EventMedia> get featuredMedia {
-    return media.where((m) => m.isFeatured).toList();
-  }
+  List<EventMedia> get featuredMedia =>
+      media.where((m) => m.isFeatured).toList();
 
   /// Получить медиафайлы пользователя
-  List<EventMedia> getUserMedia(String userId) {
-    return media.where((m) => m.uploadedBy == userId).toList();
-  }
+  List<EventMedia> getUserMedia(String userId) =>
+      media.where((m) => m.uploadedBy == userId).toList();
 
   /// Получить общий размер всех файлов
-  int get totalSize {
-    return media.fold(0, (total, m) => total + m.fileSize);
-  }
+  int get totalSize => media.fold(0, (total, m) => total + m.fileSize);
 
   /// Получить общий размер в читаемом формате
   String get totalSizeFormatted {

@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:event_marketplace_app/core/feature_flags.dart';
+import '../core/feature_flags.dart';
 
 /// Сервис для режима гостя мероприятия
 class GuestModeService {
@@ -33,9 +33,7 @@ class GuestModeService {
         status: GuestAccessStatus.pending,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        activatedAt: null,
         expiresAt: expiresAt ?? DateTime.now().add(const Duration(days: 30)),
-        lastAccessedAt: null,
         accessCount: 0,
         metadata: {},
       );
@@ -127,7 +125,7 @@ class GuestModeService {
         throw Exception('Мероприятие не найдено');
       }
 
-      final eventData = eventDoc.data()!;
+      final eventData = eventDoc.data();
 
       // Обновляем статистику доступа
       await _updateAccessStats(snapshot.docs.first.id);
@@ -156,7 +154,7 @@ class GuestModeService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => GuestAccess.fromDocument(doc)).toList();
+      return snapshot.docs.map(GuestAccess.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения списка гостевых доступов: $e');
     }
@@ -196,7 +194,7 @@ class GuestModeService {
     final random = DateTime.now().millisecondsSinceEpoch;
     final code = StringBuffer();
 
-    for (int i = 0; i < 8; i++) {
+    for (var i = 0; i < 8; i++) {
       code.write(chars[(random + i) % chars.length]);
     }
 
@@ -204,7 +202,9 @@ class GuestModeService {
   }
 
   Future<void> _sendInvitation(
-      String guestAccessId, GuestAccess guestAccess) async {
+    String guestAccessId,
+    GuestAccess guestAccess,
+  ) async {
     try {
       // TODO: Отправить email с кодом доступа
       // TODO: Отправить SMS с кодом доступа (если указан телефон)
@@ -228,23 +228,6 @@ class GuestModeService {
 
 /// Модель гостевого доступа
 class GuestAccess {
-  final String id;
-  final String eventId;
-  final String organizerId;
-  final String guestName;
-  final String guestEmail;
-  final String? guestPhone;
-  final String? invitationMessage;
-  final String accessCode;
-  final GuestAccessStatus status;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final DateTime? activatedAt;
-  final DateTime expiresAt;
-  final DateTime? lastAccessedAt;
-  final int accessCount;
-  final Map<String, dynamic> metadata;
-
   const GuestAccess({
     required this.id,
     required this.eventId,
@@ -293,29 +276,43 @@ class GuestAccess {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
+  final String id;
+  final String eventId;
+  final String organizerId;
+  final String guestName;
+  final String guestEmail;
+  final String? guestPhone;
+  final String? invitationMessage;
+  final String accessCode;
+  final GuestAccessStatus status;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? activatedAt;
+  final DateTime expiresAt;
+  final DateTime? lastAccessedAt;
+  final int accessCount;
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'eventId': eventId,
-      'organizerId': organizerId,
-      'guestName': guestName,
-      'guestEmail': guestEmail,
-      'guestPhone': guestPhone,
-      'invitationMessage': invitationMessage,
-      'accessCode': accessCode,
-      'status': status.name,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'activatedAt':
-          activatedAt != null ? Timestamp.fromDate(activatedAt!) : null,
-      'expiresAt': Timestamp.fromDate(expiresAt),
-      'lastAccessedAt':
-          lastAccessedAt != null ? Timestamp.fromDate(lastAccessedAt!) : null,
-      'accessCount': accessCount,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'eventId': eventId,
+        'organizerId': organizerId,
+        'guestName': guestName,
+        'guestEmail': guestEmail,
+        'guestPhone': guestPhone,
+        'invitationMessage': invitationMessage,
+        'accessCode': accessCode,
+        'status': status.name,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'activatedAt':
+            activatedAt != null ? Timestamp.fromDate(activatedAt!) : null,
+        'expiresAt': Timestamp.fromDate(expiresAt),
+        'lastAccessedAt':
+            lastAccessedAt != null ? Timestamp.fromDate(lastAccessedAt!) : null,
+        'accessCount': accessCount,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   GuestAccess copyWith({
@@ -335,39 +332,29 @@ class GuestAccess {
     DateTime? lastAccessedAt,
     int? accessCount,
     Map<String, dynamic>? metadata,
-  }) {
-    return GuestAccess(
-      id: id ?? this.id,
-      eventId: eventId ?? this.eventId,
-      organizerId: organizerId ?? this.organizerId,
-      guestName: guestName ?? this.guestName,
-      guestEmail: guestEmail ?? this.guestEmail,
-      guestPhone: guestPhone ?? this.guestPhone,
-      invitationMessage: invitationMessage ?? this.invitationMessage,
-      accessCode: accessCode ?? this.accessCode,
-      status: status ?? this.status,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      activatedAt: activatedAt ?? this.activatedAt,
-      expiresAt: expiresAt ?? this.expiresAt,
-      lastAccessedAt: lastAccessedAt ?? this.lastAccessedAt,
-      accessCount: accessCount ?? this.accessCount,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      GuestAccess(
+        id: id ?? this.id,
+        eventId: eventId ?? this.eventId,
+        organizerId: organizerId ?? this.organizerId,
+        guestName: guestName ?? this.guestName,
+        guestEmail: guestEmail ?? this.guestEmail,
+        guestPhone: guestPhone ?? this.guestPhone,
+        invitationMessage: invitationMessage ?? this.invitationMessage,
+        accessCode: accessCode ?? this.accessCode,
+        status: status ?? this.status,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        activatedAt: activatedAt ?? this.activatedAt,
+        expiresAt: expiresAt ?? this.expiresAt,
+        lastAccessedAt: lastAccessedAt ?? this.lastAccessedAt,
+        accessCount: accessCount ?? this.accessCount,
+        metadata: metadata ?? this.metadata,
+      );
 }
 
 /// Информация о мероприятии для гостя
 class GuestEventInfo {
-  final String eventId;
-  final String eventTitle;
-  final String eventDescription;
-  final DateTime eventDate;
-  final String eventLocation;
-  final String organizerName;
-  final GuestAccess guestAccess;
-  final Map<String, dynamic> eventDetails;
-
   const GuestEventInfo({
     required this.eventId,
     required this.eventTitle,
@@ -378,6 +365,14 @@ class GuestEventInfo {
     required this.guestAccess,
     required this.eventDetails,
   });
+  final String eventId;
+  final String eventTitle;
+  final String eventDescription;
+  final DateTime eventDate;
+  final String eventLocation;
+  final String organizerName;
+  final GuestAccess guestAccess;
+  final Map<String, dynamic> eventDetails;
 }
 
 /// Статусы гостевого доступа

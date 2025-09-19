@@ -1,93 +1,68 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 
-/// Типы взаимодействий с рекомендациями
+/// Тип взаимодействия с рекомендацией
 enum RecommendationInteractionType {
-  view,
-  click,
-  like,
-  dislike,
-  share,
-  bookmark,
-  contact,
-  book,
+  viewed,
+  clicked,
+  saved,
+  dismissed,
 }
 
 /// Модель взаимодействия с рекомендацией
+@immutable
 class RecommendationInteraction {
-  final String id;
-  final String userId;
-  final String specialistId;
-  final RecommendationInteractionType type;
-  final DateTime createdAt;
-  final Map<String, dynamic> metadata;
-
   const RecommendationInteraction({
-    required this.id,
-    required this.userId,
+    required this.recommendationId,
     required this.specialistId,
     required this.type,
-    required this.createdAt,
-    this.metadata = const {},
+    required this.timestamp,
   });
 
-  /// Создать из документа Firestore
-  factory RecommendationInteraction.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data() as Map<String, dynamic>;
+  final String recommendationId;
+  final String specialistId;
+  final RecommendationInteractionType type;
+  final DateTime timestamp;
 
-    return RecommendationInteraction(
-      id: doc.id,
-      userId: data['userId'] as String,
-      specialistId: data['specialistId'] as String,
-      type: RecommendationInteractionType.values.firstWhere(
-        (e) => e.name == data['type'],
-        orElse: () => RecommendationInteractionType.view,
-      ),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-    );
-  }
-
-  /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() {
     return {
-      'userId': userId,
+      'recommendationId': recommendationId,
       'specialistId': specialistId,
       'type': type.name,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'metadata': metadata,
+      'timestamp': timestamp.toIso8601String(),
     };
   }
 
-  /// Создать копию с обновлёнными полями
-  RecommendationInteraction copyWith({
-    String? id,
-    String? userId,
-    String? specialistId,
-    RecommendationInteractionType? type,
-    DateTime? createdAt,
-    Map<String, dynamic>? metadata,
-  }) {
+  factory RecommendationInteraction.fromMap(Map<String, dynamic> map) {
     return RecommendationInteraction(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      specialistId: specialistId ?? this.specialistId,
-      type: type ?? this.type,
-      createdAt: createdAt ?? this.createdAt,
-      metadata: metadata ?? this.metadata,
+      recommendationId: map['recommendationId'] as String,
+      specialistId: map['specialistId'] as String,
+      type: RecommendationInteractionType.values.firstWhere(
+        (e) => e.name == map['type'],
+        orElse: () => RecommendationInteractionType.viewed,
+      ),
+      timestamp: DateTime.parse(map['timestamp'] as String),
     );
   }
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
-    return other is RecommendationInteraction && other.id == id;
+
+    return other is RecommendationInteraction &&
+        other.recommendationId == recommendationId &&
+        other.specialistId == specialistId &&
+        other.type == type &&
+        other.timestamp == timestamp;
   }
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode =>
+      recommendationId.hashCode ^
+      specialistId.hashCode ^
+      type.hashCode ^
+      timestamp.hashCode;
 
   @override
-  String toString() {
-    return 'RecommendationInteraction(id: $id, userId: $userId, specialistId: $specialistId, type: $type)';
-  }
+  String toString() =>
+      'RecommendationInteraction(recommendationId: $recommendationId, specialistId: $specialistId, type: $type, timestamp: $timestamp)';
 }

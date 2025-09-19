@@ -1,16 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../models/cache_item.dart';
 
 /// Сервис кэширования и оптимизации
 class CacheService {
-  static final CacheService _instance = CacheService._internal();
   factory CacheService() => _instance;
   CacheService._internal();
+  static final CacheService _instance = CacheService._internal();
 
   final Map<String, CacheItem> _memoryCache = {};
   final Map<String, int> _accessCount = {};
@@ -55,7 +57,7 @@ class CacheService {
   }
 
   /// Получить элемент из кэша
-  Future<T?> get<T>(String key, {T Function(dynamic)? fromJson}) async {
+  Future<T?> get<T>(String key, {T Function()? fromJson}) async {
     if (!_isInitialized) await initialize();
     if (!_config.enabled) return null;
 
@@ -207,7 +209,8 @@ class CacheService {
       if (_config.enableLogging) {
         if (kDebugMode) {
           print(
-              'Cache cleared${type != null ? ' (type: ${type.displayName})' : ''}');
+            'Cache cleared${type != null ? ' (type: ${type.displayName})' : ''}',
+          );
         }
       }
     } catch (e) {
@@ -275,7 +278,9 @@ class CacheService {
 
   /// Получить элемент с диска
   Future<CacheItem<T>?> _getFromDisk<T>(
-      String key, T Function(dynamic)? fromJson) async {
+    String key,
+    T Function()? fromJson,
+  ) async {
     try {
       final file = File('${_cacheDirectory!.path}/app_cache/$key.json');
       if (!await file.exists()) return null;
@@ -438,12 +443,16 @@ class CacheService {
 
     switch (_config.evictionPolicy) {
       case CacheEvictionPolicy.lru:
-        items.sort((a, b) => (a.value.lastAccessed ?? a.value.createdAt)
-            .compareTo(b.value.lastAccessed ?? b.value.createdAt));
+        items.sort(
+          (a, b) => (a.value.lastAccessed ?? a.value.createdAt)
+              .compareTo(b.value.lastAccessed ?? b.value.createdAt),
+        );
         break;
       case CacheEvictionPolicy.lfu:
-        items.sort((a, b) =>
-            (_accessCount[a.key] ?? 0).compareTo(_accessCount[b.key] ?? 0));
+        items.sort(
+          (a, b) =>
+              (_accessCount[a.key] ?? 0).compareTo(_accessCount[b.key] ?? 0),
+        );
         break;
       case CacheEvictionPolicy.fifo:
         items.sort((a, b) => a.value.createdAt.compareTo(b.value.createdAt));
@@ -458,7 +467,7 @@ class CacheService {
 
     // Удаляем 20% элементов
     final itemsToRemove = (items.length * 0.2).ceil();
-    for (int i = 0; i < itemsToRemove && i < items.length; i++) {
+    for (var i = 0; i < itemsToRemove && i < items.length; i++) {
       await remove(items[i].key);
     }
   }
@@ -508,7 +517,7 @@ class CacheService {
   Future<int> getCacheSize() async {
     if (!_isInitialized) await initialize();
 
-    int totalSize = 0;
+    var totalSize = 0;
 
     // Размер в памяти
     totalSize +=
@@ -535,19 +544,14 @@ class CacheService {
   }
 
   /// Получить количество элементов в кэше
-  int getItemCount() {
-    return _memoryCache.length;
-  }
+  int getItemCount() => _memoryCache.length;
 
   /// Проверить, существует ли ключ
-  bool containsKey(String key) {
-    return _memoryCache.containsKey(key) && _memoryCache[key]!.isValid;
-  }
+  bool containsKey(String key) =>
+      _memoryCache.containsKey(key) && _memoryCache[key]!.isValid;
 
   /// Получить все ключи
-  List<String> getAllKeys() {
-    return _memoryCache.keys.toList();
-  }
+  List<String> getAllKeys() => _memoryCache.keys.toList();
 
   /// Закрыть сервис
   Future<void> dispose() async {

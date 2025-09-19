@@ -3,16 +3,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 /// Виджет для локализованного текста
 class LocalizedText extends StatelessWidget {
-  final String Function(AppLocalizations l10n) textBuilder;
-  final TextStyle? style;
-  final TextAlign? textAlign;
-  final int? maxLines;
-  final TextOverflow? overflow;
-  final TextDirection? textDirection;
-  final Locale? locale;
-  final bool? softWrap;
-  final double? textScaleFactor;
-
   const LocalizedText(
     this.textBuilder, {
     super.key,
@@ -25,10 +15,19 @@ class LocalizedText extends StatelessWidget {
     this.softWrap,
     this.textScaleFactor,
   });
+  final String Function(AppLocalizations l10n) textBuilder;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final int? maxLines;
+  final TextOverflow? overflow;
+  final TextDirection? textDirection;
+  final Locale? locale;
+  final bool? softWrap;
+  final double? textScaleFactor;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return Text(
       textBuilder(l10n),
       style: style,
@@ -45,16 +44,6 @@ class LocalizedText extends StatelessWidget {
 
 /// Виджет для локализованного текста с параметрами
 class LocalizedTextWithParams extends StatelessWidget {
-  final String Function(AppLocalizations l10n) textBuilder;
-  final TextStyle? style;
-  final TextAlign? textAlign;
-  final int? maxLines;
-  final TextOverflow? overflow;
-  final TextDirection? textDirection;
-  final Locale? locale;
-  final bool? softWrap;
-  final double? textScaleFactor;
-
   const LocalizedTextWithParams(
     this.textBuilder, {
     super.key,
@@ -67,10 +56,19 @@ class LocalizedTextWithParams extends StatelessWidget {
     this.softWrap,
     this.textScaleFactor,
   });
+  final String Function(AppLocalizations l10n) textBuilder;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final int? maxLines;
+  final TextOverflow? overflow;
+  final TextDirection? textDirection;
+  final Locale? locale;
+  final bool? softWrap;
+  final double? textScaleFactor;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return Text(
       textBuilder(l10n),
       style: style,
@@ -87,18 +85,6 @@ class LocalizedTextWithParams extends StatelessWidget {
 
 /// Виджет для локализованного текста с форматированием
 class LocalizedRichText extends StatelessWidget {
-  final TextSpan Function(AppLocalizations l10n) textSpanBuilder;
-  final TextAlign? textAlign;
-  final TextDirection? textDirection;
-  final bool? softWrap;
-  final TextOverflow? overflow;
-  final double? textScaleFactor;
-  final int? maxLines;
-  final Locale? locale;
-  final StrutStyle? strutStyle;
-  final TextWidthBasis? textWidthBasis;
-  final TextHeightBehavior? textHeightBehavior;
-
   const LocalizedRichText(
     this.textSpanBuilder, {
     super.key,
@@ -113,10 +99,21 @@ class LocalizedRichText extends StatelessWidget {
     this.textWidthBasis,
     this.textHeightBehavior,
   });
+  final TextSpan Function(AppLocalizations l10n) textSpanBuilder;
+  final TextAlign? textAlign;
+  final TextDirection? textDirection;
+  final bool? softWrap;
+  final TextOverflow? overflow;
+  final double? textScaleFactor;
+  final int? maxLines;
+  final Locale? locale;
+  final StrutStyle? strutStyle;
+  final TextWidthBasis? textWidthBasis;
+  final TextHeightBehavior? textHeightBehavior;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return RichText(
       text: textSpanBuilder(l10n),
       textAlign: textAlign ?? TextAlign.start,
@@ -135,14 +132,6 @@ class LocalizedRichText extends StatelessWidget {
 
 /// Виджет для локализованного текста с автоматическим определением направления
 class LocalizedDirectionalText extends StatelessWidget {
-  final String Function(AppLocalizations l10n) textBuilder;
-  final TextStyle? style;
-  final TextAlign? textAlign;
-  final int? maxLines;
-  final TextOverflow? overflow;
-  final bool? softWrap;
-  final double? textScaleFactor;
-
   const LocalizedDirectionalText(
     this.textBuilder, {
     super.key,
@@ -153,10 +142,17 @@ class LocalizedDirectionalText extends StatelessWidget {
     this.softWrap,
     this.textScaleFactor,
   });
+  final String Function(AppLocalizations l10n) textBuilder;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final int? maxLines;
+  final TextOverflow? overflow;
+  final bool? softWrap;
+  final double? textScaleFactor;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     final text = textBuilder(l10n);
 
     // Автоматическое определение направления текста
@@ -189,17 +185,6 @@ class LocalizedDirectionalText extends StatelessWidget {
 
 /// Виджет для локализованного текста с поддержкой плюрализации
 class LocalizedPluralText extends StatelessWidget {
-  final String Function(AppLocalizations l10n, int count) textBuilder;
-  final int count;
-  final TextStyle? style;
-  final TextAlign? textAlign;
-  final int? maxLines;
-  final TextOverflow? overflow;
-  final TextDirection? textDirection;
-  final Locale? locale;
-  final bool? softWrap;
-  final double? textScaleFactor;
-
   const LocalizedPluralText(
     this.textBuilder,
     this.count, {
@@ -213,10 +198,20 @@ class LocalizedPluralText extends StatelessWidget {
     this.softWrap,
     this.textScaleFactor,
   });
+  final String Function(AppLocalizations l10n, int count) textBuilder;
+  final int count;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final int? maxLines;
+  final TextOverflow? overflow;
+  final TextDirection? textDirection;
+  final Locale? locale;
+  final bool? softWrap;
+  final double? textScaleFactor;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return Text(
       textBuilder(l10n, count),
       style: style,
@@ -233,17 +228,6 @@ class LocalizedPluralText extends StatelessWidget {
 
 /// Виджет для локализованного текста с поддержкой дат
 class LocalizedDateText extends StatelessWidget {
-  final String Function(AppLocalizations l10n, DateTime date) textBuilder;
-  final DateTime date;
-  final TextStyle? style;
-  final TextAlign? textAlign;
-  final int? maxLines;
-  final TextOverflow? overflow;
-  final TextDirection? textDirection;
-  final Locale? locale;
-  final bool? softWrap;
-  final double? textScaleFactor;
-
   const LocalizedDateText(
     this.textBuilder,
     this.date, {
@@ -257,10 +241,20 @@ class LocalizedDateText extends StatelessWidget {
     this.softWrap,
     this.textScaleFactor,
   });
+  final String Function(AppLocalizations l10n, DateTime date) textBuilder;
+  final DateTime date;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final int? maxLines;
+  final TextOverflow? overflow;
+  final TextDirection? textDirection;
+  final Locale? locale;
+  final bool? softWrap;
+  final double? textScaleFactor;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return Text(
       textBuilder(l10n, date),
       style: style,
@@ -277,17 +271,6 @@ class LocalizedDateText extends StatelessWidget {
 
 /// Виджет для локализованного текста с поддержкой чисел
 class LocalizedNumberText extends StatelessWidget {
-  final String Function(AppLocalizations l10n, num number) textBuilder;
-  final num number;
-  final TextStyle? style;
-  final TextAlign? textAlign;
-  final int? maxLines;
-  final TextOverflow? overflow;
-  final TextDirection? textDirection;
-  final Locale? locale;
-  final bool? softWrap;
-  final double? textScaleFactor;
-
   const LocalizedNumberText(
     this.textBuilder,
     this.number, {
@@ -301,10 +284,20 @@ class LocalizedNumberText extends StatelessWidget {
     this.softWrap,
     this.textScaleFactor,
   });
+  final String Function(AppLocalizations l10n, num number) textBuilder;
+  final num number;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final int? maxLines;
+  final TextOverflow? overflow;
+  final TextDirection? textDirection;
+  final Locale? locale;
+  final bool? softWrap;
+  final double? textScaleFactor;
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
     return Text(
       textBuilder(l10n, number),
       style: style,

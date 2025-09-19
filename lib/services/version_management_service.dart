@@ -1,20 +1,22 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uuid/uuid.dart';
+
 import '../models/version_management.dart';
 
 /// Сервис управления версиями и обновлениями
 class VersionManagementService {
+  factory VersionManagementService() => _instance;
+  VersionManagementService._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
 
   static final VersionManagementService _instance =
       VersionManagementService._internal();
-  factory VersionManagementService() => _instance;
-  VersionManagementService._internal();
 
   final Map<String, AppVersion> _versionsCache = {};
   final Map<String, AppUpdate> _updatesCache = {};
@@ -109,7 +111,7 @@ class VersionManagementService {
         currentParts.add(0);
       }
 
-      for (int i = 0; i < newParts.length; i++) {
+      for (var i = 0; i < newParts.length; i++) {
         if (newParts[i] > currentParts[i]) {
           return true;
         } else if (newParts[i] < currentParts[i]) {
@@ -187,7 +189,9 @@ class VersionManagementService {
 
   /// Обновить версию
   Future<void> updateVersion(
-      String versionId, AppVersion updatedVersion) async {
+    String versionId,
+    AppVersion updatedVersion,
+  ) async {
     try {
       await _firestore
           .collection('appVersions')
@@ -216,10 +220,12 @@ class VersionManagementService {
 
       // Деактивируем все версии того же типа и платформы
       final sameTypeVersions = _versionsCache.values
-          .where((v) =>
-              v.platform == version.platform &&
-              v.type == version.type &&
-              v.isAvailable)
+          .where(
+            (v) =>
+                v.platform == version.platform &&
+                v.type == version.type &&
+                v.isAvailable,
+          )
           .toList();
 
       for (final v in sameTypeVersions) {
@@ -294,8 +300,11 @@ class VersionManagementService {
   }
 
   /// Обновить прогресс обновления
-  Future<void> updateProgress(String updateId, double progress,
-      {UpdateStatus? status}) async {
+  Future<void> updateProgress(
+    String updateId,
+    double progress, {
+    UpdateStatus? status,
+  }) async {
     try {
       final update = _updatesCache[updateId];
       if (update == null) {
@@ -325,8 +334,11 @@ class VersionManagementService {
   }
 
   /// Завершить обновление
-  Future<void> completeUpdate(String updateId,
-      {bool success = true, String? errorMessage}) async {
+  Future<void> completeUpdate(
+    String updateId, {
+    bool success = true,
+    String? errorMessage,
+  }) async {
     try {
       final update = _updatesCache[updateId];
       if (update == null) {
@@ -350,7 +362,8 @@ class VersionManagementService {
 
       if (kDebugMode) {
         print(
-            'Update completed: $updateId - ${success ? 'success' : 'failed'}');
+          'Update completed: $updateId - ${success ? 'success' : 'failed'}',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -360,36 +373,27 @@ class VersionManagementService {
   }
 
   /// Получить версии по платформе
-  List<AppVersion> getVersionsByPlatform(String platform) {
-    return _versionsCache.values
-        .where((version) => version.platform == platform)
-        .toList()
-      ..sort((a, b) => b.releaseDate.compareTo(a.releaseDate));
-  }
+  List<AppVersion> getVersionsByPlatform(String platform) =>
+      _versionsCache.values
+          .where((version) => version.platform == platform)
+          .toList()
+        ..sort((a, b) => b.releaseDate.compareTo(a.releaseDate));
 
   /// Получить версии по типу
-  List<AppVersion> getVersionsByType(VersionType type) {
-    return _versionsCache.values
-        .where((version) => version.type == type)
-        .toList()
-      ..sort((a, b) => b.releaseDate.compareTo(a.releaseDate));
-  }
+  List<AppVersion> getVersionsByType(VersionType type) =>
+      _versionsCache.values.where((version) => version.type == type).toList()
+        ..sort((a, b) => b.releaseDate.compareTo(a.releaseDate));
 
   /// Получить доступные версии
-  List<AppVersion> getAvailableVersions() {
-    return _versionsCache.values
-        .where((version) => version.isCurrentlyAvailable)
-        .toList()
-      ..sort((a, b) => b.releaseDate.compareTo(a.releaseDate));
-  }
+  List<AppVersion> getAvailableVersions() => _versionsCache.values
+      .where((version) => version.isCurrentlyAvailable)
+      .toList()
+    ..sort((a, b) => b.releaseDate.compareTo(a.releaseDate));
 
   /// Получить обновления пользователя
-  List<AppUpdate> getUserUpdates(String userId) {
-    return _updatesCache.values
-        .where((update) => update.userId == userId)
-        .toList()
-      ..sort((a, b) => b.startedAt.compareTo(a.startedAt));
-  }
+  List<AppUpdate> getUserUpdates(String userId) =>
+      _updatesCache.values.where((update) => update.userId == userId).toList()
+        ..sort((a, b) => b.startedAt.compareTo(a.startedAt));
 
   /// Получить статистику версии
   VersionStatistics? getVersionStatistics(String version, String platform) {
@@ -453,22 +457,16 @@ class VersionManagementService {
   PackageInfo? get packageInfo => _packageInfo;
 
   /// Получить все версии
-  List<AppVersion> getAllVersions() {
-    return _versionsCache.values.toList()
-      ..sort((a, b) => b.releaseDate.compareTo(a.releaseDate));
-  }
+  List<AppVersion> getAllVersions() => _versionsCache.values.toList()
+    ..sort((a, b) => b.releaseDate.compareTo(a.releaseDate));
 
   /// Получить все обновления
-  List<AppUpdate> getAllUpdates() {
-    return _updatesCache.values.toList()
-      ..sort((a, b) => b.startedAt.compareTo(a.startedAt));
-  }
+  List<AppUpdate> getAllUpdates() => _updatesCache.values.toList()
+    ..sort((a, b) => b.startedAt.compareTo(a.startedAt));
 
   /// Получить всю статистику
-  List<VersionStatistics> getAllStatistics() {
-    return _statisticsCache.values.toList()
-      ..sort((a, b) => b.lastUpdated.compareTo(a.lastUpdated));
-  }
+  List<VersionStatistics> getAllStatistics() => _statisticsCache.values.toList()
+    ..sort((a, b) => b.lastUpdated.compareTo(a.lastUpdated));
 
   /// Загрузить кэш версий
   Future<void> _loadVersionsCache() async {

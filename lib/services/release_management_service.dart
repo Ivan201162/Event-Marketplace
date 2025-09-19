@@ -1,17 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import '../models/release_management.dart';
+
 import '../core/feature_flags.dart';
+import '../models/release_management.dart';
 
 /// Сервис для управления релизами
 class ReleaseManagementService {
-  static final ReleaseManagementService _instance =
-      ReleaseManagementService._internal();
   factory ReleaseManagementService() => _instance;
   ReleaseManagementService._internal();
+  static final ReleaseManagementService _instance =
+      ReleaseManagementService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -248,28 +250,20 @@ class ReleaseManagementService {
   }
 
   /// Получение релиза
-  Release? getRelease(String id) {
-    return _releaseCache[id];
-  }
+  Release? getRelease(String id) => _releaseCache[id];
 
   /// Получение всех релизов
-  List<Release> getAllReleases() {
-    return _releaseCache.values.toList();
-  }
+  List<Release> getAllReleases() => _releaseCache.values.toList();
 
   /// Получение релизов по типу
-  List<Release> getReleasesByType(ReleaseType type) {
-    return _releaseCache.values
-        .where((release) => release.type == type)
-        .toList();
-  }
+  List<Release> getReleasesByType(ReleaseType type) =>
+      _releaseCache.values.where((release) => release.type == type).toList();
 
   /// Получение релизов по статусу
-  List<Release> getReleasesByStatus(ReleaseStatus status) {
-    return _releaseCache.values
-        .where((release) => release.status == status)
-        .toList();
-  }
+  List<Release> getReleasesByStatus(ReleaseStatus status) =>
+      _releaseCache.values
+          .where((release) => release.status == status)
+          .toList();
 
   /// Получение последнего релиза
   Release? getLatestRelease() {
@@ -279,8 +273,10 @@ class ReleaseManagementService {
 
     if (releases.isEmpty) return null;
 
-    releases.sort((a, b) =>
-        b.releasedDate?.compareTo(a.releasedDate ?? DateTime(1970)) ?? 0);
+    releases.sort(
+      (a, b) =>
+          b.releasedDate?.compareTo(a.releasedDate ?? DateTime(1970)) ?? 0,
+    );
     return releases.first;
   }
 
@@ -388,19 +384,14 @@ class ReleaseManagementService {
   }
 
   /// Получение плана
-  ReleasePlan? getPlan(String id) {
-    return _planCache[id];
-  }
+  ReleasePlan? getPlan(String id) => _planCache[id];
 
   /// Получение всех планов
-  List<ReleasePlan> getAllPlans() {
-    return _planCache.values.toList();
-  }
+  List<ReleasePlan> getAllPlans() => _planCache.values.toList();
 
   /// Получение планов по статусу
-  List<ReleasePlan> getPlansByStatus(PlanStatus status) {
-    return _planCache.values.where((plan) => plan.status == status).toList();
-  }
+  List<ReleasePlan> getPlansByStatus(PlanStatus status) =>
+      _planCache.values.where((plan) => plan.status == status).toList();
 
   /// Создание деплоя
   Future<Deployment> createDeployment({
@@ -489,35 +480,28 @@ class ReleaseManagementService {
   }
 
   /// Получение деплоя
-  Deployment? getDeployment(String id) {
-    return _deploymentCache[id];
-  }
+  Deployment? getDeployment(String id) => _deploymentCache[id];
 
   /// Получение всех деплоев
-  List<Deployment> getAllDeployments() {
-    return _deploymentCache.values.toList();
-  }
+  List<Deployment> getAllDeployments() => _deploymentCache.values.toList();
 
   /// Получение деплоев по релизу
-  List<Deployment> getDeploymentsByRelease(String releaseId) {
-    return _deploymentCache.values
-        .where((deployment) => deployment.releaseId == releaseId)
-        .toList();
-  }
+  List<Deployment> getDeploymentsByRelease(String releaseId) =>
+      _deploymentCache.values
+          .where((deployment) => deployment.releaseId == releaseId)
+          .toList();
 
   /// Получение деплоев по окружению
-  List<Deployment> getDeploymentsByEnvironment(String environment) {
-    return _deploymentCache.values
-        .where((deployment) => deployment.environment == environment)
-        .toList();
-  }
+  List<Deployment> getDeploymentsByEnvironment(String environment) =>
+      _deploymentCache.values
+          .where((deployment) => deployment.environment == environment)
+          .toList();
 
   /// Получение деплоев по статусу
-  List<Deployment> getDeploymentsByStatus(DeploymentStatus status) {
-    return _deploymentCache.values
-        .where((deployment) => deployment.status == status)
-        .toList();
-  }
+  List<Deployment> getDeploymentsByStatus(DeploymentStatus status) =>
+      _deploymentCache.values
+          .where((deployment) => deployment.status == status)
+          .toList();
 
   /// Запуск деплоя
   Future<Deployment> startDeployment(String deploymentId) async {
@@ -635,7 +619,7 @@ class ReleaseManagementService {
 
   /// Группировка релизов по типу
   Map<String, int> _groupReleasesByType(List<Release> releases) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final release in releases) {
       groups[release.type.value] = (groups[release.type.value] ?? 0) + 1;
     }
@@ -644,7 +628,7 @@ class ReleaseManagementService {
 
   /// Группировка релизов по статусу
   Map<String, int> _groupReleasesByStatus(List<Release> releases) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final release in releases) {
       groups[release.status.value] = (groups[release.status.value] ?? 0) + 1;
     }
@@ -653,7 +637,7 @@ class ReleaseManagementService {
 
   /// Группировка планов по статусу
   Map<String, int> _groupPlansByStatus(List<ReleasePlan> plans) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final plan in plans) {
       groups[plan.status.value] = (groups[plan.status.value] ?? 0) + 1;
     }
@@ -662,7 +646,7 @@ class ReleaseManagementService {
 
   /// Группировка деплоев по статусу
   Map<String, int> _groupDeploymentsByStatus(List<Deployment> deployments) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final deployment in deployments) {
       groups[deployment.status.value] =
           (groups[deployment.status.value] ?? 0) + 1;
@@ -672,8 +656,9 @@ class ReleaseManagementService {
 
   /// Группировка деплоев по окружению
   Map<String, int> _groupDeploymentsByEnvironment(
-      List<Deployment> deployments) {
-    final Map<String, int> groups = {};
+    List<Deployment> deployments,
+  ) {
+    final groups = <String, int>{};
     for (final deployment in deployments) {
       groups[deployment.environment] =
           (groups[deployment.environment] ?? 0) + 1;
@@ -718,19 +703,19 @@ class ReleaseManagementService {
 
     for (final release in data['releases']) {
       buffer.writeln(
-          '${release['version']},${release['name']},${release['type']},${release['status']},${release['releasedDate'] ?? 'N/A'}');
+        '${release['version']},${release['name']},${release['type']},${release['status']},${release['releasedDate'] ?? 'N/A'}',
+      );
     }
 
     return buffer.toString();
   }
 
   /// Генерация уникального ID
-  String _generateId() {
-    return DateTime.now().millisecondsSinceEpoch.toString() +
-        (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
-            .round()
-            .toString();
-  }
+  String _generateId() =>
+      DateTime.now().millisecondsSinceEpoch.toString() +
+      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
+          .round()
+          .toString();
 
   /// Закрытие сервиса
   Future<void> dispose() async {

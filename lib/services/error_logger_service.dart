@@ -1,20 +1,22 @@
 import 'dart:async';
 import 'dart:developer' as developer;
-import 'package:flutter/foundation.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/foundation.dart';
+
 import '../models/app_error.dart';
 
 /// Сервис для логирования ошибок приложения
 class ErrorLoggerService {
+  factory ErrorLoggerService() => _instance;
+  ErrorLoggerService._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
   final StreamController<AppError> _errorController =
       StreamController<AppError>.broadcast();
 
   static final ErrorLoggerService _instance = ErrorLoggerService._internal();
-  factory ErrorLoggerService() => _instance;
-  ErrorLoggerService._internal();
 
   /// Поток ошибок
   Stream<AppError> get errorStream => _errorController.stream;
@@ -22,9 +24,7 @@ class ErrorLoggerService {
   /// Инициализация сервиса логирования ошибок
   Future<void> initialize() async {
     // Перехватываем Flutter ошибки
-    FlutterError.onError = (FlutterErrorDetails details) {
-      _logFlutterError(details);
-    };
+    FlutterError.onError = _logFlutterError;
 
     // Перехватываем асинхронные ошибки
     PlatformDispatcher.instance.onError = (error, stack) {
@@ -37,9 +37,7 @@ class ErrorLoggerService {
       () {
         // Основной код приложения
       },
-      (error, stack) {
-        _logZonedError(error, stack);
-      },
+      _logZonedError,
     );
   }
 
@@ -301,7 +299,7 @@ class ErrorLoggerService {
     bool unresolvedOnly = false,
   }) async {
     try {
-      Query query = _firestore.collection('appErrors');
+      var query = _firestore.collection('appErrors');
 
       if (resolvedOnly) {
         query = query.where('resolved', isEqualTo: true);
@@ -312,7 +310,7 @@ class ErrorLoggerService {
       final snapshot =
           await query.orderBy('timestamp', descending: true).limit(limit).get();
 
-      return snapshot.docs.map((doc) => AppError.fromDocument(doc)).toList();
+      return snapshot.docs.map(AppError.fromDocument).toList();
     } catch (e) {
       developer.log('Ошибка при получении ошибок: $e');
       return [];
@@ -328,7 +326,7 @@ class ErrorLoggerService {
           .orderBy('timestamp', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => AppError.fromDocument(doc)).toList();
+      return snapshot.docs.map(AppError.fromDocument).toList();
     } catch (e) {
       developer.log('Ошибка при получении ошибок по типу: $e');
       return [];
@@ -344,7 +342,7 @@ class ErrorLoggerService {
           .orderBy('timestamp', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => AppError.fromDocument(doc)).toList();
+      return snapshot.docs.map(AppError.fromDocument).toList();
     } catch (e) {
       developer.log('Ошибка при получении ошибок по экрану: $e');
       return [];
@@ -360,7 +358,7 @@ class ErrorLoggerService {
           .orderBy('timestamp', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => AppError.fromDocument(doc)).toList();
+      return snapshot.docs.map(AppError.fromDocument).toList();
     } catch (e) {
       developer.log('Ошибка при получении ошибок пользователя: $e');
       return [];
@@ -394,11 +392,11 @@ class ErrorLoggerService {
     try {
       final snapshot = await _firestore.collection('appErrors').get();
 
-      int totalErrors = 0;
-      int resolvedErrors = 0;
-      int unresolvedErrors = 0;
-      int criticalErrors = 0;
-      int recentErrors = 0;
+      var totalErrors = 0;
+      var resolvedErrors = 0;
+      var unresolvedErrors = 0;
+      var criticalErrors = 0;
+      var recentErrors = 0;
       final errorsByType = <String, int>{};
       final errorsByScreen = <String, int>{};
       final errorsByDevice = <String, int>{};
@@ -461,20 +459,23 @@ class ErrorLoggerService {
 
       // Заголовки
       csv.writeln(
-          'ID,User ID,Device,Screen,Error Message,Error Type,Resolved,Timestamp');
+        'ID,User ID,Device,Screen,Error Message,Error Type,Resolved,Timestamp',
+      );
 
       // Данные
       for (final error in errors) {
-        csv.writeln([
-          error.id,
-          error.userId ?? '',
-          error.device,
-          error.screen,
-          error.errorMessage.replaceAll(',', ';'),
-          error.errorType,
-          error.resolved,
-          error.timestamp.toIso8601String(),
-        ].join(','));
+        csv.writeln(
+          [
+            error.id,
+            error.userId ?? '',
+            error.device,
+            error.screen,
+            error.errorMessage.replaceAll(',', ';'),
+            error.errorType,
+            error.resolved,
+            error.timestamp.toIso8601String(),
+          ].join(','),
+        );
       }
 
       return csv.toString();

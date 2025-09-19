@@ -21,13 +21,6 @@ enum SpecialistCategory {
 
 /// Портфолио элемент
 class PortfolioItem {
-  final String id;
-  final String type; // 'photo', 'video', 'document'
-  final String url;
-  final String? title;
-  final String? description;
-  final DateTime createdAt;
-
   const PortfolioItem({
     required this.id,
     required this.type,
@@ -37,52 +30,35 @@ class PortfolioItem {
     required this.createdAt,
   });
 
-  factory PortfolioItem.fromMap(Map<String, dynamic> data) {
-    return PortfolioItem(
-      id: data['id'] ?? '',
-      type: data['type'] ?? 'photo',
-      url: data['url'] ?? '',
-      title: data['title'],
-      description: data['description'],
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-    );
-  }
+  factory PortfolioItem.fromMap(Map<String, dynamic> data) => PortfolioItem(
+        id: data['id'] ?? '',
+        type: data['type'] ?? 'photo',
+        url: data['url'] ?? '',
+        title: data['title'],
+        description: data['description'],
+        createdAt: data['createdAt'] != null
+            ? (data['createdAt'] as Timestamp).toDate()
+            : DateTime.now(),
+      );
+  final String id;
+  final String type; // 'photo', 'video', 'document'
+  final String url;
+  final String? title;
+  final String? description;
+  final DateTime createdAt;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'type': type,
-      'url': url,
-      'title': title,
-      'description': description,
-      'createdAt': Timestamp.fromDate(createdAt),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'type': type,
+        'url': url,
+        'title': title,
+        'description': description,
+        'createdAt': Timestamp.fromDate(createdAt),
+      };
 }
 
 /// Профиль специалиста
 class SpecialistProfile {
-  final String userId;
-  final String? photoURL;
-  final String? bio;
-  final List<SpecialistCategory> categories;
-  final int experienceYears;
-  final double hourlyRate;
-  final String? phoneNumber;
-  final String? location;
-  final Map<String, String> socialLinks; // 'vk', 'instagram', 'telegram', etc.
-  final List<PortfolioItem> portfolio;
-  final List<String> services;
-  final Map<String, dynamic>? workingHours;
-  final Map<String, dynamic>? preferences;
-  final double rating;
-  final int reviewCount;
-  final bool isVerified;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
   const SpecialistProfile({
     required this.userId,
     this.photoURL,
@@ -140,29 +116,45 @@ class SpecialistProfile {
           : DateTime.now(),
     );
   }
+  final String userId;
+  final String? photoURL;
+  final String? bio;
+  final List<SpecialistCategory> categories;
+  final int experienceYears;
+  final double hourlyRate;
+  final String? phoneNumber;
+  final String? location;
+  final Map<String, String> socialLinks; // 'vk', 'instagram', 'telegram', etc.
+  final List<PortfolioItem> portfolio;
+  final List<String> services;
+  final Map<String, dynamic>? workingHours;
+  final Map<String, dynamic>? preferences;
+  final double rating;
+  final int reviewCount;
+  final bool isVerified;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'photoURL': photoURL,
-      'bio': bio,
-      'categories': categories.map((e) => e.name).toList(),
-      'experienceYears': experienceYears,
-      'hourlyRate': hourlyRate,
-      'phoneNumber': phoneNumber,
-      'location': location,
-      'socialLinks': socialLinks,
-      'portfolio': portfolio.map((e) => e.toMap()).toList(),
-      'services': services,
-      'workingHours': workingHours,
-      'preferences': preferences,
-      'rating': rating,
-      'reviewCount': reviewCount,
-      'isVerified': isVerified,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'photoURL': photoURL,
+        'bio': bio,
+        'categories': categories.map((e) => e.name).toList(),
+        'experienceYears': experienceYears,
+        'hourlyRate': hourlyRate,
+        'phoneNumber': phoneNumber,
+        'location': location,
+        'socialLinks': socialLinks,
+        'portfolio': portfolio.map((e) => e.toMap()).toList(),
+        'services': services,
+        'workingHours': workingHours,
+        'preferences': preferences,
+        'rating': rating,
+        'reviewCount': reviewCount,
+        'isVerified': isVerified,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   /// Копировать с изменениями
   SpecialistProfile copyWith({
@@ -184,66 +176,63 @@ class SpecialistProfile {
     bool? isVerified,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) {
-    return SpecialistProfile(
-      userId: userId ?? this.userId,
-      photoURL: photoURL ?? this.photoURL,
-      bio: bio ?? this.bio,
-      categories: categories ?? this.categories,
-      experienceYears: experienceYears ?? this.experienceYears,
-      hourlyRate: hourlyRate ?? this.hourlyRate,
-      phoneNumber: phoneNumber ?? this.phoneNumber,
-      location: location ?? this.location,
-      socialLinks: socialLinks ?? this.socialLinks,
-      portfolio: portfolio ?? this.portfolio,
-      services: services ?? this.services,
-      workingHours: workingHours ?? this.workingHours,
-      preferences: preferences ?? this.preferences,
-      rating: rating ?? this.rating,
-      reviewCount: reviewCount ?? this.reviewCount,
-      isVerified: isVerified ?? this.isVerified,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
+  }) =>
+      SpecialistProfile(
+        userId: userId ?? this.userId,
+        photoURL: photoURL ?? this.photoURL,
+        bio: bio ?? this.bio,
+        categories: categories ?? this.categories,
+        experienceYears: experienceYears ?? this.experienceYears,
+        hourlyRate: hourlyRate ?? this.hourlyRate,
+        phoneNumber: phoneNumber ?? this.phoneNumber,
+        location: location ?? this.location,
+        socialLinks: socialLinks ?? this.socialLinks,
+        portfolio: portfolio ?? this.portfolio,
+        services: services ?? this.services,
+        workingHours: workingHours ?? this.workingHours,
+        preferences: preferences ?? this.preferences,
+        rating: rating ?? this.rating,
+        reviewCount: reviewCount ?? this.reviewCount,
+        isVerified: isVerified ?? this.isVerified,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Получить русские названия категорий
-  List<String> get categoryDisplayNames {
-    return categories.map((category) {
-      switch (category) {
-        case SpecialistCategory.host:
-          return 'Ведущий';
-        case SpecialistCategory.photographer:
-          return 'Фотограф';
-        case SpecialistCategory.animator:
-          return 'Аниматор';
-        case SpecialistCategory.dj:
-          return 'Диджей';
-        case SpecialistCategory.decorator:
-          return 'Оформитель';
-        case SpecialistCategory.catering:
-          return 'Кейтеринг';
-        case SpecialistCategory.cleaning:
-          return 'Клининг';
-        case SpecialistCategory.equipment:
-          return 'Аренда свет/звук';
-        case SpecialistCategory.clothing:
-          return 'Платья/костюмы';
-        case SpecialistCategory.fireShow:
-          return 'Фаер-шоу';
-        case SpecialistCategory.fireworks:
-          return 'Салюты';
-        case SpecialistCategory.lightShow:
-          return 'Световые шоу';
-        case SpecialistCategory.florist:
-          return 'Флорист';
-        case SpecialistCategory.coverBand:
-          return 'Кавер-группа';
-        case SpecialistCategory.teamBuilding:
-          return 'Тимбилдинг';
-      }
-    }).toList();
-  }
+  List<String> get categoryDisplayNames => categories.map((category) {
+        switch (category) {
+          case SpecialistCategory.host:
+            return 'Ведущий';
+          case SpecialistCategory.photographer:
+            return 'Фотограф';
+          case SpecialistCategory.animator:
+            return 'Аниматор';
+          case SpecialistCategory.dj:
+            return 'Диджей';
+          case SpecialistCategory.decorator:
+            return 'Оформитель';
+          case SpecialistCategory.catering:
+            return 'Кейтеринг';
+          case SpecialistCategory.cleaning:
+            return 'Клининг';
+          case SpecialistCategory.equipment:
+            return 'Аренда свет/звук';
+          case SpecialistCategory.clothing:
+            return 'Платья/костюмы';
+          case SpecialistCategory.fireShow:
+            return 'Фаер-шоу';
+          case SpecialistCategory.fireworks:
+            return 'Салюты';
+          case SpecialistCategory.lightShow:
+            return 'Световые шоу';
+          case SpecialistCategory.florist:
+            return 'Флорист';
+          case SpecialistCategory.coverBand:
+            return 'Кавер-группа';
+          case SpecialistCategory.teamBuilding:
+            return 'Тимбилдинг';
+        }
+      }).toList();
 
   /// Получить основную категорию
   String get primaryCategory {
@@ -255,19 +244,16 @@ class SpecialistProfile {
   bool get hasPortfolio => portfolio.isNotEmpty;
 
   /// Получить фото из портфолио
-  List<PortfolioItem> get photos {
-    return portfolio.where((item) => item.type == 'photo').toList();
-  }
+  List<PortfolioItem> get photos =>
+      portfolio.where((item) => item.type == 'photo').toList();
 
   /// Получить видео из портфолио
-  List<PortfolioItem> get videos {
-    return portfolio.where((item) => item.type == 'video').toList();
-  }
+  List<PortfolioItem> get videos =>
+      portfolio.where((item) => item.type == 'video').toList();
 
   /// Получить документы из портфолио
-  List<PortfolioItem> get documents {
-    return portfolio.where((item) => item.type == 'document').toList();
-  }
+  List<PortfolioItem> get documents =>
+      portfolio.where((item) => item.type == 'document').toList();
 
   /// Парсинг категории из строки
   static SpecialistCategory? _parseCategory(String categoryString) {
@@ -317,7 +303,6 @@ class SpecialistProfile {
   int get hashCode => userId.hashCode;
 
   @override
-  String toString() {
-    return 'SpecialistProfile(userId: $userId, categories: $categories, rating: $rating)';
-  }
+  String toString() =>
+      'SpecialistProfile(userId: $userId, categories: $categories, rating: $rating)';
 }

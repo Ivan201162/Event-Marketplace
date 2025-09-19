@@ -3,149 +3,151 @@ import '../models/support_ticket.dart';
 
 /// Виджет FAQ
 class FAQWidget extends StatelessWidget {
-  final FAQItem faqItem;
-  final VoidCallback? onTap;
-
   const FAQWidget({
     super.key,
     required this.faqItem,
     this.onTap,
   });
+  final FAQItem faqItem;
+  final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Категория и просмотры
-              Row(
-                children: [
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: Colors.blue.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: Colors.blue.withOpacity(0.3),
+  Widget build(BuildContext context) => Card(
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Категория и просмотры
+                Row(
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.blue.withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color: Colors.blue.withOpacity(0.3),
+                        ),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(
+                            faqItem.category.categoryIcon,
+                            size: 14,
+                            color: Colors.blue,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            faqItem.category.categoryText,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.blue,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
+                    const Spacer(),
+                    Row(
                       children: [
                         Icon(
-                          faqItem.category.categoryIcon,
+                          Icons.visibility,
                           size: 14,
-                          color: Colors.blue,
+                          color: Colors.grey[600],
                         ),
                         const SizedBox(width: 4),
                         Text(
-                          faqItem.category.categoryText,
-                          style: const TextStyle(
+                          '${faqItem.viewsCount}',
+                          style: TextStyle(
                             fontSize: 12,
-                            color: Colors.blue,
-                            fontWeight: FontWeight.w500,
+                            color: Colors.grey[600],
                           ),
                         ),
                       ],
                     ),
+                  ],
+                ),
+
+                const SizedBox(height: 12),
+
+                // Вопрос
+                Text(
+                  faqItem.question,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
-                  const Spacer(),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.visibility,
-                        size: 14,
-                        color: Colors.grey[600],
-                      ),
-                      const SizedBox(width: 4),
-                      Text(
-                        '${faqItem.viewsCount}',
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 12),
-
-              // Вопрос
-              Text(
-                faqItem.question,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
 
-              const SizedBox(height: 8),
-
-              // Ответ
-              Text(
-                faqItem.answer,
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey[600],
-                ),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-
-              const SizedBox(height: 12),
-
-              // Теги
-              if (faqItem.tags.isNotEmpty) ...[
-                Wrap(
-                  spacing: 6,
-                  runSpacing: 4,
-                  children: faqItem.tags.take(3).map((tag) {
-                    return Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        '#$tag',
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    );
-                  }).toList(),
-                ),
                 const SizedBox(height: 8),
-              ],
 
-              // Дата обновления
-              Text(
-                'Обновлено: ${_formatDate(faqItem.updatedAt)}',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
+                // Ответ
+                Text(
+                  faqItem.answer,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                  ),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
+
+                const SizedBox(height: 12),
+
+                // Теги
+                if (faqItem.tags.isNotEmpty) ...[
+                  Wrap(
+                    spacing: 6,
+                    runSpacing: 4,
+                    children: faqItem.tags
+                        .take(3)
+                        .map(
+                          (tag) => Container(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              '#$tag',
+                              style: TextStyle(
+                                fontSize: 10,
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList(),
+                  ),
+                  const SizedBox(height: 8),
+                ],
+
+                // Дата обновления
+                Text(
+                  'Обновлено: ${_formatDate(faqItem.updatedAt)}',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
   String _formatDate(DateTime date) {
     final now = DateTime.now();
@@ -165,190 +167,186 @@ class FAQWidget extends StatelessWidget {
 
 /// Виджет для отображения FAQ в списке
 class FAQListTile extends StatelessWidget {
-  final FAQItem faqItem;
-  final VoidCallback? onTap;
-
   const FAQListTile({
     super.key,
     required this.faqItem,
     this.onTap,
   });
+  final FAQItem faqItem;
+  final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: Container(
-        width: 50,
-        height: 50,
-        decoration: BoxDecoration(
-          color: Colors.blue.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Icon(
-          faqItem.category.categoryIcon,
-          color: Colors.blue,
-          size: 24,
-        ),
-      ),
-      title: Text(
-        faqItem.question,
-        style: const TextStyle(fontWeight: FontWeight.bold),
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-      ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            faqItem.answer,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
+  Widget build(BuildContext context) => ListTile(
+        leading: Container(
+          width: 50,
+          height: 50,
+          decoration: BoxDecoration(
+            color: Colors.blue.withOpacity(0.1),
+            borderRadius: BorderRadius.circular(8),
           ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  faqItem.category.categoryText,
-                  style: const TextStyle(
-                    fontSize: 10,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.w500,
+          child: Icon(
+            faqItem.category.categoryIcon,
+            color: Colors.blue,
+            size: 24,
+          ),
+        ),
+        title: Text(
+          faqItem.question,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              faqItem.answer,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
                   ),
-                ),
-              ),
-              const Spacer(),
-              Row(
-                children: [
-                  Icon(
-                    Icons.visibility,
-                    size: 12,
-                    color: Colors.grey[600],
-                  ),
-                  const SizedBox(width: 2),
-                  Text(
-                    '${faqItem.viewsCount}',
-                    style: TextStyle(
+                  child: Text(
+                    faqItem.category.categoryText,
+                    style: const TextStyle(
                       fontSize: 10,
-                      color: Colors.grey[600],
+                      color: Colors.blue,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
-                ],
-              ),
-            ],
-          ),
-        ],
-      ),
-      trailing: const Icon(Icons.chevron_right),
-      onTap: onTap,
-    );
-  }
+                ),
+                const Spacer(),
+                Row(
+                  children: [
+                    Icon(
+                      Icons.visibility,
+                      size: 12,
+                      color: Colors.grey[600],
+                    ),
+                    const SizedBox(width: 2),
+                    Text(
+                      '${faqItem.viewsCount}',
+                      style: TextStyle(
+                        fontSize: 10,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ],
+        ),
+        trailing: const Icon(Icons.chevron_right),
+        onTap: onTap,
+      );
 }
 
 /// Виджет для отображения FAQ в сетке
 class FAQGridTile extends StatelessWidget {
-  final FAQItem faqItem;
-  final VoidCallback? onTap;
-
   const FAQGridTile({
     super.key,
     required this.faqItem,
     this.onTap,
   });
+  final FAQItem faqItem;
+  final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Категория и просмотры
-              Row(
-                children: [
-                  Icon(
-                    faqItem.category.categoryIcon,
-                    size: 20,
-                    color: Colors.blue,
-                  ),
-                  const Spacer(),
-                  Row(
-                    children: [
-                      Icon(
-                        Icons.visibility,
-                        size: 12,
-                        color: Colors.grey[600],
-                      ),
-                      const SizedBox(width: 2),
-                      Text(
-                        '${faqItem.viewsCount}',
-                        style: TextStyle(
-                          fontSize: 10,
+  Widget build(BuildContext context) => Card(
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Категория и просмотры
+                Row(
+                  children: [
+                    Icon(
+                      faqItem.category.categoryIcon,
+                      size: 20,
+                      color: Colors.blue,
+                    ),
+                    const Spacer(),
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.visibility,
+                          size: 12,
                           color: Colors.grey[600],
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 8),
-
-              // Вопрос
-              Text(
-                faqItem.question,
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
+                        const SizedBox(width: 2),
+                        Text(
+                          '${faqItem.viewsCount}',
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-              ),
 
-              const SizedBox(height: 4),
+                const SizedBox(height: 8),
 
-              // Ответ
-              Text(
-                faqItem.answer,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey[600],
-                ),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
-
-              const Spacer(),
-
-              // Категория
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  faqItem.category.categoryText,
+                // Вопрос
+                Text(
+                  faqItem.question,
                   style: const TextStyle(
-                    fontSize: 10,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+
+                const SizedBox(height: 4),
+
+                // Ответ
+                Text(
+                  faqItem.answer,
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                  ),
+                  maxLines: 3,
+                  overflow: TextOverflow.ellipsis,
+                ),
+
+                const Spacer(),
+
+                // Категория
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: Colors.blue.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    faqItem.category.categoryText,
+                    style: const TextStyle(
+                      fontSize: 10,
+                      color: Colors.blue,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }

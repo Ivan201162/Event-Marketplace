@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:event_marketplace_app/widgets/specialist_card.dart';
 import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/widgets/specialist_card.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('SpecialistCard', () {
@@ -18,17 +18,16 @@ void main() {
         subcategories: ['свадебная фотография', 'портретная съемка'],
         experienceLevel: ExperienceLevel.advanced,
         yearsOfExperience: 5,
-        hourlyRate: 3000.0,
-        minBookingHours: 2.0,
-        maxBookingHours: 12.0,
+        hourlyRate: 3000,
+        minBookingHours: 2,
+        maxBookingHours: 12,
         serviceAreas: ['Москва', 'Санкт-Петербург'],
         languages: ['Русский', 'Английский'],
         equipment: ['Canon EOS R5', 'Canon 24-70mm f/2.8'],
         portfolio: [
           'https://example.com/portfolio1',
-          'https://example.com/portfolio2'
+          'https://example.com/portfolio2',
         ],
-        isAvailable: true,
         isVerified: true,
         rating: 4.8,
         reviewCount: 47,
@@ -38,7 +37,7 @@ void main() {
     });
 
     testWidgets('should display specialist information correctly',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -64,8 +63,7 @@ void main() {
       expect(find.text('портретная съемка'), findsOneWidget);
     });
 
-    testWidgets('should display rating and review count',
-        (WidgetTester tester) async {
+    testWidgets('should display rating and review count', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -87,7 +85,7 @@ void main() {
     });
 
     testWidgets('should display verification badge for verified specialist',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -108,7 +106,7 @@ void main() {
 
     testWidgets(
         'should not display verification badge for unverified specialist',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange
       final unverifiedSpecialist = testSpecialist.copyWith(isVerified: false);
 
@@ -130,8 +128,7 @@ void main() {
       expect(find.text('✓'), findsNothing);
     });
 
-    testWidgets('should display availability status correctly',
-        (WidgetTester tester) async {
+    testWidgets('should display availability status correctly', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -152,7 +149,7 @@ void main() {
     });
 
     testWidgets('should display unavailable status for unavailable specialist',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange
       final unavailableSpecialist = testSpecialist.copyWith(isAvailable: false);
 
@@ -175,10 +172,9 @@ void main() {
       expect(find.byIcon(Icons.cancel), findsOneWidget);
     });
 
-    testWidgets('should call onTap when card is tapped',
-        (WidgetTester tester) async {
+    testWidgets('should call onTap when card is tapped', (tester) async {
       // Arrange
-      bool tapped = false;
+      var tapped = false;
 
       // Act
       await tester.pumpWidget(
@@ -204,7 +200,7 @@ void main() {
     });
 
     testWidgets('should display action buttons when showActions is true',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -213,7 +209,6 @@ void main() {
               body: SpecialistCard(
                 specialist: testSpecialist,
                 onTap: () {},
-                showActions: true,
               ),
             ),
           ),
@@ -228,7 +223,7 @@ void main() {
     });
 
     testWidgets('should not display action buttons when showActions is false',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -249,7 +244,7 @@ void main() {
       expect(find.text('Подробнее'), findsNothing);
     });
 
-    testWidgets('should display favorite button', (WidgetTester tester) async {
+    testWidgets('should display favorite button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -268,8 +263,7 @@ void main() {
       expect(find.byIcon(Icons.favorite_border), findsOneWidget);
     });
 
-    testWidgets('should display price range correctly',
-        (WidgetTester tester) async {
+    testWidgets('should display price range correctly', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -289,12 +283,9 @@ void main() {
     });
 
     testWidgets('should display hourly rate when no min/max booking hours',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange
-      final specialistWithoutHours = testSpecialist.copyWith(
-        minBookingHours: null,
-        maxBookingHours: null,
-      );
+      final specialistWithoutHours = testSpecialist.copyWith();
 
       // Act
       await tester.pumpWidget(
@@ -328,14 +319,13 @@ void main() {
         subcategories: ['свадебная фотография'],
         experienceLevel: ExperienceLevel.advanced,
         yearsOfExperience: 5,
-        hourlyRate: 3000.0,
-        minBookingHours: 2.0,
-        maxBookingHours: 12.0,
+        hourlyRate: 3000,
+        minBookingHours: 2,
+        maxBookingHours: 12,
         serviceAreas: ['Москва'],
         languages: ['Русский'],
         equipment: ['Canon EOS R5'],
         portfolio: ['https://example.com/portfolio'],
-        isAvailable: true,
         isVerified: true,
         rating: 4.8,
         reviewCount: 47,
@@ -345,7 +335,7 @@ void main() {
     });
 
     testWidgets('should display compact specialist information',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -368,7 +358,7 @@ void main() {
     });
 
     testWidgets('should display verification icon for verified specialist',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
         ProviderScope(
@@ -388,9 +378,9 @@ void main() {
     });
 
     testWidgets('should call onTap when compact card is tapped',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange
-      bool tapped = false;
+      var tapped = false;
 
       // Act
       await tester.pumpWidget(

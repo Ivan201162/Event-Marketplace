@@ -1,20 +1,22 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
+
 import '../models/notification_template.dart';
 
 /// Сервис уведомлений
 class NotificationService {
+  factory NotificationService() => _instance;
+  NotificationService._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseMessaging _messaging = FirebaseMessaging.instance;
   final Uuid _uuid = const Uuid();
 
   static final NotificationService _instance = NotificationService._internal();
-  factory NotificationService() => _instance;
-  NotificationService._internal();
 
   final StreamController<SentNotification> _notificationController =
       StreamController<SentNotification>.broadcast();
@@ -70,7 +72,8 @@ class NotificationService {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       if (kDebugMode) {
         print(
-            'Получено уведомление в foreground: ${message.notification?.title}');
+          'Получено уведомление в foreground: ${message.notification?.title}',
+        );
       }
       _handleForegroundMessage(message);
     });
@@ -123,7 +126,7 @@ class NotificationService {
           channel: NotificationChannel.push,
           variables: {
             'customerName': 'Имя клиента',
-            'date': 'Дата бронирования'
+            'date': 'Дата бронирования',
           },
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
@@ -148,7 +151,7 @@ class NotificationService {
           channel: NotificationChannel.push,
           variables: {
             'senderName': 'Имя отправителя',
-            'message': 'Текст сообщения'
+            'message': 'Текст сообщения',
           },
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
@@ -173,7 +176,7 @@ class NotificationService {
           channel: NotificationChannel.push,
           variables: {
             'hours': 'Количество часов',
-            'customerName': 'Имя клиента'
+            'customerName': 'Имя клиента',
           },
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
@@ -247,16 +250,15 @@ class NotificationService {
     required NotificationType type,
     required NotificationChannel channel,
     Map<String, dynamic>? data,
-  }) async {
-    return await _sendNotification(
-      userId: userId,
-      title: title,
-      body: body,
-      type: type,
-      channel: channel,
-      data: data ?? {},
-    );
-  }
+  }) async =>
+      _sendNotification(
+        userId: userId,
+        title: title,
+        body: body,
+        type: type,
+        channel: channel,
+        data: data ?? {},
+      );
 
   /// Внутренний метод отправки уведомления
   Future<String> _sendNotification({
@@ -282,7 +284,6 @@ class NotificationService {
         type: type,
         channel: channel,
         data: data,
-        status: NotificationStatus.pending,
         sentAt: now,
       );
 
@@ -324,7 +325,10 @@ class NotificationService {
       // Обновляем статус на "ошибка"
       if (notificationId != null) {
         await _updateNotificationStatus(
-            notificationId, NotificationStatus.failed, e.toString());
+          notificationId,
+          NotificationStatus.failed,
+          e.toString(),
+        );
       }
 
       rethrow;
@@ -343,7 +347,7 @@ class NotificationService {
       final userDoc = await _firestore.collection('users').doc(userId).get();
       if (!userDoc.exists) return;
 
-      final userData = userDoc.data()!;
+      final userData = userDoc.data();
       final fcmTokens = List<String>.from(userData['fcmTokens'] ?? []);
 
       if (fcmTokens.isEmpty) return;
@@ -451,7 +455,9 @@ class NotificationService {
   /// Отметить уведомление как доставленное
   Future<void> markAsDelivered(String notificationId) async {
     await _updateNotificationStatus(
-        notificationId, NotificationStatus.delivered);
+      notificationId,
+      NotificationStatus.delivered,
+    );
   }
 
   /// Получить уведомления пользователя
@@ -464,9 +470,7 @@ class NotificationService {
           .limit(50)
           .get();
 
-      return snapshot.docs
-          .map((doc) => SentNotification.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(SentNotification.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка получения уведомлений пользователя: $e');
@@ -484,9 +488,7 @@ class NotificationService {
           .orderBy('name')
           .get();
 
-      return snapshot.docs
-          .map((doc) => NotificationTemplate.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(NotificationTemplate.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка получения шаблонов уведомлений: $e');
@@ -511,14 +513,13 @@ class NotificationService {
           .where('sentAt', isLessThanOrEqualTo: Timestamp.fromDate(end))
           .get();
 
-      final notifications = snapshot.docs
-          .map((doc) => SentNotification.fromDocument(doc))
-          .toList();
+      final notifications =
+          snapshot.docs.map(SentNotification.fromDocument).toList();
 
-      int totalSent = 0;
-      int totalDelivered = 0;
-      int totalRead = 0;
-      int totalFailed = 0;
+      var totalSent = 0;
+      var totalDelivered = 0;
+      var totalRead = 0;
+      var totalFailed = 0;
       final sentByType = <String, int>{};
       final sentByChannel = <String, int>{};
 
@@ -573,8 +574,8 @@ class NotificationService {
         totalFailed: 0,
         sentByType: {},
         sentByChannel: {},
-        deliveryRate: 0.0,
-        readRate: 0.0,
+        deliveryRate: 0,
+        readRate: 0,
         periodStart: DateTime.now().subtract(const Duration(days: 30)),
         periodEnd: DateTime.now(),
       );

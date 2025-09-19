@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../analytics/analytics_service.dart';
-import '../providers/analytics_providers.dart';
 import '../core/feature_flags.dart';
+import '../providers/analytics_providers.dart';
 
 /// Обертка для автоматического отслеживания аналитики
 class AnalyticsWrapper extends ConsumerWidget {
-  final Widget child;
-  final String screenName;
-  final Map<String, dynamic>? parameters;
-
   const AnalyticsWrapper({
     super.key,
     required this.child,
     required this.screenName,
     this.parameters,
   });
+  final Widget child;
+  final String screenName;
+  final Map<String, dynamic>? parameters;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -123,12 +123,6 @@ mixin AnalyticsMixin<T extends ConsumerStatefulWidget> on ConsumerState<T> {
 
 /// Виджет для отслеживания нажатий кнопок
 class AnalyticsButton extends ConsumerWidget {
-  final Widget child;
-  final VoidCallback? onPressed;
-  final String buttonName;
-  final String? screenName;
-  final Map<String, dynamic>? parameters;
-
   const AnalyticsButton({
     super.key,
     required this.child,
@@ -137,17 +131,20 @@ class AnalyticsButton extends ConsumerWidget {
     this.screenName,
     this.parameters,
   });
+  final Widget child;
+  final VoidCallback? onPressed;
+  final String buttonName;
+  final String? screenName;
+  final Map<String, dynamic>? parameters;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ElevatedButton(
-      onPressed: () {
-        _trackButtonClick(ref);
-        onPressed?.call();
-      },
-      child: child,
-    );
-  }
+  Widget build(BuildContext context, WidgetRef ref) => ElevatedButton(
+        onPressed: () {
+          _trackButtonClick(ref);
+          onPressed?.call();
+        },
+        child: child,
+      );
 
   void _trackButtonClick(WidgetRef ref) {
     if (!FeatureFlags.analyticsEnabled) return;
@@ -168,25 +165,22 @@ class AnalyticsButton extends ConsumerWidget {
 
 /// Виджет для отслеживания навигации
 class AnalyticsNavigator extends ConsumerWidget {
-  final Widget child;
-
   const AnalyticsNavigator({
     super.key,
     required this.child,
   });
+  final Widget child;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Navigator(
-      onGenerateRoute: (settings) {
-        _trackNavigation(ref, settings.name ?? 'unknown');
-        return MaterialPageRoute(
-          builder: (context) => child,
-          settings: settings,
-        );
-      },
-    );
-  }
+  Widget build(BuildContext context, WidgetRef ref) => Navigator(
+        onGenerateRoute: (settings) {
+          _trackNavigation(ref, settings.name ?? 'unknown');
+          return MaterialPageRoute(
+            builder: (context) => child,
+            settings: settings,
+          );
+        },
+      );
 
   void _trackNavigation(WidgetRef ref, String routeName) {
     if (!FeatureFlags.analyticsEnabled) return;
@@ -203,33 +197,30 @@ class AnalyticsNavigator extends ConsumerWidget {
 
 /// Виджет для отслеживания ошибок
 class AnalyticsErrorBoundary extends ConsumerWidget {
-  final Widget child;
-  final Widget Function(Object error, StackTrace stackTrace)? errorBuilder;
-
   const AnalyticsErrorBoundary({
     super.key,
     required this.child,
     this.errorBuilder,
   });
+  final Widget child;
+  final Widget Function(Object error, StackTrace stackTrace)? errorBuilder;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Builder(
-      builder: (context) {
-        try {
-          return child;
-        } catch (error, stackTrace) {
-          _trackError(ref, error, stackTrace);
+  Widget build(BuildContext context, WidgetRef ref) => Builder(
+        builder: (context) {
+          try {
+            return child;
+          } catch (error, stackTrace) {
+            _trackError(ref, error, stackTrace);
 
-          if (errorBuilder != null) {
-            return errorBuilder!(error, stackTrace);
+            if (errorBuilder != null) {
+              return errorBuilder!(error, stackTrace);
+            }
+
+            return ErrorWidget(error);
           }
-
-          return ErrorWidget(error);
-        }
-      },
-    );
-  }
+        },
+      );
 
   void _trackError(WidgetRef ref, Object error, StackTrace stackTrace) {
     if (!FeatureFlags.analyticsEnabled) return;
@@ -249,16 +240,15 @@ class AnalyticsErrorBoundary extends ConsumerWidget {
 
 /// Виджет для отслеживания производительности
 class AnalyticsPerformanceTracker extends ConsumerWidget {
-  final Widget child;
-  final String operationName;
-  final Map<String, dynamic>? parameters;
-
   const AnalyticsPerformanceTracker({
     super.key,
     required this.child,
     required this.operationName,
     this.parameters,
   });
+  final Widget child;
+  final String operationName;
+  final Map<String, dynamic>? parameters;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:event_marketplace_app/providers/monitoring_providers.dart';
-import 'package:event_marketplace_app/core/feature_flags.dart';
+
+import '../core/feature_flags.dart';
+import '../providers/monitoring_providers.dart';
 
 /// Виджет для отображения статуса мониторинга
 class MonitoringStatusWidget extends ConsumerWidget {
@@ -17,9 +18,9 @@ class MonitoringStatusWidget extends ConsumerWidget {
     }
 
     return Card(
-      margin: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(8),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -46,10 +47,10 @@ class MonitoringStatusWidget extends ConsumerWidget {
             const SizedBox(height: 8),
             if (monitoringState.lastError != null) ...[
               Container(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
                   color: Colors.red.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(4.0),
+                  borderRadius: BorderRadius.circular(4),
                 ),
                 child: Row(
                   children: [
@@ -92,18 +93,16 @@ class MonitoringStatusWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatusChip(bool isInitialized) {
-    return Chip(
-      label: Text(isInitialized ? 'Активен' : 'Неактивен'),
-      backgroundColor: isInitialized
-          ? Colors.green.withOpacity(0.2)
-          : Colors.orange.withOpacity(0.2),
-      labelStyle: TextStyle(
-        color: isInitialized ? Colors.green : Colors.orange,
-        fontSize: 12,
-      ),
-    );
-  }
+  Widget _buildStatusChip(bool isInitialized) => Chip(
+        label: Text(isInitialized ? 'Активен' : 'Неактивен'),
+        backgroundColor: isInitialized
+            ? Colors.green.withOpacity(0.2)
+            : Colors.orange.withOpacity(0.2),
+        labelStyle: TextStyle(
+          color: isInitialized ? Colors.green : Colors.orange,
+          fontSize: 12,
+        ),
+      );
 }
 
 /// Виджет для отображения метрик приложения
@@ -117,9 +116,9 @@ class AppMetricsWidget extends ConsumerWidget {
     final memoryAsync = ref.watch(memoryUsageProvider);
 
     return Card(
-      margin: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(8),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -192,59 +191,55 @@ class AppMetricsWidget extends ConsumerWidget {
     String value,
     Color color,
     IconData icon,
-  ) {
-    return Row(
-      children: [
-        Icon(icon, color: color, size: 16),
-        const SizedBox(width: 8),
-        Text(
-          '$label: ',
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-        Text(
-          value,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: color,
-                fontWeight: FontWeight.bold,
-              ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildLoadingRow(BuildContext context, String label) {
-    return Row(
-      children: [
-        const SizedBox(
-          width: 16,
-          height: 16,
-          child: CircularProgressIndicator(strokeWidth: 2),
-        ),
-        const SizedBox(width: 8),
-        Text(
-          '$label: Загрузка...',
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildErrorRow(BuildContext context, String label, String error) {
-    return Row(
-      children: [
-        const Icon(Icons.error, color: Colors.red, size: 16),
-        const SizedBox(width: 8),
-        Expanded(
-          child: Text(
-            '$label: Ошибка - $error',
+  ) =>
+      Row(
+        children: [
+          Icon(icon, color: color, size: 16),
+          const SizedBox(width: 8),
+          Text(
+            '$label: ',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          Text(
+            value,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.red,
+                  color: color,
+                  fontWeight: FontWeight.bold,
                 ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
+
+  Widget _buildLoadingRow(BuildContext context, String label) => Row(
+        children: [
+          const SizedBox(
+            width: 16,
+            height: 16,
+            child: CircularProgressIndicator(strokeWidth: 2),
+          ),
+          const SizedBox(width: 8),
+          Text(
+            '$label: Загрузка...',
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+        ],
+      );
+
+  Widget _buildErrorRow(BuildContext context, String label, String error) =>
+      Row(
+        children: [
+          const Icon(Icons.error, color: Colors.red, size: 16),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              '$label: Ошибка - $error',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Colors.red,
+                  ),
+            ),
+          ),
+        ],
+      );
 }
 
 /// Виджет для управления мониторингом
@@ -257,9 +252,9 @@ class MonitoringControlWidget extends ConsumerWidget {
     final monitoringNotifier = ref.read(monitoringStateProvider.notifier);
 
     return Card(
-      margin: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(8),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -273,7 +268,7 @@ class MonitoringControlWidget extends ConsumerWidget {
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () => monitoringNotifier.updateMetrics(),
+                    onPressed: monitoringNotifier.updateMetrics,
                     icon: const Icon(Icons.refresh),
                     label: const Text('Обновить метрики'),
                   ),
@@ -281,7 +276,7 @@ class MonitoringControlWidget extends ConsumerWidget {
                 const SizedBox(width: 8),
                 Expanded(
                   child: ElevatedButton.icon(
-                    onPressed: () => monitoringNotifier.clearData(),
+                    onPressed: monitoringNotifier.clearData,
                     icon: const Icon(Icons.clear),
                     label: const Text('Очистить данные'),
                     style: ElevatedButton.styleFrom(
@@ -333,9 +328,9 @@ class MonitoringLogsWidget extends ConsumerWidget {
     final monitoringState = ref.watch(monitoringStateProvider);
 
     return Card(
-      margin: const EdgeInsets.all(8.0),
+      margin: const EdgeInsets.all(8),
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisSize: MainAxisSize.min,
@@ -348,10 +343,10 @@ class MonitoringLogsWidget extends ConsumerWidget {
             if (monitoringState.lastError != null) ...[
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.red.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.red.withOpacity(0.3)),
                 ),
                 child: Column(
@@ -391,16 +386,19 @@ class MonitoringLogsWidget extends ConsumerWidget {
             ] else ...[
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(12.0),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: Colors.green.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(8.0),
+                  borderRadius: BorderRadius.circular(8),
                   border: Border.all(color: Colors.green.withOpacity(0.3)),
                 ),
                 child: Row(
                   children: [
-                    const Icon(Icons.check_circle,
-                        color: Colors.green, size: 16),
+                    const Icon(
+                      Icons.check_circle,
+                      color: Colors.green,
+                      size: 16,
+                    ),
                     const SizedBox(width: 8),
                     Text(
                       'Ошибок не обнаружено',

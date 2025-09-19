@@ -1,15 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+
 import '../models/idea.dart';
 
 /// Виджет идеи
 class IdeaWidget extends StatelessWidget {
-  final Idea idea;
-  final VoidCallback? onTap;
-  final VoidCallback? onLike;
-  final VoidCallback? onSave;
-  final VoidCallback? onShare;
-
   const IdeaWidget({
     super.key,
     required this.idea,
@@ -18,169 +13,179 @@ class IdeaWidget extends StatelessWidget {
     this.onSave,
     this.onShare,
   });
+  final Idea idea;
+  final VoidCallback? onTap;
+  final VoidCallback? onLike;
+  final VoidCallback? onSave;
+  final VoidCallback? onShare;
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Изображения
-            if (idea.images.isNotEmpty) _buildImages(),
+  Widget build(BuildContext context) => Card(
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Изображения
+              if (idea.images.isNotEmpty) _buildImages(),
 
-            // Основная информация
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Заголовок и категория
-                  Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          idea.title,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      const SizedBox(width: 8),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: idea.categoryColor.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(12),
-                          border: Border.all(
-                            color: idea.categoryColor.withOpacity(0.3),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(
-                              idea.categoryIcon,
-                              size: 14,
-                              color: idea.categoryColor,
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              idea.category,
-                              style: TextStyle(
-                                fontSize: 12,
-                                color: idea.categoryColor,
-                                fontWeight: FontWeight.w500,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 8),
-
-                  // Описание
-                  Text(
-                    idea.description,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-
-                  const SizedBox(height: 12),
-
-                  // Теги
-                  if (idea.tags.isNotEmpty) ...[
-                    Wrap(
-                      spacing: 6,
-                      runSpacing: 4,
-                      children: idea.tags.take(3).map((tag) {
-                        return Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+              // Основная информация
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Заголовок и категория
+                    Row(
+                      children: [
+                        Expanded(
                           child: Text(
-                            '#$tag',
-                            style: TextStyle(
-                              fontSize: 10,
-                              color: Colors.grey[600],
+                            idea.title,
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
+                          decoration: BoxDecoration(
+                            color: idea.categoryColor.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: idea.categoryColor.withOpacity(0.3),
                             ),
                           ),
-                        );
-                      }).toList(),
-                    ),
-                    const SizedBox(height: 12),
-                  ],
-
-                  // Автор и дата
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 12,
-                        backgroundImage: idea.authorPhotoUrl != null
-                            ? CachedNetworkImageProvider(idea.authorPhotoUrl!)
-                            : null,
-                        child: idea.authorPhotoUrl == null
-                            ? Text(
-                                idea.authorName.isNotEmpty
-                                    ? idea.authorName[0].toUpperCase()
-                                    : '?',
-                                style: const TextStyle(fontSize: 10),
-                              )
-                            : null,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          idea.authorName,
-                          style: const TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                idea.categoryIcon,
+                                size: 14,
+                                color: idea.categoryColor,
+                              ),
+                              const SizedBox(width: 4),
+                              Text(
+                                idea.category,
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: idea.categoryColor,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 8),
+
+                    // Описание
+                    Text(
+                      idea.description,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
                       ),
-                      Text(
-                        _formatDate(idea.createdAt),
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
-                        ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+
+                    const SizedBox(height: 12),
+
+                    // Теги
+                    if (idea.tags.isNotEmpty) ...[
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 4,
+                        children: idea.tags
+                            .take(3)
+                            .map(
+                              (tag) => Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Text(
+                                  '#$tag',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ),
+                            )
+                            .toList(),
                       ),
+                      const SizedBox(height: 12),
                     ],
-                  ),
 
-                  const SizedBox(height: 12),
+                    // Автор и дата
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 12,
+                          backgroundImage: idea.authorPhotoUrl != null
+                              ? CachedNetworkImageProvider(idea.authorPhotoUrl!)
+                              : null,
+                          child: idea.authorPhotoUrl == null
+                              ? Text(
+                                  idea.authorName.isNotEmpty
+                                      ? idea.authorName[0].toUpperCase()
+                                      : '?',
+                                  style: const TextStyle(fontSize: 10),
+                                )
+                              : null,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            idea.authorName,
+                            style: const TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          _formatDate(idea.createdAt),
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
 
-                  // Действия
-                  _buildActions(),
-                ],
+                    const SizedBox(height: 12),
+
+                    // Действия
+                    _buildActions(),
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildImages() {
     if (idea.images.isEmpty) return const SizedBox.shrink();
 
-    return Container(
+    return SizedBox(
       height: 200,
       child: PageView.builder(
         itemCount: idea.images.length,
@@ -205,22 +210,43 @@ class IdeaWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildActions() {
-    return Row(
-      children: [
-        // Лайк
-        GestureDetector(
-          onTap: onLike,
-          child: Row(
+  Widget _buildActions() => Row(
+        children: [
+          // Лайк
+          GestureDetector(
+            onTap: onLike,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.favorite,
+                  size: 20,
+                  color: idea.likesCount > 0 ? Colors.red : Colors.grey[600],
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  idea.likesCount.toString(),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(width: 16),
+
+          // Просмотры
+          Row(
             children: [
               Icon(
-                Icons.favorite,
+                Icons.visibility,
                 size: 20,
-                color: idea.likesCount > 0 ? Colors.red : Colors.grey[600],
+                color: Colors.grey[600],
               ),
               const SizedBox(width: 4),
               Text(
-                idea.likesCount.toString(),
+                idea.viewsCount.toString(),
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
@@ -228,44 +254,44 @@ class IdeaWidget extends StatelessWidget {
               ),
             ],
           ),
-        ),
 
-        const SizedBox(width: 16),
+          const SizedBox(width: 16),
 
-        // Просмотры
-        Row(
-          children: [
-            Icon(
-              Icons.visibility,
-              size: 20,
-              color: Colors.grey[600],
+          // Сохранения
+          GestureDetector(
+            onTap: onSave,
+            child: Row(
+              children: [
+                Icon(
+                  Icons.bookmark,
+                  size: 20,
+                  color: idea.savesCount > 0 ? Colors.blue : Colors.grey[600],
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  idea.savesCount.toString(),
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
             ),
-            const SizedBox(width: 4),
-            Text(
-              idea.viewsCount.toString(),
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
-            ),
-          ],
-        ),
+          ),
 
-        const SizedBox(width: 16),
+          const Spacer(),
 
-        // Сохранения
-        GestureDetector(
-          onTap: onSave,
-          child: Row(
+          // Комментарии
+          Row(
             children: [
               Icon(
-                Icons.bookmark,
+                Icons.comment,
                 size: 20,
-                color: idea.savesCount > 0 ? Colors.blue : Colors.grey[600],
+                color: Colors.grey[600],
               ),
               const SizedBox(width: 4),
               Text(
-                idea.savesCount.toString(),
+                idea.commentsCount.toString(),
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.grey[600],
@@ -273,43 +299,20 @@ class IdeaWidget extends StatelessWidget {
               ),
             ],
           ),
-        ),
 
-        const Spacer(),
+          const SizedBox(width: 8),
 
-        // Комментарии
-        Row(
-          children: [
-            Icon(
-              Icons.comment,
+          // Шаринг
+          GestureDetector(
+            onTap: onShare,
+            child: Icon(
+              Icons.share,
               size: 20,
               color: Colors.grey[600],
             ),
-            const SizedBox(width: 4),
-            Text(
-              idea.commentsCount.toString(),
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
-            ),
-          ],
-        ),
-
-        const SizedBox(width: 8),
-
-        // Шаринг
-        GestureDetector(
-          onTap: onShare,
-          child: Icon(
-            Icons.share,
-            size: 20,
-            color: Colors.grey[600],
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
 
   String _formatDate(DateTime date) {
     final now = DateTime.now();
@@ -329,12 +332,6 @@ class IdeaWidget extends StatelessWidget {
 
 /// Виджет для отображения идеи в списке
 class IdeaListTile extends StatelessWidget {
-  final Idea idea;
-  final VoidCallback? onTap;
-  final VoidCallback? onLike;
-  final VoidCallback? onSave;
-  final VoidCallback? onShare;
-
   const IdeaListTile({
     super.key,
     required this.idea,
@@ -343,136 +340,140 @@ class IdeaListTile extends StatelessWidget {
     this.onSave,
     this.onShare,
   });
+  final Idea idea;
+  final VoidCallback? onTap;
+  final VoidCallback? onLike;
+  final VoidCallback? onSave;
+  final VoidCallback? onShare;
 
   @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: idea.images.isNotEmpty
-          ? ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: CachedNetworkImage(
-                imageUrl: idea.images.first.url,
-                width: 60,
-                height: 60,
-                fit: BoxFit.cover,
-                placeholder: (context, url) => Container(
+  Widget build(BuildContext context) => ListTile(
+        leading: idea.images.isNotEmpty
+            ? ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: CachedNetworkImage(
+                  imageUrl: idea.images.first.url,
                   width: 60,
                   height: 60,
-                  color: Colors.grey[200],
-                  child: const Center(
-                    child: CircularProgressIndicator(),
+                  fit: BoxFit.cover,
+                  placeholder: (context, url) => Container(
+                    width: 60,
+                    height: 60,
+                    color: Colors.grey[200],
+                    child: const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+                  ),
+                  errorWidget: (context, url, error) => Container(
+                    width: 60,
+                    height: 60,
+                    color: Colors.grey[200],
+                    child: const Icon(Icons.error),
                   ),
                 ),
-                errorWidget: (context, url, error) => Container(
-                  width: 60,
-                  height: 60,
-                  color: Colors.grey[200],
-                  child: const Icon(Icons.error),
-                ),
-              ),
-            )
-          : Container(
-              width: 60,
-              height: 60,
-              decoration: BoxDecoration(
-                color: idea.categoryColor.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Icon(
-                idea.categoryIcon,
-                color: idea.categoryColor,
-                size: 24,
-              ),
-            ),
-      title: Text(
-        idea.title,
-        style: const TextStyle(fontWeight: FontWeight.bold),
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-      ),
-      subtitle: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            idea.description,
-            maxLines: 2,
-            overflow: TextOverflow.ellipsis,
-          ),
-          const SizedBox(height: 4),
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+              )
+            : Container(
+                width: 60,
+                height: 60,
                 decoration: BoxDecoration(
                   color: idea.categoryColor.withOpacity(0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Text(
-                  idea.category,
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: idea.categoryColor,
-                    fontWeight: FontWeight.w500,
+                child: Icon(
+                  idea.categoryIcon,
+                  color: idea.categoryColor,
+                  size: 24,
+                ),
+              ),
+        title: Text(
+          idea.title,
+          style: const TextStyle(fontWeight: FontWeight.bold),
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
+        ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              idea.description,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+            ),
+            const SizedBox(height: 4),
+            Row(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                    color: idea.categoryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    idea.category,
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: idea.categoryColor,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
                 ),
-              ),
-              const Spacer(),
-              Text(
-                _formatDate(idea.createdAt),
-                style: TextStyle(
-                  fontSize: 10,
-                  color: Colors.grey[600],
+                const Spacer(),
+                Text(
+                  _formatDate(idea.createdAt),
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.grey[600],
+                  ),
                 ),
-              ),
-            ],
-          ),
-        ],
-      ),
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              GestureDetector(
-                onTap: onLike,
-                child: Icon(
-                  Icons.favorite,
-                  size: 16,
-                  color: idea.likesCount > 0 ? Colors.red : Colors.grey[600],
+              ],
+            ),
+          ],
+        ),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: onLike,
+                  child: Icon(
+                    Icons.favorite,
+                    size: 16,
+                    color: idea.likesCount > 0 ? Colors.red : Colors.grey[600],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 4),
-              Text(
-                idea.likesCount.toString(),
-                style: const TextStyle(fontSize: 12),
-              ),
-            ],
-          ),
-          const SizedBox(height: 4),
-          Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              GestureDetector(
-                onTap: onSave,
-                child: Icon(
-                  Icons.bookmark,
-                  size: 16,
-                  color: idea.savesCount > 0 ? Colors.blue : Colors.grey[600],
+                const SizedBox(width: 4),
+                Text(
+                  idea.likesCount.toString(),
+                  style: const TextStyle(fontSize: 12),
                 ),
-              ),
-              const SizedBox(width: 4),
-              Text(
-                idea.savesCount.toString(),
-                style: const TextStyle(fontSize: 12),
-              ),
-            ],
-          ),
-        ],
-      ),
-      onTap: onTap,
-    );
-  }
+              ],
+            ),
+            const SizedBox(height: 4),
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GestureDetector(
+                  onTap: onSave,
+                  child: Icon(
+                    Icons.bookmark,
+                    size: 16,
+                    color: idea.savesCount > 0 ? Colors.blue : Colors.grey[600],
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  idea.savesCount.toString(),
+                  style: const TextStyle(fontSize: 12),
+                ),
+              ],
+            ),
+          ],
+        ),
+        onTap: onTap,
+      );
 
   String _formatDate(DateTime date) {
     final now = DateTime.now();
@@ -492,12 +493,6 @@ class IdeaListTile extends StatelessWidget {
 
 /// Виджет для отображения идеи в сетке
 class IdeaGridTile extends StatelessWidget {
-  final Idea idea;
-  final VoidCallback? onTap;
-  final VoidCallback? onLike;
-  final VoidCallback? onSave;
-  final VoidCallback? onShare;
-
   const IdeaGridTile({
     super.key,
     required this.idea,
@@ -506,130 +501,135 @@ class IdeaGridTile extends StatelessWidget {
     this.onSave,
     this.onShare,
   });
+  final Idea idea;
+  final VoidCallback? onTap;
+  final VoidCallback? onLike;
+  final VoidCallback? onSave;
+  final VoidCallback? onShare;
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Изображение
-            Expanded(
-              flex: 3,
-              child: idea.images.isNotEmpty
-                  ? CachedNetworkImage(
-                      imageUrl: idea.images.first.url,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => Container(
-                        color: Colors.grey[200],
-                        child: const Center(
-                          child: CircularProgressIndicator(),
+  Widget build(BuildContext context) => Card(
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Изображение
+              Expanded(
+                flex: 3,
+                child: idea.images.isNotEmpty
+                    ? CachedNetworkImage(
+                        imageUrl: idea.images.first.url,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => Container(
+                          color: Colors.grey[200],
+                          child: const Center(
+                            child: CircularProgressIndicator(),
+                          ),
                         ),
-                      ),
-                      errorWidget: (context, url, error) => Container(
-                        color: Colors.grey[200],
-                        child: const Icon(Icons.error),
-                      ),
-                    )
-                  : Container(
-                      color: idea.categoryColor.withOpacity(0.1),
-                      child: Center(
-                        child: Icon(
-                          idea.categoryIcon,
-                          color: idea.categoryColor,
-                          size: 32,
+                        errorWidget: (context, url, error) => Container(
+                          color: Colors.grey[200],
+                          child: const Icon(Icons.error),
                         ),
-                      ),
-                    ),
-            ),
-
-            // Информация
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Заголовок
-                    Text(
-                      idea.title,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-
-                    const SizedBox(height: 4),
-
-                    // Категория
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
+                      )
+                    : Container(
                         color: idea.categoryColor.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      child: Text(
-                        idea.category,
-                        style: TextStyle(
-                          fontSize: 10,
-                          color: idea.categoryColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ),
-
-                    const Spacer(),
-
-                    // Действия
-                    Row(
-                      children: [
-                        GestureDetector(
-                          onTap: onLike,
+                        child: Center(
                           child: Icon(
-                            Icons.favorite,
-                            size: 16,
-                            color: idea.likesCount > 0
-                                ? Colors.red
-                                : Colors.grey[600],
+                            idea.categoryIcon,
+                            color: idea.categoryColor,
+                            size: 32,
                           ),
                         ),
-                        const SizedBox(width: 4),
-                        Text(
-                          idea.likesCount.toString(),
-                          style: const TextStyle(fontSize: 12),
+                      ),
+              ),
+
+              // Информация
+              Expanded(
+                flex: 2,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Заголовок
+                      Text(
+                        idea.title,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
                         ),
-                        const Spacer(),
-                        GestureDetector(
-                          onTap: onSave,
-                          child: Icon(
-                            Icons.bookmark,
-                            size: 16,
-                            color: idea.savesCount > 0
-                                ? Colors.blue
-                                : Colors.grey[600],
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+
+                      const SizedBox(height: 4),
+
+                      // Категория
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: idea.categoryColor.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          idea.category,
+                          style: TextStyle(
+                            fontSize: 10,
+                            color: idea.categoryColor,
+                            fontWeight: FontWeight.w500,
                           ),
                         ),
-                        const SizedBox(width: 4),
-                        Text(
-                          idea.savesCount.toString(),
-                          style: const TextStyle(fontSize: 12),
-                        ),
-                      ],
-                    ),
-                  ],
+                      ),
+
+                      const Spacer(),
+
+                      // Действия
+                      Row(
+                        children: [
+                          GestureDetector(
+                            onTap: onLike,
+                            child: Icon(
+                              Icons.favorite,
+                              size: 16,
+                              color: idea.likesCount > 0
+                                  ? Colors.red
+                                  : Colors.grey[600],
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            idea.likesCount.toString(),
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                          const Spacer(),
+                          GestureDetector(
+                            onTap: onSave,
+                            child: Icon(
+                              Icons.bookmark,
+                              size: 16,
+                              color: idea.savesCount > 0
+                                  ? Colors.blue
+                                  : Colors.grey[600],
+                            ),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            idea.savesCount.toString(),
+                            style: const TextStyle(fontSize: 12),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 }

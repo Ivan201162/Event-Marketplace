@@ -28,25 +28,6 @@ enum OrganizationType {
 
 /// Модель платежа
 class Payment {
-  final String id;
-  final String bookingId;
-  final String userId;
-  final String customerId;
-  final String specialistId;
-  final PaymentType type;
-  final PaymentStatus status;
-  final double amount;
-  final double? originalAmount; // Оригинальная сумма до скидок/комиссий
-  final String currency;
-  final DateTime createdAt;
-  final DateTime? completedAt;
-  final DateTime? failedAt;
-  final String? paymentMethod;
-  final String? transactionId;
-  final String? description;
-  final Map<String, dynamic>? metadata;
-  final OrganizationType organizationType;
-
   const Payment({
     required this.id,
     required this.bookingId,
@@ -101,28 +82,72 @@ class Payment {
     );
   }
 
+  /// Создать объект из Map
+  factory Payment.fromMap(Map<String, dynamic> map) => Payment(
+        id: map['id'] ?? '',
+        bookingId: map['bookingId'] ?? '',
+        userId: map['userId'] ?? '',
+        specialistId: map['specialistId'] ?? '',
+        amount: (map['amount'] ?? 0).toDouble(),
+        currency: map['currency'] ?? 'RUB',
+        type: PaymentType.values.firstWhere(
+          (e) => e.name == map['type'],
+          orElse: () => PaymentType.fullPayment,
+        ),
+        status: PaymentStatus.values.firstWhere(
+          (e) => e.name == map['status'],
+          orElse: () => PaymentStatus.pending,
+        ),
+        paymentMethod: map['paymentMethod'] ?? '',
+        transactionId: map['transactionId'],
+        description: map['description'] ?? '',
+        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+        createdAt: map['createdAt'] != null
+            ? (map['createdAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        updatedAt: map['updatedAt'] != null
+            ? (map['updatedAt'] as Timestamp).toDate()
+            : DateTime.now(),
+      );
+  final String id;
+  final String bookingId;
+  final String userId;
+  final String customerId;
+  final String specialistId;
+  final PaymentType type;
+  final PaymentStatus status;
+  final double amount;
+  final double? originalAmount; // Оригинальная сумма до скидок/комиссий
+  final String currency;
+  final DateTime createdAt;
+  final DateTime? completedAt;
+  final DateTime? failedAt;
+  final String? paymentMethod;
+  final String? transactionId;
+  final String? description;
+  final Map<String, dynamic>? metadata;
+  final OrganizationType organizationType;
+
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'bookingId': bookingId,
-      'customerId': customerId,
-      'specialistId': specialistId,
-      'type': type.name,
-      'status': status.name,
-      'amount': amount,
-      'originalAmount': originalAmount,
-      'currency': currency,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'completedAt':
-          completedAt != null ? Timestamp.fromDate(completedAt!) : null,
-      'failedAt': failedAt != null ? Timestamp.fromDate(failedAt!) : null,
-      'paymentMethod': paymentMethod,
-      'transactionId': transactionId,
-      'description': description,
-      'metadata': metadata,
-      'organizationType': organizationType.name,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'bookingId': bookingId,
+        'customerId': customerId,
+        'specialistId': specialistId,
+        'type': type.name,
+        'status': status.name,
+        'amount': amount,
+        'originalAmount': originalAmount,
+        'currency': currency,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'completedAt':
+            completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+        'failedAt': failedAt != null ? Timestamp.fromDate(failedAt!) : null,
+        'paymentMethod': paymentMethod,
+        'transactionId': transactionId,
+        'description': description,
+        'metadata': metadata,
+        'organizationType': organizationType.name,
+      };
 
   /// Копировать с изменениями
   Payment copyWith({
@@ -143,27 +168,26 @@ class Payment {
     String? description,
     Map<String, dynamic>? metadata,
     OrganizationType? organizationType,
-  }) {
-    return Payment(
-      id: id ?? this.id,
-      bookingId: bookingId ?? this.bookingId,
-      customerId: customerId ?? this.customerId,
-      specialistId: specialistId ?? this.specialistId,
-      type: type ?? this.type,
-      status: status ?? this.status,
-      amount: amount ?? this.amount,
-      originalAmount: originalAmount ?? this.originalAmount,
-      currency: currency ?? this.currency,
-      createdAt: createdAt ?? this.createdAt,
-      completedAt: completedAt ?? this.completedAt,
-      failedAt: failedAt ?? this.failedAt,
-      paymentMethod: paymentMethod ?? this.paymentMethod,
-      transactionId: transactionId ?? this.transactionId,
-      description: description ?? this.description,
-      metadata: metadata ?? this.metadata,
-      organizationType: organizationType ?? this.organizationType,
-    );
-  }
+  }) =>
+      Payment(
+        id: id ?? this.id,
+        bookingId: bookingId ?? this.bookingId,
+        customerId: customerId ?? this.customerId,
+        specialistId: specialistId ?? this.specialistId,
+        type: type ?? this.type,
+        status: status ?? this.status,
+        amount: amount ?? this.amount,
+        originalAmount: originalAmount ?? this.originalAmount,
+        currency: currency ?? this.currency,
+        createdAt: createdAt ?? this.createdAt,
+        completedAt: completedAt ?? this.completedAt,
+        failedAt: failedAt ?? this.failedAt,
+        paymentMethod: paymentMethod ?? this.paymentMethod,
+        transactionId: transactionId ?? this.transactionId,
+        description: description ?? this.description,
+        metadata: metadata ?? this.metadata,
+        organizationType: organizationType ?? this.organizationType,
+      );
 
   /// Получить отображаемое название типа платежа
   String get typeDisplayName {
@@ -225,7 +249,7 @@ class Payment {
   bool get isFailed => status == PaymentStatus.failed;
 
   /// Парсинг типа платежа
-  static PaymentType _parsePaymentType(dynamic typeData) {
+  static PaymentType _parsePaymentType(typeData) {
     if (typeData == null) return PaymentType.advance;
 
     final typeString = typeData.toString().toLowerCase();
@@ -243,7 +267,7 @@ class Payment {
   }
 
   /// Парсинг статуса платежа
-  static PaymentStatus _parsePaymentStatus(dynamic statusData) {
+  static PaymentStatus _parsePaymentStatus(statusData) {
     if (statusData == null) return PaymentStatus.pending;
 
     final statusString = statusData.toString().toLowerCase();
@@ -265,7 +289,7 @@ class Payment {
   }
 
   /// Парсинг типа организации
-  static OrganizationType _parseOrganizationType(dynamic typeData) {
+  static OrganizationType _parseOrganizationType(typeData) {
     if (typeData == null) return OrganizationType.individual;
 
     final typeString = typeData.toString().toLowerCase();
@@ -293,50 +317,13 @@ class Payment {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'Payment(id: $id, type: $type, status: $status, amount: $amount)';
-  }
-
-  /// Создать объект из Map
-  factory Payment.fromMap(Map<String, dynamic> map) {
-    return Payment(
-      id: map['id'] ?? '',
-      bookingId: map['bookingId'] ?? '',
-      userId: map['userId'] ?? '',
-      specialistId: map['specialistId'] ?? '',
-      amount: (map['amount'] ?? 0).toDouble(),
-      currency: map['currency'] ?? 'RUB',
-      type: PaymentType.values.firstWhere(
-        (e) => e.name == map['type'],
-        orElse: () => PaymentType.fullPayment,
-      ),
-      status: PaymentStatus.values.firstWhere(
-        (e) => e.name == map['status'],
-        orElse: () => PaymentStatus.pending,
-      ),
-      paymentMethod: map['paymentMethod'] ?? '',
-      transactionId: map['transactionId'],
-      description: map['description'] ?? '',
-      metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-      createdAt: map['createdAt'] != null
-          ? (map['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      updatedAt: map['updatedAt'] != null
-          ? (map['updatedAt'] as Timestamp).toDate()
-          : DateTime.now(),
-    );
-  }
+  String toString() =>
+      'Payment(id: $id, type: $type, status: $status, amount: $amount)';
 }
 
 /// Конфигурация платежей для разных типов организаций
 class PaymentConfiguration {
-  final OrganizationType organizationType;
-  final double advancePercentage; // Процент аванса
-  final bool requiresAdvance; // Требуется ли аванс
-  final bool allowsPostPayment; // Разрешена ли постоплата
-  final double? maxAdvanceAmount; // Максимальная сумма аванса
-  final Duration? advanceDeadline; // Срок оплаты аванса
-  final Duration? finalPaymentDeadline; // Срок финального платежа
+  // Срок финального платежа
 
   const PaymentConfiguration({
     required this.organizationType,
@@ -347,6 +334,13 @@ class PaymentConfiguration {
     this.advanceDeadline,
     this.finalPaymentDeadline,
   });
+  final OrganizationType organizationType;
+  final double advancePercentage; // Процент аванса
+  final bool requiresAdvance; // Требуется ли аванс
+  final bool allowsPostPayment; // Разрешена ли постоплата
+  final double? maxAdvanceAmount; // Максимальная сумма аванса
+  final Duration? advanceDeadline; // Срок оплаты аванса
+  final Duration? finalPaymentDeadline;
 
   /// Получить конфигурацию по умолчанию для типа организации
   static PaymentConfiguration getDefault(OrganizationType type) {
@@ -354,7 +348,7 @@ class PaymentConfiguration {
       case OrganizationType.individual:
         return const PaymentConfiguration(
           organizationType: OrganizationType.individual,
-          advancePercentage: 30.0,
+          advancePercentage: 30,
           requiresAdvance: true,
           allowsPostPayment: false,
           advanceDeadline: Duration(days: 3),
@@ -363,7 +357,7 @@ class PaymentConfiguration {
       case OrganizationType.commercial:
         return const PaymentConfiguration(
           organizationType: OrganizationType.commercial,
-          advancePercentage: 30.0,
+          advancePercentage: 30,
           requiresAdvance: true,
           allowsPostPayment: false,
           advanceDeadline: Duration(days: 7),
@@ -372,7 +366,7 @@ class PaymentConfiguration {
       case OrganizationType.government:
         return const PaymentConfiguration(
           organizationType: OrganizationType.government,
-          advancePercentage: 0.0, // Госучреждения часто работают по постоплате
+          advancePercentage: 0, // Госучреждения часто работают по постоплате
           requiresAdvance: false,
           allowsPostPayment: true,
           finalPaymentDeadline: Duration(days: 30),
@@ -380,7 +374,7 @@ class PaymentConfiguration {
       case OrganizationType.nonProfit:
         return const PaymentConfiguration(
           organizationType: OrganizationType.nonProfit,
-          advancePercentage: 20.0,
+          advancePercentage: 20,
           requiresAdvance: true,
           allowsPostPayment: true,
           advanceDeadline: Duration(days: 5),
@@ -391,7 +385,7 @@ class PaymentConfiguration {
 
   /// Рассчитать сумму аванса
   double calculateAdvanceAmount(double totalAmount) {
-    if (!requiresAdvance) return 0.0;
+    if (!requiresAdvance) return 0;
 
     final advanceAmount = totalAmount * (advancePercentage / 100);
 
@@ -403,7 +397,6 @@ class PaymentConfiguration {
   }
 
   /// Рассчитать сумму финального платежа
-  double calculateFinalAmount(double totalAmount, double advanceAmount) {
-    return totalAmount - advanceAmount;
-  }
+  double calculateFinalAmount(double totalAmount, double advanceAmount) =>
+      totalAmount - advanceAmount;
 }

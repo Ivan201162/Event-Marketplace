@@ -32,17 +32,6 @@ enum BadgeType {
 
 /// Модель бейджа
 class Badge {
-  final String id;
-  final String userId;
-  final BadgeType type;
-  final String title;
-  final String description;
-  final String icon;
-  final String color;
-  final DateTime earnedAt;
-  final bool isVisible;
-  final Map<String, dynamic> metadata;
-
   const Badge({
     required this.id,
     required this.userId,
@@ -76,21 +65,29 @@ class Badge {
       metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
     );
   }
+  final String id;
+  final String userId;
+  final BadgeType type;
+  final String title;
+  final String description;
+  final String icon;
+  final String color;
+  final DateTime earnedAt;
+  final bool isVisible;
+  final Map<String, dynamic> metadata;
 
   /// Преобразует бейдж в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'type': type.name,
-      'title': title,
-      'description': description,
-      'icon': icon,
-      'color': color,
-      'earnedAt': Timestamp.fromDate(earnedAt),
-      'isVisible': isVisible,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'userId': userId,
+        'type': type.name,
+        'title': title,
+        'description': description,
+        'icon': icon,
+        'color': color,
+        'earnedAt': Timestamp.fromDate(earnedAt),
+        'isVisible': isVisible,
+        'metadata': metadata,
+      };
 
   /// Создаёт копию бейджа с обновлёнными полями
   Badge copyWith({
@@ -104,20 +101,19 @@ class Badge {
     DateTime? earnedAt,
     bool? isVisible,
     Map<String, dynamic>? metadata,
-  }) {
-    return Badge(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      type: type ?? this.type,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      icon: icon ?? this.icon,
-      color: color ?? this.color,
-      earnedAt: earnedAt ?? this.earnedAt,
-      isVisible: isVisible ?? this.isVisible,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      Badge(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        type: type ?? this.type,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        icon: icon ?? this.icon,
+        color: color ?? this.color,
+        earnedAt: earnedAt ?? this.earnedAt,
+        isVisible: isVisible ?? this.isVisible,
+        metadata: metadata ?? this.metadata,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -129,9 +125,7 @@ class Badge {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'Badge(id: $id, type: $type, title: $title)';
-  }
+  String toString() => 'Badge(id: $id, type: $type, title: $title)';
 }
 
 /// Расширение для BadgeType
@@ -141,7 +135,7 @@ extension BadgeTypeExtension on BadgeType {
     switch (this) {
       // Бейджи для специалистов
       case BadgeType.firstBooking:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: 'Первое бронирование',
           description: 'Получили первое бронирование',
           icon: '🎯',
@@ -149,7 +143,7 @@ extension BadgeTypeExtension on BadgeType {
           category: BadgeCategory.specialist,
         );
       case BadgeType.tenBookings:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: '10 успешных заказов',
           description: 'Выполнили 10 успешных заказов',
           icon: '⭐',
@@ -157,7 +151,7 @@ extension BadgeTypeExtension on BadgeType {
           category: BadgeCategory.specialist,
         );
       case BadgeType.fiftyBookings:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: '50 успешных заказов',
           description: 'Выполнили 50 успешных заказов',
           icon: '🏆',
@@ -165,7 +159,7 @@ extension BadgeTypeExtension on BadgeType {
           category: BadgeCategory.specialist,
         );
       case BadgeType.hundredBookings:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: '100 успешных заказов',
           description: 'Выполнили 100 успешных заказов',
           icon: '👑',
@@ -173,7 +167,7 @@ extension BadgeTypeExtension on BadgeType {
           category: BadgeCategory.specialist,
         );
       case BadgeType.fiveStarRating:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: 'Идеальный рейтинг',
           description: 'Поддерживаете рейтинг 5.0',
           icon: '✨',
@@ -181,7 +175,7 @@ extension BadgeTypeExtension on BadgeType {
           category: BadgeCategory.specialist,
         );
       case BadgeType.topRated:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: 'Топ-рейтинг',
           description: 'Входите в топ-10 специалистов',
           icon: '🥇',
@@ -189,7 +183,7 @@ extension BadgeTypeExtension on BadgeType {
           category: BadgeCategory.specialist,
         );
       case BadgeType.quickResponder:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: 'Быстрый ответ',
           description: 'Отвечаете на сообщения в течение часа',
           icon: '⚡',
@@ -197,7 +191,7 @@ extension BadgeTypeExtension on BadgeType {
           category: BadgeCategory.specialist,
         );
       case BadgeType.popularSpecialist:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: 'Популярный специалист',
           description: 'Популярны среди клиентов',
           icon: '🔥',
@@ -205,7 +199,7 @@ extension BadgeTypeExtension on BadgeType {
           category: BadgeCategory.specialist,
         );
       case BadgeType.qualityMaster:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: 'Мастер качества',
           description: 'Всегда получаете отличные отзывы',
           icon: '🎨',
@@ -213,7 +207,7 @@ extension BadgeTypeExtension on BadgeType {
           category: BadgeCategory.specialist,
         );
       case BadgeType.customerFavorite:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: 'Любимец клиентов',
           description: 'Клиенты часто возвращаются к вам',
           icon: '💖',
@@ -223,7 +217,7 @@ extension BadgeTypeExtension on BadgeType {
 
       // Бейджи для заказчиков
       case BadgeType.firstEvent:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: 'Первое мероприятие',
           description: 'Организовали первое мероприятие',
           icon: '🎉',
@@ -231,7 +225,7 @@ extension BadgeTypeExtension on BadgeType {
           category: BadgeCategory.customer,
         );
       case BadgeType.regularCustomer:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: 'Постоянный клиент',
           description: 'Регулярно пользуетесь услугами',
           icon: '🔄',
@@ -239,7 +233,7 @@ extension BadgeTypeExtension on BadgeType {
           category: BadgeCategory.customer,
         );
       case BadgeType.eventOrganizer:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: 'Организатор мероприятий',
           description: 'Организовали 5+ мероприятий',
           icon: '📅',
@@ -247,7 +241,7 @@ extension BadgeTypeExtension on BadgeType {
           category: BadgeCategory.customer,
         );
       case BadgeType.reviewWriter:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: 'Активный рецензент',
           description: 'Оставляете отзывы после каждого заказа',
           icon: '✍️',
@@ -255,7 +249,7 @@ extension BadgeTypeExtension on BadgeType {
           category: BadgeCategory.customer,
         );
       case BadgeType.earlyBird:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: 'Ранняя пташка',
           description: 'Бронируете услуги заранее',
           icon: '🐦',
@@ -263,7 +257,7 @@ extension BadgeTypeExtension on BadgeType {
           category: BadgeCategory.customer,
         );
       case BadgeType.loyalCustomer:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: 'Лояльный клиент',
           description: 'Пользуетесь услугами более года',
           icon: '💎',
@@ -271,7 +265,7 @@ extension BadgeTypeExtension on BadgeType {
           category: BadgeCategory.customer,
         );
       case BadgeType.socialButterfly:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: 'Социальная бабочка',
           description: 'Организуете много мероприятий',
           icon: '🦋',
@@ -279,7 +273,7 @@ extension BadgeTypeExtension on BadgeType {
           category: BadgeCategory.customer,
         );
       case BadgeType.trendsetter:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: 'Трендсеттер',
           description: 'Выбираете популярные категории',
           icon: '📈',
@@ -289,7 +283,7 @@ extension BadgeTypeExtension on BadgeType {
 
       // Общие бейджи
       case BadgeType.earlyAdopter:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: 'Ранний пользователь',
           description: 'Одни из первых пользователей приложения',
           icon: '🚀',
@@ -297,7 +291,7 @@ extension BadgeTypeExtension on BadgeType {
           category: BadgeCategory.general,
         );
       case BadgeType.communityHelper:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: 'Помощник сообщества',
           description: 'Помогаете другим пользователям',
           icon: '🤝',
@@ -305,7 +299,7 @@ extension BadgeTypeExtension on BadgeType {
           category: BadgeCategory.general,
         );
       case BadgeType.feedbackProvider:
-        return BadgeInfo(
+        return const BadgeInfo(
           title: 'Поставщик обратной связи',
           description: 'Активно участвуете в улучшении приложения',
           icon: '💡',
@@ -318,12 +312,6 @@ extension BadgeTypeExtension on BadgeType {
 
 /// Информация о бейдже
 class BadgeInfo {
-  final String title;
-  final String description;
-  final String icon;
-  final String color;
-  final BadgeCategory category;
-
   const BadgeInfo({
     required this.title,
     required this.description,
@@ -331,6 +319,11 @@ class BadgeInfo {
     required this.color,
     required this.category,
   });
+  final String title;
+  final String description;
+  final String icon;
+  final String color;
+  final BadgeCategory category;
 }
 
 /// Категории бейджей
@@ -343,9 +336,8 @@ enum BadgeCategory {
 /// Расширение для работы с бейджами
 extension BadgeListExtension on List<Badge> {
   /// Получает бейджи по категории
-  List<Badge> byCategory(BadgeCategory category) {
-    return where((badge) => badge.type.info.category == category).toList();
-  }
+  List<Badge> byCategory(BadgeCategory category) =>
+      where((badge) => badge.type.info.category == category).toList();
 
   /// Получает последние бейджи
   List<Badge> get recent =>
@@ -356,7 +348,7 @@ extension BadgeListExtension on List<Badge> {
 
   /// Группирует бейджи по категориям
   Map<BadgeCategory, List<Badge>> get groupedByCategory {
-    final Map<BadgeCategory, List<Badge>> grouped = {};
+    final grouped = <BadgeCategory, List<Badge>>{};
     for (final badge in this) {
       final category = badge.type.info.category;
       grouped.putIfAbsent(category, () => []).add(badge);

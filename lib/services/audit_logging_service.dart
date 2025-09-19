@@ -1,17 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import '../models/audit_log.dart';
+
 import '../core/feature_flags.dart';
+import '../models/audit_log.dart';
 
 /// Сервис для аудита действий пользователей и системных логов
 class AuditLoggingService {
-  static final AuditLoggingService _instance = AuditLoggingService._internal();
   factory AuditLoggingService() => _instance;
   AuditLoggingService._internal();
+  static final AuditLoggingService _instance = AuditLoggingService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -271,7 +273,7 @@ class AuditLoggingService {
     DocumentSnapshot? startAfter,
   }) async {
     try {
-      Query query = _firestore.collection(_auditLogsCollection);
+      var query = _firestore.collection(_auditLogsCollection);
 
       if (userId != null) {
         query = query.where('userId', isEqualTo: userId);
@@ -289,12 +291,16 @@ class AuditLoggingService {
         query = query.where('category', isEqualTo: category.value);
       }
       if (startDate != null) {
-        query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where(
+          'timestamp',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+        );
       }
       if (endDate != null) {
-        query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where(
+          'timestamp',
+          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
+        );
       }
 
       query = query.orderBy('timestamp', descending: true).limit(limit);
@@ -324,7 +330,7 @@ class AuditLoggingService {
     DocumentSnapshot? startAfter,
   }) async {
     try {
-      Query query = _firestore.collection(_systemLogsCollection);
+      var query = _firestore.collection(_systemLogsCollection);
 
       if (component != null) {
         query = query.where('component', isEqualTo: component);
@@ -336,12 +342,16 @@ class AuditLoggingService {
         query = query.where('category', isEqualTo: category.value);
       }
       if (startDate != null) {
-        query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where(
+          'timestamp',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+        );
       }
       if (endDate != null) {
-        query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where(
+          'timestamp',
+          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
+        );
       }
 
       query = query.orderBy('timestamp', descending: true).limit(limit);
@@ -381,7 +391,7 @@ class AuditLoggingService {
     String format = 'json',
   }) async {
     try {
-      final Map<String, dynamic> exportData = {
+      final exportData = <String, dynamic>{
         'exportDate': DateTime.now().toIso8601String(),
         'startDate': startDate.toIso8601String(),
         'endDate': endDate.toIso8601String(),
@@ -429,11 +439,13 @@ class AuditLoggingService {
     if (data['auditLogs'].isNotEmpty) {
       buffer.writeln('Audit Logs:');
       buffer.writeln(
-          'ID,User ID,User Email,Action,Resource,Resource ID,Level,Category,Timestamp,Success');
+        'ID,User ID,User Email,Action,Resource,Resource ID,Level,Category,Timestamp,Success',
+      );
 
       for (final log in data['auditLogs']) {
         buffer.writeln(
-            '${log['id']},${log['userId']},${log['userEmail']},${log['action']},${log['resource']},${log['resourceId']},${log['level']},${log['category']},${log['timestamp']},${log['isSuccess']}');
+          '${log['id']},${log['userId']},${log['userEmail']},${log['action']},${log['resource']},${log['resourceId']},${log['level']},${log['category']},${log['timestamp']},${log['isSuccess']}',
+        );
       }
       buffer.writeln();
     }
@@ -445,7 +457,8 @@ class AuditLoggingService {
 
       for (final log in data['systemLogs']) {
         buffer.writeln(
-            '${log['id']},${log['component']},${log['message']},${log['level']},${log['category']},${log['timestamp']}');
+          '${log['id']},${log['component']},${log['message']},${log['level']},${log['category']},${log['timestamp']}',
+        );
       }
     }
 
@@ -556,7 +569,7 @@ class AuditLoggingService {
 
   /// Группировка по уровням аудита
   Map<String, int> _groupByLevel(List<AuditLog> logs) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final log in logs) {
       groups[log.level.value] = (groups[log.level.value] ?? 0) + 1;
     }
@@ -565,7 +578,7 @@ class AuditLoggingService {
 
   /// Группировка по категориям аудита
   Map<String, int> _groupByCategory(List<AuditLog> logs) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final log in logs) {
       groups[log.category.value] = (groups[log.category.value] ?? 0) + 1;
     }
@@ -574,7 +587,7 @@ class AuditLoggingService {
 
   /// Группировка по уровням системных логов
   Map<String, int> _groupBySystemLevel(List<SystemLog> logs) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final log in logs) {
       groups[log.level.value] = (groups[log.level.value] ?? 0) + 1;
     }
@@ -583,7 +596,7 @@ class AuditLoggingService {
 
   /// Группировка по категориям системных логов
   Map<String, int> _groupBySystemCategory(List<SystemLog> logs) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final log in logs) {
       groups[log.category.value] = (groups[log.category.value] ?? 0) + 1;
     }
@@ -621,12 +634,11 @@ class AuditLoggingService {
   }
 
   /// Генерация уникального ID
-  String _generateId() {
-    return DateTime.now().millisecondsSinceEpoch.toString() +
-        (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
-            .round()
-            .toString();
-  }
+  String _generateId() =>
+      DateTime.now().millisecondsSinceEpoch.toString() +
+      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
+          .round()
+          .toString();
 
   /// Закрытие сервиса
   Future<void> dispose() async {

@@ -2,18 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель предложения специалистов в чат
 class Proposal {
-  final String id;
-  final String chatId;
-  final String organizerId;
-  final String customerId;
-  final List<ProposalSpecialist> specialists;
-  final ProposalStatus status;
-  final String? message;
-  final DateTime createdAt;
-  final DateTime? respondedAt;
-  final String? respondedBy;
-  final Map<String, dynamic>? metadata;
-
   const Proposal({
     required this.id,
     required this.chatId,
@@ -38,7 +26,8 @@ class Proposal {
       customerId: data['customerId'] ?? '',
       specialists: (data['specialists'] as List<dynamic>?)
               ?.map(
-                  (s) => ProposalSpecialist.fromMap(s as Map<String, dynamic>))
+                (s) => ProposalSpecialist.fromMap(s as Map<String, dynamic>),
+              )
               .toList() ??
           [],
       status: ProposalStatus.values.firstWhere(
@@ -58,49 +47,57 @@ class Proposal {
   }
 
   /// Создать из Map
-  factory Proposal.fromMap(Map<String, dynamic> data) {
-    return Proposal(
-      id: data['id'] ?? '',
-      chatId: data['chatId'] ?? '',
-      organizerId: data['organizerId'] ?? '',
-      customerId: data['customerId'] ?? '',
-      specialists: (data['specialists'] as List<dynamic>?)
-              ?.map(
-                  (s) => ProposalSpecialist.fromMap(s as Map<String, dynamic>))
-              .toList() ??
-          [],
-      status: ProposalStatus.values.firstWhere(
-        (e) => e.name == data['status'],
-        orElse: () => ProposalStatus.pending,
-      ),
-      message: data['message'],
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      respondedAt: data['respondedAt'] != null
-          ? (data['respondedAt'] as Timestamp).toDate()
-          : null,
-      respondedBy: data['respondedBy'],
-      metadata: data['metadata'] != null
-          ? Map<String, dynamic>.from(data['metadata'])
-          : null,
-    );
-  }
+  factory Proposal.fromMap(Map<String, dynamic> data) => Proposal(
+        id: data['id'] ?? '',
+        chatId: data['chatId'] ?? '',
+        organizerId: data['organizerId'] ?? '',
+        customerId: data['customerId'] ?? '',
+        specialists: (data['specialists'] as List<dynamic>?)
+                ?.map(
+                  (s) => ProposalSpecialist.fromMap(s as Map<String, dynamic>),
+                )
+                .toList() ??
+            [],
+        status: ProposalStatus.values.firstWhere(
+          (e) => e.name == data['status'],
+          orElse: () => ProposalStatus.pending,
+        ),
+        message: data['message'],
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        respondedAt: data['respondedAt'] != null
+            ? (data['respondedAt'] as Timestamp).toDate()
+            : null,
+        respondedBy: data['respondedBy'],
+        metadata: data['metadata'] != null
+            ? Map<String, dynamic>.from(data['metadata'])
+            : null,
+      );
+  final String id;
+  final String chatId;
+  final String organizerId;
+  final String customerId;
+  final List<ProposalSpecialist> specialists;
+  final ProposalStatus status;
+  final String? message;
+  final DateTime createdAt;
+  final DateTime? respondedAt;
+  final String? respondedBy;
+  final Map<String, dynamic>? metadata;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'chatId': chatId,
-      'organizerId': organizerId,
-      'customerId': customerId,
-      'specialists': specialists.map((s) => s.toMap()).toList(),
-      'status': status.name,
-      'message': message,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'respondedAt':
-          respondedAt != null ? Timestamp.fromDate(respondedAt!) : null,
-      'respondedBy': respondedBy,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'chatId': chatId,
+        'organizerId': organizerId,
+        'customerId': customerId,
+        'specialists': specialists.map((s) => s.toMap()).toList(),
+        'status': status.name,
+        'message': message,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'respondedAt':
+            respondedAt != null ? Timestamp.fromDate(respondedAt!) : null,
+        'respondedBy': respondedBy,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   Proposal copyWith({
@@ -115,21 +112,20 @@ class Proposal {
     DateTime? respondedAt,
     String? respondedBy,
     Map<String, dynamic>? metadata,
-  }) {
-    return Proposal(
-      id: id ?? this.id,
-      chatId: chatId ?? this.chatId,
-      organizerId: organizerId ?? this.organizerId,
-      customerId: customerId ?? this.customerId,
-      specialists: specialists ?? this.specialists,
-      status: status ?? this.status,
-      message: message ?? this.message,
-      createdAt: createdAt ?? this.createdAt,
-      respondedAt: respondedAt ?? this.respondedAt,
-      respondedBy: respondedBy ?? this.respondedBy,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      Proposal(
+        id: id ?? this.id,
+        chatId: chatId ?? this.chatId,
+        organizerId: organizerId ?? this.organizerId,
+        customerId: customerId ?? this.customerId,
+        specialists: specialists ?? this.specialists,
+        status: status ?? this.status,
+        message: message ?? this.message,
+        createdAt: createdAt ?? this.createdAt,
+        respondedAt: respondedAt ?? this.respondedAt,
+        respondedBy: respondedBy ?? this.respondedBy,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Проверить, можно ли ответить на предложение
   bool get canRespond => status == ProposalStatus.pending;
@@ -144,10 +140,10 @@ class Proposal {
   int get specialistCount => specialists.length;
 
   /// Получить общую стоимость предложения
-  double get totalCost {
-    return specialists.fold(
-        0.0, (sum, specialist) => sum + (specialist.estimatedPrice ?? 0));
-  }
+  double get totalCost => specialists.fold(
+        0,
+        (sum, specialist) => sum + (specialist.estimatedPrice ?? 0),
+      );
 
   @override
   bool operator ==(Object other) {
@@ -166,37 +162,26 @@ class Proposal {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      chatId,
-      organizerId,
-      customerId,
-      specialists,
-      status,
-      message,
-      createdAt,
-      respondedAt,
-      respondedBy,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        chatId,
+        organizerId,
+        customerId,
+        specialists,
+        status,
+        message,
+        createdAt,
+        respondedAt,
+        respondedBy,
+      );
 
   @override
-  String toString() {
-    return 'Proposal(id: $id, chatId: $chatId, status: $status, specialistCount: $specialistCount)';
-  }
+  String toString() =>
+      'Proposal(id: $id, chatId: $chatId, status: $status, specialistCount: $specialistCount)';
 }
 
 /// Специалист в предложении
 class ProposalSpecialist {
-  final String specialistId;
-  final String specialistName;
-  final String categoryId;
-  final String categoryName;
-  final double? estimatedPrice;
-  final String? description;
-  final Map<String, dynamic>? metadata;
-
   const ProposalSpecialist({
     required this.specialistId,
     required this.specialistName,
@@ -208,32 +193,36 @@ class ProposalSpecialist {
   });
 
   /// Создать из Map
-  factory ProposalSpecialist.fromMap(Map<String, dynamic> data) {
-    return ProposalSpecialist(
-      specialistId: data['specialistId'] ?? '',
-      specialistName: data['specialistName'] ?? '',
-      categoryId: data['categoryId'] ?? '',
-      categoryName: data['categoryName'] ?? '',
-      estimatedPrice: data['estimatedPrice']?.toDouble(),
-      description: data['description'],
-      metadata: data['metadata'] != null
-          ? Map<String, dynamic>.from(data['metadata'])
-          : null,
-    );
-  }
+  factory ProposalSpecialist.fromMap(Map<String, dynamic> data) =>
+      ProposalSpecialist(
+        specialistId: data['specialistId'] ?? '',
+        specialistName: data['specialistName'] ?? '',
+        categoryId: data['categoryId'] ?? '',
+        categoryName: data['categoryName'] ?? '',
+        estimatedPrice: data['estimatedPrice']?.toDouble(),
+        description: data['description'],
+        metadata: data['metadata'] != null
+            ? Map<String, dynamic>.from(data['metadata'])
+            : null,
+      );
+  final String specialistId;
+  final String specialistName;
+  final String categoryId;
+  final String categoryName;
+  final double? estimatedPrice;
+  final String? description;
+  final Map<String, dynamic>? metadata;
 
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'specialistId': specialistId,
-      'specialistName': specialistName,
-      'categoryId': categoryId,
-      'categoryName': categoryName,
-      'estimatedPrice': estimatedPrice,
-      'description': description,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'specialistId': specialistId,
+        'specialistName': specialistName,
+        'categoryId': categoryId,
+        'categoryName': categoryName,
+        'estimatedPrice': estimatedPrice,
+        'description': description,
+        'metadata': metadata,
+      };
 
   @override
   bool operator ==(Object other) {
@@ -248,21 +237,18 @@ class ProposalSpecialist {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      specialistId,
-      specialistName,
-      categoryId,
-      categoryName,
-      estimatedPrice,
-      description,
-    );
-  }
+  int get hashCode => Object.hash(
+        specialistId,
+        specialistName,
+        categoryId,
+        categoryName,
+        estimatedPrice,
+        description,
+      );
 
   @override
-  String toString() {
-    return 'ProposalSpecialist(specialistId: $specialistId, specialistName: $specialistName, categoryName: $categoryName)';
-  }
+  String toString() =>
+      'ProposalSpecialist(specialistId: $specialistId, specialistName: $specialistName, categoryName: $categoryName)';
 }
 
 /// Статус предложения

@@ -3,9 +3,8 @@ import '../models/event.dart';
 import '../services/favorites_service.dart';
 
 /// Провайдер сервиса избранного
-final favoritesServiceProvider = Provider<FavoritesService>((ref) {
-  return FavoritesService();
-});
+final favoritesServiceProvider =
+    Provider<FavoritesService>((ref) => FavoritesService());
 
 /// Провайдер избранных событий пользователя
 final userFavoritesProvider =

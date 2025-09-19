@@ -1,12 +1,12 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/calendar_service.dart';
-import '../models/specialist_schedule.dart';
+
 import '../models/calendar_event.dart';
+import '../models/specialist_schedule.dart';
+import '../services/calendar_service.dart';
 
 /// Провайдер сервиса календаря
-final calendarServiceProvider = Provider<CalendarService>((ref) {
-  return CalendarService();
-});
+final calendarServiceProvider =
+    Provider<CalendarService>((ref) => CalendarService());
 
 /// Провайдер расписания специалиста
 final specialistScheduleProvider =
@@ -27,7 +27,9 @@ final dateTimeAvailabilityProvider =
     FutureProvider.family<bool, DateTimeAvailabilityParams>((ref, params) {
   final calendarService = ref.watch(calendarServiceProvider);
   return calendarService.isDateTimeAvailable(
-      params.specialistId, params.dateTime);
+    params.specialistId,
+    params.dateTime,
+  );
 });
 
 /// Провайдер доступных дат в диапазоне
@@ -68,21 +70,11 @@ final allSchedulesProvider = StreamProvider<List<SpecialistSchedule>>((ref) {
 
 /// Провайдер для управления состоянием календаря
 final calendarStateProvider =
-    NotifierProvider<CalendarStateNotifier, CalendarState>(() {
-  return CalendarStateNotifier();
-});
+    NotifierProvider<CalendarStateNotifier, CalendarState>(
+        CalendarStateNotifier.new);
 
 /// Состояние календаря
 class CalendarState {
-  final DateTime selectedDate;
-  final DateTime focusedDate;
-  final String? selectedSpecialistId;
-  final List<DateTime> availableDates;
-  final List<DateTime> availableTimeSlots;
-  final List<CalendarEvent> eventsForSelectedDate;
-  final bool isLoading;
-  final String? errorMessage;
-
   const CalendarState({
     required this.selectedDate,
     required this.focusedDate,
@@ -93,6 +85,14 @@ class CalendarState {
     this.isLoading = false,
     this.errorMessage,
   });
+  final DateTime selectedDate;
+  final DateTime focusedDate;
+  final String? selectedSpecialistId;
+  final List<DateTime> availableDates;
+  final List<DateTime> availableTimeSlots;
+  final List<CalendarEvent> eventsForSelectedDate;
+  final bool isLoading;
+  final String? errorMessage;
 
   CalendarState copyWith({
     DateTime? selectedDate,
@@ -103,19 +103,18 @@ class CalendarState {
     List<CalendarEvent>? eventsForSelectedDate,
     bool? isLoading,
     String? errorMessage,
-  }) {
-    return CalendarState(
-      selectedDate: selectedDate ?? this.selectedDate,
-      focusedDate: focusedDate ?? this.focusedDate,
-      selectedSpecialistId: selectedSpecialistId ?? this.selectedSpecialistId,
-      availableDates: availableDates ?? this.availableDates,
-      availableTimeSlots: availableTimeSlots ?? this.availableTimeSlots,
-      eventsForSelectedDate:
-          eventsForSelectedDate ?? this.eventsForSelectedDate,
-      isLoading: isLoading ?? this.isLoading,
-      errorMessage: errorMessage,
-    );
-  }
+  }) =>
+      CalendarState(
+        selectedDate: selectedDate ?? this.selectedDate,
+        focusedDate: focusedDate ?? this.focusedDate,
+        selectedSpecialistId: selectedSpecialistId ?? this.selectedSpecialistId,
+        availableDates: availableDates ?? this.availableDates,
+        availableTimeSlots: availableTimeSlots ?? this.availableTimeSlots,
+        eventsForSelectedDate:
+            eventsForSelectedDate ?? this.eventsForSelectedDate,
+        isLoading: isLoading ?? this.isLoading,
+        errorMessage: errorMessage,
+      );
 }
 
 /// Нотификатор состояния календаря
@@ -148,14 +147,14 @@ class CalendarStateNotifier extends Notifier<CalendarState> {
   Future<void> _loadDataForSelectedDate() async {
     if (state.selectedSpecialistId == null) return;
 
-    state = state.copyWith(isLoading: true, errorMessage: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       // Загружаем доступные временные слоты
       final timeSlots = await _calendarService.getAvailableTimeSlots(
         state.selectedSpecialistId!,
         state.selectedDate,
-        Duration(hours: 1), // По умолчанию 1 час
+        const Duration(hours: 1), // По умолчанию 1 час
       );
 
       // Загружаем события на дату
@@ -181,7 +180,7 @@ class CalendarStateNotifier extends Notifier<CalendarState> {
   Future<void> loadAvailableDates(DateTime startDate, DateTime endDate) async {
     if (state.selectedSpecialistId == null) return;
 
-    state = state.copyWith(isLoading: true, errorMessage: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       final availableDates = await _calendarService.getAvailableDates(
@@ -205,11 +204,13 @@ class CalendarStateNotifier extends Notifier<CalendarState> {
   Future<void> addEvent(ScheduleEvent event) async {
     if (state.selectedSpecialistId == null) return;
 
-    state = state.copyWith(isLoading: true, errorMessage: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       await _calendarService.addEvent(
-          state.selectedSpecialistId!, event as CalendarEvent);
+        state.selectedSpecialistId!,
+        event as CalendarEvent,
+      );
       await _loadDataForSelectedDate(); // Обновляем данные
     } catch (e) {
       state = state.copyWith(
@@ -223,7 +224,7 @@ class CalendarStateNotifier extends Notifier<CalendarState> {
   Future<void> removeEvent(String eventId) async {
     if (state.selectedSpecialistId == null) return;
 
-    state = state.copyWith(isLoading: true, errorMessage: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       await _calendarService.removeEvent(state.selectedSpecialistId!, eventId);
@@ -238,19 +239,18 @@ class CalendarStateNotifier extends Notifier<CalendarState> {
 
   /// Очистить ошибку
   void clearError() {
-    state = state.copyWith(errorMessage: null);
+    state = state.copyWith();
   }
 }
 
 /// Параметры для проверки доступности даты
 class DateAvailabilityParams {
-  final String specialistId;
-  final DateTime date;
-
   const DateAvailabilityParams({
     required this.specialistId,
     required this.date,
   });
+  final String specialistId;
+  final DateTime date;
 
   @override
   bool operator ==(Object other) {
@@ -266,13 +266,12 @@ class DateAvailabilityParams {
 
 /// Параметры для проверки доступности времени
 class DateTimeAvailabilityParams {
-  final String specialistId;
-  final DateTime dateTime;
-
   const DateTimeAvailabilityParams({
     required this.specialistId,
     required this.dateTime,
   });
+  final String specialistId;
+  final DateTime dateTime;
 
   @override
   bool operator ==(Object other) {
@@ -288,15 +287,14 @@ class DateTimeAvailabilityParams {
 
 /// Параметры для получения доступных дат
 class AvailableDatesParams {
-  final String specialistId;
-  final DateTime startDate;
-  final DateTime endDate;
-
   const AvailableDatesParams({
     required this.specialistId,
     required this.startDate,
     required this.endDate,
   });
+  final String specialistId;
+  final DateTime startDate;
+  final DateTime endDate;
 
   @override
   bool operator ==(Object other) {
@@ -314,15 +312,14 @@ class AvailableDatesParams {
 
 /// Параметры для получения доступных временных слотов
 class AvailableTimeSlotsParams {
-  final String specialistId;
-  final DateTime date;
-  final Duration slotDuration;
-
   const AvailableTimeSlotsParams({
     required this.specialistId,
     required this.date,
     this.slotDuration = const Duration(hours: 1),
   });
+  final String specialistId;
+  final DateTime date;
+  final Duration slotDuration;
 
   @override
   bool operator ==(Object other) {
@@ -340,13 +337,12 @@ class AvailableTimeSlotsParams {
 
 /// Параметры для получения событий на дату
 class EventsForDateParams {
-  final String specialistId;
-  final DateTime date;
-
   const EventsForDateParams({
     required this.specialistId,
     required this.date,
   });
+  final String specialistId;
+  final DateTime date;
 
   @override
   bool operator ==(Object other) {

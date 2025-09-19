@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:isolate';
 import 'package:flutter/foundation.dart';
-import 'package:event_marketplace_app/services/logger_service.dart';
-import 'package:event_marketplace_app/services/monitoring_service.dart';
+import 'logger_service.dart';
+import 'monitoring_service.dart';
 
 /// Сервис для оптимизации производительности приложения
 class PerformanceService {
-  static final PerformanceService _instance = PerformanceService._internal();
   factory PerformanceService() => _instance;
   PerformanceService._internal();
+  static final PerformanceService _instance = PerformanceService._internal();
 
   final LoggerService _logger = LoggerService();
   final MonitoringService _monitoring = MonitoringService();
@@ -20,7 +20,7 @@ class PerformanceService {
   // Кэш для часто используемых данных
   final Map<String, dynamic> _cache = {};
   final Map<String, DateTime> _cacheTimestamps = {};
-  final Duration _cacheExpiration = Duration(minutes: 5);
+  const Duration _cacheExpiration = Duration(minutes: 5);
 
   // Очередь для тяжелых операций
   final Queue<Future<void> Function()> _heavyOperationsQueue = Queue();
@@ -39,8 +39,11 @@ class PerformanceService {
   }
 
   /// Дебаунс функция - выполняется только после паузы в вызовах
-  void debounce(String key, VoidCallback callback,
-      {Duration delay = const Duration(milliseconds: 300)}) {
+  void debounce(
+    String key,
+    VoidCallback callback, {
+    Duration delay = const Duration(milliseconds: 300),
+  }) {
     _debounceTimers[key]?.cancel();
     _debounceTimers[key] = Timer(delay, () {
       callback();
@@ -49,9 +52,12 @@ class PerformanceService {
   }
 
   /// Троттлинг функции - выполняется не чаще указанного интервала
-  void throttle(String key, VoidCallback callback,
-      {Duration interval = const Duration(milliseconds: 100)}) {
-    if (_throttleFlags[key] == true) return;
+  void throttle(
+    String key,
+    VoidCallback callback, {
+    Duration interval = const Duration(milliseconds: 100),
+  }) {
+    if (_throttleFlags[key] ?? false) return;
 
     _throttleFlags[key] = true;
     callback();
@@ -64,8 +70,11 @@ class PerformanceService {
   }
 
   /// Кэширование результата функции
-  Future<T> cache<T>(String key, Future<T> Function() computation,
-      {Duration? expiration}) async {
+  Future<T> cache<T>(
+    String key,
+    Future<T> Function() computation, {
+    Duration? expiration,
+  }) async {
     final now = DateTime.now();
     final exp = expiration ?? _cacheExpiration;
 
@@ -105,17 +114,17 @@ class PerformanceService {
   }
 
   /// Получение статистики кэша
-  Map<String, dynamic> getCacheStats() {
-    return {
-      'size': _cache.length,
-      'keys': _cache.keys.toList(),
-      'hitRate': _calculateCacheHitRate(),
-    };
-  }
+  Map<String, dynamic> getCacheStats() => {
+        'size': _cache.length,
+        'keys': _cache.keys.toList(),
+        'hitRate': _calculateCacheHitRate(),
+      };
 
   /// Выполнение операции с ограничением количества одновременных операций
-  Future<T> executeWithLimit<T>(Future<T> Function() operation,
-      {String? operationName}) async {
+  Future<T> executeWithLimit<T>(
+    Future<T> Function() operation, {
+    String? operationName,
+  }) async {
     if (_currentOperations >= _maxConcurrentOperations) {
       // Добавляем в очередь
       final completer = Completer<T>();
@@ -167,14 +176,17 @@ class PerformanceService {
   }
 
   /// Оптимизация изображений
-  Future<Uint8List> optimizeImage(Uint8List imageData,
-      {int? maxWidth, int? maxHeight, int quality = 85}) async {
-    return await executeInIsolate(() {
-      // Здесь должна быть логика оптимизации изображений
-      // Для примера возвращаем исходные данные
-      return imageData;
-    });
-  }
+  Future<Uint8List> optimizeImage(
+    Uint8List imageData, {
+    int? maxWidth,
+    int? maxHeight,
+    int quality = 85,
+  }) async =>
+      executeInIsolate(() {
+        // Здесь должна быть логика оптимизации изображений
+        // Для примера возвращаем исходные данные
+        return imageData;
+      });
 
   /// Ленивая загрузка данных
   Future<List<T>> lazyLoad<T>({
@@ -184,14 +196,12 @@ class PerformanceService {
   }) async {
     final key = 'lazy_load_${T.toString()}_${initialOffset}_$limit';
 
-    return await cache(key, () async {
-      return await loader(initialOffset, limit);
-    });
+    return cache(key, () async => loader(initialOffset, limit));
   }
 
   /// Предзагрузка данных
   Future<void> preloadData<T>(List<Future<T> Function()> loaders) async {
-    final futures = loaders.map((loader) => executeWithLimit(loader));
+    final futures = loaders.map(executeWithLimit);
     await Future.wait(futures);
     _logger.info('Preloaded ${loaders.length} data items', tag: 'PERFORMANCE');
   }
@@ -199,8 +209,10 @@ class PerformanceService {
   /// Оптимизация списков
   List<T> optimizeList<T>(List<T> list, {int? maxItems}) {
     if (maxItems != null && list.length > maxItems) {
-      _logger.debug('Optimized list from ${list.length} to $maxItems items',
-          tag: 'PERFORMANCE');
+      _logger.debug(
+        'Optimized list from ${list.length} to $maxItems items',
+        tag: 'PERFORMANCE',
+      );
       return list.take(maxItems).toList();
     }
     return list;
@@ -233,24 +245,22 @@ class PerformanceService {
   }
 
   /// Получение статистики производительности
-  Map<String, dynamic> getPerformanceStats() {
-    return {
-      'cache': getCacheStats(),
-      'operations': {
-        'current': _currentOperations,
-        'max': _maxConcurrentOperations,
-        'queued': _operationQueue.length,
-      },
-      'heavyOperations': {
-        'queued': _heavyOperationsQueue.length,
-        'processing': _isProcessingQueue,
-      },
-      'timers': {
-        'debounce': _debounceTimers.length,
-        'throttle': _throttleTimers.length,
-      },
-    };
-  }
+  Map<String, dynamic> getPerformanceStats() => {
+        'cache': getCacheStats(),
+        'operations': {
+          'current': _currentOperations,
+          'max': _maxConcurrentOperations,
+          'queued': _operationQueue.length,
+        },
+        'heavyOperations': {
+          'queued': _heavyOperationsQueue.length,
+          'processing': _isProcessingQueue,
+        },
+        'timers': {
+          'debounce': _debounceTimers.length,
+          'throttle': _throttleTimers.length,
+        },
+      };
 
   /// Настройка параметров производительности
   void configure({
@@ -259,15 +269,18 @@ class PerformanceService {
   }) {
     if (maxConcurrentOperations != null) {
       _maxConcurrentOperations = maxConcurrentOperations;
-      _logger.info('Set max concurrent operations to $maxConcurrentOperations',
-          tag: 'PERFORMANCE');
+      _logger.info(
+        'Set max concurrent operations to $maxConcurrentOperations',
+        tag: 'PERFORMANCE',
+      );
     }
 
     if (cacheExpiration != null) {
       _cacheExpiration = cacheExpiration;
       _logger.info(
-          'Set cache expiration to ${cacheExpiration.inMinutes} minutes',
-          tag: 'PERFORMANCE');
+        'Set cache expiration to ${cacheExpiration.inMinutes} minutes',
+        tag: 'PERFORMANCE',
+      );
     }
   }
 
@@ -295,13 +308,13 @@ class PerformanceService {
   // Приватные методы
 
   void _startCacheCleanup() {
-    Timer.periodic(Duration(minutes: 1), (_) {
+    Timer.periodic(const Duration(minutes: 1), (_) {
       _cleanupExpiredCache();
     });
   }
 
   void _startQueueProcessor() {
-    Timer.periodic(Duration(seconds: 1), (_) {
+    Timer.periodic(const Duration(seconds: 1), (_) {
       _processHeavyOperationsQueue();
     });
   }
@@ -322,8 +335,10 @@ class PerformanceService {
     }
 
     if (expiredKeys.isNotEmpty) {
-      _logger.debug('Cleaned up ${expiredKeys.length} expired cache entries',
-          tag: 'PERFORMANCE');
+      _logger.debug(
+        'Cleaned up ${expiredKeys.length} expired cache entries',
+        tag: 'PERFORMANCE',
+      );
     }
   }
 
@@ -343,7 +358,9 @@ class PerformanceService {
 
   void _processOperationQueue() {
     if (_operationQueue.isEmpty ||
-        _currentOperations >= _maxConcurrentOperations) return;
+        _currentOperations >= _maxConcurrentOperations) {
+      return;
+    }
 
     final operation = _operationQueue.removeFirst();
     _currentOperations++;
@@ -368,34 +385,28 @@ class PerformanceService {
 /// Расширение для Future с оптимизацией производительности
 extension PerformanceFutureExtension<T> on Future<T> {
   /// Выполнить с ограничением количества одновременных операций
-  Future<T> withConcurrencyLimit({String? operationName}) {
-    return PerformanceService()
-        .executeWithLimit(() => this, operationName: operationName);
-  }
+  Future<T> withConcurrencyLimit({String? operationName}) =>
+      PerformanceService()
+          .executeWithLimit(() => this, operationName: operationName);
 
   /// Выполнить в изоляте
-  Future<T> inIsolate() {
-    return PerformanceService().executeInIsolate(() => this);
-  }
+  Future<T> inIsolate() => PerformanceService().executeInIsolate(() => this);
 
   /// Кэшировать результат
-  Future<T> cached(String key, {Duration? expiration}) {
-    return PerformanceService().cache(key, () => this, expiration: expiration);
-  }
+  Future<T> cached(String key, {Duration? expiration}) =>
+      PerformanceService().cache(key, () => this, expiration: expiration);
 }
 
 /// Расширение для List с оптимизацией
 extension PerformanceListExtension<T> on List<T> {
   /// Оптимизировать список
-  List<T> optimized({int? maxItems}) {
-    return PerformanceService().optimizeList(this, maxItems: maxItems);
-  }
+  List<T> optimized({int? maxItems}) =>
+      PerformanceService().optimizeList(this, maxItems: maxItems);
 }
 
 /// Расширение для String с оптимизацией
 extension PerformanceStringExtension on String {
   /// Оптимизировать строку
-  String optimized({int? maxLength}) {
-    return PerformanceService().optimizeString(this, maxLength: maxLength);
-  }
+  String optimized({int? maxLength}) =>
+      PerformanceService().optimizeString(this, maxLength: maxLength);
 }

@@ -1,11 +1,13 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-import '../models/dj_playlist.dart';
+
 import '../core/feature_flags.dart';
+import '../models/dj_playlist.dart';
 
 /// Сервис для работы с плейлистами и медиафайлами диджеев
 class DJPlaylistService {
@@ -25,8 +27,7 @@ class DJPlaylistService {
     }
 
     try {
-      final fileName =
-          '${DateTime.now().millisecondsSinceEpoch}_${originalName}';
+      final fileName = '${DateTime.now().millisecondsSinceEpoch}_$originalName';
       final filePath = 'dj_media/$djId/$fileName';
 
       // Загружаем файл в Firebase Storage
@@ -79,14 +80,16 @@ class DJPlaylistService {
         .where('status', isEqualTo: MediaStatus.ready.name)
         .orderBy('uploadedAt', descending: true)
         .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return MediaFile.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
-    });
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => MediaFile.fromMap({
+                  'id': doc.id,
+                  ...doc.data(),
+                }),
+              )
+              .toList(),
+        );
   }
 
   /// Создать плейлист
@@ -190,7 +193,9 @@ class DJPlaylistService {
 
   /// Обновить плейлист
   Future<void> updatePlaylist(
-      String playlistId, Map<String, dynamic> updates) async {
+    String playlistId,
+    Map<String, dynamic> updates,
+  ) async {
     if (!FeatureFlags.djPlaylistsEnabled) {
       throw Exception('Плейлисты диджеев отключены');
     }
@@ -279,7 +284,6 @@ class DJPlaylistService {
         djId: djId,
         name: playlistName,
         description: description ?? 'Импортировано из VK',
-        isPublic: false,
         settings: {
           'source': 'vk',
           'vk_url': vkPlaylistUrl,
@@ -341,12 +345,14 @@ class DJPlaylistService {
           .where(FieldPath.documentId, whereIn: mediaFileIds)
           .get();
 
-      return query.docs.map((doc) {
-        return MediaFile.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
+      return query.docs
+          .map(
+            (doc) => MediaFile.fromMap({
+              'id': doc.id,
+              ...doc.data(),
+            }),
+          )
+          .toList();
     } catch (e) {
       debugPrint('Error getting media files by IDs: $e');
       return [];
@@ -418,87 +424,86 @@ class DJPlaylistService {
   }
 
   /// Создать mock VK плейлист для демонстрации
-  VKPlaylist _createMockVKPlaylist() {
-    return VKPlaylist(
-      id: 'mock_vk_playlist',
-      title: 'Лучшие хиты 2024',
-      description: 'Популярные треки этого года',
-      coverImageUrl:
-          'https://via.placeholder.com/300x300/4CAF50/FFFFFF?text=VK+Playlist',
-      trackCount: 5,
-      ownerId: 'mock_user',
-      ownerName: 'Mock DJ',
-      createdAt: DateTime.now().subtract(const Duration(days: 30)),
-      tracks: [
-        VKTrack(
-          id: '1',
-          title: 'Summer Vibes',
-          artist: 'Chill Artist',
-          duration: const Duration(minutes: 3, seconds: 45),
-          url: 'https://example.com/track1.mp3',
-          albumTitle: 'Summer Collection',
-        ),
-        VKTrack(
-          id: '2',
-          title: 'Night Drive',
-          artist: 'Electronic DJ',
-          duration: const Duration(minutes: 4, seconds: 12),
-          url: 'https://example.com/track2.mp3',
-          albumTitle: 'Night Sessions',
-        ),
-        VKTrack(
-          id: '3',
-          title: 'Dance Floor',
-          artist: 'Party Master',
-          duration: const Duration(minutes: 3, seconds: 28),
-          url: 'https://example.com/track3.mp3',
-          albumTitle: 'Club Hits',
-        ),
-        VKTrack(
-          id: '4',
-          title: 'Sunset Dreams',
-          artist: 'Ambient Creator',
-          duration: const Duration(minutes: 5, seconds: 33),
-          url: 'https://example.com/track4.mp3',
-          albumTitle: 'Dreams & Visions',
-        ),
-        VKTrack(
-          id: '5',
-          title: 'Energy Boost',
-          artist: 'Power DJ',
-          duration: const Duration(minutes: 3, seconds: 56),
-          url: 'https://example.com/track5.mp3',
-          albumTitle: 'High Energy',
-        ),
-      ],
-    );
-  }
+  VKPlaylist _createMockVKPlaylist() => VKPlaylist(
+        id: 'mock_vk_playlist',
+        title: 'Лучшие хиты 2024',
+        description: 'Популярные треки этого года',
+        coverImageUrl:
+            'https://via.placeholder.com/300x300/4CAF50/FFFFFF?text=VK+Playlist',
+        trackCount: 5,
+        ownerId: 'mock_user',
+        ownerName: 'Mock DJ',
+        createdAt: DateTime.now().subtract(const Duration(days: 30)),
+        tracks: [
+          const VKTrack(
+            id: '1',
+            title: 'Summer Vibes',
+            artist: 'Chill Artist',
+            duration: Duration(minutes: 3, seconds: 45),
+            url: 'https://example.com/track1.mp3',
+            albumTitle: 'Summer Collection',
+          ),
+          const VKTrack(
+            id: '2',
+            title: 'Night Drive',
+            artist: 'Electronic DJ',
+            duration: Duration(minutes: 4, seconds: 12),
+            url: 'https://example.com/track2.mp3',
+            albumTitle: 'Night Sessions',
+          ),
+          const VKTrack(
+            id: '3',
+            title: 'Dance Floor',
+            artist: 'Party Master',
+            duration: Duration(minutes: 3, seconds: 28),
+            url: 'https://example.com/track3.mp3',
+            albumTitle: 'Club Hits',
+          ),
+          const VKTrack(
+            id: '4',
+            title: 'Sunset Dreams',
+            artist: 'Ambient Creator',
+            duration: Duration(minutes: 5, seconds: 33),
+            url: 'https://example.com/track4.mp3',
+            albumTitle: 'Dreams & Visions',
+          ),
+          const VKTrack(
+            id: '5',
+            title: 'Energy Boost',
+            artist: 'Power DJ',
+            duration: Duration(minutes: 3, seconds: 56),
+            url: 'https://example.com/track5.mp3',
+            albumTitle: 'High Energy',
+          ),
+        ],
+      );
 
   /// Создать mock медиафайлы для демонстрации
-  List<MediaFile> _createMockMediaFiles(String djId, List<VKTrack> tracks) {
-    return tracks.map((track) {
-      return MediaFile(
-        id: 'mock_${track.id}',
-        djId: djId,
-        fileName: '${track.artist} - ${track.title}.mp3',
-        originalName: '${track.artist} - ${track.title}.mp3',
-        filePath: track.url ?? 'https://example.com/mock_track.mp3',
-        type: MediaType.audio,
-        status: MediaStatus.ready,
-        fileSize: 5000000, // 5MB
-        duration: track.duration,
-        mimeType: 'audio/mpeg',
-        metadata: {
-          'artist': track.artist,
-          'title': track.title,
-          'album': track.albumTitle,
-          'source': 'vk_import',
-        },
-        uploadedAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-    }).toList();
-  }
+  List<MediaFile> _createMockMediaFiles(String djId, List<VKTrack> tracks) =>
+      tracks
+          .map(
+            (track) => MediaFile(
+              id: 'mock_${track.id}',
+              djId: djId,
+              fileName: '${track.artist} - ${track.title}.mp3',
+              originalName: '${track.artist} - ${track.title}.mp3',
+              filePath: track.url ?? 'https://example.com/mock_track.mp3',
+              type: MediaType.audio,
+              status: MediaStatus.ready,
+              fileSize: 5000000, // 5MB
+              duration: track.duration,
+              mimeType: 'audio/mpeg',
+              metadata: {
+                'artist': track.artist,
+                'title': track.title,
+                'album': track.albumTitle,
+                'source': 'vk_import',
+              },
+              uploadedAt: DateTime.now(),
+              updatedAt: DateTime.now(),
+            ),
+          )
+          .toList();
 
   /// Получить статистику плейлистов диджея
   Future<Map<String, dynamic>> getDJPlaylistStats(String djId) async {

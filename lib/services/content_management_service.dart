@@ -1,21 +1,23 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+
 import '../models/content_management.dart';
 
 /// Сервис управления контентом и медиа
 class ContentManagementService {
+  factory ContentManagementService() => _instance;
+  ContentManagementService._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final Uuid _uuid = const Uuid();
 
   static final ContentManagementService _instance =
       ContentManagementService._internal();
-  factory ContentManagementService() => _instance;
-  ContentManagementService._internal();
 
   final Map<String, MediaContent> _mediaCache = {};
   final Map<String, ContentGallery> _galleryCache = {};
@@ -250,7 +252,9 @@ class ContentManagementService {
 
   /// Создать задачу обработки
   Future<void> _createProcessingTask(
-      String mediaId, ProcessingType type) async {
+    String mediaId,
+    ProcessingType type,
+  ) async {
     try {
       final processingId = _uuid.v4();
       final processing = MediaProcessing(
@@ -415,7 +419,9 @@ class ContentManagementService {
 
   /// Изменить размер изображения
   Future<String?> _resizeImage(
-      MediaContent mediaContent, Map<String, dynamic> parameters) async {
+    MediaContent mediaContent,
+    Map<String, dynamic> parameters,
+  ) async {
     try {
       if (mediaContent.type != MediaType.image) return null;
 
@@ -434,7 +440,9 @@ class ContentManagementService {
 
   /// Сжать медиа
   Future<String?> _compressMedia(
-      MediaContent mediaContent, Map<String, dynamic> parameters) async {
+    MediaContent mediaContent,
+    Map<String, dynamic> parameters,
+  ) async {
     try {
       final quality = parameters['quality'] as int? ?? 80;
 
@@ -450,7 +458,9 @@ class ContentManagementService {
 
   /// Добавить водяной знак
   Future<String?> _addWatermark(
-      MediaContent mediaContent, Map<String, dynamic> parameters) async {
+    MediaContent mediaContent,
+    Map<String, dynamic> parameters,
+  ) async {
     try {
       if (mediaContent.type != MediaType.image) return null;
 
@@ -466,7 +476,9 @@ class ContentManagementService {
 
   /// Применить фильтр
   Future<String?> _applyFilter(
-      MediaContent mediaContent, Map<String, dynamic> parameters) async {
+    MediaContent mediaContent,
+    Map<String, dynamic> parameters,
+  ) async {
     try {
       if (mediaContent.type != MediaType.image) return null;
 
@@ -482,7 +494,9 @@ class ContentManagementService {
 
   /// Обрезать изображение
   Future<String?> _cropImage(
-      MediaContent mediaContent, Map<String, dynamic> parameters) async {
+    MediaContent mediaContent,
+    Map<String, dynamic> parameters,
+  ) async {
     try {
       if (mediaContent.type != MediaType.image) return null;
 
@@ -498,7 +512,9 @@ class ContentManagementService {
 
   /// Повернуть изображение
   Future<String?> _rotateImage(
-      MediaContent mediaContent, Map<String, dynamic> parameters) async {
+    MediaContent mediaContent,
+    Map<String, dynamic> parameters,
+  ) async {
     try {
       if (mediaContent.type != MediaType.image) return null;
 
@@ -514,7 +530,9 @@ class ContentManagementService {
 
   /// Конвертировать медиа
   Future<String?> _convertMedia(
-      MediaContent mediaContent, Map<String, dynamic> parameters) async {
+    MediaContent mediaContent,
+    Map<String, dynamic> parameters,
+  ) async {
     try {
       // TODO: Реализовать конвертацию медиа
       return mediaContent.url; // Временная заглушка
@@ -695,14 +713,10 @@ class ContentManagementService {
   }
 
   /// Получить медиа контент
-  MediaContent? getMediaContent(String mediaId) {
-    return _mediaCache[mediaId];
-  }
+  MediaContent? getMediaContent(String mediaId) => _mediaCache[mediaId];
 
   /// Получить галерею
-  ContentGallery? getGallery(String galleryId) {
-    return _galleryCache[galleryId];
-  }
+  ContentGallery? getGallery(String galleryId) => _galleryCache[galleryId];
 
   /// Получить медиа по специалисту
   Future<List<MediaContent>> getMediaBySpecialist(String specialistId) async {
@@ -713,9 +727,7 @@ class ContentManagementService {
           .orderBy('uploadedAt', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => MediaContent.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(MediaContent.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка получения медиа по специалисту: $e');
@@ -726,7 +738,8 @@ class ContentManagementService {
 
   /// Получить галереи по специалисту
   Future<List<ContentGallery>> getGalleriesBySpecialist(
-      String specialistId) async {
+    String specialistId,
+  ) async {
     try {
       final snapshot = await _firestore
           .collection('contentGalleries')
@@ -734,9 +747,7 @@ class ContentManagementService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => ContentGallery.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(ContentGallery.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка получения галерей по специалисту: $e');
@@ -841,9 +852,8 @@ class ContentManagementService {
   }
 
   /// Проверить поддержку типа файла
-  bool _isSupportedFileType(MediaType type, String mimeType) {
-    return type.supportedMimeTypes.contains(mimeType);
-  }
+  bool _isSupportedFileType(MediaType type, String mimeType) =>
+      type.supportedMimeTypes.contains(mimeType);
 
   /// Загрузить кэш медиа
   Future<void> _loadMediaCache() async {

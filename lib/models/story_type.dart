@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 /// Тип истории
 enum StoryType {
   photo,
@@ -7,6 +5,7 @@ enum StoryType {
   text,
   poll,
   quiz,
+  image,
 }
 
 /// Расширение для StoryType
@@ -23,6 +22,8 @@ extension StoryTypeExtension on StoryType {
         return 'Опрос';
       case StoryType.quiz:
         return 'Викторина';
+      case StoryType.image:
+        return 'Изображение';
     }
   }
 
@@ -38,6 +39,8 @@ extension StoryTypeExtension on StoryType {
         return '📊';
       case StoryType.quiz:
         return '❓';
+      case StoryType.image:
+        return '🖼️';
     }
   }
 }

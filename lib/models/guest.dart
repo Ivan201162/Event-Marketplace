@@ -2,17 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель гостя мероприятия
 class Guest {
-  final String id;
-  final String eventId;
-  final String name;
-  final String? email;
-  final String? phone;
-  final String? avatar;
-  final GuestStatus status;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final Map<String, dynamic> metadata;
-
   const Guest({
     required this.id,
     required this.eventId,
@@ -27,39 +16,45 @@ class Guest {
   });
 
   /// Создать из Map
-  factory Guest.fromMap(Map<String, dynamic> data) {
-    return Guest(
-      id: data['id'] ?? '',
-      eventId: data['eventId'] ?? '',
-      name: data['name'] ?? '',
-      email: data['email'],
-      phone: data['phone'],
-      avatar: data['avatar'],
-      status: GuestStatus.values.firstWhere(
-        (e) => e.name == data['status'],
-        orElse: () => GuestStatus.invited,
-      ),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-    );
-  }
+  factory Guest.fromMap(Map<String, dynamic> data) => Guest(
+        id: data['id'] ?? '',
+        eventId: data['eventId'] ?? '',
+        name: data['name'] ?? '',
+        email: data['email'],
+        phone: data['phone'],
+        avatar: data['avatar'],
+        status: GuestStatus.values.firstWhere(
+          (e) => e.name == data['status'],
+          orElse: () => GuestStatus.invited,
+        ),
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      );
+  final String id;
+  final String eventId;
+  final String name;
+  final String? email;
+  final String? phone;
+  final String? avatar;
+  final GuestStatus status;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'eventId': eventId,
-      'name': name,
-      'email': email,
-      'phone': phone,
-      'avatar': avatar,
-      'status': status.name,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'eventId': eventId,
+        'name': name,
+        'email': email,
+        'phone': phone,
+        'avatar': avatar,
+        'status': status.name,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'metadata': metadata,
+      };
 
   /// Геттеры для совместимости с виджетами
   String get guestName => name;
@@ -117,20 +112,19 @@ class Guest {
     DateTime? createdAt,
     DateTime? updatedAt,
     Map<String, dynamic>? metadata,
-  }) {
-    return Guest(
-      id: id ?? this.id,
-      eventId: eventId ?? this.eventId,
-      name: name ?? this.name,
-      email: email ?? this.email,
-      phone: phone ?? this.phone,
-      avatar: avatar ?? this.avatar,
-      status: status ?? this.status,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      Guest(
+        id: id ?? this.id,
+        eventId: eventId ?? this.eventId,
+        name: name ?? this.name,
+        email: email ?? this.email,
+        phone: phone ?? this.phone,
+        avatar: avatar ?? this.avatar,
+        status: status ?? this.status,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        metadata: metadata ?? this.metadata,
+      );
 }
 
 /// Статус гостя
@@ -168,21 +162,6 @@ enum GuestStatus {
 
 /// Модель гостевого приветствия
 class GuestGreeting {
-  final String id;
-  final String eventId;
-  final String guestId;
-  final String guestName;
-  final String? guestAvatar;
-  final GreetingType type;
-  final String? text;
-  final String? imageUrl;
-  final String? videoUrl;
-  final String? audioUrl;
-  final DateTime createdAt;
-  final List<String> likedBy;
-  final int likesCount;
-  final bool isPublic;
-
   const GuestGreeting({
     required this.id,
     required this.eventId,
@@ -201,47 +180,57 @@ class GuestGreeting {
   });
 
   /// Создать из Map
-  factory GuestGreeting.fromMap(Map<String, dynamic> data) {
-    return GuestGreeting(
-      id: data['id'] ?? '',
-      eventId: data['eventId'] ?? '',
-      guestId: data['guestId'] ?? '',
-      guestName: data['guestName'] ?? '',
-      guestAvatar: data['guestAvatar'],
-      type: GreetingType.values.firstWhere(
-        (e) => e.name == data['type'],
-        orElse: () => GreetingType.text,
-      ),
-      text: data['text'],
-      imageUrl: data['imageUrl'],
-      videoUrl: data['videoUrl'],
-      audioUrl: data['audioUrl'],
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      likedBy: List<String>.from(data['likedBy'] ?? []),
-      likesCount: data['likesCount'] ?? 0,
-      isPublic: data['isPublic'] ?? true,
-    );
-  }
+  factory GuestGreeting.fromMap(Map<String, dynamic> data) => GuestGreeting(
+        id: data['id'] ?? '',
+        eventId: data['eventId'] ?? '',
+        guestId: data['guestId'] ?? '',
+        guestName: data['guestName'] ?? '',
+        guestAvatar: data['guestAvatar'],
+        type: GreetingType.values.firstWhere(
+          (e) => e.name == data['type'],
+          orElse: () => GreetingType.text,
+        ),
+        text: data['text'],
+        imageUrl: data['imageUrl'],
+        videoUrl: data['videoUrl'],
+        audioUrl: data['audioUrl'],
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        likedBy: List<String>.from(data['likedBy'] ?? []),
+        likesCount: data['likesCount'] ?? 0,
+        isPublic: data['isPublic'] ?? true,
+      );
+  final String id;
+  final String eventId;
+  final String guestId;
+  final String guestName;
+  final String? guestAvatar;
+  final GreetingType type;
+  final String? text;
+  final String? imageUrl;
+  final String? videoUrl;
+  final String? audioUrl;
+  final DateTime createdAt;
+  final List<String> likedBy;
+  final int likesCount;
+  final bool isPublic;
 
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'eventId': eventId,
-      'guestId': guestId,
-      'guestName': guestName,
-      'guestAvatar': guestAvatar,
-      'type': type.name,
-      'text': text,
-      'imageUrl': imageUrl,
-      'videoUrl': videoUrl,
-      'audioUrl': audioUrl,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'likedBy': likedBy,
-      'likesCount': likesCount,
-      'isPublic': isPublic,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'eventId': eventId,
+        'guestId': guestId,
+        'guestName': guestName,
+        'guestAvatar': guestAvatar,
+        'type': type.name,
+        'text': text,
+        'imageUrl': imageUrl,
+        'videoUrl': videoUrl,
+        'audioUrl': audioUrl,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'likedBy': likedBy,
+        'likesCount': likesCount,
+        'isPublic': isPublic,
+      };
 
   /// Копировать с изменениями
   GuestGreeting copyWith({
@@ -259,24 +248,23 @@ class GuestGreeting {
     List<String>? likedBy,
     int? likesCount,
     bool? isPublic,
-  }) {
-    return GuestGreeting(
-      id: id ?? this.id,
-      eventId: eventId ?? this.eventId,
-      guestId: guestId ?? this.guestId,
-      guestName: guestName ?? this.guestName,
-      guestAvatar: guestAvatar ?? this.guestAvatar,
-      type: type ?? this.type,
-      text: text ?? this.text,
-      imageUrl: imageUrl ?? this.imageUrl,
-      videoUrl: videoUrl ?? this.videoUrl,
-      audioUrl: audioUrl ?? this.audioUrl,
-      createdAt: createdAt ?? this.createdAt,
-      likedBy: likedBy ?? this.likedBy,
-      likesCount: likesCount ?? this.likesCount,
-      isPublic: isPublic ?? this.isPublic,
-    );
-  }
+  }) =>
+      GuestGreeting(
+        id: id ?? this.id,
+        eventId: eventId ?? this.eventId,
+        guestId: guestId ?? this.guestId,
+        guestName: guestName ?? this.guestName,
+        guestAvatar: guestAvatar ?? this.guestAvatar,
+        type: type ?? this.type,
+        text: text ?? this.text,
+        imageUrl: imageUrl ?? this.imageUrl,
+        videoUrl: videoUrl ?? this.videoUrl,
+        audioUrl: audioUrl ?? this.audioUrl,
+        createdAt: createdAt ?? this.createdAt,
+        likedBy: likedBy ?? this.likedBy,
+        likesCount: likesCount ?? this.likesCount,
+        isPublic: isPublic ?? this.isPublic,
+      );
 }
 
 /// Тип приветствия
@@ -302,17 +290,6 @@ enum GreetingType {
 
 /// Модель гостевого доступа к событию
 class GuestEventAccess {
-  final String id;
-  final String eventId;
-  final String accessCode;
-  final String qrCode;
-  final DateTime expiresAt;
-  final bool isActive;
-  final int maxUses;
-  final int currentUses;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
   const GuestEventAccess({
     required this.id,
     required this.eventId,
@@ -327,36 +304,43 @@ class GuestEventAccess {
   });
 
   /// Создать из Map
-  factory GuestEventAccess.fromMap(Map<String, dynamic> data) {
-    return GuestEventAccess(
-      id: data['id'] ?? '',
-      eventId: data['eventId'] ?? '',
-      accessCode: data['accessCode'] ?? '',
-      qrCode: data['qrCode'] ?? '',
-      expiresAt: (data['expiresAt'] as Timestamp).toDate(),
-      isActive: data['isActive'] ?? true,
-      maxUses: data['maxUses'] ?? 1,
-      currentUses: data['currentUses'] ?? 0,
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-    );
-  }
+  factory GuestEventAccess.fromMap(Map<String, dynamic> data) =>
+      GuestEventAccess(
+        id: data['id'] ?? '',
+        eventId: data['eventId'] ?? '',
+        accessCode: data['accessCode'] ?? '',
+        qrCode: data['qrCode'] ?? '',
+        expiresAt: (data['expiresAt'] as Timestamp).toDate(),
+        isActive: data['isActive'] ?? true,
+        maxUses: data['maxUses'] ?? 1,
+        currentUses: data['currentUses'] ?? 0,
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      );
+  final String id;
+  final String eventId;
+  final String accessCode;
+  final String qrCode;
+  final DateTime expiresAt;
+  final bool isActive;
+  final int maxUses;
+  final int currentUses;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'eventId': eventId,
-      'accessCode': accessCode,
-      'qrCode': qrCode,
-      'expiresAt': Timestamp.fromDate(expiresAt),
-      'isActive': isActive,
-      'maxUses': maxUses,
-      'currentUses': currentUses,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'eventId': eventId,
+        'accessCode': accessCode,
+        'qrCode': qrCode,
+        'expiresAt': Timestamp.fromDate(expiresAt),
+        'isActive': isActive,
+        'maxUses': maxUses,
+        'currentUses': currentUses,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   /// Копировать с изменениями
   GuestEventAccess copyWith({
@@ -370,18 +354,17 @@ class GuestEventAccess {
     int? currentUses,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) {
-    return GuestEventAccess(
-      id: id ?? this.id,
-      eventId: eventId ?? this.eventId,
-      accessCode: accessCode ?? this.accessCode,
-      qrCode: qrCode ?? this.qrCode,
-      expiresAt: expiresAt ?? this.expiresAt,
-      isActive: isActive ?? this.isActive,
-      maxUses: maxUses ?? this.maxUses,
-      currentUses: currentUses ?? this.currentUses,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
+  }) =>
+      GuestEventAccess(
+        id: id ?? this.id,
+        eventId: eventId ?? this.eventId,
+        accessCode: accessCode ?? this.accessCode,
+        qrCode: qrCode ?? this.qrCode,
+        expiresAt: expiresAt ?? this.expiresAt,
+        isActive: isActive ?? this.isActive,
+        maxUses: maxUses ?? this.maxUses,
+        currentUses: currentUses ?? this.currentUses,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 }

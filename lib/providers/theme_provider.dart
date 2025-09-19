@@ -12,7 +12,7 @@ enum AppThemeMode {
 
 /// Провайдер для управления темами
 final themeProvider = NotifierProvider<ThemeNotifier, AppThemeMode>(
-  () => ThemeNotifier(),
+  ThemeNotifier.new,
 );
 
 /// Провайдер для получения текущей темы
@@ -52,9 +52,8 @@ final AppThemeModeProvider = Provider<AppThemeMode>((ref) {
 });
 
 /// Провайдер для получения яркости системы
-final systemBrightnessProvider = Provider<Brightness>((ref) {
-  return WidgetsBinding.instance.platformDispatcher.platformBrightness;
-});
+final systemBrightnessProvider = Provider<Brightness>(
+    (ref) => WidgetsBinding.instance.platformDispatcher.platformBrightness);
 
 /// Провайдер для проверки, включена ли темная тема
 final isDarkModeProvider = Provider<bool>((ref) {
@@ -78,9 +77,7 @@ final colorSchemeProvider = Provider<ColorScheme>((ref) {
 });
 
 /// Провайдер для получения цветов бренда
-final brandColorsProvider = Provider<BrandColors>((ref) {
-  return BrandColors();
-});
+final brandColorsProvider = Provider<BrandColors>((ref) => BrandColors());
 
 /// Нотификатор для управления темами
 class ThemeNotifier extends Notifier<AppThemeMode> {
@@ -232,34 +229,31 @@ extension AppThemeModeExtension on AppThemeMode {
 }
 
 /// Провайдер для получения доступных тем
-final availableThemesProvider = Provider<List<AppThemeMode>>((ref) {
-  return AppThemeMode.values;
-});
+final availableThemesProvider =
+    Provider<List<AppThemeMode>>((ref) => AppThemeMode.values);
 
 /// Провайдер для получения информации о теме
-final themeInfoProvider =
-    Provider.family<ThemeInfo, AppThemeMode>((ref, AppThemeMode) {
-  return ThemeInfo(
+final themeInfoProvider = Provider.family<ThemeInfo, AppThemeMode>(
+  (ref, AppThemeMode) => ThemeInfo(
     mode: AppThemeMode,
     name: AppThemeMode.name,
     description: AppThemeMode.description,
     icon: AppThemeMode.icon,
-  );
-});
+  ),
+);
 
 /// Информация о теме
 class ThemeInfo {
-  final AppThemeMode mode;
-  final String name;
-  final String description;
-  final IconData icon;
-
   const ThemeInfo({
     required this.mode,
     required this.name,
     required this.description,
     required this.icon,
   });
+  final AppThemeMode mode;
+  final String name;
+  final String description;
+  final IconData icon;
 }
 
 /// Провайдер для получения цветов темы
@@ -284,18 +278,6 @@ final themeColorsProvider = Provider<ThemeColors>((ref) {
 
 /// Цвета темы
 class ThemeColors {
-  final Color primary;
-  final Color secondary;
-  final Color surface;
-  final Color background;
-  final Color error;
-  final Color onPrimary;
-  final Color onSecondary;
-  final Color onSurface;
-  final Color onBackground;
-  final Color onError;
-  final bool isDark;
-
   const ThemeColors({
     required this.primary,
     required this.secondary,
@@ -309,4 +291,15 @@ class ThemeColors {
     required this.onError,
     required this.isDark,
   });
+  final Color primary;
+  final Color secondary;
+  final Color surface;
+  final Color background;
+  final Color error;
+  final Color onPrimary;
+  final Color onSecondary;
+  final Color onSurface;
+  final Color onBackground;
+  final Color onError;
+  final bool isDark;
 }

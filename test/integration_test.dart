@@ -1,14 +1,13 @@
+import 'package:event_marketplace_app/main.dart' as app;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
-import 'package:event_marketplace_app/main.dart' as app;
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('Event Marketplace App Integration Tests', () {
-    testWidgets('App launches and shows home screen',
-        (WidgetTester tester) async {
+    testWidgets('App launches and shows home screen', (tester) async {
       // Запускаем приложение
       app.main();
       await tester.pumpAndSettle();
@@ -17,8 +16,7 @@ void main() {
       expect(find.byType(MaterialApp), findsOneWidget);
     });
 
-    testWidgets('Navigation between screens works',
-        (WidgetTester tester) async {
+    testWidgets('Navigation between screens works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -26,7 +24,7 @@ void main() {
       expect(find.text('Event Marketplace'), findsOneWidget);
     });
 
-    testWidgets('Theme switching works', (WidgetTester tester) async {
+    testWidgets('Theme switching works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -34,7 +32,7 @@ void main() {
       // TODO: Добавить тесты переключения темы
     });
 
-    testWidgets('Authentication flow works', (WidgetTester tester) async {
+    testWidgets('Authentication flow works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -42,7 +40,7 @@ void main() {
       // TODO: Добавить тесты аутентификации
     });
 
-    testWidgets('Search functionality works', (WidgetTester tester) async {
+    testWidgets('Search functionality works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -50,7 +48,7 @@ void main() {
       // TODO: Добавить тесты поиска
     });
 
-    testWidgets('Booking flow works', (WidgetTester tester) async {
+    testWidgets('Booking flow works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -58,7 +56,7 @@ void main() {
       // TODO: Добавить тесты бронирования
     });
 
-    testWidgets('Chat functionality works', (WidgetTester tester) async {
+    testWidgets('Chat functionality works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -66,7 +64,7 @@ void main() {
       // TODO: Добавить тесты чата
     });
 
-    testWidgets('Profile management works', (WidgetTester tester) async {
+    testWidgets('Profile management works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -74,7 +72,7 @@ void main() {
       // TODO: Добавить тесты профиля
     });
 
-    testWidgets('Settings management works', (WidgetTester tester) async {
+    testWidgets('Settings management works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -82,7 +80,7 @@ void main() {
       // TODO: Добавить тесты настроек
     });
 
-    testWidgets('Admin panel works', (WidgetTester tester) async {
+    testWidgets('Admin panel works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -90,7 +88,7 @@ void main() {
       // TODO: Добавить тесты админ панели
     });
 
-    testWidgets('Error handling works', (WidgetTester tester) async {
+    testWidgets('Error handling works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -98,7 +96,7 @@ void main() {
       // TODO: Добавить тесты обработки ошибок
     });
 
-    testWidgets('Performance monitoring works', (WidgetTester tester) async {
+    testWidgets('Performance monitoring works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -106,7 +104,7 @@ void main() {
       // TODO: Добавить тесты производительности
     });
 
-    testWidgets('Analytics tracking works', (WidgetTester tester) async {
+    testWidgets('Analytics tracking works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -114,7 +112,7 @@ void main() {
       // TODO: Добавить тесты аналитики
     });
 
-    testWidgets('Notifications work', (WidgetTester tester) async {
+    testWidgets('Notifications work', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -122,7 +120,7 @@ void main() {
       // TODO: Добавить тесты уведомлений
     });
 
-    testWidgets('Offline mode works', (WidgetTester tester) async {
+    testWidgets('Offline mode works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -130,7 +128,7 @@ void main() {
       // TODO: Добавить тесты офлайн режима
     });
 
-    testWidgets('Data synchronization works', (WidgetTester tester) async {
+    testWidgets('Data synchronization works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -138,7 +136,7 @@ void main() {
       // TODO: Добавить тесты синхронизации
     });
 
-    testWidgets('Security features work', (WidgetTester tester) async {
+    testWidgets('Security features work', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -146,7 +144,7 @@ void main() {
       // TODO: Добавить тесты безопасности
     });
 
-    testWidgets('Content management works', (WidgetTester tester) async {
+    testWidgets('Content management works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -154,7 +152,7 @@ void main() {
       // TODO: Добавить тесты управления контентом
     });
 
-    testWidgets('User management works', (WidgetTester tester) async {
+    testWidgets('User management works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -162,7 +160,7 @@ void main() {
       // TODO: Добавить тесты управления пользователями
     });
 
-    testWidgets('Integration management works', (WidgetTester tester) async {
+    testWidgets('Integration management works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -170,7 +168,7 @@ void main() {
       // TODO: Добавить тесты управления интеграциями
     });
 
-    testWidgets('Backup and restore works', (WidgetTester tester) async {
+    testWidgets('Backup and restore works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -178,7 +176,7 @@ void main() {
       // TODO: Добавить тесты бэкапа
     });
 
-    testWidgets('Reporting system works', (WidgetTester tester) async {
+    testWidgets('Reporting system works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -186,7 +184,7 @@ void main() {
       // TODO: Добавить тесты отчетов
     });
 
-    testWidgets('A/B testing works', (WidgetTester tester) async {
+    testWidgets('A/B testing works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -194,7 +192,7 @@ void main() {
       // TODO: Добавить тесты A/B тестирования
     });
 
-    testWidgets('Caching system works', (WidgetTester tester) async {
+    testWidgets('Caching system works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -202,7 +200,7 @@ void main() {
       // TODO: Добавить тесты кэширования
     });
 
-    testWidgets('Load testing works', (WidgetTester tester) async {
+    testWidgets('Load testing works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -212,7 +210,7 @@ void main() {
   });
 
   group('Performance Tests', () {
-    testWidgets('App startup time is acceptable', (WidgetTester tester) async {
+    testWidgets('App startup time is acceptable', (tester) async {
       final stopwatch = Stopwatch()..start();
 
       app.main();
@@ -224,7 +222,7 @@ void main() {
       expect(stopwatch.elapsedMilliseconds, lessThan(3000));
     });
 
-    testWidgets('Memory usage is within limits', (WidgetTester tester) async {
+    testWidgets('Memory usage is within limits', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -232,7 +230,7 @@ void main() {
       // TODO: Добавить проверки памяти
     });
 
-    testWidgets('Network requests are optimized', (WidgetTester tester) async {
+    testWidgets('Network requests are optimized', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -242,7 +240,7 @@ void main() {
   });
 
   group('Accessibility Tests', () {
-    testWidgets('App is accessible', (WidgetTester tester) async {
+    testWidgets('App is accessible', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -250,7 +248,7 @@ void main() {
       // TODO: Добавить проверки доступности
     });
 
-    testWidgets('Screen readers work', (WidgetTester tester) async {
+    testWidgets('Screen readers work', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -258,7 +256,7 @@ void main() {
       // TODO: Добавить проверки экранных читалок
     });
 
-    testWidgets('Keyboard navigation works', (WidgetTester tester) async {
+    testWidgets('Keyboard navigation works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -268,7 +266,7 @@ void main() {
   });
 
   group('Localization Tests', () {
-    testWidgets('Russian localization works', (WidgetTester tester) async {
+    testWidgets('Russian localization works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -276,7 +274,7 @@ void main() {
       // TODO: Добавить проверки локализации
     });
 
-    testWidgets('English localization works', (WidgetTester tester) async {
+    testWidgets('English localization works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -284,7 +282,7 @@ void main() {
       // TODO: Добавить проверки локализации
     });
 
-    testWidgets('Kazakh localization works', (WidgetTester tester) async {
+    testWidgets('Kazakh localization works', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -294,7 +292,7 @@ void main() {
   });
 
   group('Device Compatibility Tests', () {
-    testWidgets('Works on different screen sizes', (WidgetTester tester) async {
+    testWidgets('Works on different screen sizes', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -302,7 +300,7 @@ void main() {
       // TODO: Добавить проверки разных размеров экрана
     });
 
-    testWidgets('Works on different orientations', (WidgetTester tester) async {
+    testWidgets('Works on different orientations', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 
@@ -310,7 +308,7 @@ void main() {
       // TODO: Добавить проверки ориентации
     });
 
-    testWidgets('Works on different platforms', (WidgetTester tester) async {
+    testWidgets('Works on different platforms', (tester) async {
       app.main();
       await tester.pumpAndSettle();
 

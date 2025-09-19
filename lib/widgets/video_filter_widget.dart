@@ -3,14 +3,13 @@ import '../providers/specialist_profile_extended_providers.dart';
 
 /// Виджет фильтрации видео
 class VideoFilterWidget extends StatefulWidget {
-  final VideoFilters currentFilters;
-  final Function(VideoFilters) onFiltersChanged;
-
   const VideoFilterWidget({
     super.key,
     required this.currentFilters,
     required this.onFiltersChanged,
   });
+  final VideoFilters currentFilters;
+  final Function(VideoFilters) onFiltersChanged;
 
   @override
   State<VideoFilterWidget> createState() => _VideoFilterWidgetState();
@@ -45,129 +44,132 @@ class _VideoFilterWidgetState extends State<VideoFilterWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 500, maxHeight: 600),
-        child: Column(
-          children: [
-            AppBar(
-              title: const Text('Фильтры видео'),
-              actions: [
-                TextButton(
-                  onPressed: _clearFilters,
-                  child: const Text('Сбросить'),
-                ),
-                TextButton(
-                  onPressed: _applyFilters,
-                  child: const Text('Применить'),
-                ),
-              ],
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Поиск
-                    TextField(
-                      controller: _searchController,
-                      decoration: const InputDecoration(
-                        labelText: 'Поиск',
-                        hintText: 'Поиск по названию, описанию или тегам',
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(),
+  Widget build(BuildContext context) => Dialog(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 500, maxHeight: 600),
+          child: Column(
+            children: [
+              AppBar(
+                title: const Text('Фильтры видео'),
+                actions: [
+                  TextButton(
+                    onPressed: _clearFilters,
+                    child: const Text('Сбросить'),
+                  ),
+                  TextButton(
+                    onPressed: _applyFilters,
+                    child: const Text('Применить'),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Поиск
+                      TextField(
+                        controller: _searchController,
+                        decoration: const InputDecoration(
+                          labelText: 'Поиск',
+                          hintText: 'Поиск по названию, описанию или тегам',
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
-                    // Публичные видео
-                    SwitchListTile(
-                      title: const Text('Только публичные видео'),
-                      subtitle: const Text(
-                          'Показать только видео, доступные клиентам'),
-                      value: _showPublicOnly,
-                      onChanged: (value) {
-                        setState(() {
-                          _showPublicOnly = value;
-                        });
-                      },
-                    ),
+                      // Публичные видео
+                      SwitchListTile(
+                        title: const Text('Только публичные видео'),
+                        subtitle: const Text(
+                          'Показать только видео, доступные клиентам',
+                        ),
+                        value: _showPublicOnly,
+                        onChanged: (value) {
+                          setState(() {
+                            _showPublicOnly = value;
+                          });
+                        },
+                      ),
 
-                    const Divider(),
+                      const Divider(),
 
-                    // Фильтр по дате
-                    SwitchListTile(
-                      title: const Text('Фильтр по дате'),
-                      subtitle:
-                          const Text('Показать видео за определённый период'),
-                      value: _showByDate,
-                      onChanged: (value) {
-                        setState(() {
-                          _showByDate = value;
-                        });
-                      },
-                    ),
+                      // Фильтр по дате
+                      SwitchListTile(
+                        title: const Text('Фильтр по дате'),
+                        subtitle:
+                            const Text('Показать видео за определённый период'),
+                        value: _showByDate,
+                        onChanged: (value) {
+                          setState(() {
+                            _showByDate = value;
+                          });
+                        },
+                      ),
 
-                    if (_showByDate) ...[
+                      if (_showByDate) ...[
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ListTile(
+                                title: const Text('От'),
+                                subtitle: Text(
+                                  _fromDate != null
+                                      ? '${_fromDate!.day}.${_fromDate!.month}.${_fromDate!.year}'
+                                      : 'Не выбрано',
+                                ),
+                                trailing: const Icon(Icons.calendar_today),
+                                onTap: _selectFromDate,
+                              ),
+                            ),
+                            Expanded(
+                              child: ListTile(
+                                title: const Text('До'),
+                                subtitle: Text(
+                                  _toDate != null
+                                      ? '${_toDate!.day}.${_toDate!.month}.${_toDate!.year}'
+                                      : 'Не выбрано',
+                                ),
+                                trailing: const Icon(Icons.calendar_today),
+                                onTap: _selectToDate,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+
+                      const Divider(),
+
+                      // Платформы
+                      const Text(
+                        'Платформы',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ListTile(
-                              title: const Text('От'),
-                              subtitle: Text(_fromDate != null
-                                  ? '${_fromDate!.day}.${_fromDate!.month}.${_fromDate!.year}'
-                                  : 'Не выбрано'),
-                              trailing: const Icon(Icons.calendar_today),
-                              onTap: _selectFromDate,
-                            ),
-                          ),
-                          Expanded(
-                            child: ListTile(
-                              title: const Text('До'),
-                              subtitle: Text(_toDate != null
-                                  ? '${_toDate!.day}.${_toDate!.month}.${_toDate!.year}'
-                                  : 'Не выбрано'),
-                              trailing: const Icon(Icons.calendar_today),
-                              onTap: _selectToDate,
-                            ),
-                          ),
-                        ],
+                      _buildPlatformFilters(),
+
+                      const SizedBox(height: 16),
+
+                      // Теги
+                      const Text(
+                        'Теги',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
                       ),
+                      const SizedBox(height: 8),
+                      _buildTagFilters(),
                     ],
-
-                    const Divider(),
-
-                    // Платформы
-                    const Text(
-                      'Платформы',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    _buildPlatformFilters(),
-
-                    const SizedBox(height: 16),
-
-                    // Теги
-                    const Text(
-                      'Теги',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    _buildTagFilters(),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildPlatformFilters() {
     final platforms = [
@@ -188,19 +190,21 @@ class _VideoFilterWidgetState extends State<VideoFilterWidget> {
           spacing: 4,
           runSpacing: 4,
           children: platforms
-              .map((platform) => FilterChip(
-                    label: Text(platform.$2),
-                    selected: _selectedPlatforms.contains(platform.$1),
-                    onSelected: (selected) {
-                      setState(() {
-                        if (selected) {
-                          _selectedPlatforms.add(platform.$1);
-                        } else {
-                          _selectedPlatforms.remove(platform.$1);
-                        }
-                      });
-                    },
-                  ))
+              .map(
+                (platform) => FilterChip(
+                  label: Text(platform.$2),
+                  selected: _selectedPlatforms.contains(platform.$1),
+                  onSelected: (selected) {
+                    setState(() {
+                      if (selected) {
+                        _selectedPlatforms.add(platform.$1);
+                      } else {
+                        _selectedPlatforms.remove(platform.$1);
+                      }
+                    });
+                  },
+                ),
+              )
               .toList(),
         ),
         if (_selectedPlatforms.isNotEmpty) ...[
@@ -252,7 +256,7 @@ class _VideoFilterWidgetState extends State<VideoFilterWidget> {
       'репортаж',
       'документальный',
       'реклама',
-      'презентация'
+      'презентация',
     ];
 
     return Column(
@@ -267,19 +271,21 @@ class _VideoFilterWidgetState extends State<VideoFilterWidget> {
           spacing: 4,
           runSpacing: 4,
           children: commonTags
-              .map((tag) => FilterChip(
-                    label: Text(tag),
-                    selected: _selectedTags.contains(tag),
-                    onSelected: (selected) {
-                      setState(() {
-                        if (selected) {
-                          _selectedTags.add(tag);
-                        } else {
-                          _selectedTags.remove(tag);
-                        }
-                      });
-                    },
-                  ))
+              .map(
+                (tag) => FilterChip(
+                  label: Text(tag),
+                  selected: _selectedTags.contains(tag),
+                  onSelected: (selected) {
+                    setState(() {
+                      if (selected) {
+                        _selectedTags.add(tag);
+                      } else {
+                        _selectedTags.remove(tag);
+                      }
+                    });
+                  },
+                ),
+              )
               .toList(),
         ),
         if (_selectedTags.isNotEmpty) ...[
@@ -293,15 +299,17 @@ class _VideoFilterWidgetState extends State<VideoFilterWidget> {
             spacing: 4,
             runSpacing: 4,
             children: _selectedTags
-                .map((tag) => Chip(
-                      label: Text(tag),
-                      deleteIcon: const Icon(Icons.close, size: 16),
-                      onDeleted: () {
-                        setState(() {
-                          _selectedTags.remove(tag);
-                        });
-                      },
-                    ))
+                .map(
+                  (tag) => Chip(
+                    label: Text(tag),
+                    deleteIcon: const Icon(Icons.close, size: 16),
+                    onDeleted: () {
+                      setState(() {
+                        _selectedTags.remove(tag);
+                      });
+                    },
+                  ),
+                )
                 .toList(),
           ),
         ],
@@ -309,7 +317,7 @@ class _VideoFilterWidgetState extends State<VideoFilterWidget> {
     );
   }
 
-  void _selectFromDate() async {
+  Future<void> _selectFromDate() async {
     final date = await showDatePicker(
       context: context,
       initialDate: _fromDate ?? DateTime.now(),
@@ -328,7 +336,7 @@ class _VideoFilterWidgetState extends State<VideoFilterWidget> {
     }
   }
 
-  void _selectToDate() async {
+  Future<void> _selectToDate() async {
     final date = await showDatePicker(
       context: context,
       initialDate: _toDate ?? _fromDate ?? DateTime.now(),

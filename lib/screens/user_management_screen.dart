@@ -29,50 +29,49 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ResponsiveScaffold(
-      body: Column(
-        children: [
-          // Вкладки
-          _buildTabs(),
+  Widget build(BuildContext context) => ResponsiveScaffold(
+        body: Column(
+          children: [
+            // Вкладки
+            _buildTabs(),
 
-          // Контент
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _selectedTab == 'users'
-                    ? _buildUsersTab()
-                    : _selectedTab == 'roles'
-                        ? _buildRolesTab()
-                        : _selectedTab == 'permissions'
-                            ? _buildPermissionsTab()
-                            : _buildStatisticsTab(),
-          ),
-        ],
-      ),
-    );
-  }
+            // Контент
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _selectedTab == 'users'
+                      ? _buildUsersTab()
+                      : _selectedTab == 'roles'
+                          ? _buildRolesTab()
+                          : _selectedTab == 'permissions'
+                              ? _buildPermissionsTab()
+                              : _buildStatisticsTab(),
+            ),
+          ],
+        ),
+      );
 
-  Widget _buildTabs() {
-    return ResponsiveCard(
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildTabButton('users', 'Пользователи', Icons.people),
-          ),
-          Expanded(
-            child: _buildTabButton('roles', 'Роли', Icons.admin_panel_settings),
-          ),
-          Expanded(
-            child: _buildTabButton('permissions', 'Разрешения', Icons.security),
-          ),
-          Expanded(
-            child: _buildTabButton('statistics', 'Статистика', Icons.analytics),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildTabs() => ResponsiveCard(
+        child: Row(
+          children: [
+            Expanded(
+              child: _buildTabButton('users', 'Пользователи', Icons.people),
+            ),
+            Expanded(
+              child:
+                  _buildTabButton('roles', 'Роли', Icons.admin_panel_settings),
+            ),
+            Expanded(
+              child:
+                  _buildTabButton('permissions', 'Разрешения', Icons.security),
+            ),
+            Expanded(
+              child:
+                  _buildTabButton('statistics', 'Статистика', Icons.analytics),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -115,68 +114,64 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
     );
   }
 
-  Widget _buildUsersTab() {
-    return Column(
-      children: [
-        // Заголовок с фильтрами
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Пользователи',
-                isTitle: true,
-              ),
-              const Spacer(),
-              DropdownButton<UserRole?>(
-                value: null,
-                hint: const Text('Все роли'),
-                items: [
-                  const DropdownMenuItem<UserRole?>(
-                    value: null,
-                    child: Text('Все роли'),
-                  ),
-                  ...UserRole.values.map((role) {
-                    return DropdownMenuItem<UserRole?>(
-                      value: role,
-                      child: Row(
-                        children: [
-                          Text(role.icon),
-                          const SizedBox(width: 8),
-                          Text(role.displayName),
-                        ],
+  Widget _buildUsersTab() => Column(
+        children: [
+          // Заголовок с фильтрами
+          ResponsiveCard(
+            child: Row(
+              children: [
+                const ResponsiveText(
+                  'Пользователи',
+                  isTitle: true,
+                ),
+                const Spacer(),
+                DropdownButton<UserRole?>(
+                  hint: const Text('Все роли'),
+                  items: [
+                    const DropdownMenuItem<UserRole?>(
+                      child: Text('Все роли'),
+                    ),
+                    ...UserRole.values.map(
+                      (role) => DropdownMenuItem<UserRole?>(
+                        value: role,
+                        child: Row(
+                          children: [
+                            Text(role.icon),
+                            const SizedBox(width: 8),
+                            Text(role.displayName),
+                          ],
+                        ),
                       ),
-                    );
-                  }),
-                ],
-                onChanged: (value) {
-                  // TODO: Реализовать фильтрацию
-                },
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список пользователей
-        Expanded(
-          child: _users.isEmpty
-              ? const Center(child: Text('Пользователи не найдены'))
-              : ListView.builder(
-                  itemCount: _users.length,
-                  itemBuilder: (context, index) {
-                    final user = _users[index];
-                    return _buildUserCard(user);
+                    ),
+                  ],
+                  onChanged: (value) {
+                    // TODO: Реализовать фильтрацию
                   },
                 ),
-        ),
-      ],
-    );
-  }
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список пользователей
+          Expanded(
+            child: _users.isEmpty
+                ? const Center(child: Text('Пользователи не найдены'))
+                : ListView.builder(
+                    itemCount: _users.length,
+                    itemBuilder: (context, index) {
+                      final user = _users[index];
+                      return _buildUserCard(user);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildUserCard(ManagedUser user) {
     final statusColor = _getStatusColor(user.status);
@@ -192,9 +187,11 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                 backgroundImage:
                     user.photoUrl != null ? NetworkImage(user.photoUrl!) : null,
                 child: user.photoUrl == null
-                    ? Text(user.displayName?.isNotEmpty == true
-                        ? user.displayName![0].toUpperCase()
-                        : user.email[0].toUpperCase())
+                    ? Text(
+                        user.displayName?.isNotEmpty ?? false
+                            ? user.displayName![0].toUpperCase()
+                            : user.email[0].toUpperCase(),
+                      )
                     : null,
               ),
               const SizedBox(width: 12),
@@ -279,7 +276,10 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
               _buildInfoChip('Роль', user.role.displayName, Colors.blue),
               const SizedBox(width: 8),
               _buildInfoChip(
-                  'Разрешения', '${user.permissions.length}', Colors.green),
+                'Разрешения',
+                '${user.permissions.length}',
+                Colors.green,
+              ),
             ],
           ),
 
@@ -308,228 +308,225 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
     );
   }
 
-  Widget _buildRolesTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Роли пользователей',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _showCreateRoleDialog,
-                icon: const Icon(Icons.add),
-                label: const Text('Создать роль'),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список ролей
-        Expanded(
-          child: _roles.isEmpty
-              ? const Center(child: Text('Роли не найдены'))
-              : ListView.builder(
-                  itemCount: _roles.length,
-                  itemBuilder: (context, index) {
-                    final role = _roles[index];
-                    return _buildRoleCard(role);
-                  },
-                ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRoleCard(UserRoleDefinition role) {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildRolesTab() => Column(
         children: [
           // Заголовок
-          Row(
-            children: [
-              Icon(
-                Icons.admin_panel_settings,
-                color: role.isSystemRole ? Colors.orange : Colors.blue,
-                size: 24,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      role.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text(
-                      role.description,
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                  ],
+          ResponsiveCard(
+            child: Row(
+              children: [
+                const ResponsiveText(
+                  'Роли пользователей',
+                  isTitle: true,
                 ),
-              ),
-              if (role.isSystemRole)
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.orange),
-                  ),
-                  child: const Text(
-                    'Системная',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.orange,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _showCreateRoleDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Создать роль'),
                 ),
-              PopupMenuButton<String>(
-                onSelected: (value) => _handleRoleAction(value, role),
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    value: 'view',
-                    child: ListTile(
-                      leading: Icon(Icons.visibility),
-                      title: Text('Просмотр'),
-                    ),
-                  ),
-                  if (!role.isSystemRole) ...[
-                    const PopupMenuItem(
-                      value: 'edit',
-                      child: ListTile(
-                        leading: Icon(Icons.edit),
-                        title: Text('Редактировать'),
-                      ),
-                    ),
-                    const PopupMenuItem(
-                      value: 'delete',
-                      child: ListTile(
-                        leading: Icon(Icons.delete),
-                        title: Text('Удалить'),
-                      ),
-                    ),
-                  ],
-                ],
-                child: const Icon(Icons.more_vert),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          // Разрешения
-          Text(
-            'Разрешения (${role.permissions.length}):',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[600],
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
             ),
           ),
 
-          const SizedBox(height: 8),
-
-          Wrap(
-            spacing: 8,
-            runSpacing: 4,
-            children: role.permissions.take(5).map((permission) {
-              return Chip(
-                label: Text(permission),
-                backgroundColor: Colors.blue.withValues(alpha: 0.1),
-                labelStyle: const TextStyle(fontSize: 12),
-              );
-            }).toList(),
-          ),
-
-          if (role.permissions.length > 5) ...[
-            const SizedBox(height: 4),
-            Text(
-              'и еще ${role.permissions.length - 5}...',
-              style: const TextStyle(
-                fontSize: 12,
-                color: Colors.grey,
-                fontStyle: FontStyle.italic,
-              ),
-            ),
-          ],
-
-          const SizedBox(height: 12),
-
-          // Время создания
-          Row(
-            children: [
-              const Icon(Icons.access_time, size: 16, color: Colors.grey),
-              const SizedBox(width: 4),
-              Text(
-                'Создана: ${_formatDateTime(role.createdAt)}',
-                style: const TextStyle(color: Colors.grey, fontSize: 12),
-              ),
-            ],
+          // Список ролей
+          Expanded(
+            child: _roles.isEmpty
+                ? const Center(child: Text('Роли не найдены'))
+                : ListView.builder(
+                    itemCount: _roles.length,
+                    itemBuilder: (context, index) {
+                      final role = _roles[index];
+                      return _buildRoleCard(role);
+                    },
+                  ),
           ),
         ],
-      ),
-    );
-  }
+      );
 
-  Widget _buildPermissionsTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Разрешения',
-                isTitle: true,
+  Widget _buildRoleCard(UserRoleDefinition role) => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Заголовок
+            Row(
+              children: [
+                Icon(
+                  Icons.admin_panel_settings,
+                  color: role.isSystemRole ? Colors.orange : Colors.blue,
+                  size: 24,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        role.name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        role.description,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ],
+                  ),
+                ),
+                if (role.isSystemRole)
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.orange.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.orange),
+                    ),
+                    child: const Text(
+                      'Системная',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.orange,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                PopupMenuButton<String>(
+                  onSelected: (value) => _handleRoleAction(value, role),
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'view',
+                      child: ListTile(
+                        leading: Icon(Icons.visibility),
+                        title: Text('Просмотр'),
+                      ),
+                    ),
+                    if (!role.isSystemRole) ...[
+                      const PopupMenuItem(
+                        value: 'edit',
+                        child: ListTile(
+                          leading: Icon(Icons.edit),
+                          title: Text('Редактировать'),
+                        ),
+                      ),
+                      const PopupMenuItem(
+                        value: 'delete',
+                        child: ListTile(
+                          leading: Icon(Icons.delete),
+                          title: Text('Удалить'),
+                        ),
+                      ),
+                    ],
+                  ],
+                  child: const Icon(Icons.more_vert),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            // Разрешения
+            Text(
+              'Разрешения (${role.permissions.length}):',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[600],
               ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _showCreatePermissionDialog,
-                icon: const Icon(Icons.add),
-                label: const Text('Создать разрешение'),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
+            ),
+
+            const SizedBox(height: 8),
+
+            Wrap(
+              spacing: 8,
+              runSpacing: 4,
+              children: role.permissions
+                  .take(5)
+                  .map(
+                    (permission) => Chip(
+                      label: Text(permission),
+                      backgroundColor: Colors.blue.withValues(alpha: 0.1),
+                      labelStyle: const TextStyle(fontSize: 12),
+                    ),
+                  )
+                  .toList(),
+            ),
+
+            if (role.permissions.length > 5) ...[
+              const SizedBox(height: 4),
+              Text(
+                'и еще ${role.permissions.length - 5}...',
+                style: const TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey,
+                  fontStyle: FontStyle.italic,
+                ),
               ),
             ],
-          ),
-        ),
 
-        // Список разрешений
-        Expanded(
-          child: _permissions.isEmpty
-              ? const Center(child: Text('Разрешения не найдены'))
-              : ListView.builder(
-                  itemCount: _permissions.length,
-                  itemBuilder: (context, index) {
-                    final permission = _permissions[index];
-                    return _buildPermissionCard(permission);
-                  },
+            const SizedBox(height: 12),
+
+            // Время создания
+            Row(
+              children: [
+                const Icon(Icons.access_time, size: 16, color: Colors.grey),
+                const SizedBox(width: 4),
+                Text(
+                  'Создана: ${_formatDateTime(role.createdAt)}',
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
                 ),
+              ],
+            ),
+          ],
         ),
-      ],
-    );
-  }
+      );
+
+  Widget _buildPermissionsTab() => Column(
+        children: [
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                const ResponsiveText(
+                  'Разрешения',
+                  isTitle: true,
+                ),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _showCreatePermissionDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Создать разрешение'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список разрешений
+          Expanded(
+            child: _permissions.isEmpty
+                ? const Center(child: Text('Разрешения не найдены'))
+                : ListView.builder(
+                    itemCount: _permissions.length,
+                    itemBuilder: (context, index) {
+                      final permission = _permissions[index];
+                      return _buildPermissionCard(permission);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildPermissionCard(Permission permission) {
     final typeColor = _getPermissionTypeColor(permission.type);
@@ -626,7 +623,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ResponsiveText(
+                const ResponsiveText(
                   'Статистика пользователей',
                   isTitle: true,
                 ),
@@ -704,12 +701,12 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
                               : 0.0,
                           backgroundColor: Colors.grey.withValues(alpha: 0.3),
                           valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.blue),
+                              const AlwaysStoppedAnimation<Color>(Colors.blue),
                         ),
                       ],
                     ),
                   );
-                }).toList(),
+                }),
               ],
             ),
           ),
@@ -719,38 +716,41 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
   }
 
   Widget _buildStatCard(
-      String title, String value, Color color, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: color,
+    String title,
+    String value,
+    Color color,
+    IconData icon,
+  ) =>
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 24),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
             ),
-          ),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   Widget _buildStatusChip(UserStatus status) {
     final color = _getStatusColor(status);
@@ -773,24 +773,22 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
     );
   }
 
-  Widget _buildInfoChip(String label, String value, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color),
-      ),
-      child: Text(
-        '$label: $value',
-        style: TextStyle(
-          fontSize: 12,
-          color: color,
-          fontWeight: FontWeight.w500,
+  Widget _buildInfoChip(String label, String value, Color color) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color),
         ),
-      ),
-    );
-  }
+        child: Text(
+          '$label: $value',
+          style: TextStyle(
+            fontSize: 12,
+            color: color,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
 
   Color _getStatusColor(UserStatus status) {
     switch (status) {
@@ -837,9 +835,8 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
     }
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDateTime(DateTime dateTime) =>
+      '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
 
   Future<void> _loadData() async {
     setState(() {
@@ -904,7 +901,8 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Редактирование пользователя "${user.email}" будет реализовано'),
+          'Редактирование пользователя "${user.email}" будет реализовано',
+        ),
       ),
     );
   }
@@ -1025,7 +1023,8 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Управление разрешениями пользователя "${user.email}" будет реализовано'),
+          'Управление разрешениями пользователя "${user.email}" будет реализовано',
+        ),
       ),
     );
   }
@@ -1035,7 +1034,8 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Просмотр действий пользователя "${user.email}" будет реализован'),
+          'Просмотр действий пользователя "${user.email}" будет реализован',
+        ),
       ),
     );
   }

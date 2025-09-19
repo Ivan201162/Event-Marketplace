@@ -1,27 +1,19 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:event_marketplace_app/services/monitoring_service.dart';
-import 'package:event_marketplace_app/core/feature_flags.dart';
+
+import '../core/feature_flags.dart';
+import '../services/monitoring_service.dart';
 
 /// Провайдер сервиса мониторинга
-final monitoringServiceProvider = Provider<MonitoringService>((ref) {
-  return MonitoringService();
-});
+final monitoringServiceProvider =
+    Provider<MonitoringService>((ref) => MonitoringService());
 
 /// Провайдер состояния мониторинга
 final monitoringStateProvider =
-    NotifierProvider<MonitoringStateNotifier, MonitoringState>(() {
-  return MonitoringStateNotifier();
-});
+    NotifierProvider<MonitoringStateNotifier, MonitoringState>(
+        MonitoringStateNotifier.new);
 
 /// Состояние мониторинга
 class MonitoringState {
-  final bool isInitialized;
-  final bool isEnabled;
-  final Map<String, dynamic> metrics;
-  final List<String> activeTraces;
-  final String? lastError;
-  final DateTime? lastErrorTime;
-
   const MonitoringState({
     this.isInitialized = false,
     this.isEnabled = false,
@@ -30,6 +22,12 @@ class MonitoringState {
     this.lastError,
     this.lastErrorTime,
   });
+  final bool isInitialized;
+  final bool isEnabled;
+  final Map<String, dynamic> metrics;
+  final List<String> activeTraces;
+  final String? lastError;
+  final DateTime? lastErrorTime;
 
   MonitoringState copyWith({
     bool? isInitialized,
@@ -38,16 +36,15 @@ class MonitoringState {
     List<String>? activeTraces,
     String? lastError,
     DateTime? lastErrorTime,
-  }) {
-    return MonitoringState(
-      isInitialized: isInitialized ?? this.isInitialized,
-      isEnabled: isEnabled ?? this.isEnabled,
-      metrics: metrics ?? this.metrics,
-      activeTraces: activeTraces ?? this.activeTraces,
-      lastError: lastError ?? this.lastError,
-      lastErrorTime: lastErrorTime ?? this.lastErrorTime,
-    );
-  }
+  }) =>
+      MonitoringState(
+        isInitialized: isInitialized ?? this.isInitialized,
+        isEnabled: isEnabled ?? this.isEnabled,
+        metrics: metrics ?? this.metrics,
+        activeTraces: activeTraces ?? this.activeTraces,
+        lastError: lastError ?? this.lastError,
+        lastErrorTime: lastErrorTime ?? this.lastErrorTime,
+      );
 }
 
 /// Нотификатор состояния мониторинга
@@ -78,7 +75,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
 
   /// Запись ошибки
   Future<void> recordError(
-    dynamic error,
+    error,
     StackTrace? stackTrace, {
     String? reason,
     bool fatal = false,
@@ -107,8 +104,10 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
   }
 
   /// Запись пользовательского действия
-  Future<void> logUserAction(String action,
-      {Map<String, dynamic>? parameters}) async {
+  Future<void> logUserAction(
+    String action, {
+    Map<String, dynamic>? parameters,
+  }) async {
     try {
       final monitoringService = ref.read(monitoringServiceProvider);
       await monitoringService.logUserAction(action, parameters: parameters);
@@ -190,8 +189,6 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       state = state.copyWith(
         metrics: {},
         activeTraces: [],
-        lastError: null,
-        lastErrorTime: null,
       );
     } catch (e) {
       state = state.copyWith(
@@ -203,10 +200,11 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
 }
 
 /// Провайдер для проверки доступности мониторинга
-final monitoringAvailableProvider = Provider<bool>((ref) {
-  return FeatureFlags.crashlyticsEnabled ||
-      FeatureFlags.performanceMonitoringEnabled;
-});
+final monitoringAvailableProvider = Provider<bool>(
+  (ref) =>
+      FeatureFlags.crashlyticsEnabled ||
+      FeatureFlags.performanceMonitoringEnabled,
+);
 
 /// Провайдер для получения метрик приложения
 final appMetricsProvider = FutureProvider<Map<String, dynamic>>((ref) async {

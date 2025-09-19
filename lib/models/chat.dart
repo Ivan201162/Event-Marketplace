@@ -20,19 +20,6 @@ enum MessageStatus {
 
 /// Модель сообщения
 class ChatMessage {
-  final String id;
-  final String chatId;
-  final String senderId;
-  final String? receiverId;
-  final MessageType type;
-  final String content;
-  final MessageStatus status;
-  final DateTime createdAt;
-  final DateTime? readAt;
-  final Map<String, dynamic>? metadata;
-  final String? replyToMessageId;
-  final List<String> attachments;
-
   const ChatMessage({
     required this.id,
     required this.chatId,
@@ -70,23 +57,33 @@ class ChatMessage {
       attachments: List<String>.from(data['attachments'] ?? []),
     );
   }
+  final String id;
+  final String chatId;
+  final String senderId;
+  final String? receiverId;
+  final MessageType type;
+  final String content;
+  final MessageStatus status;
+  final DateTime createdAt;
+  final DateTime? readAt;
+  final Map<String, dynamic>? metadata;
+  final String? replyToMessageId;
+  final List<String> attachments;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'chatId': chatId,
-      'senderId': senderId,
-      'receiverId': receiverId,
-      'type': type.name,
-      'content': content,
-      'status': status.name,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
-      'metadata': metadata,
-      'replyToMessageId': replyToMessageId,
-      'attachments': attachments,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'chatId': chatId,
+        'senderId': senderId,
+        'receiverId': receiverId,
+        'type': type.name,
+        'content': content,
+        'status': status.name,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
+        'metadata': metadata,
+        'replyToMessageId': replyToMessageId,
+        'attachments': attachments,
+      };
 
   /// Копировать с изменениями
   ChatMessage copyWith({
@@ -102,22 +99,21 @@ class ChatMessage {
     Map<String, dynamic>? metadata,
     String? replyToMessageId,
     List<String>? attachments,
-  }) {
-    return ChatMessage(
-      id: id ?? this.id,
-      chatId: chatId ?? this.chatId,
-      senderId: senderId ?? this.senderId,
-      receiverId: receiverId ?? this.receiverId,
-      type: type ?? this.type,
-      content: content ?? this.content,
-      status: status ?? this.status,
-      createdAt: createdAt ?? this.createdAt,
-      readAt: readAt ?? this.readAt,
-      metadata: metadata ?? this.metadata,
-      replyToMessageId: replyToMessageId ?? this.replyToMessageId,
-      attachments: attachments ?? this.attachments,
-    );
-  }
+  }) =>
+      ChatMessage(
+        id: id ?? this.id,
+        chatId: chatId ?? this.chatId,
+        senderId: senderId ?? this.senderId,
+        receiverId: receiverId ?? this.receiverId,
+        type: type ?? this.type,
+        content: content ?? this.content,
+        status: status ?? this.status,
+        createdAt: createdAt ?? this.createdAt,
+        readAt: readAt ?? this.readAt,
+        metadata: metadata ?? this.metadata,
+        replyToMessageId: replyToMessageId ?? this.replyToMessageId,
+        attachments: attachments ?? this.attachments,
+      );
 
   /// Проверить, прочитано ли сообщение
   bool get isRead => status == MessageStatus.read;
@@ -150,7 +146,7 @@ class ChatMessage {
   }
 
   /// Парсинг типа сообщения
-  static MessageType _parseMessageType(dynamic typeData) {
+  static MessageType _parseMessageType(typeData) {
     if (typeData == null) return MessageType.text;
 
     final typeString = typeData.toString().toLowerCase();
@@ -172,7 +168,7 @@ class ChatMessage {
   }
 
   /// Парсинг статуса сообщения
-  static MessageStatus _parseMessageStatus(dynamic statusData) {
+  static MessageStatus _parseMessageStatus(statusData) {
     if (statusData == null) return MessageStatus.sent;
 
     final statusString = statusData.toString().toLowerCase();
@@ -199,24 +195,12 @@ class ChatMessage {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'ChatMessage(id: $id, type: $type, content: $content, status: $status)';
-  }
+  String toString() =>
+      'ChatMessage(id: $id, type: $type, content: $content, status: $status)';
 }
 
 /// Модель чата
 class Chat {
-  final String id;
-  final String customerId;
-  final String specialistId;
-  final String? bookingId;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final ChatMessage? lastMessage;
-  final int unreadCount;
-  final bool isActive;
-  final Map<String, dynamic>? metadata;
-
   const Chat({
     required this.id,
     required this.customerId,
@@ -252,21 +236,29 @@ class Chat {
       metadata: data['metadata'],
     );
   }
+  final String id;
+  final String customerId;
+  final String specialistId;
+  final String? bookingId;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final ChatMessage? lastMessage;
+  final int unreadCount;
+  final bool isActive;
+  final Map<String, dynamic>? metadata;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'customerId': customerId,
-      'specialistId': specialistId,
-      'bookingId': bookingId,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'lastMessage': lastMessage?.toMap(),
-      'unreadCount': unreadCount,
-      'isActive': isActive,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'customerId': customerId,
+        'specialistId': specialistId,
+        'bookingId': bookingId,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'lastMessage': lastMessage?.toMap(),
+        'unreadCount': unreadCount,
+        'isActive': isActive,
+        'metadata': metadata,
+      };
 
   /// Копировать с изменениями
   Chat copyWith({
@@ -280,20 +272,19 @@ class Chat {
     int? unreadCount,
     bool? isActive,
     Map<String, dynamic>? metadata,
-  }) {
-    return Chat(
-      id: id ?? this.id,
-      customerId: customerId ?? this.customerId,
-      specialistId: specialistId ?? this.specialistId,
-      bookingId: bookingId ?? this.bookingId,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      lastMessage: lastMessage ?? this.lastMessage,
-      unreadCount: unreadCount ?? this.unreadCount,
-      isActive: isActive ?? this.isActive,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      Chat(
+        id: id ?? this.id,
+        customerId: customerId ?? this.customerId,
+        specialistId: specialistId ?? this.specialistId,
+        bookingId: bookingId ?? this.bookingId,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        lastMessage: lastMessage ?? this.lastMessage,
+        unreadCount: unreadCount ?? this.unreadCount,
+        isActive: isActive ?? this.isActive,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Проверить, есть ли непрочитанные сообщения
   bool get hasUnreadMessages => unreadCount > 0;
@@ -308,7 +299,6 @@ class Chat {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'Chat(id: $id, customerId: $customerId, specialistId: $specialistId, unreadCount: $unreadCount)';
-  }
+  String toString() =>
+      'Chat(id: $id, customerId: $customerId, specialistId: $specialistId, unreadCount: $unreadCount)';
 }

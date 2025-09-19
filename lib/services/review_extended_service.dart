@@ -7,10 +7,10 @@ import '../models/review_extended.dart';
 
 /// Сервис для работы с расширенными отзывами
 class ReviewExtendedService {
-  static final ReviewExtendedService _instance =
-      ReviewExtendedService._internal();
   factory ReviewExtendedService() => _instance;
   ReviewExtendedService._internal();
+  static final ReviewExtendedService _instance =
+      ReviewExtendedService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -58,8 +58,10 @@ class ReviewExtendedService {
 
   /// Получить отзывы специалиста
   Stream<List<ReviewExtended>> getSpecialistReviews(
-      String specialistId, ReviewFilter filter) {
-    Query query = _firestore
+    String specialistId,
+    ReviewFilter filter,
+  ) {
+    var query = _firestore
         .collection('reviews_extended')
         .where('specialistId', isEqualTo: specialistId)
         .where('isApproved', isEqualTo: true);
@@ -82,13 +84,17 @@ class ReviewExtendedService {
     }
 
     if (filter.startDate != null) {
-      query = query.where('createdAt',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!));
+      query = query.where(
+        'createdAt',
+        isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!),
+      );
     }
 
     if (filter.endDate != null) {
-      query = query.where('createdAt',
-          isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
+      query = query.where(
+        'createdAt',
+        isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!),
+      );
     }
 
     // Сортировка
@@ -100,32 +106,38 @@ class ReviewExtendedService {
         query = query.orderBy('rating', descending: !filter.sortAscending);
         break;
       case ReviewSortBy.likes:
-        query = query.orderBy('stats.likesCount',
-            descending: !filter.sortAscending);
+        query = query.orderBy(
+          'stats.likesCount',
+          descending: !filter.sortAscending,
+        );
         break;
       case ReviewSortBy.helpfulness:
-        query = query.orderBy('stats.helpfulnessScore',
-            descending: !filter.sortAscending);
+        query = query.orderBy(
+          'stats.helpfulnessScore',
+          descending: !filter.sortAscending,
+        );
         break;
     }
 
     return query.snapshots().map((snapshot) {
-      var reviews =
-          snapshot.docs.map((doc) => ReviewExtended.fromDocument(doc)).toList();
+      var reviews = snapshot.docs.map(ReviewExtended.fromDocument).toList();
 
       // Применяем фильтры, которые нельзя применить в Firestore
       if (filter.hasMedia != null) {
         reviews = reviews
-            .where((review) => filter.hasMedia!
-                ? review.media.isNotEmpty
-                : review.media.isEmpty)
+            .where(
+              (review) => filter.hasMedia!
+                  ? review.media.isNotEmpty
+                  : review.media.isEmpty,
+            )
             .toList();
       }
 
       if (filter.tags != null && filter.tags!.isNotEmpty) {
         reviews = reviews
-            .where((review) =>
-                review.tags.any((tag) => filter.tags!.contains(tag)))
+            .where(
+              (review) => review.tags.any((tag) => filter.tags!.contains(tag)),
+            )
             .toList();
       }
 
@@ -174,8 +186,12 @@ class ReviewExtendedService {
   }
 
   /// Добавить лайк к отзыву
-  Future<bool> likeReview(String reviewId, String userId, String userName,
-      String userPhotoUrl) async {
+  Future<bool> likeReview(
+    String reviewId,
+    String userId,
+    String userName,
+    String userPhotoUrl,
+  ) async {
     try {
       final review = await getReview(reviewId);
       if (review == null) return false;
@@ -236,7 +252,9 @@ class ReviewExtendedService {
 
   /// Добавить медиа к отзыву
   Future<bool> addMediaToReview(
-      String reviewId, List<ReviewMedia> media) async {
+    String reviewId,
+    List<ReviewMedia> media,
+  ) async {
     try {
       final review = await getReview(reviewId);
       if (review == null) return false;
@@ -412,7 +430,8 @@ class ReviewExtendedService {
 
   /// Получить статистику отзывов специалиста
   Future<SpecialistReviewStats> getSpecialistReviewStats(
-      String specialistId) async {
+    String specialistId,
+  ) async {
     try {
       final snapshot = await _firestore
           .collection('reviews_extended')
@@ -420,20 +439,19 @@ class ReviewExtendedService {
           .where('isApproved', isEqualTo: true)
           .get();
 
-      final reviews =
-          snapshot.docs.map((doc) => ReviewExtended.fromDocument(doc)).toList();
+      final reviews = snapshot.docs.map(ReviewExtended.fromDocument).toList();
 
       if (reviews.isEmpty) {
         return SpecialistReviewStats.empty();
       }
 
       // Подсчитываем статистику
-      double totalRating = 0.0;
-      int totalReviews = reviews.length;
+      var totalRating = 0;
+      final int totalReviews = reviews.length;
       final ratingDistribution = <int, int>{};
-      int totalLikes = 0;
-      int totalViews = 0;
-      double totalHelpfulness = 0.0;
+      var totalLikes = 0;
+      var totalViews = 0;
+      var totalHelpfulness = 0;
       final tagCounts = <String, int>{};
       final categoryRatings = <String, List<double>>{};
 
@@ -547,7 +565,10 @@ class ReviewExtendedService {
 
   /// Пожаловаться на отзыв
   Future<bool> reportReview(
-      String reviewId, String reason, String reporterId) async {
+    String reviewId,
+    String reason,
+    String reporterId,
+  ) async {
     try {
       final review = await getReview(reviewId);
       if (review == null) return false;
@@ -580,8 +601,12 @@ class ReviewExtendedService {
   }
 
   /// Модерировать отзыв
-  Future<bool> moderateReview(String reviewId, bool approved, String? comment,
-      String moderatorId) async {
+  Future<bool> moderateReview(
+    String reviewId,
+    bool approved,
+    String? comment,
+    String moderatorId,
+  ) async {
     try {
       final review = await getReview(reviewId);
       if (review == null) return false;

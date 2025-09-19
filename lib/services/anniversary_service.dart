@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:event_marketplace_app/models/user.dart';
-import 'package:event_marketplace_app/services/notification_service.dart';
-import 'package:event_marketplace_app/core/feature_flags.dart';
+
+import '../core/feature_flags.dart';
+import '../models/user.dart';
+import 'notification_service.dart';
 
 /// Сервис для работы с годовщинами и напоминаниями
 class AnniversaryService {
@@ -77,15 +78,15 @@ class AnniversaryService {
     if (daysUntil == 0) {
       title = '🎉 Поздравляем с годовщиной!';
       body =
-          'Сегодня ${yearsMarried}-я годовщина вашей свадьбы! Желаем счастья и любви!';
+          'Сегодня $yearsMarried-я годовщина вашей свадьбы! Желаем счастья и любви!';
     } else if (daysUntil == 1) {
       title = 'Напоминание о годовщине';
       body =
-          'Завтра ${yearsMarried}-я годовщина вашей свадьбы. Не забудьте поздравить друг друга!';
+          'Завтра $yearsMarried-я годовщина вашей свадьбы. Не забудьте поздравить друг друга!';
     } else {
       title = 'Приближается годовщина';
       body =
-          'Через $daysUntil дней будет ${yearsMarried}-я годовщина вашей свадьбы. Время планировать празднование!';
+          'Через $daysUntil дней будет $yearsMarried-я годовщина вашей свадьбы. Время планировать празднование!';
     }
 
     await _notificationService.sendNotification(
@@ -103,16 +104,15 @@ class AnniversaryService {
   }
 
   /// Проверить, совпадают ли дни
-  bool _isSameDay(DateTime date1, DateTime date2) {
-    return date1.year == date2.year &&
-        date1.month == date2.month &&
-        date1.day == date2.day;
-  }
+  bool _isSameDay(DateTime date1, DateTime date2) =>
+      date1.year == date2.year &&
+      date1.month == date2.month &&
+      date1.day == date2.day;
 
   /// Получить количество лет в браке
   int getYearsMarried(DateTime weddingDate) {
     final now = DateTime.now();
-    int years = now.year - weddingDate.year;
+    var years = now.year - weddingDate.year;
 
     // Если день рождения еще не наступил в этом году
     if (now.month < weddingDate.month ||

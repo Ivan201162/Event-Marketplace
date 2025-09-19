@@ -1,166 +1,158 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../core/responsive_utils.dart';
 import '../providers/offline_provider.dart';
 import '../widgets/offline_status_widget.dart';
 import '../widgets/responsive_layout.dart';
-import '../core/responsive_utils.dart';
 
 /// Экран настроек офлайн-режима
 class OfflineSettingsScreen extends ConsumerWidget {
   const OfflineSettingsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ResponsiveLayout(
-      mobile: _buildMobileLayout(context, ref),
-      tablet: _buildTabletLayout(context, ref),
-      desktop: _buildDesktopLayout(context, ref),
-      largeDesktop: _buildLargeDesktopLayout(context, ref),
-    );
-  }
+  Widget build(BuildContext context, WidgetRef ref) => ResponsiveLayout(
+        mobile: _buildMobileLayout(context, ref),
+        tablet: _buildTabletLayout(context, ref),
+        desktop: _buildDesktopLayout(context, ref),
+        largeDesktop: _buildLargeDesktopLayout(context, ref),
+      );
 
-  Widget _buildMobileLayout(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Офлайн-режим'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          children: [
-            const OfflineDetailsWidget(),
-            const SizedBox(height: 24),
-            const CacheInfoWidget(),
-            const SizedBox(height: 24),
-            const OfflineRecommendationsWidget(),
-            const SizedBox(height: 24),
-            const SyncStatusWidget(),
-          ],
+  Widget _buildMobileLayout(BuildContext context, WidgetRef ref) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Офлайн-режим'),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         ),
-      ),
-    );
-  }
-
-  Widget _buildTabletLayout(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Офлайн-режим'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: ResponsiveContainer(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
+        body: const SingleChildScrollView(
+          padding: EdgeInsets.all(16),
           child: Column(
             children: [
-              const OfflineDetailsWidget(),
-              const SizedBox(height: 24),
-              const CacheInfoWidget(),
-              const SizedBox(height: 24),
-              const OfflineRecommendationsWidget(),
-              const SizedBox(height: 24),
-              const SyncStatusWidget(),
+              OfflineDetailsWidget(),
+              SizedBox(height: 24),
+              CacheInfoWidget(),
+              SizedBox(height: 24),
+              OfflineRecommendationsWidget(),
+              SizedBox(height: 24),
+              SyncStatusWidget(),
             ],
           ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildDesktopLayout(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Офлайн-режим'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: ResponsiveContainer(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Левая панель
-            SizedBox(
-              width: 400,
-              child: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  const OfflineDetailsWidget(),
-                  const SizedBox(height: 24),
-                  const CacheInfoWidget(),
-                ],
-              ),
-            ),
-            const SizedBox(width: 24),
-            // Правая панель
-            Expanded(
-              child: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  const OfflineRecommendationsWidget(),
-                  const SizedBox(height: 24),
-                  const SyncStatusWidget(),
-                  const SizedBox(height: 24),
-                  _buildOfflineActions(context, ref),
-                ],
-              ),
-            ),
-          ],
+  Widget _buildTabletLayout(BuildContext context, WidgetRef ref) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Офлайн-режим'),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         ),
-      ),
-    );
-  }
+        body: const ResponsiveContainer(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.all(16),
+            child: Column(
+              children: [
+                OfflineDetailsWidget(),
+                SizedBox(height: 24),
+                CacheInfoWidget(),
+                SizedBox(height: 24),
+                OfflineRecommendationsWidget(),
+                SizedBox(height: 24),
+                SyncStatusWidget(),
+              ],
+            ),
+          ),
+        ),
+      );
 
-  Widget _buildLargeDesktopLayout(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Офлайн-режим'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: ResponsiveContainer(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Левая панель
-            SizedBox(
-              width: 450,
-              child: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  const OfflineDetailsWidget(),
-                  const SizedBox(height: 24),
-                  const CacheInfoWidget(),
-                ],
-              ),
-            ),
-            const SizedBox(width: 32),
-            // Центральная панель
-            Expanded(
-              child: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  const OfflineRecommendationsWidget(),
-                  const SizedBox(height: 24),
-                  const SyncStatusWidget(),
-                ],
-              ),
-            ),
-            const SizedBox(width: 32),
-            // Правая панель
-            SizedBox(
-              width: 300,
-              child: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  _buildOfflineActions(context, ref),
-                  const SizedBox(height: 24),
-                  _buildQuickSettings(context, ref),
-                ],
-              ),
-            ),
-          ],
+  Widget _buildDesktopLayout(BuildContext context, WidgetRef ref) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Офлайн-режим'),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         ),
-      ),
-    );
-  }
+        body: ResponsiveContainer(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Левая панель
+              const SizedBox(
+                width: 400,
+                child: Column(
+                  children: [
+                    SizedBox(height: 20),
+                    OfflineDetailsWidget(),
+                    SizedBox(height: 24),
+                    CacheInfoWidget(),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 24),
+              // Правая панель
+              Expanded(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    const OfflineRecommendationsWidget(),
+                    const SizedBox(height: 24),
+                    const SyncStatusWidget(),
+                    const SizedBox(height: 24),
+                    _buildOfflineActions(context, ref),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildLargeDesktopLayout(BuildContext context, WidgetRef ref) =>
+      Scaffold(
+        appBar: AppBar(
+          title: const Text('Офлайн-режим'),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        ),
+        body: ResponsiveContainer(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Левая панель
+              const SizedBox(
+                width: 450,
+                child: Column(
+                  children: [
+                    SizedBox(height: 20),
+                    OfflineDetailsWidget(),
+                    SizedBox(height: 24),
+                    CacheInfoWidget(),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 32),
+              // Центральная панель
+              const Expanded(
+                child: Column(
+                  children: [
+                    SizedBox(height: 20),
+                    OfflineRecommendationsWidget(),
+                    SizedBox(height: 24),
+                    SyncStatusWidget(),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 32),
+              // Правая панель
+              SizedBox(
+                width: 300,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    _buildOfflineActions(context, ref),
+                    const SizedBox(height: 24),
+                    _buildQuickSettings(context, ref),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
 
   Widget _buildOfflineActions(BuildContext context, WidgetRef ref) {
     final offlineState = ref.watch(offlineModeProvider);
@@ -170,7 +162,7 @@ class OfflineSettingsScreen extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ResponsiveText(
+          const ResponsiveText(
             'Действия',
             isTitle: true,
           ),
@@ -240,61 +232,60 @@ class OfflineSettingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildQuickSettings(BuildContext context, WidgetRef ref) {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ResponsiveText(
-            'Быстрые настройки',
-            isTitle: true,
-          ),
-          const SizedBox(height: 16),
+  Widget _buildQuickSettings(BuildContext context, WidgetRef ref) =>
+      ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const ResponsiveText(
+              'Быстрые настройки',
+              isTitle: true,
+            ),
+            const SizedBox(height: 16),
 
-          // Автоматическая синхронизация
-          SwitchListTile(
-            title: const Text('Автосинхронизация'),
-            subtitle:
-                const Text('Автоматическая синхронизация при подключении'),
-            value: true, // TODO: Получить из настроек
-            onChanged: (value) {
-              // TODO: Сохранить настройку
-            },
-          ),
+            // Автоматическая синхронизация
+            SwitchListTile(
+              title: const Text('Автосинхронизация'),
+              subtitle:
+                  const Text('Автоматическая синхронизация при подключении'),
+              value: true, // TODO: Получить из настроек
+              onChanged: (value) {
+                // TODO: Сохранить настройку
+              },
+            ),
 
-          // Кэширование изображений
-          SwitchListTile(
-            title: const Text('Кэш изображений'),
-            subtitle: const Text('Сохранять изображения локально'),
-            value: true, // TODO: Получить из настроек
-            onChanged: (value) {
-              // TODO: Сохранить настройку
-            },
-          ),
+            // Кэширование изображений
+            SwitchListTile(
+              title: const Text('Кэш изображений'),
+              subtitle: const Text('Сохранять изображения локально'),
+              value: true, // TODO: Получить из настроек
+              onChanged: (value) {
+                // TODO: Сохранить настройку
+              },
+            ),
 
-          // Кэширование видео
-          SwitchListTile(
-            title: const Text('Кэш видео'),
-            subtitle: const Text('Сохранять видео локально'),
-            value: false, // TODO: Получить из настроек
-            onChanged: (value) {
-              // TODO: Сохранить настройку
-            },
-          ),
+            // Кэширование видео
+            SwitchListTile(
+              title: const Text('Кэш видео'),
+              subtitle: const Text('Сохранять видео локально'),
+              value: false, // TODO: Получить из настроек
+              onChanged: (value) {
+                // TODO: Сохранить настройку
+              },
+            ),
 
-          // Уведомления о статусе
-          SwitchListTile(
-            title: const Text('Уведомления'),
-            subtitle: const Text('Уведомления о статусе подключения'),
-            value: true, // TODO: Получить из настроек
-            onChanged: (value) {
-              // TODO: Сохранить настройку
-            },
-          ),
-        ],
-      ),
-    );
-  }
+            // Уведомления о статусе
+            SwitchListTile(
+              title: const Text('Уведомления'),
+              subtitle: const Text('Уведомления о статусе подключения'),
+              value: true, // TODO: Получить из настроек
+              onChanged: (value) {
+                // TODO: Сохранить настройку
+              },
+            ),
+          ],
+        ),
+      );
 
   void _showClearCacheDialog(BuildContext context, WidgetRef ref) {
     showDialog(
@@ -340,7 +331,7 @@ class OfflineStatsWidget extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ResponsiveText(
+          const ResponsiveText(
             'Статистика',
             isTitle: true,
           ),
@@ -387,33 +378,36 @@ class OfflineStatsWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatRow(String label, String value, IconData icon,
-      {Color? color}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            size: 20,
-            color: color ?? Colors.grey[600],
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: ResponsiveText(
-              label,
-              isSubtitle: true,
+  Widget _buildStatRow(
+    String label,
+    String value,
+    IconData icon, {
+    Color? color,
+  }) =>
+      Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 20,
+              color: color ?? Colors.grey[600],
             ),
-          ),
-          ResponsiveText(
-            value,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              color: color,
+            const SizedBox(width: 12),
+            Expanded(
+              child: ResponsiveText(
+                label,
+                isSubtitle: true,
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+            ResponsiveText(
+              value,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+      );
 }

@@ -1,12 +1,5 @@
 /// Фильтр для поиска идей
 class IdeaFilter {
-  final String? category;
-  final String? authorId;
-  final List<String>? tags;
-  final bool? isPublic;
-  final int? limit;
-  final String? searchQuery;
-
   const IdeaFilter({
     this.category,
     this.authorId,
@@ -17,47 +10,43 @@ class IdeaFilter {
   });
 
   /// Создать фильтр для публичных идей
-  factory IdeaFilter.public({int? limit}) {
-    return IdeaFilter(
-      isPublic: true,
-      limit: limit,
-    );
-  }
+  factory IdeaFilter.public({int? limit}) => IdeaFilter(
+        isPublic: true,
+        limit: limit,
+      );
 
   /// Создать фильтр по категории
-  factory IdeaFilter.byCategory(String category, {int? limit}) {
-    return IdeaFilter(
-      category: category,
-      isPublic: true,
-      limit: limit,
-    );
-  }
+  factory IdeaFilter.byCategory(String category, {int? limit}) => IdeaFilter(
+        category: category,
+        isPublic: true,
+        limit: limit,
+      );
 
   /// Создать фильтр по автору
-  factory IdeaFilter.byAuthor(String authorId, {int? limit}) {
-    return IdeaFilter(
-      authorId: authorId,
-      limit: limit,
-    );
-  }
+  factory IdeaFilter.byAuthor(String authorId, {int? limit}) => IdeaFilter(
+        authorId: authorId,
+        limit: limit,
+      );
 
   /// Создать фильтр по тегам
-  factory IdeaFilter.byTags(List<String> tags, {int? limit}) {
-    return IdeaFilter(
-      tags: tags,
-      isPublic: true,
-      limit: limit,
-    );
-  }
+  factory IdeaFilter.byTags(List<String> tags, {int? limit}) => IdeaFilter(
+        tags: tags,
+        isPublic: true,
+        limit: limit,
+      );
 
   /// Создать фильтр для поиска
-  factory IdeaFilter.search(String query, {int? limit}) {
-    return IdeaFilter(
-      searchQuery: query,
-      isPublic: true,
-      limit: limit,
-    );
-  }
+  factory IdeaFilter.search(String query, {int? limit}) => IdeaFilter(
+        searchQuery: query,
+        isPublic: true,
+        limit: limit,
+      );
+  final String? category;
+  final String? authorId;
+  final List<String>? tags;
+  final bool? isPublic;
+  final int? limit;
+  final String? searchQuery;
 
   /// Создать копию с изменениями
   IdeaFilter copyWith({
@@ -67,16 +56,15 @@ class IdeaFilter {
     bool? isPublic,
     int? limit,
     String? searchQuery,
-  }) {
-    return IdeaFilter(
-      category: category ?? this.category,
-      authorId: authorId ?? this.authorId,
-      tags: tags ?? this.tags,
-      isPublic: isPublic ?? this.isPublic,
-      limit: limit ?? this.limit,
-      searchQuery: searchQuery ?? this.searchQuery,
-    );
-  }
+  }) =>
+      IdeaFilter(
+        category: category ?? this.category,
+        authorId: authorId ?? this.authorId,
+        tags: tags ?? this.tags,
+        isPublic: isPublic ?? this.isPublic,
+        limit: limit ?? this.limit,
+        searchQuery: searchQuery ?? this.searchQuery,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -91,17 +79,15 @@ class IdeaFilter {
   }
 
   @override
-  int get hashCode {
-    return category.hashCode ^
-        authorId.hashCode ^
-        tags.hashCode ^
-        isPublic.hashCode ^
-        limit.hashCode ^
-        searchQuery.hashCode;
-  }
+  int get hashCode =>
+      category.hashCode ^
+      authorId.hashCode ^
+      tags.hashCode ^
+      isPublic.hashCode ^
+      limit.hashCode ^
+      searchQuery.hashCode;
 
   @override
-  String toString() {
-    return 'IdeaFilter(category: $category, authorId: $authorId, tags: $tags, isPublic: $isPublic, limit: $limit, searchQuery: $searchQuery)';
-  }
+  String toString() =>
+      'IdeaFilter(category: $category, authorId: $authorId, tags: $tags, isPublic: $isPublic, limit: $limit, searchQuery: $searchQuery)';
 }

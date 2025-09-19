@@ -8,12 +8,11 @@ import 'guest_registration_screen.dart';
 
 /// Экран управления гостями
 class GuestManagementScreen extends ConsumerStatefulWidget {
-  final String organizerId;
-
   const GuestManagementScreen({
     super.key,
     required this.organizerId,
   });
+  final String organizerId;
 
   @override
   ConsumerState<GuestManagementScreen> createState() =>
@@ -28,346 +27,345 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
   String _searchQuery = '';
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Управление гостями'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: _showSearchDialog,
-          ),
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFilterDialog,
-          ),
-          IconButton(
-            icon: const Icon(Icons.qr_code_scanner),
-            onPressed: _showQRScanner,
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Выбор события
-          _buildEventSelector(),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Управление гостями'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: _showSearchDialog,
+            ),
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFilterDialog,
+            ),
+            IconButton(
+              icon: const Icon(Icons.qr_code_scanner),
+              onPressed: _showQRScanner,
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            // Выбор события
+            _buildEventSelector(),
 
-          // Статистика
-          if (_selectedEventId.isNotEmpty) _buildStatsSection(),
+            // Статистика
+            if (_selectedEventId.isNotEmpty) _buildStatsSection(),
 
-          // Список гостей
-          Expanded(
-            child: _selectedEventId.isEmpty
-                ? _buildEmptyState()
-                : _buildGuestsList(),
-          ),
-        ],
-      ),
-      floatingActionButton: Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            heroTag: 'add_guest',
-            onPressed: _selectedEventId.isNotEmpty ? _addGuest : null,
-            child: const Icon(Icons.person_add),
-          ),
-          const SizedBox(height: 8),
-          FloatingActionButton(
-            heroTag: 'create_event',
-            onPressed: _createEvent,
-            child: const Icon(Icons.event),
-          ),
-        ],
-      ),
-    );
-  }
+            // Список гостей
+            Expanded(
+              child: _selectedEventId.isEmpty
+                  ? _buildEmptyState()
+                  : _buildGuestsList(),
+            ),
+          ],
+        ),
+        floatingActionButton: Column(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            FloatingActionButton(
+              heroTag: 'add_guest',
+              onPressed: _selectedEventId.isNotEmpty ? _addGuest : null,
+              child: const Icon(Icons.person_add),
+            ),
+            const SizedBox(height: 8),
+            FloatingActionButton(
+              heroTag: 'create_event',
+              onPressed: _createEvent,
+              child: const Icon(Icons.event),
+            ),
+          ],
+        ),
+      );
 
-  Widget _buildEventSelector() {
-    return StreamBuilder<List<GuestEvent>>(
-      stream: _guestService.getOrganizerEvents(widget.organizerId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Padding(
-            padding: EdgeInsets.all(16),
-            child: Center(child: CircularProgressIndicator()),
-          );
-        }
+  Widget _buildEventSelector() => StreamBuilder<List<GuestEvent>>(
+        stream: _guestService.getOrganizerEvents(widget.organizerId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Padding(
+              padding: EdgeInsets.all(16),
+              child: Center(child: CircularProgressIndicator()),
+            );
+          }
 
-        final events = snapshot.data ?? [];
+          final events = snapshot.data ?? [];
 
-        if (events.isEmpty) {
+          if (events.isEmpty) {
+            return Container(
+              padding: const EdgeInsets.all(16),
+              child: const Text(
+                'У вас пока нет событий для гостей',
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+            );
+          }
+
           return Container(
             padding: const EdgeInsets.all(16),
-            child: const Text(
-              'У вас пока нет событий для гостей',
-              style: TextStyle(fontSize: 16, color: Colors.grey),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Выберите событие:',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 8),
+                DropdownButtonFormField<String>(
+                  initialValue:
+                      _selectedEventId.isEmpty ? null : _selectedEventId,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Выберите событие',
+                  ),
+                  items: events
+                      .map(
+                        (event) => DropdownMenuItem(
+                          value: event.id,
+                          child: Text(event.title),
+                        ),
+                      )
+                      .toList(),
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedEventId = value ?? '';
+                    });
+                  },
+                ),
+              ],
             ),
           );
-        }
+        },
+      );
 
-        return Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Выберите событие:',
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 8),
-              DropdownButtonFormField<String>(
-                initialValue:
-                    _selectedEventId.isEmpty ? null : _selectedEventId,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  hintText: 'Выберите событие',
+  Widget _buildStatsSection() => FutureBuilder<GuestStats>(
+        future: _guestService.getGuestStats(_selectedEventId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const SizedBox.shrink();
+          }
+
+          final stats = snapshot.data ?? GuestStats.empty();
+          if (stats.totalGuests == 0) {
+            return const SizedBox.shrink();
+          }
+
+          return Container(
+            padding: const EdgeInsets.all(16),
+            child: Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    // Общая статистика
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildStatItem(
+                            'Всего гостей',
+                            stats.totalGuests.toString(),
+                            Icons.people,
+                            Colors.blue,
+                          ),
+                        ),
+                        Expanded(
+                          child: _buildStatItem(
+                            'Подтверждено',
+                            stats.confirmedGuests.toString(),
+                            Icons.check_circle,
+                            Colors.green,
+                          ),
+                        ),
+                        Expanded(
+                          child: _buildStatItem(
+                            'На мероприятии',
+                            stats.checkedInGuests.toString(),
+                            Icons.event_available,
+                            Colors.purple,
+                          ),
+                        ),
+                      ],
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Процентные показатели
+                    Row(
+                      children: [
+                        Expanded(
+                          child: _buildStatItem(
+                            'Посещаемость',
+                            '${(stats.attendanceRate * 100).toInt()}%',
+                            Icons.trending_up,
+                            Colors.orange,
+                          ),
+                        ),
+                        Expanded(
+                          child: _buildStatItem(
+                            'Подтверждения',
+                            '${(stats.confirmationRate * 100).toInt()}%',
+                            Icons.thumb_up,
+                            Colors.teal,
+                          ),
+                        ),
+                        Expanded(
+                          child: _buildStatItem(
+                            'Поздравления',
+                            stats.totalGreetings.toString(),
+                            Icons.celebration,
+                            Colors.pink,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-                items: events.map((event) {
-                  return DropdownMenuItem(
-                    value: event.id,
-                    child: Text(event.title),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  setState(() {
-                    _selectedEventId = value ?? '';
-                  });
-                },
               ),
-            ],
+            ),
+          );
+        },
+      );
+
+  Widget _buildStatItem(
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) =>
+      Column(
+        children: [
+          Icon(icon, color: color, size: 24),
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
           ),
-        );
-      },
-    );
-  }
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey[600],
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      );
 
-  Widget _buildStatsSection() {
-    return FutureBuilder<GuestStats>(
-      future: _guestService.getGuestStats(_selectedEventId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const SizedBox.shrink();
-        }
+  Widget _buildEmptyState() => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.event_busy, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            const Text(
+              'Выберите событие',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Выберите событие из списка выше, чтобы управлять гостями',
+              style: TextStyle(color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: _createEvent,
+              icon: const Icon(Icons.add),
+              label: const Text('Создать событие'),
+            ),
+          ],
+        ),
+      );
 
-        final stats = snapshot.data ?? GuestStats.empty();
-        if (stats.totalGuests == 0) {
-          return const SizedBox.shrink();
-        }
+  Widget _buildGuestsList() => StreamBuilder<List<Guest>>(
+        stream: _guestService.getEventGuests(_selectedEventId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-        return Container(
-          padding: const EdgeInsets.all(16),
-          child: Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
+          if (snapshot.hasError) {
+            return Center(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  // Общая статистика
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildStatItem(
-                          'Всего гостей',
-                          stats.totalGuests.toString(),
-                          Icons.people,
-                          Colors.blue,
-                        ),
-                      ),
-                      Expanded(
-                        child: _buildStatItem(
-                          'Подтверждено',
-                          stats.confirmedGuests.toString(),
-                          Icons.check_circle,
-                          Colors.green,
-                        ),
-                      ),
-                      Expanded(
-                        child: _buildStatItem(
-                          'На мероприятии',
-                          stats.checkedInGuests.toString(),
-                          Icons.event_available,
-                          Colors.purple,
-                        ),
-                      ),
-                    ],
-                  ),
-
+                  const Icon(Icons.error, size: 64, color: Colors.red),
                   const SizedBox(height: 16),
-
-                  // Процентные показатели
-                  Row(
-                    children: [
-                      Expanded(
-                        child: _buildStatItem(
-                          'Посещаемость',
-                          '${(stats.attendanceRate * 100).toInt()}%',
-                          Icons.trending_up,
-                          Colors.orange,
-                        ),
-                      ),
-                      Expanded(
-                        child: _buildStatItem(
-                          'Подтверждения',
-                          '${(stats.confirmationRate * 100).toInt()}%',
-                          Icons.thumb_up,
-                          Colors.teal,
-                        ),
-                      ),
-                      Expanded(
-                        child: _buildStatItem(
-                          'Поздравления',
-                          stats.totalGreetings.toString(),
-                          Icons.celebration,
-                          Colors.pink,
-                        ),
-                      ),
-                    ],
+                  Text('Ошибка: ${snapshot.error}'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => setState(() {}),
+                    child: const Text('Повторить'),
                   ),
                 ],
               ),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildStatItem(
-      String label, String value, IconData icon, Color color) {
-    return Column(
-      children: [
-        Icon(icon, color: color, size: 24),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
-            color: color,
-          ),
-        ),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey[600],
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.event_busy, size: 64, color: Colors.grey),
-          const SizedBox(height: 16),
-          const Text(
-            'Выберите событие',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Выберите событие из списка выше, чтобы управлять гостями',
-            style: TextStyle(color: Colors.grey),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            onPressed: _createEvent,
-            icon: const Icon(Icons.add),
-            label: const Text('Создать событие'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildGuestsList() {
-    return StreamBuilder<List<Guest>>(
-      stream: _guestService.getEventGuests(_selectedEventId),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (snapshot.hasError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.error, size: 64, color: Colors.red),
-                const SizedBox(height: 16),
-                Text('Ошибка: ${snapshot.error}'),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () => setState(() {}),
-                  child: const Text('Повторить'),
-                ),
-              ],
-            ),
-          );
-        }
-
-        final guests = snapshot.data ?? [];
-        final filteredGuests = _filterGuests(guests);
-
-        if (filteredGuests.isEmpty) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.people_outline, size: 64, color: Colors.grey),
-                const SizedBox(height: 16),
-                const Text(
-                  'Нет гостей',
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Добавьте гостей для этого события',
-                  style: TextStyle(color: Colors.grey),
-                ),
-                const SizedBox(height: 16),
-                ElevatedButton.icon(
-                  onPressed: _addGuest,
-                  icon: const Icon(Icons.person_add),
-                  label: const Text('Добавить гостя'),
-                ),
-              ],
-            ),
-          );
-        }
-
-        return ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          itemCount: filteredGuests.length,
-          itemBuilder: (context, index) {
-            final guest = filteredGuests[index];
-            return GuestWidget(
-              guest: guest,
-              onTap: () => _showGuestDetails(guest),
-              onCheckIn: () => _checkInGuest(guest),
-              onCheckOut: () => _checkOutGuest(guest),
-              onCancel: () => _cancelGuest(guest),
-              onShare: () => _shareGuestInfo(guest),
             );
-          },
-        );
-      },
-    );
-  }
+          }
+
+          final guests = snapshot.data ?? [];
+          final filteredGuests = _filterGuests(guests);
+
+          if (filteredGuests.isEmpty) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.people_outline,
+                      size: 64, color: Colors.grey),
+                  const SizedBox(height: 16),
+                  const Text(
+                    'Нет гостей',
+                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Добавьте гостей для этого события',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    onPressed: _addGuest,
+                    icon: const Icon(Icons.person_add),
+                    label: const Text('Добавить гостя'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            itemCount: filteredGuests.length,
+            itemBuilder: (context, index) {
+              final guest = filteredGuests[index];
+              return GuestWidget(
+                guest: guest,
+                onTap: () => _showGuestDetails(guest),
+                onCheckIn: () => _checkInGuest(guest),
+                onCheckOut: () => _checkOutGuest(guest),
+                onCancel: () => _cancelGuest(guest),
+                onShare: () => _shareGuestInfo(guest),
+              );
+            },
+          );
+        },
+      );
 
   List<Guest> _filterGuests(List<Guest> guests) {
     if (_searchQuery.isEmpty) return guests;
 
     final query = _searchQuery.toLowerCase();
-    return guests.where((guest) {
-      return guest.guestName.toLowerCase().contains(query) ||
-          guest.guestEmail.toLowerCase().contains(query);
-    }).toList();
+    return guests
+        .where(
+          (guest) =>
+              guest.guestName.toLowerCase().contains(query) ||
+              guest.guestEmail.toLowerCase().contains(query),
+        )
+        .toList();
   }
 
   void _createEvent() {
@@ -590,20 +588,18 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
     );
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day}.${date.month}.${date.year} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDate(DateTime date) =>
+      '${date.day}.${date.month}.${date.year} ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
 }
 
 /// Диалог фильтра гостей
 class _FilterDialog extends StatefulWidget {
-  final GuestFilter filter;
-  final Function(GuestFilter) onFilterChanged;
-
   const _FilterDialog({
     required this.filter,
     required this.onFilterChanged,
   });
+  final GuestFilter filter;
+  final Function(GuestFilter) onFilterChanged;
 
   @override
   State<_FilterDialog> createState() => _FilterDialogState();
@@ -619,81 +615,82 @@ class _FilterDialogState extends State<_FilterDialog> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Фильтр гостей'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Статусы
-          const Text('Статус:', style: TextStyle(fontWeight: FontWeight.bold)),
-          ...GuestStatus.values.map((status) {
-            return CheckboxListTile(
-              title: Text(_getStatusText(status)),
-              value: _filter.statuses?.contains(status) ?? false,
+  Widget build(BuildContext context) => AlertDialog(
+        title: const Text('Фильтр гостей'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Статусы
+            const Text('Статус:',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            ...GuestStatus.values.map(
+              (status) => CheckboxListTile(
+                title: Text(_getStatusText(status)),
+                value: _filter.statuses?.contains(status) ?? false,
+                onChanged: (value) {
+                  setState(() {
+                    final statuses = _filter.statuses ?? [];
+                    if (value ?? false) {
+                      _filter =
+                          _filter.copyWith(statuses: [...statuses, status]);
+                    } else {
+                      _filter = _filter.copyWith(
+                        statuses: statuses.where((s) => s != status).toList(),
+                      );
+                    }
+                  });
+                },
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Дополнительные фильтры
+            CheckboxListTile(
+              title: const Text('С поздравлениями'),
+              value: _filter.hasGreetings ?? false,
               onChanged: (value) {
                 setState(() {
-                  final statuses = _filter.statuses ?? [];
-                  if (value == true) {
-                    _filter = _filter.copyWith(statuses: [...statuses, status]);
-                  } else {
-                    _filter = _filter.copyWith(
-                        statuses: statuses.where((s) => s != status).toList());
-                  }
+                  _filter = _filter.copyWith(hasGreetings: value);
                 });
               },
-            );
-          }),
+            ),
 
-          const SizedBox(height: 16),
+            CheckboxListTile(
+              title: const Text('На мероприятии'),
+              value: _filter.isCheckedIn ?? false,
+              onChanged: (value) {
+                setState(() {
+                  _filter = _filter.copyWith(isCheckedIn: value);
+                });
+              },
+            ),
 
-          // Дополнительные фильтры
-          CheckboxListTile(
-            title: const Text('С поздравлениями'),
-            value: _filter.hasGreetings ?? false,
-            onChanged: (value) {
-              setState(() {
-                _filter = _filter.copyWith(hasGreetings: value);
-              });
-            },
+            CheckboxListTile(
+              title: const Text('Покинули мероприятие'),
+              value: _filter.isCheckedOut ?? false,
+              onChanged: (value) {
+                setState(() {
+                  _filter = _filter.copyWith(isCheckedOut: value);
+                });
+              },
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
           ),
-
-          CheckboxListTile(
-            title: const Text('На мероприятии'),
-            value: _filter.isCheckedIn ?? false,
-            onChanged: (value) {
-              setState(() {
-                _filter = _filter.copyWith(isCheckedIn: value);
-              });
+          ElevatedButton(
+            onPressed: () {
+              widget.onFilterChanged(_filter);
+              Navigator.pop(context);
             },
-          ),
-
-          CheckboxListTile(
-            title: const Text('Покинули мероприятие'),
-            value: _filter.isCheckedOut ?? false,
-            onChanged: (value) {
-              setState(() {
-                _filter = _filter.copyWith(isCheckedOut: value);
-              });
-            },
+            child: const Text('Применить'),
           ),
         ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Отмена'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            widget.onFilterChanged(_filter);
-            Navigator.pop(context);
-          },
-          child: const Text('Применить'),
-        ),
-      ],
-    );
-  }
+      );
 
   String _getStatusText(GuestStatus status) {
     switch (status) {

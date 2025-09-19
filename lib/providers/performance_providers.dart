@@ -1,15 +1,9 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'dart:async';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 /// Состояние производительности
 class PerformanceState {
-  final double fps;
-  final int memoryUsage;
-  final int cpuUsage;
-  final bool isOptimized;
-  final List<String> optimizations;
-
   const PerformanceState({
     this.fps = 60.0,
     this.memoryUsage = 0,
@@ -17,6 +11,11 @@ class PerformanceState {
     this.isOptimized = false,
     this.optimizations = const [],
   });
+  final double fps;
+  final int memoryUsage;
+  final int cpuUsage;
+  final bool isOptimized;
+  final List<String> optimizations;
 
   PerformanceState copyWith({
     double? fps,
@@ -24,15 +23,14 @@ class PerformanceState {
     int? cpuUsage,
     bool? isOptimized,
     List<String>? optimizations,
-  }) {
-    return PerformanceState(
-      fps: fps ?? this.fps,
-      memoryUsage: memoryUsage ?? this.memoryUsage,
-      cpuUsage: cpuUsage ?? this.cpuUsage,
-      isOptimized: isOptimized ?? this.isOptimized,
-      optimizations: optimizations ?? this.optimizations,
-    );
-  }
+  }) =>
+      PerformanceState(
+        fps: fps ?? this.fps,
+        memoryUsage: memoryUsage ?? this.memoryUsage,
+        cpuUsage: cpuUsage ?? this.cpuUsage,
+        isOptimized: isOptimized ?? this.isOptimized,
+        optimizations: optimizations ?? this.optimizations,
+      );
 }
 
 /// Провайдер производительности
@@ -52,7 +50,7 @@ class PerformanceNotifier extends Notifier<PerformanceState> {
   void _updatePerformanceMetrics() {
     // Здесь должна быть логика мониторинга производительности
     state = state.copyWith(
-      fps: 60.0,
+      fps: 60,
       memoryUsage: 100,
       cpuUsage: 50,
       isOptimized: true,
@@ -76,6 +74,5 @@ class PerformanceNotifier extends Notifier<PerformanceState> {
 
 /// Провайдер производительности
 final performanceProvider =
-    NotifierProvider<PerformanceNotifier, PerformanceState>((ref) {
-  return PerformanceNotifier();
-});
+    NotifierProvider<PerformanceNotifier, PerformanceState>(
+        (ref) => PerformanceNotifier());

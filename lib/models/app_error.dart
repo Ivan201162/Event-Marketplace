@@ -2,17 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель ошибки приложения
 class AppError {
-  final String id;
-  final String? userId;
-  final String device;
-  final String screen;
-  final String errorMessage;
-  final String? stackTrace;
-  final String errorType;
-  final bool resolved;
-  final DateTime timestamp;
-  final Map<String, dynamic>? metadata;
-
   const AppError({
     required this.id,
     this.userId,
@@ -46,37 +35,43 @@ class AppError {
   }
 
   /// Создать из Map
-  factory AppError.fromMap(Map<String, dynamic> data) {
-    return AppError(
-      id: data['id'] ?? '',
-      userId: data['userId'],
-      device: data['device'] ?? '',
-      screen: data['screen'] ?? '',
-      errorMessage: data['errorMessage'] ?? '',
-      stackTrace: data['stackTrace'],
-      errorType: data['errorType'] ?? 'unknown',
-      resolved: data['resolved'] ?? false,
-      timestamp: (data['timestamp'] as Timestamp).toDate(),
-      metadata: data['metadata'] != null
-          ? Map<String, dynamic>.from(data['metadata'])
-          : null,
-    );
-  }
+  factory AppError.fromMap(Map<String, dynamic> data) => AppError(
+        id: data['id'] ?? '',
+        userId: data['userId'],
+        device: data['device'] ?? '',
+        screen: data['screen'] ?? '',
+        errorMessage: data['errorMessage'] ?? '',
+        stackTrace: data['stackTrace'],
+        errorType: data['errorType'] ?? 'unknown',
+        resolved: data['resolved'] ?? false,
+        timestamp: (data['timestamp'] as Timestamp).toDate(),
+        metadata: data['metadata'] != null
+            ? Map<String, dynamic>.from(data['metadata'])
+            : null,
+      );
+  final String id;
+  final String? userId;
+  final String device;
+  final String screen;
+  final String errorMessage;
+  final String? stackTrace;
+  final String errorType;
+  final bool resolved;
+  final DateTime timestamp;
+  final Map<String, dynamic>? metadata;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'device': device,
-      'screen': screen,
-      'errorMessage': errorMessage,
-      'stackTrace': stackTrace,
-      'errorType': errorType,
-      'resolved': resolved,
-      'timestamp': Timestamp.fromDate(timestamp),
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'userId': userId,
+        'device': device,
+        'screen': screen,
+        'errorMessage': errorMessage,
+        'stackTrace': stackTrace,
+        'errorType': errorType,
+        'resolved': resolved,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   AppError copyWith({
@@ -90,20 +85,19 @@ class AppError {
     bool? resolved,
     DateTime? timestamp,
     Map<String, dynamic>? metadata,
-  }) {
-    return AppError(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      device: device ?? this.device,
-      screen: screen ?? this.screen,
-      errorMessage: errorMessage ?? this.errorMessage,
-      stackTrace: stackTrace ?? this.stackTrace,
-      errorType: errorType ?? this.errorType,
-      resolved: resolved ?? this.resolved,
-      timestamp: timestamp ?? this.timestamp,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      AppError(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        device: device ?? this.device,
+        screen: screen ?? this.screen,
+        errorMessage: errorMessage ?? this.errorMessage,
+        stackTrace: stackTrace ?? this.stackTrace,
+        errorType: errorType ?? this.errorType,
+        resolved: resolved ?? this.resolved,
+        timestamp: timestamp ?? this.timestamp,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Получить краткое описание ошибки
   String get shortDescription {
@@ -156,25 +150,22 @@ class AppError {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      userId,
-      device,
-      screen,
-      errorMessage,
-      stackTrace,
-      errorType,
-      resolved,
-      timestamp,
-      metadata,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        userId,
+        device,
+        screen,
+        errorMessage,
+        stackTrace,
+        errorType,
+        resolved,
+        timestamp,
+        metadata,
+      );
 
   @override
-  String toString() {
-    return 'AppError(id: $id, errorType: $errorType, resolved: $resolved)';
-  }
+  String toString() =>
+      'AppError(id: $id, errorType: $errorType, resolved: $resolved)';
 }
 
 /// Уровень критичности ошибки
@@ -229,15 +220,6 @@ extension ErrorSeverityExtension on ErrorSeverity {
 
 /// Статистика ошибок
 class ErrorStatistics {
-  final int totalErrors;
-  final int resolvedErrors;
-  final int unresolvedErrors;
-  final int criticalErrors;
-  final int recentErrors;
-  final Map<String, int> errorsByType;
-  final Map<String, int> errorsByScreen;
-  final Map<String, int> errorsByDevice;
-
   const ErrorStatistics({
     required this.totalErrors,
     required this.resolvedErrors,
@@ -248,6 +230,14 @@ class ErrorStatistics {
     required this.errorsByScreen,
     required this.errorsByDevice,
   });
+  final int totalErrors;
+  final int resolvedErrors;
+  final int unresolvedErrors;
+  final int criticalErrors;
+  final int recentErrors;
+  final Map<String, int> errorsByType;
+  final Map<String, int> errorsByScreen;
+  final Map<String, int> errorsByDevice;
 
   /// Процент решенных ошибок
   double get resolutionRate {
@@ -282,7 +272,6 @@ class ErrorStatistics {
   }
 
   @override
-  String toString() {
-    return 'ErrorStatistics(totalErrors: $totalErrors, resolvedErrors: $resolvedErrors, criticalErrors: $criticalErrors)';
-  }
+  String toString() =>
+      'ErrorStatistics(totalErrors: $totalErrors, resolvedErrors: $resolvedErrors, criticalErrors: $criticalErrors)';
 }

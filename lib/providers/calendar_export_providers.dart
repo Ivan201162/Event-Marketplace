@@ -3,24 +3,20 @@ import '../calendar/ics_export.dart';
 import '../core/feature_flags.dart';
 
 /// Провайдер для проверки доступности экспорта календаря
-final calendarExportAvailableProvider = Provider<bool>((ref) {
-  return FeatureFlags.calendarExportEnabled;
-});
+final calendarExportAvailableProvider =
+    Provider<bool>((ref) => FeatureFlags.calendarExportEnabled);
 
 /// Провайдер для получения информации о поддерживаемых форматах
-final supportedCalendarFormatsProvider = Provider<List<String>>((ref) {
-  return IcsExportService.supportedFormats;
-});
+final supportedCalendarFormatsProvider =
+    Provider<List<String>>((ref) => IcsExportService.supportedFormats);
 
 /// Провайдер для получения максимального количества событий для экспорта
-final maxEventsPerExportProvider = Provider<int>((ref) {
-  return IcsExportService.maxEventsPerExport;
-});
+final maxEventsPerExportProvider =
+    Provider<int>((ref) => IcsExportService.maxEventsPerExport);
 
 /// Провайдер для проверки возможности экспорта
-final canExportEventsProvider = Provider.family<bool, int>((ref, count) {
-  return IcsExportService.canExportEvents(count);
-});
+final canExportEventsProvider = Provider.family<bool, int>(
+    (ref, count) => IcsExportService.canExportEvents(count));
 
 /// Провайдер для экспорта одного события
 final exportEventProvider =
@@ -65,14 +61,13 @@ class ExportStatusNotifier extends Notifier<String> {
 }
 
 /// Провайдер для проверки статуса экспорта
-final exportStatusProvider = NotifierProvider<ExportStatusNotifier, String>(() {
-  return ExportStatusNotifier();
-});
+final exportStatusProvider =
+    NotifierProvider<ExportStatusNotifier, String>(ExportStatusNotifier.new);
 
 /// Нотификатор для отслеживания прогресса экспорта
 class ExportProgressNotifier extends Notifier<double> {
   @override
-  double build() => 0.0;
+  double build() => 0;
 
   void setProgress(double progress) {
     state = progress;
@@ -80,10 +75,8 @@ class ExportProgressNotifier extends Notifier<double> {
 }
 
 /// Провайдер для отслеживания прогресса экспорта
-final exportProgressProvider =
-    NotifierProvider<ExportProgressNotifier, double>(() {
-  return ExportProgressNotifier();
-});
+final exportProgressProvider = NotifierProvider<ExportProgressNotifier, double>(
+    ExportProgressNotifier.new);
 
 /// Нотификатор для последней ошибки экспорта
 class ExportErrorNotifier extends Notifier<String?> {
@@ -96,9 +89,8 @@ class ExportErrorNotifier extends Notifier<String?> {
 }
 
 /// Провайдер для последней ошибки экспорта
-final exportErrorProvider = NotifierProvider<ExportErrorNotifier, String?>(() {
-  return ExportErrorNotifier();
-});
+final exportErrorProvider =
+    NotifierProvider<ExportErrorNotifier, String?>(ExportErrorNotifier.new);
 
 /// Нотификатор для истории экспорта
 class ExportHistoryNotifier extends Notifier<List<Map<String, dynamic>>> {
@@ -116,26 +108,16 @@ class ExportHistoryNotifier extends Notifier<List<Map<String, dynamic>>> {
 
 /// Провайдер для истории экспорта
 final exportHistoryProvider =
-    NotifierProvider<ExportHistoryNotifier, List<Map<String, dynamic>>>(() {
-  return ExportHistoryNotifier();
-});
+    NotifierProvider<ExportHistoryNotifier, List<Map<String, dynamic>>>(
+        ExportHistoryNotifier.new);
 
 /// Провайдер для настроек экспорта
 final exportSettingsProvider =
-    NotifierProvider<ExportSettingsNotifier, ExportSettings>(() {
-  return ExportSettingsNotifier();
-});
+    NotifierProvider<ExportSettingsNotifier, ExportSettings>(
+        ExportSettingsNotifier.new);
 
 /// Настройки экспорта
 class ExportSettings {
-  final bool includeDescription;
-  final bool includeLocation;
-  final bool includeAttendees;
-  final bool includeReminders;
-  final int reminderMinutes;
-  final String defaultDuration;
-  final bool autoShare;
-
   const ExportSettings({
     this.includeDescription = true,
     this.includeLocation = true,
@@ -145,6 +127,13 @@ class ExportSettings {
     this.defaultDuration = '2 hours',
     this.autoShare = false,
   });
+  final bool includeDescription;
+  final bool includeLocation;
+  final bool includeAttendees;
+  final bool includeReminders;
+  final int reminderMinutes;
+  final String defaultDuration;
+  final bool autoShare;
 
   ExportSettings copyWith({
     bool? includeDescription,
@@ -154,17 +143,16 @@ class ExportSettings {
     int? reminderMinutes,
     String? defaultDuration,
     bool? autoShare,
-  }) {
-    return ExportSettings(
-      includeDescription: includeDescription ?? this.includeDescription,
-      includeLocation: includeLocation ?? this.includeLocation,
-      includeAttendees: includeAttendees ?? this.includeAttendees,
-      includeReminders: includeReminders ?? this.includeReminders,
-      reminderMinutes: reminderMinutes ?? this.reminderMinutes,
-      defaultDuration: defaultDuration ?? this.defaultDuration,
-      autoShare: autoShare ?? this.autoShare,
-    );
-  }
+  }) =>
+      ExportSettings(
+        includeDescription: includeDescription ?? this.includeDescription,
+        includeLocation: includeLocation ?? this.includeLocation,
+        includeAttendees: includeAttendees ?? this.includeAttendees,
+        includeReminders: includeReminders ?? this.includeReminders,
+        reminderMinutes: reminderMinutes ?? this.reminderMinutes,
+        defaultDuration: defaultDuration ?? this.defaultDuration,
+        autoShare: autoShare ?? this.autoShare,
+      );
 }
 
 /// Нотификатор для настроек экспорта
@@ -233,9 +221,8 @@ class ExportStatsNotifier extends Notifier<Map<String, int>> {
 
 /// Провайдер для статистики экспорта
 final exportStatsProvider =
-    NotifierProvider<ExportStatsNotifier, Map<String, int>>(() {
-  return ExportStatsNotifier();
-});
+    NotifierProvider<ExportStatsNotifier, Map<String, int>>(
+        ExportStatsNotifier.new);
 
 /// Нотификатор для последнего экспорта
 class LastExportNotifier extends Notifier<Map<String, dynamic>?> {
@@ -249,9 +236,8 @@ class LastExportNotifier extends Notifier<Map<String, dynamic>?> {
 
 /// Провайдер для последнего экспорта
 final lastExportProvider =
-    NotifierProvider<LastExportNotifier, Map<String, dynamic>?>(() {
-  return LastExportNotifier();
-});
+    NotifierProvider<LastExportNotifier, Map<String, dynamic>?>(
+        LastExportNotifier.new);
 
 /// Нотификатор для активных экспортов
 class ActiveExportsNotifier extends Notifier<Set<String>> {
@@ -273,9 +259,8 @@ class ActiveExportsNotifier extends Notifier<Set<String>> {
 
 /// Провайдер для активных экспортов
 final activeExportsProvider =
-    NotifierProvider<ActiveExportsNotifier, Set<String>>(() {
-  return ActiveExportsNotifier();
-});
+    NotifierProvider<ActiveExportsNotifier, Set<String>>(
+        ActiveExportsNotifier.new);
 
 /// Нотификатор для очереди экспорта
 class ExportQueueNotifier extends Notifier<List<Map<String, dynamic>>> {
@@ -297,9 +282,8 @@ class ExportQueueNotifier extends Notifier<List<Map<String, dynamic>>> {
 
 /// Провайдер для очереди экспорта
 final exportQueueProvider =
-    NotifierProvider<ExportQueueNotifier, List<Map<String, dynamic>>>(() {
-  return ExportQueueNotifier();
-});
+    NotifierProvider<ExportQueueNotifier, List<Map<String, dynamic>>>(
+        ExportQueueNotifier.new);
 
 /// Провайдер для проверки, идет ли экспорт
 final isExportingProvider = Provider<bool>((ref) {

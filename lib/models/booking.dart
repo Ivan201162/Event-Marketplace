@@ -11,47 +11,7 @@ enum BookingStatus {
 
 /// Модель бронирования
 class Booking {
-  final String id;
-  final String eventId;
-  final String eventTitle;
-  final String userId;
-  final String userName;
-  final String? userEmail;
-  final String? userPhone;
-  final BookingStatus status;
-  final DateTime bookingDate;
-  final DateTime eventDate;
-  final int participantsCount;
-  final double totalPrice;
-  final String? notes;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String? organizerId;
-  final String? organizerName;
-  final DateTime? expiresAt; // Время истечения подтверждения
-  final String? customerId;
-  final String? specialistId;
-  final String? specialistName;
-  final DateTime? endDate;
-  final double? prepayment;
-
-  // Дополнительные поля для совместимости
-  final String? title;
-  final String? customerName;
-  final String? customerPhone;
-  final String? customerEmail;
-  final String? description;
-  final String? eventName;
-  final String? eventDescription;
-  final String? eventLocation;
-  final Duration? duration;
-  final String? specialRequests;
-  final String? currency;
-  final DateTime? dueDate;
-  final bool? isPrepayment;
-  final bool? isFinalPayment;
-  final bool? prepaymentPaid;
-  final String? vkPlaylistUrl; // Ссылка на плейлист VK
+  // Ссылка на плейлист VK
 
   const Booking({
     required this.id,
@@ -150,48 +110,122 @@ class Booking {
     );
   }
 
+  /// Создать объект из Map
+  factory Booking.fromMap(Map<String, dynamic> map) => Booking(
+        id: map['id'] ?? '',
+        eventId: map['eventId'] ?? '',
+        eventTitle: map['eventTitle'] ?? '',
+        userId: map['userId'] ?? '',
+        userName: map['userName'] ?? '',
+        userEmail: map['userEmail'],
+        userPhone: map['userPhone'],
+        specialistId: map['specialistId'] ?? '',
+        specialistName: map['specialistName'] ?? '',
+        serviceId: map['serviceId'] ?? '',
+        serviceName: map['serviceName'] ?? '',
+        servicePrice: (map['servicePrice'] ?? 0).toDouble(),
+        eventDate: map['eventDate'] != null
+            ? (map['eventDate'] as Timestamp).toDate()
+            : DateTime.now(),
+        eventTime: map['eventTime'] ?? '',
+        eventDuration: map['eventDuration'] ?? 0,
+        eventLocation: map['eventLocation'] ?? '',
+        eventAddress: map['eventAddress'] ?? '',
+        eventDescription: map['eventDescription'] ?? '',
+        specialRequests: map['specialRequests'] ?? '',
+        status: BookingStatus.values.firstWhere(
+          (e) => e.name == map['status'],
+          orElse: () => BookingStatus.pending,
+        ),
+        createdAt: map['createdAt'] != null
+            ? (map['createdAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        updatedAt: map['updatedAt'] != null
+            ? (map['updatedAt'] as Timestamp).toDate()
+            : DateTime.now(),
+      );
+  final String id;
+  final String eventId;
+  final String eventTitle;
+  final String userId;
+  final String userName;
+  final String? userEmail;
+  final String? userPhone;
+  final BookingStatus status;
+  final DateTime bookingDate;
+  final DateTime eventDate;
+  final int participantsCount;
+  final double totalPrice;
+  final String? notes;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String? organizerId;
+  final String? organizerName;
+  final DateTime? expiresAt; // Время истечения подтверждения
+  final String? customerId;
+  final String? specialistId;
+  final String? specialistName;
+  final DateTime? endDate;
+  final double? prepayment;
+
+  // Дополнительные поля для совместимости
+  final String? title;
+  final String? customerName;
+  final String? customerPhone;
+  final String? customerEmail;
+  final String? description;
+  final String? eventName;
+  final String? eventDescription;
+  final String? eventLocation;
+  final Duration? duration;
+  final String? specialRequests;
+  final String? currency;
+  final DateTime? dueDate;
+  final bool? isPrepayment;
+  final bool? isFinalPayment;
+  final bool? prepaymentPaid;
+  final String? vkPlaylistUrl;
+
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'eventId': eventId,
-      'eventTitle': eventTitle,
-      'userId': userId,
-      'userName': userName,
-      'userEmail': userEmail,
-      'userPhone': userPhone,
-      'status': status.name,
-      'bookingDate': Timestamp.fromDate(bookingDate),
-      'eventDate': Timestamp.fromDate(eventDate),
-      'participantsCount': participantsCount,
-      'totalPrice': totalPrice,
-      'notes': notes,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'organizerId': organizerId,
-      'organizerName': organizerName,
-      'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
-      'customerId': customerId,
-      'specialistId': specialistId,
-      'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
-      'prepayment': prepayment,
-      'title': title,
-      'customerName': customerName,
-      'customerPhone': customerPhone,
-      'customerEmail': customerEmail,
-      'description': description,
-      'eventName': eventName,
-      'eventDescription': eventDescription,
-      'eventLocation': eventLocation,
-      'duration': duration?.inSeconds,
-      'specialRequests': specialRequests,
-      'currency': currency,
-      'dueDate': dueDate != null ? Timestamp.fromDate(dueDate!) : null,
-      'isPrepayment': isPrepayment,
-      'isFinalPayment': isFinalPayment,
-      'prepaymentPaid': prepaymentPaid,
-      'vkPlaylistUrl': vkPlaylistUrl,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'eventId': eventId,
+        'eventTitle': eventTitle,
+        'userId': userId,
+        'userName': userName,
+        'userEmail': userEmail,
+        'userPhone': userPhone,
+        'status': status.name,
+        'bookingDate': Timestamp.fromDate(bookingDate),
+        'eventDate': Timestamp.fromDate(eventDate),
+        'participantsCount': participantsCount,
+        'totalPrice': totalPrice,
+        'notes': notes,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'organizerId': organizerId,
+        'organizerName': organizerName,
+        'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
+        'customerId': customerId,
+        'specialistId': specialistId,
+        'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
+        'prepayment': prepayment,
+        'title': title,
+        'customerName': customerName,
+        'customerPhone': customerPhone,
+        'customerEmail': customerEmail,
+        'description': description,
+        'eventName': eventName,
+        'eventDescription': eventDescription,
+        'eventLocation': eventLocation,
+        'duration': duration?.inSeconds,
+        'specialRequests': specialRequests,
+        'currency': currency,
+        'dueDate': dueDate != null ? Timestamp.fromDate(dueDate!) : null,
+        'isPrepayment': isPrepayment,
+        'isFinalPayment': isFinalPayment,
+        'prepaymentPaid': prepaymentPaid,
+        'vkPlaylistUrl': vkPlaylistUrl,
+      };
 
   /// Создать копию с изменениями
   Booking copyWith({
@@ -232,48 +266,47 @@ class Booking {
     bool? isFinalPayment,
     bool? prepaymentPaid,
     String? vkPlaylistUrl,
-  }) {
-    return Booking(
-      id: id ?? this.id,
-      eventId: eventId ?? this.eventId,
-      eventTitle: eventTitle ?? this.eventTitle,
-      userId: userId ?? this.userId,
-      userName: userName ?? this.userName,
-      userEmail: userEmail ?? this.userEmail,
-      userPhone: userPhone ?? this.userPhone,
-      status: status ?? this.status,
-      bookingDate: bookingDate ?? this.bookingDate,
-      eventDate: eventDate ?? this.eventDate,
-      participantsCount: participantsCount ?? this.participantsCount,
-      totalPrice: totalPrice ?? this.totalPrice,
-      notes: notes ?? this.notes,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      organizerId: organizerId ?? this.organizerId,
-      organizerName: organizerName ?? this.organizerName,
-      expiresAt: this.expiresAt,
-      customerId: customerId ?? this.customerId,
-      specialistId: specialistId ?? this.specialistId,
-      endDate: endDate ?? this.endDate,
-      prepayment: prepayment ?? this.prepayment,
-      title: title ?? this.title,
-      customerName: customerName ?? this.customerName,
-      customerPhone: customerPhone ?? this.customerPhone,
-      customerEmail: customerEmail ?? this.customerEmail,
-      description: description ?? this.description,
-      eventName: eventName ?? this.eventName,
-      eventDescription: eventDescription ?? this.eventDescription,
-      eventLocation: eventLocation ?? this.eventLocation,
-      duration: duration ?? this.duration,
-      specialRequests: specialRequests ?? this.specialRequests,
-      currency: currency ?? this.currency,
-      dueDate: dueDate ?? this.dueDate,
-      isPrepayment: isPrepayment ?? this.isPrepayment,
-      isFinalPayment: isFinalPayment ?? this.isFinalPayment,
-      prepaymentPaid: prepaymentPaid ?? this.prepaymentPaid,
-      vkPlaylistUrl: vkPlaylistUrl ?? this.vkPlaylistUrl,
-    );
-  }
+  }) =>
+      Booking(
+        id: id ?? this.id,
+        eventId: eventId ?? this.eventId,
+        eventTitle: eventTitle ?? this.eventTitle,
+        userId: userId ?? this.userId,
+        userName: userName ?? this.userName,
+        userEmail: userEmail ?? this.userEmail,
+        userPhone: userPhone ?? this.userPhone,
+        status: status ?? this.status,
+        bookingDate: bookingDate ?? this.bookingDate,
+        eventDate: eventDate ?? this.eventDate,
+        participantsCount: participantsCount ?? this.participantsCount,
+        totalPrice: totalPrice ?? this.totalPrice,
+        notes: notes ?? this.notes,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        organizerId: organizerId ?? this.organizerId,
+        organizerName: organizerName ?? this.organizerName,
+        expiresAt: expiresAt,
+        customerId: customerId ?? this.customerId,
+        specialistId: specialistId ?? this.specialistId,
+        endDate: endDate ?? this.endDate,
+        prepayment: prepayment ?? this.prepayment,
+        title: title ?? this.title,
+        customerName: customerName ?? this.customerName,
+        customerPhone: customerPhone ?? this.customerPhone,
+        customerEmail: customerEmail ?? this.customerEmail,
+        description: description ?? this.description,
+        eventName: eventName ?? this.eventName,
+        eventDescription: eventDescription ?? this.eventDescription,
+        eventLocation: eventLocation ?? this.eventLocation,
+        duration: duration ?? this.duration,
+        specialRequests: specialRequests ?? this.specialRequests,
+        currency: currency ?? this.currency,
+        dueDate: dueDate ?? this.dueDate,
+        isPrepayment: isPrepayment ?? this.isPrepayment,
+        isFinalPayment: isFinalPayment ?? this.isFinalPayment,
+        prepaymentPaid: prepaymentPaid ?? this.prepaymentPaid,
+        vkPlaylistUrl: vkPlaylistUrl ?? this.vkPlaylistUrl,
+      );
 
   /// Получить цвет статуса
   String get statusColor {
@@ -308,54 +341,12 @@ class Booking {
   }
 
   /// Проверить, можно ли отменить бронирование
-  bool get canBeCancelled {
-    return status == BookingStatus.pending || status == BookingStatus.confirmed;
-  }
+  bool get canBeCancelled =>
+      status == BookingStatus.pending || status == BookingStatus.confirmed;
 
   /// Проверить, можно ли подтвердить бронирование
-  bool get canBeConfirmed {
-    return status == BookingStatus.pending;
-  }
+  bool get canBeConfirmed => status == BookingStatus.pending;
 
   /// Проверить, можно ли завершить бронирование
-  bool get canBeCompleted {
-    return status == BookingStatus.confirmed;
-  }
-
-  /// Создать объект из Map
-  factory Booking.fromMap(Map<String, dynamic> map) {
-    return Booking(
-      id: map['id'] ?? '',
-      eventId: map['eventId'] ?? '',
-      eventTitle: map['eventTitle'] ?? '',
-      userId: map['userId'] ?? '',
-      userName: map['userName'] ?? '',
-      userEmail: map['userEmail'],
-      userPhone: map['userPhone'],
-      specialistId: map['specialistId'] ?? '',
-      specialistName: map['specialistName'] ?? '',
-      serviceId: map['serviceId'] ?? '',
-      serviceName: map['serviceName'] ?? '',
-      servicePrice: (map['servicePrice'] ?? 0).toDouble(),
-      eventDate: map['eventDate'] != null
-          ? (map['eventDate'] as Timestamp).toDate()
-          : DateTime.now(),
-      eventTime: map['eventTime'] ?? '',
-      eventDuration: map['eventDuration'] ?? 0,
-      eventLocation: map['eventLocation'] ?? '',
-      eventAddress: map['eventAddress'] ?? '',
-      eventDescription: map['eventDescription'] ?? '',
-      specialRequests: map['specialRequests'] ?? '',
-      status: BookingStatus.values.firstWhere(
-        (e) => e.name == map['status'],
-        orElse: () => BookingStatus.pending,
-      ),
-      createdAt: map['createdAt'] != null
-          ? (map['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      updatedAt: map['updatedAt'] != null
-          ? (map['updatedAt'] as Timestamp).toDate()
-          : DateTime.now(),
-    );
-  }
+  bool get canBeCompleted => status == BookingStatus.confirmed;
 }

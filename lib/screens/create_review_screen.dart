@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/review_providers.dart';
+
 import '../models/review.dart';
+import '../providers/review_providers.dart';
 
 /// Экран создания отзыва
 class CreateReviewScreen extends ConsumerStatefulWidget {
-  final String targetId;
-
   const CreateReviewScreen({
     super.key,
     required this.targetId,
   });
+  final String targetId;
 
   @override
   ConsumerState<CreateReviewScreen> createState() => _CreateReviewScreenState();
@@ -22,7 +22,7 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
   final _commentController = TextEditingController();
 
   int _rating = 5;
-  List<String> _selectedTags = [];
+  final List<String> _selectedTags = [];
   bool _isPublic = true;
 
   final List<String> _availableTags = [
@@ -77,8 +77,9 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
                       const SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(5, (index) {
-                          return IconButton(
+                        children: List.generate(
+                          5,
+                          (index) => IconButton(
                             onPressed: () {
                               setState(() {
                                 _rating = index + 1;
@@ -89,8 +90,8 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
                               color: Colors.amber,
                               size: 40,
                             ),
-                          );
-                        }),
+                          ),
+                        ),
                       ),
                       const SizedBox(height: 8),
                       Text(
@@ -198,7 +199,8 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
                       SwitchListTile(
                         title: const Text('Публичный отзыв'),
                         subtitle: const Text(
-                            'Отзыв будет виден другим пользователям'),
+                          'Отзыв будет виден другим пользователям',
+                        ),
                         value: _isPublic,
                         onChanged: (value) {
                           setState(() {

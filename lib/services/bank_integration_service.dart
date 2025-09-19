@@ -1,4 +1,4 @@
-import 'package:event_marketplace_app/core/feature_flags.dart';
+import '../core/feature_flags.dart';
 
 /// Сервис интеграции с российскими банками
 class BankIntegrationService {
@@ -93,7 +93,7 @@ class BankIntegrationService {
       return PaymentStatusResult(
         paymentId: paymentId,
         status: PaymentStatus.completed,
-        amount: 1000.0,
+        amount: 1000,
         currency: 'RUB',
         transactionId: 'txn_${DateTime.now().millisecondsSinceEpoch}',
         completedAt: DateTime.now(),
@@ -121,8 +121,7 @@ class BankIntegrationService {
         paymentId: paymentId,
         status: PaymentStatus.cancelled,
         cancelledAt: DateTime.now(),
-        refundAmount: 0.0,
-        refundId: null,
+        refundAmount: 0,
         bankInfo: _getBankById(bankId),
       );
     } catch (e) {
@@ -140,9 +139,7 @@ class BankIntegrationService {
   }
 
   /// Получить список поддерживаемых банков
-  List<BankInfo> getSupportedBanks() {
-    return supportedBanks;
-  }
+  List<BankInfo> getSupportedBanks() => supportedBanks;
 
   /// Получить банк по умолчанию
   BankInfo getDefaultBank() {
@@ -187,8 +184,8 @@ class BankIntegrationService {
     try {
       // TODO: Реализовать получение комиссии через API банка
       // Пока возвращаем заглушку
-      double feePercentage = 0.0;
-      double fixedFee = 0.0;
+      var feePercentage = 0;
+      const fixedFee = 0;
 
       switch (bankId) {
         case 'sberbank':
@@ -259,12 +256,6 @@ class BankIntegrationService {
 
 /// Информация о банке
 class BankInfo {
-  final String id;
-  final String name;
-  final String logoUrl;
-  final String apiEndpoint;
-  final List<String> supportedMethods;
-
   const BankInfo({
     required this.id,
     required this.name,
@@ -272,17 +263,15 @@ class BankInfo {
     required this.apiEndpoint,
     required this.supportedMethods,
   });
+  final String id;
+  final String name;
+  final String logoUrl;
+  final String apiEndpoint;
+  final List<String> supportedMethods;
 }
 
 /// Результат инициализации платежа
 class PaymentInitiationResult {
-  final String paymentId;
-  final PaymentStatus status;
-  final String redirectUrl;
-  final String qrCode;
-  final DateTime expiresAt;
-  final BankInfo bankInfo;
-
   const PaymentInitiationResult({
     required this.paymentId,
     required this.status,
@@ -291,18 +280,16 @@ class PaymentInitiationResult {
     required this.expiresAt,
     required this.bankInfo,
   });
+  final String paymentId;
+  final PaymentStatus status;
+  final String redirectUrl;
+  final String qrCode;
+  final DateTime expiresAt;
+  final BankInfo bankInfo;
 }
 
 /// Результат проверки статуса платежа
 class PaymentStatusResult {
-  final String paymentId;
-  final PaymentStatus status;
-  final double amount;
-  final String currency;
-  final String transactionId;
-  final DateTime completedAt;
-  final BankInfo? bankInfo;
-
   const PaymentStatusResult({
     required this.paymentId,
     required this.status,
@@ -312,17 +299,17 @@ class PaymentStatusResult {
     required this.completedAt,
     this.bankInfo,
   });
+  final String paymentId;
+  final PaymentStatus status;
+  final double amount;
+  final String currency;
+  final String transactionId;
+  final DateTime completedAt;
+  final BankInfo? bankInfo;
 }
 
 /// Результат отмены платежа
 class PaymentCancellationResult {
-  final String paymentId;
-  final PaymentStatus status;
-  final DateTime cancelledAt;
-  final double refundAmount;
-  final String? refundId;
-  final BankInfo? bankInfo;
-
   const PaymentCancellationResult({
     required this.paymentId,
     required this.status,
@@ -331,17 +318,16 @@ class PaymentCancellationResult {
     this.refundId,
     this.bankInfo,
   });
+  final String paymentId;
+  final PaymentStatus status;
+  final DateTime cancelledAt;
+  final double refundAmount;
+  final String? refundId;
+  final BankInfo? bankInfo;
 }
 
 /// Комиссия банка
 class BankFee {
-  final String bankId;
-  final double feePercentage;
-  final double fixedFee;
-  final double totalFee;
-  final String paymentMethod;
-  final String currency;
-
   const BankFee({
     required this.bankId,
     required this.feePercentage,
@@ -350,21 +336,26 @@ class BankFee {
     required this.paymentMethod,
     required this.currency,
   });
+  final String bankId;
+  final double feePercentage;
+  final double fixedFee;
+  final double totalFee;
+  final String paymentMethod;
+  final String currency;
 }
 
 /// Результат создания QR-кода
 class QRCodeResult {
-  final String qrCode;
-  final String qrData;
-  final DateTime expiresAt;
-  final BankInfo bankInfo;
-
   const QRCodeResult({
     required this.qrCode,
     required this.qrData,
     required this.expiresAt,
     required this.bankInfo,
   });
+  final String qrCode;
+  final String qrData;
+  final DateTime expiresAt;
+  final BankInfo bankInfo;
 }
 
 /// Статусы платежа

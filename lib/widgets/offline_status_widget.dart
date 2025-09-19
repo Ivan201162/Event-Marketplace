@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/offline_provider.dart';
+
 import '../core/responsive_utils.dart';
+import '../providers/offline_provider.dart';
 
 /// Виджет для отображения статуса офлайн-режима
 class OfflineStatusWidget extends ConsumerWidget {
-  final bool showDetails;
-  final EdgeInsets? padding;
-  final VoidCallback? onTap;
-
   const OfflineStatusWidget({
     super.key,
     this.showDetails = false,
     this.padding,
     this.onTap,
   });
+  final bool showDetails;
+  final EdgeInsets? padding;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,7 +29,6 @@ class OfflineStatusWidget extends ConsumerWidget {
           color: Color(offlineState.statusColor).withOpacity(0.1),
           border: Border.all(
             color: Color(offlineState.statusColor),
-            width: 1,
           ),
           borderRadius: BorderRadius.circular(8),
         ),
@@ -85,7 +84,7 @@ class OfflineDetailsWidget extends ConsumerWidget {
                 style: const TextStyle(fontSize: 24),
               ),
               const SizedBox(width: 12),
-              Expanded(
+              const Expanded(
                 child: ResponsiveText(
                   'Статус подключения',
                   isTitle: true,
@@ -227,27 +226,25 @@ class OfflineDetailsWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatusRow(String label, String value, Color color) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ResponsiveText(
-            label,
-            isSubtitle: true,
-          ),
-          ResponsiveText(
-            value,
-            style: TextStyle(
-              color: color,
-              fontWeight: FontWeight.w500,
+  Widget _buildStatusRow(String label, String value, Color color) => Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ResponsiveText(
+              label,
+              isSubtitle: true,
             ),
-          ),
-        ],
-      ),
-    );
-  }
+            ResponsiveText(
+              value,
+              style: TextStyle(
+                color: color,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      );
 }
 
 /// Виджет для отображения информации о кэше
@@ -266,7 +263,7 @@ class CacheInfoWidget extends ConsumerWidget {
             children: [
               const Icon(Icons.storage),
               const SizedBox(width: 12),
-              Expanded(
+              const Expanded(
                 child: ResponsiveText(
                   'Информация о кэше',
                   isTitle: true,
@@ -351,24 +348,22 @@ class CacheInfoWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ResponsiveText(
-            label,
-            isSubtitle: true,
-          ),
-          ResponsiveText(
-            value,
-            style: const TextStyle(fontWeight: FontWeight.w500),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildInfoRow(String label, String value) => Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ResponsiveText(
+              label,
+              isSubtitle: true,
+            ),
+            ResponsiveText(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      );
 
   void _showClearCacheDialog(BuildContext context, WidgetRef ref) {
     showDialog(
@@ -402,12 +397,11 @@ class CacheInfoWidget extends ConsumerWidget {
 
 /// Виджет для отображения ограничений офлайн-режима
 class OfflineLimitationsWidget extends ConsumerWidget {
-  final String operation;
-
   const OfflineLimitationsWidget({
     super.key,
     required this.operation,
   });
+  final String operation;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -454,10 +448,10 @@ class OfflineRecommendationsWidget extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             children: [
-              const Icon(Icons.lightbulb_outline),
-              const SizedBox(width: 12),
+              Icon(Icons.lightbulb_outline),
+              SizedBox(width: 12),
               ResponsiveText(
                 'Рекомендации',
                 isTitle: true,
@@ -465,26 +459,28 @@ class OfflineRecommendationsWidget extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 16),
-          ...recommendations.map((recommendation) => Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Icon(
-                      Icons.check_circle_outline,
-                      size: 16,
-                      color: Colors.green,
+          ...recommendations.map(
+            (recommendation) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.check_circle_outline,
+                    size: 16,
+                    color: Colors.green,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ResponsiveText(
+                      recommendation,
+                      isSubtitle: true,
                     ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: ResponsiveText(
-                        recommendation,
-                        isSubtitle: true,
-                      ),
-                    ),
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

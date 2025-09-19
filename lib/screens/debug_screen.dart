@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:event_marketplace_app/services/logger_service.dart';
-import 'package:event_marketplace_app/services/monitoring_service.dart';
+import '../services/logger_service.dart';
+import '../services/monitoring_service.dart';
 import 'integration_test_screen.dart';
 
 class DebugScreen extends ConsumerStatefulWidget {
-  const DebugScreen({Key? key}) : super(key: key);
+  const DebugScreen({super.key});
 
   @override
   ConsumerState<DebugScreen> createState() => _DebugScreenState();
@@ -35,104 +35,98 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Отладка и мониторинг'),
-        bottom: TabBar(
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Отладка и мониторинг'),
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(icon: Icon(Icons.analytics), text: 'Мониторинг'),
+              Tab(icon: Icon(Icons.bug_report), text: 'Логи'),
+              Tab(icon: Icon(Icons.settings), text: 'Настройки'),
+              Tab(icon: Icon(Icons.info), text: 'Информация'),
+              Tab(icon: Icon(Icons.integration_instructions), text: 'Тесты'),
+            ],
+          ),
+          actions: [
+            IconButton(
+              icon: Icon(_isMonitoring ? Icons.stop : Icons.play_arrow),
+              onPressed: _toggleMonitoring,
+              tooltip: _isMonitoring
+                  ? 'Остановить мониторинг'
+                  : 'Запустить мониторинг',
+            ),
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: _refreshData,
+              tooltip: 'Обновить данные',
+            ),
+          ],
+        ),
+        body: TabBarView(
           controller: _tabController,
-          tabs: const [
-            Tab(icon: Icon(Icons.analytics), text: 'Мониторинг'),
-            Tab(icon: Icon(Icons.bug_report), text: 'Логи'),
-            Tab(icon: Icon(Icons.settings), text: 'Настройки'),
-            Tab(icon: Icon(Icons.info), text: 'Информация'),
-            Tab(icon: Icon(Icons.integration_instructions), text: 'Тесты'),
+          children: [
+            _buildMonitoringTab(),
+            _buildLogsTab(),
+            _buildSettingsTab(),
+            _buildInfoTab(),
+            _buildTestsTab(),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: Icon(_isMonitoring ? Icons.stop : Icons.play_arrow),
-            onPressed: _toggleMonitoring,
-            tooltip: _isMonitoring
-                ? 'Остановить мониторинг'
-                : 'Запустить мониторинг',
-          ),
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _refreshData,
-            tooltip: 'Обновить данные',
-          ),
-        ],
-      ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          _buildMonitoringTab(),
-          _buildLogsTab(),
-          _buildSettingsTab(),
-          _buildInfoTab(),
-          _buildTestsTab(),
-        ],
-      ),
-    );
-  }
+      );
 
-  Widget _buildMonitoringTab() {
-    return RefreshIndicator(
-      onRefresh: _refreshData,
-      child: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildMonitoringStatus(),
-            const SizedBox(height: 16),
-            _buildPerformanceStats(),
-            const SizedBox(height: 16),
-            _buildErrorStats(),
-            const SizedBox(height: 16),
-            _buildMemoryStats(),
-            const SizedBox(height: 16),
-            _buildActionButtons(),
-          ],
+  Widget _buildMonitoringTab() => RefreshIndicator(
+        onRefresh: _refreshData,
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildMonitoringStatus(),
+              const SizedBox(height: 16),
+              _buildPerformanceStats(),
+              const SizedBox(height: 16),
+              _buildErrorStats(),
+              const SizedBox(height: 16),
+              _buildMemoryStats(),
+              const SizedBox(height: 16),
+              _buildActionButtons(),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildMonitoringStatus() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  _isMonitoring ? Icons.monitor : Icons.monitor_off,
-                  color: _isMonitoring ? Colors.green : Colors.red,
-                ),
-                const SizedBox(width: 8),
-                Text(
-                  'Статус мониторинга',
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              _isMonitoring ? 'Мониторинг активен' : 'Мониторинг остановлен',
-              style: TextStyle(
-                color: _isMonitoring ? Colors.green : Colors.red,
-                fontWeight: FontWeight.w500,
+  Widget _buildMonitoringStatus() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    _isMonitoring ? Icons.monitor : Icons.monitor_off,
+                    color: _isMonitoring ? Colors.green : Colors.red,
+                  ),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Статус мониторинга',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                ],
               ),
-            ),
-          ],
+              const SizedBox(height: 8),
+              Text(
+                _isMonitoring ? 'Мониторинг активен' : 'Мониторинг остановлен',
+                style: TextStyle(
+                  color: _isMonitoring ? Colors.green : Colors.red,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildPerformanceStats() {
     final stats = _monitoring.getPerformanceStats();
@@ -151,12 +145,14 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
             if (stats.isEmpty)
               const Text('Нет данных о производительности')
             else
-              ...stats.entries.map((entry) => _buildStatItem(
-                    entry.key,
-                    '${entry.value['count']} операций',
-                    'Среднее время: ${entry.value['averageTime']?.toStringAsFixed(1)}ms',
-                    Icons.speed,
-                  )),
+              ...stats.entries.map(
+                (entry) => _buildStatItem(
+                  entry.key,
+                  '${entry.value['count']} операций',
+                  'Среднее время: ${entry.value['averageTime']?.toStringAsFixed(1)}ms',
+                  Icons.speed,
+                ),
+              ),
           ],
         ),
       ),
@@ -185,15 +181,15 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
               color: Colors.red,
             ),
             if (stats['errorTypes'] != null)
-              ...(stats['errorTypes'] as Map<String, int>)
-                  .entries
-                  .map((entry) => _buildStatItem(
-                        entry.key,
-                        '${entry.value}',
-                        '',
-                        Icons.warning,
-                        color: Colors.orange,
-                      )),
+              ...(stats['errorTypes'] as Map<String, int>).entries.map(
+                    (entry) => _buildStatItem(
+                      entry.key,
+                      '${entry.value}',
+                      '',
+                      Icons.warning,
+                      color: Colors.orange,
+                    ),
+                  ),
           ],
         ),
       ),
@@ -246,315 +242,319 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
   }
 
   Widget _buildStatItem(
-      String title, String value, String subtitle, IconData icon,
-      {Color? color}) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        children: [
-          Icon(icon, color: color ?? Theme.of(context).colorScheme.primary),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
-                ),
-                Text(
-                  value,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        color: color ?? Theme.of(context).colorScheme.primary,
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                if (subtitle.isNotEmpty)
+    String title,
+    String value,
+    String subtitle,
+    IconData icon, {
+    Color? color,
+  }) =>
+      Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          children: [
+            Icon(icon, color: color ?? Theme.of(context).colorScheme.primary),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    subtitle,
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(0.7),
+                    title,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
                         ),
                   ),
+                  Text(
+                    value,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                          color: color ?? Theme.of(context).colorScheme.primary,
+                          fontWeight: FontWeight.bold,
+                        ),
+                  ),
+                  if (subtitle.isNotEmpty)
+                    Text(
+                      subtitle,
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.7),
+                          ),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildActionButtons() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Действия',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  ElevatedButton.icon(
+                    onPressed: _clearMetrics,
+                    icon: const Icon(Icons.clear_all),
+                    label: const Text('Очистить метрики'),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: _exportMetrics,
+                    icon: const Icon(Icons.download),
+                    label: const Text('Экспорт метрик'),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: _testPerformance,
+                    icon: const Icon(Icons.speed),
+                    label: const Text('Тест производительности'),
+                  ),
+                  ElevatedButton.icon(
+                    onPressed: _testError,
+                    icon: const Icon(Icons.error),
+                    label: const Text('Тест ошибки'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildLogsTab() => Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                const Text('Уровень логирования:'),
+                const SizedBox(width: 16),
+                DropdownButton<LogLevel>(
+                  value: _selectedLogLevel,
+                  onChanged: (newValue) {
+                    if (newValue != null) {
+                      setState(() {
+                        _selectedLogLevel = newValue;
+                      });
+                      _logger.setMinLevel(newValue);
+                    }
+                  },
+                  items: LogLevel.values
+                      .map<DropdownMenuItem<LogLevel>>(
+                        (level) => DropdownMenuItem<LogLevel>(
+                          value: level,
+                          child: Text(level.name.toUpperCase()),
+                        ),
+                      )
+                      .toList(),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              children: [
+                _buildLogTestButton('Debug', LogLevel.debug, Icons.bug_report),
+                _buildLogTestButton('Info', LogLevel.info, Icons.info),
+                _buildLogTestButton('Warning', LogLevel.warning, Icons.warning),
+                _buildLogTestButton('Error', LogLevel.error, Icons.error),
+                _buildLogTestButton('Fatal', LogLevel.fatal, Icons.dangerous),
               ],
             ),
           ),
         ],
-      ),
-    );
-  }
+      );
 
-  Widget _buildActionButtons() {
-    return Card(
-      child: Padding(
+  Widget _buildLogTestButton(String label, LogLevel level, IconData icon) =>
+      Card(
+        margin: const EdgeInsets.only(bottom: 8),
+        child: ListTile(
+          leading: Icon(icon),
+          title: Text(label),
+          subtitle: Text('Тест ${level.name} сообщения'),
+          onTap: () => _testLog(level),
+        ),
+      );
+
+  Widget _buildSettingsTab() => Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Действия',
-              style: Theme.of(context).textTheme.titleMedium,
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Настройки мониторинга',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    SwitchListTile(
+                      title: const Text('Автоматический мониторинг'),
+                      subtitle: const Text(
+                        'Запускать мониторинг при старте приложения',
+                      ),
+                      value: _isMonitoring,
+                      onChanged: (value) => _toggleMonitoring(),
+                    ),
+                    SwitchListTile(
+                      title: const Text('Мониторинг памяти'),
+                      subtitle: const Text('Отслеживать использование памяти'),
+                      value: true,
+                      onChanged: (value) {
+                        // TODO: Implement memory monitoring toggle
+                      },
+                    ),
+                    SwitchListTile(
+                      title: const Text('Мониторинг производительности'),
+                      subtitle:
+                          const Text('Отслеживать время выполнения операций'),
+                      value: true,
+                      onChanged: (value) {
+                        // TODO: Implement performance monitoring toggle
+                      },
+                    ),
+                  ],
+                ),
+              ),
             ),
             const SizedBox(height: 16),
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: [
-                ElevatedButton.icon(
-                  onPressed: _clearMetrics,
-                  icon: const Icon(Icons.clear_all),
-                  label: const Text('Очистить метрики'),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Настройки логирования',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    ListTile(
+                      title: const Text('Уровень логирования'),
+                      subtitle: Text(_selectedLogLevel.name.toUpperCase()),
+                      trailing: const Icon(Icons.arrow_forward_ios),
+                      onTap: () {
+                        // TODO: Show log level selection dialog
+                      },
+                    ),
+                    SwitchListTile(
+                      title: const Text('Логирование в консоль'),
+                      subtitle:
+                          const Text('Выводить логи в консоль разработчика'),
+                      value: true,
+                      onChanged: (value) {
+                        // TODO: Implement console logging toggle
+                      },
+                    ),
+                  ],
                 ),
-                ElevatedButton.icon(
-                  onPressed: _exportMetrics,
-                  icon: const Icon(Icons.download),
-                  label: const Text('Экспорт метрик'),
-                ),
-                ElevatedButton.icon(
-                  onPressed: _testPerformance,
-                  icon: const Icon(Icons.speed),
-                  label: const Text('Тест производительности'),
-                ),
-                ElevatedButton.icon(
-                  onPressed: _testError,
-                  icon: const Icon(Icons.error),
-                  label: const Text('Тест ошибки'),
-                ),
-              ],
+              ),
             ),
           ],
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildLogsTab() {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              const Text('Уровень логирования:'),
-              const SizedBox(width: 16),
-              DropdownButton<LogLevel>(
-                value: _selectedLogLevel,
-                onChanged: (LogLevel? newValue) {
-                  if (newValue != null) {
-                    setState(() {
-                      _selectedLogLevel = newValue;
-                    });
-                    _logger.setMinLevel(newValue);
-                  }
-                },
-                items: LogLevel.values
-                    .map<DropdownMenuItem<LogLevel>>((LogLevel level) {
-                  return DropdownMenuItem<LogLevel>(
-                    value: level,
-                    child: Text(level.name.toUpperCase()),
-                  );
-                }).toList(),
+  Widget _buildInfoTab() => Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Информация о приложении',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildInfoItem('Версия', '1.0.0'),
+                    _buildInfoItem('Сборка', '1'),
+                    _buildInfoItem('Платформа', 'Flutter'),
+                    _buildInfoItem('Режим отладки', kDebugMode ? 'Да' : 'Нет'),
+                    _buildInfoItem(
+                      'Профиль',
+                      kProfileMode ? 'Профилирование' : 'Релиз',
+                    ),
+                  ],
+                ),
               ),
-            ],
-          ),
+            ),
+            const SizedBox(height: 16),
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Информация о мониторинге',
+                      style: Theme.of(context).textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 16),
+                    _buildInfoItem(
+                      'Статус',
+                      _isMonitoring ? 'Активен' : 'Остановлен',
+                    ),
+                    _buildInfoItem(
+                      'Метрики производительности',
+                      '${_monitoring.getPerformanceMetrics().length}',
+                    ),
+                    _buildInfoItem(
+                      'Метрики ошибок',
+                      '${_monitoring.getErrorMetrics().length}',
+                    ),
+                    _buildInfoItem(
+                      'Метрики памяти',
+                      '${_monitoring.getMemoryMetrics().length}',
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
-        Expanded(
-          child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            children: [
-              _buildLogTestButton('Debug', LogLevel.debug, Icons.bug_report),
-              _buildLogTestButton('Info', LogLevel.info, Icons.info),
-              _buildLogTestButton('Warning', LogLevel.warning, Icons.warning),
-              _buildLogTestButton('Error', LogLevel.error, Icons.error),
-              _buildLogTestButton('Fatal', LogLevel.fatal, Icons.dangerous),
-            ],
-          ),
+      );
+
+  Widget _buildInfoItem(String label, String value) => Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 120,
+              child: Text(
+                label,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                value,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            ),
+          ],
         ),
-      ],
-    );
-  }
-
-  Widget _buildLogTestButton(String label, LogLevel level, IconData icon) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        leading: Icon(icon),
-        title: Text(label),
-        subtitle: Text('Тест ${level.name} сообщения'),
-        onTap: () => _testLog(level),
-      ),
-    );
-  }
-
-  Widget _buildSettingsTab() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Настройки мониторинга',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 16),
-                  SwitchListTile(
-                    title: const Text('Автоматический мониторинг'),
-                    subtitle: const Text(
-                        'Запускать мониторинг при старте приложения'),
-                    value: _isMonitoring,
-                    onChanged: (value) => _toggleMonitoring(),
-                  ),
-                  SwitchListTile(
-                    title: const Text('Мониторинг памяти'),
-                    subtitle: const Text('Отслеживать использование памяти'),
-                    value: true,
-                    onChanged: (value) {
-                      // TODO: Implement memory monitoring toggle
-                    },
-                  ),
-                  SwitchListTile(
-                    title: const Text('Мониторинг производительности'),
-                    subtitle:
-                        const Text('Отслеживать время выполнения операций'),
-                    value: true,
-                    onChanged: (value) {
-                      // TODO: Implement performance monitoring toggle
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Настройки логирования',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 16),
-                  ListTile(
-                    title: const Text('Уровень логирования'),
-                    subtitle: Text(_selectedLogLevel.name.toUpperCase()),
-                    trailing: const Icon(Icons.arrow_forward_ios),
-                    onTap: () {
-                      // TODO: Show log level selection dialog
-                    },
-                  ),
-                  SwitchListTile(
-                    title: const Text('Логирование в консоль'),
-                    subtitle:
-                        const Text('Выводить логи в консоль разработчика'),
-                    value: true,
-                    onChanged: (value) {
-                      // TODO: Implement console logging toggle
-                    },
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoTab() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Информация о приложении',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildInfoItem('Версия', '1.0.0'),
-                  _buildInfoItem('Сборка', '1'),
-                  _buildInfoItem('Платформа', 'Flutter'),
-                  _buildInfoItem('Режим отладки', kDebugMode ? 'Да' : 'Нет'),
-                  _buildInfoItem(
-                      'Профиль', kProfileMode ? 'Профилирование' : 'Релиз'),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Информация о мониторинге',
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                  const SizedBox(height: 16),
-                  _buildInfoItem(
-                      'Статус', _isMonitoring ? 'Активен' : 'Остановлен'),
-                  _buildInfoItem('Метрики производительности',
-                      '${_monitoring.getPerformanceMetrics().length}'),
-                  _buildInfoItem('Метрики ошибок',
-                      '${_monitoring.getErrorMetrics().length}'),
-                  _buildInfoItem('Метрики памяти',
-                      '${_monitoring.getMemoryMetrics().length}'),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoItem(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              label,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
-            ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+      );
 
   void _toggleMonitoring() {
     setState(() {
@@ -594,11 +594,14 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
     _monitoring.startOperation('test_operation');
 
     // Симулируем работу
-    Future.delayed(Duration(milliseconds: 500), () {
-      _monitoring.endOperation('test_operation', metadata: {
-        'test': true,
-        'duration': 500,
-      });
+    Future.delayed(const Duration(milliseconds: 500), () {
+      _monitoring.endOperation(
+        'test_operation',
+        metadata: {
+          'test': true,
+          'duration': 500,
+        },
+      );
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Тест производительности выполнен')),
@@ -644,49 +647,48 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
     );
   }
 
-  Widget _buildTestsTab() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Card(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Тестирование интеграции',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                        ),
-                  ),
-                  const SizedBox(height: 16),
-                  const Text(
-                    'Запустите тесты для проверки интеграции всех компонентов:',
-                  ),
-                  const SizedBox(height: 16),
-                  SizedBox(
-                    width: double.infinity,
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const IntegrationTestScreen(),
+  Widget _buildTestsTab() => Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Тестирование интеграции',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.bold,
                           ),
-                        );
-                      },
-                      icon: const Icon(Icons.play_arrow),
-                      label: const Text('Запустить тесты интеграции'),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    const Text(
+                      'Запустите тесты для проверки интеграции всех компонентов:',
+                    ),
+                    const SizedBox(height: 16),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton.icon(
+                        onPressed: () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  const IntegrationTestScreen(),
+                            ),
+                          );
+                        },
+                        icon: const Icon(Icons.play_arrow),
+                        label: const Text('Запустить тесты интеграции'),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 }

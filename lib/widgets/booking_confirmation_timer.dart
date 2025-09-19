@@ -1,18 +1,17 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:event_marketplace_app/models/booking.dart';
-import 'package:event_marketplace_app/services/booking_service.dart';
+import '../models/booking.dart';
+import '../services/booking_service.dart';
 
 /// Виджет таймера подтверждения бронирования
 class BookingConfirmationTimer extends StatefulWidget {
-  final Booking booking;
-  final BookingService bookingService;
-
   const BookingConfirmationTimer({
     super.key,
     required this.booking,
     required this.bookingService,
   });
+  final Booking booking;
+  final BookingService bookingService;
 
   @override
   State<BookingConfirmationTimer> createState() =>
@@ -129,14 +128,13 @@ class _BookingConfirmationTimerState extends State<BookingConfirmationTimer> {
 
 /// Виджет для отображения статуса подтверждения
 class BookingConfirmationStatus extends StatelessWidget {
-  final Booking booking;
-  final BookingService bookingService;
-
   const BookingConfirmationStatus({
     super.key,
     required this.booking,
     required this.bookingService,
   });
+  final Booking booking;
+  final BookingService bookingService;
 
   @override
   Widget build(BuildContext context) {

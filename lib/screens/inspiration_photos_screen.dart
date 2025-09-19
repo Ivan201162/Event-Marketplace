@@ -1,22 +1,22 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
 // import 'dart:io';
 import '../models/customer_profile_extended.dart';
 import '../providers/customer_profile_extended_providers.dart';
 import '../services/customer_profile_extended_service.dart';
+import '../widgets/photo_filter_widget.dart';
 import '../widgets/photo_grid_widget.dart';
 import '../widgets/photo_upload_widget.dart';
-import '../widgets/photo_filter_widget.dart';
 
 /// Экран управления фотоальбомом вдохновения
 class InspirationPhotosScreen extends ConsumerStatefulWidget {
-  final String userId;
-
   const InspirationPhotosScreen({
     super.key,
     required this.userId,
   });
+  final String userId;
 
   @override
   ConsumerState<InspirationPhotosScreen> createState() =>
@@ -75,7 +75,7 @@ class _InspirationPhotosScreenState
         children: [
           // Статистика
           statsAsync.when(
-            data: (stats) => _buildStatsCard(stats),
+            data: _buildStatsCard,
             loading: () => const LinearProgressIndicator(),
             error: (error, stack) => const SizedBox.shrink(),
           ),
@@ -100,64 +100,62 @@ class _InspirationPhotosScreenState
     );
   }
 
-  Widget _buildStatsCard(CustomerProfileStats stats) {
-    return Card(
-      margin: const EdgeInsets.all(8.0),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildStatItem(
-                'Всего фото', stats.totalPhotos, Icons.photo_library),
-            _buildStatItem('Публичных', stats.publicPhotos, Icons.public),
-            _buildStatItem('Тегов', stats.totalTags, Icons.tag),
-          ],
+  Widget _buildStatsCard(CustomerProfileStats stats) => Card(
+        margin: const EdgeInsets.all(8),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildStatItem(
+                'Всего фото',
+                stats.totalPhotos,
+                Icons.photo_library,
+              ),
+              _buildStatItem('Публичных', stats.publicPhotos, Icons.public),
+              _buildStatItem('Тегов', stats.totalTags, Icons.tag),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildStatItem(String label, int value, IconData icon) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 24),
-        const SizedBox(height: 4),
-        Text(
-          value.toString(),
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 12, color: Colors.grey),
-        ),
-      ],
-    );
-  }
+  Widget _buildStatItem(String label, int value, IconData icon) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 24),
+          const SizedBox(height: 4),
+          Text(
+            value.toString(),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
+          ),
+        ],
+      );
 
-  Widget _buildAllPhotosTab(AsyncValue<List<InspirationPhoto>> photosAsync) {
-    return photosAsync.when(
-      data: (photos) {
-        if (photos.isEmpty) {
-          return _buildEmptyState(
-            'Нет фото для вдохновения',
-            'Добавьте фото, которые вдохновляют вас на создание мероприятий',
-            Icons.photo_library_outlined,
+  Widget _buildAllPhotosTab(AsyncValue<List<InspirationPhoto>> photosAsync) =>
+      photosAsync.when(
+        data: (photos) {
+          if (photos.isEmpty) {
+            return _buildEmptyState(
+              'Нет фото для вдохновения',
+              'Добавьте фото, которые вдохновляют вас на создание мероприятий',
+              Icons.photo_library_outlined,
+            );
+          }
+
+          return PhotoGridWidget(
+            photos: photos,
+            onPhotoTap: _showPhotoDetails,
+            onPhotoEdit: _showEditPhotoDialog,
+            onPhotoDelete: _deletePhoto,
           );
-        }
-
-        return PhotoGridWidget(
-          photos: photos,
-          onPhotoTap: (photo) => _showPhotoDetails(photo),
-          onPhotoEdit: (photo) => _showEditPhotoDialog(photo),
-          onPhotoDelete: (photo) => _deletePhoto(photo),
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => _buildErrorState(error.toString()),
-    );
-  }
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => _buildErrorState(error.toString()),
+      );
 
   Widget _buildPublicPhotosTab() {
     final publicPhotosAsync = ref.watch(publicPhotosProvider(widget.userId));
@@ -174,9 +172,9 @@ class _InspirationPhotosScreenState
 
         return PhotoGridWidget(
           photos: photos,
-          onPhotoTap: (photo) => _showPhotoDetails(photo),
-          onPhotoEdit: (photo) => _showEditPhotoDialog(photo),
-          onPhotoDelete: (photo) => _deletePhoto(photo),
+          onPhotoTap: _showPhotoDetails,
+          onPhotoEdit: _showEditPhotoDialog,
+          onPhotoDelete: _deletePhoto,
         );
       },
       loading: () => const Center(child: CircularProgressIndicator()),
@@ -198,7 +196,7 @@ class _InspirationPhotosScreenState
         }
 
         return ListView.builder(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8),
           itemCount: tags.length,
           itemBuilder: (context, index) {
             final tag = tags[index];
@@ -216,7 +214,7 @@ class _InspirationPhotosScreenState
         ref.watch(photosByTagProvider((widget.userId, tag)));
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: ListTile(
         leading: const Icon(Icons.tag),
         title: Text(tag),
@@ -231,46 +229,43 @@ class _InspirationPhotosScreenState
     );
   }
 
-  Widget _buildEmptyState(String title, String subtitle, IconData icon) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 64, color: Colors.grey),
-          const SizedBox(height: 16),
-          Text(
-            title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            subtitle,
-            style: const TextStyle(color: Colors.grey),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildEmptyState(String title, String subtitle, IconData icon) =>
+      Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              subtitle,
+              style: const TextStyle(color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
 
-  Widget _buildErrorState(String error) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.error_outline, size: 64, color: Colors.red),
-          const SizedBox(height: 16),
-          Text('Ошибка: $error'),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () =>
-                ref.refresh(inspirationPhotosProvider(widget.userId)),
-            child: const Text('Повторить'),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildErrorState(String error) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
+            const SizedBox(height: 16),
+            Text('Ошибка: $error'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () =>
+                  ref.refresh(inspirationPhotosProvider(widget.userId)),
+              child: const Text('Повторить'),
+            ),
+          ],
+        ),
+      );
 
   void _showAddPhotoDialog() {
     showDialog(
@@ -347,7 +342,7 @@ class _InspirationPhotosScreenState
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -355,7 +350,9 @@ class _InspirationPhotosScreenState
                     Text(
                       photo.caption!,
                       style: const TextStyle(
-                          fontSize: 16, fontWeight: FontWeight.bold),
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                     const SizedBox(height: 8),
                   ],
@@ -363,10 +360,12 @@ class _InspirationPhotosScreenState
                     Wrap(
                       spacing: 4,
                       children: photo.tags
-                          .map((tag) => Chip(
-                                label: Text(tag),
-                                labelStyle: const TextStyle(fontSize: 12),
-                              ))
+                          .map(
+                            (tag) => Chip(
+                              label: Text(tag),
+                              labelStyle: const TextStyle(fontSize: 12),
+                            ),
+                          )
                           .toList(),
                     ),
                     const SizedBox(height: 8),
@@ -406,8 +405,8 @@ class _InspirationPhotosScreenState
     // TODO: Реализовать редактирование фото
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content:
-              Text('Редактирование фото будет добавлено в следующей версии')),
+        content: Text('Редактирование фото будет добавлено в следующей версии'),
+      ),
     );
   }
 
@@ -462,21 +461,18 @@ class _InspirationPhotosScreenState
     );
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day}.${date.month}.${date.year}';
-  }
+  String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 }
 
 /// Экран фото по тегу
 class PhotosByTagScreen extends ConsumerWidget {
-  final String userId;
-  final String tag;
-
   const PhotosByTagScreen({
     super.key,
     required this.userId,
     required this.tag,
   });
+  final String userId;
+  final String tag;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -518,21 +514,23 @@ class PhotosByTagScreen extends ConsumerWidget {
   }
 
   void _deletePhoto(
-      BuildContext context, WidgetRef ref, InspirationPhoto photo) {
+    BuildContext context,
+    WidgetRef ref,
+    InspirationPhoto photo,
+  ) {
     // TODO: Удалить фото
   }
 }
 
 /// Экран результатов поиска фото
 class PhotoSearchResultsScreen extends ConsumerWidget {
-  final String userId;
-  final String query;
-
   const PhotoSearchResultsScreen({
     super.key,
     required this.userId,
     required this.query,
   });
+  final String userId;
+  final String query;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -574,7 +572,10 @@ class PhotoSearchResultsScreen extends ConsumerWidget {
   }
 
   void _deletePhoto(
-      BuildContext context, WidgetRef ref, InspirationPhoto photo) {
+    BuildContext context,
+    WidgetRef ref,
+    InspirationPhoto photo,
+  ) {
     // TODO: Удалить фото
   }
 }

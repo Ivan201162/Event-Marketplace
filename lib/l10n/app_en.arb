@@ -95,5 +95,29 @@
   "retry": "Retry",
   "@retry": {
     "description": "Retry button text"
+  },
+  "takePhoto": "Take Photo",
+  "@takePhoto": {
+    "description": "Take photo button text"
+  },
+  "chooseFromGallery": "Choose from Gallery",
+  "@chooseFromGallery": {
+    "description": "Choose from gallery button text"
+  },
+  "takeVideo": "Take Video",
+  "@takeVideo": {
+    "description": "Take video button text"
+  },
+  "chooseVideoFromGallery": "Choose Video from Gallery",
+  "@chooseVideoFromGallery": {
+    "description": "Choose video from gallery button text"
+  },
+  "storyCreatedSuccessfully": "Story created successfully",
+  "@storyCreatedSuccessfully": {
+    "description": "Story created successfully message"
+  },
+  "errorCreatingStory": "Error creating story",
+  "@errorCreatingStory": {
+    "description": "Error creating story message"
   }
 }

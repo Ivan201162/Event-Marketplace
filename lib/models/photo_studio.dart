@@ -2,22 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель фотостудии
 class PhotoStudio {
-  final String id;
-  final String name;
-  final String description;
-  final String location;
-  final String address;
-  final double latitude;
-  final double longitude;
-  final List<StudioOption> studioOptions;
-  final List<String> availableDates;
-  final List<String> photos;
-  final double? rating;
-  final int? reviewCount;
-  final bool isActive;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
   const PhotoStudio({
     required this.id,
     required this.name,
@@ -48,8 +32,10 @@ class PhotoStudio {
       latitude: (data['latitude'] as num).toDouble(),
       longitude: (data['longitude'] as num).toDouble(),
       studioOptions: (data['studioOptions'] as List<dynamic>?)
-              ?.map((option) =>
-                  StudioOption.fromMap(option as Map<String, dynamic>))
+              ?.map(
+                (option) =>
+                    StudioOption.fromMap(option as Map<String, dynamic>),
+              )
               .toList() ??
           [],
       availableDates: List<String>.from(data['availableDates'] ?? []),
@@ -63,49 +49,62 @@ class PhotoStudio {
   }
 
   /// Создать из Map
-  factory PhotoStudio.fromMap(Map<String, dynamic> data) {
-    return PhotoStudio(
-      id: data['id'] ?? '',
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
-      location: data['location'] ?? '',
-      address: data['address'] ?? '',
-      latitude: (data['latitude'] as num).toDouble(),
-      longitude: (data['longitude'] as num).toDouble(),
-      studioOptions: (data['studioOptions'] as List<dynamic>?)
-              ?.map((option) =>
-                  StudioOption.fromMap(option as Map<String, dynamic>))
-              .toList() ??
-          [],
-      availableDates: List<String>.from(data['availableDates'] ?? []),
-      photos: List<String>.from(data['photos'] ?? []),
-      rating: data['rating']?.toDouble(),
-      reviewCount: data['reviewCount'],
-      isActive: data['isActive'] ?? true,
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-    );
-  }
+  factory PhotoStudio.fromMap(Map<String, dynamic> data) => PhotoStudio(
+        id: data['id'] ?? '',
+        name: data['name'] ?? '',
+        description: data['description'] ?? '',
+        location: data['location'] ?? '',
+        address: data['address'] ?? '',
+        latitude: (data['latitude'] as num).toDouble(),
+        longitude: (data['longitude'] as num).toDouble(),
+        studioOptions: (data['studioOptions'] as List<dynamic>?)
+                ?.map(
+                  (option) =>
+                      StudioOption.fromMap(option as Map<String, dynamic>),
+                )
+                .toList() ??
+            [],
+        availableDates: List<String>.from(data['availableDates'] ?? []),
+        photos: List<String>.from(data['photos'] ?? []),
+        rating: data['rating']?.toDouble(),
+        reviewCount: data['reviewCount'],
+        isActive: data['isActive'] ?? true,
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      );
+  final String id;
+  final String name;
+  final String description;
+  final String location;
+  final String address;
+  final double latitude;
+  final double longitude;
+  final List<StudioOption> studioOptions;
+  final List<String> availableDates;
+  final List<String> photos;
+  final double? rating;
+  final int? reviewCount;
+  final bool isActive;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'description': description,
-      'location': location,
-      'address': address,
-      'latitude': latitude,
-      'longitude': longitude,
-      'studioOptions': studioOptions.map((option) => option.toMap()).toList(),
-      'availableDates': availableDates,
-      'photos': photos,
-      'rating': rating,
-      'reviewCount': reviewCount,
-      'isActive': isActive,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'description': description,
+        'location': location,
+        'address': address,
+        'latitude': latitude,
+        'longitude': longitude,
+        'studioOptions': studioOptions.map((option) => option.toMap()).toList(),
+        'availableDates': availableDates,
+        'photos': photos,
+        'rating': rating,
+        'reviewCount': reviewCount,
+        'isActive': isActive,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   /// Создать копию с изменениями
   PhotoStudio copyWith({
@@ -124,25 +123,24 @@ class PhotoStudio {
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) {
-    return PhotoStudio(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      location: location ?? this.location,
-      address: address ?? this.address,
-      latitude: latitude ?? this.latitude,
-      longitude: longitude ?? this.longitude,
-      studioOptions: studioOptions ?? this.studioOptions,
-      availableDates: availableDates ?? this.availableDates,
-      photos: photos ?? this.photos,
-      rating: rating ?? this.rating,
-      reviewCount: reviewCount ?? this.reviewCount,
-      isActive: isActive ?? this.isActive,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
+  }) =>
+      PhotoStudio(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        location: location ?? this.location,
+        address: address ?? this.address,
+        latitude: latitude ?? this.latitude,
+        longitude: longitude ?? this.longitude,
+        studioOptions: studioOptions ?? this.studioOptions,
+        availableDates: availableDates ?? this.availableDates,
+        photos: photos ?? this.photos,
+        rating: rating ?? this.rating,
+        reviewCount: reviewCount ?? this.reviewCount,
+        isActive: isActive ?? this.isActive,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Получить минимальную цену за час
   double? get minPricePerHour {
@@ -201,41 +199,30 @@ class PhotoStudio {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      name,
-      description,
-      location,
-      address,
-      latitude,
-      longitude,
-      studioOptions,
-      availableDates,
-      photos,
-      rating,
-      reviewCount,
-      isActive,
-      createdAt,
-      updatedAt,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        name,
+        description,
+        location,
+        address,
+        latitude,
+        longitude,
+        studioOptions,
+        availableDates,
+        photos,
+        rating,
+        reviewCount,
+        isActive,
+        createdAt,
+        updatedAt,
+      );
 
   @override
-  String toString() {
-    return 'PhotoStudio(id: $id, name: $name, location: $location)';
-  }
+  String toString() => 'PhotoStudio(id: $id, name: $name, location: $location)';
 }
 
 /// Опция студии
 class StudioOption {
-  final String id;
-  final String name;
-  final String description;
-  final double pricePerHour;
-  final List<String> photos;
-  final Map<String, dynamic>? specifications;
-
   const StudioOption({
     required this.id,
     required this.name,
@@ -246,30 +233,32 @@ class StudioOption {
   });
 
   /// Создать из Map
-  factory StudioOption.fromMap(Map<String, dynamic> data) {
-    return StudioOption(
-      id: data['id'] ?? '',
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
-      pricePerHour: (data['pricePerHour'] as num).toDouble(),
-      photos: List<String>.from(data['photos'] ?? []),
-      specifications: data['specifications'] != null
-          ? Map<String, dynamic>.from(data['specifications'])
-          : null,
-    );
-  }
+  factory StudioOption.fromMap(Map<String, dynamic> data) => StudioOption(
+        id: data['id'] ?? '',
+        name: data['name'] ?? '',
+        description: data['description'] ?? '',
+        pricePerHour: (data['pricePerHour'] as num).toDouble(),
+        photos: List<String>.from(data['photos'] ?? []),
+        specifications: data['specifications'] != null
+            ? Map<String, dynamic>.from(data['specifications'])
+            : null,
+      );
+  final String id;
+  final String name;
+  final String description;
+  final double pricePerHour;
+  final List<String> photos;
+  final Map<String, dynamic>? specifications;
 
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'pricePerHour': pricePerHour,
-      'photos': photos,
-      'specifications': specifications,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'name': name,
+        'description': description,
+        'pricePerHour': pricePerHour,
+        'photos': photos,
+        'specifications': specifications,
+      };
 
   @override
   bool operator ==(Object other) {
@@ -284,38 +273,22 @@ class StudioOption {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      name,
-      description,
-      pricePerHour,
-      photos,
-      specifications,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        name,
+        description,
+        pricePerHour,
+        photos,
+        specifications,
+      );
 
   @override
-  String toString() {
-    return 'StudioOption(id: $id, name: $name, pricePerHour: $pricePerHour)';
-  }
+  String toString() =>
+      'StudioOption(id: $id, name: $name, pricePerHour: $pricePerHour)';
 }
 
 /// Бронирование фотостудии
 class StudioBooking {
-  final String id;
-  final String studioId;
-  final String customerId;
-  final String? photographerId;
-  final String optionId;
-  final DateTime startTime;
-  final DateTime endTime;
-  final double totalPrice;
-  final String status;
-  final String? notes;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
   const StudioBooking({
     required this.id,
     required this.studioId,
@@ -351,54 +324,57 @@ class StudioBooking {
   }
 
   /// Создать из Map
-  factory StudioBooking.fromMap(Map<String, dynamic> data) {
-    return StudioBooking(
-      id: data['id'] ?? '',
-      studioId: data['studioId'] ?? '',
-      customerId: data['customerId'] ?? '',
-      photographerId: data['photographerId'],
-      optionId: data['optionId'] ?? '',
-      startTime: (data['startTime'] as Timestamp).toDate(),
-      endTime: (data['endTime'] as Timestamp).toDate(),
-      totalPrice: (data['totalPrice'] as num).toDouble(),
-      status: data['status'] ?? 'pending',
-      notes: data['notes'],
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-    );
-  }
+  factory StudioBooking.fromMap(Map<String, dynamic> data) => StudioBooking(
+        id: data['id'] ?? '',
+        studioId: data['studioId'] ?? '',
+        customerId: data['customerId'] ?? '',
+        photographerId: data['photographerId'],
+        optionId: data['optionId'] ?? '',
+        startTime: (data['startTime'] as Timestamp).toDate(),
+        endTime: (data['endTime'] as Timestamp).toDate(),
+        totalPrice: (data['totalPrice'] as num).toDouble(),
+        status: data['status'] ?? 'pending',
+        notes: data['notes'],
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      );
+  final String id;
+  final String studioId;
+  final String customerId;
+  final String? photographerId;
+  final String optionId;
+  final DateTime startTime;
+  final DateTime endTime;
+  final double totalPrice;
+  final String status;
+  final String? notes;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'studioId': studioId,
-      'customerId': customerId,
-      'photographerId': photographerId,
-      'optionId': optionId,
-      'startTime': Timestamp.fromDate(startTime),
-      'endTime': Timestamp.fromDate(endTime),
-      'totalPrice': totalPrice,
-      'status': status,
-      'notes': notes,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'studioId': studioId,
+        'customerId': customerId,
+        'photographerId': photographerId,
+        'optionId': optionId,
+        'startTime': Timestamp.fromDate(startTime),
+        'endTime': Timestamp.fromDate(endTime),
+        'totalPrice': totalPrice,
+        'status': status,
+        'notes': notes,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   /// Получить продолжительность в часах
-  double get durationInHours {
-    return endTime.difference(startTime).inHours.toDouble();
-  }
+  double get durationInHours =>
+      endTime.difference(startTime).inHours.toDouble();
 
   /// Проверить, активно ли бронирование
-  bool get isActive {
-    return status == 'confirmed' || status == 'in_progress';
-  }
+  bool get isActive => status == 'confirmed' || status == 'in_progress';
 
   /// Проверить, завершено ли бронирование
-  bool get isCompleted {
-    return status == 'completed';
-  }
+  bool get isCompleted => status == 'completed';
 
   @override
   bool operator ==(Object other) {
@@ -419,25 +395,22 @@ class StudioBooking {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      studioId,
-      customerId,
-      photographerId,
-      optionId,
-      startTime,
-      endTime,
-      totalPrice,
-      status,
-      notes,
-      createdAt,
-      updatedAt,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        studioId,
+        customerId,
+        photographerId,
+        optionId,
+        startTime,
+        endTime,
+        totalPrice,
+        status,
+        notes,
+        createdAt,
+        updatedAt,
+      );
 
   @override
-  String toString() {
-    return 'StudioBooking(id: $id, studioId: $studioId, status: $status)';
-  }
+  String toString() =>
+      'StudioBooking(id: $id, studioId: $studioId, status: $status)';
 }

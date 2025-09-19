@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/user_role_provider.dart';
-import '../widgets/role_switcher.dart';
-import '../widgets/recommendations_section.dart';
-import '../widgets/enhanced_page_transition.dart';
-import '../widgets/responsive_layout.dart';
-import '../widgets/theme_switch_widget.dart';
+
 import '../core/app_theme.dart';
 import '../core/responsive_utils.dart';
 import '../models/user.dart';
+import '../providers/user_role_provider.dart';
+import '../widgets/enhanced_page_transition.dart';
+import '../widgets/recommendations_section.dart';
+import '../widgets/responsive_layout.dart';
+import '../widgets/role_switcher.dart';
+import '../widgets/theme_switch_widget.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -16,7 +17,7 @@ class HomeScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final userRole = ref.watch(userRoleProvider);
-    final roleString = userRole == UserRole.customer ? "Клиент" : "Специалист";
+    final roleString = userRole == UserRole.customer ? 'Клиент' : 'Специалист';
 
     return ResponsiveLayout(
       mobile: _buildMobileLayout(context, userRole, roleString),
@@ -27,355 +28,20 @@ class HomeScreen extends ConsumerWidget {
   }
 
   Widget _buildMobileLayout(
-      BuildContext context, UserRole userRole, String roleString) {
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          // Современный AppBar с градиентом
-          SliverAppBar(
-            expandedHeight: 120,
-            floating: false,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              title: const Text(
-                "Event Marketplace",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              background: Container(
-                decoration: const BoxDecoration(
-                  gradient: BrandColors.primaryGradient,
-                ),
-                child: SafeArea(
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(top: 40, left: 16, right: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          "Event Marketplace",
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Row(
-                          children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: const QuickThemeToggle(
-                                iconColor: Colors.white,
-                              ),
-                            ),
-                            const SizedBox(width: 8),
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: IconButton(
-                                icon: const Icon(Icons.notifications_outlined,
-                                    color: Colors.white),
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text(
-                                            "Уведомления пока не реализованы")),
-                                  );
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
-          ),
-          // Основной контент
-          SliverToBoxAdapter(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Переключатель ролей
-                const RoleSwitcher(),
-
-                // Приветственная карточка с градиентом
-                Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      gradient: BrandColors.secondaryGradient,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: BrandColors.secondary.withOpacity(0.3),
-                          blurRadius: 20,
-                          offset: const Offset(0, 10),
-                        ),
-                      ],
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(24),
-                      child: Row(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(16),
-                            ),
-                            child: Icon(
-                              userRole == UserRole.customer
-                                  ? Icons.person_outline
-                                  : Icons.work_outline,
-                              size: 32,
-                              color: Colors.white,
-                            ),
-                          ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                const Text(
-                                  "Добро пожаловать!",
-                                  style: TextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                const SizedBox(height: 4),
-                                Text(
-                                  "Вы вошли как $roleString",
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: Colors.white.withOpacity(0.9),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-
-                // Быстрые действия
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        "Быстрые действия",
-                        style:
-                            Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                      ),
-                      TextButton(
-                        onPressed: () {},
-                        child: const Text("Все"),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                // Сетка быстрых действий
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  child: GridView.count(
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 1.2,
-                    children: [
-                      AnimatedButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Поиск специалистов")),
-                          );
-                        },
-                        child: _buildModernQuickActionCard(
-                          context,
-                          icon: Icons.search_rounded,
-                          title: "Найти специалиста",
-                          subtitle: "Поиск по категориям",
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
-                          ),
-                          onTap: () {},
-                        ),
-                      ),
-                      AnimatedButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            SnackBar(
-                                content: Text(userRole == UserRole.customer
-                                    ? "Мои заявки"
-                                    : "Заявки клиентов")),
-                          );
-                        },
-                        child: _buildModernQuickActionCard(
-                          context,
-                          icon: userRole == UserRole.customer
-                              ? Icons.book_online_rounded
-                              : Icons.assignment_rounded,
-                          title: userRole == UserRole.customer
-                              ? "Мои заявки"
-                              : "Заявки клиентов",
-                          subtitle: userRole == UserRole.customer
-                              ? "Просмотр заявок"
-                              : "Управление заявками",
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF10B981), Color(0xFF059669)],
-                          ),
-                          onTap: () {},
-                        ),
-                      ),
-                      AnimatedButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Календарь событий")),
-                          );
-                        },
-                        child: _buildModernQuickActionCard(
-                          context,
-                          icon: Icons.calendar_today_rounded,
-                          title: "Календарь",
-                          subtitle: "Расписание событий",
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
-                          ),
-                          onTap: () {},
-                        ),
-                      ),
-                      AnimatedButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Сообщения")),
-                          );
-                        },
-                        child: _buildModernQuickActionCard(
-                          context,
-                          icon: Icons.chat_bubble_outline_rounded,
-                          title: "Сообщения",
-                          subtitle: "Общение с клиентами",
-                          gradient: const LinearGradient(
-                            colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
-                          ),
-                          onTap: () {},
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 32),
-
-                // Статистика
-                AnimatedContent(
-                  delay: const Duration(milliseconds: 200),
-                  type: AnimationType.slideUp,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Text(
-                      "Статистика",
-                      style:
-                          Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                fontWeight: FontWeight.bold,
-                              ),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-
-                AnimatedContent(
-                  delay: const Duration(milliseconds: 400),
-                  type: AnimationType.scale,
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 20,
-                            offset: const Offset(0, 10),
-                          ),
-                        ],
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(24),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            _buildModernStatItem(
-                                context,
-                                "Активных заявок",
-                                "0",
-                                Icons.assignment_rounded,
-                                BrandColors.primary),
-                            _buildModernStatItem(
-                                context,
-                                "Завершенных",
-                                "0",
-                                Icons.check_circle_rounded,
-                                BrandColors.secondary),
-                            _buildModernStatItem(context, "В ожидании", "0",
-                                Icons.schedule_rounded, BrandColors.accent),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-
-                const SizedBox(height: 32),
-
-                // Секция рекомендаций
-                const RecommendationsSection(),
-
-                const SizedBox(height: 100), // Отступ для нижней навигации
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTabletLayout(
-      BuildContext context, UserRole userRole, String roleString) {
-    return Scaffold(
-      body: ResponsiveContainer(
-        child: CustomScrollView(
+    BuildContext context,
+    UserRole userRole,
+    String roleString,
+  ) =>
+      Scaffold(
+        body: CustomScrollView(
           slivers: [
-            // Адаптивный AppBar для планшета
+            // Современный AppBar с градиентом
             SliverAppBar(
-              expandedHeight: 140,
-              floating: false,
+              expandedHeight: 120,
               pinned: true,
               flexibleSpace: FlexibleSpaceBar(
                 title: const Text(
-                  "Event Marketplace",
+                  'Event Marketplace',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
@@ -385,480 +51,814 @@ class HomeScreen extends ConsumerWidget {
                   decoration: const BoxDecoration(
                     gradient: BrandColors.primaryGradient,
                   ),
+                  child: SafeArea(
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.only(top: 40, left: 16, right: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text(
+                            'Event Marketplace',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Row(
+                            children: [
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: const QuickThemeToggle(
+                                  iconColor: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white.withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: IconButton(
+                                  icon: const Icon(
+                                    Icons.notifications_outlined,
+                                    color: Colors.white,
+                                  ),
+                                  onPressed: () {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                          'Уведомления пока не реализованы',
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ),
-            // Основной контент для планшета
+            // Основной контент
             SliverToBoxAdapter(
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
-                  // Приветственная карточка
-                  _buildWelcomeCard(context, userRole, roleString),
-                  const SizedBox(height: 24),
-                  // Быстрые действия в сетке 2x2
-                  _buildQuickActionsGrid(context, userRole, 2),
+                  // Переключатель ролей
+                  const RoleSwitcher(),
+
+                  // Приветственная карточка с градиентом
+                  Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: BrandColors.secondaryGradient,
+                        borderRadius: BorderRadius.circular(20),
+                        boxShadow: [
+                          BoxShadow(
+                            color: BrandColors.secondary.withOpacity(0.3),
+                            blurRadius: 20,
+                            offset: const Offset(0, 10),
+                          ),
+                        ],
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(24),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(16),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                borderRadius: BorderRadius.circular(16),
+                              ),
+                              child: Icon(
+                                userRole == UserRole.customer
+                                    ? Icons.person_outline
+                                    : Icons.work_outline,
+                                size: 32,
+                                color: Colors.white,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'Добро пожаловать!',
+                                    style: TextStyle(
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    'Вы вошли как $roleString',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: Colors.white.withOpacity(0.9),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  // Быстрые действия
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Быстрые действия',
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                        TextButton(
+                          onPressed: () {},
+                          child: const Text('Все'),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Сетка быстрых действий
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: GridView.count(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                      childAspectRatio: 1.2,
+                      children: [
+                        AnimatedButton(
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Поиск специалистов')),
+                            );
+                          },
+                          child: _buildModernQuickActionCard(
+                            context,
+                            icon: Icons.search_rounded,
+                            title: 'Найти специалиста',
+                            subtitle: 'Поиск по категориям',
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
+                            ),
+                            onTap: () {},
+                          ),
+                        ),
+                        AnimatedButton(
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text(
+                                  userRole == UserRole.customer
+                                      ? 'Мои заявки'
+                                      : 'Заявки клиентов',
+                                ),
+                              ),
+                            );
+                          },
+                          child: _buildModernQuickActionCard(
+                            context,
+                            icon: userRole == UserRole.customer
+                                ? Icons.book_online_rounded
+                                : Icons.assignment_rounded,
+                            title: userRole == UserRole.customer
+                                ? 'Мои заявки'
+                                : 'Заявки клиентов',
+                            subtitle: userRole == UserRole.customer
+                                ? 'Просмотр заявок'
+                                : 'Управление заявками',
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF10B981), Color(0xFF059669)],
+                            ),
+                            onTap: () {},
+                          ),
+                        ),
+                        AnimatedButton(
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                  content: Text('Календарь событий')),
+                            );
+                          },
+                          child: _buildModernQuickActionCard(
+                            context,
+                            icon: Icons.calendar_today_rounded,
+                            title: 'Календарь',
+                            subtitle: 'Расписание событий',
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
+                            ),
+                            onTap: () {},
+                          ),
+                        ),
+                        AnimatedButton(
+                          onPressed: () {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Сообщения')),
+                            );
+                          },
+                          child: _buildModernQuickActionCard(
+                            context,
+                            icon: Icons.chat_bubble_outline_rounded,
+                            title: 'Сообщения',
+                            subtitle: 'Общение с клиентами',
+                            gradient: const LinearGradient(
+                              colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
+                            ),
+                            onTap: () {},
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
                   const SizedBox(height: 32),
+
                   // Статистика
-                  _buildStatsSection(context),
+                  AnimatedContent(
+                    delay: const Duration(milliseconds: 200),
+                    type: AnimationType.slideUp,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Text(
+                        'Статистика',
+                        style:
+                            Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  AnimatedContent(
+                    delay: const Duration(milliseconds: 400),
+                    type: AnimationType.scale,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 20,
+                              offset: const Offset(0, 10),
+                            ),
+                          ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(24),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              _buildModernStatItem(
+                                context,
+                                'Активных заявок',
+                                '0',
+                                Icons.assignment_rounded,
+                                BrandColors.primary,
+                              ),
+                              _buildModernStatItem(
+                                context,
+                                'Завершенных',
+                                '0',
+                                Icons.check_circle_rounded,
+                                BrandColors.secondary,
+                              ),
+                              _buildModernStatItem(
+                                context,
+                                'В ожидании',
+                                '0',
+                                Icons.schedule_rounded,
+                                BrandColors.accent,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
                   const SizedBox(height: 32),
+
                   // Секция рекомендаций
                   const RecommendationsSection(),
-                  const SizedBox(height: 100),
+
+                  const SizedBox(height: 100), // Отступ для нижней навигации
                 ],
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
+      );
+
+  Widget _buildTabletLayout(
+    BuildContext context,
+    UserRole userRole,
+    String roleString,
+  ) =>
+      Scaffold(
+        body: ResponsiveContainer(
+          child: CustomScrollView(
+            slivers: [
+              // Адаптивный AppBar для планшета
+              SliverAppBar(
+                expandedHeight: 140,
+                pinned: true,
+                flexibleSpace: FlexibleSpaceBar(
+                  title: const Text(
+                    'Event Marketplace',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  background: Container(
+                    decoration: const BoxDecoration(
+                      gradient: BrandColors.primaryGradient,
+                    ),
+                  ),
+                ),
+              ),
+              // Основной контент для планшета
+              SliverToBoxAdapter(
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    // Приветственная карточка
+                    _buildWelcomeCard(context, userRole, roleString),
+                    const SizedBox(height: 24),
+                    // Быстрые действия в сетке 2x2
+                    _buildQuickActionsGrid(context, userRole, 2),
+                    const SizedBox(height: 32),
+                    // Статистика
+                    _buildStatsSection(context),
+                    const SizedBox(height: 32),
+                    // Секция рекомендаций
+                    const RecommendationsSection(),
+                    const SizedBox(height: 100),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
 
   Widget _buildDesktopLayout(
-      BuildContext context, UserRole userRole, String roleString) {
-    return Scaffold(
-      body: ResponsiveContainer(
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Левая панель с быстрыми действиями
-            SizedBox(
-              width: 300,
-              child: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  _buildWelcomeCard(context, userRole, roleString),
-                  const SizedBox(height: 24),
-                  _buildQuickActionsList(context, userRole),
-                ],
+    BuildContext context,
+    UserRole userRole,
+    String roleString,
+  ) =>
+      Scaffold(
+        body: ResponsiveContainer(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Левая панель с быстрыми действиями
+              SizedBox(
+                width: 300,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    _buildWelcomeCard(context, userRole, roleString),
+                    const SizedBox(height: 24),
+                    _buildQuickActionsList(context, userRole),
+                  ],
+                ),
               ),
-            ),
-            const SizedBox(width: 24),
-            // Основной контент
-            Expanded(
-              child: CustomScrollView(
-                slivers: [
-                  SliverAppBar(
-                    expandedHeight: 160,
-                    floating: false,
-                    pinned: true,
-                    flexibleSpace: FlexibleSpaceBar(
-                      title: const Text(
-                        "Event Marketplace",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
+              const SizedBox(width: 24),
+              // Основной контент
+              Expanded(
+                child: CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      expandedHeight: 160,
+                      pinned: true,
+                      flexibleSpace: FlexibleSpaceBar(
+                        title: const Text(
+                          'Event Marketplace',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
                         ),
-                      ),
-                      background: Container(
-                        decoration: const BoxDecoration(
-                          gradient: BrandColors.primaryGradient,
+                        background: Container(
+                          decoration: const BoxDecoration(
+                            gradient: BrandColors.primaryGradient,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 20),
-                        _buildStatsSection(context),
-                        const SizedBox(height: 32),
-                        const RecommendationsSection(),
-                        const SizedBox(height: 100),
-                      ],
+                    SliverToBoxAdapter(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 20),
+                          _buildStatsSection(context),
+                          const SizedBox(height: 32),
+                          const RecommendationsSection(),
+                          const SizedBox(height: 100),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildLargeDesktopLayout(
-      BuildContext context, UserRole userRole, String roleString) {
-    return Scaffold(
-      body: ResponsiveContainer(
+    BuildContext context,
+    UserRole userRole,
+    String roleString,
+  ) =>
+      Scaffold(
+        body: ResponsiveContainer(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Левая панель
+              SizedBox(
+                width: 350,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    _buildWelcomeCard(context, userRole, roleString),
+                    const SizedBox(height: 24),
+                    _buildQuickActionsList(context, userRole),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 32),
+              // Основной контент
+              Expanded(
+                child: CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      expandedHeight: 180,
+                      pinned: true,
+                      flexibleSpace: FlexibleSpaceBar(
+                        title: const Text(
+                          'Event Marketplace',
+                          style: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        background: Container(
+                          decoration: const BoxDecoration(
+                            gradient: BrandColors.primaryGradient,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SliverToBoxAdapter(
+                      child: Column(
+                        children: [
+                          const SizedBox(height: 20),
+                          _buildStatsSection(context),
+                          const SizedBox(height: 32),
+                          const RecommendationsSection(),
+                          const SizedBox(height: 100),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 32),
+              // Правая панель с дополнительной информацией
+              SizedBox(
+                width: 300,
+                child: Column(
+                  children: [
+                    const SizedBox(height: 20),
+                    _buildInfoPanel(context),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildWelcomeCard(
+    BuildContext context,
+    UserRole userRole,
+    String roleString,
+  ) =>
+      ResponsiveCard(
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Левая панель
-            SizedBox(
-              width: 350,
-              child: Column(
-                children: [
-                  const SizedBox(height: 20),
-                  _buildWelcomeCard(context, userRole, roleString),
-                  const SizedBox(height: 24),
-                  _buildQuickActionsList(context, userRole),
-                ],
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: BrandColors.secondary.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Icon(
+                userRole == UserRole.customer
+                    ? Icons.person_outline
+                    : Icons.work_outline,
+                size: 32,
+                color: BrandColors.secondary,
               ),
             ),
-            const SizedBox(width: 32),
-            // Основной контент
+            const SizedBox(width: 16),
             Expanded(
-              child: CustomScrollView(
-                slivers: [
-                  SliverAppBar(
-                    expandedHeight: 180,
-                    floating: false,
-                    pinned: true,
-                    flexibleSpace: FlexibleSpaceBar(
-                      title: const Text(
-                        "Event Marketplace",
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                      background: Container(
-                        decoration: const BoxDecoration(
-                          gradient: BrandColors.primaryGradient,
-                        ),
-                      ),
-                    ),
-                  ),
-                  SliverToBoxAdapter(
-                    child: Column(
-                      children: [
-                        const SizedBox(height: 20),
-                        _buildStatsSection(context),
-                        const SizedBox(height: 32),
-                        const RecommendationsSection(),
-                        const SizedBox(height: 100),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(width: 32),
-            // Правая панель с дополнительной информацией
-            SizedBox(
-              width: 300,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SizedBox(height: 20),
-                  _buildInfoPanel(context),
+                  const ResponsiveText(
+                    'Добро пожаловать!',
+                    isTitle: true,
+                  ),
+                  const SizedBox(height: 4),
+                  ResponsiveText(
+                    'Вы вошли как $roleString',
+                    isSubtitle: true,
+                  ),
                 ],
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildWelcomeCard(
-      BuildContext context, UserRole userRole, String roleString) {
-    return ResponsiveCard(
-      child: Row(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: BrandColors.secondary.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Icon(
-              userRole == UserRole.customer
-                  ? Icons.person_outline
-                  : Icons.work_outline,
-              size: 32,
-              color: BrandColors.secondary,
-            ),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ResponsiveText(
-                  "Добро пожаловать!",
-                  isTitle: true,
-                ),
-                const SizedBox(height: 4),
-                ResponsiveText(
-                  "Вы вошли как $roleString",
-                  isSubtitle: true,
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+      );
 
   Widget _buildQuickActionsGrid(
-      BuildContext context, UserRole userRole, int crossAxisCount) {
-    return ResponsiveGrid(
-      crossAxisCount: crossAxisCount,
-      children: [
-        _buildQuickActionCard(
+    BuildContext context,
+    UserRole userRole,
+    int crossAxisCount,
+  ) =>
+      ResponsiveGrid(
+        crossAxisCount: crossAxisCount,
+        children: [
+          _buildQuickActionCard(
             context,
             userRole,
-            "Найти специалиста",
-            "Поиск по категориям",
+            'Найти специалиста',
+            'Поиск по категориям',
             Icons.search_rounded,
             const LinearGradient(
-                colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)])),
-        _buildQuickActionCard(
+              colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
+            ),
+          ),
+          _buildQuickActionCard(
             context,
             userRole,
-            userRole == UserRole.customer ? "Мои заявки" : "Заявки клиентов",
+            userRole == UserRole.customer ? 'Мои заявки' : 'Заявки клиентов',
             userRole == UserRole.customer
-                ? "Просмотр заявок"
-                : "Управление заявками",
+                ? 'Просмотр заявок'
+                : 'Управление заявками',
             userRole == UserRole.customer
                 ? Icons.book_online_rounded
                 : Icons.assignment_rounded,
             const LinearGradient(
-                colors: [Color(0xFF10B981), Color(0xFF059669)])),
-        _buildQuickActionCard(
+              colors: [Color(0xFF10B981), Color(0xFF059669)],
+            ),
+          ),
+          _buildQuickActionCard(
             context,
             userRole,
-            "Календарь",
-            "Расписание событий",
+            'Календарь',
+            'Расписание событий',
             Icons.calendar_today_rounded,
             const LinearGradient(
-                colors: [Color(0xFFF59E0B), Color(0xFFD97706)])),
-        _buildQuickActionCard(
+              colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
+            ),
+          ),
+          _buildQuickActionCard(
             context,
             userRole,
-            "Сообщения",
-            "Общение с клиентами",
+            'Сообщения',
+            'Общение с клиентами',
             Icons.chat_bubble_outline_rounded,
             const LinearGradient(
-                colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)])),
-      ],
-    );
-  }
-
-  Widget _buildQuickActionsList(BuildContext context, UserRole userRole) {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ResponsiveText(
-            "Быстрые действия",
-            isTitle: true,
+              colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
+            ),
           ),
-          const SizedBox(height: 16),
-          _buildQuickActionItem(
+        ],
+      );
+
+  Widget _buildQuickActionsList(BuildContext context, UserRole userRole) =>
+      ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const ResponsiveText(
+              'Быстрые действия',
+              isTitle: true,
+            ),
+            const SizedBox(height: 16),
+            _buildQuickActionItem(
               context,
               userRole,
-              "Найти специалиста",
+              'Найти специалиста',
               Icons.search_rounded,
               const LinearGradient(
-                  colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)])),
-          _buildQuickActionItem(
+                colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
+              ),
+            ),
+            _buildQuickActionItem(
               context,
               userRole,
-              userRole == UserRole.customer ? "Мои заявки" : "Заявки клиентов",
+              userRole == UserRole.customer ? 'Мои заявки' : 'Заявки клиентов',
               userRole == UserRole.customer
                   ? Icons.book_online_rounded
                   : Icons.assignment_rounded,
               const LinearGradient(
-                  colors: [Color(0xFF10B981), Color(0xFF059669)])),
-          _buildQuickActionItem(
+                colors: [Color(0xFF10B981), Color(0xFF059669)],
+              ),
+            ),
+            _buildQuickActionItem(
               context,
               userRole,
-              "Календарь",
+              'Календарь',
               Icons.calendar_today_rounded,
               const LinearGradient(
-                  colors: [Color(0xFFF59E0B), Color(0xFFD97706)])),
-          _buildQuickActionItem(
+                colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
+              ),
+            ),
+            _buildQuickActionItem(
               context,
               userRole,
-              "Сообщения",
+              'Сообщения',
               Icons.chat_bubble_outline_rounded,
               const LinearGradient(
-                  colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)])),
-        ],
-      ),
-    );
-  }
+                colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
+              ),
+            ),
+          ],
+        ),
+      );
 
-  Widget _buildQuickActionItem(BuildContext context, UserRole userRole,
-      String title, IconData icon, LinearGradient gradient) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: AnimatedButton(
+  Widget _buildQuickActionItem(
+    BuildContext context,
+    UserRole userRole,
+    String title,
+    IconData icon,
+    LinearGradient gradient,
+  ) =>
+      Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: AnimatedButton(
+          onPressed: () {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(title)),
+            );
+          },
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: gradient,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                Icon(icon, color: Colors.white, size: 24),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: ResponsiveText(
+                    title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+
+  Widget _buildStatsSection(BuildContext context) => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const ResponsiveText(
+              'Статистика',
+              isTitle: true,
+            ),
+            const SizedBox(height: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                _buildStatItem(
+                  context,
+                  'Активных заявок',
+                  '0',
+                  Icons.assignment_rounded,
+                  BrandColors.primary,
+                ),
+                _buildStatItem(
+                  context,
+                  'Завершенных',
+                  '0',
+                  Icons.check_circle_rounded,
+                  BrandColors.secondary,
+                ),
+                _buildStatItem(
+                  context,
+                  'В ожидании',
+                  '0',
+                  Icons.schedule_rounded,
+                  BrandColors.accent,
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildInfoPanel(BuildContext context) => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const ResponsiveText(
+              'Информация',
+              isTitle: true,
+            ),
+            const SizedBox(height: 16),
+            _buildInfoItem('Версия приложения', '1.0.0'),
+            _buildInfoItem('Последнее обновление', 'Сегодня'),
+            _buildInfoItem('Активных пользователей', '1,234'),
+          ],
+        ),
+      );
+
+  Widget _buildInfoItem(String label, String value) => Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ResponsiveText(label, isSubtitle: true),
+            ResponsiveText(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildQuickActionCard(
+    BuildContext context,
+    UserRole userRole,
+    String title,
+    String subtitle,
+    IconData icon,
+    LinearGradient gradient,
+  ) =>
+      AnimatedButton(
         onPressed: () {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(title)),
           );
         },
         child: Container(
-          padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             gradient: gradient,
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            children: [
-              Icon(icon, color: Colors.white, size: 24),
-              const SizedBox(width: 12),
-              Expanded(
-                child: ResponsiveText(
-                  title,
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.w500),
-                ),
+            borderRadius: BorderRadius.circular(20),
+            boxShadow: [
+              BoxShadow(
+                color: gradient.colors.first.withOpacity(0.3),
+                blurRadius: 15,
+                offset: const Offset(0, 8),
               ),
             ],
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildStatsSection(BuildContext context) {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ResponsiveText(
-            "Статистика",
-            isTitle: true,
-          ),
-          const SizedBox(height: 16),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              _buildStatItem(context, "Активных заявок", "0",
-                  Icons.assignment_rounded, BrandColors.primary),
-              _buildStatItem(context, "Завершенных", "0",
-                  Icons.check_circle_rounded, BrandColors.secondary),
-              _buildStatItem(context, "В ожидании", "0", Icons.schedule_rounded,
-                  BrandColors.accent),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoPanel(BuildContext context) {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ResponsiveText(
-            "Информация",
-            isTitle: true,
-          ),
-          const SizedBox(height: 16),
-          _buildInfoItem("Версия приложения", "1.0.0"),
-          _buildInfoItem("Последнее обновление", "Сегодня"),
-          _buildInfoItem("Активных пользователей", "1,234"),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoItem(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ResponsiveText(label, isSubtitle: true),
-          ResponsiveText(value,
-              style: const TextStyle(fontWeight: FontWeight.w500)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuickActionCard(BuildContext context, UserRole userRole,
-      String title, String subtitle, IconData icon, LinearGradient gradient) {
-    return AnimatedButton(
-      onPressed: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(title)),
-        );
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          gradient: gradient,
-          borderRadius: BorderRadius.circular(20),
-          boxShadow: [
-            BoxShadow(
-              color: gradient.colors.first.withOpacity(0.3),
-              blurRadius: 15,
-              offset: const Offset(0, 8),
-            ),
-          ],
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Icon(icon, color: Colors.white, size: 28),
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ResponsiveText(
-                    title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  ResponsiveText(
-                    subtitle,
-                    style: TextStyle(
-                      color: Colors.white.withOpacity(0.8),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildModernQuickActionCard(
-    BuildContext context, {
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required LinearGradient gradient,
-    required VoidCallback onTap,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: gradient,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(
-            color: gradient.colors.first.withOpacity(0.3),
-            blurRadius: 15,
-            offset: const Offset(0, 8),
-          ),
-        ],
-      ),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(20),
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: Column(
@@ -876,19 +876,17 @@ class HomeScreen extends ConsumerWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    ResponsiveText(
                       title,
                       style: const TextStyle(
-                        fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text(
+                    ResponsiveText(
                       subtitle,
                       style: TextStyle(
-                        fontSize: 12,
                         color: Colors.white.withOpacity(0.8),
                       ),
                     ),
@@ -898,42 +896,111 @@ class HomeScreen extends ConsumerWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildModernStatItem(BuildContext context, String label, String value,
-      IconData icon, Color color) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Icon(icon, color: color, size: 24),
+  Widget _buildModernQuickActionCard(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required LinearGradient gradient,
+    required VoidCallback onTap,
+  }) =>
+      Container(
+        decoration: BoxDecoration(
+          gradient: gradient,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(
+              color: gradient.colors.first.withOpacity(0.3),
+              blurRadius: 15,
+              offset: const Offset(0, 8),
+            ),
+          ],
         ),
-        const SizedBox(height: 12),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            color: color,
+        child: Material(
+          color: Colors.transparent,
+          child: InkWell(
+            onTap: onTap,
+            borderRadius: BorderRadius.circular(20),
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.2),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Icon(icon, color: Colors.white, size: 28),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        subtitle,
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.white.withOpacity(0.8),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey[600],
-            fontWeight: FontWeight.w500,
+      );
+
+  Widget _buildModernStatItem(
+    BuildContext context,
+    String label,
+    String value,
+    IconData icon,
+    Color color,
+  ) =>
+      Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Icon(icon, color: color, size: 24),
           ),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
-  }
+          const SizedBox(height: 12),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey[600],
+              fontWeight: FontWeight.w500,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      );
 }

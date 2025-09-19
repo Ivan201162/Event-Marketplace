@@ -13,7 +13,8 @@ class PaymentGatewayMock implements PaymentGateway {
   Future<void> initialize() async {
     if (!FeatureFlags.paymentsEnabled) {
       SafeLog.info(
-          'PaymentGatewayMock: Payments are disabled via feature flag');
+        'PaymentGatewayMock: Payments are disabled via feature flag',
+      );
       return;
     }
 
@@ -51,7 +52,7 @@ class PaymentGatewayMock implements PaymentGateway {
   }) async {
     if (!FeatureFlags.paymentsEnabled) {
       SafeLog.info('PaymentGatewayMock: Payment creation disabled');
-      return PaymentResult(
+      return const PaymentResult(
         paymentId: '',
         status: PaymentStatus.failed,
         errorMessage: 'Платежи отключены',
@@ -59,7 +60,8 @@ class PaymentGatewayMock implements PaymentGateway {
     }
 
     SafeLog.info(
-        'PaymentGatewayMock: Creating payment for booking $bookingId, amount: $amount $currency');
+      'PaymentGatewayMock: Creating payment for booking $bookingId, amount: $amount $currency',
+    );
 
     // Валидация
     if (amount < getMinimumAmount()) {
@@ -117,7 +119,8 @@ class PaymentGatewayMock implements PaymentGateway {
     _payments[paymentId] = paymentInfo;
 
     SafeLog.info(
-        'PaymentGatewayMock: Payment $paymentId created with status $status');
+      'PaymentGatewayMock: Payment $paymentId created with status $status',
+    );
 
     return PaymentResult(
       paymentId: paymentId,
@@ -184,7 +187,8 @@ class PaymentGatewayMock implements PaymentGateway {
     );
 
     SafeLog.info(
-        'PaymentGatewayMock: Payment $paymentId confirmed with status $newStatus');
+      'PaymentGatewayMock: Payment $paymentId confirmed with status $newStatus',
+    );
 
     return PaymentResult(
       paymentId: paymentId,
@@ -249,8 +253,10 @@ class PaymentGatewayMock implements PaymentGateway {
   }
 
   @override
-  Future<PaymentResult> refundPayment(String paymentId,
-      {double? amount}) async {
+  Future<PaymentResult> refundPayment(
+    String paymentId, {
+    double? amount,
+  }) async {
     if (!FeatureFlags.paymentsEnabled) {
       SafeLog.info('PaymentGatewayMock: Payment refund disabled');
       return PaymentResult(
@@ -295,7 +301,8 @@ class PaymentGatewayMock implements PaymentGateway {
     final newStatus = isSuccess ? PaymentStatus.refunded : PaymentStatus.failed;
 
     SafeLog.info(
-        'PaymentGatewayMock: Payment $paymentId refunded with status $newStatus');
+      'PaymentGatewayMock: Payment $paymentId refunded with status $newStatus',
+    );
 
     return PaymentResult(
       paymentId: paymentId,
@@ -326,7 +333,8 @@ class PaymentGatewayMock implements PaymentGateway {
     }
 
     SafeLog.info(
-        'PaymentGatewayMock: Getting payment history for booking $bookingId');
+      'PaymentGatewayMock: Getting payment history for booking $bookingId',
+    );
 
     await Future.delayed(const Duration(milliseconds: 200));
 
@@ -399,7 +407,8 @@ class PaymentGatewayMock implements PaymentGateway {
     }
 
     SafeLog.info(
-        'PaymentGatewayMock: Calculating payment fee for amount $amount, method $method');
+      'PaymentGatewayMock: Calculating payment fee for amount $amount, method $method',
+    );
 
     await Future.delayed(const Duration(milliseconds: 100));
 
@@ -422,10 +431,10 @@ class PaymentGatewayMock implements PaymentGateway {
   }
 
   @override
-  double getMinimumAmount() => 1.0;
+  double getMinimumAmount() => 1;
 
   @override
-  double getMaximumAmount() => 1000000.0;
+  double getMaximumAmount() => 1000000;
 
   @override
   List<String> getSupportedCurrencies() => ['RUB', 'USD', 'EUR'];

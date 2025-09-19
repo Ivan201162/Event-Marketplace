@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import '../models/feature_request.dart';
+
 import '../core/feature_flags.dart';
+import '../models/feature_request.dart';
 
 /// Сервис для работы с предложениями по функционалу
 class FeatureRequestService {
@@ -72,7 +73,7 @@ class FeatureRequestService {
       return Stream.value([]);
     }
 
-    Query query = _firestore.collection('feature_requests');
+    var query = _firestore.collection('feature_requests');
 
     // Применяем фильтры
     if (status != null) {
@@ -103,14 +104,16 @@ class FeatureRequestService {
         query = query.orderBy('createdAt', descending: true);
     }
 
-    return query.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return FeatureRequest.fromMap({
-          'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
-        });
-      }).toList();
-    });
+    return query.snapshots().map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => FeatureRequest.fromMap({
+                  'id': doc.id,
+                  ...doc.data() as Map<String, dynamic>,
+                }),
+              )
+              .toList(),
+        );
   }
 
   /// Получить предложения пользователя
@@ -124,14 +127,16 @@ class FeatureRequestService {
         .where('userId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return FeatureRequest.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
-    });
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => FeatureRequest.fromMap({
+                  'id': doc.id,
+                  ...doc.data(),
+                }),
+              )
+              .toList(),
+        );
   }
 
   /// Получить предложение по ID
@@ -208,7 +213,7 @@ class FeatureRequestService {
           throw Exception('Предложение не найдено');
         }
 
-        final data = doc.data()!;
+        final data = doc.data();
         final voters = List<String>.from(data['voters'] ?? []);
 
         if (voters.contains(userId)) {
@@ -246,7 +251,7 @@ class FeatureRequestService {
           throw Exception('Предложение не найдено');
         }
 
-        final data = doc.data()!;
+        final data = doc.data();
         final voters = List<String>.from(data['voters'] ?? []);
 
         if (!voters.contains(userId)) {
@@ -316,12 +321,14 @@ class FeatureRequestService {
     try {
       final query = await _firestore.collection('feature_requests').get();
 
-      final requests = query.docs.map((doc) {
-        return FeatureRequest.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
+      final requests = query.docs
+          .map(
+            (doc) => FeatureRequest.fromMap({
+              'id': doc.id,
+              ...doc.data(),
+            }),
+          )
+          .toList();
 
       return _calculateStats(requests);
     } catch (e) {
@@ -341,13 +348,13 @@ class FeatureRequestService {
       final titleQuery = await _firestore
           .collection('feature_requests')
           .where('title', isGreaterThanOrEqualTo: query)
-          .where('title', isLessThan: query + '\uf8ff')
+          .where('title', isLessThan: '$query\uf8ff')
           .get();
 
       final descriptionQuery = await _firestore
           .collection('feature_requests')
           .where('description', isGreaterThanOrEqualTo: query)
-          .where('description', isLessThan: query + '\uf8ff')
+          .where('description', isLessThan: '$query\uf8ff')
           .get();
 
       final allDocs = <QueryDocumentSnapshot>[];
@@ -360,12 +367,14 @@ class FeatureRequestService {
         uniqueDocs[doc.id] = doc;
       }
 
-      return uniqueDocs.values.map((doc) {
-        return FeatureRequest.fromMap({
-          'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
-        });
-      }).toList();
+      return uniqueDocs.values
+          .map(
+            (doc) => FeatureRequest.fromMap({
+              'id': doc.id,
+              ...doc.data() as Map<String, dynamic>,
+            }),
+          )
+          .toList();
     } catch (e) {
       debugPrint('Error searching feature requests: $e');
       return [];
@@ -374,19 +383,19 @@ class FeatureRequestService {
 
   /// Вычислить статистику
   FeatureRequestStats _calculateStats(List<FeatureRequest> requests) {
-    int totalRequests = requests.length;
-    int submittedRequests = 0;
-    int underReviewRequests = 0;
-    int approvedRequests = 0;
-    int inDevelopmentRequests = 0;
-    int completedRequests = 0;
-    int rejectedRequests = 0;
+    final totalRequests = requests.length;
+    var submittedRequests = 0;
+    var underReviewRequests = 0;
+    var approvedRequests = 0;
+    var inDevelopmentRequests = 0;
+    var completedRequests = 0;
+    var rejectedRequests = 0;
 
     final categoryStats = <FeatureCategory, int>{};
     final priorityStats = <FeaturePriority, int>{};
     final userTypeStats = <UserType, int>{};
 
-    int totalVotes = 0;
+    var totalVotes = 0;
 
     for (final request in requests) {
       // Статистика по статусам
@@ -449,35 +458,33 @@ class FeatureRequestService {
   }
 
   /// Создать mock статистику
-  FeatureRequestStats _createMockStats() {
-    return FeatureRequestStats(
-      totalRequests: 25,
-      submittedRequests: 8,
-      underReviewRequests: 5,
-      approvedRequests: 4,
-      inDevelopmentRequests: 3,
-      completedRequests: 3,
-      rejectedRequests: 2,
-      categoryStats: {
-        FeatureCategory.ui: 8,
-        FeatureCategory.functionality: 10,
-        FeatureCategory.performance: 3,
-        FeatureCategory.integration: 2,
-        FeatureCategory.other: 2,
-      },
-      priorityStats: {
-        FeaturePriority.low: 5,
-        FeaturePriority.medium: 15,
-        FeaturePriority.high: 4,
-        FeaturePriority.critical: 1,
-      },
-      userTypeStats: {
-        UserType.customer: 18,
-        UserType.specialist: 6,
-        UserType.admin: 1,
-      },
-      totalVotes: 156,
-      averageVotesPerRequest: 6.24,
-    );
-  }
+  FeatureRequestStats _createMockStats() => const FeatureRequestStats(
+        totalRequests: 25,
+        submittedRequests: 8,
+        underReviewRequests: 5,
+        approvedRequests: 4,
+        inDevelopmentRequests: 3,
+        completedRequests: 3,
+        rejectedRequests: 2,
+        categoryStats: {
+          FeatureCategory.ui: 8,
+          FeatureCategory.functionality: 10,
+          FeatureCategory.performance: 3,
+          FeatureCategory.integration: 2,
+          FeatureCategory.other: 2,
+        },
+        priorityStats: {
+          FeaturePriority.low: 5,
+          FeaturePriority.medium: 15,
+          FeaturePriority.high: 4,
+          FeaturePriority.critical: 1,
+        },
+        userTypeStats: {
+          UserType.customer: 18,
+          UserType.specialist: 6,
+          UserType.admin: 1,
+        },
+        totalVotes: 156,
+        averageVotesPerRequest: 6.24,
+      );
 }

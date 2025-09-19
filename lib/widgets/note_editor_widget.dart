@@ -1,21 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/customer_profile_extended.dart';
-import '../services/customer_profile_extended_service.dart';
 import '../providers/customer_profile_extended_providers.dart';
 
 /// Виджет редактора заметок
 class NoteEditorWidget extends ConsumerStatefulWidget {
-  final String userId;
-  final CustomerNote? existingNote;
-  final VoidCallback onNoteSaved;
-
   const NoteEditorWidget({
     super.key,
     required this.userId,
     this.existingNote,
     required this.onNoteSaved,
   });
+  final String userId;
+  final CustomerNote? existingNote;
+  final VoidCallback onNoteSaved;
 
   @override
   ConsumerState<NoteEditorWidget> createState() => _NoteEditorWidgetState();
@@ -49,128 +48,128 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 600, maxHeight: 700),
-        child: Column(
-          children: [
-            AppBar(
-              title: Text(widget.existingNote == null
-                  ? 'Новая заметка'
-                  : 'Редактировать заметку'),
-              actions: [
-                TextButton(
-                  onPressed: _isSaving ? null : _saveNote,
-                  child: _isSaving
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Text('Сохранить'),
+  Widget build(BuildContext context) => Dialog(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 600, maxHeight: 700),
+          child: Column(
+            children: [
+              AppBar(
+                title: Text(
+                  widget.existingNote == null
+                      ? 'Новая заметка'
+                      : 'Редактировать заметку',
                 ),
-              ],
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Заголовок
-                    TextField(
-                      controller: _titleController,
-                      decoration: const InputDecoration(
-                        labelText: 'Заголовок *',
-                        border: OutlineInputBorder(),
-                        hintText: 'Введите заголовок заметки',
+                actions: [
+                  TextButton(
+                    onPressed: _isSaving ? null : _saveNote,
+                    child: _isSaving
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Text('Сохранить'),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Заголовок
+                      TextField(
+                        controller: _titleController,
+                        decoration: const InputDecoration(
+                          labelText: 'Заголовок *',
+                          border: OutlineInputBorder(),
+                          hintText: 'Введите заголовок заметки',
+                        ),
+                        textCapitalization: TextCapitalization.sentences,
                       ),
-                      textCapitalization: TextCapitalization.sentences,
-                    ),
-                    const SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
-                    // Содержимое
-                    TextField(
-                      controller: _contentController,
-                      decoration: const InputDecoration(
-                        labelText: 'Содержимое *',
-                        border: OutlineInputBorder(),
-                        hintText: 'Введите текст заметки',
-                        alignLabelWithHint: true,
+                      // Содержимое
+                      TextField(
+                        controller: _contentController,
+                        decoration: const InputDecoration(
+                          labelText: 'Содержимое *',
+                          border: OutlineInputBorder(),
+                          hintText: 'Введите текст заметки',
+                          alignLabelWithHint: true,
+                        ),
+                        maxLines: 8,
+                        textCapitalization: TextCapitalization.sentences,
                       ),
-                      maxLines: 8,
-                      textCapitalization: TextCapitalization.sentences,
-                    ),
-                    const SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
-                    // Теги
-                    _buildTagsSection(),
-                    const SizedBox(height: 16),
+                      // Теги
+                      _buildTagsSection(),
+                      const SizedBox(height: 16),
 
-                    // Настройки
-                    _buildSettingsSection(),
-                  ],
+                      // Настройки
+                      _buildSettingsSection(),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildTagsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Теги',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
+  Widget _buildTagsSection() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Теги',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
 
-        // Поле ввода тегов
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                controller: _tagsController,
-                decoration: const InputDecoration(
-                  hintText: 'Введите тег и нажмите Enter',
-                  border: OutlineInputBorder(),
+          // Поле ввода тегов
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _tagsController,
+                  decoration: const InputDecoration(
+                    hintText: 'Введите тег и нажмите Enter',
+                    border: OutlineInputBorder(),
+                  ),
+                  onSubmitted: _addTag,
                 ),
-                onSubmitted: _addTag,
               ),
-            ),
-            const SizedBox(width: 8),
-            IconButton(
-              onPressed: () => _addTag(_tagsController.text),
-              icon: const Icon(Icons.add),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
+              const SizedBox(width: 8),
+              IconButton(
+                onPressed: () => _addTag(_tagsController.text),
+                icon: const Icon(Icons.add),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
 
-        // Список тегов
-        if (_tags.isNotEmpty)
-          Wrap(
-            spacing: 4,
-            runSpacing: 4,
-            children: _tags
-                .map((tag) => Chip(
+          // Список тегов
+          if (_tags.isNotEmpty)
+            Wrap(
+              spacing: 4,
+              runSpacing: 4,
+              children: _tags
+                  .map(
+                    (tag) => Chip(
                       label: Text(tag),
                       deleteIcon: const Icon(Icons.close, size: 16),
                       onDeleted: () => _removeTag(tag),
-                    ))
-                .toList(),
-          ),
+                    ),
+                  )
+                  .toList(),
+            ),
 
-        // Предложенные теги
-        _buildSuggestedTags(),
-      ],
-    );
-  }
+          // Предложенные теги
+          _buildSuggestedTags(),
+        ],
+      );
 
   Widget _buildSuggestedTags() {
     final suggestedTags = [
@@ -185,7 +184,7 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
       'музыка',
       'фото',
       'видео',
-      'подарки'
+      'подарки',
     ];
 
     return Column(
@@ -201,41 +200,41 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
           spacing: 4,
           runSpacing: 4,
           children: suggestedTags
-              .map((tag) => ActionChip(
-                    label: Text(tag, style: const TextStyle(fontSize: 12)),
-                    onPressed: () => _addTag(tag),
-                    materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    visualDensity: VisualDensity.compact,
-                  ))
+              .map(
+                (tag) => ActionChip(
+                  label: Text(tag, style: const TextStyle(fontSize: 12)),
+                  onPressed: () => _addTag(tag),
+                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                  visualDensity: VisualDensity.compact,
+                ),
+              )
               .toList(),
         ),
       ],
     );
   }
 
-  Widget _buildSettingsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Настройки',
-          style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        SwitchListTile(
-          title: const Text('Закрепить заметку'),
-          subtitle:
-              const Text('Закреплённые заметки отображаются вверху списка'),
-          value: _isPinned,
-          onChanged: (value) {
-            setState(() {
-              _isPinned = value;
-            });
-          },
-        ),
-      ],
-    );
-  }
+  Widget _buildSettingsSection() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Настройки',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          SwitchListTile(
+            title: const Text('Закрепить заметку'),
+            subtitle:
+                const Text('Закреплённые заметки отображаются вверху списка'),
+            value: _isPinned,
+            onChanged: (value) {
+              setState(() {
+                _isPinned = value;
+              });
+            },
+          ),
+        ],
+      );
 
   void _addTag(String tag) {
     final trimmedTag = tag.trim().toLowerCase();
@@ -253,7 +252,7 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
     });
   }
 
-  void _saveNote() async {
+  Future<void> _saveNote() async {
     final title = _titleController.text.trim();
     final content = _contentController.text.trim();
 
@@ -297,9 +296,11 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text(widget.existingNote == null
-              ? 'Заметка создана'
-              : 'Заметка обновлена'),
+          content: Text(
+            widget.existingNote == null
+                ? 'Заметка создана'
+                : 'Заметка обновлена',
+          ),
         ),
       );
     } catch (e) {

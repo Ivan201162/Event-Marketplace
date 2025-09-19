@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import '../models/event.dart';
+
 import '../core/feature_flags.dart';
 import '../core/safe_log.dart';
+import '../models/event.dart';
 import 'map_service.dart';
 
 /// Mock-реализация сервиса карт
@@ -58,7 +59,7 @@ class MapServiceMock implements MapService {
       return _buildDisabledMap();
     }
 
-    final markers = events.map((event) => createEventMarker(event)).toList();
+    final markers = events.map(createEventMarker).toList();
     final mapCenter = center ?? _getEventsCenter(events);
 
     return _buildMockMap(
@@ -86,20 +87,18 @@ class MapServiceMock implements MapService {
     await Future.delayed(const Duration(milliseconds: 500));
 
     return [
-      PlaceSearchResult(
+      const PlaceSearchResult(
         id: '1',
         name: 'Москва, Красная площадь',
         address: 'Красная площадь, 1, Москва',
-        coordinates:
-            const MapCoordinates(latitude: 55.7539, longitude: 37.6208),
+        coordinates: MapCoordinates(latitude: 55.7539, longitude: 37.6208),
         placeId: 'mock_place_1',
       ),
-      PlaceSearchResult(
+      const PlaceSearchResult(
         id: '2',
         name: 'Санкт-Петербург, Дворцовая площадь',
         address: 'Дворцовая площадь, Санкт-Петербург',
-        coordinates:
-            const MapCoordinates(latitude: 59.9386, longitude: 30.3141),
+        coordinates: MapCoordinates(latitude: 59.9386, longitude: 30.3141),
         placeId: 'mock_place_2',
       ),
     ];
@@ -124,7 +123,9 @@ class MapServiceMock implements MapService {
     }
 
     return const MapCoordinates(
-        latitude: 55.7558, longitude: 37.6176); // Москва по умолчанию
+      latitude: 55.7558,
+      longitude: 37.6176,
+    ); // Москва по умолчанию
   }
 
   @override
@@ -204,7 +205,9 @@ class MapServiceMock implements MapService {
     await Future.delayed(const Duration(milliseconds: 1000));
 
     return const MapCoordinates(
-        latitude: 55.7558, longitude: 37.6176); // Москва
+      latitude: 55.7558,
+      longitude: 37.6176,
+    ); // Москва
   }
 
   @override
@@ -238,28 +241,25 @@ class MapServiceMock implements MapService {
   }
 
   @override
-  MapMarker createEventMarker(Event event) {
-    return MapMarker(
-      id: event.id,
-      coordinates: _parseEventLocation(event.location),
-      title: event.title,
-      description: event.description,
-      icon: Icons.event,
-      color: Colors.blue,
-      data: {'event': event},
-    );
-  }
+  MapMarker createEventMarker(Event event) => MapMarker(
+        id: event.id,
+        coordinates: _parseEventLocation(event.location),
+        title: event.title,
+        description: event.description,
+        icon: Icons.event,
+        color: Colors.blue,
+        data: {'event': event},
+      );
 
   @override
-  MapMarker createUserMarker(MapCoordinates coordinates, String title) {
-    return MapMarker(
-      id: 'user_${coordinates.latitude}_${coordinates.longitude}',
-      coordinates: coordinates,
-      title: title,
-      icon: Icons.person,
-      color: Colors.red,
-    );
-  }
+  MapMarker createUserMarker(MapCoordinates coordinates, String title) =>
+      MapMarker(
+        id: 'user_${coordinates.latitude}_${coordinates.longitude}',
+        coordinates: coordinates,
+        title: title,
+        icon: Icons.person,
+        color: Colors.red,
+      );
 
   @override
   void animateToLocation(MapCoordinates coordinates, {double? zoom}) {
@@ -297,43 +297,41 @@ class MapServiceMock implements MapService {
   }
 
   /// Построить отключенную карту
-  Widget _buildDisabledMap() {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.grey[200],
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.map_outlined,
-              size: 64,
-              color: Colors.grey,
-            ),
-            SizedBox(height: 16),
-            Text(
-              'Карты отключены',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.grey,
-              ),
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Функция карт временно недоступна',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey,
-              ),
-            ),
-          ],
+  Widget _buildDisabledMap() => Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(8),
         ),
-      ),
-    );
-  }
+        child: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.map_outlined,
+                size: 64,
+                color: Colors.grey,
+              ),
+              SizedBox(height: 16),
+              Text(
+                'Карты отключены',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey,
+                ),
+              ),
+              SizedBox(height: 8),
+              Text(
+                'Функция карт временно недоступна',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
 
   /// Построить mock карту
   Widget _buildMockMap({
@@ -342,63 +340,64 @@ class MapServiceMock implements MapService {
     required List<MapMarker> markers,
     Function(MapMarker)? onMarkerTap,
     Function(MapCoordinates)? onMapTap,
-  }) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.green[100],
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.green[300]!),
-      ),
-      child: Stack(
-        children: [
-          // Mock карта
-          Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Icons.map,
-                  size: 48,
-                  color: Colors.green[600],
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  'Mock Карта',
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green[700],
-                  ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  'Центр: ${center.latitude.toStringAsFixed(4)}, ${center.longitude.toStringAsFixed(4)}',
-                  style: TextStyle(
-                    fontSize: 12,
+  }) =>
+      Container(
+        decoration: BoxDecoration(
+          color: Colors.green[100],
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.green[300]!),
+        ),
+        child: Stack(
+          children: [
+            // Mock карта
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.map,
+                    size: 48,
                     color: Colors.green[600],
                   ),
-                ),
-                Text(
-                  'Масштаб: ${zoom.toStringAsFixed(1)}x',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.green[600],
-                  ),
-                ),
-                if (markers.isNotEmpty)
+                  const SizedBox(height: 8),
                   Text(
-                    'Маркеров: ${markers.length}',
+                    'Mock Карта',
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green[700],
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    'Центр: ${center.latitude.toStringAsFixed(4)}, ${center.longitude.toStringAsFixed(4)}',
                     style: TextStyle(
                       fontSize: 12,
                       color: Colors.green[600],
                     ),
                   ),
-              ],
+                  Text(
+                    'Масштаб: ${zoom.toStringAsFixed(1)}x',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.green[600],
+                    ),
+                  ),
+                  if (markers.isNotEmpty)
+                    Text(
+                      'Маркеров: ${markers.length}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.green[600],
+                      ),
+                    ),
+                ],
+              ),
             ),
-          ),
 
-          // Маркеры
-          ...markers.map((marker) => Positioned(
+            // Маркеры
+            ...markers.map(
+              (marker) => Positioned(
                 left: 50 +
                     (marker.coordinates.longitude - center.longitude) * 100,
                 top: 50 + (marker.coordinates.latitude - center.latitude) * 100,
@@ -419,22 +418,24 @@ class MapServiceMock implements MapService {
                     ),
                   ),
                 ),
-              )),
-        ],
-      ),
-    );
-  }
+              ),
+            ),
+          ],
+        ),
+      );
 
   /// Получить центр событий
   MapCoordinates _getEventsCenter(List<Event> events) {
     if (events.isEmpty) {
       return const MapCoordinates(
-          latitude: 55.7558, longitude: 37.6176); // Москва по умолчанию
+        latitude: 55.7558,
+        longitude: 37.6176,
+      ); // Москва по умолчанию
     }
 
     double totalLat = 0;
     double totalLng = 0;
-    int count = 0;
+    var count = 0;
 
     for (final event in events) {
       final coords = _parseEventLocation(event.location);

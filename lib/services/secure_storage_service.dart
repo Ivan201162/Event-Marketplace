@@ -36,12 +36,16 @@ class SecureStorageService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(_isEncryptionEnabledKey, true);
       await prefs.setInt(
-          _lastEncryptionUpdateKey, DateTime.now().millisecondsSinceEpoch);
+        _lastEncryptionUpdateKey,
+        DateTime.now().millisecondsSinceEpoch,
+      );
 
       // Генерируем новый ключ шифрования
       final key = EncryptionService.generateKey();
       await _secureStorage.write(
-          key: _encryptionKeyKey, value: base64Encode(key));
+        key: _encryptionKeyKey,
+        value: base64Encode(key),
+      );
 
       debugPrint('Шифрование включено');
     } catch (e) {
@@ -56,7 +60,9 @@ class SecureStorageService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setBool(_isEncryptionEnabledKey, false);
       await prefs.setInt(
-          _lastEncryptionUpdateKey, DateTime.now().millisecondsSinceEpoch);
+        _lastEncryptionUpdateKey,
+        DateTime.now().millisecondsSinceEpoch,
+      );
 
       // Удаляем ключ шифрования
       await _secureStorage.delete(key: _encryptionKeyKey);
@@ -174,7 +180,10 @@ class SecureStorageService {
 
   /// Сохранить данные с паролем
   static Future<void> storeWithPassword(
-      String key, String value, String password) async {
+    String key,
+    String value,
+    String password,
+  ) async {
     try {
       final encryptedData =
           EncryptionService.encryptWithPassword(value, password);
@@ -223,7 +232,8 @@ class SecureStorageService {
           : null;
     } catch (e) {
       debugPrint(
-          'Ошибка получения времени последнего обновления шифрования: $e');
+        'Ошибка получения времени последнего обновления шифрования: $e',
+      );
       return null;
     }
   }
@@ -271,12 +281,16 @@ class SecureStorageService {
 
       // Сохраняем новый ключ
       await _secureStorage.write(
-          key: _encryptionKeyKey, value: base64Encode(newKey));
+        key: _encryptionKeyKey,
+        value: base64Encode(newKey),
+      );
 
       // Обновляем время последнего обновления
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt(
-          _lastEncryptionUpdateKey, DateTime.now().millisecondsSinceEpoch);
+        _lastEncryptionUpdateKey,
+        DateTime.now().millisecondsSinceEpoch,
+      );
 
       debugPrint('Ключ шифрования обновлен');
     } catch (e) {
@@ -302,7 +316,7 @@ class SecureStorageService {
       );
     } catch (e) {
       debugPrint('Ошибка получения статистики безопасности: $e');
-      return SecurityStats(
+      return const SecurityStats(
         isEncryptionEnabled: false,
         lastEncryptionUpdate: null,
         encryptedItemsCount: 0,
@@ -314,17 +328,16 @@ class SecureStorageService {
 
 /// Статистика безопасности
 class SecurityStats {
-  final bool isEncryptionEnabled;
-  final DateTime? lastEncryptionUpdate;
-  final int encryptedItemsCount;
-  final bool hasEncryptionKey;
-
   const SecurityStats({
     required this.isEncryptionEnabled,
     required this.lastEncryptionUpdate,
     required this.encryptedItemsCount,
     required this.hasEncryptionKey,
   });
+  final bool isEncryptionEnabled;
+  final DateTime? lastEncryptionUpdate;
+  final int encryptedItemsCount;
+  final bool hasEncryptionKey;
 
   /// Получить время последнего обновления в читаемом виде
   String get formattedLastUpdate {

@@ -211,47 +211,20 @@ extension ExperienceLevelExtension on ExperienceLevel {
 
 /// Модель специалиста
 class Specialist {
-  final String id;
-  final String userId; // Связь с пользователем
-  final String name;
-  final String? description;
-  final SpecialistCategory category;
-  final List<String> subcategories; // Подкатегории
-  final ExperienceLevel experienceLevel;
-  final int yearsOfExperience;
-  final double hourlyRate;
-  final double? minBookingHours;
-  final double? maxBookingHours;
-  final List<String> serviceAreas; // Географические области
-  final List<String> languages; // Языки
-  final List<String> equipment; // Оборудование
-  final List<String> portfolio; // Ссылки на портфолио
-  final Map<String, dynamic>? contactInfo;
-  final Map<String, dynamic>? businessInfo;
-  final bool isAvailable;
-  final bool isVerified;
-  final double rating;
-  final int reviewCount;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final Map<String, dynamic>? metadata;
-  final String? avatarUrl;
-  final String? avatar;
-  final String? specialization;
-  final String? phone;
-
   const Specialist({
     required this.id,
     required this.userId,
     required this.name,
     this.description,
     required this.category,
+    this.categories = const [],
     this.subcategories = const [],
     required this.experienceLevel,
     required this.yearsOfExperience,
     required this.hourlyRate,
     this.minBookingHours,
     this.maxBookingHours,
+    this.min,
     this.serviceAreas = const [],
     this.languages = const [],
     this.equipment = const [],
@@ -272,70 +245,70 @@ class Specialist {
   });
 
   /// Создать из Map
-  factory Specialist.fromMap(Map<String, dynamic> data) {
-    return Specialist(
-      id: data['id'] ?? '',
-      name: data['name'] ?? '',
-      // email: data['email'] ?? '', // Удалено, так как нет в конструкторе
-      phone: data['phone'] ?? '',
-      description: data['description'] ?? '',
-      categories: (data['categories'] as List<dynamic>?)
-              ?.map((e) => SpecialistCategory.values.firstWhere(
+  factory Specialist.fromMap(Map<String, dynamic> data) => Specialist(
+        id: data['id'] ?? '',
+        name: data['name'] ?? '',
+        // email: data['email'] ?? '', // Удалено, так как нет в конструкторе
+        phone: data['phone'] ?? '',
+        description: data['description'] ?? '',
+        categories: (data['categories'] as List<dynamic>?)
+                ?.map(
+                  (e) => SpecialistCategory.values.firstWhere(
                     (cat) => cat.name == e,
                     orElse: () => SpecialistCategory.other,
-                  ))
-              .toList() ??
-          [],
-      experienceLevel: ExperienceLevel.values.firstWhere(
-        (e) => e.name == data['experienceLevel'],
-        orElse: () => ExperienceLevel.beginner,
-      ),
-      rating: (data['rating'] as num?)?.toDouble() ?? 0.0,
-      reviewCount: data['reviewCount'] ?? 0,
-      pricePerHour: (data['pricePerHour'] as num?)?.toDouble(),
-      minPrice: (data['minPrice'] as num?)?.toDouble(),
-      maxPrice: (data['maxPrice'] as num?)?.toDouble(),
-      location: data['location'] ?? '',
-      isAvailable: data['isAvailable'] ?? true,
-      isVerified: data['isVerified'] ?? false,
-      portfolioImages: List<String>.from(data['portfolioImages'] ?? []),
-      portfolioVideos: List<String>.from(data['portfolioVideos'] ?? []),
-      services: List<String>.from(data['services'] ?? []),
-      equipment: List<String>.from(data['equipment'] ?? []),
-      languages: List<String>.from(data['languages'] ?? []),
-      workingHours: Map<String, String>.from(data['workingHours'] ?? {}),
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      lastActiveAt: data['lastActiveAt'] != null
-          ? (data['lastActiveAt'] as Timestamp).toDate()
-          : null,
-      profileImageUrl: data['profileImageUrl'],
-      coverImageUrl: data['coverImageUrl'],
-      socialLinks: Map<String, String>.from(data['socialLinks'] ?? {}),
-      certifications: List<String>.from(data['certifications'] ?? []),
-      awards: List<String>.from(data['awards'] ?? []),
-      insurance: data['insurance'] ?? false,
-      travelRadius: data['travelRadius'] ?? 0,
-      responseTime: data['responseTime'] ?? 0,
-      completionRate: (data['completionRate'] as num?)?.toDouble() ?? 0.0,
-      cancellationRate: (data['cancellationRate'] as num?)?.toDouble() ?? 0.0,
-      averageResponseTime: data['averageResponseTime'] ?? 0,
-      totalBookings: data['totalBookings'] ?? 0,
-      totalEarnings: (data['totalEarnings'] as num?)?.toDouble() ?? 0.0,
-      isOnline: data['isOnline'] ?? false,
-      isPremium: data['isPremium'] ?? false,
-      premiumExpiresAt: data['premiumExpiresAt'] != null
-          ? (data['premiumExpiresAt'] as Timestamp).toDate()
-          : null,
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-      avatar: data['avatar'],
-      specialization: data['specialization'],
-    );
-  }
+                  ),
+                )
+                .toList() ??
+            [],
+        experienceLevel: ExperienceLevel.values.firstWhere(
+          (e) => e.name == data['experienceLevel'],
+          orElse: () => ExperienceLevel.beginner,
+        ),
+        rating: (data['rating'] as num?)?.toDouble() ?? 0.0,
+        reviewCount: data['reviewCount'] ?? 0,
+        pricePerHour: (data['pricePerHour'] as num?)?.toDouble(),
+        minPrice: (data['minPrice'] as num?)?.toDouble(),
+        maxPrice: (data['maxPrice'] as num?)?.toDouble(),
+        location: data['location'] ?? '',
+        isAvailable: data['isAvailable'] ?? true,
+        isVerified: data['isVerified'] ?? false,
+        portfolioImages: List<String>.from(data['portfolioImages'] ?? []),
+        portfolioVideos: List<String>.from(data['portfolioVideos'] ?? []),
+        services: List<String>.from(data['services'] ?? []),
+        equipment: List<String>.from(data['equipment'] ?? []),
+        languages: List<String>.from(data['languages'] ?? []),
+        workingHours: Map<String, String>.from(data['workingHours'] ?? {}),
+        createdAt: data['createdAt'] != null
+            ? (data['createdAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        updatedAt: data['updatedAt'] != null
+            ? (data['updatedAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        lastActiveAt: data['lastActiveAt'] != null
+            ? (data['lastActiveAt'] as Timestamp).toDate()
+            : null,
+        profileImageUrl: data['profileImageUrl'],
+        coverImageUrl: data['coverImageUrl'],
+        socialLinks: Map<String, String>.from(data['socialLinks'] ?? {}),
+        certifications: List<String>.from(data['certifications'] ?? []),
+        awards: List<String>.from(data['awards'] ?? []),
+        insurance: data['insurance'] ?? false,
+        travelRadius: data['travelRadius'] ?? 0,
+        responseTime: data['responseTime'] ?? 0,
+        completionRate: (data['completionRate'] as num?)?.toDouble() ?? 0.0,
+        cancellationRate: (data['cancellationRate'] as num?)?.toDouble() ?? 0.0,
+        averageResponseTime: data['averageResponseTime'] ?? 0,
+        totalBookings: data['totalBookings'] ?? 0,
+        totalEarnings: (data['totalEarnings'] as num?)?.toDouble() ?? 0.0,
+        isOnline: data['isOnline'] ?? false,
+        isPremium: data['isPremium'] ?? false,
+        premiumExpiresAt: data['premiumExpiresAt'] != null
+            ? (data['premiumExpiresAt'] as Timestamp).toDate()
+            : null,
+        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+        avatar: data['avatar'],
+        specialization: data['specialization'],
+      );
 
   /// Создать из документа Firestore
   factory Specialist.fromDocument(DocumentSnapshot doc) {
@@ -374,38 +347,66 @@ class Specialist {
       specialization: data['specialization'],
     );
   }
+  final String id;
+  final String userId; // Связь с пользователем
+  final String name;
+  final String? description;
+  final SpecialistCategory category;
+  final List<SpecialistCategory> categories; // Категории
+  final List<String> subcategories; // Подкатегории
+  final ExperienceLevel experienceLevel;
+  final int yearsOfExperience;
+  final double hourlyRate;
+  final double? minBookingHours;
+  final double? maxBookingHours;
+  final double? min; // Минимальная цена
+  final List<String> serviceAreas; // Географические области
+  final List<String> languages; // Языки
+  final List<String> equipment; // Оборудование
+  final List<String> portfolio; // Ссылки на портфолио
+  final Map<String, dynamic>? contactInfo;
+  final Map<String, dynamic>? businessInfo;
+  final bool isAvailable;
+  final bool isVerified;
+  final double rating;
+  final int reviewCount;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final Map<String, dynamic>? metadata;
+  final String? avatarUrl;
+  final String? avatar;
+  final String? specialization;
+  final String? phone;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'name': name,
-      'description': description,
-      'category': category.name,
-      'subcategories': subcategories,
-      'experienceLevel': experienceLevel.name,
-      'yearsOfExperience': yearsOfExperience,
-      'hourlyRate': hourlyRate,
-      'minBookingHours': minBookingHours,
-      'maxBookingHours': maxBookingHours,
-      'serviceAreas': serviceAreas,
-      'languages': languages,
-      'equipment': equipment,
-      'portfolio': portfolio,
-      'contactInfo': contactInfo,
-      'businessInfo': businessInfo,
-      'isAvailable': isAvailable,
-      'isVerified': isVerified,
-      'rating': rating,
-      'reviewCount': reviewCount,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'metadata': metadata,
-      'avatarUrl': avatarUrl,
-      'avatar': avatar,
-      'specialization': specialization,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'userId': userId,
+        'name': name,
+        'description': description,
+        'category': category.name,
+        'subcategories': subcategories,
+        'experienceLevel': experienceLevel.name,
+        'yearsOfExperience': yearsOfExperience,
+        'hourlyRate': hourlyRate,
+        'minBookingHours': minBookingHours,
+        'maxBookingHours': maxBookingHours,
+        'serviceAreas': serviceAreas,
+        'languages': languages,
+        'equipment': equipment,
+        'portfolio': portfolio,
+        'contactInfo': contactInfo,
+        'businessInfo': businessInfo,
+        'isAvailable': isAvailable,
+        'isVerified': isVerified,
+        'rating': rating,
+        'reviewCount': reviewCount,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'metadata': metadata,
+        'avatarUrl': avatarUrl,
+        'avatar': avatar,
+        'specialization': specialization,
+      };
 
   /// Копировать с изменениями
   Specialist copyWith({
@@ -436,37 +437,36 @@ class Specialist {
     String? avatarUrl,
     String? avatar,
     String? specialization,
-  }) {
-    return Specialist(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      category: category ?? this.category,
-      subcategories: subcategories ?? this.subcategories,
-      experienceLevel: experienceLevel ?? this.experienceLevel,
-      yearsOfExperience: yearsOfExperience ?? this.yearsOfExperience,
-      hourlyRate: hourlyRate ?? this.hourlyRate,
-      minBookingHours: minBookingHours ?? this.minBookingHours,
-      maxBookingHours: maxBookingHours ?? this.maxBookingHours,
-      serviceAreas: serviceAreas ?? this.serviceAreas,
-      languages: languages ?? this.languages,
-      equipment: equipment ?? this.equipment,
-      portfolio: portfolio ?? this.portfolio,
-      contactInfo: contactInfo ?? this.contactInfo,
-      businessInfo: businessInfo ?? this.businessInfo,
-      isAvailable: isAvailable ?? this.isAvailable,
-      isVerified: isVerified ?? this.isVerified,
-      rating: rating ?? this.rating,
-      reviewCount: reviewCount ?? this.reviewCount,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      metadata: metadata ?? this.metadata,
-      avatarUrl: avatarUrl ?? this.avatarUrl,
-      avatar: avatar ?? this.avatar,
-      specialization: specialization ?? this.specialization,
-    );
-  }
+  }) =>
+      Specialist(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        category: category ?? this.category,
+        subcategories: subcategories ?? this.subcategories,
+        experienceLevel: experienceLevel ?? this.experienceLevel,
+        yearsOfExperience: yearsOfExperience ?? this.yearsOfExperience,
+        hourlyRate: hourlyRate ?? this.hourlyRate,
+        minBookingHours: minBookingHours ?? this.minBookingHours,
+        maxBookingHours: maxBookingHours ?? this.maxBookingHours,
+        serviceAreas: serviceAreas ?? this.serviceAreas,
+        languages: languages ?? this.languages,
+        equipment: equipment ?? this.equipment,
+        portfolio: portfolio ?? this.portfolio,
+        contactInfo: contactInfo ?? this.contactInfo,
+        businessInfo: businessInfo ?? this.businessInfo,
+        isAvailable: isAvailable ?? this.isAvailable,
+        isVerified: isVerified ?? this.isVerified,
+        rating: rating ?? this.rating,
+        reviewCount: reviewCount ?? this.reviewCount,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        metadata: metadata ?? this.metadata,
+        avatarUrl: avatarUrl ?? this.avatarUrl,
+        avatar: avatar ?? this.avatar,
+        specialization: specialization ?? this.specialization,
+      );
 
   /// Получить отображаемое название категории
   String get categoryDisplayName {
@@ -697,20 +697,6 @@ class Specialist {
 
 /// Фильтры для поиска специалистов
 class SpecialistFilters {
-  final String? searchQuery;
-  final SpecialistCategory? category;
-  final List<String>? subcategories;
-  final ExperienceLevel? minExperienceLevel;
-  final double? maxHourlyRate;
-  final double? minRating;
-  final List<String>? serviceAreas;
-  final List<String>? languages;
-  final bool? isVerified;
-  final bool? isAvailable;
-  final DateTime? availableDate;
-  final String? sortBy; // 'rating', 'price', 'experience', 'reviews'
-  final bool sortAscending;
-
   const SpecialistFilters({
     this.searchQuery,
     this.category,
@@ -726,6 +712,19 @@ class SpecialistFilters {
     this.sortBy = 'rating',
     this.sortAscending = false,
   });
+  final String? searchQuery;
+  final SpecialistCategory? category;
+  final List<String>? subcategories;
+  final ExperienceLevel? minExperienceLevel;
+  final double? maxHourlyRate;
+  final double? minRating;
+  final List<String>? serviceAreas;
+  final List<String>? languages;
+  final bool? isVerified;
+  final bool? isAvailable;
+  final DateTime? availableDate;
+  final String? sortBy; // 'rating', 'price', 'experience', 'reviews'
+  final bool sortAscending;
 
   /// Копировать с изменениями
   SpecialistFilters copyWith({
@@ -742,41 +741,37 @@ class SpecialistFilters {
     DateTime? availableDate,
     String? sortBy,
     bool? sortAscending,
-  }) {
-    return SpecialistFilters(
-      searchQuery: searchQuery ?? this.searchQuery,
-      category: category ?? this.category,
-      subcategories: subcategories ?? this.subcategories,
-      minExperienceLevel: minExperienceLevel ?? this.minExperienceLevel,
-      maxHourlyRate: maxHourlyRate ?? this.maxHourlyRate,
-      minRating: minRating ?? this.minRating,
-      serviceAreas: serviceAreas ?? this.serviceAreas,
-      languages: languages ?? this.languages,
-      isVerified: isVerified ?? this.isVerified,
-      isAvailable: isAvailable ?? this.isAvailable,
-      availableDate: availableDate ?? this.availableDate,
-      sortBy: sortBy ?? this.sortBy,
-      sortAscending: sortAscending ?? this.sortAscending,
-    );
-  }
+  }) =>
+      SpecialistFilters(
+        searchQuery: searchQuery ?? this.searchQuery,
+        category: category ?? this.category,
+        subcategories: subcategories ?? this.subcategories,
+        minExperienceLevel: minExperienceLevel ?? this.minExperienceLevel,
+        maxHourlyRate: maxHourlyRate ?? this.maxHourlyRate,
+        minRating: minRating ?? this.minRating,
+        serviceAreas: serviceAreas ?? this.serviceAreas,
+        languages: languages ?? this.languages,
+        isVerified: isVerified ?? this.isVerified,
+        isAvailable: isAvailable ?? this.isAvailable,
+        availableDate: availableDate ?? this.availableDate,
+        sortBy: sortBy ?? this.sortBy,
+        sortAscending: sortAscending ?? this.sortAscending,
+      );
 
   /// Проверить, применены ли фильтры
-  bool get hasFilters {
-    return searchQuery != null ||
-        category != null ||
-        subcategories != null ||
-        minExperienceLevel != null ||
-        maxHourlyRate != null ||
-        minRating != null ||
-        serviceAreas != null ||
-        languages != null ||
-        isVerified != null ||
-        isAvailable != null ||
-        availableDate != null;
-  }
+  bool get hasFilters =>
+      searchQuery != null ||
+      category != null ||
+      subcategories != null ||
+      minExperienceLevel != null ||
+      maxHourlyRate != null ||
+      minRating != null ||
+      serviceAreas != null ||
+      languages != null ||
+      isVerified != null ||
+      isAvailable != null ||
+      availableDate != null;
 
   /// Сбросить все фильтры
-  SpecialistFilters clear() {
-    return const SpecialistFilters();
-  }
+  SpecialistFilters clear() => const SpecialistFilters();
 }

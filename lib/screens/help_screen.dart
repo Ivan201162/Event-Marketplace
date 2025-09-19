@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/support_providers.dart';
+
 import '../models/faq.dart';
+import '../providers/support_providers.dart';
 
 /// Экран помощи и FAQ
 class HelpScreen extends ConsumerStatefulWidget {
@@ -70,13 +71,15 @@ class _HelpScreenState extends ConsumerState<HelpScreen> {
                 final filteredFaqs = _searchQuery.isEmpty
                     ? faqs
                     : faqs
-                        .where((faq) =>
-                            faq.question
-                                .toLowerCase()
-                                .contains(_searchQuery.toLowerCase()) ||
-                            faq.answer
-                                .toLowerCase()
-                                .contains(_searchQuery.toLowerCase()))
+                        .where(
+                          (faq) =>
+                              faq.question
+                                  .toLowerCase()
+                                  .contains(_searchQuery.toLowerCase()) ||
+                              faq.answer
+                                  .toLowerCase()
+                                  .contains(_searchQuery.toLowerCase()),
+                        )
                         .toList();
 
                 if (filteredFaqs.isEmpty) {
@@ -97,8 +100,11 @@ class _HelpScreenState extends ConsumerState<HelpScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline,
-                        size: 64, color: Colors.red),
+                    const Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Colors.red,
+                    ),
                     const SizedBox(height: 16),
                     Text('Ошибка загрузки: $error'),
                     const SizedBox(height: 16),
@@ -118,7 +124,7 @@ class _HelpScreenState extends ConsumerState<HelpScreen> {
             child: SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () => _showContactSupportDialog(),
+                onPressed: _showContactSupportDialog,
                 icon: const Icon(Icons.support_agent),
                 label: const Text('Связаться с поддержкой'),
                 style: ElevatedButton.styleFrom(
@@ -132,49 +138,45 @@ class _HelpScreenState extends ConsumerState<HelpScreen> {
     );
   }
 
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.help_outline, size: 64, color: Colors.grey),
-          const SizedBox(height: 16),
-          Text(
-            _searchQuery.isEmpty ? 'Нет вопросов' : 'Ничего не найдено',
-            style: const TextStyle(fontSize: 18, color: Colors.grey),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            _searchQuery.isEmpty
-                ? 'Вопросы и ответы появятся здесь'
-                : 'Попробуйте изменить поисковый запрос',
-            style: const TextStyle(color: Colors.grey),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFaqCard(FAQ faq) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ExpansionTile(
-        title: Text(
-          faq.question,
-          style: const TextStyle(fontWeight: FontWeight.w500),
-        ),
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Text(
-              faq.answer,
-              style: const TextStyle(height: 1.5),
+  Widget _buildEmptyState() => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.help_outline, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            Text(
+              _searchQuery.isEmpty ? 'Нет вопросов' : 'Ничего не найдено',
+              style: const TextStyle(fontSize: 18, color: Colors.grey),
             ),
+            const SizedBox(height: 8),
+            Text(
+              _searchQuery.isEmpty
+                  ? 'Вопросы и ответы появятся здесь'
+                  : 'Попробуйте изменить поисковый запрос',
+              style: const TextStyle(color: Colors.grey),
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildFaqCard(FAQ faq) => Card(
+        margin: const EdgeInsets.only(bottom: 8),
+        child: ExpansionTile(
+          title: Text(
+            faq.question,
+            style: const TextStyle(fontWeight: FontWeight.w500),
           ),
-        ],
-      ),
-    );
-  }
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Text(
+                faq.answer,
+                style: const TextStyle(height: 1.5),
+              ),
+            ),
+          ],
+        ),
+      );
 
   void _showContactSupportDialog() {
     showDialog(

@@ -1,6 +1,7 @@
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:path/path.dart' as path;
 
 /// Сервис для работы с Firebase Storage
@@ -95,10 +96,12 @@ class StorageService {
 
   /// Загрузить несколько изображений события
   Future<List<String>> uploadEventImages(
-      List<File> imageFiles, String eventId) async {
-    final List<String> urls = [];
+    List<File> imageFiles,
+    String eventId,
+  ) async {
+    final urls = <String>[];
 
-    for (int i = 0; i < imageFiles.length; i++) {
+    for (var i = 0; i < imageFiles.length; i++) {
       final url = await uploadEventImage(imageFiles[i], '${eventId}_$i');
       urls.add(url);
     }
@@ -109,7 +112,7 @@ class StorageService {
   /// Получить размер файла
   Future<int> getFileSize(String filePath) async {
     final file = File(filePath);
-    return await file.length();
+    return file.length();
   }
 
   /// Проверить, является ли файл изображением

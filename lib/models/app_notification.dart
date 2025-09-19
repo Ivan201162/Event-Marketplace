@@ -23,20 +23,6 @@ enum NotificationPriority {
 
 /// Модель уведомления
 class AppNotification {
-  final String id;
-  final String userId;
-  final String title;
-  final String content;
-  final NotificationType type;
-  final NotificationPriority priority;
-  final DateTime timestamp;
-  final bool isRead;
-  final String? bookingId;
-  final String? paymentId;
-  final Map<String, dynamic>? data;
-  final DateTime createdAt;
-  final DateTime? readAt;
-
   const AppNotification({
     required this.id,
     required this.userId,
@@ -81,24 +67,35 @@ class AppNotification {
           : null,
     );
   }
+  final String id;
+  final String userId;
+  final String title;
+  final String content;
+  final NotificationType type;
+  final NotificationPriority priority;
+  final DateTime timestamp;
+  final bool isRead;
+  final String? bookingId;
+  final String? paymentId;
+  final Map<String, dynamic>? data;
+  final DateTime createdAt;
+  final DateTime? readAt;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'title': title,
-      'content': content,
-      'type': type.name,
-      'priority': priority.name,
-      'timestamp': Timestamp.fromDate(timestamp),
-      'isRead': isRead,
-      'bookingId': bookingId,
-      'paymentId': paymentId,
-      'data': data,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'userId': userId,
+        'title': title,
+        'content': content,
+        'type': type.name,
+        'priority': priority.name,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'isRead': isRead,
+        'bookingId': bookingId,
+        'paymentId': paymentId,
+        'data': data,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
+      };
 
   /// Копировать с изменениями
   AppNotification copyWith({
@@ -115,36 +112,32 @@ class AppNotification {
     Map<String, dynamic>? data,
     DateTime? createdAt,
     DateTime? readAt,
-  }) {
-    return AppNotification(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      title: title ?? this.title,
-      content: content ?? this.content,
-      type: type ?? this.type,
-      priority: priority ?? this.priority,
-      timestamp: timestamp ?? this.timestamp,
-      isRead: isRead ?? this.isRead,
-      bookingId: bookingId ?? this.bookingId,
-      paymentId: paymentId ?? this.paymentId,
-      data: data ?? this.data,
-      createdAt: createdAt ?? this.createdAt,
-      readAt: readAt ?? this.readAt,
-    );
-  }
+  }) =>
+      AppNotification(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        title: title ?? this.title,
+        content: content ?? this.content,
+        type: type ?? this.type,
+        priority: priority ?? this.priority,
+        timestamp: timestamp ?? this.timestamp,
+        isRead: isRead ?? this.isRead,
+        bookingId: bookingId ?? this.bookingId,
+        paymentId: paymentId ?? this.paymentId,
+        data: data ?? this.data,
+        createdAt: createdAt ?? this.createdAt,
+        readAt: readAt ?? this.readAt,
+      );
 
   /// Отметить как прочитанное
-  AppNotification markAsRead() {
-    return copyWith(
-      isRead: true,
-      readAt: DateTime.now(),
-    );
-  }
+  AppNotification markAsRead() => copyWith(
+        isRead: true,
+        readAt: DateTime.now(),
+      );
 
   @override
-  String toString() {
-    return 'AppNotification(id: $id, title: $title, type: $type, isRead: $isRead)';
-  }
+  String toString() =>
+      'AppNotification(id: $id, title: $title, type: $type, isRead: $isRead)';
 
   @override
   bool operator ==(Object other) {

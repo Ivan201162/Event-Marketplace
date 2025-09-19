@@ -2,17 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Шаблон услуги по категории
 class ServiceTemplate {
-  final String id;
-  final String categoryId;
-  final String categoryName;
-  final String serviceName;
-  final String description;
-  final List<String> requiredFields;
-  final Map<String, dynamic> defaultPricing;
-  final bool isActive;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
   const ServiceTemplate({
     required this.id,
     required this.categoryId,
@@ -42,21 +31,29 @@ class ServiceTemplate {
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
     );
   }
+  final String id;
+  final String categoryId;
+  final String categoryName;
+  final String serviceName;
+  final String description;
+  final List<String> requiredFields;
+  final Map<String, dynamic> defaultPricing;
+  final bool isActive;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'categoryId': categoryId,
-      'categoryName': categoryName,
-      'serviceName': serviceName,
-      'description': description,
-      'requiredFields': requiredFields,
-      'defaultPricing': defaultPricing,
-      'isActive': isActive,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'categoryId': categoryId,
+        'categoryName': categoryName,
+        'serviceName': serviceName,
+        'description': description,
+        'requiredFields': requiredFields,
+        'defaultPricing': defaultPricing,
+        'isActive': isActive,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   @override
   bool operator ==(Object other) {
@@ -68,25 +65,12 @@ class ServiceTemplate {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'ServiceTemplate(id: $id, serviceName: $serviceName, categoryName: $categoryName)';
-  }
+  String toString() =>
+      'ServiceTemplate(id: $id, serviceName: $serviceName, categoryName: $categoryName)';
 }
 
 /// Услуга специалиста
 class SpecialistService {
-  final String id;
-  final String specialistId;
-  final String serviceName;
-  final String description;
-  final double priceMin;
-  final double priceMax;
-  final String currency;
-  final Map<String, dynamic> pricingDetails;
-  final bool isActive;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
   const SpecialistService({
     required this.id,
     required this.specialistId,
@@ -118,22 +102,31 @@ class SpecialistService {
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
     );
   }
+  final String id;
+  final String specialistId;
+  final String serviceName;
+  final String description;
+  final double priceMin;
+  final double priceMax;
+  final String currency;
+  final Map<String, dynamic> pricingDetails;
+  final bool isActive;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'specialistId': specialistId,
-      'serviceName': serviceName,
-      'description': description,
-      'priceMin': priceMin,
-      'priceMax': priceMax,
-      'currency': currency,
-      'pricingDetails': pricingDetails,
-      'isActive': isActive,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'specialistId': specialistId,
+        'serviceName': serviceName,
+        'description': description,
+        'priceMin': priceMin,
+        'priceMax': priceMax,
+        'currency': currency,
+        'pricingDetails': pricingDetails,
+        'isActive': isActive,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   /// Получить среднюю цену
   double get averagePrice => (priceMin + priceMax) / 2;
@@ -156,7 +149,6 @@ class SpecialistService {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'SpecialistService(id: $id, serviceName: $serviceName, priceRange: $priceRange)';
-  }
+  String toString() =>
+      'SpecialistService(id: $id, serviceName: $serviceName, priceRange: $priceRange)';
 }

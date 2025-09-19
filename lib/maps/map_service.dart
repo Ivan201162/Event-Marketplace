@@ -3,13 +3,12 @@ import '../models/event.dart';
 
 /// Координаты на карте
 class MapCoordinates {
-  final double latitude;
-  final double longitude;
-
   const MapCoordinates({
     required this.latitude,
     required this.longitude,
   });
+  final double latitude;
+  final double longitude;
 
   @override
   bool operator ==(Object other) {
@@ -28,14 +27,6 @@ class MapCoordinates {
 
 /// Маркер на карте
 class MapMarker {
-  final String id;
-  final MapCoordinates coordinates;
-  final String title;
-  final String? description;
-  final IconData? icon;
-  final Color? color;
-  final Map<String, dynamic>? data;
-
   const MapMarker({
     required this.id,
     required this.coordinates,
@@ -45,6 +36,13 @@ class MapMarker {
     this.color,
     this.data,
   });
+  final String id;
+  final MapCoordinates coordinates;
+  final String title;
+  final String? description;
+  final IconData? icon;
+  final Color? color;
+  final Map<String, dynamic>? data;
 
   @override
   bool operator ==(Object other) {
@@ -61,12 +59,6 @@ class MapMarker {
 
 /// Результат поиска мест
 class PlaceSearchResult {
-  final String id;
-  final String name;
-  final String? address;
-  final MapCoordinates coordinates;
-  final String? placeId;
-
   const PlaceSearchResult({
     required this.id,
     required this.name,
@@ -74,6 +66,11 @@ class PlaceSearchResult {
     required this.coordinates,
     this.placeId,
   });
+  final String id;
+  final String name;
+  final String? address;
+  final MapCoordinates coordinates;
+  final String? placeId;
 }
 
 /// Абстрактный сервис для работы с картами

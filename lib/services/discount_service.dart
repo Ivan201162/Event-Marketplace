@@ -27,7 +27,6 @@ class DiscountService {
         percent: ((oldPrice - newPrice) / oldPrice) * 100,
         offeredAt: now,
         expiresAt: expiresAt,
-        offeredBy: 'specialist',
         reason: reason,
       );
 
@@ -60,7 +59,7 @@ class DiscountService {
           await _firestore.collection('bookings').doc(bookingId).get();
       if (!bookingDoc.exists) throw Exception('Бронирование не найдено');
 
-      final bookingData = bookingDoc.data()!;
+      final bookingData = bookingDoc.data();
       final discountData = bookingData['discount'] as Map<String, dynamic>?;
 
       if (discountData == null) throw Exception('Скидка не найдена');
@@ -84,7 +83,9 @@ class DiscountService {
 
       // Отправляем уведомление специалисту
       await _sendDiscountAcceptedNotification(
-          bookingData['specialistId'], updatedDiscount);
+        bookingData['specialistId'],
+        updatedDiscount,
+      );
 
       // Логируем принятие скидки
       await _logDiscountAcceptance(bookingId, customerId, updatedDiscount);
@@ -107,7 +108,7 @@ class DiscountService {
           await _firestore.collection('bookings').doc(bookingId).get();
       if (!bookingDoc.exists) throw Exception('Бронирование не найдено');
 
-      final bookingData = bookingDoc.data()!;
+      final bookingData = bookingDoc.data();
       final discountData = bookingData['discount'] as Map<String, dynamic>?;
 
       if (discountData == null) throw Exception('Скидка не найдена');
@@ -128,7 +129,9 @@ class DiscountService {
 
       // Отправляем уведомление специалисту
       await _sendDiscountRejectedNotification(
-          bookingData['specialistId'], reason);
+        bookingData['specialistId'],
+        reason,
+      );
 
       // Логируем отклонение скидки
       await _logDiscountRejection(bookingId, customerId, reason);
@@ -144,7 +147,7 @@ class DiscountService {
           await _firestore.collection('bookings').doc(bookingId).get();
       if (!bookingDoc.exists) return null;
 
-      final bookingData = bookingDoc.data()!;
+      final bookingData = bookingDoc.data();
       final discountData = bookingData['discount'] as Map<String, dynamic>?;
 
       if (discountData == null) return null;
@@ -170,7 +173,8 @@ class DiscountService {
 
   /// Получить статистику скидок для специалиста
   Future<Map<String, dynamic>> getSpecialistDiscountStats(
-      String specialistId) async {
+    String specialistId,
+  ) async {
     try {
       final snapshot = await _firestore
           .collection('bookings')
@@ -178,10 +182,10 @@ class DiscountService {
           .where('discount.isOffered', isEqualTo: true)
           .get();
 
-      int totalOffered = 0;
-      int accepted = 0;
-      int rejected = 0;
-      int expired = 0;
+      var totalOffered = 0;
+      var accepted = 0;
+      var rejected = 0;
+      var expired = 0;
       double totalSavings = 0;
 
       for (final doc in snapshot.docs) {
@@ -232,14 +236,16 @@ class DiscountService {
 
   /// Отправить уведомление о предложении скидки
   Future<void> _sendDiscountNotification(
-      String customerId, BookingDiscount discount) async {
+    String customerId,
+    BookingDiscount discount,
+  ) async {
     try {
       // Получаем FCM токены клиента
       final customerDoc =
           await _firestore.collection('users').doc(customerId).get();
       if (!customerDoc.exists) return;
 
-      final customerData = customerDoc.data()!;
+      final customerData = customerDoc.data();
       final fcmTokens = List<String>.from(customerData['fcmTokens'] ?? []);
 
       if (fcmTokens.isEmpty) return;
@@ -272,14 +278,16 @@ class DiscountService {
 
   /// Отправить уведомление о принятии скидки
   Future<void> _sendDiscountAcceptedNotification(
-      String specialistId, BookingDiscount discount) async {
+    String specialistId,
+    BookingDiscount discount,
+  ) async {
     try {
       // Получаем FCM токены специалиста
       final specialistDoc =
           await _firestore.collection('specialists').doc(specialistId).get();
       if (!specialistDoc.exists) return;
 
-      final specialistData = specialistDoc.data()!;
+      final specialistData = specialistDoc.data();
       final fcmTokens = List<String>.from(specialistData['fcmTokens'] ?? []);
 
       if (fcmTokens.isEmpty) return;
@@ -311,14 +319,16 @@ class DiscountService {
 
   /// Отправить уведомление об отклонении скидки
   Future<void> _sendDiscountRejectedNotification(
-      String specialistId, String? reason) async {
+    String specialistId,
+    String? reason,
+  ) async {
     try {
       // Получаем FCM токены специалиста
       final specialistDoc =
           await _firestore.collection('specialists').doc(specialistId).get();
       if (!specialistDoc.exists) return;
 
-      final specialistData = specialistDoc.data()!;
+      final specialistData = specialistDoc.data();
       final fcmTokens = List<String>.from(specialistData['fcmTokens'] ?? []);
 
       if (fcmTokens.isEmpty) return;
@@ -348,8 +358,12 @@ class DiscountService {
   }
 
   /// Логировать предложение скидки
-  Future<void> _logDiscountOffer(String bookingId, String specialistId,
-      String customerId, BookingDiscount discount) async {
+  Future<void> _logDiscountOffer(
+    String bookingId,
+    String specialistId,
+    String customerId,
+    BookingDiscount discount,
+  ) async {
     try {
       await _firestore.collection('discountLogs').add({
         'bookingId': bookingId,
@@ -366,7 +380,10 @@ class DiscountService {
 
   /// Логировать принятие скидки
   Future<void> _logDiscountAcceptance(
-      String bookingId, String customerId, BookingDiscount discount) async {
+    String bookingId,
+    String customerId,
+    BookingDiscount discount,
+  ) async {
     try {
       await _firestore.collection('discountLogs').add({
         'bookingId': bookingId,
@@ -382,7 +399,10 @@ class DiscountService {
 
   /// Логировать отклонение скидки
   Future<void> _logDiscountRejection(
-      String bookingId, String customerId, String? reason) async {
+    String bookingId,
+    String customerId,
+    String? reason,
+  ) async {
     try {
       await _firestore.collection('discountLogs').add({
         'bookingId': bookingId,

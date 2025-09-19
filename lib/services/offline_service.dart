@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
+
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:flutter/foundation.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Сервис для управления офлайн-режимом
@@ -154,7 +155,7 @@ class OfflineService {
         return 0;
       }
 
-      int totalSize = 0;
+      var totalSize = 0;
       await for (final entity in cacheDir.list(recursive: true)) {
         if (entity is File) {
           totalSize += await entity.length();
@@ -245,8 +246,9 @@ class OfflineService {
   static String formatBytes(int bytes) {
     if (bytes < 1024) return '$bytes B';
     if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    if (bytes < 1024 * 1024 * 1024)
+    if (bytes < 1024 * 1024 * 1024) {
       return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+    }
     return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
   }
 }
@@ -269,9 +271,8 @@ class CacheKeys {
 
 /// Менеджер офлайн-данных для конкретных экранов
 class OfflineDataManager {
-  final String screenKey;
-
   OfflineDataManager(this.screenKey);
+  final String screenKey;
 
   /// Сохранить данные экрана
   Future<void> saveScreenData(Map<String, dynamic> data) async {
@@ -279,9 +280,8 @@ class OfflineDataManager {
   }
 
   /// Загрузить данные экрана
-  Future<Map<String, dynamic>?> loadScreenData() async {
-    return await OfflineService.loadFromCache('${screenKey}_data');
-  }
+  Future<Map<String, dynamic>?> loadScreenData() async =>
+      OfflineService.loadFromCache('${screenKey}_data');
 
   /// Сохранить состояние экрана
   Future<void> saveScreenState(Map<String, dynamic> state) async {
@@ -289,9 +289,8 @@ class OfflineDataManager {
   }
 
   /// Загрузить состояние экрана
-  Future<Map<String, dynamic>?> loadScreenState() async {
-    return await OfflineService.loadFromCache('${screenKey}_state');
-  }
+  Future<Map<String, dynamic>?> loadScreenState() async =>
+      OfflineService.loadFromCache('${screenKey}_state');
 
   /// Очистить данные экрана
   Future<void> clearScreenData() async {
@@ -303,14 +302,12 @@ class OfflineDataManager {
 /// Утилиты для работы с офлайн-режимом
 class OfflineUtils {
   /// Получить сообщение о статусе подключения
-  static String getConnectionStatusMessage(bool isOnline) {
-    return isOnline ? 'Подключено к интернету' : 'Работа в офлайн-режиме';
-  }
+  static String getConnectionStatusMessage(bool isOnline) =>
+      isOnline ? 'Подключено к интернету' : 'Работа в офлайн-режиме';
 
   /// Получить иконку статуса подключения
-  static String getConnectionStatusIcon(bool isOnline) {
-    return isOnline ? '🌐' : '📱';
-  }
+  static String getConnectionStatusIcon(bool isOnline) =>
+      isOnline ? '🌐' : '📱';
 
   /// Получить цвет статуса подключения
   static int getConnectionStatusColor(bool isOnline) {
@@ -353,12 +350,10 @@ class OfflineUtils {
   }
 
   /// Получить рекомендации для офлайн-режима
-  static List<String> getOfflineRecommendations() {
-    return [
-      'Проверьте подключение к интернету',
-      'Некоторые функции могут быть ограничены',
-      'Данные будут синхронизированы при восстановлении связи',
-      'Используйте кэшированные данные для просмотра',
-    ];
-  }
+  static List<String> getOfflineRecommendations() => [
+        'Проверьте подключение к интернету',
+        'Некоторые функции могут быть ограничены',
+        'Данные будут синхронизированы при восстановлении связи',
+        'Используйте кэшированные данные для просмотра',
+      ];
 }

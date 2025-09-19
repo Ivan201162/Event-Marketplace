@@ -26,282 +26,278 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          // Фильтры и поиск
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                // Поиск
-                TextField(
-                  controller: _searchController,
-                  decoration: InputDecoration(
-                    hintText: 'Поиск пользователей...',
-                    prefixIcon: const Icon(Icons.search),
-                    suffixIcon: _searchQuery.isNotEmpty
-                        ? IconButton(
-                            icon: const Icon(Icons.clear),
-                            onPressed: () {
-                              _searchController.clear();
-                              setState(() {
-                                _searchQuery = '';
-                              });
-                            },
-                          )
-                        : null,
-                    border: const OutlineInputBorder(),
+  Widget build(BuildContext context) => Scaffold(
+        body: Column(
+          children: [
+            // Фильтры и поиск
+            Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  // Поиск
+                  TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      hintText: 'Поиск пользователей...',
+                      prefixIcon: const Icon(Icons.search),
+                      suffixIcon: _searchQuery.isNotEmpty
+                          ? IconButton(
+                              icon: const Icon(Icons.clear),
+                              onPressed: () {
+                                _searchController.clear();
+                                setState(() {
+                                  _searchQuery = '';
+                                });
+                              },
+                            )
+                          : null,
+                      border: const OutlineInputBorder(),
+                    ),
+                    onChanged: (value) {
+                      setState(() {
+                        _searchQuery = value;
+                      });
+                    },
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      _searchQuery = value;
-                    });
-                  },
-                ),
 
-                const SizedBox(height: 12),
+                  const SizedBox(height: 12),
 
-                // Фильтры
-                Row(
-                  children: [
-                    Expanded(
-                      child: DropdownButtonFormField<UserRole?>(
-                        initialValue: _selectedRole,
-                        decoration: const InputDecoration(
-                          labelText: 'Роль',
-                          border: OutlineInputBorder(),
+                  // Фильтры
+                  Row(
+                    children: [
+                      Expanded(
+                        child: DropdownButtonFormField<UserRole?>(
+                          initialValue: _selectedRole,
+                          decoration: const InputDecoration(
+                            labelText: 'Роль',
+                            border: OutlineInputBorder(),
+                          ),
+                          items: const [
+                            DropdownMenuItem(
+                              child: Text('Все роли'),
+                            ),
+                            DropdownMenuItem(
+                              value: UserRole.customer,
+                              child: Text('Заказчики'),
+                            ),
+                            DropdownMenuItem(
+                              value: UserRole.specialist,
+                              child: Text('Специалисты'),
+                            ),
+                          ],
+                          onChanged: (value) {
+                            setState(() {
+                              _selectedRole = value;
+                            });
+                          },
                         ),
-                        items: [
-                          const DropdownMenuItem(
-                            value: null,
-                            child: Text('Все роли'),
-                          ),
-                          const DropdownMenuItem(
-                            value: UserRole.customer,
-                            child: Text('Заказчики'),
-                          ),
-                          const DropdownMenuItem(
-                            value: UserRole.specialist,
-                            child: Text('Специалисты'),
-                          ),
-                        ],
-                        onChanged: (value) {
+                      ),
+                      const SizedBox(width: 12),
+                      FilterChip(
+                        label: const Text('Заблокированные'),
+                        selected: _showBannedOnly,
+                        onSelected: (selected) {
                           setState(() {
-                            _selectedRole = value;
+                            _showBannedOnly = selected;
                           });
                         },
                       ),
-                    ),
-                    const SizedBox(width: 12),
-                    FilterChip(
-                      label: const Text('Заблокированные'),
-                      selected: _showBannedOnly,
-                      onSelected: (selected) {
-                        setState(() {
-                          _showBannedOnly = selected;
-                        });
-                      },
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
 
-          // Список пользователей
-          Expanded(
-            child: StreamBuilder<List<AppUser>>(
-              stream: _adminService.getAllUsers(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
+            // Список пользователей
+            Expanded(
+              child: StreamBuilder<List<AppUser>>(
+                stream: _adminService.getAllUsers(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
 
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.error, size: 64, color: Colors.red),
-                        const SizedBox(height: 16),
-                        Text('Ошибка: ${snapshot.error}'),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () => setState(() {}),
-                          child: const Text('Повторить'),
-                        ),
-                      ],
-                    ),
+                  if (snapshot.hasError) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Icon(Icons.error, size: 64, color: Colors.red),
+                          const SizedBox(height: 16),
+                          Text('Ошибка: ${snapshot.error}'),
+                          const SizedBox(height: 16),
+                          ElevatedButton(
+                            onPressed: () => setState(() {}),
+                            child: const Text('Повторить'),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  final allUsers = snapshot.data ?? [];
+                  final filteredUsers = _filterUsers(allUsers);
+
+                  if (filteredUsers.isEmpty) {
+                    return const Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.people_outline,
+                            size: 64,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(height: 16),
+                          Text(
+                            'Пользователи не найдены',
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      ),
+                    );
+                  }
+
+                  return ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: filteredUsers.length,
+                    itemBuilder: (context, index) {
+                      final user = filteredUsers[index];
+                      return _buildUserCard(user);
+                    },
                   );
-                }
-
-                final allUsers = snapshot.data ?? [];
-                final filteredUsers = _filterUsers(allUsers);
-
-                if (filteredUsers.isEmpty) {
-                  return const Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(Icons.people_outline,
-                            size: 64, color: Colors.grey),
-                        SizedBox(height: 16),
-                        Text(
-                          'Пользователи не найдены',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-
-                return ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  itemCount: filteredUsers.length,
-                  itemBuilder: (context, index) {
-                    final user = filteredUsers[index];
-                    return _buildUserCard(user);
-                  },
-                );
-              },
+                },
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
-  List<AppUser> _filterUsers(List<AppUser> users) {
-    return users.where((user) {
-      // Поиск по имени или email
-      if (_searchQuery.isNotEmpty) {
-        final query = _searchQuery.toLowerCase();
-        if (!(user.displayName?.toLowerCase().contains(query) ?? false) &&
-            !user.email.toLowerCase().contains(query)) {
+  List<AppUser> _filterUsers(List<AppUser> users) => users.where((user) {
+        // Поиск по имени или email
+        if (_searchQuery.isNotEmpty) {
+          final query = _searchQuery.toLowerCase();
+          if (!(user.displayName?.toLowerCase().contains(query) ?? false) &&
+              !user.email.toLowerCase().contains(query)) {
+            return false;
+          }
+        }
+
+        // Фильтр по роли
+        if (_selectedRole != null && user.role != _selectedRole) {
           return false;
         }
-      }
 
-      // Фильтр по роли
-      if (_selectedRole != null && user.role != _selectedRole) {
-        return false;
-      }
+        // Фильтр по статусу блокировки
+        if (_showBannedOnly && user.isActive) {
+          return false;
+        }
 
-      // Фильтр по статусу блокировки
-      if (_showBannedOnly && user.isActive) {
-        return false;
-      }
+        return true;
+      }).toList();
 
-      return true;
-    }).toList();
-  }
-
-  Widget _buildUserCard(AppUser user) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor:
-              !user.isActive ? Colors.red : Theme.of(context).primaryColor,
-          backgroundImage:
-              user.photoURL != null ? NetworkImage(user.photoURL!) : null,
-          child: user.photoURL == null
-              ? Text(
-                  (user.displayName?.isNotEmpty ?? false)
-                      ? user.displayName![0].toUpperCase()
-                      : '?',
-                  style: const TextStyle(color: Colors.white),
-                )
-              : null,
-        ),
-        title: Row(
-          children: [
-            Expanded(
-              child: Text(
-                user.displayName ?? 'Без имени',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: !user.isActive ? Colors.red : null,
-                ),
-              ),
-            ),
-            if (!user.isActive)
-              const Icon(Icons.block, color: Colors.red, size: 16),
-          ],
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(user.email),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                _buildRoleChip(user.role),
-                const SizedBox(width: 8),
-                Text(
-                  'Создан: ${_formatDate(user.createdAt)}',
+  Widget _buildUserCard(AppUser user) => Card(
+        margin: const EdgeInsets.only(bottom: 8),
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor:
+                !user.isActive ? Colors.red : Theme.of(context).primaryColor,
+            backgroundImage:
+                user.photoURL != null ? NetworkImage(user.photoURL!) : null,
+            child: user.photoURL == null
+                ? Text(
+                    (user.displayName?.isNotEmpty ?? false)
+                        ? user.displayName![0].toUpperCase()
+                        : '?',
+                    style: const TextStyle(color: Colors.white),
+                  )
+                : null,
+          ),
+          title: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  user.displayName ?? 'Без имени',
                   style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey[600],
+                    fontWeight: FontWeight.bold,
+                    color: !user.isActive ? Colors.red : null,
                   ),
                 ),
-              ],
-            ),
-          ],
-        ),
-        trailing: PopupMenuButton<String>(
-          onSelected: (action) => _handleUserAction(action, user),
-          itemBuilder: (context) => [
-            if (user.isActive)
+              ),
+              if (!user.isActive)
+                const Icon(Icons.block, color: Colors.red, size: 16),
+            ],
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(user.email),
+              const SizedBox(height: 4),
+              Row(
+                children: [
+                  _buildRoleChip(user.role),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Создан: ${_formatDate(user.createdAt)}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          trailing: PopupMenuButton<String>(
+            onSelected: (action) => _handleUserAction(action, user),
+            itemBuilder: (context) => [
+              if (user.isActive)
+                const PopupMenuItem(
+                  value: 'ban',
+                  child: Row(
+                    children: [
+                      Icon(Icons.block, color: Colors.red),
+                      SizedBox(width: 8),
+                      Text('Заблокировать'),
+                    ],
+                  ),
+                ),
+              if (!user.isActive)
+                const PopupMenuItem(
+                  value: 'unban',
+                  child: Row(
+                    children: [
+                      Icon(Icons.check_circle, color: Colors.green),
+                      SizedBox(width: 8),
+                      Text('Разблокировать'),
+                    ],
+                  ),
+                ),
               const PopupMenuItem(
-                value: 'ban',
+                value: 'view',
                 child: Row(
                   children: [
-                    Icon(Icons.block, color: Colors.red),
+                    Icon(Icons.visibility),
                     SizedBox(width: 8),
-                    Text('Заблокировать'),
+                    Text('Подробнее'),
                   ],
                 ),
               ),
-            if (!user.isActive)
               const PopupMenuItem(
-                value: 'unban',
+                value: 'edit',
                 child: Row(
                   children: [
-                    Icon(Icons.check_circle, color: Colors.green),
+                    Icon(Icons.edit),
                     SizedBox(width: 8),
-                    Text('Разблокировать'),
+                    Text('Редактировать'),
                   ],
                 ),
               ),
-            const PopupMenuItem(
-              value: 'view',
-              child: Row(
-                children: [
-                  Icon(Icons.visibility),
-                  SizedBox(width: 8),
-                  Text('Подробнее'),
-                ],
-              ),
-            ),
-            const PopupMenuItem(
-              value: 'edit',
-              child: Row(
-                children: [
-                  Icon(Icons.edit),
-                  SizedBox(width: 8),
-                  Text('Редактировать'),
-                ],
-              ),
-            ),
-          ],
+            ],
+          ),
+          onTap: () => _showUserDetails(user),
         ),
-        onTap: () => _showUserDetails(user),
-      ),
-    );
-  }
+      );
 
   Widget _buildRoleChip(UserRole role) {
     Color color;
@@ -370,7 +366,9 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
               _buildDetailRow('Email', user.email),
               _buildDetailRow('Роль', _getRoleText(user.role)),
               _buildDetailRow(
-                  'Статус', user.isBanned ? 'Заблокирован' : 'Активен'),
+                'Статус',
+                user.isBanned ? 'Заблокирован' : 'Активен',
+              ),
               _buildDetailRow('Дата создания', _formatDate(user.createdAt)),
               if (user.lastLogin != null)
                 _buildDetailRow('Последний вход', _formatDate(user.lastLogin!)),
@@ -407,26 +405,24 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
     );
   }
 
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              '$label:',
-              style: const TextStyle(fontWeight: FontWeight.w500),
+  Widget _buildDetailRow(String label, String value) => Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 120,
+              child: Text(
+                '$label:',
+                style: const TextStyle(fontWeight: FontWeight.w500),
+              ),
             ),
-          ),
-          Expanded(
-            child: Text(value),
-          ),
-        ],
-      ),
-    );
-  }
+            Expanded(
+              child: Text(value),
+            ),
+          ],
+        ),
+      );
 
   void _showBanUserDialog(AppUser user) {
     final reasonController = TextEditingController();
@@ -439,7 +435,8 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-                'Вы уверены, что хотите заблокировать пользователя ${user.displayName}?'),
+              'Вы уверены, что хотите заблокировать пользователя ${user.displayName}?',
+            ),
             const SizedBox(height: 16),
             TextField(
               controller: reasonController,
@@ -475,7 +472,8 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
       builder: (context) => AlertDialog(
         title: const Text('Редактирование пользователя'),
         content: const Text(
-            'Функция редактирования пользователя будет добавлена в следующих версиях.'),
+          'Функция редактирования пользователя будет добавлена в следующих версиях.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -489,7 +487,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
   Future<void> _banUser(AppUser user, String reason) async {
     try {
       // TODO: Получить ID текущего администратора
-      final adminId = 'demo_admin_id';
+      const adminId = 'demo_admin_id';
 
       final success = await _adminService.banUser(user.uid, adminId, reason);
 
@@ -506,7 +504,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
   Future<void> _unbanUser(AppUser user) async {
     try {
       // TODO: Получить ID текущего администратора
-      final adminId = 'demo_admin_id';
+      const adminId = 'demo_admin_id';
 
       final success = await _adminService.unbanUser(user.uid, adminId);
 
@@ -529,9 +527,7 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
     }
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day}.${date.month}.${date.year}';
-  }
+  String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 
   void _showSuccessSnackBar(String message) {
     ScaffoldMessenger.of(context).showSnackBar(

@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:flutter/material.dart';
 
 /// Цветовая схема бренда Event Marketplace
 class BrandColors {
@@ -43,226 +43,219 @@ class BrandColors {
 
 /// Тема приложения
 class AppTheme {
-  static ThemeData get lightTheme {
-    return FlexThemeData.light(
-      scheme: FlexScheme.material,
-      surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
-      blendLevel: 7,
-      appBarStyle: FlexAppBarStyle.primary,
-      appBarOpacity: 0.95,
-      appBarElevation: 0,
-      transparentStatusBar: true,
-      tabBarStyle: FlexTabBarStyle.forAppBar,
-      tooltipsMatchBackground: true,
-      swapColors: false,
-      lightIsWhite: true,
-      useSubThemes: true,
-      visualDensity: FlexColorScheme.comfortablePlatformDensity,
-      fontFamily: 'Roboto',
-      primary: BrandColors.primary,
-      primaryContainer: BrandColors.primaryVariant,
-      secondary: BrandColors.secondary,
-      secondaryContainer: BrandColors.secondaryVariant,
-      tertiary: BrandColors.accent,
-      tertiaryContainer: BrandColors.accentVariant,
-      appBarPrimary: BrandColors.primary,
-      error: BrandColors.error,
-    ).copyWith(
-      // Кастомные настройки
-      colorScheme: const ColorScheme.light(
+  static ThemeData get lightTheme => FlexThemeData.light(
+        scheme: FlexScheme.material,
+        surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
+        blendLevel: 7,
+        appBarStyle: FlexAppBarStyle.primary,
+        appBarOpacity: 0.95,
+        appBarElevation: 0,
+        transparentStatusBar: true,
+        tabBarStyle: FlexTabBarStyle.forAppBar,
+        tooltipsMatchBackground: true,
+        swapColors: false,
+        lightIsWhite: true,
+        useSubThemes: true,
+        visualDensity: FlexColorScheme.comfortablePlatformDensity,
+        fontFamily: 'Roboto',
         primary: BrandColors.primary,
         primaryContainer: BrandColors.primaryVariant,
         secondary: BrandColors.secondary,
         secondaryContainer: BrandColors.secondaryVariant,
         tertiary: BrandColors.accent,
         tertiaryContainer: BrandColors.accentVariant,
-        surface: BrandColors.surface,
+        appBarPrimary: BrandColors.primary,
         error: BrandColors.error,
-        onPrimary: Colors.white,
-        onSecondary: Colors.white,
-        onTertiary: Colors.white,
-        onSurface: Color(0xFF1F2937),
-        onError: Colors.white,
-      ),
-      // Кастомные стили текста
-      textTheme: const TextTheme(
-        displayLarge: TextStyle(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: Color(0xFF1F2937),
+      ).copyWith(
+        // Кастомные настройки
+        colorScheme: const ColorScheme.light(
+          primary: BrandColors.primary,
+          primaryContainer: BrandColors.primaryVariant,
+          secondary: BrandColors.secondary,
+          secondaryContainer: BrandColors.secondaryVariant,
+          tertiary: BrandColors.accent,
+          tertiaryContainer: BrandColors.accentVariant,
+          surface: BrandColors.surface,
+          error: BrandColors.error,
+          onSecondary: Colors.white,
+          onTertiary: Colors.white,
+          onSurface: Color(0xFF1F2937),
         ),
-        displayMedium: TextStyle(
-          fontSize: 28,
-          fontWeight: FontWeight.bold,
-          color: Color(0xFF1F2937),
-        ),
-        displaySmall: TextStyle(
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-          color: Color(0xFF1F2937),
-        ),
-        headlineLarge: TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.w600,
-          color: Color(0xFF1F2937),
-        ),
-        headlineMedium: TextStyle(
-          fontSize: 20,
-          fontWeight: FontWeight.w600,
-          color: Color(0xFF1F2937),
-        ),
-        headlineSmall: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.w600,
-          color: Color(0xFF1F2937),
-        ),
-        titleLarge: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.w600,
-          color: Color(0xFF1F2937),
-        ),
-        titleMedium: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: Color(0xFF1F2937),
-        ),
-        titleSmall: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          color: Color(0xFF6B7280),
-        ),
-        bodyLarge: TextStyle(
-          fontSize: 16,
-          fontWeight: FontWeight.normal,
-          color: Color(0xFF1F2937),
-        ),
-        bodyMedium: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.normal,
-          color: Color(0xFF1F2937),
-        ),
-        bodySmall: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.normal,
-          color: Color(0xFF6B7280),
-        ),
-        labelLarge: TextStyle(
-          fontSize: 14,
-          fontWeight: FontWeight.w500,
-          color: Color(0xFF1F2937),
-        ),
-        labelMedium: TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          color: Color(0xFF6B7280),
-        ),
-        labelSmall: TextStyle(
-          fontSize: 10,
-          fontWeight: FontWeight.w500,
-          color: Color(0xFF9CA3AF),
-        ),
-      ),
-      // Кастомные стили карточек
-      cardTheme: CardTheme(
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
-        ),
-        color: Colors.white,
-        shadowColor: Colors.black.withOpacity(0.1),
-      ),
-      // Кастомные стили кнопок
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          elevation: 0,
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+        // Кастомные стили текста
+        textTheme: const TextTheme(
+          displayLarge: TextStyle(
+            fontSize: 32,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1F2937),
           ),
-          textStyle: const TextStyle(
+          displayMedium: TextStyle(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1F2937),
+          ),
+          displaySmall: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF1F2937),
+          ),
+          headlineLarge: TextStyle(
+            fontSize: 22,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF1F2937),
+          ),
+          headlineMedium: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF1F2937),
+          ),
+          headlineSmall: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w600,
+            color: Color(0xFF1F2937),
+          ),
+          titleLarge: TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w600,
+            color: Color(0xFF1F2937),
+          ),
+          titleMedium: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF1F2937),
+          ),
+          titleSmall: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF6B7280),
+          ),
+          bodyLarge: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.normal,
+            color: Color(0xFF1F2937),
+          ),
+          bodyMedium: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.normal,
+            color: Color(0xFF1F2937),
+          ),
+          bodySmall: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.normal,
+            color: Color(0xFF6B7280),
+          ),
+          labelLarge: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF1F2937),
+          ),
+          labelMedium: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF6B7280),
+          ),
+          labelSmall: TextStyle(
+            fontSize: 10,
+            fontWeight: FontWeight.w500,
+            color: Color(0xFF9CA3AF),
           ),
         ),
-      ),
-      // Кастомные стили полей ввода
-      inputDecorationTheme: InputDecorationTheme(
-        filled: true,
-        fillColor: Colors.grey[50],
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide.none,
+        // Кастомные стили карточек
+        cardTheme: CardTheme(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          color: Colors.white,
+          shadowColor: Colors.black.withOpacity(0.1),
         ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: BorderSide(color: Colors.grey[300]!),
+        // Кастомные стили кнопок
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            elevation: 0,
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(12),
+            ),
+            textStyle: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
         ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: BrandColors.primary, width: 2),
+        // Кастомные стили полей ввода
+        inputDecorationTheme: InputDecorationTheme(
+          filled: true,
+          fillColor: Colors.grey[50],
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide.none,
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: BorderSide(color: Colors.grey[300]!),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: BrandColors.primary, width: 2),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: BrandColors.error),
+          ),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
         ),
-        errorBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12),
-          borderSide: const BorderSide(color: BrandColors.error),
-        ),
-        contentPadding:
-            const EdgeInsets.symmetric(horizontal: 16, vertical: 16),
-      ),
-    );
-  }
+      );
 
-  static ThemeData get darkTheme {
-    return FlexThemeData.dark(
-      scheme: FlexScheme.material,
-      surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
-      blendLevel: 15,
-      appBarStyle: FlexAppBarStyle.primary,
-      appBarOpacity: 0.90,
-      appBarElevation: 0,
-      transparentStatusBar: true,
-      tabBarStyle: FlexTabBarStyle.forAppBar,
-      tooltipsMatchBackground: true,
-      swapColors: false,
-      darkIsTrueBlack: false,
-      useSubThemes: true,
-      visualDensity: FlexColorScheme.comfortablePlatformDensity,
-      fontFamily: 'Roboto',
-      primary: BrandColors.primary,
-      primaryContainer: BrandColors.primaryVariant,
-      secondary: BrandColors.secondary,
-      secondaryContainer: BrandColors.secondaryVariant,
-      tertiary: BrandColors.accent,
-      tertiaryContainer: BrandColors.accentVariant,
-      appBarPrimary: BrandColors.primary,
-      error: BrandColors.error,
-    ).copyWith(
-      // Кастомные настройки для темной темы
-      colorScheme: const ColorScheme.dark(
+  static ThemeData get darkTheme => FlexThemeData.dark(
+        scheme: FlexScheme.material,
+        surfaceMode: FlexSurfaceMode.levelSurfacesLowScaffold,
+        blendLevel: 15,
+        appBarStyle: FlexAppBarStyle.primary,
+        appBarOpacity: 0.90,
+        appBarElevation: 0,
+        transparentStatusBar: true,
+        tabBarStyle: FlexTabBarStyle.forAppBar,
+        tooltipsMatchBackground: true,
+        swapColors: false,
+        darkIsTrueBlack: false,
+        useSubThemes: true,
+        visualDensity: FlexColorScheme.comfortablePlatformDensity,
+        fontFamily: 'Roboto',
         primary: BrandColors.primary,
         primaryContainer: BrandColors.primaryVariant,
         secondary: BrandColors.secondary,
         secondaryContainer: BrandColors.secondaryVariant,
         tertiary: BrandColors.accent,
         tertiaryContainer: BrandColors.accentVariant,
-        surface: Color(0xFF1F2937),
+        appBarPrimary: BrandColors.primary,
         error: BrandColors.error,
-        onPrimary: Colors.white,
-        onSecondary: Colors.white,
-        onTertiary: Colors.white,
-        onSurface: Colors.white,
-        onError: Colors.white,
-      ),
-      // Кастомные стили карточек для темной темы
-      cardTheme: CardTheme(
-        elevation: 2,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16),
+      ).copyWith(
+        // Кастомные настройки для темной темы
+        colorScheme: const ColorScheme.dark(
+          primary: BrandColors.primary,
+          primaryContainer: BrandColors.primaryVariant,
+          secondary: BrandColors.secondary,
+          secondaryContainer: BrandColors.secondaryVariant,
+          tertiary: BrandColors.accent,
+          tertiaryContainer: BrandColors.accentVariant,
+          surface: Color(0xFF1F2937),
+          error: BrandColors.error,
+          onPrimary: Colors.white,
+          onSecondary: Colors.white,
+          onTertiary: Colors.white,
+          onError: Colors.white,
         ),
-        color: const Color(0xFF1F2937),
-        shadowColor: Colors.black.withOpacity(0.3),
-      ),
-    );
-  }
+        // Кастомные стили карточек для темной темы
+        cardTheme: CardTheme(
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
+          color: const Color(0xFF1F2937),
+          shadowColor: Colors.black.withOpacity(0.3),
+        ),
+      );
 }
 
 /// Расширения для удобства работы с темой

@@ -46,9 +46,7 @@ class PriceHistoryService {
           .orderBy('changedAt', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => PriceHistory.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(PriceHistory.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения истории цен: $e');
     }
@@ -56,7 +54,8 @@ class PriceHistoryService {
 
   /// Получить историю цен для специалиста
   Future<List<PriceHistory>> getSpecialistPriceHistory(
-      String specialistId) async {
+    String specialistId,
+  ) async {
     try {
       // Получаем все бронирования специалиста
       final bookingsSnapshot = await _firestore
@@ -75,9 +74,7 @@ class PriceHistoryService {
           .orderBy('changedAt', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => PriceHistory.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(PriceHistory.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения истории цен специалиста: $e');
     }
@@ -88,18 +85,18 @@ class PriceHistoryService {
     try {
       final priceHistory = await getSpecialistPriceHistory(specialistId);
 
-      int totalChanges = priceHistory.length;
-      int discountOffers = priceHistory.where((p) => p.isDiscount).length;
-      int priceIncreases = priceHistory.where((p) => !p.isDiscount).length;
+      final totalChanges = priceHistory.length;
+      final discountOffers = priceHistory.where((p) => p.isDiscount).length;
+      final priceIncreases = priceHistory.where((p) => !p.isDiscount).length;
 
-      double totalSavings = priceHistory
+      final totalSavings = priceHistory
           .where((p) => p.isDiscount)
-          .fold(0.0, (sum, p) => sum + p.savings);
+          .fold(0, (sum, p) => sum + p.savings);
 
-      double averageDiscount = discountOffers > 0
+      final averageDiscount = discountOffers > 0
           ? priceHistory
                   .where((p) => p.isDiscount)
-                  .fold(0.0, (sum, p) => sum + (p.discountPercent ?? 0)) /
+                  .fold(0, (sum, p) => sum + (p.discountPercent ?? 0)) /
               discountOffers
           : 0;
 
@@ -126,9 +123,7 @@ class PriceHistoryService {
           .limit(limit)
           .get();
 
-      return snapshot.docs
-          .map((doc) => PriceHistory.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(PriceHistory.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения последних изменений цен: $e');
     }
@@ -141,10 +136,12 @@ class PriceHistoryService {
     String? specialistId,
   }) async {
     try {
-      Query query = _firestore
+      var query = _firestore
           .collection('priceHistory')
-          .where('changedAt',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+          .where(
+            'changedAt',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+          )
           .where('changedAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
 
       if (specialistId != null) {
@@ -163,9 +160,7 @@ class PriceHistoryService {
 
       final snapshot = await query.orderBy('changedAt', descending: true).get();
 
-      return snapshot.docs
-          .map((doc) => PriceHistory.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(PriceHistory.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения изменений цен за период: $e');
     }

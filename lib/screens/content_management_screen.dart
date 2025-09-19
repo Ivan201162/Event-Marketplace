@@ -1,6 +1,7 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:file_picker/file_picker.dart';
+
 import '../models/content_management.dart';
 import '../services/content_management_service.dart';
 import '../widgets/responsive_layout.dart';
@@ -30,45 +31,41 @@ class _ContentManagementScreenState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ResponsiveScaffold(
-      body: Column(
-        children: [
-          // Вкладки
-          _buildTabs(),
+  Widget build(BuildContext context) => ResponsiveScaffold(
+        body: Column(
+          children: [
+            // Вкладки
+            _buildTabs(),
 
-          // Контент
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _selectedTab == 'media'
-                    ? _buildMediaTab()
-                    : _selectedTab == 'galleries'
-                        ? _buildGalleriesTab()
-                        : _buildUploadTab(),
-          ),
-        ],
-      ),
-    );
-  }
+            // Контент
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _selectedTab == 'media'
+                      ? _buildMediaTab()
+                      : _selectedTab == 'galleries'
+                          ? _buildGalleriesTab()
+                          : _buildUploadTab(),
+            ),
+          ],
+        ),
+      );
 
-  Widget _buildTabs() {
-    return ResponsiveCard(
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildTabButton('media', 'Медиа', Icons.photo_library),
-          ),
-          Expanded(
-            child: _buildTabButton('galleries', 'Галереи', Icons.collections),
-          ),
-          Expanded(
-            child: _buildTabButton('upload', 'Загрузка', Icons.cloud_upload),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildTabs() => ResponsiveCard(
+        child: Row(
+          children: [
+            Expanded(
+              child: _buildTabButton('media', 'Медиа', Icons.photo_library),
+            ),
+            Expanded(
+              child: _buildTabButton('galleries', 'Галереи', Icons.collections),
+            ),
+            Expanded(
+              child: _buildTabButton('upload', 'Загрузка', Icons.cloud_upload),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -111,75 +108,71 @@ class _ContentManagementScreenState
     );
   }
 
-  Widget _buildMediaTab() {
-    return Column(
-      children: [
-        // Заголовок с фильтрами
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Медиа контент',
-                isTitle: true,
-              ),
-              const Spacer(),
-              DropdownButton<MediaType?>(
-                value: null,
-                hint: const Text('Все типы'),
-                items: [
-                  const DropdownMenuItem<MediaType?>(
-                    value: null,
-                    child: Text('Все типы'),
-                  ),
-                  ...MediaType.values.map((type) {
-                    return DropdownMenuItem<MediaType?>(
-                      value: type,
-                      child: Row(
-                        children: [
-                          Text(type.icon),
-                          const SizedBox(width: 8),
-                          Text(type.displayName),
-                        ],
+  Widget _buildMediaTab() => Column(
+        children: [
+          // Заголовок с фильтрами
+          ResponsiveCard(
+            child: Row(
+              children: [
+                const ResponsiveText(
+                  'Медиа контент',
+                  isTitle: true,
+                ),
+                const Spacer(),
+                DropdownButton<MediaType?>(
+                  hint: const Text('Все типы'),
+                  items: [
+                    const DropdownMenuItem<MediaType?>(
+                      child: Text('Все типы'),
+                    ),
+                    ...MediaType.values.map(
+                      (type) => DropdownMenuItem<MediaType?>(
+                        value: type,
+                        child: Row(
+                          children: [
+                            Text(type.icon),
+                            const SizedBox(width: 8),
+                            Text(type.displayName),
+                          ],
+                        ),
                       ),
-                    );
-                  }),
-                ],
-                onChanged: (value) {
-                  // TODO: Реализовать фильтрацию
-                },
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список медиа
-        Expanded(
-          child: _mediaContent.isEmpty
-              ? const Center(child: Text('Медиа контент не найден'))
-              : GridView.builder(
-                  padding: const EdgeInsets.all(16),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
-                    childAspectRatio: 1,
-                  ),
-                  itemCount: _mediaContent.length,
-                  itemBuilder: (context, index) {
-                    final media = _mediaContent[index];
-                    return _buildMediaCard(media);
+                    ),
+                  ],
+                  onChanged: (value) {
+                    // TODO: Реализовать фильтрацию
                   },
                 ),
-        ),
-      ],
-    );
-  }
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список медиа
+          Expanded(
+            child: _mediaContent.isEmpty
+                ? const Center(child: Text('Медиа контент не найден'))
+                : GridView.builder(
+                    padding: const EdgeInsets.all(16),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 3,
+                      crossAxisSpacing: 16,
+                      mainAxisSpacing: 16,
+                    ),
+                    itemCount: _mediaContent.length,
+                    itemBuilder: (context, index) {
+                      final media = _mediaContent[index];
+                      return _buildMediaCard(media);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildMediaCard(MediaContent media) {
     final statusColor = _getStatusColor(media.status);
@@ -202,24 +195,22 @@ class _ContentManagementScreenState
                       child: Image.network(
                         media.thumbnailUrl ?? media.url,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Center(
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  media.type.icon,
-                                  style: const TextStyle(fontSize: 32),
-                                ),
-                                const SizedBox(height: 8),
-                                Text(
-                                  media.type.displayName,
-                                  style: const TextStyle(fontSize: 12),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
+                        errorBuilder: (context, error, stackTrace) => Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                media.type.icon,
+                                style: const TextStyle(fontSize: 32),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                media.type.displayName,
+                                style: const TextStyle(fontSize: 12),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     )
                   : Center(
@@ -319,357 +310,352 @@ class _ContentManagementScreenState
     );
   }
 
-  Widget _buildGalleriesTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Галереи контента',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _showCreateGalleryDialog,
-                icon: const Icon(Icons.add),
-                label: const Text('Создать галерею'),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список галерей
-        Expanded(
-          child: _galleries.isEmpty
-              ? const Center(child: Text('Галереи не найдены'))
-              : ListView.builder(
-                  itemCount: _galleries.length,
-                  itemBuilder: (context, index) {
-                    final gallery = _galleries[index];
-                    return _buildGalleryCard(gallery);
-                  },
-                ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildGalleryCard(ContentGallery gallery) {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildGalleriesTab() => Column(
         children: [
           // Заголовок
-          Row(
-            children: [
-              Text(
-                gallery.type.icon,
-                style: const TextStyle(fontSize: 24),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      gallery.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    if (gallery.description != null)
-                      Text(
-                        gallery.description!,
-                        style: const TextStyle(fontSize: 14),
-                      ),
-                  ],
+          ResponsiveCard(
+            child: Row(
+              children: [
+                const ResponsiveText(
+                  'Галереи контента',
+                  isTitle: true,
                 ),
-              ),
-              PopupMenuButton<String>(
-                onSelected: (value) => _handleGalleryAction(value, gallery),
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    value: 'edit',
-                    child: ListTile(
-                      leading: Icon(Icons.edit),
-                      title: Text('Редактировать'),
-                    ),
-                  ),
-                  const PopupMenuItem(
-                    value: 'manage',
-                    child: ListTile(
-                      leading: Icon(Icons.manage_accounts),
-                      title: Text('Управление медиа'),
-                    ),
-                  ),
-                  const PopupMenuItem(
-                    value: 'delete',
-                    child: ListTile(
-                      leading: Icon(Icons.delete),
-                      title: Text('Удалить'),
-                    ),
-                  ),
-                ],
-                child: const Icon(Icons.more_vert),
-              ),
-            ],
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _showCreateGalleryDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Создать галерею'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
           ),
 
-          const SizedBox(height: 12),
+          // Список галерей
+          Expanded(
+            child: _galleries.isEmpty
+                ? const Center(child: Text('Галереи не найдены'))
+                : ListView.builder(
+                    itemCount: _galleries.length,
+                    itemBuilder: (context, index) {
+                      final gallery = _galleries[index];
+                      return _buildGalleryCard(gallery);
+                    },
+                  ),
+          ),
+        ],
+      );
 
-          // Метаданные
-          Row(
-            children: [
-              _buildInfoChip('Тип', gallery.type.displayName, Colors.blue),
-              const SizedBox(width: 8),
-              _buildInfoChip('Медиа', '${gallery.mediaCount}', Colors.green),
-              const SizedBox(width: 8),
-              _buildInfoChip(
+  Widget _buildGalleryCard(ContentGallery gallery) => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Заголовок
+            Row(
+              children: [
+                Text(
+                  gallery.type.icon,
+                  style: const TextStyle(fontSize: 24),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        gallery.name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      if (gallery.description != null)
+                        Text(
+                          gallery.description!,
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                    ],
+                  ),
+                ),
+                PopupMenuButton<String>(
+                  onSelected: (value) => _handleGalleryAction(value, gallery),
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'edit',
+                      child: ListTile(
+                        leading: Icon(Icons.edit),
+                        title: Text('Редактировать'),
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'manage',
+                      child: ListTile(
+                        leading: Icon(Icons.manage_accounts),
+                        title: Text('Управление медиа'),
+                      ),
+                    ),
+                    const PopupMenuItem(
+                      value: 'delete',
+                      child: ListTile(
+                        leading: Icon(Icons.delete),
+                        title: Text('Удалить'),
+                      ),
+                    ),
+                  ],
+                  child: const Icon(Icons.more_vert),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            // Метаданные
+            Row(
+              children: [
+                _buildInfoChip('Тип', gallery.type.displayName, Colors.blue),
+                const SizedBox(width: 8),
+                _buildInfoChip('Медиа', '${gallery.mediaCount}', Colors.green),
+                const SizedBox(width: 8),
+                _buildInfoChip(
                   'Статус',
                   gallery.isPublic ? 'Публичная' : 'Приватная',
-                  gallery.isPublic ? Colors.green : Colors.orange),
+                  gallery.isPublic ? Colors.green : Colors.orange,
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 8),
+
+            // Время создания
+            Row(
+              children: [
+                const Icon(Icons.access_time, size: 16, color: Colors.grey),
+                const SizedBox(width: 4),
+                Text(
+                  'Создана: ${_formatDateTime(gallery.createdAt)}',
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildUploadTab() => SingleChildScrollView(
+        child: ResponsiveCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const ResponsiveText(
+                'Загрузка медиа',
+                isTitle: true,
+              ),
+
+              const SizedBox(height: 16),
+
+              // Форма загрузки
+              _buildUploadForm(),
             ],
           ),
+        ),
+      );
 
-          const SizedBox(height: 8),
+  Widget _buildUploadForm() {
+    final titleController = TextEditingController();
+    final descriptionController = TextEditingController();
+    final tagsController = TextEditingController();
+    var selectedType = MediaType.image;
+    String? selectedFile;
 
-          // Время создания
-          Row(
-            children: [
-              const Icon(Icons.access_time, size: 16, color: Colors.grey),
-              const SizedBox(width: 4),
-              Text(
-                'Создана: ${_formatDateTime(gallery.createdAt)}',
-                style: const TextStyle(color: Colors.grey, fontSize: 12),
-              ),
-            ],
+    return StatefulBuilder(
+      builder: (context, setState) => Column(
+        children: [
+          // Выбор файла
+          Container(
+            width: double.infinity,
+            height: 120,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.grey),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: InkWell(
+              onTap: () async {
+                final result = await FilePicker.platform.pickFiles(
+                  type: FileType.any,
+                  allowMultiple: false,
+                );
+
+                if (result != null && result.files.isNotEmpty) {
+                  final file = result.files.first;
+                  setState(() {
+                    selectedFile = file.path;
+                    // Автоматически определяем тип по расширению
+                    final extension = file.extension?.toLowerCase();
+                    if (extension != null) {
+                      if (['jpg', 'jpeg', 'png', 'gif', 'webp']
+                          .contains(extension)) {
+                        selectedType = MediaType.image;
+                      } else if (['mp4', 'avi', 'mov', 'webm']
+                          .contains(extension)) {
+                        selectedType = MediaType.video;
+                      } else if (['mp3', 'wav', 'ogg', 'm4a']
+                          .contains(extension)) {
+                        selectedType = MediaType.audio;
+                      } else if (['pdf', 'txt', 'doc', 'docx']
+                          .contains(extension)) {
+                        selectedType = MediaType.document;
+                      } else {
+                        selectedType = MediaType.other;
+                      }
+                    }
+                  });
+                }
+              },
+              child: selectedFile == null
+                  ? const Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.cloud_upload,
+                            size: 48,
+                            color: Colors.grey,
+                          ),
+                          SizedBox(height: 8),
+                          Text('Нажмите для выбора файла'),
+                        ],
+                      ),
+                    )
+                  : Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            selectedType.icon,
+                            style: const TextStyle(fontSize: 32),
+                          ),
+                          const SizedBox(height: 8),
+                          Text(
+                            selectedFile!.split('/').last,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Название
+          TextField(
+            controller: titleController,
+            decoration: const InputDecoration(
+              labelText: 'Название',
+              border: OutlineInputBorder(),
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Описание
+          TextField(
+            controller: descriptionController,
+            decoration: const InputDecoration(
+              labelText: 'Описание',
+              border: OutlineInputBorder(),
+            ),
+            maxLines: 3,
+          ),
+
+          const SizedBox(height: 16),
+
+          // Теги
+          TextField(
+            controller: tagsController,
+            decoration: const InputDecoration(
+              labelText: 'Теги (через запятую)',
+              border: OutlineInputBorder(),
+              hintText: 'фото, свадьба, портрет',
+            ),
+          ),
+
+          const SizedBox(height: 16),
+
+          // Тип медиа
+          DropdownButtonFormField<MediaType>(
+            initialValue: selectedType,
+            decoration: const InputDecoration(
+              labelText: 'Тип медиа',
+              border: OutlineInputBorder(),
+            ),
+            items: MediaType.values
+                .map(
+                  (type) => DropdownMenuItem(
+                    value: type,
+                    child: Row(
+                      children: [
+                        Text(type.icon),
+                        const SizedBox(width: 8),
+                        Text(type.displayName),
+                      ],
+                    ),
+                  ),
+                )
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                selectedType = value!;
+              });
+            },
+          ),
+
+          const SizedBox(height: 24),
+
+          // Кнопка загрузки
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: selectedFile == null || titleController.text.isEmpty
+                  ? null
+                  : () => _uploadMedia(
+                        selectedFile!,
+                        titleController.text,
+                        descriptionController.text,
+                        tagsController.text,
+                        selectedType,
+                      ),
+              icon: const Icon(Icons.cloud_upload),
+              label: const Text('Загрузить медиа'),
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildUploadTab() {
-    return SingleChildScrollView(
-      child: ResponsiveCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ResponsiveText(
-              'Загрузка медиа',
-              isTitle: true,
-            ),
-
-            const SizedBox(height: 16),
-
-            // Форма загрузки
-            _buildUploadForm(),
-          ],
+  Widget _buildInfoChip(String label, String value, Color color) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color),
         ),
-      ),
-    );
-  }
-
-  Widget _buildUploadForm() {
-    final titleController = TextEditingController();
-    final descriptionController = TextEditingController();
-    final tagsController = TextEditingController();
-    MediaType selectedType = MediaType.image;
-    String? selectedFile;
-
-    return StatefulBuilder(
-      builder: (context, setState) {
-        return Column(
-          children: [
-            // Выбор файла
-            Container(
-              width: double.infinity,
-              height: 120,
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: InkWell(
-                onTap: () async {
-                  final result = await FilePicker.platform.pickFiles(
-                    type: FileType.any,
-                    allowMultiple: false,
-                  );
-
-                  if (result != null && result.files.isNotEmpty) {
-                    final file = result.files.first;
-                    setState(() {
-                      selectedFile = file.path;
-                      // Автоматически определяем тип по расширению
-                      final extension = file.extension?.toLowerCase();
-                      if (extension != null) {
-                        if (['jpg', 'jpeg', 'png', 'gif', 'webp']
-                            .contains(extension)) {
-                          selectedType = MediaType.image;
-                        } else if (['mp4', 'avi', 'mov', 'webm']
-                            .contains(extension)) {
-                          selectedType = MediaType.video;
-                        } else if (['mp3', 'wav', 'ogg', 'm4a']
-                            .contains(extension)) {
-                          selectedType = MediaType.audio;
-                        } else if (['pdf', 'txt', 'doc', 'docx']
-                            .contains(extension)) {
-                          selectedType = MediaType.document;
-                        } else {
-                          selectedType = MediaType.other;
-                        }
-                      }
-                    });
-                  }
-                },
-                child: selectedFile == null
-                    ? const Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(Icons.cloud_upload,
-                                size: 48, color: Colors.grey),
-                            SizedBox(height: 8),
-                            Text('Нажмите для выбора файла'),
-                          ],
-                        ),
-                      )
-                    : Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              selectedType.icon,
-                              style: const TextStyle(fontSize: 32),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              selectedFile!.split('/').last,
-                              style:
-                                  const TextStyle(fontWeight: FontWeight.bold),
-                              textAlign: TextAlign.center,
-                            ),
-                          ],
-                        ),
-                      ),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // Название
-            TextField(
-              controller: titleController,
-              decoration: const InputDecoration(
-                labelText: 'Название',
-                border: OutlineInputBorder(),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // Описание
-            TextField(
-              controller: descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Описание',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
-            ),
-
-            const SizedBox(height: 16),
-
-            // Теги
-            TextField(
-              controller: tagsController,
-              decoration: const InputDecoration(
-                labelText: 'Теги (через запятую)',
-                border: OutlineInputBorder(),
-                hintText: 'фото, свадьба, портрет',
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // Тип медиа
-            DropdownButtonFormField<MediaType>(
-              initialValue: selectedType,
-              decoration: const InputDecoration(
-                labelText: 'Тип медиа',
-                border: OutlineInputBorder(),
-              ),
-              items: MediaType.values.map((type) {
-                return DropdownMenuItem(
-                  value: type,
-                  child: Row(
-                    children: [
-                      Text(type.icon),
-                      const SizedBox(width: 8),
-                      Text(type.displayName),
-                    ],
-                  ),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedType = value!;
-                });
-              },
-            ),
-
-            const SizedBox(height: 24),
-
-            // Кнопка загрузки
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: selectedFile == null || titleController.text.isEmpty
-                    ? null
-                    : () => _uploadMedia(
-                          selectedFile!,
-                          titleController.text,
-                          descriptionController.text,
-                          tagsController.text,
-                          selectedType,
-                        ),
-                icon: const Icon(Icons.cloud_upload),
-                label: const Text('Загрузить медиа'),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildInfoChip(String label, String value, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color),
-      ),
-      child: Text(
-        '$label: $value',
-        style: TextStyle(
-          fontSize: 12,
-          color: color,
-          fontWeight: FontWeight.w500,
+        child: Text(
+          '$label: $value',
+          style: TextStyle(
+            fontSize: 12,
+            color: color,
+            fontWeight: FontWeight.w500,
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Color _getStatusColor(ContentStatus status) {
     switch (status) {
@@ -688,9 +674,8 @@ class _ContentManagementScreenState
     }
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDateTime(DateTime dateTime) =>
+      '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
 
   Future<void> _loadData() async {
     setState(() {
@@ -807,8 +792,8 @@ class _ContentManagementScreenState
   void _showCreateGalleryDialog() {
     final nameController = TextEditingController();
     final descriptionController = TextEditingController();
-    GalleryType selectedType = GalleryType.portfolio;
-    bool isPublic = false;
+    var selectedType = GalleryType.portfolio;
+    var isPublic = false;
 
     showDialog(
       context: context,
@@ -841,18 +826,20 @@ class _ContentManagementScreenState
                   labelText: 'Тип галереи',
                   border: OutlineInputBorder(),
                 ),
-                items: GalleryType.values.map((type) {
-                  return DropdownMenuItem(
-                    value: type,
-                    child: Row(
-                      children: [
-                        Text(type.icon),
-                        const SizedBox(width: 8),
-                        Text(type.displayName),
-                      ],
-                    ),
-                  );
-                }).toList(),
+                items: GalleryType.values
+                    .map(
+                      (type) => DropdownMenuItem(
+                        value: type,
+                        child: Row(
+                          children: [
+                            Text(type.icon),
+                            const SizedBox(width: 8),
+                            Text(type.displayName),
+                          ],
+                        ),
+                      ),
+                    )
+                    .toList(),
                 onChanged: (value) {
                   setState(() {
                     selectedType = value!;
@@ -941,7 +928,8 @@ class _ContentManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Управление медиа в галерее "${gallery.name}" будет реализовано'),
+          'Управление медиа в галерее "${gallery.name}" будет реализовано',
+        ),
       ),
     );
   }

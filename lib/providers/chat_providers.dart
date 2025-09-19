@@ -4,9 +4,7 @@ import '../models/chat_message.dart';
 import '../services/chat_service.dart';
 
 /// Провайдер сервиса чата
-final chatServiceProvider = Provider<ChatService>((ref) {
-  return ChatService();
-});
+final chatServiceProvider = Provider<ChatService>((ref) => ChatService());
 
 /// Провайдер для списка чатов пользователя
 final userChatsProvider =
@@ -17,9 +15,8 @@ final userChatsProvider =
 
 /// Параметры для получения чатов пользователя
 class UserChatsParams {
-  final String userId;
-
   const UserChatsParams({required this.userId});
+  final String userId;
 }
 
 /// Провайдер для сообщений чата
@@ -31,45 +28,40 @@ final chatMessagesProvider =
 
 /// Провайдер для состояния формы сообщения
 final messageFormProvider =
-    NotifierProvider<MessageFormNotifier, MessageFormState>(() {
-  return MessageFormNotifier();
-});
+    NotifierProvider<MessageFormNotifier, MessageFormState>(
+        MessageFormNotifier.new);
 
 /// Состояние формы сообщения
 class MessageFormState {
-  final String text;
-  final List<String> attachments;
-  final bool isSending;
-  final String? error;
-
   const MessageFormState({
     this.text = '',
     this.attachments = const [],
     this.isSending = false,
     this.error,
   });
+  final String text;
+  final List<String> attachments;
+  final bool isSending;
+  final String? error;
 
   MessageFormState copyWith({
     String? text,
     List<String>? attachments,
     bool? isSending,
     String? error,
-  }) {
-    return MessageFormState(
-      text: text ?? this.text,
-      attachments: attachments ?? this.attachments,
-      isSending: isSending ?? this.isSending,
-      error: error ?? this.error,
-    );
-  }
+  }) =>
+      MessageFormState(
+        text: text ?? this.text,
+        attachments: attachments ?? this.attachments,
+        isSending: isSending ?? this.isSending,
+        error: error ?? this.error,
+      );
 }
 
 /// Нотификатор для формы сообщения
 class MessageFormNotifier extends Notifier<MessageFormState> {
   @override
-  MessageFormState build() {
-    return const MessageFormState();
-  }
+  MessageFormState build() => const MessageFormState();
 
   void updateText(String text) {
     state = state.copyWith(text: text);
@@ -100,45 +92,40 @@ class MessageFormNotifier extends Notifier<MessageFormState> {
 }
 
 /// Провайдер для состояния чата
-final chatStateProvider = NotifierProvider<ChatStateNotifier, ChatState>(() {
-  return ChatStateNotifier();
-});
+final chatStateProvider =
+    NotifierProvider<ChatStateNotifier, ChatState>(ChatStateNotifier.new);
 
 /// Состояние чата
 class ChatState {
-  final List<Chat> chats;
-  final Map<String, List<ChatMessage>> messages;
-  final bool isLoading;
-  final String? error;
-
   const ChatState({
     this.chats = const [],
     this.messages = const {},
     this.isLoading = false,
     this.error,
   });
+  final List<Chat> chats;
+  final Map<String, List<ChatMessage>> messages;
+  final bool isLoading;
+  final String? error;
 
   ChatState copyWith({
     List<Chat>? chats,
     Map<String, List<ChatMessage>>? messages,
     bool? isLoading,
     String? error,
-  }) {
-    return ChatState(
-      chats: chats ?? this.chats,
-      messages: messages ?? this.messages,
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
-    );
-  }
+  }) =>
+      ChatState(
+        chats: chats ?? this.chats,
+        messages: messages ?? this.messages,
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+      );
 }
 
 /// Нотификатор для состояния чата
 class ChatStateNotifier extends Notifier<ChatState> {
   @override
-  ChatState build() {
-    return const ChatState();
-  }
+  ChatState build() => const ChatState();
 
   void setChats(List<Chat> chats) {
     state = state.copyWith(chats: chats);

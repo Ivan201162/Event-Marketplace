@@ -1,10 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+
+import '../core/feature_flags.dart';
+import '../models/collection.dart';
 import '../models/idea.dart';
 import '../models/idea_filter.dart';
-import '../models/collection.dart';
 import '../models/idea_stats.dart';
-import '../core/feature_flags.dart';
 
 /// Сервис для работы с идеями
 class IdeaService {
@@ -21,7 +22,7 @@ class IdeaService {
       return Stream.value([]);
     }
 
-    Query query = _firestore
+    var query = _firestore
         .collection('ideas')
         .where('isPublic', isEqualTo: true)
         .orderBy('createdAt', descending: true);
@@ -36,14 +37,16 @@ class IdeaService {
 
     query = query.limit(limit);
 
-    return query.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return Idea.fromMap({
-          'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
-        });
-      }).toList();
-    });
+    return query.snapshots().map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => Idea.fromMap({
+                  'id': doc.id,
+                  ...doc.data() as Map<String, dynamic>,
+                }),
+              )
+              .toList(),
+        );
   }
 
   /// Получить идеи пользователя
@@ -57,14 +60,16 @@ class IdeaService {
         .where('authorId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return Idea.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
-    });
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => Idea.fromMap({
+                  'id': doc.id,
+                  ...doc.data(),
+                }),
+              )
+              .toList(),
+        );
   }
 
   /// Получить сохраненные идеи пользователя
@@ -78,14 +83,16 @@ class IdeaService {
         .where('savedBy', arrayContains: userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return Idea.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
-    });
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => Idea.fromMap({
+                  'id': doc.id,
+                  ...doc.data(),
+                }),
+              )
+              .toList(),
+        );
   }
 
   /// Создать новую идею
@@ -227,7 +234,7 @@ class IdeaService {
       return Stream.value([]);
     }
 
-    Query firestoreQuery =
+    var firestoreQuery =
         _firestore.collection('ideas').where('isPublic', isEqualTo: true);
 
     if (category != null) {
@@ -242,22 +249,25 @@ class IdeaService {
         firestoreQuery.orderBy('createdAt', descending: true).limit(limit);
 
     return firestoreQuery.snapshots().map((snapshot) {
-      final ideas = snapshot.docs.map((doc) {
-        return Idea.fromMap({
-          'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
-        });
-      }).toList();
+      final ideas = snapshot.docs
+          .map(
+            (doc) => Idea.fromMap({
+              'id': doc.id,
+              ...doc.data() as Map<String, dynamic>,
+            }),
+          )
+          .toList();
 
       // Фильтруем по тексту поиска
       if (query.isNotEmpty) {
         final lowercaseQuery = query.toLowerCase();
-        ideas.removeWhere((idea) {
-          return !idea.title.toLowerCase().contains(lowercaseQuery) &&
+        ideas.removeWhere(
+          (idea) =>
+              !idea.title.toLowerCase().contains(lowercaseQuery) &&
               !idea.description.toLowerCase().contains(lowercaseQuery) &&
               !idea.tags
-                  .any((tag) => tag.toLowerCase().contains(lowercaseQuery));
-        });
+                  .any((tag) => tag.toLowerCase().contains(lowercaseQuery)),
+        );
       }
 
       return ideas;
@@ -277,14 +287,16 @@ class IdeaService {
         .orderBy('createdAt', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return Idea.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
-    });
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => Idea.fromMap({
+                  'id': doc.id,
+                  ...doc.data(),
+                }),
+              )
+              .toList(),
+        );
   }
 
   /// Получить идеи по категории
@@ -300,14 +312,16 @@ class IdeaService {
         .orderBy('createdAt', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return Idea.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
-    });
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => Idea.fromMap({
+                  'id': doc.id,
+                  ...doc.data(),
+                }),
+              )
+              .toList(),
+        );
   }
 
   /// Получить идею по ID
@@ -344,14 +358,16 @@ class IdeaService {
         .where('parentCommentId', isNull: true) // Только основные комментарии
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return IdeaComment.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
-    });
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => IdeaComment.fromMap({
+                  'id': doc.id,
+                  ...doc.data(),
+                }),
+              )
+              .toList(),
+        );
   }
 
   /// Добавить комментарий к идее
@@ -420,7 +436,7 @@ class IdeaService {
 
   /// Получить идеи с фильтром
   Stream<List<Idea>> getIdeas(IdeaFilter filter) {
-    Query query = _firestore.collection('ideas');
+    var query = _firestore.collection('ideas');
 
     if (filter.category != null) {
       query = query.where('category', isEqualTo: filter.category);
@@ -444,11 +460,11 @@ class IdeaService {
       query = query.limit(filter.limit!);
     }
 
-    return query.snapshots().map((snapshot) {
-      return snapshot.docs
-          .map((doc) => Idea.fromMap(doc.data() as Map<String, dynamic>))
-          .toList();
-    });
+    return query.snapshots().map(
+          (snapshot) => snapshot.docs
+              .map((doc) => Idea.fromMap(doc.data() as Map<String, dynamic>))
+              .toList(),
+        );
   }
 
   /// Получить идею по ID
@@ -477,24 +493,20 @@ class IdeaService {
         .orderBy('likesCount', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) => Idea.fromMap(doc.data())).toList();
-    });
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Idea.fromMap(doc.data())).toList());
   }
 
   /// Получить коллекции пользователя
-  Stream<List<Collection>> getUserCollections(String userId) {
-    return _firestore
-        .collection('collections')
-        .where('authorId', isEqualTo: userId)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => Collection.fromMap(doc.data()))
-          .toList();
-    });
-  }
+  Stream<List<Collection>> getUserCollections(String userId) => _firestore
+      .collection('collections')
+      .where('authorId', isEqualTo: userId)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) =>
+            snapshot.docs.map((doc) => Collection.fromMap(doc.data())).toList(),
+      );
 
   /// Получить статистику идей
   Future<IdeaStats> getIdeaStats(String ideaId) async {

@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/specialist.dart';
+
 import '../models/booking.dart';
-import '../providers/specialist_providers.dart';
+import '../models/specialist.dart';
 import '../providers/firestore_providers.dart';
+import '../providers/specialist_providers.dart';
 import 'calendar_widget.dart';
 
 /// Виджет бронирования
 class BookingWidget extends ConsumerStatefulWidget {
-  final Specialist specialist;
-
   const BookingWidget({
     super.key,
     required this.specialist,
   });
+  final Specialist specialist;
 
   @override
   ConsumerState<BookingWidget> createState() => _BookingWidgetState();
@@ -32,300 +32,294 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        height: MediaQuery.of(context).size.height * 0.8,
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  Widget build(BuildContext context) => Dialog(
+        child: Container(
+          width: MediaQuery.of(context).size.width * 0.9,
+          height: MediaQuery.of(context).size.height * 0.8,
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Заголовок
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      'Забронировать ${widget.specialist.name}',
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 16),
+
+              // Информация о специалисте
+              _buildSpecialistInfo(),
+
+              const SizedBox(height: 24),
+
+              // Выбор даты
+              _buildDateSelection(),
+
+              const SizedBox(height: 24),
+
+              // Выбор времени
+              if (_selectedDate != null) _buildTimeSelection(),
+
+              const SizedBox(height: 24),
+
+              // Выбор продолжительности
+              _buildDurationSelection(),
+
+              const SizedBox(height: 24),
+
+              // Дополнительные заметки
+              _buildNotesSection(),
+
+              const Spacer(),
+
+              // Кнопки
+              _buildActionButtons(),
+            ],
+          ),
+        ),
+      );
+
+  /// Построить информацию о специалисте
+  Widget _buildSpecialistInfo() => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
           children: [
-            // Заголовок
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    'Забронировать ${widget.specialist.name}',
+            CircleAvatar(
+              radius: 24,
+              backgroundColor: Theme.of(context).colorScheme.primary,
+              child: Text(
+                widget.specialist.name.isNotEmpty
+                    ? widget.specialist.name[0].toUpperCase()
+                    : '?',
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.specialist.name,
                     style: const TextStyle(
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-                ),
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () => Navigator.of(context).pop(),
-                ),
-              ],
+                  Text(
+                    widget.specialist.categoryDisplayName,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                  Text(
+                    '${widget.specialist.hourlyRate.toStringAsFixed(0)} ₽/час',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.green[700],
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
             ),
-
-            const SizedBox(height: 16),
-
-            // Информация о специалисте
-            _buildSpecialistInfo(),
-
-            const SizedBox(height: 24),
-
-            // Выбор даты
-            _buildDateSelection(),
-
-            const SizedBox(height: 24),
-
-            // Выбор времени
-            if (_selectedDate != null) _buildTimeSelection(),
-
-            const SizedBox(height: 24),
-
-            // Выбор продолжительности
-            _buildDurationSelection(),
-
-            const SizedBox(height: 24),
-
-            // Дополнительные заметки
-            _buildNotesSection(),
-
-            const Spacer(),
-
-            // Кнопки
-            _buildActionButtons(),
           ],
         ),
-      ),
-    );
-  }
+      );
 
-  /// Построить информацию о специалисте
-  Widget _buildSpecialistInfo() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
+  /// Построить выбор даты
+  Widget _buildDateSelection() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CircleAvatar(
-            radius: 24,
-            backgroundColor: Theme.of(context).colorScheme.primary,
-            child: Text(
-              widget.specialist.name.isNotEmpty
-                  ? widget.specialist.name[0].toUpperCase()
-                  : '?',
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
+          const Text(
+            'Выберите дату',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          InkWell(
+            onTap: _selectDate,
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey[300]!),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.calendar_today, color: Colors.grey[600]),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      _selectedDate != null
+                          ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
+                          : 'Выберите дату',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: _selectedDate != null
+                            ? Colors.black
+                            : Colors.grey[600],
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                    color: Colors.grey[400],
+                  ),
+                ],
               ),
             ),
           ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.specialist.name,
+        ],
+      );
+
+  /// Построить выбор времени
+  Widget _buildTimeSelection() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Выберите время',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          InkWell(
+            onTap: _selectTime,
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey[300]!),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: [
+                  Icon(Icons.access_time, color: Colors.grey[600]),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      _selectedTime != null
+                          ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
+                          : 'Выберите время',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: _selectedTime != null
+                            ? Colors.black
+                            : Colors.grey[600],
+                      ),
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    size: 16,
+                    color: Colors.grey[400],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      );
+
+  /// Построить выбор продолжительности
+  Widget _buildDurationSelection() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Продолжительность',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              IconButton(
+                onPressed: _selectedHours > 1
+                    ? () => setState(() => _selectedHours--)
+                    : null,
+                icon: const Icon(Icons.remove),
+              ),
+              Expanded(
+                child: Text(
+                  '$_selectedHours ${_getHoursText(_selectedHours)}',
+                  textAlign: TextAlign.center,
                   style: const TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                Text(
-                  widget.specialist.categoryDisplayName,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                Text(
-                  '${widget.specialist.hourlyRate.toStringAsFixed(0)} ₽/час',
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.green[700],
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ],
+              ),
+              IconButton(
+                onPressed: _selectedHours < 12
+                    ? () => setState(() => _selectedHours++)
+                    : null,
+                icon: const Icon(Icons.add),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Стоимость: ${(widget.specialist.hourlyRate * _selectedHours).toStringAsFixed(0)} ₽',
+            style: TextStyle(
+              fontSize: 14,
+              color: Colors.green[700],
+              fontWeight: FontWeight.w600,
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  /// Построить выбор даты
-  Widget _buildDateSelection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Выберите дату',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 12),
-        InkWell(
-          onTap: _selectDate,
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey[300]!),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.calendar_today, color: Colors.grey[600]),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    _selectedDate != null
-                        ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
-                        : 'Выберите дату',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: _selectedDate != null
-                          ? Colors.black
-                          : Colors.grey[600],
-                    ),
-                  ),
-                ),
-                Icon(Icons.arrow_forward_ios,
-                    size: 16, color: Colors.grey[400]),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// Построить выбор времени
-  Widget _buildTimeSelection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Выберите время',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 12),
-        InkWell(
-          onTap: _selectTime,
-          child: Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey[300]!),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Row(
-              children: [
-                Icon(Icons.access_time, color: Colors.grey[600]),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    _selectedTime != null
-                        ? '${_selectedTime!.hour.toString().padLeft(2, '0')}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
-                        : 'Выберите время',
-                    style: TextStyle(
-                      fontSize: 16,
-                      color: _selectedTime != null
-                          ? Colors.black
-                          : Colors.grey[600],
-                    ),
-                  ),
-                ),
-                Icon(Icons.arrow_forward_ios,
-                    size: 16, color: Colors.grey[400]),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-
-  /// Построить выбор продолжительности
-  Widget _buildDurationSelection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Продолжительность',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            IconButton(
-              onPressed: _selectedHours > 1
-                  ? () => setState(() => _selectedHours--)
-                  : null,
-              icon: const Icon(Icons.remove),
-            ),
-            Expanded(
-              child: Text(
-                '$_selectedHours ${_getHoursText(_selectedHours)}',
-                textAlign: TextAlign.center,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            IconButton(
-              onPressed: _selectedHours < 12
-                  ? () => setState(() => _selectedHours++)
-                  : null,
-              icon: const Icon(Icons.add),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Стоимость: ${(widget.specialist.hourlyRate * _selectedHours).toStringAsFixed(0)} ₽',
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.green[700],
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-      ],
-    );
-  }
+      );
 
   /// Построить секцию заметок
-  Widget _buildNotesSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Дополнительные заметки (необязательно)',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
+  Widget _buildNotesSection() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Дополнительные заметки (необязательно)',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const SizedBox(height: 12),
-        TextField(
-          controller: _notesController,
-          decoration: const InputDecoration(
-            hintText: 'Опишите детали мероприятия...',
-            border: OutlineInputBorder(),
+          const SizedBox(height: 12),
+          TextField(
+            controller: _notesController,
+            decoration: const InputDecoration(
+              hintText: 'Опишите детали мероприятия...',
+              border: OutlineInputBorder(),
+            ),
+            maxLines: 3,
           ),
-          maxLines: 3,
-        ),
-      ],
-    );
-  }
+        ],
+      );
 
   /// Построить кнопки действий
   Widget _buildActionButtons() {
@@ -414,8 +408,6 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
                 child: CalendarWidget(
                   specialistId: widget.specialist.id,
                   initialDate: _selectedDate,
-                  showEvents: true,
-                  showTimeSlots: false,
                   onDateSelected: (date) {
                     setState(() {
                       _selectedDate = date;
@@ -566,11 +558,6 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
 
 /// Виджет для отображения доступных временных слотов
 class TimeSlotsWidget extends ConsumerWidget {
-  final String specialistId;
-  final DateTime selectedDate;
-  final DateTime? selectedTime;
-  final Function(DateTime) onTimeSelected;
-
   const TimeSlotsWidget({
     super.key,
     required this.specialistId,
@@ -578,15 +565,21 @@ class TimeSlotsWidget extends ConsumerWidget {
     this.selectedTime,
     required this.onTimeSelected,
   });
+  final String specialistId;
+  final DateTime selectedDate;
+  final DateTime? selectedTime;
+  final Function(DateTime) onTimeSelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final timeSlotsAsync = ref.watch(specialistTimeSlotsProvider(
-      SpecialistTimeSlotsParams(
-        specialistId: specialistId,
-        date: selectedDate,
+    final timeSlotsAsync = ref.watch(
+      specialistTimeSlotsProvider(
+        SpecialistTimeSlotsParams(
+          specialistId: specialistId,
+          date: selectedDate,
+        ),
       ),
-    ));
+    );
 
     return timeSlotsAsync.when(
       data: (timeSlots) {

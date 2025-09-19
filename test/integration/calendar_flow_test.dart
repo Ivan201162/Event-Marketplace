@@ -1,13 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:event_marketplace_app/main.dart';
 import 'package:event_marketplace_app/models/specialist_schedule.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Calendar Flow Integration Tests', () {
     testWidgets('should complete full calendar management flow',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -27,8 +27,7 @@ void main() {
       expect(find.text('Быстрые действия'), findsOneWidget);
     });
 
-    testWidgets('should handle adding unavailable period',
-        (WidgetTester tester) async {
+    testWidgets('should handle adding unavailable period', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -49,7 +48,9 @@ void main() {
       // Act 3: Fill unavailable period form
       await tester.enterText(find.byType(TextFormField).first, 'Personal time');
       await tester.enterText(
-          find.byType(TextFormField).at(1), 'Need some time off');
+        find.byType(TextFormField).at(1),
+        'Need some time off',
+      );
 
       // Act 4: Select date range
       await tester.tap(find.text('Выберите дату начала'));
@@ -63,8 +64,7 @@ void main() {
       expect(find.text('Недоступность добавлена'), findsOneWidget);
     });
 
-    testWidgets('should handle adding vacation period',
-        (WidgetTester tester) async {
+    testWidgets('should handle adding vacation period', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -84,9 +84,13 @@ void main() {
 
       // Act 3: Fill vacation form
       await tester.enterText(
-          find.byType(TextFormField).first, 'Summer vacation');
+        find.byType(TextFormField).first,
+        'Summer vacation',
+      );
       await tester.enterText(
-          find.byType(TextFormField).at(1), 'Going on vacation');
+        find.byType(TextFormField).at(1),
+        'Going on vacation',
+      );
 
       // Act 4: Select date range
       await tester.tap(find.text('Выберите дату начала'));
@@ -100,8 +104,7 @@ void main() {
       expect(find.text('Отпуск добавлен'), findsOneWidget);
     });
 
-    testWidgets('should handle viewing calendar statistics',
-        (WidgetTester tester) async {
+    testWidgets('should handle viewing calendar statistics', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -127,8 +130,7 @@ void main() {
       expect(find.text('Отпуск'), findsOneWidget);
     });
 
-    testWidgets('should handle viewing calendar analytics',
-        (WidgetTester tester) async {
+    testWidgets('should handle viewing calendar analytics', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -153,7 +155,7 @@ void main() {
       expect(find.text('Популярные дни'), findsOneWidget);
     });
 
-    testWidgets('should handle viewing test data', (WidgetTester tester) async {
+    testWidgets('should handle viewing test data', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -176,8 +178,7 @@ void main() {
       expect(find.text('Создать тестовые события'), findsOneWidget);
     });
 
-    testWidgets('should handle calendar navigation',
-        (WidgetTester tester) async {
+    testWidgets('should handle calendar navigation', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -203,8 +204,7 @@ void main() {
       expect(find.text('Календарь'), findsOneWidget);
     });
 
-    testWidgets('should handle calendar date selection',
-        (WidgetTester tester) async {
+    testWidgets('should handle calendar date selection', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -229,8 +229,7 @@ void main() {
       }
     });
 
-    testWidgets('should handle calendar event viewing',
-        (WidgetTester tester) async {
+    testWidgets('should handle calendar event viewing', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -255,8 +254,7 @@ void main() {
       }
     });
 
-    testWidgets('should handle calendar event editing',
-        (WidgetTester tester) async {
+    testWidgets('should handle calendar event editing', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -278,7 +276,9 @@ void main() {
 
         // Act 3: Edit event details
         await tester.enterText(
-            find.byType(TextFormField).first, 'Updated event');
+          find.byType(TextFormField).first,
+          'Updated event',
+        );
 
         // Act 4: Save changes
         await tester.tap(find.text('Сохранить'));
@@ -289,8 +289,7 @@ void main() {
       }
     });
 
-    testWidgets('should handle calendar event deletion',
-        (WidgetTester tester) async {
+    testWidgets('should handle calendar event deletion', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(

@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../models/booking.dart';
+import '../models/specialist.dart';
 import '../providers/booking_providers.dart';
 import '../providers/specialist_providers.dart';
-import '../models/specialist.dart';
-import '../models/booking.dart';
 
 /// Экран формы бронирования
 class BookingFormScreen extends ConsumerStatefulWidget {
-  final String specialistId;
-
   const BookingFormScreen({
     super.key,
     required this.specialistId,
   });
+  final String specialistId;
 
   @override
   ConsumerState<BookingFormScreen> createState() => _BookingFormScreenState();
@@ -72,231 +72,235 @@ class _BookingFormScreenState extends ConsumerState<BookingFormScreen> {
     );
   }
 
-  Widget _buildBookingForm(Specialist specialist) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Form(
-        key: _formKey,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Информация о специалисте
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 30,
-                      backgroundImage: specialist.avatar != null
-                          ? NetworkImage(specialist.avatar!)
-                          : null,
-                      child: specialist.avatar == null
-                          ? const Icon(Icons.person, size: 30)
-                          : null,
-                    ),
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            specialist.name,
-                            style: const TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            specialist.specialization,
-                            style: TextStyle(
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          const SizedBox(height: 4),
-                          Row(
-                            children: [
-                              const Icon(Icons.star,
-                                  size: 16, color: Colors.amber),
-                              const SizedBox(width: 4),
-                              Text(
-                                specialist.rating.toStringAsFixed(1) ?? '0.0',
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.w500),
+  Widget _buildBookingForm(Specialist specialist) => SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Form(
+          key: _formKey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Информация о специалисте
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundImage: specialist.avatar != null
+                            ? NetworkImage(specialist.avatar!)
+                            : null,
+                        child: specialist.avatar == null
+                            ? const Icon(Icons.person, size: 30)
+                            : null,
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              specialist.name,
+                              style: const TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
-                            ],
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              specialist.specialization,
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Row(
+                              children: [
+                                const Icon(
+                                  Icons.star,
+                                  size: 16,
+                                  color: Colors.amber,
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  specialist.rating.toStringAsFixed(1) ?? '0.0',
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              const SizedBox(height: 24),
+
+              // Выбор услуги
+              Text(
+                'Выберите услугу',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              DropdownButtonFormField<String>(
+                initialValue: _selectedService,
+                decoration: const InputDecoration(
+                  border: OutlineInputBorder(),
+                  hintText: 'Выберите услугу',
+                ),
+                items: specialist.services
+                        ?.map(
+                          (service) => DropdownMenuItem(
+                            value: service,
+                            child: Text(service),
                           ),
-                        ],
-                      ),
-                    ),
-                  ],
+                        )
+                        .toList() ??
+                    [],
+                onChanged: (value) {
+                  setState(() {
+                    _selectedService = value;
+                  });
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Выберите услугу';
+                  }
+                  return null;
+                },
+              ),
+
+              const SizedBox(height: 24),
+
+              // Выбор даты
+              Text(
+                'Выберите дату',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              InkWell(
+                onTap: _selectDate,
+                child: InputDecorator(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    suffixIcon: Icon(Icons.calendar_today),
+                  ),
+                  child: Text(
+                    _selectedDate != null
+                        ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
+                        : 'Выберите дату',
+                  ),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            // Выбор услуги
-            Text(
-              'Выберите услугу',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            DropdownButtonFormField<String>(
-              initialValue: _selectedService,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Выберите услугу',
+              // Выбор времени
+              Text(
+                'Выберите время',
+                style: Theme.of(context).textTheme.titleMedium,
               ),
-              items: specialist.services?.map((service) {
-                    return DropdownMenuItem(
-                      value: service,
-                      child: Text(service),
-                    );
-                  }).toList() ??
-                  [],
-              onChanged: (value) {
-                setState(() {
-                  _selectedService = value;
-                });
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Выберите услугу';
-                }
-                return null;
-              },
-            ),
+              const SizedBox(height: 8),
+              InkWell(
+                onTap: _selectTime,
+                child: InputDecorator(
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    suffixIcon: Icon(Icons.access_time),
+                  ),
+                  child: Text(
+                    _selectedTime != null
+                        ? '${_selectedTime!.hour}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
+                        : 'Выберите время',
+                  ),
+                ),
+              ),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            // Выбор даты
-            Text(
-              'Выберите дату',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            InkWell(
-              onTap: _selectDate,
-              child: InputDecorator(
+              // Продолжительность
+              Text(
+                'Продолжительность (часы)',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              Slider(
+                value: _selectedHours.toDouble(),
+                min: 1,
+                max: 8,
+                divisions: 7,
+                label: '$_selectedHours ч.',
+                onChanged: (value) {
+                  setState(() {
+                    _selectedHours = value.round();
+                  });
+                },
+              ),
+
+              const SizedBox(height: 24),
+
+              // Дополнительные пожелания
+              Text(
+                'Дополнительные пожелания',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+              const SizedBox(height: 8),
+              TextFormField(
+                controller: _notesController,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
-                  suffixIcon: Icon(Icons.calendar_today),
+                  hintText: 'Опишите ваши пожелания...',
                 ),
-                child: Text(
-                  _selectedDate != null
-                      ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
-                      : 'Выберите дату',
+                maxLines: 3,
+              ),
+
+              const SizedBox(height: 32),
+
+              // Кнопка бронирования
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: bookingFormState.isLoading ? null : _submitBooking,
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                  child: bookingFormState.isLoading
+                      ? const CircularProgressIndicator(color: Colors.white)
+                      : const Text('Забронировать'),
                 ),
               ),
-            ),
 
-            const SizedBox(height: 24),
-
-            // Выбор времени
-            Text(
-              'Выберите время',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            InkWell(
-              onTap: _selectTime,
-              child: InputDecorator(
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  suffixIcon: Icon(Icons.access_time),
-                ),
-                child: Text(
-                  _selectedTime != null
-                      ? '${_selectedTime!.hour}:${_selectedTime!.minute.toString().padLeft(2, '0')}'
-                      : 'Выберите время',
-                ),
-              ),
-            ),
-
-            const SizedBox(height: 24),
-
-            // Продолжительность
-            Text(
-              'Продолжительность (часы)',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            Slider(
-              value: _selectedHours.toDouble(),
-              min: 1,
-              max: 8,
-              divisions: 7,
-              label: '$_selectedHours ч.',
-              onChanged: (value) {
-                setState(() {
-                  _selectedHours = value.round();
-                });
-              },
-            ),
-
-            const SizedBox(height: 24),
-
-            // Дополнительные пожелания
-            Text(
-              'Дополнительные пожелания',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            const SizedBox(height: 8),
-            TextFormField(
-              controller: _notesController,
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: 'Опишите ваши пожелания...',
-              ),
-              maxLines: 3,
-            ),
-
-            const SizedBox(height: 32),
-
-            // Кнопка бронирования
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: bookingFormState.isLoading ? null : _submitBooking,
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-                child: bookingFormState.isLoading
-                    ? const CircularProgressIndicator(color: Colors.white)
-                    : const Text('Забронировать'),
-              ),
-            ),
-
-            if (bookingFormState.errorMessage != null) ...[
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.red[50],
-                  border: Border.all(color: Colors.red[200]!),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Row(
-                  children: [
-                    Icon(Icons.error_outline, color: Colors.red[700]),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        bookingFormState.errorMessage!,
-                        style: TextStyle(color: Colors.red[700]),
+              if (bookingFormState.errorMessage != null) ...[
+                const SizedBox(height: 16),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.red[50],
+                    border: Border.all(color: Colors.red[200]!),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(Icons.error_outline, color: Colors.red[700]),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: Text(
+                          bookingFormState.errorMessage!,
+                          style: TextStyle(color: Colors.red[700]),
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ],
-          ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Future<void> _selectDate() async {
     final date = await showDatePicker(

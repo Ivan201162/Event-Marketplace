@@ -2,20 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель контент-мейкера
 class ContentCreator {
-  final String id;
-  final String name;
-  final String description;
-  final List<String> categories;
-  final List<ContentFormat> formats;
-  final List<MediaShowcase> mediaShowcase;
-  final Map<String, dynamic>? pricing;
-  final String? location;
-  final double? rating;
-  final int? reviewCount;
-  final bool isActive;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
   const ContentCreator({
     required this.id,
     required this.name,
@@ -61,49 +47,58 @@ class ContentCreator {
   }
 
   /// Создать из Map
-  factory ContentCreator.fromMap(Map<String, dynamic> data) {
-    return ContentCreator(
-      id: data['id'] ?? '',
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
-      categories: List<String>.from(data['categories'] ?? []),
-      formats: (data['formats'] as List<dynamic>?)
-              ?.map((f) => ContentFormat.fromMap(f as Map<String, dynamic>))
-              .toList() ??
-          [],
-      mediaShowcase: (data['mediaShowcase'] as List<dynamic>?)
-              ?.map((m) => MediaShowcase.fromMap(m as Map<String, dynamic>))
-              .toList() ??
-          [],
-      pricing: data['pricing'] != null
-          ? Map<String, dynamic>.from(data['pricing'])
-          : null,
-      location: data['location'],
-      rating: data['rating']?.toDouble(),
-      reviewCount: data['reviewCount'],
-      isActive: data['isActive'] ?? true,
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-    );
-  }
+  factory ContentCreator.fromMap(Map<String, dynamic> data) => ContentCreator(
+        id: data['id'] ?? '',
+        name: data['name'] ?? '',
+        description: data['description'] ?? '',
+        categories: List<String>.from(data['categories'] ?? []),
+        formats: (data['formats'] as List<dynamic>?)
+                ?.map((f) => ContentFormat.fromMap(f as Map<String, dynamic>))
+                .toList() ??
+            [],
+        mediaShowcase: (data['mediaShowcase'] as List<dynamic>?)
+                ?.map((m) => MediaShowcase.fromMap(m as Map<String, dynamic>))
+                .toList() ??
+            [],
+        pricing: data['pricing'] != null
+            ? Map<String, dynamic>.from(data['pricing'])
+            : null,
+        location: data['location'],
+        rating: data['rating']?.toDouble(),
+        reviewCount: data['reviewCount'],
+        isActive: data['isActive'] ?? true,
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      );
+  final String id;
+  final String name;
+  final String description;
+  final List<String> categories;
+  final List<ContentFormat> formats;
+  final List<MediaShowcase> mediaShowcase;
+  final Map<String, dynamic>? pricing;
+  final String? location;
+  final double? rating;
+  final int? reviewCount;
+  final bool isActive;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'description': description,
-      'categories': categories,
-      'formats': formats.map((f) => f.toMap()).toList(),
-      'mediaShowcase': mediaShowcase.map((m) => m.toMap()).toList(),
-      'pricing': pricing,
-      'location': location,
-      'rating': rating,
-      'reviewCount': reviewCount,
-      'isActive': isActive,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'description': description,
+        'categories': categories,
+        'formats': formats.map((f) => f.toMap()).toList(),
+        'mediaShowcase': mediaShowcase.map((m) => m.toMap()).toList(),
+        'pricing': pricing,
+        'location': location,
+        'rating': rating,
+        'reviewCount': reviewCount,
+        'isActive': isActive,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   /// Создать копию с изменениями
   ContentCreator copyWith({
@@ -120,23 +115,22 @@ class ContentCreator {
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) {
-    return ContentCreator(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      categories: categories ?? this.categories,
-      formats: formats ?? this.formats,
-      mediaShowcase: mediaShowcase ?? this.mediaShowcase,
-      pricing: pricing ?? this.pricing,
-      location: location ?? this.location,
-      rating: rating ?? this.rating,
-      reviewCount: reviewCount ?? this.reviewCount,
-      isActive: isActive ?? this.isActive,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
+  }) =>
+      ContentCreator(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        categories: categories ?? this.categories,
+        formats: formats ?? this.formats,
+        mediaShowcase: mediaShowcase ?? this.mediaShowcase,
+        pricing: pricing ?? this.pricing,
+        location: location ?? this.location,
+        rating: rating ?? this.rating,
+        reviewCount: reviewCount ?? this.reviewCount,
+        isActive: isActive ?? this.isActive,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Получить диапазон цен
   String? get priceRange {
@@ -179,37 +173,29 @@ class ContentCreator {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      name,
-      description,
-      categories,
-      formats,
-      mediaShowcase,
-      pricing,
-      location,
-      rating,
-      reviewCount,
-      isActive,
-      createdAt,
-      updatedAt,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        name,
+        description,
+        categories,
+        formats,
+        mediaShowcase,
+        pricing,
+        location,
+        rating,
+        reviewCount,
+        isActive,
+        createdAt,
+        updatedAt,
+      );
 
   @override
-  String toString() {
-    return 'ContentCreator(id: $id, name: $name, formats: ${supportedFormats.length})';
-  }
+  String toString() =>
+      'ContentCreator(id: $id, name: $name, formats: ${supportedFormats.length})';
 }
 
 /// Формат контента
 class ContentFormat {
-  final String name;
-  final String description;
-  final List<String> platforms;
-  final Map<String, dynamic>? specifications;
-
   const ContentFormat({
     required this.name,
     required this.description,
@@ -218,26 +204,26 @@ class ContentFormat {
   });
 
   /// Создать из Map
-  factory ContentFormat.fromMap(Map<String, dynamic> data) {
-    return ContentFormat(
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
-      platforms: List<String>.from(data['platforms'] ?? []),
-      specifications: data['specifications'] != null
-          ? Map<String, dynamic>.from(data['specifications'])
-          : null,
-    );
-  }
+  factory ContentFormat.fromMap(Map<String, dynamic> data) => ContentFormat(
+        name: data['name'] ?? '',
+        description: data['description'] ?? '',
+        platforms: List<String>.from(data['platforms'] ?? []),
+        specifications: data['specifications'] != null
+            ? Map<String, dynamic>.from(data['specifications'])
+            : null,
+      );
+  final String name;
+  final String description;
+  final List<String> platforms;
+  final Map<String, dynamic>? specifications;
 
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'description': description,
-      'platforms': platforms,
-      'specifications': specifications,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'description': description,
+        'platforms': platforms,
+        'specifications': specifications,
+      };
 
   @override
   bool operator ==(Object other) {
@@ -250,27 +236,14 @@ class ContentFormat {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(name, description, platforms, specifications);
-  }
+  int get hashCode => Object.hash(name, description, platforms, specifications);
 
   @override
-  String toString() {
-    return 'ContentFormat(name: $name, platforms: $platforms)';
-  }
+  String toString() => 'ContentFormat(name: $name, platforms: $platforms)';
 }
 
 /// Медиа в портфолио
 class MediaShowcase {
-  final String id;
-  final MediaType type;
-  final String url;
-  final String? coverUrl;
-  final String? title;
-  final String? description;
-  final Map<String, dynamic>? metadata;
-  final DateTime createdAt;
-
   const MediaShowcase({
     required this.id,
     required this.type,
@@ -283,37 +256,41 @@ class MediaShowcase {
   });
 
   /// Создать из Map
-  factory MediaShowcase.fromMap(Map<String, dynamic> data) {
-    return MediaShowcase(
-      id: data['id'] ?? '',
-      type: MediaType.values.firstWhere(
-        (e) => e.name == data['type'],
-        orElse: () => MediaType.image,
-      ),
-      url: data['url'] ?? '',
-      coverUrl: data['coverUrl'],
-      title: data['title'],
-      description: data['description'],
-      metadata: data['metadata'] != null
-          ? Map<String, dynamic>.from(data['metadata'])
-          : null,
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-    );
-  }
+  factory MediaShowcase.fromMap(Map<String, dynamic> data) => MediaShowcase(
+        id: data['id'] ?? '',
+        type: MediaType.values.firstWhere(
+          (e) => e.name == data['type'],
+          orElse: () => MediaType.image,
+        ),
+        url: data['url'] ?? '',
+        coverUrl: data['coverUrl'],
+        title: data['title'],
+        description: data['description'],
+        metadata: data['metadata'] != null
+            ? Map<String, dynamic>.from(data['metadata'])
+            : null,
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+      );
+  final String id;
+  final MediaType type;
+  final String url;
+  final String? coverUrl;
+  final String? title;
+  final String? description;
+  final Map<String, dynamic>? metadata;
+  final DateTime createdAt;
 
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'type': type.name,
-      'url': url,
-      'coverUrl': coverUrl,
-      'title': title,
-      'description': description,
-      'metadata': metadata,
-      'createdAt': Timestamp.fromDate(createdAt),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'type': type.name,
+        'url': url,
+        'coverUrl': coverUrl,
+        'title': title,
+        'description': description,
+        'metadata': metadata,
+        'createdAt': Timestamp.fromDate(createdAt),
+      };
 
   @override
   bool operator ==(Object other) {
@@ -330,23 +307,19 @@ class MediaShowcase {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      type,
-      url,
-      coverUrl,
-      title,
-      description,
-      metadata,
-      createdAt,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        type,
+        url,
+        coverUrl,
+        title,
+        description,
+        metadata,
+        createdAt,
+      );
 
   @override
-  String toString() {
-    return 'MediaShowcase(id: $id, type: $type, title: $title)';
-  }
+  String toString() => 'MediaShowcase(id: $id, type: $type, title: $title)';
 }
 
 /// Тип медиа

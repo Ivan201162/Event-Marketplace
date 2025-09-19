@@ -53,7 +53,7 @@ extension SecurityPasswordLevelExtension on SecurityPasswordLevel {
       case SecurityPasswordLevel.strong:
         return 0.8;
       case SecurityPasswordLevel.veryStrong:
-        return 1.0;
+        return 1;
     }
   }
 }

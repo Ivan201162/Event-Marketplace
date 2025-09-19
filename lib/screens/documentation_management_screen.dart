@@ -38,52 +38,50 @@ class _DocumentationManagementScreenState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ResponsiveScaffold(
-      title: 'Управление документацией',
-      body: Column(
-        children: [
-          // Вкладки
-          _buildTabs(),
+  Widget build(BuildContext context) => ResponsiveScaffold(
+        title: 'Управление документацией',
+        body: Column(
+          children: [
+            // Вкладки
+            _buildTabs(),
 
-          // Поиск и фильтры
-          _buildSearchAndFilters(),
+            // Поиск и фильтры
+            _buildSearchAndFilters(),
 
-          // Анализ
-          _buildAnalysis(),
+            // Анализ
+            _buildAnalysis(),
 
-          // Контент
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _selectedTab == 'documents'
-                    ? _buildDocumentsTab()
-                    : _selectedTab == 'templates'
-                        ? _buildTemplatesTab()
-                        : _buildCommentsTab(),
-          ),
-        ],
-      ),
-    );
-  }
+            // Контент
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _selectedTab == 'documents'
+                      ? _buildDocumentsTab()
+                      : _selectedTab == 'templates'
+                          ? _buildTemplatesTab()
+                          : _buildCommentsTab(),
+            ),
+          ],
+        ),
+      );
 
-  Widget _buildTabs() {
-    return ResponsiveCard(
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildTabButton('documents', 'Документы', Icons.description),
-          ),
-          Expanded(
-            child: _buildTabButton('templates', 'Шаблоны', Icons.content_copy),
-          ),
-          Expanded(
-            child: _buildTabButton('comments', 'Комментарии', Icons.comment),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildTabs() => ResponsiveCard(
+        child: Row(
+          children: [
+            Expanded(
+              child:
+                  _buildTabButton('documents', 'Документы', Icons.description),
+            ),
+            Expanded(
+              child:
+                  _buildTabButton('templates', 'Шаблоны', Icons.content_copy),
+            ),
+            Expanded(
+              child: _buildTabButton('comments', 'Комментарии', Icons.comment),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -126,116 +124,114 @@ class _DocumentationManagementScreenState
     );
   }
 
-  Widget _buildSearchAndFilters() {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ResponsiveText(
-            'Поиск и фильтры',
-            isTitle: true,
-          ),
-          const SizedBox(height: 16),
-
-          // Поиск
-          TextField(
-            decoration: const InputDecoration(
-              hintText: 'Поиск по названию, содержанию или тегам...',
-              prefixIcon: Icon(Icons.search),
-              border: OutlineInputBorder(),
+  Widget _buildSearchAndFilters() => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ResponsiveText(
+              'Поиск и фильтры',
+              isTitle: true,
             ),
-            onChanged: (value) {
-              setState(() {
-                _searchQuery = value;
-              });
-            },
-          ),
+            const SizedBox(height: 16),
 
-          const SizedBox(height: 16),
-
-          // Фильтры
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              // Фильтр по типу
-              DropdownButton<DocumentType?>(
-                value: _selectedType,
-                hint: const Text('Все типы'),
-                items: [
-                  const DropdownMenuItem<DocumentType?>(
-                    value: null,
-                    child: Text('Все типы'),
-                  ),
-                  ...DocumentType.values
-                      .map((type) => DropdownMenuItem<DocumentType?>(
-                            value: type,
-                            child: Text('${type.icon} ${type.displayName}'),
-                          )),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedType = value;
-                  });
-                },
+            // Поиск
+            TextField(
+              decoration: const InputDecoration(
+                hintText: 'Поиск по названию, содержанию или тегам...',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(),
               ),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+              },
+            ),
 
-              // Фильтр по категории
-              DropdownButton<DocumentCategory?>(
-                value: _selectedCategory,
-                hint: const Text('Все категории'),
-                items: [
-                  const DropdownMenuItem<DocumentCategory?>(
-                    value: null,
-                    child: Text('Все категории'),
-                  ),
-                  ...DocumentCategory.values.map((category) =>
-                      DropdownMenuItem<DocumentCategory?>(
+            const SizedBox(height: 16),
+
+            // Фильтры
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                // Фильтр по типу
+                DropdownButton<DocumentType?>(
+                  value: _selectedType,
+                  hint: const Text('Все типы'),
+                  items: [
+                    const DropdownMenuItem<DocumentType?>(
+                      child: Text('Все типы'),
+                    ),
+                    ...DocumentType.values.map(
+                      (type) => DropdownMenuItem<DocumentType?>(
+                        value: type,
+                        child: Text('${type.icon} ${type.displayName}'),
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedType = value;
+                    });
+                  },
+                ),
+
+                // Фильтр по категории
+                DropdownButton<DocumentCategory?>(
+                  value: _selectedCategory,
+                  hint: const Text('Все категории'),
+                  items: [
+                    const DropdownMenuItem<DocumentCategory?>(
+                      child: Text('Все категории'),
+                    ),
+                    ...DocumentCategory.values.map(
+                      (category) => DropdownMenuItem<DocumentCategory?>(
                         value: category,
                         child: Text('${category.icon} ${category.displayName}'),
-                      )),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCategory = value;
-                  });
-                },
-              ),
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedCategory = value;
+                    });
+                  },
+                ),
 
-              // Фильтр по статусу
-              DropdownButton<DocumentStatus?>(
-                value: _selectedStatus,
-                hint: const Text('Все статусы'),
-                items: [
-                  const DropdownMenuItem<DocumentStatus?>(
-                    value: null,
-                    child: Text('Все статусы'),
-                  ),
-                  ...DocumentStatus.values
-                      .map((status) => DropdownMenuItem<DocumentStatus?>(
-                            value: status,
-                            child: Text('${status.icon} ${status.displayName}'),
-                          )),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedStatus = value;
-                  });
-                },
-              ),
+                // Фильтр по статусу
+                DropdownButton<DocumentStatus?>(
+                  value: _selectedStatus,
+                  hint: const Text('Все статусы'),
+                  items: [
+                    const DropdownMenuItem<DocumentStatus?>(
+                      child: Text('Все статусы'),
+                    ),
+                    ...DocumentStatus.values.map(
+                      (status) => DropdownMenuItem<DocumentStatus?>(
+                        value: status,
+                        child: Text('${status.icon} ${status.displayName}'),
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedStatus = value;
+                    });
+                  },
+                ),
 
-              // Кнопка сброса фильтров
-              ElevatedButton.icon(
-                onPressed: _resetFilters,
-                icon: const Icon(Icons.clear),
-                label: const Text('Сбросить'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+                // Кнопка сброса фильтров
+                ElevatedButton.icon(
+                  onPressed: _resetFilters,
+                  icon: const Icon(Icons.clear),
+                  label: const Text('Сбросить'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
 
   Widget _buildAnalysis() {
     if (_analysis.isEmpty) return const SizedBox.shrink();
@@ -294,79 +290,80 @@ class _DocumentationManagementScreenState
   }
 
   Widget _buildAnalysisCard(
-      String title, String value, IconData icon, Color color) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color),
-      ),
-      child: Column(
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) =>
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 32),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 12),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildDocumentsTab() => Column(
         children: [
-          Icon(icon, color: color, size: 32),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: color,
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                ResponsiveText(
+                  'Документы',
+                  isTitle: true,
+                ),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _showAddDocumentDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Добавить'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: const TextStyle(fontSize: 12),
-            textAlign: TextAlign.center,
+
+          // Список документов
+          Expanded(
+            child: _getFilteredDocuments().isEmpty
+                ? const Center(child: Text('Документы не найдены'))
+                : ListView.builder(
+                    itemCount: _getFilteredDocuments().length,
+                    itemBuilder: (context, index) {
+                      final document = _getFilteredDocuments()[index];
+                      return _buildDocumentCard(document);
+                    },
+                  ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildDocumentsTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Документы',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _showAddDocumentDialog,
-                icon: const Icon(Icons.add),
-                label: const Text('Добавить'),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список документов
-        Expanded(
-          child: _getFilteredDocuments().isEmpty
-              ? const Center(child: Text('Документы не найдены'))
-              : ListView.builder(
-                  itemCount: _getFilteredDocuments().length,
-                  itemBuilder: (context, index) {
-                    final document = _getFilteredDocuments()[index];
-                    return _buildDocumentCard(document);
-                  },
-                ),
-        ),
-      ],
-    );
-  }
+      );
 
   Widget _buildDocumentCard(Documentation document) {
     final typeColor = _getTypeColor(document.type);
@@ -507,18 +504,22 @@ class _DocumentationManagementScreenState
               spacing: 4,
               runSpacing: 4,
               children: document.tags
-                  .map((tag) => Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          tag,
-                          style: const TextStyle(fontSize: 10),
-                        ),
-                      ))
+                  .map(
+                    (tag) => Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        tag,
+                        style: const TextStyle(fontSize: 10),
+                      ),
+                    ),
+                  )
                   .toList(),
             ),
             const SizedBox(height: 8),
@@ -547,48 +548,46 @@ class _DocumentationManagementScreenState
     );
   }
 
-  Widget _buildTemplatesTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Шаблоны документов',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _showAddTemplateDialog,
-                icon: const Icon(Icons.add),
-                label: const Text('Добавить'),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список шаблонов
-        Expanded(
-          child: _templates.isEmpty
-              ? const Center(child: Text('Шаблоны не найдены'))
-              : ListView.builder(
-                  itemCount: _templates.length,
-                  itemBuilder: (context, index) {
-                    final template = _templates[index];
-                    return _buildTemplateCard(template);
-                  },
+  Widget _buildTemplatesTab() => Column(
+        children: [
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                ResponsiveText(
+                  'Шаблоны документов',
+                  isTitle: true,
                 ),
-        ),
-      ],
-    );
-  }
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _showAddTemplateDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Добавить'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список шаблонов
+          Expanded(
+            child: _templates.isEmpty
+                ? const Center(child: Text('Шаблоны не найдены'))
+                : ListView.builder(
+                    itemCount: _templates.length,
+                    itemBuilder: (context, index) {
+                      final template = _templates[index];
+                      return _buildTemplateCard(template);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildTemplateCard(DocumentTemplate template) {
     final typeColor = _getTypeColor(template.type);
@@ -693,7 +692,10 @@ class _DocumentationManagementScreenState
           Row(
             children: [
               _buildInfoChip(
-                  'Использований', '${template.usageCount}', Colors.blue),
+                'Использований',
+                '${template.usageCount}',
+                Colors.blue,
+              ),
               const SizedBox(width: 8),
               _buildInfoChip('Теги', '${template.tags.length}', Colors.green),
             ],
@@ -717,42 +719,40 @@ class _DocumentationManagementScreenState
     );
   }
 
-  Widget _buildCommentsTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Комментарии к документам',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список комментариев
-        Expanded(
-          child: _comments.isEmpty
-              ? const Center(child: Text('Комментарии не найдены'))
-              : ListView.builder(
-                  itemCount: _comments.length,
-                  itemBuilder: (context, index) {
-                    final comment = _comments[index];
-                    return _buildCommentCard(comment);
-                  },
+  Widget _buildCommentsTab() => Column(
+        children: [
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                ResponsiveText(
+                  'Комментарии к документам',
+                  isTitle: true,
                 ),
-        ),
-      ],
-    );
-  }
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список комментариев
+          Expanded(
+            child: _comments.isEmpty
+                ? const Center(child: Text('Комментарии не найдены'))
+                : ListView.builder(
+                    itemCount: _comments.length,
+                    itemBuilder: (context, index) {
+                      final comment = _comments[index];
+                      return _buildCommentCard(comment);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildCommentCard(DocumentComment comment) {
     final document = _docService.getDocument(comment.documentId);
@@ -858,24 +858,22 @@ class _DocumentationManagementScreenState
     );
   }
 
-  Widget _buildInfoChip(String label, String value, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color),
-      ),
-      child: Text(
-        '$label: $value',
-        style: TextStyle(
-          fontSize: 12,
-          color: color,
-          fontWeight: FontWeight.w500,
+  Widget _buildInfoChip(String label, String value, Color color) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color),
         ),
-      ),
-    );
-  }
+        child: Text(
+          '$label: $value',
+          style: TextStyle(
+            fontSize: 12,
+            color: color,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
 
   Color _getTypeColor(DocumentType type) {
     switch (type) {
@@ -944,9 +942,8 @@ class _DocumentationManagementScreenState
     }
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDateTime(DateTime dateTime) =>
+      '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
 
   List<Documentation> _getFilteredDocuments() {
     var filtered = _documents;
@@ -1100,7 +1097,8 @@ class _DocumentationManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Редактирование документа "${document.title}" будет реализовано'),
+          'Редактирование документа "${document.title}" будет реализовано',
+        ),
       ),
     );
   }
@@ -1110,7 +1108,8 @@ class _DocumentationManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Комментарии к документу "${document.title}" будут реализованы'),
+          'Комментарии к документу "${document.title}" будут реализованы',
+        ),
       ),
     );
   }
@@ -1134,7 +1133,7 @@ class _DocumentationManagementScreenState
     );
   }
 
-  void _useTemplate(DocumentTemplate template) async {
+  Future<void> _useTemplate(DocumentTemplate template) async {
     try {
       await _docService.incrementTemplateUsage(template.id);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -1157,21 +1156,21 @@ class _DocumentationManagementScreenState
   void _viewComment(DocumentComment comment) {
     // TODO: Реализовать просмотр комментария
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         content: Text('Просмотр комментария будет реализован'),
       ),
     );
   }
 
-  void _resolveComment(DocumentComment comment) async {
+  Future<void> _resolveComment(DocumentComment comment) async {
     try {
       await _docService.updateComment(
         id: comment.id,
         isResolved: true,
       );
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Комментарий решен'),
+        const SnackBar(
+          content: Text('Комментарий решен'),
           backgroundColor: Colors.green,
         ),
       );

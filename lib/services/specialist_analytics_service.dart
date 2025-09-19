@@ -6,17 +6,6 @@ import '../models/review.dart';
 
 /// Статистика доходов специалиста
 class SpecialistIncomeStats {
-  final double totalIncome;
-  final double monthlyIncome;
-  final double weeklyIncome;
-  final double averageBookingValue;
-  final int totalBookings;
-  final int completedBookings;
-  final int cancelledBookings;
-  final double completionRate;
-  final Map<String, double> incomeByMonth;
-  final Map<String, int> bookingsByMonth;
-
   const SpecialistIncomeStats({
     required this.totalIncome,
     required this.monthlyIncome,
@@ -31,52 +20,48 @@ class SpecialistIncomeStats {
   });
 
   /// Создать из Map
-  factory SpecialistIncomeStats.fromMap(Map<String, dynamic> data) {
-    return SpecialistIncomeStats(
-      totalIncome: (data['totalIncome'] as num?)?.toDouble() ?? 0.0,
-      monthlyIncome: (data['monthlyIncome'] as num?)?.toDouble() ?? 0.0,
-      weeklyIncome: (data['weeklyIncome'] as num?)?.toDouble() ?? 0.0,
-      averageBookingValue:
-          (data['averageBookingValue'] as num?)?.toDouble() ?? 0.0,
-      totalBookings: data['totalBookings'] ?? 0,
-      completedBookings: data['completedBookings'] ?? 0,
-      cancelledBookings: data['cancelledBookings'] ?? 0,
-      completionRate: (data['completionRate'] as num?)?.toDouble() ?? 0.0,
-      incomeByMonth: Map<String, double>.from(data['incomeByMonth'] ?? {}),
-      bookingsByMonth: Map<String, int>.from(data['bookingsByMonth'] ?? {}),
-    );
-  }
+  factory SpecialistIncomeStats.fromMap(Map<String, dynamic> data) =>
+      SpecialistIncomeStats(
+        totalIncome: (data['totalIncome'] as num?)?.toDouble() ?? 0.0,
+        monthlyIncome: (data['monthlyIncome'] as num?)?.toDouble() ?? 0.0,
+        weeklyIncome: (data['weeklyIncome'] as num?)?.toDouble() ?? 0.0,
+        averageBookingValue:
+            (data['averageBookingValue'] as num?)?.toDouble() ?? 0.0,
+        totalBookings: data['totalBookings'] ?? 0,
+        completedBookings: data['completedBookings'] ?? 0,
+        cancelledBookings: data['cancelledBookings'] ?? 0,
+        completionRate: (data['completionRate'] as num?)?.toDouble() ?? 0.0,
+        incomeByMonth: Map<String, double>.from(data['incomeByMonth'] ?? {}),
+        bookingsByMonth: Map<String, int>.from(data['bookingsByMonth'] ?? {}),
+      );
+  final double totalIncome;
+  final double monthlyIncome;
+  final double weeklyIncome;
+  final double averageBookingValue;
+  final int totalBookings;
+  final int completedBookings;
+  final int cancelledBookings;
+  final double completionRate;
+  final Map<String, double> incomeByMonth;
+  final Map<String, int> bookingsByMonth;
 
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'totalIncome': totalIncome,
-      'monthlyIncome': monthlyIncome,
-      'weeklyIncome': weeklyIncome,
-      'averageBookingValue': averageBookingValue,
-      'totalBookings': totalBookings,
-      'completedBookings': completedBookings,
-      'cancelledBookings': cancelledBookings,
-      'completionRate': completionRate,
-      'incomeByMonth': incomeByMonth,
-      'bookingsByMonth': bookingsByMonth,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'totalIncome': totalIncome,
+        'monthlyIncome': monthlyIncome,
+        'weeklyIncome': weeklyIncome,
+        'averageBookingValue': averageBookingValue,
+        'totalBookings': totalBookings,
+        'completedBookings': completedBookings,
+        'cancelledBookings': cancelledBookings,
+        'completionRate': completionRate,
+        'incomeByMonth': incomeByMonth,
+        'bookingsByMonth': bookingsByMonth,
+      };
 }
 
 /// Статистика отзывов специалиста
 class SpecialistReviewStats {
-  final double averageRating;
-  final int totalReviews;
-  final int fiveStarReviews;
-  final int fourStarReviews;
-  final int threeStarReviews;
-  final int twoStarReviews;
-  final int oneStarReviews;
-  final Map<String, int> reviewsByMonth;
-  final List<String> commonTags;
-  final double responseRate;
-
   const SpecialistReviewStats({
     required this.averageRating,
     required this.totalReviews,
@@ -91,46 +76,47 @@ class SpecialistReviewStats {
   });
 
   /// Создать из Map
-  factory SpecialistReviewStats.fromMap(Map<String, dynamic> data) {
-    return SpecialistReviewStats(
-      averageRating: (data['averageRating'] as num?)?.toDouble() ?? 0.0,
-      totalReviews: data['totalReviews'] ?? 0,
-      fiveStarReviews: data['fiveStarReviews'] ?? 0,
-      fourStarReviews: data['fourStarReviews'] ?? 0,
-      threeStarReviews: data['threeStarReviews'] ?? 0,
-      twoStarReviews: data['twoStarReviews'] ?? 0,
-      oneStarReviews: data['oneStarReviews'] ?? 0,
-      reviewsByMonth: Map<String, int>.from(data['reviewsByMonth'] ?? {}),
-      commonTags: List<String>.from(data['commonTags'] ?? []),
-      responseRate: (data['responseRate'] as num?)?.toDouble() ?? 0.0,
-    );
-  }
+  factory SpecialistReviewStats.fromMap(Map<String, dynamic> data) =>
+      SpecialistReviewStats(
+        averageRating: (data['averageRating'] as num?)?.toDouble() ?? 0.0,
+        totalReviews: data['totalReviews'] ?? 0,
+        fiveStarReviews: data['fiveStarReviews'] ?? 0,
+        fourStarReviews: data['fourStarReviews'] ?? 0,
+        threeStarReviews: data['threeStarReviews'] ?? 0,
+        twoStarReviews: data['twoStarReviews'] ?? 0,
+        oneStarReviews: data['oneStarReviews'] ?? 0,
+        reviewsByMonth: Map<String, int>.from(data['reviewsByMonth'] ?? {}),
+        commonTags: List<String>.from(data['commonTags'] ?? []),
+        responseRate: (data['responseRate'] as num?)?.toDouble() ?? 0.0,
+      );
+  final double averageRating;
+  final int totalReviews;
+  final int fiveStarReviews;
+  final int fourStarReviews;
+  final int threeStarReviews;
+  final int twoStarReviews;
+  final int oneStarReviews;
+  final Map<String, int> reviewsByMonth;
+  final List<String> commonTags;
+  final double responseRate;
 
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'averageRating': averageRating,
-      'totalReviews': totalReviews,
-      'fiveStarReviews': fiveStarReviews,
-      'fourStarReviews': fourStarReviews,
-      'threeStarReviews': threeStarReviews,
-      'twoStarReviews': twoStarReviews,
-      'oneStarReviews': oneStarReviews,
-      'reviewsByMonth': reviewsByMonth,
-      'commonTags': commonTags,
-      'responseRate': responseRate,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'averageRating': averageRating,
+        'totalReviews': totalReviews,
+        'fiveStarReviews': fiveStarReviews,
+        'fourStarReviews': fourStarReviews,
+        'threeStarReviews': threeStarReviews,
+        'twoStarReviews': twoStarReviews,
+        'oneStarReviews': oneStarReviews,
+        'reviewsByMonth': reviewsByMonth,
+        'commonTags': commonTags,
+        'responseRate': responseRate,
+      };
 }
 
 /// Общая аналитика специалиста
 class SpecialistAnalytics {
-  final String specialistId;
-  final SpecialistIncomeStats incomeStats;
-  final SpecialistReviewStats reviewStats;
-  final DateTime lastUpdated;
-  final Map<String, dynamic> additionalMetrics;
-
   const SpecialistAnalytics({
     required this.specialistId,
     required this.incomeStats,
@@ -140,27 +126,29 @@ class SpecialistAnalytics {
   });
 
   /// Создать из Map
-  factory SpecialistAnalytics.fromMap(Map<String, dynamic> data) {
-    return SpecialistAnalytics(
-      specialistId: data['specialistId'] ?? '',
-      incomeStats: SpecialistIncomeStats.fromMap(data['incomeStats'] ?? {}),
-      reviewStats: SpecialistReviewStats.fromMap(data['reviewStats'] ?? {}),
-      lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
-      additionalMetrics:
-          Map<String, dynamic>.from(data['additionalMetrics'] ?? {}),
-    );
-  }
+  factory SpecialistAnalytics.fromMap(Map<String, dynamic> data) =>
+      SpecialistAnalytics(
+        specialistId: data['specialistId'] ?? '',
+        incomeStats: SpecialistIncomeStats.fromMap(data['incomeStats'] ?? {}),
+        reviewStats: SpecialistReviewStats.fromMap(data['reviewStats'] ?? {}),
+        lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
+        additionalMetrics:
+            Map<String, dynamic>.from(data['additionalMetrics'] ?? {}),
+      );
+  final String specialistId;
+  final SpecialistIncomeStats incomeStats;
+  final SpecialistReviewStats reviewStats;
+  final DateTime lastUpdated;
+  final Map<String, dynamic> additionalMetrics;
 
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'specialistId': specialistId,
-      'incomeStats': incomeStats.toMap(),
-      'reviewStats': reviewStats.toMap(),
-      'lastUpdated': Timestamp.fromDate(lastUpdated),
-      'additionalMetrics': additionalMetrics,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'specialistId': specialistId,
+        'incomeStats': incomeStats.toMap(),
+        'reviewStats': reviewStats.toMap(),
+        'lastUpdated': Timestamp.fromDate(lastUpdated),
+        'additionalMetrics': additionalMetrics,
+      };
 }
 
 /// Сервис аналитики для специалистов
@@ -169,7 +157,8 @@ class SpecialistAnalyticsService {
 
   /// Получить аналитику специалиста
   Future<SpecialistAnalytics?> getSpecialistAnalytics(
-      String specialistId) async {
+    String specialistId,
+  ) async {
     try {
       final doc = await _firestore
           .collection('specialist_analytics')
@@ -266,19 +255,23 @@ class SpecialistAnalyticsService {
     // Общие показатели
     final totalIncome = payments
         .where((p) => p.status == PaymentStatus.completed)
-        .fold(0.0, (sum, p) => sum + p.amount);
+        .fold(0, (sum, p) => sum + p.amount);
 
     final monthlyIncome = payments
-        .where((p) =>
-            p.status == PaymentStatus.completed &&
-            p.createdAt.isAfter(thisMonth))
-        .fold(0.0, (sum, p) => sum + p.amount);
+        .where(
+          (p) =>
+              p.status == PaymentStatus.completed &&
+              p.createdAt.isAfter(thisMonth),
+        )
+        .fold(0, (sum, p) => sum + p.amount);
 
     final weeklyIncome = payments
-        .where((p) =>
-            p.status == PaymentStatus.completed &&
-            p.createdAt.isAfter(lastWeek))
-        .fold(0.0, (sum, p) => sum + p.amount);
+        .where(
+          (p) =>
+              p.status == PaymentStatus.completed &&
+              p.createdAt.isAfter(lastWeek),
+        )
+        .fold(0, (sum, p) => sum + p.amount);
 
     final completedBookings =
         bookings.where((b) => b.status == BookingStatus.completed).length;
@@ -297,22 +290,26 @@ class SpecialistAnalyticsService {
     final incomeByMonth = <String, double>{};
     final bookingsByMonth = <String, int>{};
 
-    for (int i = 11; i >= 0; i--) {
+    for (var i = 11; i >= 0; i--) {
       final month = DateTime(now.year, now.month - i);
       final monthKey =
           '${month.year}-${month.month.toString().padLeft(2, '0')}';
 
       final monthIncome = payments
-          .where((p) =>
-              p.status == PaymentStatus.completed &&
-              p.createdAt.year == month.year &&
-              p.createdAt.month == month.month)
-          .fold(0.0, (sum, p) => sum + p.amount);
+          .where(
+            (p) =>
+                p.status == PaymentStatus.completed &&
+                p.createdAt.year == month.year &&
+                p.createdAt.month == month.month,
+          )
+          .fold(0, (sum, p) => sum + p.amount);
 
       final monthBookings = bookings
-          .where((b) =>
-              b.createdAt.year == month.year &&
-              b.createdAt.month == month.month)
+          .where(
+            (b) =>
+                b.createdAt.year == month.year &&
+                b.createdAt.month == month.month,
+          )
           .length;
 
       incomeByMonth[monthKey] = monthIncome;
@@ -337,7 +334,7 @@ class SpecialistAnalyticsService {
   SpecialistReviewStats _generateReviewStats(List<Review> reviews) {
     if (reviews.isEmpty) {
       return const SpecialistReviewStats(
-        averageRating: 0.0,
+        averageRating: 0,
         totalReviews: 0,
         fiveStarReviews: 0,
         fourStarReviews: 0,
@@ -346,11 +343,11 @@ class SpecialistAnalyticsService {
         oneStarReviews: 0,
         reviewsByMonth: {},
         commonTags: [],
-        responseRate: 0.0,
+        responseRate: 0,
       );
     }
 
-    final totalRating = reviews.fold(0.0, (sum, r) => sum + r.rating);
+    final totalRating = reviews.fold(0, (sum, r) => sum + r.rating);
     final averageRating = totalRating / reviews.length;
 
     final fiveStar = reviews.where((r) => r.rating == 5).length;
@@ -363,15 +360,17 @@ class SpecialistAnalyticsService {
     final reviewsByMonth = <String, int>{};
     final now = DateTime.now();
 
-    for (int i = 11; i >= 0; i--) {
+    for (var i = 11; i >= 0; i--) {
       final month = DateTime(now.year, now.month - i);
       final monthKey =
           '${month.year}-${month.month.toString().padLeft(2, '0')}';
 
       final monthReviews = reviews
-          .where((r) =>
-              r.createdAt.year == month.year &&
-              r.createdAt.month == month.month)
+          .where(
+            (r) =>
+                r.createdAt.year == month.year &&
+                r.createdAt.month == month.month,
+          )
           .length;
 
       reviewsByMonth[monthKey] = monthReviews;
@@ -389,7 +388,7 @@ class SpecialistAnalyticsService {
       ..sort((a, b) => b.value.compareTo(a.value));
 
     // Процент ответов (заглушка)
-    final responseRate = 0.85; // TODO: Реальная логика
+    const responseRate = 0.85; // TODO: Реальная логика
 
     return SpecialistReviewStats(
       averageRating: averageRating,
@@ -428,7 +427,7 @@ class SpecialistAnalyticsService {
     DateTime? endDate,
   }) async {
     try {
-      Query query = _firestore
+      var query = _firestore
           .collection('specialist_analytics')
           .orderBy('incomeStats.totalIncome', descending: true)
           .limit(limit);
@@ -442,10 +441,12 @@ class SpecialistAnalyticsService {
 
       final snapshot = await query.get();
       return snapshot.docs
-          .map((doc) => {
-                'specialistId': doc.id,
-                ...doc.data() as Map<String, dynamic>,
-              })
+          .map(
+            (doc) => {
+              'specialistId': doc.id,
+              ...doc.data() as Map<String, dynamic>,
+            },
+          )
           .toList();
     } catch (e) {
       debugPrint('Error getting top specialists: $e');
@@ -468,10 +469,12 @@ class SpecialistAnalyticsService {
           .get();
 
       return snapshot.docs
-          .map((doc) => {
-                'specialistId': doc.id,
-                ...doc.data(),
-              })
+          .map(
+            (doc) => {
+              'specialistId': doc.id,
+              ...doc.data(),
+            },
+          )
           .toList();
     } catch (e) {
       debugPrint('Error getting top specialists by rating: $e');
@@ -481,7 +484,8 @@ class SpecialistAnalyticsService {
 
   /// Получить сравнительную аналитику
   Future<Map<String, dynamic>> getComparativeAnalytics(
-      String specialistId) async {
+    String specialistId,
+  ) async {
     try {
       final specialistAnalytics = await getSpecialistAnalytics(specialistId);
       if (specialistAnalytics == null) {
@@ -527,13 +531,13 @@ class SpecialistAnalyticsService {
 
   /// Вычислить процентиль
   double _calculatePercentile(List<double> values, double target) {
-    if (values.isEmpty) return 0.0;
+    if (values.isEmpty) return 0;
 
     final sortedValues = List<double>.from(values)..sort();
     final index = sortedValues.indexWhere((v) => v >= target);
 
-    if (index == -1) return 100.0;
-    if (index == 0) return 0.0;
+    if (index == -1) return 100;
+    if (index == 0) return 0;
 
     return (index / sortedValues.length) * 100.0;
   }

@@ -4,16 +4,6 @@ import 'notification_type.dart';
 /// Уведомление о подписке
 @immutable
 class SubscriptionNotification {
-  final String id;
-  final String userId;
-  final String specialistId;
-  final NotificationType type;
-  final String title;
-  final String body;
-  final Map<String, dynamic> data;
-  final DateTime createdAt;
-  final bool isRead;
-
   const SubscriptionNotification({
     required this.id,
     required this.userId,
@@ -24,7 +14,18 @@ class SubscriptionNotification {
     this.data = const {},
     required this.createdAt,
     this.isRead = false,
+    this.specialistPhotoUrl,
   });
+  final String id;
+  final String userId;
+  final String specialistId;
+  final NotificationType type;
+  final String title;
+  final String body;
+  final Map<String, dynamic> data;
+  final DateTime createdAt;
+  final bool isRead;
+  final String? specialistPhotoUrl;
 
   SubscriptionNotification copyWith({
     String? id,
@@ -36,19 +37,20 @@ class SubscriptionNotification {
     Map<String, dynamic>? data,
     DateTime? createdAt,
     bool? isRead,
-  }) {
-    return SubscriptionNotification(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      specialistId: specialistId ?? this.specialistId,
-      type: type ?? this.type,
-      title: title ?? this.title,
-      body: body ?? this.body,
-      data: data ?? this.data,
-      createdAt: createdAt ?? this.createdAt,
-      isRead: isRead ?? this.isRead,
-    );
-  }
+    String? specialistPhotoUrl,
+  }) =>
+      SubscriptionNotification(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        specialistId: specialistId ?? this.specialistId,
+        type: type ?? this.type,
+        title: title ?? this.title,
+        body: body ?? this.body,
+        data: data ?? this.data,
+        createdAt: createdAt ?? this.createdAt,
+        isRead: isRead ?? this.isRead,
+        specialistPhotoUrl: specialistPhotoUrl ?? this.specialistPhotoUrl,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -63,24 +65,24 @@ class SubscriptionNotification {
         other.body == body &&
         mapEquals(other.data, data) &&
         other.createdAt == createdAt &&
-        other.isRead == isRead;
+        other.isRead == isRead &&
+        other.specialistPhotoUrl == specialistPhotoUrl;
   }
 
   @override
-  int get hashCode {
-    return id.hashCode ^
-        userId.hashCode ^
-        specialistId.hashCode ^
-        type.hashCode ^
-        title.hashCode ^
-        body.hashCode ^
-        data.hashCode ^
-        createdAt.hashCode ^
-        isRead.hashCode;
-  }
+  int get hashCode =>
+      id.hashCode ^
+      userId.hashCode ^
+      specialistId.hashCode ^
+      type.hashCode ^
+      title.hashCode ^
+      body.hashCode ^
+      data.hashCode ^
+      createdAt.hashCode ^
+      isRead.hashCode ^
+      specialistPhotoUrl.hashCode;
 
   @override
-  String toString() {
-    return 'SubscriptionNotification(id: $id, userId: $userId, specialistId: $specialistId, type: $type, title: $title, body: $body, data: $data, createdAt: $createdAt, isRead: $isRead)';
-  }
+  String toString() =>
+      'SubscriptionNotification(id: $id, userId: $userId, specialistId: $specialistId, type: $type, title: $title, body: $body, data: $data, createdAt: $createdAt, isRead: $isRead, specialistPhotoUrl: $specialistPhotoUrl)';
 }

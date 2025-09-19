@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../core/feature_flags.dart';
 import '../payments/payment_gateway.dart';
 import '../payments/payment_gateway_mock.dart';
-import '../core/feature_flags.dart';
 
 /// Провайдер платежного шлюза
 final paymentGatewayProvider = Provider<PaymentGateway>((ref) {
@@ -10,9 +11,8 @@ final paymentGatewayProvider = Provider<PaymentGateway>((ref) {
 });
 
 /// Провайдер для проверки доступности платежей
-final paymentsAvailableProvider = Provider<bool>((ref) {
-  return FeatureFlags.paymentsEnabled;
-});
+final paymentsAvailableProvider =
+    Provider<bool>((ref) => FeatureFlags.paymentsEnabled);
 
 /// Провайдер для инициализации платежей
 final paymentInitializationProvider = FutureProvider<void>((ref) async {
@@ -34,7 +34,7 @@ final paymentInfoProvider =
   final paymentGateway = ref.read(paymentGatewayProvider);
   if (!paymentGateway.isAvailable) return null;
 
-  return await paymentGateway.getPaymentInfo(paymentId);
+  return paymentGateway.getPaymentInfo(paymentId);
 });
 
 /// Провайдер истории платежей для бронирования
@@ -43,7 +43,7 @@ final paymentHistoryProvider =
   final paymentGateway = ref.read(paymentGatewayProvider);
   if (!paymentGateway.isAvailable) return [];
 
-  return await paymentGateway.getPaymentHistory(bookingId);
+  return paymentGateway.getPaymentHistory(bookingId);
 });
 
 /// Провайдер для платежей специалиста
@@ -65,40 +65,30 @@ final paymentStatisticsProvider =
     FutureProvider.family<PaymentStatistics, PaymentStatisticsParams>(
         (ref, params) async {
   // TODO: Реализовать получение статистики платежей
-  return PaymentStatistics(
+  return const PaymentStatistics(
     totalCount: 0,
-    totalAmount: 0.0,
+    totalAmount: 0,
     completedCount: 0,
-    completedAmount: 0.0,
+    completedAmount: 0,
     pendingCount: 0,
-    pendingAmount: 0.0,
+    pendingAmount: 0,
     failedCount: 0,
-    completionRate: 0.0,
+    completionRate: 0,
   );
 });
 
 /// Параметры для статистики платежей
 class PaymentStatisticsParams {
-  final String userId;
-  final bool isSpecialist;
-
   const PaymentStatisticsParams({
     required this.userId,
     required this.isSpecialist,
   });
+  final String userId;
+  final bool isSpecialist;
 }
 
 /// Статистика платежей
 class PaymentStatistics {
-  final int totalCount;
-  final double totalAmount;
-  final int completedCount;
-  final double completedAmount;
-  final int pendingCount;
-  final double pendingAmount;
-  final int failedCount;
-  final double completionRate;
-
   const PaymentStatistics({
     required this.totalCount,
     required this.totalAmount,
@@ -109,4 +99,12 @@ class PaymentStatistics {
     required this.failedCount,
     required this.completionRate,
   });
+  final int totalCount;
+  final double totalAmount;
+  final int completedCount;
+  final double completedAmount;
+  final int pendingCount;
+  final double pendingAmount;
+  final int failedCount;
+  final double completionRate;
 }

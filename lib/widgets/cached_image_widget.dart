@@ -1,20 +1,8 @@
-import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
 
 /// Виджет для кэширования изображений с улучшенной производительностью
 class CachedImageWidget extends StatelessWidget {
-  final String imageUrl;
-  final double? width;
-  final double? height;
-  final BoxFit fit;
-  final BorderRadius? borderRadius;
-  final Widget? placeholder;
-  final Widget? errorWidget;
-  final Color? placeholderColor;
-  final Color? errorColor;
-  final Duration fadeInDuration;
-  final bool useOldImageOnUrlChange;
-
   const CachedImageWidget({
     super.key,
     required this.imageUrl,
@@ -29,6 +17,17 @@ class CachedImageWidget extends StatelessWidget {
     this.fadeInDuration = const Duration(milliseconds: 300),
     this.useOldImageOnUrlChange = true,
   });
+  final String imageUrl;
+  final double? width;
+  final double? height;
+  final BoxFit fit;
+  final BorderRadius? borderRadius;
+  final Widget? placeholder;
+  final Widget? errorWidget;
+  final Color? placeholderColor;
+  final Color? errorColor;
+  final Duration fadeInDuration;
+  final bool useOldImageOnUrlChange;
 
   @override
   Widget build(BuildContext context) {
@@ -89,13 +88,6 @@ class CachedImageWidget extends StatelessWidget {
 
 /// Адаптивный кэшированный аватар
 class CachedAvatar extends StatelessWidget {
-  final String? imageUrl;
-  final String? name;
-  final double radius;
-  final Color? backgroundColor;
-  final Color? foregroundColor;
-  final IconData? fallbackIcon;
-
   const CachedAvatar({
     super.key,
     this.imageUrl,
@@ -105,6 +97,12 @@ class CachedAvatar extends StatelessWidget {
     this.foregroundColor,
     this.fallbackIcon,
   });
+  final String? imageUrl;
+  final String? name;
+  final double radius;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final IconData? fallbackIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +116,6 @@ class CachedAvatar extends StatelessWidget {
           imageUrl: imageUrl!,
           width: radius * 2,
           height: radius * 2,
-          fit: BoxFit.cover,
           borderRadius: BorderRadius.circular(radius),
           placeholder: Container(
             width: radius * 2,
@@ -173,14 +170,6 @@ class CachedAvatar extends StatelessWidget {
 
 /// Кэшированная сетка изображений
 class CachedImageGrid extends StatelessWidget {
-  final List<String> imageUrls;
-  final int crossAxisCount;
-  final double spacing;
-  final double childAspectRatio;
-  final VoidCallback? onImageTap;
-  final int? maxImages;
-  final bool showMoreIndicator;
-
   const CachedImageGrid({
     super.key,
     required this.imageUrls,
@@ -191,6 +180,13 @@ class CachedImageGrid extends StatelessWidget {
     this.maxImages,
     this.showMoreIndicator = true,
   });
+  final List<String> imageUrls;
+  final int crossAxisCount;
+  final double spacing;
+  final double childAspectRatio;
+  final VoidCallback? onImageTap;
+  final int? maxImages;
+  final bool showMoreIndicator;
 
   @override
   Widget build(BuildContext context) {
@@ -223,57 +219,48 @@ class CachedImageGrid extends StatelessWidget {
     );
   }
 
-  Widget _buildImageItem(BuildContext context, String imageUrl, int index) {
-    return GestureDetector(
-      onTap: onImageTap,
-      child: CachedImageWidget(
-        imageUrl: imageUrl,
-        fit: BoxFit.cover,
-        borderRadius: BorderRadius.circular(8),
-        placeholder: Container(
-          color: Colors.grey[200],
-          child: const Center(
-            child: CircularProgressIndicator(strokeWidth: 2),
+  Widget _buildImageItem(BuildContext context, String imageUrl, int index) =>
+      GestureDetector(
+        onTap: onImageTap,
+        child: CachedImageWidget(
+          imageUrl: imageUrl,
+          borderRadius: BorderRadius.circular(8),
+          placeholder: Container(
+            color: Colors.grey[200],
+            child: const Center(
+              child: CircularProgressIndicator(strokeWidth: 2),
+            ),
+          ),
+          errorWidget: Container(
+            color: Colors.grey[300],
+            child: const Center(
+              child: Icon(Icons.broken_image, color: Colors.grey),
+            ),
           ),
         ),
-        errorWidget: Container(
-          color: Colors.grey[300],
-          child: const Center(
-            child: Icon(Icons.broken_image, color: Colors.grey),
-          ),
-        ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildMoreIndicator(BuildContext context, int remainingCount) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.6),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Center(
-        child: Text(
-          '+$remainingCount',
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 18,
-            fontWeight: FontWeight.bold,
+  Widget _buildMoreIndicator(BuildContext context, int remainingCount) =>
+      Container(
+        decoration: BoxDecoration(
+          color: Colors.black.withOpacity(0.6),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Center(
+          child: Text(
+            '+$remainingCount',
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 }
 
 /// Кэшированный список изображений
 class CachedImageList extends StatelessWidget {
-  final List<String> imageUrls;
-  final double height;
-  final double spacing;
-  final VoidCallback? onImageTap;
-  final bool showIndicators;
-
   const CachedImageList({
     super.key,
     required this.imageUrls,
@@ -282,16 +269,19 @@ class CachedImageList extends StatelessWidget {
     this.onImageTap,
     this.showIndicators = true,
   });
+  final List<String> imageUrls;
+  final double height;
+  final double spacing;
+  final VoidCallback? onImageTap;
+  final bool showIndicators;
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: height,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: imageUrls.length,
-        itemBuilder: (context, index) {
-          return Container(
+  Widget build(BuildContext context) => SizedBox(
+        height: height,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: imageUrls.length,
+          itemBuilder: (context, index) => Container(
             width: height,
             margin: EdgeInsets.only(
               right: index < imageUrls.length - 1 ? spacing : 0,
@@ -302,7 +292,6 @@ class CachedImageList extends StatelessWidget {
                 imageUrl: imageUrls[index],
                 width: height,
                 height: height,
-                fit: BoxFit.cover,
                 borderRadius: BorderRadius.circular(8),
                 placeholder: Container(
                   color: Colors.grey[200],
@@ -318,24 +307,13 @@ class CachedImageList extends StatelessWidget {
                 ),
               ),
             ),
-          );
-        },
-      ),
-    );
-  }
+          ),
+        ),
+      );
 }
 
 /// Кэшированное изображение с ленивой загрузкой
 class LazyCachedImage extends StatefulWidget {
-  final String imageUrl;
-  final double? width;
-  final double? height;
-  final BoxFit fit;
-  final BorderRadius? borderRadius;
-  final Widget? placeholder;
-  final Widget? errorWidget;
-  final Duration fadeInDuration;
-
   const LazyCachedImage({
     super.key,
     required this.imageUrl,
@@ -347,6 +325,14 @@ class LazyCachedImage extends StatefulWidget {
     this.errorWidget,
     this.fadeInDuration = const Duration(milliseconds: 300),
   });
+  final String imageUrl;
+  final double? width;
+  final double? height;
+  final BoxFit fit;
+  final BorderRadius? borderRadius;
+  final Widget? placeholder;
+  final Widget? errorWidget;
+  final Duration fadeInDuration;
 
   @override
   State<LazyCachedImage> createState() => _LazyCachedImageState();
@@ -356,49 +342,46 @@ class _LazyCachedImageState extends State<LazyCachedImage> {
   bool _isVisible = false;
 
   @override
-  Widget build(BuildContext context) {
-    return VisibilityDetector(
-      key: Key(widget.imageUrl),
-      onVisibilityChanged: (visibilityInfo) {
-        if (visibilityInfo.visibleFraction > 0.1 && !_isVisible) {
-          setState(() {
-            _isVisible = true;
-          });
-        }
-      },
-      child: _isVisible
-          ? CachedImageWidget(
-              imageUrl: widget.imageUrl,
-              width: widget.width,
-              height: widget.height,
-              fit: widget.fit,
-              borderRadius: widget.borderRadius,
-              placeholder: widget.placeholder,
-              errorWidget: widget.errorWidget,
-              fadeInDuration: widget.fadeInDuration,
-            )
-          : Container(
-              width: widget.width,
-              height: widget.height,
-              color: Colors.grey[200],
-              child: const Center(
-                child: CircularProgressIndicator(strokeWidth: 2),
+  Widget build(BuildContext context) => VisibilityDetector(
+        key: Key(widget.imageUrl),
+        onVisibilityChanged: (visibilityInfo) {
+          if (visibilityInfo.visibleFraction > 0.1 && !_isVisible) {
+            setState(() {
+              _isVisible = true;
+            });
+          }
+        },
+        child: _isVisible
+            ? CachedImageWidget(
+                imageUrl: widget.imageUrl,
+                width: widget.width,
+                height: widget.height,
+                fit: widget.fit,
+                borderRadius: widget.borderRadius,
+                placeholder: widget.placeholder,
+                errorWidget: widget.errorWidget,
+                fadeInDuration: widget.fadeInDuration,
+              )
+            : Container(
+                width: widget.width,
+                height: widget.height,
+                color: Colors.grey[200],
+                child: const Center(
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                ),
               ),
-            ),
-    );
-  }
+      );
 }
 
 /// Простой виджет для определения видимости (заглушка)
 class VisibilityDetector extends StatefulWidget {
-  final Widget child;
-  final Function(VisibilityInfo) onVisibilityChanged;
-
   const VisibilityDetector({
     super.key,
     required this.child,
     required this.onVisibilityChanged,
   });
+  final Widget child;
+  final Function(VisibilityInfo) onVisibilityChanged;
 
   @override
   State<VisibilityDetector> createState() => _VisibilityDetectorState();
@@ -411,20 +394,17 @@ class _VisibilityDetectorState extends State<VisibilityDetector> {
     // Симулируем видимость через небольшую задержку
     Future.delayed(const Duration(milliseconds: 100), () {
       if (mounted) {
-        widget.onVisibilityChanged(VisibilityInfo(visibleFraction: 1.0));
+        widget.onVisibilityChanged(VisibilityInfo(visibleFraction: 1));
       }
     });
   }
 
   @override
-  Widget build(BuildContext context) {
-    return widget.child;
-  }
+  Widget build(BuildContext context) => widget.child;
 }
 
 /// Информация о видимости виджета
 class VisibilityInfo {
-  final double visibleFraction;
-
   VisibilityInfo({required this.visibleFraction});
+  final double visibleFraction;
 }

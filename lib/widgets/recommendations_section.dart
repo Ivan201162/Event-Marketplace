@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:event_marketplace_app/providers/recommendation_providers.dart';
-import 'package:event_marketplace_app/widgets/specialist_card.dart';
+import '../providers/recommendation_providers.dart';
+import 'specialist_card.dart';
 
 /// Секция рекомендаций на главном экране
 class RecommendationsSection extends ConsumerWidget {
@@ -63,61 +63,57 @@ class RecommendationsSection extends ConsumerWidget {
               ),
             );
           },
-          loading: () => _buildLoadingState(),
+          loading: _buildLoadingState,
           error: (error, stack) => _buildErrorState(error.toString()),
         ),
       ],
     );
   }
 
-  Widget _buildEmptyState() {
-    return Container(
-      height: 120,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.grey[100],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: const Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.recommend,
-              size: 48,
-              color: Colors.grey,
-            ),
-            SizedBox(height: 8),
-            Text(
-              'Пока нет рекомендаций',
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 16,
-              ),
-            ),
-            Text(
-              'Забронируйте услугу, чтобы получить персональные рекомендации',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.grey,
-                fontSize: 12,
-              ),
-            ),
-          ],
+  Widget _buildEmptyState() => Container(
+        height: 120,
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.circular(12),
         ),
-      ),
-    );
-  }
+        child: const Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.recommend,
+                size: 48,
+                color: Colors.grey,
+              ),
+              SizedBox(height: 8),
+              Text(
+                'Пока нет рекомендаций',
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 16,
+                ),
+              ),
+              Text(
+                'Забронируйте услугу, чтобы получить персональные рекомендации',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.grey,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
 
-  Widget _buildLoadingState() {
-    return SizedBox(
-      height: 200,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: 3,
-        itemBuilder: (context, index) {
-          return Container(
+  Widget _buildLoadingState() => SizedBox(
+        height: 200,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          itemCount: 3,
+          itemBuilder: (context, index) => Container(
             width: 280,
             margin: const EdgeInsets.only(right: 12),
             child: Card(
@@ -164,50 +160,46 @@ class RecommendationsSection extends ConsumerWidget {
                 ],
               ),
             ),
-          );
-        },
-      ),
-    );
-  }
-
-  Widget _buildErrorState(String error) {
-    return Container(
-      height: 120,
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      decoration: BoxDecoration(
-        color: Colors.red[50],
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.red[200]!),
-      ),
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.error_outline,
-              size: 48,
-              color: Colors.red[400],
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Ошибка загрузки рекомендаций',
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            Text(
-              error,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.red[600],
-                fontSize: 12,
-              ),
-            ),
-          ],
+          ),
         ),
-      ),
-    );
-  }
+      );
+
+  Widget _buildErrorState(String error) => Container(
+        height: 120,
+        margin: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          color: Colors.red[50],
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.red[200]!),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.error_outline,
+                size: 48,
+                color: Colors.red[400],
+              ),
+              const SizedBox(height: 8),
+              const Text(
+                'Ошибка загрузки рекомендаций',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+              Text(
+                error,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.red[600],
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
 }

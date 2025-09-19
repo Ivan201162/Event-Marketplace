@@ -1,17 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import '../models/incident_management.dart';
+
 import '../core/feature_flags.dart';
+import '../models/incident_management.dart';
 
 /// Сервис для управления инцидентами
 class IncidentManagementService {
-  static final IncidentManagementService _instance =
-      IncidentManagementService._internal();
   factory IncidentManagementService() => _instance;
   IncidentManagementService._internal();
+  static final IncidentManagementService _instance =
+      IncidentManagementService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -256,56 +258,42 @@ class IncidentManagementService {
   }
 
   /// Получение инцидента
-  Incident? getIncident(String id) {
-    return _incidentCache[id];
-  }
+  Incident? getIncident(String id) => _incidentCache[id];
 
   /// Получение всех инцидентов
-  List<Incident> getAllIncidents() {
-    return _incidentCache.values.toList();
-  }
+  List<Incident> getAllIncidents() => _incidentCache.values.toList();
 
   /// Получение инцидентов по типу
-  List<Incident> getIncidentsByType(IncidentType type) {
-    return _incidentCache.values
-        .where((incident) => incident.type == type)
-        .toList();
-  }
+  List<Incident> getIncidentsByType(IncidentType type) =>
+      _incidentCache.values.where((incident) => incident.type == type).toList();
 
   /// Получение инцидентов по серьезности
-  List<Incident> getIncidentsBySeverity(IncidentSeverity severity) {
-    return _incidentCache.values
-        .where((incident) => incident.severity == severity)
-        .toList();
-  }
+  List<Incident> getIncidentsBySeverity(IncidentSeverity severity) =>
+      _incidentCache.values
+          .where((incident) => incident.severity == severity)
+          .toList();
 
   /// Получение инцидентов по статусу
-  List<Incident> getIncidentsByStatus(IncidentStatus status) {
-    return _incidentCache.values
-        .where((incident) => incident.status == status)
-        .toList();
-  }
+  List<Incident> getIncidentsByStatus(IncidentStatus status) =>
+      _incidentCache.values
+          .where((incident) => incident.status == status)
+          .toList();
 
   /// Получение инцидентов по приоритету
-  List<Incident> getIncidentsByPriority(IncidentPriority priority) {
-    return _incidentCache.values
-        .where((incident) => incident.priority == priority)
-        .toList();
-  }
+  List<Incident> getIncidentsByPriority(IncidentPriority priority) =>
+      _incidentCache.values
+          .where((incident) => incident.priority == priority)
+          .toList();
 
   /// Получение инцидентов назначенных пользователю
-  List<Incident> getIncidentsAssignedTo(String userId) {
-    return _incidentCache.values
-        .where((incident) => incident.assignedTo == userId)
-        .toList();
-  }
+  List<Incident> getIncidentsAssignedTo(String userId) => _incidentCache.values
+      .where((incident) => incident.assignedTo == userId)
+      .toList();
 
   /// Получение открытых инцидентов
-  List<Incident> getOpenIncidents() {
-    return _incidentCache.values
-        .where((incident) => incident.status == IncidentStatus.open)
-        .toList();
-  }
+  List<Incident> getOpenIncidents() => _incidentCache.values
+      .where((incident) => incident.status == IncidentStatus.open)
+      .toList();
 
   /// Создание комментария
   Future<IncidentComment> createComment({
@@ -392,16 +380,13 @@ class IncidentManagementService {
   }
 
   /// Получение комментариев к инциденту
-  List<IncidentComment> getIncidentComments(String incidentId) {
-    return _commentCache.values
-        .where((comment) => comment.incidentId == incidentId)
-        .toList();
-  }
+  List<IncidentComment> getIncidentComments(String incidentId) =>
+      _commentCache.values
+          .where((comment) => comment.incidentId == incidentId)
+          .toList();
 
   /// Получение всех комментариев
-  List<IncidentComment> getAllComments() {
-    return _commentCache.values.toList();
-  }
+  List<IncidentComment> getAllComments() => _commentCache.values.toList();
 
   /// Создание SLA для инцидента
   Future<IncidentSLA> _createSLA(Incident incident) async {
@@ -471,23 +456,16 @@ class IncidentManagementService {
   }
 
   /// Получение SLA для инцидента
-  IncidentSLA? getIncidentSLA(String incidentId) {
-    return _slaCache.values
-        .where((sla) => sla.incidentId == incidentId)
-        .firstOrNull;
-  }
+  IncidentSLA? getIncidentSLA(String incidentId) =>
+      _slaCache.values.where((sla) => sla.incidentId == incidentId).firstOrNull;
 
   /// Получение всех SLA
-  List<IncidentSLA> getAllSLA() {
-    return _slaCache.values.toList();
-  }
+  List<IncidentSLA> getAllSLA() => _slaCache.values.toList();
 
   /// Получение нарушенных SLA
-  List<IncidentSLA> getBreachedSLA() {
-    return _slaCache.values
-        .where((sla) => sla.status == SLAStatus.breached)
-        .toList();
-  }
+  List<IncidentSLA> getBreachedSLA() => _slaCache.values
+      .where((sla) => sla.status == SLAStatus.breached)
+      .toList();
 
   /// Расчет приоритета на основе серьезности
   IncidentPriority _calculatePriority(IncidentSeverity severity) {
@@ -584,7 +562,7 @@ class IncidentManagementService {
 
   /// Группировка инцидентов по типу
   Map<String, int> _groupIncidentsByType(List<Incident> incidents) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final incident in incidents) {
       groups[incident.type.value] = (groups[incident.type.value] ?? 0) + 1;
     }
@@ -593,7 +571,7 @@ class IncidentManagementService {
 
   /// Группировка инцидентов по серьезности
   Map<String, int> _groupIncidentsBySeverity(List<Incident> incidents) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final incident in incidents) {
       groups[incident.severity.value] =
           (groups[incident.severity.value] ?? 0) + 1;
@@ -603,7 +581,7 @@ class IncidentManagementService {
 
   /// Группировка инцидентов по статусу
   Map<String, int> _groupIncidentsByStatus(List<Incident> incidents) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final incident in incidents) {
       groups[incident.status.value] = (groups[incident.status.value] ?? 0) + 1;
     }
@@ -612,7 +590,7 @@ class IncidentManagementService {
 
   /// Группировка инцидентов по приоритету
   Map<String, int> _groupIncidentsByPriority(List<Incident> incidents) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final incident in incidents) {
       groups[incident.priority.value] =
           (groups[incident.priority.value] ?? 0) + 1;
@@ -622,7 +600,7 @@ class IncidentManagementService {
 
   /// Группировка комментариев по типу
   Map<String, int> _groupCommentsByType(List<IncidentComment> comments) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final comment in comments) {
       groups[comment.type.value] = (groups[comment.type.value] ?? 0) + 1;
     }
@@ -663,23 +641,24 @@ class IncidentManagementService {
     // Заголовки для инцидентов
     buffer.writeln('Incidents:');
     buffer.writeln(
-        'Title,Type,Severity,Status,Priority,Assigned To,Reported At,Resolved At');
+      'Title,Type,Severity,Status,Priority,Assigned To,Reported At,Resolved At',
+    );
 
     for (final incident in data['incidents']) {
       buffer.writeln(
-          '${incident['title']},${incident['type']},${incident['severity']},${incident['status']},${incident['priority']},${incident['assignedToName'] ?? 'N/A'},${incident['reportedAt']},${incident['resolvedAt'] ?? 'N/A'}');
+        '${incident['title']},${incident['type']},${incident['severity']},${incident['status']},${incident['priority']},${incident['assignedToName'] ?? 'N/A'},${incident['reportedAt']},${incident['resolvedAt'] ?? 'N/A'}',
+      );
     }
 
     return buffer.toString();
   }
 
   /// Генерация уникального ID
-  String _generateId() {
-    return DateTime.now().millisecondsSinceEpoch.toString() +
-        (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
-            .round()
-            .toString();
-  }
+  String _generateId() =>
+      DateTime.now().millisecondsSinceEpoch.toString() +
+      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
+          .round()
+          .toString();
 
   /// Закрытие сервиса
   Future<void> dispose() async {

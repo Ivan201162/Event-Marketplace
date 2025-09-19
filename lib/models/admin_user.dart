@@ -19,19 +19,6 @@ enum UserStatus {
 
 /// Модель администратора
 class AdminUser {
-  final String id;
-  final String email;
-  final String firstName;
-  final String lastName;
-  final String? profileImageUrl;
-  final AdminRole role;
-  final List<String> permissions;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final DateTime? lastLoginAt;
-  final bool isActive;
-  final String? notes;
-
   const AdminUser({
     required this.id,
     required this.email,
@@ -70,24 +57,34 @@ class AdminUser {
       notes: data['notes'] as String?,
     );
   }
+  final String id;
+  final String email;
+  final String firstName;
+  final String lastName;
+  final String? profileImageUrl;
+  final AdminRole role;
+  final List<String> permissions;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? lastLoginAt;
+  final bool isActive;
+  final String? notes;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'email': email,
-      'firstName': firstName,
-      'lastName': lastName,
-      'profileImageUrl': profileImageUrl,
-      'role': role.name,
-      'permissions': permissions,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'lastLoginAt':
-          lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
-      'isActive': isActive,
-      'notes': notes,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'email': email,
+        'firstName': firstName,
+        'lastName': lastName,
+        'profileImageUrl': profileImageUrl,
+        'role': role.name,
+        'permissions': permissions,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'lastLoginAt':
+            lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
+        'isActive': isActive,
+        'notes': notes,
+      };
 
   /// Создать копию с обновлёнными полями
   AdminUser copyWith({
@@ -103,22 +100,21 @@ class AdminUser {
     DateTime? lastLoginAt,
     bool? isActive,
     String? notes,
-  }) {
-    return AdminUser(
-      id: id ?? this.id,
-      email: email ?? this.email,
-      firstName: firstName ?? this.firstName,
-      lastName: lastName ?? this.lastName,
-      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
-      role: role ?? this.role,
-      permissions: permissions ?? this.permissions,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      lastLoginAt: lastLoginAt ?? this.lastLoginAt,
-      isActive: isActive ?? this.isActive,
-      notes: notes ?? this.notes,
-    );
-  }
+  }) =>
+      AdminUser(
+        id: id ?? this.id,
+        email: email ?? this.email,
+        firstName: firstName ?? this.firstName,
+        lastName: lastName ?? this.lastName,
+        profileImageUrl: profileImageUrl ?? this.profileImageUrl,
+        role: role ?? this.role,
+        permissions: permissions ?? this.permissions,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        lastLoginAt: lastLoginAt ?? this.lastLoginAt,
+        isActive: isActive ?? this.isActive,
+        notes: notes ?? this.notes,
+      );
 
   /// Получить полное имя
   String get fullName => '$firstName $lastName';
@@ -138,26 +134,20 @@ class AdminUser {
   }
 
   /// Проверить, есть ли разрешение
-  bool hasPermission(String permission) {
-    return permissions.contains(permission);
-  }
+  bool hasPermission(String permission) => permissions.contains(permission);
 
   /// Проверить, может ли управлять пользователями
-  bool get canManageUsers {
-    return role == AdminRole.superAdmin || role == AdminRole.admin;
-  }
+  bool get canManageUsers =>
+      role == AdminRole.superAdmin || role == AdminRole.admin;
 
   /// Проверить, может ли модерировать контент
-  bool get canModerateContent {
-    return role == AdminRole.superAdmin ||
-        role == AdminRole.admin ||
-        role == AdminRole.moderator;
-  }
+  bool get canModerateContent =>
+      role == AdminRole.superAdmin ||
+      role == AdminRole.admin ||
+      role == AdminRole.moderator;
 
   /// Проверить, может ли управлять системой
-  bool get canManageSystem {
-    return role == AdminRole.superAdmin;
-  }
+  bool get canManageSystem => role == AdminRole.superAdmin;
 
   @override
   bool operator ==(Object other) {
@@ -169,32 +159,12 @@ class AdminUser {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'AdminUser(id: $id, email: $email, fullName: $fullName, role: $role)';
-  }
+  String toString() =>
+      'AdminUser(id: $id, email: $email, fullName: $fullName, role: $role)';
 }
 
 /// Модель пользователя для админ-панели
 class ManagedUser {
-  final String id;
-  final String email;
-  final String firstName;
-  final String lastName;
-  final String? profileImageUrl;
-  final UserStatus status;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final DateTime? lastLoginAt;
-  final int totalBookings;
-  final int completedBookings;
-  final double? rating;
-  final bool isVerified;
-  final String? verificationNotes;
-  final List<String> reportedIssues;
-  final String? banReason;
-  final DateTime? bannedUntil;
-  final String? notes;
-
   const ManagedUser({
     required this.id,
     required this.email,
@@ -247,31 +217,47 @@ class ManagedUser {
       notes: data['notes'] as String?,
     );
   }
+  final String id;
+  final String email;
+  final String firstName;
+  final String lastName;
+  final String? profileImageUrl;
+  final UserStatus status;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? lastLoginAt;
+  final int totalBookings;
+  final int completedBookings;
+  final double? rating;
+  final bool isVerified;
+  final String? verificationNotes;
+  final List<String> reportedIssues;
+  final String? banReason;
+  final DateTime? bannedUntil;
+  final String? notes;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'email': email,
-      'firstName': firstName,
-      'lastName': lastName,
-      'profileImageUrl': profileImageUrl,
-      'status': status.name,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'lastLoginAt':
-          lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
-      'totalBookings': totalBookings,
-      'completedBookings': completedBookings,
-      'rating': rating,
-      'isVerified': isVerified,
-      'verificationNotes': verificationNotes,
-      'reportedIssues': reportedIssues,
-      'banReason': banReason,
-      'bannedUntil':
-          bannedUntil != null ? Timestamp.fromDate(bannedUntil!) : null,
-      'notes': notes,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'email': email,
+        'firstName': firstName,
+        'lastName': lastName,
+        'profileImageUrl': profileImageUrl,
+        'status': status.name,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'lastLoginAt':
+            lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
+        'totalBookings': totalBookings,
+        'completedBookings': completedBookings,
+        'rating': rating,
+        'isVerified': isVerified,
+        'verificationNotes': verificationNotes,
+        'reportedIssues': reportedIssues,
+        'banReason': banReason,
+        'bannedUntil':
+            bannedUntil != null ? Timestamp.fromDate(bannedUntil!) : null,
+        'notes': notes,
+      };
 
   /// Создать копию с обновлёнными полями
   ManagedUser copyWith({
@@ -293,28 +279,27 @@ class ManagedUser {
     String? banReason,
     DateTime? bannedUntil,
     String? notes,
-  }) {
-    return ManagedUser(
-      id: id ?? this.id,
-      email: email ?? this.email,
-      firstName: firstName ?? this.firstName,
-      lastName: lastName ?? this.lastName,
-      profileImageUrl: profileImageUrl ?? this.profileImageUrl,
-      status: status ?? this.status,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      lastLoginAt: lastLoginAt ?? this.lastLoginAt,
-      totalBookings: totalBookings ?? this.totalBookings,
-      completedBookings: completedBookings ?? this.completedBookings,
-      rating: rating ?? this.rating,
-      isVerified: isVerified ?? this.isVerified,
-      verificationNotes: verificationNotes ?? this.verificationNotes,
-      reportedIssues: reportedIssues ?? this.reportedIssues,
-      banReason: banReason ?? this.banReason,
-      bannedUntil: bannedUntil ?? this.bannedUntil,
-      notes: notes ?? this.notes,
-    );
-  }
+  }) =>
+      ManagedUser(
+        id: id ?? this.id,
+        email: email ?? this.email,
+        firstName: firstName ?? this.firstName,
+        lastName: lastName ?? this.lastName,
+        profileImageUrl: profileImageUrl ?? this.profileImageUrl,
+        status: status ?? this.status,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        lastLoginAt: lastLoginAt ?? this.lastLoginAt,
+        totalBookings: totalBookings ?? this.totalBookings,
+        completedBookings: completedBookings ?? this.completedBookings,
+        rating: rating ?? this.rating,
+        isVerified: isVerified ?? this.isVerified,
+        verificationNotes: verificationNotes ?? this.verificationNotes,
+        reportedIssues: reportedIssues ?? this.reportedIssues,
+        banReason: banReason ?? this.banReason,
+        bannedUntil: bannedUntil ?? this.bannedUntil,
+        notes: notes ?? this.notes,
+      );
 
   /// Получить полное имя
   String get fullName => '$firstName $lastName';
@@ -352,14 +337,13 @@ class ManagedUser {
   }
 
   /// Проверить, заблокирован ли пользователь
-  bool get isBanned {
-    return status == UserStatus.suspended &&
-        (bannedUntil == null || bannedUntil!.isAfter(DateTime.now()));
-  }
+  bool get isBanned =>
+      status == UserStatus.suspended &&
+      (bannedUntil == null || bannedUntil!.isAfter(DateTime.now()));
 
   /// Получить процент завершенных бронирований
   double get completionRate {
-    if (totalBookings == 0) return 0.0;
+    if (totalBookings == 0) return 0;
     return (completedBookings / totalBookings) * 100;
   }
 
@@ -373,25 +357,12 @@ class ManagedUser {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'ManagedUser(id: $id, email: $email, fullName: $fullName, status: $status)';
-  }
+  String toString() =>
+      'ManagedUser(id: $id, email: $email, fullName: $fullName, status: $status)';
 }
 
 /// Модель жалобы
 class UserReport {
-  final String id;
-  final String reporterId;
-  final String reportedUserId;
-  final String reason;
-  final String description;
-  final List<String> evidenceUrls;
-  final DateTime createdAt;
-  final DateTime? resolvedAt;
-  final String? resolvedBy;
-  final String? resolution;
-  final bool isResolved;
-
   const UserReport({
     required this.id,
     required this.reporterId,
@@ -425,22 +396,32 @@ class UserReport {
       isResolved: data['isResolved'] ?? false,
     );
   }
+  final String id;
+  final String reporterId;
+  final String reportedUserId;
+  final String reason;
+  final String description;
+  final List<String> evidenceUrls;
+  final DateTime createdAt;
+  final DateTime? resolvedAt;
+  final String? resolvedBy;
+  final String? resolution;
+  final bool isResolved;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'reporterId': reporterId,
-      'reportedUserId': reportedUserId,
-      'reason': reason,
-      'description': description,
-      'evidenceUrls': evidenceUrls,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
-      'resolvedBy': resolvedBy,
-      'resolution': resolution,
-      'isResolved': isResolved,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'reporterId': reporterId,
+        'reportedUserId': reportedUserId,
+        'reason': reason,
+        'description': description,
+        'evidenceUrls': evidenceUrls,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'resolvedAt':
+            resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+        'resolvedBy': resolvedBy,
+        'resolution': resolution,
+        'isResolved': isResolved,
+      };
 
   @override
   bool operator ==(Object other) {
@@ -452,7 +433,6 @@ class UserReport {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'UserReport(id: $id, reporterId: $reporterId, reportedUserId: $reportedUserId, reason: $reason)';
-  }
+  String toString() =>
+      'UserReport(id: $id, reporterId: $reporterId, reportedUserId: $reportedUserId, reason: $reason)';
 }

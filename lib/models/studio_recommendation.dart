@@ -2,16 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель рекомендации студии фотографом
 class StudioRecommendation {
-  final String id;
-  final String photographerId;
-  final String studioId;
-  final String studioName;
-  final String studioUrl;
-  final String? message;
-  final DateTime createdAt;
-  final DateTime? expiresAt;
-  final bool isActive;
-
   const StudioRecommendation({
     required this.id,
     required this.photographerId,
@@ -43,35 +33,41 @@ class StudioRecommendation {
   }
 
   /// Создать из Map
-  factory StudioRecommendation.fromMap(Map<String, dynamic> data) {
-    return StudioRecommendation(
-      id: data['id'] ?? '',
-      photographerId: data['photographerId'] ?? '',
-      studioId: data['studioId'] ?? '',
-      studioName: data['studioName'] ?? '',
-      studioUrl: data['studioUrl'] ?? '',
-      message: data['message'],
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      expiresAt: data['expiresAt'] != null
-          ? (data['expiresAt'] as Timestamp).toDate()
-          : null,
-      isActive: data['isActive'] ?? true,
-    );
-  }
+  factory StudioRecommendation.fromMap(Map<String, dynamic> data) =>
+      StudioRecommendation(
+        id: data['id'] ?? '',
+        photographerId: data['photographerId'] ?? '',
+        studioId: data['studioId'] ?? '',
+        studioName: data['studioName'] ?? '',
+        studioUrl: data['studioUrl'] ?? '',
+        message: data['message'],
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        expiresAt: data['expiresAt'] != null
+            ? (data['expiresAt'] as Timestamp).toDate()
+            : null,
+        isActive: data['isActive'] ?? true,
+      );
+  final String id;
+  final String photographerId;
+  final String studioId;
+  final String studioName;
+  final String studioUrl;
+  final String? message;
+  final DateTime createdAt;
+  final DateTime? expiresAt;
+  final bool isActive;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'photographerId': photographerId,
-      'studioId': studioId,
-      'studioName': studioName,
-      'studioUrl': studioUrl,
-      'message': message,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
-      'isActive': isActive,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'photographerId': photographerId,
+        'studioId': studioId,
+        'studioName': studioName,
+        'studioUrl': studioUrl,
+        'message': message,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
+        'isActive': isActive,
+      };
 
   /// Создать копию с изменениями
   StudioRecommendation copyWith({
@@ -84,19 +80,18 @@ class StudioRecommendation {
     DateTime? createdAt,
     DateTime? expiresAt,
     bool? isActive,
-  }) {
-    return StudioRecommendation(
-      id: id ?? this.id,
-      photographerId: photographerId ?? this.photographerId,
-      studioId: studioId ?? this.studioId,
-      studioName: studioName ?? this.studioName,
-      studioUrl: studioUrl ?? this.studioUrl,
-      message: message ?? this.message,
-      createdAt: createdAt ?? this.createdAt,
-      expiresAt: expiresAt ?? this.expiresAt,
-      isActive: isActive ?? this.isActive,
-    );
-  }
+  }) =>
+      StudioRecommendation(
+        id: id ?? this.id,
+        photographerId: photographerId ?? this.photographerId,
+        studioId: studioId ?? this.studioId,
+        studioName: studioName ?? this.studioName,
+        studioUrl: studioUrl ?? this.studioUrl,
+        message: message ?? this.message,
+        createdAt: createdAt ?? this.createdAt,
+        expiresAt: expiresAt ?? this.expiresAt,
+        isActive: isActive ?? this.isActive,
+      );
 
   /// Проверить, не истекла ли рекомендация
   bool get isExpired {
@@ -123,43 +118,25 @@ class StudioRecommendation {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      photographerId,
-      studioId,
-      studioName,
-      studioUrl,
-      message,
-      createdAt,
-      expiresAt,
-      isActive,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        photographerId,
+        studioId,
+        studioName,
+        studioUrl,
+        message,
+        createdAt,
+        expiresAt,
+        isActive,
+      );
 
   @override
-  String toString() {
-    return 'StudioRecommendation(id: $id, photographerId: $photographerId, studioName: $studioName)';
-  }
+  String toString() =>
+      'StudioRecommendation(id: $id, photographerId: $photographerId, studioName: $studioName)';
 }
 
 /// Модель двойного бронирования (фотограф + студия)
 class DualBooking {
-  final String id;
-  final String customerId;
-  final String photographerId;
-  final String studioId;
-  final String studioOptionId;
-  final DateTime startTime;
-  final DateTime endTime;
-  final double photographerPrice;
-  final double studioPrice;
-  final double totalPrice;
-  final String status;
-  final String? notes;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
   const DualBooking({
     required this.id,
     required this.customerId,
@@ -199,43 +176,53 @@ class DualBooking {
   }
 
   /// Создать из Map
-  factory DualBooking.fromMap(Map<String, dynamic> data) {
-    return DualBooking(
-      id: data['id'] ?? '',
-      customerId: data['customerId'] ?? '',
-      photographerId: data['photographerId'] ?? '',
-      studioId: data['studioId'] ?? '',
-      studioOptionId: data['studioOptionId'] ?? '',
-      startTime: (data['startTime'] as Timestamp).toDate(),
-      endTime: (data['endTime'] as Timestamp).toDate(),
-      photographerPrice: (data['photographerPrice'] as num).toDouble(),
-      studioPrice: (data['studioPrice'] as num).toDouble(),
-      totalPrice: (data['totalPrice'] as num).toDouble(),
-      status: data['status'] ?? 'pending',
-      notes: data['notes'],
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-    );
-  }
+  factory DualBooking.fromMap(Map<String, dynamic> data) => DualBooking(
+        id: data['id'] ?? '',
+        customerId: data['customerId'] ?? '',
+        photographerId: data['photographerId'] ?? '',
+        studioId: data['studioId'] ?? '',
+        studioOptionId: data['studioOptionId'] ?? '',
+        startTime: (data['startTime'] as Timestamp).toDate(),
+        endTime: (data['endTime'] as Timestamp).toDate(),
+        photographerPrice: (data['photographerPrice'] as num).toDouble(),
+        studioPrice: (data['studioPrice'] as num).toDouble(),
+        totalPrice: (data['totalPrice'] as num).toDouble(),
+        status: data['status'] ?? 'pending',
+        notes: data['notes'],
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      );
+  final String id;
+  final String customerId;
+  final String photographerId;
+  final String studioId;
+  final String studioOptionId;
+  final DateTime startTime;
+  final DateTime endTime;
+  final double photographerPrice;
+  final double studioPrice;
+  final double totalPrice;
+  final String status;
+  final String? notes;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'customerId': customerId,
-      'photographerId': photographerId,
-      'studioId': studioId,
-      'studioOptionId': studioOptionId,
-      'startTime': Timestamp.fromDate(startTime),
-      'endTime': Timestamp.fromDate(endTime),
-      'photographerPrice': photographerPrice,
-      'studioPrice': studioPrice,
-      'totalPrice': totalPrice,
-      'status': status,
-      'notes': notes,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'customerId': customerId,
+        'photographerId': photographerId,
+        'studioId': studioId,
+        'studioOptionId': studioOptionId,
+        'startTime': Timestamp.fromDate(startTime),
+        'endTime': Timestamp.fromDate(endTime),
+        'photographerPrice': photographerPrice,
+        'studioPrice': studioPrice,
+        'totalPrice': totalPrice,
+        'status': status,
+        'notes': notes,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   /// Создать копию с изменениями
   DualBooking copyWith({
@@ -253,39 +240,33 @@ class DualBooking {
     String? notes,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) {
-    return DualBooking(
-      id: id ?? this.id,
-      customerId: customerId ?? this.customerId,
-      photographerId: photographerId ?? this.photographerId,
-      studioId: studioId ?? this.studioId,
-      studioOptionId: studioOptionId ?? this.studioOptionId,
-      startTime: startTime ?? this.startTime,
-      endTime: endTime ?? this.endTime,
-      photographerPrice: photographerPrice ?? this.photographerPrice,
-      studioPrice: studioPrice ?? this.studioPrice,
-      totalPrice: totalPrice ?? this.totalPrice,
-      status: status ?? this.status,
-      notes: notes ?? this.notes,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
+  }) =>
+      DualBooking(
+        id: id ?? this.id,
+        customerId: customerId ?? this.customerId,
+        photographerId: photographerId ?? this.photographerId,
+        studioId: studioId ?? this.studioId,
+        studioOptionId: studioOptionId ?? this.studioOptionId,
+        startTime: startTime ?? this.startTime,
+        endTime: endTime ?? this.endTime,
+        photographerPrice: photographerPrice ?? this.photographerPrice,
+        studioPrice: studioPrice ?? this.studioPrice,
+        totalPrice: totalPrice ?? this.totalPrice,
+        status: status ?? this.status,
+        notes: notes ?? this.notes,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Получить продолжительность в часах
-  double get durationInHours {
-    return endTime.difference(startTime).inHours.toDouble();
-  }
+  double get durationInHours =>
+      endTime.difference(startTime).inHours.toDouble();
 
   /// Проверить, активно ли бронирование
-  bool get isActive {
-    return status == 'confirmed' || status == 'in_progress';
-  }
+  bool get isActive => status == 'confirmed' || status == 'in_progress';
 
   /// Проверить, завершено ли бронирование
-  bool get isCompleted {
-    return status == 'completed';
-  }
+  bool get isCompleted => status == 'completed';
 
   /// Получить экономию от двойного бронирования
   double get savings {
@@ -315,27 +296,24 @@ class DualBooking {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      customerId,
-      photographerId,
-      studioId,
-      studioOptionId,
-      startTime,
-      endTime,
-      photographerPrice,
-      studioPrice,
-      totalPrice,
-      status,
-      notes,
-      createdAt,
-      updatedAt,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        customerId,
+        photographerId,
+        studioId,
+        studioOptionId,
+        startTime,
+        endTime,
+        photographerPrice,
+        studioPrice,
+        totalPrice,
+        status,
+        notes,
+        createdAt,
+        updatedAt,
+      );
 
   @override
-  String toString() {
-    return 'DualBooking(id: $id, customerId: $customerId, status: $status)';
-  }
+  String toString() =>
+      'DualBooking(id: $id, customerId: $customerId, status: $status)';
 }

@@ -4,84 +4,81 @@ import '../models/analytics.dart';
 
 /// Виджет KPI
 class KPIWidget extends StatelessWidget {
-  final KPI kpi;
-
   const KPIWidget({
     super.key,
     required this.kpi,
   });
+  final KPI kpi;
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Text(
-                    kpi.name,
-                    style: const TextStyle(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
+  Widget build(BuildContext context) => Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Text(
+                      kpi.name,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
-                ),
-                _buildStatusIcon(kpi.status),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Text(
-                  kpi.value.toStringAsFixed(kpi.unit == '%' ? 1 : 0),
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
+                  _buildStatusIcon(kpi.status),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Text(
+                    kpi.value.toStringAsFixed(kpi.unit == '%' ? 1 : 0),
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                const SizedBox(width: 4),
-                Text(
-                  kpi.unit,
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.7),
+                  const SizedBox(width: 4),
+                  Text(
+                    kpi.unit,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.7),
+                    ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            _buildProgressBar(context, kpi.targetAchievement),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Цель: ${kpi.target.toStringAsFixed(0)} ${kpi.unit}',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.7),
+                ],
+              ),
+              const SizedBox(height: 8),
+              _buildProgressBar(context, kpi.targetAchievement),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Цель: ${kpi.target.toStringAsFixed(0)} ${kpi.unit}',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.7),
+                    ),
                   ),
-                ),
-                _buildChangeIndicator(context, kpi.percentageChange),
-              ],
-            ),
-          ],
+                  _buildChangeIndicator(context, kpi.percentageChange),
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   /// Построить иконку статуса
   Widget _buildStatusIcon(KPIStatus status) {
@@ -111,17 +108,16 @@ class KPIWidget extends StatelessWidget {
   }
 
   /// Построить прогресс-бар
-  Widget _buildProgressBar(BuildContext context, double percentage) {
-    return LinearProgressIndicator(
-      value: percentage / 100,
-      backgroundColor: Colors.grey.withOpacity(0.3),
-      valueColor: AlwaysStoppedAnimation<Color>(
-        percentage >= 100
-            ? Colors.green
-            : Theme.of(context).colorScheme.primary,
-      ),
-    );
-  }
+  Widget _buildProgressBar(BuildContext context, double percentage) =>
+      LinearProgressIndicator(
+        value: percentage / 100,
+        backgroundColor: Colors.grey.withOpacity(0.3),
+        valueColor: AlwaysStoppedAnimation<Color>(
+          percentage >= 100
+              ? Colors.green
+              : Theme.of(context).colorScheme.primary,
+        ),
+      );
 
   /// Построить индикатор изменения
   Widget _buildChangeIndicator(BuildContext context, double change) {
@@ -149,13 +145,6 @@ class KPIWidget extends StatelessWidget {
 
 /// Виджет метрики
 class MetricWidget extends StatelessWidget {
-  final String name;
-  final double value;
-  final String unit;
-  final double? previousValue;
-  final IconData? icon;
-  final Color? color;
-
   const MetricWidget({
     super.key,
     required this.name,
@@ -165,6 +154,12 @@ class MetricWidget extends StatelessWidget {
     this.icon,
     this.color,
   });
+  final String name;
+  final double value;
+  final String unit;
+  final double? previousValue;
+  final IconData? icon;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +214,10 @@ class MetricWidget extends StatelessWidget {
 
   /// Построить индикатор изменения
   Widget _buildChangeIndicator(
-      BuildContext context, double change, bool isPositive) {
+    BuildContext context,
+    double change,
+    bool isPositive,
+  ) {
     final color = isPositive ? Colors.green : Colors.red;
     final icon = isPositive ? Icons.arrow_upward : Icons.arrow_downward;
 
@@ -243,76 +241,74 @@ class MetricWidget extends StatelessWidget {
 
 /// Виджет статистики за период
 class PeriodStatisticsWidget extends StatelessWidget {
-  final PeriodStatistics statistics;
-
   const PeriodStatisticsWidget({
     super.key,
     required this.statistics,
   });
+  final PeriodStatistics statistics;
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Статистика за ${_getPeriodName(statistics.period)}',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              '${_formatDate(statistics.startDate)} - ${_formatDate(statistics.endDate)}',
-              style: TextStyle(
-                fontSize: 14,
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+  Widget build(BuildContext context) => Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Статистика за ${_getPeriodName(statistics.period)}',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
-            ),
-            const SizedBox(height: 16),
-            Wrap(
-              spacing: 16,
-              runSpacing: 16,
-              children: [
-                MetricWidget(
-                  name: 'Заявки',
-                  value: statistics.getMetric('total_bookings'),
-                  unit: 'шт',
-                  icon: Icons.assignment,
-                  color: Colors.blue,
+              const SizedBox(height: 16),
+              Text(
+                '${_formatDate(statistics.startDate)} - ${_formatDate(statistics.endDate)}',
+                style: TextStyle(
+                  fontSize: 14,
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
                 ),
-                MetricWidget(
-                  name: 'Подтвержденные',
-                  value: statistics.getMetric('confirmed_bookings'),
-                  unit: 'шт',
-                  icon: Icons.check_circle,
-                  color: Colors.green,
-                ),
-                MetricWidget(
-                  name: 'Доход',
-                  value: statistics.getMetric('total_revenue'),
-                  unit: '₽',
-                  icon: Icons.attach_money,
-                  color: Colors.amber,
-                ),
-                MetricWidget(
-                  name: 'Рейтинг',
-                  value: statistics.getMetric('average_rating'),
-                  unit: 'звезд',
-                  icon: Icons.star,
-                  color: Colors.orange,
-                ),
-              ],
-            ),
-          ],
+              ),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 16,
+                runSpacing: 16,
+                children: [
+                  MetricWidget(
+                    name: 'Заявки',
+                    value: statistics.getMetric('total_bookings'),
+                    unit: 'шт',
+                    icon: Icons.assignment,
+                    color: Colors.blue,
+                  ),
+                  MetricWidget(
+                    name: 'Подтвержденные',
+                    value: statistics.getMetric('confirmed_bookings'),
+                    unit: 'шт',
+                    icon: Icons.check_circle,
+                    color: Colors.green,
+                  ),
+                  MetricWidget(
+                    name: 'Доход',
+                    value: statistics.getMetric('total_revenue'),
+                    unit: '₽',
+                    icon: Icons.attach_money,
+                    color: Colors.amber,
+                  ),
+                  MetricWidget(
+                    name: 'Рейтинг',
+                    value: statistics.getMetric('average_rating'),
+                    unit: 'звезд',
+                    icon: Icons.star,
+                    color: Colors.orange,
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   /// Получить название периода
   String _getPeriodName(AnalyticsPeriod period) {
@@ -331,90 +327,87 @@ class PeriodStatisticsWidget extends StatelessWidget {
   }
 
   /// Форматировать дату
-  String _formatDate(DateTime date) {
-    return '${date.day}.${date.month}.${date.year}';
-  }
+  String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 }
 
 /// Виджет отчета
 class ReportWidget extends StatelessWidget {
-  final Report report;
-  final VoidCallback? onTap;
-
   const ReportWidget({
     super.key,
     required this.report,
     this.onTap,
   });
+  final Report report;
+  final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 2,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      report.title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+  Widget build(BuildContext context) => Card(
+        elevation: 2,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        report.title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  _buildTypeChip(context, report.type),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                report.description,
-                style: TextStyle(
-                  fontSize: 14,
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    _buildTypeChip(context, report.type),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '${_formatDate(report.startDate)} - ${_formatDate(report.endDate)}',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.6),
-                    ),
+                const SizedBox(height: 8),
+                Text(
+                  report.description,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.7),
                   ),
-                  Text(
-                    _formatDate(report.createdAt),
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.6),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${_formatDate(report.startDate)} - ${_formatDate(report.endDate)}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.6),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    Text(
+                      _formatDate(report.createdAt),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.6),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
   /// Построить чип типа отчета
   Widget _buildTypeChip(BuildContext context, ReportType type) {
@@ -463,111 +456,105 @@ class ReportWidget extends StatelessWidget {
   }
 
   /// Форматировать дату
-  String _formatDate(DateTime date) {
-    return '${date.day}.${date.month}.${date.year}';
-  }
+  String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 }
 
 /// Виджет дашборда
 class DashboardWidget extends StatelessWidget {
-  final Dashboard dashboard;
-  final VoidCallback? onTap;
-
   const DashboardWidget({
     super.key,
     required this.dashboard,
     this.onTap,
   });
+  final Dashboard dashboard;
+  final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      elevation: 4,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Expanded(
-                    child: Text(
-                      dashboard.title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+  Widget build(BuildContext context) => Card(
+        elevation: 4,
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        dashboard.title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  if (dashboard.isPublic)
-                    Icon(
-                      Icons.public,
-                      size: 16,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                ],
-              ),
-              const SizedBox(height: 8),
-              Text(
-                dashboard.description,
-                style: TextStyle(
-                  fontSize: 14,
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                    if (dashboard.isPublic)
+                      Icon(
+                        Icons.public,
+                        size: 16,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                  ],
                 ),
-              ),
-              const SizedBox(height: 12),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    '${dashboard.widgets.length} виджетов',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.6),
-                    ),
+                const SizedBox(height: 8),
+                Text(
+                  dashboard.description,
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .onSurface
+                        .withOpacity(0.7),
                   ),
-                  Text(
-                    _formatDate(dashboard.updatedAt),
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.6),
+                ),
+                const SizedBox(height: 12),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      '${dashboard.widgets.length} виджетов',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.6),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                    Text(
+                      _formatDate(dashboard.updatedAt),
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.6),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
   /// Форматировать дату
-  String _formatDate(DateTime date) {
-    return '${date.day}.${date.month}.${date.year}';
-  }
+  String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 }
 
 /// Виджет формы отчета
 class ReportFormWidget extends ConsumerStatefulWidget {
-  final Function(ReportType type, AnalyticsPeriod period, DateTime date)?
-      onSubmit;
-
   const ReportFormWidget({
     super.key,
     this.onSubmit,
   });
+  final Function(ReportType type, AnalyticsPeriod period, DateTime date)?
+      onSubmit;
 
   @override
   ConsumerState<ReportFormWidget> createState() => _ReportFormWidgetState();
@@ -606,12 +593,14 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
-              items: ReportType.values.map((type) {
-                return DropdownMenuItem(
-                  value: type,
-                  child: Text(_getReportTypeName(type)),
-                );
-              }).toList(),
+              items: ReportType.values
+                  .map(
+                    (type) => DropdownMenuItem(
+                      value: type,
+                      child: Text(_getReportTypeName(type)),
+                    ),
+                  )
+                  .toList(),
               onChanged: (value) {
                 if (value != null) {
                   ref.read(reportFormProvider.notifier).selectType(value);
@@ -633,12 +622,14 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 12, vertical: 8),
               ),
-              items: AnalyticsPeriod.values.map((period) {
-                return DropdownMenuItem(
-                  value: period,
-                  child: Text(_getPeriodName(period)),
-                );
-              }).toList(),
+              items: AnalyticsPeriod.values
+                  .map(
+                    (period) => DropdownMenuItem(
+                      value: period,
+                      child: Text(_getPeriodName(period)),
+                    ),
+                  )
+                  .toList(),
               onChanged: (value) {
                 if (value != null) {
                   ref.read(reportFormProvider.notifier).selectPeriod(value);
@@ -702,8 +693,7 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
-                onPressed:
-                    formState.isGenerating ? null : () => _createReport(),
+                onPressed: formState.isGenerating ? null : _createReport,
                 child: formState.isGenerating
                     ? const SizedBox(
                         width: 16,
@@ -776,7 +766,5 @@ class _ReportFormWidgetState extends ConsumerState<ReportFormWidget> {
   }
 
   /// Форматировать дату
-  String _formatDate(DateTime date) {
-    return '${date.day}.${date.month}.${date.year}';
-  }
+  String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 }

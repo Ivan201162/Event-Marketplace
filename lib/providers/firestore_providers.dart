@@ -1,16 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/firestore_service.dart';
-import '../services/fcm_service.dart';
-import '../models/booking.dart';
 
-final firestoreServiceProvider = Provider<FirestoreService>((ref) {
-  return FirestoreService();
-});
+import '../models/booking.dart';
+import '../services/fcm_service.dart';
+import '../services/firestore_service.dart';
+
+final firestoreServiceProvider =
+    Provider<FirestoreService>((ref) => FirestoreService());
 
 /// Провайдер FCM сервиса
-final fcmServiceProvider = Provider<FCMService>((ref) {
-  return FCMService();
-});
+final fcmServiceProvider = Provider<FCMService>((ref) => FCMService());
 
 /// Провайдер занятых дат специалиста
 final busyDatesProvider =
@@ -41,17 +39,16 @@ final bookingConflictProvider =
 
 /// Параметры для проверки конфликтов бронирования
 class BookingConflictParams {
-  final String specialistId;
-  final DateTime startTime;
-  final DateTime endTime;
-  final String? excludeBookingId;
-
   const BookingConflictParams({
     required this.specialistId,
     required this.startTime,
     required this.endTime,
     this.excludeBookingId,
   });
+  final String specialistId;
+  final DateTime startTime;
+  final DateTime endTime;
+  final String? excludeBookingId;
 
   @override
   bool operator ==(Object other) {

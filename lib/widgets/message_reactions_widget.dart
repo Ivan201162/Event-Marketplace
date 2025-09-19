@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/message_reaction_service.dart';
+
 import '../models/chat_message_extended.dart';
+import '../services/message_reaction_service.dart';
 
 /// Виджет для отображения и управления реакциями на сообщения
 class MessageReactionsWidget extends ConsumerStatefulWidget {
-  final ChatMessageExtended message;
-  final String currentUserId;
-  final String currentUserName;
-  final bool isOwnMessage;
-
   const MessageReactionsWidget({
     super.key,
     required this.message,
@@ -17,6 +13,10 @@ class MessageReactionsWidget extends ConsumerStatefulWidget {
     required this.currentUserName,
     this.isOwnMessage = false,
   });
+  final ChatMessageExtended message;
+  final String currentUserId;
+  final String currentUserName;
+  final bool isOwnMessage;
 
   @override
   ConsumerState<MessageReactionsWidget> createState() =>
@@ -29,27 +29,25 @@ class _MessageReactionsWidgetState
   bool _showEmojiPicker = false;
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Существующие реакции
-        if (widget.message.reactions.isNotEmpty) ...[
-          _buildReactionsList(),
-          const SizedBox(height: 8),
-        ],
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Существующие реакции
+          if (widget.message.reactions.isNotEmpty) ...[
+            _buildReactionsList(),
+            const SizedBox(height: 8),
+          ],
 
-        // Кнопка добавления реакции
-        _buildAddReactionButton(),
+          // Кнопка добавления реакции
+          _buildAddReactionButton(),
 
-        // Эмодзи пикер
-        if (_showEmojiPicker) ...[
-          const SizedBox(height: 8),
-          _buildEmojiPicker(),
+          // Эмодзи пикер
+          if (_showEmojiPicker) ...[
+            const SizedBox(height: 8),
+            _buildEmojiPicker(),
+          ],
         ],
-      ],
-    );
-  }
+      );
 
   Widget _buildReactionsList() {
     // Группируем реакции по эмодзи
@@ -111,43 +109,41 @@ class _MessageReactionsWidgetState
     );
   }
 
-  Widget _buildAddReactionButton() {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _showEmojiPicker = !_showEmojiPicker;
-        });
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-        decoration: BoxDecoration(
-          color: Colors.grey.withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: Colors.grey.withValues(alpha: 0.3),
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              _showEmojiPicker ? Icons.close : Icons.add_reaction,
-              size: 16,
-              color: Colors.grey[600],
+  Widget _buildAddReactionButton() => GestureDetector(
+        onTap: () {
+          setState(() {
+            _showEmojiPicker = !_showEmojiPicker;
+          });
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          decoration: BoxDecoration(
+            color: Colors.grey.withValues(alpha: 0.1),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Colors.grey.withValues(alpha: 0.3),
             ),
-            const SizedBox(width: 4),
-            Text(
-              _showEmojiPicker ? 'Закрыть' : 'Реакция',
-              style: TextStyle(
-                fontSize: 12,
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                _showEmojiPicker ? Icons.close : Icons.add_reaction,
+                size: 16,
                 color: Colors.grey[600],
               ),
-            ),
-          ],
+              const SizedBox(width: 4),
+              Text(
+                _showEmojiPicker ? 'Закрыть' : 'Реакция',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildEmojiPicker() {
     final emojisByCategory = _reactionService.getEmojisByCategory();
@@ -180,58 +176,58 @@ class _MessageReactionsWidgetState
           const SizedBox(height: 12),
 
           // Категории эмодзи
-          ...emojisByCategory.entries.map((entry) {
-            return Column(
+          ...emojisByCategory.entries.map(
+            (entry) => Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildEmojiCategory(entry.key, entry.value),
                 const SizedBox(height: 8),
               ],
-            );
-          }),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildEmojiCategory(String title, List<String> emojis) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 12,
-            fontWeight: FontWeight.w500,
-            color: Colors.grey[600],
+  Widget _buildEmojiCategory(String title, List<String> emojis) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            title,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: Colors.grey[600],
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Wrap(
-          spacing: 4,
-          runSpacing: 4,
-          children: emojis.map((emoji) {
-            return GestureDetector(
-              onTap: () => _addReaction(emoji),
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.grey.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  emoji,
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ),
-            );
-          }).toList(),
-        ),
-      ],
-    );
-  }
+          const SizedBox(height: 4),
+          Wrap(
+            spacing: 4,
+            runSpacing: 4,
+            children: emojis
+                .map(
+                  (emoji) => GestureDetector(
+                    onTap: () => _addReaction(emoji),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withValues(alpha: 0.1),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        emoji,
+                        style: const TextStyle(fontSize: 20),
+                      ),
+                    ),
+                  ),
+                )
+                .toList(),
+          ),
+        ],
+      );
 
-  void _addReaction(String emoji) async {
+  Future<void> _addReaction(String emoji) async {
     final success = await _reactionService.addReaction(
       messageId: widget.message.id,
       userId: widget.currentUserId,
@@ -248,7 +244,7 @@ class _MessageReactionsWidgetState
     }
   }
 
-  void _toggleReaction(String emoji) async {
+  Future<void> _toggleReaction(String emoji) async {
     final success = await _reactionService.toggleReaction(
       messageId: widget.message.id,
       userId: widget.currentUserId,
@@ -273,14 +269,13 @@ class _MessageReactionsWidgetState
 
 /// Виджет для отображения детальной информации о реакциях
 class ReactionDetailsWidget extends StatelessWidget {
-  final List<MessageReaction> reactions;
-  final String emoji;
-
   const ReactionDetailsWidget({
     super.key,
     required this.reactions,
     required this.emoji,
   });
+  final List<MessageReaction> reactions;
+  final String emoji;
 
   @override
   Widget build(BuildContext context) {

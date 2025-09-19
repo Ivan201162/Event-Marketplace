@@ -1,17 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import '../models/dependency_management.dart';
+
 import '../core/feature_flags.dart';
+import '../models/dependency_management.dart';
 
 /// Сервис для управления зависимостями
 class DependencyManagementService {
-  static final DependencyManagementService _instance =
-      DependencyManagementService._internal();
   factory DependencyManagementService() => _instance;
   DependencyManagementService._internal();
+  static final DependencyManagementService _instance =
+      DependencyManagementService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -241,28 +243,22 @@ class DependencyManagementService {
   }
 
   /// Получение зависимости
-  Dependency? getDependency(String id) {
-    return _dependencyCache[id];
-  }
+  Dependency? getDependency(String id) => _dependencyCache[id];
 
   /// Получение всех зависимостей
-  List<Dependency> getAllDependencies() {
-    return _dependencyCache.values.toList();
-  }
+  List<Dependency> getAllDependencies() => _dependencyCache.values.toList();
 
   /// Получение зависимостей по типу
-  List<Dependency> getDependenciesByType(DependencyType type) {
-    return _dependencyCache.values
-        .where((dependency) => dependency.type == type)
-        .toList();
-  }
+  List<Dependency> getDependenciesByType(DependencyType type) =>
+      _dependencyCache.values
+          .where((dependency) => dependency.type == type)
+          .toList();
 
   /// Получение зависимостей по статусу
-  List<Dependency> getDependenciesByStatus(DependencyStatus status) {
-    return _dependencyCache.values
-        .where((dependency) => dependency.status == status)
-        .toList();
-  }
+  List<Dependency> getDependenciesByStatus(DependencyStatus status) =>
+      _dependencyCache.values
+          .where((dependency) => dependency.status == status)
+          .toList();
 
   /// Проверка обновлений
   Future<List<DependencyUpdate>> checkForUpdates() async {
@@ -278,9 +274,10 @@ class DependencyManagementService {
             currentVersion: dependency.version,
             newVersion: dependency.latestVersion!,
             type: _determineUpdateType(
-                dependency.version, dependency.latestVersion!),
+              dependency.version,
+              dependency.latestVersion!,
+            ),
             priority: _determineUpdatePriority(dependency),
-            changelog: null,
             breakingChanges: [],
             securityFixes: [],
             bugFixes: [],
@@ -388,21 +385,17 @@ class DependencyManagementService {
   }
 
   /// Получение обновлений
-  List<DependencyUpdate> getUpdates() {
-    return _updateCache.values.toList();
-  }
+  List<DependencyUpdate> getUpdates() => _updateCache.values.toList();
 
   /// Получение обновлений по приоритету
-  List<DependencyUpdate> getUpdatesByPriority(UpdatePriority priority) {
-    return _updateCache.values
-        .where((update) => update.priority == priority)
-        .toList();
-  }
+  List<DependencyUpdate> getUpdatesByPriority(UpdatePriority priority) =>
+      _updateCache.values
+          .where((update) => update.priority == priority)
+          .toList();
 
   /// Получение обновлений по типу
-  List<DependencyUpdate> getUpdatesByType(UpdateType type) {
-    return _updateCache.values.where((update) => update.type == type).toList();
-  }
+  List<DependencyUpdate> getUpdatesByType(UpdateType type) =>
+      _updateCache.values.where((update) => update.type == type).toList();
 
   /// Обновление конфигурации
   Future<void> updateConfig(DependencyConfig config) async {
@@ -458,7 +451,7 @@ class DependencyManagementService {
 
   /// Группировка зависимостей по типу
   Map<String, int> _groupDependenciesByType(List<Dependency> dependencies) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final dependency in dependencies) {
       groups[dependency.type.value] = (groups[dependency.type.value] ?? 0) + 1;
     }
@@ -467,7 +460,7 @@ class DependencyManagementService {
 
   /// Группировка зависимостей по статусу
   Map<String, int> _groupDependenciesByStatus(List<Dependency> dependencies) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final dependency in dependencies) {
       groups[dependency.status.value] =
           (groups[dependency.status.value] ?? 0) + 1;
@@ -612,12 +605,11 @@ class DependencyManagementService {
   }
 
   /// Генерация уникального ID
-  String _generateId() {
-    return DateTime.now().millisecondsSinceEpoch.toString() +
-        (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
-            .round()
-            .toString();
-  }
+  String _generateId() =>
+      DateTime.now().millisecondsSinceEpoch.toString() +
+      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
+          .round()
+          .toString();
 
   /// Закрытие сервиса
   Future<void> dispose() async {

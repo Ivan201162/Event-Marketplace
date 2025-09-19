@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:event_marketplace_app/models/booking.dart';
-import 'package:event_marketplace_app/models/payment.dart';
-import 'package:event_marketplace_app/services/bank_integration_service.dart';
-import 'package:event_marketplace_app/core/feature_flags.dart';
+
+import '../core/feature_flags.dart';
+import '../models/booking.dart';
+import '../models/payment.dart';
+import 'bank_integration_service.dart';
 
 /// Сервис для управления авансами и финальными платежами
 class AdvancePaymentService {
@@ -43,7 +44,6 @@ class AdvancePaymentService {
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         paymentMethod: 'bank_transfer',
-        transactionId: null,
         bankId: bankId,
         metadata: {
           'totalAmount': totalAmount,
@@ -89,7 +89,7 @@ class AdvancePaymentService {
       final advancePayments = await _getAdvancePayments(bookingId);
       final totalAdvancePaid = advancePayments
           .where((p) => p.status == PaymentStatus.completed)
-          .fold(0.0, (sum, payment) => sum + payment.amount);
+          .fold(0, (sum, payment) => sum + payment.amount);
 
       if (totalAdvancePaid == 0) {
         throw Exception('Сначала необходимо оплатить аванс');
@@ -114,7 +114,6 @@ class AdvancePaymentService {
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
         paymentMethod: 'bank_transfer',
-        transactionId: null,
         bankId: bankId,
         metadata: {
           'totalAmount': booking.totalPrice,
@@ -129,7 +128,10 @@ class AdvancePaymentService {
 
       // Обновляем бронирование
       await _updateBookingPaymentStatus(
-          bookingId, totalAdvancePaid + finalAmount, booking.totalPrice);
+        bookingId,
+        totalAdvancePaid + finalAmount,
+        booking.totalPrice,
+      );
 
       return payment.copyWith(id: docRef.id);
     } catch (e) {
@@ -153,11 +155,11 @@ class AdvancePaymentService {
 
       final totalAdvancePaid = advancePayments
           .where((p) => p.status == PaymentStatus.completed)
-          .fold(0.0, (sum, payment) => sum + payment.amount);
+          .fold(0, (sum, payment) => sum + payment.amount);
 
       final totalFinalPaid = finalPayments
           .where((p) => p.status == PaymentStatus.completed)
-          .fold(0.0, (sum, payment) => sum + payment.amount);
+          .fold(0, (sum, payment) => sum + payment.amount);
 
       final totalPaid = totalAdvancePaid + totalFinalPaid;
       final remainingAmount = booking.totalPrice - totalPaid;
@@ -198,7 +200,7 @@ class AdvancePaymentService {
         final paymentDoc =
             await _firestore.collection('payments').doc(paymentId).get();
         if (paymentDoc.exists) {
-          final paymentData = paymentDoc.data()!;
+          final paymentData = paymentDoc.data();
           final bookingId = paymentData['bookingId'] as String;
           await _updateBookingStatus(bookingId);
         }
@@ -247,7 +249,7 @@ class AdvancePaymentService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => Payment.fromDocument(doc)).toList();
+      return snapshot.docs.map(Payment.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения истории платежей: $e');
     }
@@ -275,7 +277,7 @@ class AdvancePaymentService {
           .where('type', isEqualTo: PaymentType.advance.name)
           .get();
 
-      return snapshot.docs.map((doc) => Payment.fromDocument(doc)).toList();
+      return snapshot.docs.map(Payment.fromDocument).toList();
     } catch (e) {
       return [];
     }
@@ -288,14 +290,17 @@ class AdvancePaymentService {
           .where('bookingId', isEqualTo: bookingId)
           .get();
 
-      return snapshot.docs.map((doc) => Payment.fromDocument(doc)).toList();
+      return snapshot.docs.map(Payment.fromDocument).toList();
     } catch (e) {
       return [];
     }
   }
 
   Future<void> _updateBookingPaymentStatus(
-      String bookingId, double paidAmount, double totalAmount) async {
+    String bookingId,
+    double paidAmount,
+    double totalAmount,
+  ) async {
     try {
       await _firestore.collection('bookings').doc(bookingId).update({
         'paidAmount': paidAmount,
@@ -311,7 +316,7 @@ class AdvancePaymentService {
   Future<void> _updateBookingStatus(String bookingId) async {
     try {
       final summary = await getPaymentSummary(bookingId);
-      String status = 'confirmed';
+      var status = 'confirmed';
 
       if (summary.isFullyPaid) {
         status = 'paid';
@@ -345,18 +350,6 @@ class AdvancePaymentService {
 
 /// Сводка по платежам
 class PaymentSummary {
-  final String bookingId;
-  final double totalAmount;
-  final double advanceAmount;
-  final double finalAmount;
-  final double totalPaid;
-  final double remainingAmount;
-  final bool isAdvancePaid;
-  final bool isFullyPaid;
-  final List<Payment> advancePayments;
-  final List<Payment> finalPayments;
-  final DateTime? nextPaymentDue;
-
   const PaymentSummary({
     required this.bookingId,
     required this.totalAmount,
@@ -370,4 +363,15 @@ class PaymentSummary {
     required this.finalPayments,
     this.nextPaymentDue,
   });
+  final String bookingId;
+  final double totalAmount;
+  final double advanceAmount;
+  final double finalAmount;
+  final double totalPaid;
+  final double remainingAmount;
+  final bool isAdvancePaid;
+  final bool isFullyPaid;
+  final List<Payment> advancePayments;
+  final List<Payment> finalPayments;
+  final DateTime? nextPaymentDue;
 }

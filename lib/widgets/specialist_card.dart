@@ -5,11 +5,6 @@ import '../providers/specialist_providers.dart';
 
 /// Карточка специалиста
 class SpecialistCard extends ConsumerWidget {
-  final Specialist specialist;
-  final VoidCallback? onTap;
-  final bool showActions;
-  final bool showAvailability;
-
   const SpecialistCard({
     super.key,
     required this.specialist,
@@ -17,6 +12,10 @@ class SpecialistCard extends ConsumerWidget {
     this.showActions = true,
     this.showAvailability = true,
   });
+  final Specialist specialist;
+  final VoidCallback? onTap;
+  final bool showActions;
+  final bool showAvailability;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -77,117 +76,122 @@ class SpecialistCard extends ConsumerWidget {
   }
 
   /// Построить заголовок
-  Widget _buildHeader(BuildContext context, WidgetRef ref, bool isFavorite) {
-    return Row(
-      children: [
-        // Аватар
-        CircleAvatar(
-          radius: 24,
-          backgroundColor: Theme.of(context).colorScheme.primary,
-          child: Text(
-            specialist.name.isNotEmpty ? specialist.name[0].toUpperCase() : '?',
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 18,
+  Widget _buildHeader(BuildContext context, WidgetRef ref, bool isFavorite) =>
+      Row(
+        children: [
+          // Аватар
+          CircleAvatar(
+            radius: 24,
+            backgroundColor: Theme.of(context).colorScheme.primary,
+            child: Text(
+              specialist.name.isNotEmpty
+                  ? specialist.name[0].toUpperCase()
+                  : '?',
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 18,
+              ),
             ),
           ),
-        ),
 
-        const SizedBox(width: 12),
+          const SizedBox(width: 12),
 
-        // Имя и статус
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      specialist.name,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  if (specialist.isVerified)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: const Text(
-                        '✓',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 12,
+          // Имя и статус
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        specialist.name,
+                        style: const TextStyle(
+                          fontSize: 16,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                     ),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  Text(
-                    specialist.categoryDisplayName,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                  if (specialist.experienceLevel !=
-                      ExperienceLevel.beginner) ...[
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 6, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: Colors.orange.withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(4),
-                      ),
-                      child: Text(
-                        specialist.experienceLevelDisplayName,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.orange[700],
-                          fontWeight: FontWeight.w500,
+                    if (specialist.isVerified)
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: const Text(
+                          '✓',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
                   ],
-                ],
-              ),
-            ],
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Text(
+                      specialist.categoryDisplayName,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    if (specialist.experienceLevel !=
+                        ExperienceLevel.beginner) ...[
+                      const SizedBox(width: 8),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 6,
+                          vertical: 2,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.orange.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: Text(
+                          specialist.experienceLevelDisplayName,
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.orange[700],
+                            fontWeight: FontWeight.w500,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ],
+            ),
           ),
-        ),
 
-        // Кнопка избранного
-        IconButton(
-          icon: Icon(
-            isFavorite ? Icons.favorite : Icons.favorite_border,
-            color: isFavorite ? Colors.red : Colors.grey,
+          // Кнопка избранного
+          IconButton(
+            icon: Icon(
+              isFavorite ? Icons.favorite : Icons.favorite_border,
+              color: isFavorite ? Colors.red : Colors.grey,
+            ),
+            onPressed: () {
+              if (isFavorite) {
+                ref
+                    .read(favoriteSpecialistsProvider.notifier)
+                    .removeFromFavorites(specialist.id);
+              } else {
+                ref
+                    .read(favoriteSpecialistsProvider.notifier)
+                    .addToFavorites(specialist.id);
+              }
+            },
           ),
-          onPressed: () {
-            if (isFavorite) {
-              ref
-                  .read(favoriteSpecialistsProvider.notifier)
-                  .removeFromFavorites(specialist.id);
-            } else {
-              ref
-                  .read(favoriteSpecialistsProvider.notifier)
-                  .addToFavorites(specialist.id);
-            }
-          },
-        ),
-      ],
-    );
-  }
+        ],
+      );
 
   /// Построить секцию категории
   Widget _buildCategorySection() {
@@ -196,163 +200,161 @@ class SpecialistCard extends ConsumerWidget {
     return Wrap(
       spacing: 6,
       runSpacing: 4,
-      children: specialist.subcategories.take(3).map((subcategory) {
-        return Container(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          decoration: BoxDecoration(
-            color: Colors.blue.withOpacity(0.1),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Text(
-            subcategory,
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.blue[700],
-              fontWeight: FontWeight.w500,
+      children: specialist.subcategories
+          .take(3)
+          .map(
+            (subcategory) => Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.blue.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                subcategory,
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.blue[700],
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
             ),
-          ),
-        );
-      }).toList(),
+          )
+          .toList(),
     );
   }
 
   /// Построить рейтинг и опыт
-  Widget _buildRatingAndExperience() {
-    return Row(
-      children: [
-        // Рейтинг
-        if (specialist.rating > 0) ...[
+  Widget _buildRatingAndExperience() => Row(
+        children: [
+          // Рейтинг
+          if (specialist.rating > 0) ...[
+            Row(
+              children: [
+                const Icon(Icons.star, color: Colors.amber, size: 16),
+                const SizedBox(width: 4),
+                Text(
+                  specialist.rating.toStringAsFixed(1),
+                  style: const TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                const SizedBox(width: 4),
+                Text(
+                  '(${specialist.reviewCount})',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(width: 16),
+          ],
+
+          // Опыт
           Row(
             children: [
-              const Icon(Icons.star, color: Colors.amber, size: 16),
+              Icon(Icons.work_outline, color: Colors.grey[600], size: 16),
               const SizedBox(width: 4),
               Text(
-                specialist.rating.toStringAsFixed(1),
-                style: const TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              const SizedBox(width: 4),
-              Text(
-                '(${specialist.reviewCount})',
+                '${specialist.yearsOfExperience} лет опыта',
                 style: TextStyle(
-                  fontSize: 12,
+                  fontSize: 14,
                   color: Colors.grey[600],
                 ),
               ),
             ],
           ),
-          const SizedBox(width: 16),
         ],
-
-        // Опыт
-        Row(
-          children: [
-            Icon(Icons.work_outline, color: Colors.grey[600], size: 16),
-            const SizedBox(width: 4),
-            Text(
-              '${specialist.yearsOfExperience} лет опыта',
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.grey[600],
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+      );
 
   /// Построить цену и доступность
-  Widget _buildPriceAndAvailability() {
-    return Row(
-      children: [
-        // Цена
-        Expanded(
-          child: Row(
-            children: [
-              Icon(Icons.attach_money, color: Colors.green[600], size: 16),
-              const SizedBox(width: 4),
-              Text(
-                specialist.priceRange,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.green[700],
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        // Доступность
-        if (showAvailability) ...[
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: specialist.isAvailable
-                  ? Colors.green.withOpacity(0.1)
-                  : Colors.red.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(12),
-            ),
+  Widget _buildPriceAndAvailability() => Row(
+        children: [
+          // Цена
+          Expanded(
             child: Row(
-              mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  specialist.isAvailable ? Icons.check_circle : Icons.cancel,
-                  color: specialist.isAvailable ? Colors.green : Colors.red,
-                  size: 12,
-                ),
+                Icon(Icons.attach_money, color: Colors.green[600], size: 16),
                 const SizedBox(width: 4),
                 Text(
-                  specialist.isAvailable ? 'Доступен' : 'Занят',
+                  specialist.priceRange,
                   style: TextStyle(
-                    fontSize: 12,
-                    color: specialist.isAvailable
-                        ? Colors.green[700]
-                        : Colors.red[700],
-                    fontWeight: FontWeight.w500,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.green[700],
                   ),
                 ),
               ],
             ),
           ),
+
+          // Доступность
+          if (showAvailability) ...[
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              decoration: BoxDecoration(
+                color: specialist.isAvailable
+                    ? Colors.green.withOpacity(0.1)
+                    : Colors.red.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    specialist.isAvailable ? Icons.check_circle : Icons.cancel,
+                    color: specialist.isAvailable ? Colors.green : Colors.red,
+                    size: 12,
+                  ),
+                  const SizedBox(width: 4),
+                  Text(
+                    specialist.isAvailable ? 'Доступен' : 'Занят',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: specialist.isAvailable
+                          ? Colors.green[700]
+                          : Colors.red[700],
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
         ],
-      ],
-    );
-  }
+      );
 
   /// Построить действия
-  Widget _buildActions(BuildContext context, WidgetRef ref, bool isFavorite) {
-    return Row(
-      children: [
-        // Кнопка "Забронировать"
-        Expanded(
-          child: ElevatedButton.icon(
-            onPressed: specialist.isAvailable
-                ? () => _showBookingDialog(context)
-                : null,
-            icon: const Icon(Icons.calendar_today, size: 16),
-            label: const Text('Забронировать'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.primary,
-              foregroundColor: Colors.white,
+  Widget _buildActions(BuildContext context, WidgetRef ref, bool isFavorite) =>
+      Row(
+        children: [
+          // Кнопка "Забронировать"
+          Expanded(
+            child: ElevatedButton.icon(
+              onPressed: specialist.isAvailable
+                  ? () => _showBookingDialog(context)
+                  : null,
+              icon: const Icon(Icons.calendar_today, size: 16),
+              label: const Text('Забронировать'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).colorScheme.primary,
+                foregroundColor: Colors.white,
+              ),
             ),
           ),
-        ),
 
-        const SizedBox(width: 12),
+          const SizedBox(width: 12),
 
-        // Кнопка "Подробнее"
-        OutlinedButton.icon(
-          onPressed: onTap,
-          icon: const Icon(Icons.info_outline, size: 16),
-          label: const Text('Подробнее'),
-        ),
-      ],
-    );
-  }
+          // Кнопка "Подробнее"
+          OutlinedButton.icon(
+            onPressed: onTap,
+            icon: const Icon(Icons.info_outline, size: 16),
+            label: const Text('Подробнее'),
+          ),
+        ],
+      );
 
   /// Показать диалог бронирования
   void _showBookingDialog(BuildContext context) {
@@ -385,7 +387,8 @@ class SpecialistCard extends ConsumerWidget {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
                   content: Text(
-                      'Бронирование ${specialist.name} будет реализовано в следующем шаге'),
+                    'Бронирование ${specialist.name} будет реализовано в следующем шаге',
+                  ),
                 ),
               );
             },
@@ -399,14 +402,13 @@ class SpecialistCard extends ConsumerWidget {
 
 /// Компактная карточка специалиста для списков
 class CompactSpecialistCard extends ConsumerWidget {
-  final Specialist specialist;
-  final VoidCallback? onTap;
-
   const CompactSpecialistCard({
     super.key,
     required this.specialist,
     this.onTap,
   });
+  final Specialist specialist;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -457,8 +459,11 @@ class CompactSpecialistCard extends ConsumerWidget {
                           ),
                         ),
                         if (specialist.isVerified)
-                          const Icon(Icons.verified,
-                              color: Colors.blue, size: 16),
+                          const Icon(
+                            Icons.verified,
+                            color: Colors.blue,
+                            size: 16,
+                          ),
                       ],
                     ),
                     const SizedBox(height: 2),

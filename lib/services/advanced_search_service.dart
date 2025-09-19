@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:event_marketplace_app/models/search_filters.dart';
-import 'package:event_marketplace_app/models/specialist.dart';
-import 'package:event_marketplace_app/core/feature_flags.dart';
+
+import '../core/feature_flags.dart';
+import '../models/search_filters.dart';
+import '../models/specialist.dart';
 
 /// Сервис расширенного поиска специалистов
 class AdvancedSearchService {
@@ -18,7 +19,7 @@ class AdvancedSearchService {
     }
 
     try {
-      Query query = _firestore.collection('specialists');
+      var query = _firestore.collection('specialists');
 
       // Фильтр по категориям
       if (filters.categories.isNotEmpty) {
@@ -128,21 +129,23 @@ class AdvancedSearchService {
           // Это требует интеграции с календарем специалиста
         }
 
-        results.add(SpecialistSearchResult(
-          specialistId: doc.id,
-          name: specialist.name,
-          avatar: specialist.avatar ?? '',
-          rating: specialist.rating,
-          reviewCount: specialist.reviewCount,
-          priceFrom: specialist.priceFrom,
-          categories: specialist.categories,
-          services: specialist.services,
-          location: specialist.location,
-          isAvailable: specialist.isAvailable,
-          isVerified: specialist.isVerified,
-          hasPortfolio: specialist.portfolio.isNotEmpty,
-          nextAvailableDate: specialist.nextAvailableDate,
-        ));
+        results.add(
+          SpecialistSearchResult(
+            specialistId: doc.id,
+            name: specialist.name,
+            avatar: specialist.avatar ?? '',
+            rating: specialist.rating,
+            reviewCount: specialist.reviewCount,
+            priceFrom: specialist.priceFrom,
+            categories: specialist.categories,
+            services: specialist.services,
+            location: specialist.location,
+            isAvailable: specialist.isAvailable,
+            isVerified: specialist.isVerified,
+            hasPortfolio: specialist.portfolio.isNotEmpty,
+            nextAvailableDate: specialist.nextAvailableDate,
+          ),
+        );
       }
 
       return results;

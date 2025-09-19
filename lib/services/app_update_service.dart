@@ -1,8 +1,9 @@
 import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 /// Сервис для проверки обновлений приложения
 class AppUpdateService {
@@ -108,7 +109,7 @@ class AppUpdateService {
       final latest = _parseVersion(latestVersion);
       final current = _parseVersion(currentVersion);
 
-      for (int i = 0; i < 3; i++) {
+      for (var i = 0; i < 3; i++) {
         if (latest[i] > current[i]) return true;
         if (latest[i] < current[i]) return false;
       }
@@ -120,9 +121,8 @@ class AppUpdateService {
   }
 
   /// Парсить версию в массив чисел
-  static List<int> _parseVersion(String version) {
-    return version.split('.').map((v) => int.tryParse(v) ?? 0).toList();
-  }
+  static List<int> _parseVersion(String version) =>
+      version.split('.').map((v) => int.tryParse(v) ?? 0).toList();
 
   /// Получить время последней проверки
   static Future<DateTime?> _getLastCheckTime() async {
@@ -208,9 +208,8 @@ class AppUpdateService {
   }
 
   /// Получить информацию о текущей версии
-  static Future<PackageInfo> getCurrentVersionInfo() async {
-    return await PackageInfo.fromPlatform();
-  }
+  static Future<PackageInfo> getCurrentVersionInfo() async =>
+      PackageInfo.fromPlatform();
 
   /// Открыть страницу загрузки
   static Future<void> openDownloadPage(String? downloadUrl) async {
@@ -237,13 +236,6 @@ class AppUpdateService {
 
 /// Информация об обновлении
 class UpdateInfo {
-  final String currentVersion;
-  final String latestVersion;
-  final String releaseNotes;
-  final String? downloadUrl;
-  final bool isUpdateAvailable;
-  final DateTime checkTime;
-
   const UpdateInfo({
     required this.currentVersion,
     required this.latestVersion,
@@ -253,34 +245,35 @@ class UpdateInfo {
     required this.checkTime,
   });
 
-  /// Преобразовать в JSON
-  Map<String, dynamic> toJson() {
-    return {
-      'currentVersion': currentVersion,
-      'latestVersion': latestVersion,
-      'releaseNotes': releaseNotes,
-      'downloadUrl': downloadUrl,
-      'isUpdateAvailable': isUpdateAvailable,
-      'checkTime': checkTime.millisecondsSinceEpoch,
-    };
-  }
-
   /// Создать из JSON
-  factory UpdateInfo.fromJson(Map<String, dynamic> json) {
-    return UpdateInfo(
-      currentVersion: json['currentVersion'] ?? '',
-      latestVersion: json['latestVersion'] ?? '',
-      releaseNotes: json['releaseNotes'] ?? '',
-      downloadUrl: json['downloadUrl'],
-      isUpdateAvailable: json['isUpdateAvailable'] ?? false,
-      checkTime: DateTime.fromMillisecondsSinceEpoch(json['checkTime'] ?? 0),
-    );
-  }
+  factory UpdateInfo.fromJson(Map<String, dynamic> json) => UpdateInfo(
+        currentVersion: json['currentVersion'] ?? '',
+        latestVersion: json['latestVersion'] ?? '',
+        releaseNotes: json['releaseNotes'] ?? '',
+        downloadUrl: json['downloadUrl'],
+        isUpdateAvailable: json['isUpdateAvailable'] ?? false,
+        checkTime: DateTime.fromMillisecondsSinceEpoch(json['checkTime'] ?? 0),
+      );
+  final String currentVersion;
+  final String latestVersion;
+  final String releaseNotes;
+  final String? downloadUrl;
+  final bool isUpdateAvailable;
+  final DateTime checkTime;
+
+  /// Преобразовать в JSON
+  Map<String, dynamic> toJson() => {
+        'currentVersion': currentVersion,
+        'latestVersion': latestVersion,
+        'releaseNotes': releaseNotes,
+        'downloadUrl': downloadUrl,
+        'isUpdateAvailable': isUpdateAvailable,
+        'checkTime': checkTime.millisecondsSinceEpoch,
+      };
 
   /// Получить тип обновления
-  UpdateType get updateType {
-    return AppUpdateService.getUpdateType(currentVersion, latestVersion);
-  }
+  UpdateType get updateType =>
+      AppUpdateService.getUpdateType(currentVersion, latestVersion);
 
   /// Получить описание типа обновления
   String get updateTypeDescription {

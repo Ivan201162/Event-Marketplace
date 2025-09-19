@@ -1,14 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:event_marketplace_app/widgets/theme_switch.dart';
 import 'package:event_marketplace_app/widgets/language_selector.dart';
 import 'package:event_marketplace_app/widgets/responsive_widgets.dart';
+import 'package:event_marketplace_app/widgets/theme_switch.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Theme Switch Tests', () {
-    testWidgets('should display theme switch widget',
-        (WidgetTester tester) async {
+    testWidgets('should display theme switch widget', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -26,8 +25,7 @@ void main() {
       expect(find.text('Тема'), findsOneWidget);
     });
 
-    testWidgets('should show theme options when tapped',
-        (WidgetTester tester) async {
+    testWidgets('should show theme options when tapped', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -51,8 +49,7 @@ void main() {
       expect(find.text('Системная'), findsOneWidget);
     });
 
-    testWidgets('should change theme when option is selected',
-        (WidgetTester tester) async {
+    testWidgets('should change theme when option is selected', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -77,8 +74,7 @@ void main() {
       expect(find.text('Выберите тему'), findsNothing);
     });
 
-    testWidgets('should display compact theme switch',
-        (WidgetTester tester) async {
+    testWidgets('should display compact theme switch', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -96,8 +92,7 @@ void main() {
       expect(find.byType(IconButton), findsOneWidget);
     });
 
-    testWidgets('should display current theme display',
-        (WidgetTester tester) async {
+    testWidgets('should display current theme display', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -114,8 +109,7 @@ void main() {
       expect(find.byType(CurrentThemeDisplay), findsOneWidget);
     });
 
-    testWidgets('should display quick theme toggle',
-        (WidgetTester tester) async {
+    testWidgets('should display quick theme toggle', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -135,8 +129,7 @@ void main() {
   });
 
   group('Language Selector Tests', () {
-    testWidgets('should display language selector widget',
-        (WidgetTester tester) async {
+    testWidgets('should display language selector widget', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -154,8 +147,7 @@ void main() {
       expect(find.text('Язык'), findsOneWidget);
     });
 
-    testWidgets('should show language options when tapped',
-        (WidgetTester tester) async {
+    testWidgets('should show language options when tapped', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -179,7 +171,7 @@ void main() {
     });
 
     testWidgets('should change language when option is selected',
-        (WidgetTester tester) async {
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -204,8 +196,7 @@ void main() {
       expect(find.text('Язык'), findsNothing);
     });
 
-    testWidgets('should display compact language selector',
-        (WidgetTester tester) async {
+    testWidgets('should display compact language selector', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -223,8 +214,7 @@ void main() {
       expect(find.byType(IconButton), findsOneWidget);
     });
 
-    testWidgets('should display current language display',
-        (WidgetTester tester) async {
+    testWidgets('should display current language display', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -243,8 +233,7 @@ void main() {
   });
 
   group('Responsive Widgets Tests', () {
-    testWidgets('should display mobile widget on small screen',
-        (WidgetTester tester) async {
+    testWidgets('should display mobile widget on small screen', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -268,7 +257,7 @@ void main() {
     });
 
     testWidgets('should display tablet widget on medium screen',
-        (WidgetTester tester) async {
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -292,7 +281,7 @@ void main() {
     });
 
     testWidgets('should display desktop widget on large screen',
-        (WidgetTester tester) async {
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -316,7 +305,7 @@ void main() {
     });
 
     testWidgets('should fallback to mobile widget when tablet is not provided',
-        (WidgetTester tester) async {
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -338,7 +327,7 @@ void main() {
     });
 
     testWidgets('should fallback to tablet widget when desktop is not provided',
-        (WidgetTester tester) async {
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -360,7 +349,7 @@ void main() {
     });
 
     testWidgets('should display responsive container with different padding',
-        (WidgetTester tester) async {
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -381,7 +370,7 @@ void main() {
     });
 
     testWidgets('should display responsive grid with different columns',
-        (WidgetTester tester) async {
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(
@@ -408,7 +397,7 @@ void main() {
     });
 
     testWidgets('should display responsive list with different items per row',
-        (WidgetTester tester) async {
+        (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: Scaffold(

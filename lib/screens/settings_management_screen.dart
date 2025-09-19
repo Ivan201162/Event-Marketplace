@@ -31,46 +31,42 @@ class _SettingsManagementScreenState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ResponsiveScaffold(
-      body: Column(
-        children: [
-          // Вкладки
-          _buildTabs(),
+  Widget build(BuildContext context) => ResponsiveScaffold(
+        body: Column(
+          children: [
+            // Вкладки
+            _buildTabs(),
 
-          // Контент
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _selectedTab == 'settings'
-                    ? _buildSettingsTab()
-                    : _selectedTab == 'configurations'
-                        ? _buildConfigurationsTab()
-                        : _buildHistoryTab(),
-          ),
-        ],
-      ),
-    );
-  }
+            // Контент
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _selectedTab == 'settings'
+                      ? _buildSettingsTab()
+                      : _selectedTab == 'configurations'
+                          ? _buildConfigurationsTab()
+                          : _buildHistoryTab(),
+            ),
+          ],
+        ),
+      );
 
-  Widget _buildTabs() {
-    return ResponsiveCard(
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildTabButton('settings', 'Настройки', Icons.settings),
-          ),
-          Expanded(
-            child:
-                _buildTabButton('configurations', 'Конфигурации', Icons.tune),
-          ),
-          Expanded(
-            child: _buildTabButton('history', 'История', Icons.history),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildTabs() => ResponsiveCard(
+        child: Row(
+          children: [
+            Expanded(
+              child: _buildTabButton('settings', 'Настройки', Icons.settings),
+            ),
+            Expanded(
+              child:
+                  _buildTabButton('configurations', 'Конфигурации', Icons.tune),
+            ),
+            Expanded(
+              child: _buildTabButton('history', 'История', Icons.history),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -113,71 +109,68 @@ class _SettingsManagementScreenState
     );
   }
 
-  Widget _buildSettingsTab() {
-    return Column(
-      children: [
-        // Заголовок с фильтрами
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Настройки приложения',
-                isTitle: true,
-              ),
-              const Spacer(),
-              DropdownButton<String?>(
-                value: _selectedCategory,
-                hint: const Text('Все категории'),
-                items: [
-                  const DropdownMenuItem<String?>(
-                    value: null,
-                    child: Text('Все категории'),
-                  ),
-                  ..._getCategories().map((category) {
-                    return DropdownMenuItem<String?>(
-                      value: category,
-                      child: Text(category),
-                    );
-                  }),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedCategory = value;
-                  });
-                  _loadSettingsByCategory();
-                },
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _showCreateSettingDialog,
-                icon: const Icon(Icons.add),
-                label: const Text('Создать'),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список настроек
-        Expanded(
-          child: _settings.isEmpty
-              ? const Center(child: Text('Настройки не найдены'))
-              : ListView.builder(
-                  itemCount: _settings.length,
-                  itemBuilder: (context, index) {
-                    final setting = _settings[index];
-                    return _buildSettingCard(setting);
+  Widget _buildSettingsTab() => Column(
+        children: [
+          // Заголовок с фильтрами
+          ResponsiveCard(
+            child: Row(
+              children: [
+                const ResponsiveText(
+                  'Настройки приложения',
+                  isTitle: true,
+                ),
+                const Spacer(),
+                DropdownButton<String?>(
+                  value: _selectedCategory,
+                  hint: const Text('Все категории'),
+                  items: [
+                    const DropdownMenuItem<String?>(
+                      child: Text('Все категории'),
+                    ),
+                    ..._getCategories().map(
+                      (category) => DropdownMenuItem<String?>(
+                        value: category,
+                        child: Text(category),
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedCategory = value;
+                    });
+                    _loadSettingsByCategory();
                   },
                 ),
-        ),
-      ],
-    );
-  }
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _showCreateSettingDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Создать'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список настроек
+          Expanded(
+            child: _settings.isEmpty
+                ? const Center(child: Text('Настройки не найдены'))
+                : ListView.builder(
+                    itemCount: _settings.length,
+                    itemBuilder: (context, index) {
+                      final setting = _settings[index];
+                      return _buildSettingCard(setting);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildSettingCard(AppSettings setting) {
     final typeColor = _getTypeColor(setting.type);
@@ -327,48 +320,46 @@ class _SettingsManagementScreenState
     );
   }
 
-  Widget _buildConfigurationsTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Конфигурации приложения',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _showCreateConfigurationDialog,
-                icon: const Icon(Icons.add),
-                label: const Text('Создать конфигурацию'),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список конфигураций
-        Expanded(
-          child: _configurations.isEmpty
-              ? const Center(child: Text('Конфигурации не найдены'))
-              : ListView.builder(
-                  itemCount: _configurations.length,
-                  itemBuilder: (context, index) {
-                    final configuration = _configurations[index];
-                    return _buildConfigurationCard(configuration);
-                  },
+  Widget _buildConfigurationsTab() => Column(
+        children: [
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                const ResponsiveText(
+                  'Конфигурации приложения',
+                  isTitle: true,
                 ),
-        ),
-      ],
-    );
-  }
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _showCreateConfigurationDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Создать конфигурацию'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список конфигураций
+          Expanded(
+            child: _configurations.isEmpty
+                ? const Center(child: Text('Конфигурации не найдены'))
+                : ListView.builder(
+                    itemCount: _configurations.length,
+                    itemBuilder: (context, index) {
+                      final configuration = _configurations[index];
+                      return _buildConfigurationCard(configuration);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildConfigurationCard(AppConfiguration configuration) {
     final typeColor = _getConfigurationTypeColor(configuration.type);
@@ -490,11 +481,17 @@ class _SettingsManagementScreenState
           Row(
             children: [
               _buildInfoChip(
-                  'Параметров', '${configuration.config.length}', Colors.blue),
+                'Параметров',
+                '${configuration.config.length}',
+                Colors.blue,
+              ),
               if (configuration.environment != null) ...[
                 const SizedBox(width: 8),
                 _buildInfoChip(
-                    'Окружение', configuration.environment!, Colors.green),
+                  'Окружение',
+                  configuration.environment!,
+                  Colors.green,
+                ),
               ],
             ],
           ),
@@ -522,55 +519,51 @@ class _SettingsManagementScreenState
     );
   }
 
-  Widget _buildHistoryTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'История изменений',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
+  Widget _buildHistoryTab() => Column(
+        children: [
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                const ResponsiveText(
+                  'История изменений',
+                  isTitle: true,
+                ),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список истории
+          const Expanded(
+            child: Center(
+              child: Text('История изменений будет отображаться здесь'),
+            ),
+          ),
+        ],
+      );
+
+  Widget _buildInfoChip(String label, String value, Color color) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color),
+        ),
+        child: Text(
+          '$label: $value',
+          style: TextStyle(
+            fontSize: 12,
+            color: color,
+            fontWeight: FontWeight.w500,
           ),
         ),
-
-        // Список истории
-        Expanded(
-          child: const Center(
-            child: Text('История изменений будет отображаться здесь'),
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildInfoChip(String label, String value, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color),
-      ),
-      child: Text(
-        '$label: $value',
-        style: TextStyle(
-          fontSize: 12,
-          color: color,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-    );
-  }
+      );
 
   Color _getTypeColor(SettingType type) {
     switch (type) {
@@ -622,18 +615,17 @@ class _SettingsManagementScreenState
     }
   }
 
-  String _formatSettingValue(dynamic value) {
+  String _formatSettingValue(value) {
     if (value == null) return 'null';
     if (value is String) return '"$value"';
     if (value is Map || value is List) {
-      return JsonEncoder.withIndent('  ').convert(value);
+      return const JsonEncoder.withIndent('  ').convert(value);
     }
     return value.toString();
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDateTime(DateTime dateTime) =>
+      '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
 
   List<String> _getCategories() {
     final categories = <String>{};
@@ -848,7 +840,9 @@ class _SettingsManagementScreenState
   }
 
   void _handleConfigurationAction(
-      String action, AppConfiguration configuration) {
+    String action,
+    AppConfiguration configuration,
+  ) {
     switch (action) {
       case 'view':
         _viewConfiguration(configuration);
@@ -873,7 +867,8 @@ class _SettingsManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Просмотр конфигурации "${configuration.name}" будет реализован'),
+          'Просмотр конфигурации "${configuration.name}" будет реализован',
+        ),
       ),
     );
   }
@@ -883,7 +878,8 @@ class _SettingsManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Редактирование конфигурации "${configuration.name}" будет реализовано'),
+          'Редактирование конфигурации "${configuration.name}" будет реализовано',
+        ),
       ),
     );
   }
@@ -936,7 +932,8 @@ class _SettingsManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Экспорт конфигурации "${configuration.name}" будет реализован'),
+          'Экспорт конфигурации "${configuration.name}" будет реализован',
+        ),
       ),
     );
   }
@@ -947,7 +944,8 @@ class _SettingsManagementScreenState
       builder: (context) => AlertDialog(
         title: const Text('Удалить конфигурацию'),
         content: Text(
-            'Вы уверены, что хотите удалить конфигурацию "${configuration.name}"?'),
+          'Вы уверены, что хотите удалить конфигурацию "${configuration.name}"?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

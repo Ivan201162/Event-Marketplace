@@ -1,20 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import '../models/specialist_schedule.dart';
-import '../models/booking.dart';
-import '../models/user.dart';
+
 import '../core/feature_flags.dart';
+import '../models/booking.dart';
+import '../models/specialist_schedule.dart';
+import '../models/user.dart';
 
 /// Модель фильтра доступности
 class AvailabilityFilter {
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final List<int>? preferredHours; // Часы дня (0-23)
-  final List<String>? preferredDays; // Дни недели (monday, tuesday, etc.)
-  final Duration? minDuration;
-  final Duration? maxDuration;
-  final bool onlyAvailable;
-
   const AvailabilityFilter({
     this.startDate,
     this.endDate,
@@ -26,42 +19,46 @@ class AvailabilityFilter {
   });
 
   /// Создать из Map
-  factory AvailabilityFilter.fromMap(Map<String, dynamic> data) {
-    return AvailabilityFilter(
-      startDate: data['startDate'] != null
-          ? (data['startDate'] as Timestamp).toDate()
-          : null,
-      endDate: data['endDate'] != null
-          ? (data['endDate'] as Timestamp).toDate()
-          : null,
-      preferredHours: data['preferredHours'] != null
-          ? List<int>.from(data['preferredHours'])
-          : null,
-      preferredDays: data['preferredDays'] != null
-          ? List<String>.from(data['preferredDays'])
-          : null,
-      minDuration: data['minDuration'] != null
-          ? Duration(minutes: data['minDuration'])
-          : null,
-      maxDuration: data['maxDuration'] != null
-          ? Duration(minutes: data['maxDuration'])
-          : null,
-      onlyAvailable: data['onlyAvailable'] ?? true,
-    );
-  }
+  factory AvailabilityFilter.fromMap(Map<String, dynamic> data) =>
+      AvailabilityFilter(
+        startDate: data['startDate'] != null
+            ? (data['startDate'] as Timestamp).toDate()
+            : null,
+        endDate: data['endDate'] != null
+            ? (data['endDate'] as Timestamp).toDate()
+            : null,
+        preferredHours: data['preferredHours'] != null
+            ? List<int>.from(data['preferredHours'])
+            : null,
+        preferredDays: data['preferredDays'] != null
+            ? List<String>.from(data['preferredDays'])
+            : null,
+        minDuration: data['minDuration'] != null
+            ? Duration(minutes: data['minDuration'])
+            : null,
+        maxDuration: data['maxDuration'] != null
+            ? Duration(minutes: data['maxDuration'])
+            : null,
+        onlyAvailable: data['onlyAvailable'] ?? true,
+      );
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final List<int>? preferredHours; // Часы дня (0-23)
+  final List<String>? preferredDays; // Дни недели (monday, tuesday, etc.)
+  final Duration? minDuration;
+  final Duration? maxDuration;
+  final bool onlyAvailable;
 
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'startDate': startDate != null ? Timestamp.fromDate(startDate!) : null,
-      'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
-      'preferredHours': preferredHours,
-      'preferredDays': preferredDays,
-      'minDuration': minDuration?.inMinutes,
-      'maxDuration': maxDuration?.inMinutes,
-      'onlyAvailable': onlyAvailable,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'startDate': startDate != null ? Timestamp.fromDate(startDate!) : null,
+        'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
+        'preferredHours': preferredHours,
+        'preferredDays': preferredDays,
+        'minDuration': minDuration?.inMinutes,
+        'maxDuration': maxDuration?.inMinutes,
+        'onlyAvailable': onlyAvailable,
+      };
 
   /// Копировать с изменениями
   AvailabilityFilter copyWith({
@@ -72,31 +69,20 @@ class AvailabilityFilter {
     Duration? minDuration,
     Duration? maxDuration,
     bool? onlyAvailable,
-  }) {
-    return AvailabilityFilter(
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
-      preferredHours: preferredHours ?? this.preferredHours,
-      preferredDays: preferredDays ?? this.preferredDays,
-      minDuration: minDuration ?? this.minDuration,
-      maxDuration: maxDuration ?? this.maxDuration,
-      onlyAvailable: onlyAvailable ?? this.onlyAvailable,
-    );
-  }
+  }) =>
+      AvailabilityFilter(
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+        preferredHours: preferredHours ?? this.preferredHours,
+        preferredDays: preferredDays ?? this.preferredDays,
+        minDuration: minDuration ?? this.minDuration,
+        maxDuration: maxDuration ?? this.maxDuration,
+        onlyAvailable: onlyAvailable ?? this.onlyAvailable,
+      );
 }
 
 /// Модель доступности специалиста
 class SpecialistAvailability {
-  final String specialistId;
-  final String specialistName;
-  final String? specialistPhoto;
-  final List<DateTime> availableSlots;
-  final List<DateTime> busySlots;
-  final Map<String, List<DateTime>> weeklyAvailability;
-  final double availabilityScore; // 0.0 - 1.0
-  final List<String> availableDays;
-  final List<int> availableHours;
-
   const SpecialistAvailability({
     required this.specialistId,
     required this.specialistName,
@@ -110,56 +96,61 @@ class SpecialistAvailability {
   });
 
   /// Создать из Map
-  factory SpecialistAvailability.fromMap(Map<String, dynamic> data) {
-    return SpecialistAvailability(
-      specialistId: data['specialistId'] ?? '',
-      specialistName: data['specialistName'] ?? '',
-      specialistPhoto: data['specialistPhoto'],
-      availableSlots: (data['availableSlots'] as List?)
-              ?.map((slot) => (slot as Timestamp).toDate())
-              .toList() ??
-          [],
-      busySlots: (data['busySlots'] as List?)
-              ?.map((slot) => (slot as Timestamp).toDate())
-              .toList() ??
-          [],
-      weeklyAvailability: Map<String, List<DateTime>>.from(
-        (data['weeklyAvailability'] as Map?)?.map(
-              (key, value) => MapEntry(
-                key.toString(),
-                (value as List)
-                    .map((slot) => (slot as Timestamp).toDate())
-                    .toList(),
-              ),
-            ) ??
-            {},
-      ),
-      availabilityScore: (data['availabilityScore'] ?? 0.0).toDouble(),
-      availableDays: List<String>.from(data['availableDays'] ?? []),
-      availableHours: List<int>.from(data['availableHours'] ?? []),
-    );
-  }
+  factory SpecialistAvailability.fromMap(Map<String, dynamic> data) =>
+      SpecialistAvailability(
+        specialistId: data['specialistId'] ?? '',
+        specialistName: data['specialistName'] ?? '',
+        specialistPhoto: data['specialistPhoto'],
+        availableSlots: (data['availableSlots'] as List?)
+                ?.map((slot) => (slot as Timestamp).toDate())
+                .toList() ??
+            [],
+        busySlots: (data['busySlots'] as List?)
+                ?.map((slot) => (slot as Timestamp).toDate())
+                .toList() ??
+            [],
+        weeklyAvailability: Map<String, List<DateTime>>.from(
+          (data['weeklyAvailability'] as Map?)?.map(
+                (key, value) => MapEntry(
+                  key.toString(),
+                  (value as List)
+                      .map((slot) => (slot as Timestamp).toDate())
+                      .toList(),
+                ),
+              ) ??
+              {},
+        ),
+        availabilityScore: (data['availabilityScore'] ?? 0.0).toDouble(),
+        availableDays: List<String>.from(data['availableDays'] ?? []),
+        availableHours: List<int>.from(data['availableHours'] ?? []),
+      );
+  final String specialistId;
+  final String specialistName;
+  final String? specialistPhoto;
+  final List<DateTime> availableSlots;
+  final List<DateTime> busySlots;
+  final Map<String, List<DateTime>> weeklyAvailability;
+  final double availabilityScore; // 0.0 - 1.0
+  final List<String> availableDays;
+  final List<int> availableHours;
 
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'specialistId': specialistId,
-      'specialistName': specialistName,
-      'specialistPhoto': specialistPhoto,
-      'availableSlots':
-          availableSlots.map((slot) => Timestamp.fromDate(slot)).toList(),
-      'busySlots': busySlots.map((slot) => Timestamp.fromDate(slot)).toList(),
-      'weeklyAvailability': weeklyAvailability.map(
-        (key, value) => MapEntry(
-          key,
-          value.map((slot) => Timestamp.fromDate(slot)).toList(),
+  Map<String, dynamic> toMap() => {
+        'specialistId': specialistId,
+        'specialistName': specialistName,
+        'specialistPhoto': specialistPhoto,
+        'availableSlots': availableSlots.map(Timestamp.fromDate).toList(),
+        'busySlots': busySlots.map(Timestamp.fromDate).toList(),
+        'weeklyAvailability': weeklyAvailability.map(
+          (key, value) => MapEntry(
+            key,
+            value.map(Timestamp.fromDate).toList(),
+          ),
         ),
-      ),
-      'availabilityScore': availabilityScore,
-      'availableDays': availableDays,
-      'availableHours': availableHours,
-    };
-  }
+        'availabilityScore': availabilityScore,
+        'availableDays': availableDays,
+        'availableHours': availableHours,
+      };
 }
 
 /// Сервис для фильтрации специалистов по занятости
@@ -193,10 +184,13 @@ class AvailabilityFilterService {
       final bookingsQuery = await _firestore
           .collection('bookings')
           .where('specialistId', isEqualTo: specialistId)
-          .where('status', whereIn: [
-            BookingStatus.pending.name,
-            BookingStatus.confirmed.name,
-          ])
+          .where(
+            'status',
+            whereIn: [
+              BookingStatus.pending.name,
+              BookingStatus.confirmed.name,
+            ],
+          )
           .where('eventDate', isGreaterThanOrEqualTo: start)
           .where('eventDate', isLessThanOrEqualTo: end)
           .get();
@@ -210,20 +204,24 @@ class AvailabilityFilterService {
       final specialistPhoto = specialistDoc.data()?['photoURL'];
 
       // Обрабатываем расписание
-      final scheduleEvents = scheduleQuery.docs.map((doc) {
-        return ScheduleEvent.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
+      final scheduleEvents = scheduleQuery.docs
+          .map(
+            (doc) => ScheduleEvent.fromMap({
+              'id': doc.id,
+              ...doc.data(),
+            }),
+          )
+          .toList();
 
       // Обрабатываем бронирования
-      final bookings = bookingsQuery.docs.map((doc) {
-        return Booking.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
+      final bookings = bookingsQuery.docs
+          .map(
+            (doc) => Booking.fromMap({
+              'id': doc.id,
+              ...doc.data(),
+            }),
+          )
+          .toList();
 
       return _calculateAvailability(
         specialistId,
@@ -255,12 +253,14 @@ class AvailabilityFilterService {
           .where('role', isEqualTo: UserRole.specialist.name)
           .get();
 
-      final specialists = specialistsQuery.docs.map((doc) {
-        return AppUser.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
+      final specialists = specialistsQuery.docs
+          .map(
+            (doc) => AppUser.fromMap({
+              'id': doc.id,
+              ...doc.data(),
+            }),
+          )
+          .toList();
 
       final availabilityList = <SpecialistAvailability>[];
 
@@ -302,10 +302,13 @@ class AvailabilityFilterService {
       final bookingsQuery = await _firestore
           .collection('bookings')
           .where('specialistId', isEqualTo: specialistId)
-          .where('status', whereIn: [
-            BookingStatus.pending.name,
-            BookingStatus.confirmed.name,
-          ])
+          .where(
+            'status',
+            whereIn: [
+              BookingStatus.pending.name,
+              BookingStatus.confirmed.name,
+            ],
+          )
           .where('eventDate', isGreaterThanOrEqualTo: now)
           .where('eventDate', isLessThanOrEqualTo: endDate)
           .get();
@@ -319,11 +322,13 @@ class AvailabilityFilterService {
         });
 
         // Добавляем дату события как занятую
-        busyDates.add(DateTime(
-          booking.eventDate.year,
-          booking.eventDate.month,
-          booking.eventDate.day,
-        ));
+        busyDates.add(
+          DateTime(
+            booking.eventDate.year,
+            booking.eventDate.month,
+            booking.eventDate.day,
+          ),
+        );
       }
 
       return busyDates;
@@ -361,24 +366,31 @@ class AvailabilityFilterService {
           .where('specialistId', isEqualTo: specialistId)
           .where('eventDate', isGreaterThanOrEqualTo: startOfDay)
           .where('eventDate', isLessThan: endOfDay)
-          .where('status', whereIn: [
-        BookingStatus.pending.name,
-        BookingStatus.confirmed.name,
-      ]).get();
+          .where(
+        'status',
+        whereIn: [
+          BookingStatus.pending.name,
+          BookingStatus.confirmed.name,
+        ],
+      ).get();
 
-      final scheduleEvents = scheduleQuery.docs.map((doc) {
-        return ScheduleEvent.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
+      final scheduleEvents = scheduleQuery.docs
+          .map(
+            (doc) => ScheduleEvent.fromMap({
+              'id': doc.id,
+              ...doc.data(),
+            }),
+          )
+          .toList();
 
-      final bookings = bookingsQuery.docs.map((doc) {
-        return Booking.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
+      final bookings = bookingsQuery.docs
+          .map(
+            (doc) => Booking.fromMap({
+              'id': doc.id,
+              ...doc.data(),
+            }),
+          )
+          .toList();
 
       return _calculateAvailableSlots(
         scheduleEvents,
@@ -394,7 +406,9 @@ class AvailabilityFilterService {
 
   /// Проверить, соответствует ли специалист фильтру
   bool _matchesFilter(
-      SpecialistAvailability availability, AvailabilityFilter filter) {
+    SpecialistAvailability availability,
+    AvailabilityFilter filter,
+  ) {
     if (!filter.onlyAvailable) return true;
 
     // Проверяем предпочитаемые дни
@@ -436,7 +450,7 @@ class AvailabilityFilterService {
     final availableHours = <int>[];
 
     // Инициализируем дни недели
-    for (int i = 0; i < 7; i++) {
+    for (var i = 0; i < 7; i++) {
       final dayName = _getDayName(i);
       weeklyAvailability[dayName] = [];
     }
@@ -493,14 +507,14 @@ class AvailabilityFilterService {
     final availableSlots = <DateTime>[];
 
     // Рабочие часы (9:00 - 18:00)
-    final startHour = 9;
-    final endHour = 18;
+    const startHour = 9;
+    const endHour = 18;
 
-    for (int hour = startHour; hour < endHour; hour++) {
+    for (var hour = startHour; hour < endHour; hour++) {
       final slotTime = DateTime(date.year, date.month, date.day, hour);
 
       // Проверяем, не занят ли слот
-      bool isBusy = false;
+      var isBusy = false;
 
       // Проверяем в расписании
       for (final event in scheduleEvents) {
@@ -550,17 +564,17 @@ class AvailabilityFilterService {
     final weeklyAvailability = <String, List<DateTime>>{};
 
     // Инициализируем дни недели
-    for (int i = 0; i < 7; i++) {
+    for (var i = 0; i < 7; i++) {
       final dayName = _getDayName(i);
       weeklyAvailability[dayName] = [];
     }
 
     // Создаем mock слоты на следующие 7 дней
-    for (int day = 0; day < 7; day++) {
+    for (var day = 0; day < 7; day++) {
       final date = now.add(Duration(days: day));
       final dayName = _getDayName(date.weekday - 1);
 
-      for (int hour = 9; hour < 18; hour++) {
+      for (var hour = 9; hour < 18; hour++) {
         final slot = DateTime(date.year, date.month, date.day, hour);
 
         // 70% слотов доступны
@@ -578,7 +592,7 @@ class AvailabilityFilterService {
       'tuesday',
       'wednesday',
       'thursday',
-      'friday'
+      'friday',
     ];
     final availableHours = [9, 10, 11, 12, 13, 14, 15, 16, 17];
 
@@ -597,13 +611,11 @@ class AvailabilityFilterService {
   }
 
   /// Создать mock список специалистов
-  List<SpecialistAvailability> _createMockSpecialistsList() {
-    return [
-      _createMockAvailability('specialist_1'),
-      _createMockAvailability('specialist_2'),
-      _createMockAvailability('specialist_3'),
-    ];
-  }
+  List<SpecialistAvailability> _createMockSpecialistsList() => [
+        _createMockAvailability('specialist_1'),
+        _createMockAvailability('specialist_2'),
+        _createMockAvailability('specialist_3'),
+      ];
 
   /// Создать mock занятые даты
   List<DateTime> _createMockBusyDates() {
@@ -619,7 +631,7 @@ class AvailabilityFilterService {
   /// Создать mock временные слоты
   List<DateTime> _createMockTimeSlots(DateTime date) {
     final slots = <DateTime>[];
-    for (int hour = 9; hour < 18; hour++) {
+    for (var hour = 9; hour < 18; hour++) {
       if (hour % 2 == 0) {
         // Каждый второй час доступен
         slots.add(DateTime(date.year, date.month, date.day, hour));

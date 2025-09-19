@@ -8,14 +8,13 @@ import 'create_event_screen.dart';
 
 /// Экран календаря
 class CalendarScreen extends ConsumerStatefulWidget {
-  final String userId;
-  final String? specialistId;
-
   const CalendarScreen({
     super.key,
     required this.userId,
     this.specialistId,
   });
+  final String userId;
+  final String? specialistId;
 
   @override
   ConsumerState<CalendarScreen> createState() => _CalendarScreenState();
@@ -39,226 +38,222 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Календарь'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: _showSearchDialog,
-          ),
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFilterDialog,
-          ),
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: _shareEvents,
-          ),
-          PopupMenuButton<String>(
-            onSelected: _handleMenuAction,
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'export',
-                child: Row(
-                  children: [
-                    Icon(Icons.download),
-                    SizedBox(width: 8),
-                    Text('Экспорт'),
-                  ],
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Календарь'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: _showSearchDialog,
+            ),
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFilterDialog,
+            ),
+            IconButton(
+              icon: const Icon(Icons.share),
+              onPressed: _shareEvents,
+            ),
+            PopupMenuButton<String>(
+              onSelected: _handleMenuAction,
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: 'export',
+                  child: Row(
+                    children: [
+                      Icon(Icons.download),
+                      SizedBox(width: 8),
+                      Text('Экспорт'),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem(
+                  value: 'sync',
+                  child: Row(
+                    children: [
+                      Icon(Icons.sync),
+                      SizedBox(width: 8),
+                      Text('Синхронизация'),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem(
+                  value: 'settings',
+                  child: Row(
+                    children: [
+                      Icon(Icons.settings),
+                      SizedBox(width: 8),
+                      Text('Настройки'),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            // Календарь
+            _buildCalendar(),
+
+            // Список событий
+            Expanded(
+              child: _buildEventsList(),
+            ),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _createEvent,
+          child: const Icon(Icons.add),
+        ),
+      );
+
+  Widget _buildCalendar() => StreamBuilder<List<CalendarEvent>>(
+        stream: _getEventsStream(),
+        builder: (context, snapshot) {
+          final events = snapshot.data ?? [];
+          final eventSource = _getEventSource(events);
+
+          return Card(
+            margin: const EdgeInsets.all(8),
+            child: TableCalendar<CalendarEvent>(
+              firstDay: DateTime.utc(2020),
+              lastDay: DateTime.utc(2030, 12, 31),
+              focusedDay: _focusedDay,
+              calendarFormat: _calendarFormat,
+              eventLoader: (day) => eventSource[day] ?? [],
+              startingDayOfWeek: StartingDayOfWeek.monday,
+              calendarStyle: CalendarStyle(
+                outsideDaysVisible: false,
+                markersMaxCount: 3,
+                markerDecoration: BoxDecoration(
+                  color: Theme.of(context).primaryColor,
+                  shape: BoxShape.circle,
                 ),
               ),
-              const PopupMenuItem(
-                value: 'sync',
-                child: Row(
-                  children: [
-                    Icon(Icons.sync),
-                    SizedBox(width: 8),
-                    Text('Синхронизация'),
-                  ],
-                ),
+              headerStyle: const HeaderStyle(
+                formatButtonVisible: true,
+                titleCentered: true,
               ),
-              const PopupMenuItem(
-                value: 'settings',
-                child: Row(
-                  children: [
-                    Icon(Icons.settings),
-                    SizedBox(width: 8),
-                    Text('Настройки'),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-      body: Column(
+              onDaySelected: (selectedDay, focusedDay) {
+                if (!isSameDay(_selectedDay, selectedDay)) {
+                  setState(() {
+                    _selectedDay = selectedDay;
+                    _focusedDay = focusedDay;
+                    _selectedEvents = eventSource[selectedDay] ?? [];
+                  });
+                }
+              },
+              onFormatChanged: (format) {
+                if (_calendarFormat != format) {
+                  setState(() {
+                    _calendarFormat = format;
+                  });
+                }
+              },
+              onPageChanged: (focusedDay) {
+                _focusedDay = focusedDay;
+              },
+              selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
+            ),
+          );
+        },
+      );
+
+  Widget _buildEventsList() => Column(
         children: [
-          // Календарь
-          _buildCalendar(),
+          // Заголовок с количеством событий
+          Container(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                Text(
+                  'События на ${_formatDate(_selectedDay!)}',
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  '${_selectedEvents.length}',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+          ),
 
           // Список событий
           Expanded(
-            child: _buildEventsList(),
+            child: _selectedEvents.isEmpty
+                ? _buildEmptyState()
+                : ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    itemCount: _selectedEvents.length,
+                    itemBuilder: (context, index) {
+                      final event = _selectedEvents[index];
+                      return CalendarEventWidget(
+                        event: event,
+                        onTap: () => _showEventDetails(event),
+                        onEdit: () => _editEvent(event),
+                        onDelete: () => _deleteEvent(event),
+                      );
+                    },
+                  ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _createEvent,
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
+      );
 
-  Widget _buildCalendar() {
-    return StreamBuilder<List<CalendarEvent>>(
-      stream: _getEventsStream(),
-      builder: (context, snapshot) {
-        final events = snapshot.data ?? [];
-        final eventSource = _getEventSource(events);
-
-        return Card(
-          margin: const EdgeInsets.all(8),
-          child: TableCalendar<CalendarEvent>(
-            firstDay: DateTime.utc(2020, 1, 1),
-            lastDay: DateTime.utc(2030, 12, 31),
-            focusedDay: _focusedDay,
-            calendarFormat: _calendarFormat,
-            eventLoader: (day) => eventSource[day] ?? [],
-            startingDayOfWeek: StartingDayOfWeek.monday,
-            calendarStyle: CalendarStyle(
-              outsideDaysVisible: false,
-              markersMaxCount: 3,
-              markerDecoration: BoxDecoration(
-                color: Theme.of(context).primaryColor,
-                shape: BoxShape.circle,
-              ),
+  Widget _buildEmptyState() => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.event_busy, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            const Text(
+              'Нет событий',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-            headerStyle: const HeaderStyle(
-              formatButtonVisible: true,
-              titleCentered: true,
+            const SizedBox(height: 8),
+            const Text(
+              'Нажмите + чтобы добавить событие',
+              style: TextStyle(color: Colors.grey),
             ),
-            onDaySelected: (selectedDay, focusedDay) {
-              if (!isSameDay(_selectedDay, selectedDay)) {
-                setState(() {
-                  _selectedDay = selectedDay;
-                  _focusedDay = focusedDay;
-                  _selectedEvents = eventSource[selectedDay] ?? [];
-                });
-              }
-            },
-            onFormatChanged: (format) {
-              if (_calendarFormat != format) {
-                setState(() {
-                  _calendarFormat = format;
-                });
-              }
-            },
-            onPageChanged: (focusedDay) {
-              _focusedDay = focusedDay;
-            },
-            selectedDayPredicate: (day) {
-              return isSameDay(_selectedDay, day);
-            },
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildEventsList() {
-    return Column(
-      children: [
-        // Заголовок с количеством событий
-        Container(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              Text(
-                'События на ${_formatDate(_selectedDay!)}',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const Spacer(),
-              Text(
-                '${_selectedEvents.length}',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.grey[600],
-                ),
-              ),
-            ],
-          ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: _createEvent,
+              icon: const Icon(Icons.add),
+              label: const Text('Добавить событие'),
+            ),
+          ],
         ),
-
-        // Список событий
-        Expanded(
-          child: _selectedEvents.isEmpty
-              ? _buildEmptyState()
-              : ListView.builder(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  itemCount: _selectedEvents.length,
-                  itemBuilder: (context, index) {
-                    final event = _selectedEvents[index];
-                    return CalendarEventWidget(
-                      event: event,
-                      onTap: () => _showEventDetails(event),
-                      onEdit: () => _editEvent(event),
-                      onDelete: () => _deleteEvent(event),
-                    );
-                  },
-                ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.event_busy, size: 64, color: Colors.grey),
-          const SizedBox(height: 16),
-          const Text(
-            'Нет событий',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Нажмите + чтобы добавить событие',
-            style: TextStyle(color: Colors.grey),
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            onPressed: _createEvent,
-            icon: const Icon(Icons.add),
-            label: const Text('Добавить событие'),
-          ),
-        ],
-      ),
-    );
-  }
+      );
 
   Stream<List<CalendarEvent>> _getEventsStream() {
     if (widget.specialistId != null) {
       return _calendarService.getSpecialistEvents(
-          widget.specialistId!, _filter);
+        widget.specialistId!,
+        _filter,
+      );
     } else {
       return _calendarService.getUserEvents(widget.userId, _filter);
     }
   }
 
   Map<DateTime, List<CalendarEvent>> _getEventSource(
-      List<CalendarEvent> events) {
+    List<CalendarEvent> events,
+  ) {
     final eventSource = <DateTime, List<CalendarEvent>>{};
 
     for (final event in events) {
       final day = DateTime(
-          event.startTime.year, event.startTime.month, event.startTime.day);
+        event.startTime.year,
+        event.startTime.month,
+        event.startTime.day,
+      );
       if (eventSource[day] == null) {
         eventSource[day] = [];
       }
@@ -361,23 +356,30 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (event.description.isNotEmpty) ...[
-              const Text('Описание:',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text(
+                'Описание:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               Text(event.description),
               const SizedBox(height: 8),
             ],
             const Text('Время:', style: TextStyle(fontWeight: FontWeight.bold)),
             Text(
-                '${_formatDateTime(event.startTime)} - ${_formatDateTime(event.endTime)}'),
+              '${_formatDateTime(event.startTime)} - ${_formatDateTime(event.endTime)}',
+            ),
             const SizedBox(height: 8),
             if (event.location.isNotEmpty) ...[
-              const Text('Место:',
-                  style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text(
+                'Место:',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               Text(event.location),
               const SizedBox(height: 8),
             ],
-            const Text('Статус:',
-                style: TextStyle(fontWeight: FontWeight.bold)),
+            const Text(
+              'Статус:',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             Text(_getStatusText(event.status)),
           ],
         ),
@@ -443,7 +445,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     );
   }
 
-  void _shareEvents() async {
+  Future<void> _shareEvents() async {
     final events = _selectedEvents;
     if (events.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -469,7 +471,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     }
   }
 
-  void _exportEvents() async {
+  Future<void> _exportEvents() async {
     final events = _selectedEvents;
     if (events.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -523,9 +525,8 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     );
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDateTime(DateTime dateTime) =>
+      '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
 
   String _getStatusText(EventStatus status) {
     switch (status) {
@@ -545,13 +546,12 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
 /// Диалог фильтра событий
 class _FilterDialog extends StatefulWidget {
-  final CalendarFilter filter;
-  final Function(CalendarFilter) onFilterChanged;
-
   const _FilterDialog({
     required this.filter,
     required this.onFilterChanged,
   });
+  final CalendarFilter filter;
+  final Function(CalendarFilter) onFilterChanged;
 
   @override
   State<_FilterDialog> createState() => _FilterDialogState();
@@ -567,70 +567,72 @@ class _FilterDialogState extends State<_FilterDialog> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Фильтр событий'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Статусы
-          const Text('Статус:', style: TextStyle(fontWeight: FontWeight.bold)),
-          ...EventStatus.values.map((status) {
-            return CheckboxListTile(
-              title: Text(_getStatusText(status)),
-              value: _filter.statuses?.contains(status) ?? false,
-              onChanged: (value) {
-                setState(() {
-                  final statuses = _filter.statuses ?? [];
-                  if (value == true) {
-                    _filter = _filter.copyWith(statuses: [...statuses, status]);
-                  } else {
-                    _filter = _filter.copyWith(
-                        statuses: statuses.where((s) => s != status).toList());
-                  }
-                });
-              },
-            );
-          }),
+  Widget build(BuildContext context) => AlertDialog(
+        title: const Text('Фильтр событий'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            // Статусы
+            const Text('Статус:',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            ...EventStatus.values.map(
+              (status) => CheckboxListTile(
+                title: Text(_getStatusText(status)),
+                value: _filter.statuses?.contains(status) ?? false,
+                onChanged: (value) {
+                  setState(() {
+                    final statuses = _filter.statuses ?? [];
+                    if (value ?? false) {
+                      _filter =
+                          _filter.copyWith(statuses: [...statuses, status]);
+                    } else {
+                      _filter = _filter.copyWith(
+                        statuses: statuses.where((s) => s != status).toList(),
+                      );
+                    }
+                  });
+                },
+              ),
+            ),
 
-          const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-          // Типы
-          const Text('Тип:', style: TextStyle(fontWeight: FontWeight.bold)),
-          ...EventType.values.map((type) {
-            return CheckboxListTile(
-              title: Text(_getTypeText(type)),
-              value: _filter.types?.contains(type) ?? false,
-              onChanged: (value) {
-                setState(() {
-                  final types = _filter.types ?? [];
-                  if (value == true) {
-                    _filter = _filter.copyWith(types: [...types, type]);
-                  } else {
-                    _filter = _filter.copyWith(
-                        types: types.where((t) => t != type).toList());
-                  }
-                });
-              },
-            );
-          }),
+            // Типы
+            const Text('Тип:', style: TextStyle(fontWeight: FontWeight.bold)),
+            ...EventType.values.map(
+              (type) => CheckboxListTile(
+                title: Text(_getTypeText(type)),
+                value: _filter.types?.contains(type) ?? false,
+                onChanged: (value) {
+                  setState(() {
+                    final types = _filter.types ?? [];
+                    if (value ?? false) {
+                      _filter = _filter.copyWith(types: [...types, type]);
+                    } else {
+                      _filter = _filter.copyWith(
+                        types: types.where((t) => t != type).toList(),
+                      );
+                    }
+                  });
+                },
+              ),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              widget.onFilterChanged(_filter);
+              Navigator.pop(context);
+            },
+            child: const Text('Применить'),
+          ),
         ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Отмена'),
-        ),
-        ElevatedButton(
-          onPressed: () {
-            widget.onFilterChanged(_filter);
-            Navigator.pop(context);
-          },
-          child: const Text('Применить'),
-        ),
-      ],
-    );
-  }
+      );
 
   String _getStatusText(EventStatus status) {
     switch (status) {

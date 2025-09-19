@@ -1,14 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:event_marketplace_app/main.dart';
-import 'package:event_marketplace_app/models/specialist.dart';
 import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Booking Flow Integration Tests', () {
     testWidgets('should complete full booking flow from search to confirmation',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -41,17 +41,29 @@ void main() {
 
         // Act 6: Fill booking form
         await tester.enterText(
-            find.byType(TextFormField).first, 'Wedding Photography');
+          find.byType(TextFormField).first,
+          'Wedding Photography',
+        );
         await tester.enterText(
-            find.byType(TextFormField).at(1), 'Beautiful wedding ceremony');
+          find.byType(TextFormField).at(1),
+          'Beautiful wedding ceremony',
+        );
         await tester.enterText(
-            find.byType(TextFormField).at(2), 'Moscow, Russia');
+          find.byType(TextFormField).at(2),
+          'Moscow, Russia',
+        );
         await tester.enterText(
-            find.byType(TextFormField).at(3), '+7 (999) 123-45-67');
+          find.byType(TextFormField).at(3),
+          '+7 (999) 123-45-67',
+        );
         await tester.enterText(
-            find.byType(TextFormField).at(4), 'test@example.com');
+          find.byType(TextFormField).at(4),
+          'test@example.com',
+        );
         await tester.enterText(
-            find.byType(TextFormField).last, 'Special requests');
+          find.byType(TextFormField).last,
+          'Special requests',
+        );
 
         // Act 7: Select date and time
         await tester.tap(find.text('Выберите дату'));
@@ -66,8 +78,7 @@ void main() {
       }
     });
 
-    testWidgets('should handle booking confirmation flow',
-        (WidgetTester tester) async {
+    testWidgets('should handle booking confirmation flow', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -100,8 +111,7 @@ void main() {
       }
     });
 
-    testWidgets('should handle booking rejection flow',
-        (WidgetTester tester) async {
+    testWidgets('should handle booking rejection flow', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -134,8 +144,7 @@ void main() {
       }
     });
 
-    testWidgets('should handle booking cancellation flow',
-        (WidgetTester tester) async {
+    testWidgets('should handle booking cancellation flow', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -168,7 +177,7 @@ void main() {
       }
     });
 
-    testWidgets('should handle payment flow', (WidgetTester tester) async {
+    testWidgets('should handle payment flow', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -194,7 +203,9 @@ void main() {
 
         // Act 4: Fill payment form
         await tester.enterText(
-            find.byType(TextFormField).first, '1234 5678 9012 3456');
+          find.byType(TextFormField).first,
+          '1234 5678 9012 3456',
+        );
         await tester.enterText(find.byType(TextFormField).at(1), '12/25');
         await tester.enterText(find.byType(TextFormField).at(2), '123');
 
@@ -207,8 +218,7 @@ void main() {
       }
     });
 
-    testWidgets('should handle review submission flow',
-        (WidgetTester tester) async {
+    testWidgets('should handle review submission flow', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -228,9 +238,13 @@ void main() {
 
       // Act 3: Fill review form
       await tester.enterText(
-          find.byType(TextFormField).first, 'Great service!');
-      await tester.enterText(find.byType(TextFormField).at(1),
-          'Excellent photographer, very professional');
+        find.byType(TextFormField).first,
+        'Great service!',
+      );
+      await tester.enterText(
+        find.byType(TextFormField).at(1),
+        'Excellent photographer, very professional',
+      );
 
       // Act 4: Submit review
       await tester.tap(find.text('Отправить отзыв'));
@@ -240,7 +254,7 @@ void main() {
       expect(find.text('Отзыв отправлен'), findsOneWidget);
     });
 
-    testWidgets('should handle chat flow', (WidgetTester tester) async {
+    testWidgets('should handle chat flow', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -270,7 +284,7 @@ void main() {
       }
     });
 
-    testWidgets('should handle notification flow', (WidgetTester tester) async {
+    testWidgets('should handle notification flow', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -295,7 +309,7 @@ void main() {
       }
     });
 
-    testWidgets('should handle analytics flow', (WidgetTester tester) async {
+    testWidgets('should handle analytics flow', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -316,7 +330,7 @@ void main() {
       expect(find.text('Отчеты'), findsOneWidget);
     });
 
-    testWidgets('should handle profile flow', (WidgetTester tester) async {
+    testWidgets('should handle profile flow', (tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(

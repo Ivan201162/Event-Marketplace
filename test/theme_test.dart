@@ -1,13 +1,12 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:event_marketplace_app/providers/theme_provider.dart';
 import 'package:event_marketplace_app/core/app_styles.dart';
+import 'package:event_marketplace_app/providers/theme_provider.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('Theme Tests', () {
-    testWidgets('should display light theme by default',
-        (WidgetTester tester) async {
+    testWidgets('should display light theme by default', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -23,8 +22,7 @@ void main() {
       expect(theme.brightness, equals(Brightness.light));
     });
 
-    testWidgets('should switch to dark theme when toggled',
-        (WidgetTester tester) async {
+    testWidgets('should switch to dark theme when toggled', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -48,8 +46,7 @@ void main() {
       expect(theme.brightness, equals(Brightness.dark));
     });
 
-    testWidgets('should maintain theme state across rebuilds',
-        (WidgetTester tester) async {
+    testWidgets('should maintain theme state across rebuilds', (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -82,7 +79,7 @@ void main() {
     });
 
     testWidgets('should have correct color scheme in light theme',
-        (WidgetTester tester) async {
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -105,7 +102,7 @@ void main() {
     });
 
     testWidgets('should have correct color scheme in dark theme',
-        (WidgetTester tester) async {
+        (tester) async {
       await tester.pumpWidget(
         const ProviderScope(
           child: MaterialApp(
@@ -193,11 +190,17 @@ void main() {
 
     test('should have correct animation durations', () {
       expect(
-          AppStyles.shortAnimation, equals(const Duration(milliseconds: 200)));
+        AppStyles.shortAnimation,
+        equals(const Duration(milliseconds: 200)),
+      );
       expect(
-          AppStyles.mediumAnimation, equals(const Duration(milliseconds: 300)));
+        AppStyles.mediumAnimation,
+        equals(const Duration(milliseconds: 300)),
+      );
       expect(
-          AppStyles.longAnimation, equals(const Duration(milliseconds: 500)));
+        AppStyles.longAnimation,
+        equals(const Duration(milliseconds: 500)),
+      );
     });
 
     test('should have correct curves', () {
@@ -208,8 +211,7 @@ void main() {
   });
 
   group('Responsive Tests', () {
-    testWidgets('should detect mobile screen size',
-        (WidgetTester tester) async {
+    testWidgets('should detect mobile screen size', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: ResponsiveTestWidget(),
@@ -225,8 +227,7 @@ void main() {
       expect(find.text('Desktop'), findsNothing);
     });
 
-    testWidgets('should detect tablet screen size',
-        (WidgetTester tester) async {
+    testWidgets('should detect tablet screen size', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: ResponsiveTestWidget(),
@@ -242,8 +243,7 @@ void main() {
       expect(find.text('Desktop'), findsNothing);
     });
 
-    testWidgets('should detect desktop screen size',
-        (WidgetTester tester) async {
+    testWidgets('should detect desktop screen size', (tester) async {
       await tester.pumpWidget(
         const MaterialApp(
           home: ResponsiveTestWidget(),
@@ -288,18 +288,16 @@ class ResponsiveTestWidget extends StatelessWidget {
   const ResponsiveTestWidget({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Column(
-        children: [
-          if (AppStyles.isMobile(context))
-            const Text('Mobile')
-          else if (AppStyles.isTablet(context))
-            const Text('Tablet')
-          else if (AppStyles.isDesktop(context))
-            const Text('Desktop'),
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+        body: Column(
+          children: [
+            if (AppStyles.isMobile(context))
+              const Text('Mobile')
+            else if (AppStyles.isTablet(context))
+              const Text('Tablet')
+            else if (AppStyles.isDesktop(context))
+              const Text('Desktop'),
+          ],
+        ),
+      );
 }

@@ -39,52 +39,48 @@ class _IncidentManagementScreenState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ResponsiveScaffold(
-      title: 'Управление инцидентами',
-      body: Column(
-        children: [
-          // Вкладки
-          _buildTabs(),
+  Widget build(BuildContext context) => ResponsiveScaffold(
+        title: 'Управление инцидентами',
+        body: Column(
+          children: [
+            // Вкладки
+            _buildTabs(),
 
-          // Поиск и фильтры
-          _buildSearchAndFilters(),
+            // Поиск и фильтры
+            _buildSearchAndFilters(),
 
-          // Анализ
-          _buildAnalysis(),
+            // Анализ
+            _buildAnalysis(),
 
-          // Контент
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _selectedTab == 'incidents'
-                    ? _buildIncidentsTab()
-                    : _selectedTab == 'comments'
-                        ? _buildCommentsTab()
-                        : _buildSLATab(),
-          ),
-        ],
-      ),
-    );
-  }
+            // Контент
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _selectedTab == 'incidents'
+                      ? _buildIncidentsTab()
+                      : _selectedTab == 'comments'
+                          ? _buildCommentsTab()
+                          : _buildSLATab(),
+            ),
+          ],
+        ),
+      );
 
-  Widget _buildTabs() {
-    return ResponsiveCard(
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildTabButton('incidents', 'Инциденты', Icons.warning),
-          ),
-          Expanded(
-            child: _buildTabButton('comments', 'Комментарии', Icons.comment),
-          ),
-          Expanded(
-            child: _buildTabButton('sla', 'SLA', Icons.schedule),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildTabs() => ResponsiveCard(
+        child: Row(
+          children: [
+            Expanded(
+              child: _buildTabButton('incidents', 'Инциденты', Icons.warning),
+            ),
+            Expanded(
+              child: _buildTabButton('comments', 'Комментарии', Icons.comment),
+            ),
+            Expanded(
+              child: _buildTabButton('sla', 'SLA', Icons.schedule),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -127,138 +123,136 @@ class _IncidentManagementScreenState
     );
   }
 
-  Widget _buildSearchAndFilters() {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ResponsiveText(
-            'Поиск и фильтры',
-            isTitle: true,
-          ),
-          const SizedBox(height: 16),
-
-          // Поиск
-          TextField(
-            decoration: const InputDecoration(
-              hintText: 'Поиск по названию, описанию или тегам...',
-              prefixIcon: Icon(Icons.search),
-              border: OutlineInputBorder(),
+  Widget _buildSearchAndFilters() => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ResponsiveText(
+              'Поиск и фильтры',
+              isTitle: true,
             ),
-            onChanged: (value) {
-              setState(() {
-                _searchQuery = value;
-              });
-            },
-          ),
+            const SizedBox(height: 16),
 
-          const SizedBox(height: 16),
-
-          // Фильтры
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              // Фильтр по типу
-              DropdownButton<IncidentType?>(
-                value: _selectedType,
-                hint: const Text('Все типы'),
-                items: [
-                  const DropdownMenuItem<IncidentType?>(
-                    value: null,
-                    child: Text('Все типы'),
-                  ),
-                  ...IncidentType.values
-                      .map((type) => DropdownMenuItem<IncidentType?>(
-                            value: type,
-                            child: Text('${type.icon} ${type.displayName}'),
-                          )),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedType = value;
-                  });
-                },
+            // Поиск
+            TextField(
+              decoration: const InputDecoration(
+                hintText: 'Поиск по названию, описанию или тегам...',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(),
               ),
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+              },
+            ),
 
-              // Фильтр по серьезности
-              DropdownButton<IncidentSeverity?>(
-                value: _selectedSeverity,
-                hint: const Text('Все серьезности'),
-                items: [
-                  const DropdownMenuItem<IncidentSeverity?>(
-                    value: null,
-                    child: Text('Все серьезности'),
-                  ),
-                  ...IncidentSeverity.values.map((severity) =>
-                      DropdownMenuItem<IncidentSeverity?>(
+            const SizedBox(height: 16),
+
+            // Фильтры
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                // Фильтр по типу
+                DropdownButton<IncidentType?>(
+                  value: _selectedType,
+                  hint: const Text('Все типы'),
+                  items: [
+                    const DropdownMenuItem<IncidentType?>(
+                      child: Text('Все типы'),
+                    ),
+                    ...IncidentType.values.map(
+                      (type) => DropdownMenuItem<IncidentType?>(
+                        value: type,
+                        child: Text('${type.icon} ${type.displayName}'),
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedType = value;
+                    });
+                  },
+                ),
+
+                // Фильтр по серьезности
+                DropdownButton<IncidentSeverity?>(
+                  value: _selectedSeverity,
+                  hint: const Text('Все серьезности'),
+                  items: [
+                    const DropdownMenuItem<IncidentSeverity?>(
+                      child: Text('Все серьезности'),
+                    ),
+                    ...IncidentSeverity.values.map(
+                      (severity) => DropdownMenuItem<IncidentSeverity?>(
                         value: severity,
                         child: Text('${severity.icon} ${severity.displayName}'),
-                      )),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedSeverity = value;
-                  });
-                },
-              ),
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedSeverity = value;
+                    });
+                  },
+                ),
 
-              // Фильтр по статусу
-              DropdownButton<IncidentStatus?>(
-                value: _selectedStatus,
-                hint: const Text('Все статусы'),
-                items: [
-                  const DropdownMenuItem<IncidentStatus?>(
-                    value: null,
-                    child: Text('Все статусы'),
-                  ),
-                  ...IncidentStatus.values
-                      .map((status) => DropdownMenuItem<IncidentStatus?>(
-                            value: status,
-                            child: Text('${status.icon} ${status.displayName}'),
-                          )),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedStatus = value;
-                  });
-                },
-              ),
+                // Фильтр по статусу
+                DropdownButton<IncidentStatus?>(
+                  value: _selectedStatus,
+                  hint: const Text('Все статусы'),
+                  items: [
+                    const DropdownMenuItem<IncidentStatus?>(
+                      child: Text('Все статусы'),
+                    ),
+                    ...IncidentStatus.values.map(
+                      (status) => DropdownMenuItem<IncidentStatus?>(
+                        value: status,
+                        child: Text('${status.icon} ${status.displayName}'),
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedStatus = value;
+                    });
+                  },
+                ),
 
-              // Фильтр по приоритету
-              DropdownButton<IncidentPriority?>(
-                value: _selectedPriority,
-                hint: const Text('Все приоритеты'),
-                items: [
-                  const DropdownMenuItem<IncidentPriority?>(
-                    value: null,
-                    child: Text('Все приоритеты'),
-                  ),
-                  ...IncidentPriority.values.map((priority) =>
-                      DropdownMenuItem<IncidentPriority?>(
+                // Фильтр по приоритету
+                DropdownButton<IncidentPriority?>(
+                  value: _selectedPriority,
+                  hint: const Text('Все приоритеты'),
+                  items: [
+                    const DropdownMenuItem<IncidentPriority?>(
+                      child: Text('Все приоритеты'),
+                    ),
+                    ...IncidentPriority.values.map(
+                      (priority) => DropdownMenuItem<IncidentPriority?>(
                         value: priority,
                         child: Text('${priority.icon} ${priority.displayName}'),
-                      )),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedPriority = value;
-                  });
-                },
-              ),
+                      ),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _selectedPriority = value;
+                    });
+                  },
+                ),
 
-              // Кнопка сброса фильтров
-              ElevatedButton.icon(
-                onPressed: _resetFilters,
-                icon: const Icon(Icons.clear),
-                label: const Text('Сбросить'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+                // Кнопка сброса фильтров
+                ElevatedButton.icon(
+                  onPressed: _resetFilters,
+                  icon: const Icon(Icons.clear),
+                  label: const Text('Сбросить'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
 
   Widget _buildAnalysis() {
     if (_analysis.isEmpty) return const SizedBox.shrink();
@@ -317,79 +311,80 @@ class _IncidentManagementScreenState
   }
 
   Widget _buildAnalysisCard(
-      String title, String value, IconData icon, Color color) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color),
-      ),
-      child: Column(
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) =>
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 32),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 12),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildIncidentsTab() => Column(
         children: [
-          Icon(icon, color: color, size: 32),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: color,
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                ResponsiveText(
+                  'Инциденты',
+                  isTitle: true,
+                ),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _showCreateIncidentDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Создать'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: const TextStyle(fontSize: 12),
-            textAlign: TextAlign.center,
+
+          // Список инцидентов
+          Expanded(
+            child: _getFilteredIncidents().isEmpty
+                ? const Center(child: Text('Инциденты не найдены'))
+                : ListView.builder(
+                    itemCount: _getFilteredIncidents().length,
+                    itemBuilder: (context, index) {
+                      final incident = _getFilteredIncidents()[index];
+                      return _buildIncidentCard(incident);
+                    },
+                  ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildIncidentsTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Инциденты',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _showCreateIncidentDialog,
-                icon: const Icon(Icons.add),
-                label: const Text('Создать'),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список инцидентов
-        Expanded(
-          child: _getFilteredIncidents().isEmpty
-              ? const Center(child: Text('Инциденты не найдены'))
-              : ListView.builder(
-                  itemCount: _getFilteredIncidents().length,
-                  itemBuilder: (context, index) {
-                    final incident = _getFilteredIncidents()[index];
-                    return _buildIncidentCard(incident);
-                  },
-                ),
-        ),
-      ],
-    );
-  }
+      );
 
   Widget _buildIncidentCard(Incident incident) {
     final typeColor = _getTypeColor(incident.type);
@@ -549,15 +544,24 @@ class _IncidentManagementScreenState
             children: [
               if (incident.assignedToName != null)
                 _buildInfoChip(
-                    'Назначен', incident.assignedToName!, Colors.blue),
+                  'Назначен',
+                  incident.assignedToName!,
+                  Colors.blue,
+                ),
               const SizedBox(width: 8),
               if (incident.affectedServices.isNotEmpty)
-                _buildInfoChip('Сервисы', '${incident.affectedServices.length}',
-                    Colors.green),
+                _buildInfoChip(
+                  'Сервисы',
+                  '${incident.affectedServices.length}',
+                  Colors.green,
+                ),
               const SizedBox(width: 8),
               if (incident.affectedUsers.isNotEmpty)
-                _buildInfoChip('Пользователи',
-                    '${incident.affectedUsers.length}', Colors.orange),
+                _buildInfoChip(
+                  'Пользователи',
+                  '${incident.affectedUsers.length}',
+                  Colors.orange,
+                ),
             ],
           ),
 
@@ -569,18 +573,22 @@ class _IncidentManagementScreenState
               spacing: 4,
               runSpacing: 4,
               children: incident.tags
-                  .map((tag) => Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.withValues(alpha: 0.2),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          tag,
-                          style: const TextStyle(fontSize: 10),
-                        ),
-                      ))
+                  .map(
+                    (tag) => Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        tag,
+                        style: const TextStyle(fontSize: 10),
+                      ),
+                    ),
+                  )
                   .toList(),
             ),
             const SizedBox(height: 8),
@@ -611,42 +619,40 @@ class _IncidentManagementScreenState
     );
   }
 
-  Widget _buildCommentsTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Комментарии к инцидентам',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список комментариев
-        Expanded(
-          child: _comments.isEmpty
-              ? const Center(child: Text('Комментарии не найдены'))
-              : ListView.builder(
-                  itemCount: _comments.length,
-                  itemBuilder: (context, index) {
-                    final comment = _comments[index];
-                    return _buildCommentCard(comment);
-                  },
+  Widget _buildCommentsTab() => Column(
+        children: [
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                ResponsiveText(
+                  'Комментарии к инцидентам',
+                  isTitle: true,
                 ),
-        ),
-      ],
-    );
-  }
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список комментариев
+          Expanded(
+            child: _comments.isEmpty
+                ? const Center(child: Text('Комментарии не найдены'))
+                : ListView.builder(
+                    itemCount: _comments.length,
+                    itemBuilder: (context, index) {
+                      final comment = _comments[index];
+                      return _buildCommentCard(comment);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildCommentCard(IncidentComment comment) {
     final incident = _incidentService.getIncident(comment.incidentId);
@@ -748,42 +754,40 @@ class _IncidentManagementScreenState
     );
   }
 
-  Widget _buildSLATab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'SLA инцидентов',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список SLA
-        Expanded(
-          child: _sla.isEmpty
-              ? const Center(child: Text('SLA не найдены'))
-              : ListView.builder(
-                  itemCount: _sla.length,
-                  itemBuilder: (context, index) {
-                    final sla = _sla[index];
-                    return _buildSLACard(sla);
-                  },
+  Widget _buildSLATab() => Column(
+        children: [
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                ResponsiveText(
+                  'SLA инцидентов',
+                  isTitle: true,
                 ),
-        ),
-      ],
-    );
-  }
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список SLA
+          Expanded(
+            child: _sla.isEmpty
+                ? const Center(child: Text('SLA не найдены'))
+                : ListView.builder(
+                    itemCount: _sla.length,
+                    itemBuilder: (context, index) {
+                      final sla = _sla[index];
+                      return _buildSLACard(sla);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildSLACard(IncidentSLA sla) {
     final incident = _incidentService.getIncident(sla.incidentId);
@@ -805,9 +809,9 @@ class _IncidentManagementScreenState
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    const Text(
                       'SLA для инцидента',
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
@@ -845,12 +849,18 @@ class _IncidentManagementScreenState
           Row(
             children: [
               if (sla.acknowledgedDeadline != null)
-                _buildInfoChip('Дедлайн подтверждения',
-                    _formatDateTime(sla.acknowledgedDeadline!), Colors.blue),
+                _buildInfoChip(
+                  'Дедлайн подтверждения',
+                  _formatDateTime(sla.acknowledgedDeadline!),
+                  Colors.blue,
+                ),
               const SizedBox(width: 8),
               if (sla.resolvedDeadline != null)
-                _buildInfoChip('Дедлайн решения',
-                    _formatDateTime(sla.resolvedDeadline!), Colors.green),
+                _buildInfoChip(
+                  'Дедлайн решения',
+                  _formatDateTime(sla.resolvedDeadline!),
+                  Colors.green,
+                ),
             ],
           ),
 
@@ -860,12 +870,16 @@ class _IncidentManagementScreenState
           Row(
             children: [
               _buildInfoChip(
-                  'Подтвержден вовремя',
-                  sla.acknowledgedOnTime ? 'Да' : 'Нет',
-                  sla.acknowledgedOnTime ? Colors.green : Colors.red),
+                'Подтвержден вовремя',
+                sla.acknowledgedOnTime ? 'Да' : 'Нет',
+                sla.acknowledgedOnTime ? Colors.green : Colors.red,
+              ),
               const SizedBox(width: 8),
-              _buildInfoChip('Решен вовремя', sla.resolvedOnTime ? 'Да' : 'Нет',
-                  sla.resolvedOnTime ? Colors.green : Colors.red),
+              _buildInfoChip(
+                'Решен вовремя',
+                sla.resolvedOnTime ? 'Да' : 'Нет',
+                sla.resolvedOnTime ? Colors.green : Colors.red,
+              ),
             ],
           ),
 
@@ -887,24 +901,22 @@ class _IncidentManagementScreenState
     );
   }
 
-  Widget _buildInfoChip(String label, String value, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color),
-      ),
-      child: Text(
-        '$label: $value',
-        style: TextStyle(
-          fontSize: 12,
-          color: color,
-          fontWeight: FontWeight.w500,
+  Widget _buildInfoChip(String label, String value, Color color) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color),
         ),
-      ),
-    );
-  }
+        child: Text(
+          '$label: $value',
+          style: TextStyle(
+            fontSize: 12,
+            color: color,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
 
   Color _getTypeColor(IncidentType type) {
     switch (type) {
@@ -1004,25 +1016,29 @@ class _IncidentManagementScreenState
     }
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDateTime(DateTime dateTime) =>
+      '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
 
   List<Incident> _getFilteredIncidents() {
     var filtered = _incidents;
 
     // Поиск
     if (_searchQuery.isNotEmpty) {
-      filtered = filtered.where((incident) {
-        return incident.title
-                .toLowerCase()
-                .contains(_searchQuery.toLowerCase()) ||
-            incident.description
-                .toLowerCase()
-                .contains(_searchQuery.toLowerCase()) ||
-            incident.tags.any((tag) =>
-                tag.toLowerCase().contains(_searchQuery.toLowerCase()));
-      }).toList();
+      filtered = filtered
+          .where(
+            (incident) =>
+                incident.title
+                    .toLowerCase()
+                    .contains(_searchQuery.toLowerCase()) ||
+                incident.description
+                    .toLowerCase()
+                    .contains(_searchQuery.toLowerCase()) ||
+                incident.tags.any(
+                  (tag) =>
+                      tag.toLowerCase().contains(_searchQuery.toLowerCase()),
+                ),
+          )
+          .toList();
     }
 
     // Фильтры
@@ -1160,7 +1176,8 @@ class _IncidentManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Редактирование инцидента "${incident.title}" будет реализовано'),
+          'Редактирование инцидента "${incident.title}" будет реализовано',
+        ),
       ),
     );
   }
@@ -1170,12 +1187,13 @@ class _IncidentManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Добавление комментария к инциденту "${incident.title}" будет реализовано'),
+          'Добавление комментария к инциденту "${incident.title}" будет реализовано',
+        ),
       ),
     );
   }
 
-  void _acknowledgeIncident(Incident incident) async {
+  Future<void> _acknowledgeIncident(Incident incident) async {
     try {
       await _incidentService.updateIncident(
         id: incident.id,
@@ -1198,7 +1216,7 @@ class _IncidentManagementScreenState
     }
   }
 
-  void _resolveIncident(Incident incident) async {
+  Future<void> _resolveIncident(Incident incident) async {
     try {
       await _incidentService.updateIncident(
         id: incident.id,

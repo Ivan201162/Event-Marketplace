@@ -3,9 +3,7 @@ import '../models/feed_post.dart';
 import '../services/feed_service.dart';
 
 /// Провайдер сервиса ленты
-final feedServiceProvider = Provider<FeedService>((ref) {
-  return FeedService();
-});
+final feedServiceProvider = Provider<FeedService>((ref) => FeedService());
 
 /// Провайдер для ленты новостей
 final feedPostsProvider = StreamProvider<List<FeedPost>>((ref) {
@@ -29,36 +27,34 @@ final postLikesProvider =
 
 /// Провайдер для состояния ленты
 final feedStateProvider = NotifierProvider<FeedStateNotifier, FeedState>(
-  () => FeedStateNotifier(),
+  FeedStateNotifier.new,
 );
 
 /// Состояние ленты
 class FeedState {
-  final List<FeedPost> posts;
-  final bool isLoading;
-  final String? error;
-  final Map<String, bool> likedPosts;
-
   const FeedState({
     this.posts = const [],
     this.isLoading = false,
     this.error,
     this.likedPosts = const {},
   });
+  final List<FeedPost> posts;
+  final bool isLoading;
+  final String? error;
+  final Map<String, bool> likedPosts;
 
   FeedState copyWith({
     List<FeedPost>? posts,
     bool? isLoading,
     String? error,
     Map<String, bool>? likedPosts,
-  }) {
-    return FeedState(
-      posts: posts ?? this.posts,
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
-      likedPosts: likedPosts ?? this.likedPosts,
-    );
-  }
+  }) =>
+      FeedState(
+        posts: posts ?? this.posts,
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+        likedPosts: likedPosts ?? this.likedPosts,
+      );
 }
 
 /// Нотификатор для состояния ленты

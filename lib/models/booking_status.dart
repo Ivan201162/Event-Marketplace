@@ -92,39 +92,21 @@ extension BookingStatusExtension on BookingStatus {
   }
 
   /// Проверить, можно ли отменить бронирование
-  bool get canCancel {
-    return this == BookingStatus.pending || this == BookingStatus.confirmed;
-  }
+  bool get canCancel =>
+      this == BookingStatus.pending || this == BookingStatus.confirmed;
 
   /// Проверить, можно ли подтвердить бронирование
-  bool get canConfirm {
-    return this == BookingStatus.pending;
-  }
+  bool get canConfirm => this == BookingStatus.pending;
 
   /// Проверить, можно ли отклонить бронирование
-  bool get canReject {
-    return this == BookingStatus.pending;
-  }
+  bool get canReject => this == BookingStatus.pending;
 
   /// Проверить, можно ли завершить бронирование
-  bool get canComplete {
-    return this == BookingStatus.confirmed;
-  }
+  bool get canComplete => this == BookingStatus.confirmed;
 }
 
 /// Информация о статусе бронирования
 class BookingStatusInfo {
-  final BookingStatus status;
-  final String name;
-  final String description;
-  final Color color;
-  final IconData icon;
-  final int sortOrder;
-  final bool canCancel;
-  final bool canConfirm;
-  final bool canReject;
-  final bool canComplete;
-
   const BookingStatusInfo({
     required this.status,
     required this.name,
@@ -139,20 +121,29 @@ class BookingStatusInfo {
   });
 
   /// Создать из статуса
-  factory BookingStatusInfo.fromStatus(BookingStatus status) {
-    return BookingStatusInfo(
-      status: status,
-      name: status.name,
-      description: status.description,
-      color: status.color,
-      icon: status.icon,
-      sortOrder: status.sortOrder,
-      canCancel: status.canCancel,
-      canConfirm: status.canConfirm,
-      canReject: status.canReject,
-      canComplete: status.canComplete,
-    );
-  }
+  factory BookingStatusInfo.fromStatus(BookingStatus status) =>
+      BookingStatusInfo(
+        status: status,
+        name: status.name,
+        description: status.description,
+        color: status.color,
+        icon: status.icon,
+        sortOrder: status.sortOrder,
+        canCancel: status.canCancel,
+        canConfirm: status.canConfirm,
+        canReject: status.canReject,
+        canComplete: status.canComplete,
+      );
+  final BookingStatus status;
+  final String name;
+  final String description;
+  final Color color;
+  final IconData icon;
+  final int sortOrder;
+  final bool canCancel;
+  final bool canConfirm;
+  final bool canReject;
+  final bool canComplete;
 }
 
 /// Утилиты для работы со статусами бронирований
@@ -190,9 +181,8 @@ class BookingStatusUtils {
       ];
 
   /// Получить информацию о статусе
-  static BookingStatusInfo getStatusInfo(BookingStatus status) {
-    return BookingStatusInfo.fromStatus(status);
-  }
+  static BookingStatusInfo getStatusInfo(BookingStatus status) =>
+      BookingStatusInfo.fromStatus(status);
 
   /// Получить следующий возможный статус
   static BookingStatus? getNextStatus(BookingStatus currentStatus) {
@@ -212,7 +202,7 @@ class BookingStatusUtils {
 
   /// Получить возможные действия для статуса
   static List<BookingAction> getAvailableActions(BookingStatus status) {
-    List<BookingAction> actions = [];
+    final actions = <BookingAction>[];
 
     if (status.canConfirm) {
       actions.add(BookingAction.confirm);

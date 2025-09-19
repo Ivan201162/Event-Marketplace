@@ -28,46 +28,45 @@ class _IntegrationManagementScreenState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ResponsiveScaffold(
-      body: Column(
-        children: [
-          // Вкладки
-          _buildTabs(),
+  Widget build(BuildContext context) => ResponsiveScaffold(
+        body: Column(
+          children: [
+            // Вкладки
+            _buildTabs(),
 
-          // Контент
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _selectedTab == 'integrations'
-                    ? _buildIntegrationsTab()
-                    : _selectedTab == 'create'
-                        ? _buildCreateTab()
-                        : _buildSyncHistoryTab(),
-          ),
-        ],
-      ),
-    );
-  }
+            // Контент
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _selectedTab == 'integrations'
+                      ? _buildIntegrationsTab()
+                      : _selectedTab == 'create'
+                          ? _buildCreateTab()
+                          : _buildSyncHistoryTab(),
+            ),
+          ],
+        ),
+      );
 
-  Widget _buildTabs() {
-    return ResponsiveCard(
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildTabButton(
-                'integrations', 'Интеграции', Icons.integration_instructions),
-          ),
-          Expanded(
-            child: _buildTabButton('create', 'Создать', Icons.add),
-          ),
-          Expanded(
-            child: _buildTabButton('history', 'История', Icons.history),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildTabs() => ResponsiveCard(
+        child: Row(
+          children: [
+            Expanded(
+              child: _buildTabButton(
+                'integrations',
+                'Интеграции',
+                Icons.integration_instructions,
+              ),
+            ),
+            Expanded(
+              child: _buildTabButton('create', 'Создать', Icons.add),
+            ),
+            Expanded(
+              child: _buildTabButton('history', 'История', Icons.history),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -110,52 +109,50 @@ class _IntegrationManagementScreenState
     );
   }
 
-  Widget _buildIntegrationsTab() {
-    return Column(
-      children: [
-        // Заголовок с кнопками
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Внешние интеграции',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _loadIntegrations,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: () {
-                  setState(() {
-                    _selectedTab = 'create';
-                  });
-                },
-                icon: const Icon(Icons.add),
-                label: const Text('Создать интеграцию'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список интеграций
-        Expanded(
-          child: _integrations.isEmpty
-              ? const Center(child: Text('Интеграции не найдены'))
-              : ListView.builder(
-                  itemCount: _integrations.length,
-                  itemBuilder: (context, index) {
-                    final integration = _integrations[index];
-                    return _buildIntegrationCard(integration);
-                  },
+  Widget _buildIntegrationsTab() => Column(
+        children: [
+          // Заголовок с кнопками
+          ResponsiveCard(
+            child: Row(
+              children: [
+                const ResponsiveText(
+                  'Внешние интеграции',
+                  isTitle: true,
                 ),
-        ),
-      ],
-    );
-  }
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadIntegrations,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      _selectedTab = 'create';
+                    });
+                  },
+                  icon: const Icon(Icons.add),
+                  label: const Text('Создать интеграцию'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список интеграций
+          Expanded(
+            child: _integrations.isEmpty
+                ? const Center(child: Text('Интеграции не найдены'))
+                : ListView.builder(
+                    itemCount: _integrations.length,
+                    itemBuilder: (context, index) {
+                      final integration = _integrations[index];
+                      return _buildIntegrationCard(integration);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildIntegrationCard(ExternalIntegration integration) {
     final statusColor = _getStatusColor(integration.status);
@@ -253,8 +250,11 @@ class _IntegrationManagementScreenState
             children: [
               _buildInfoChip('Тип', integration.type.displayName, Colors.blue),
               const SizedBox(width: 8),
-              _buildInfoChip('Аутентификация', integration.authType.displayName,
-                  Colors.green),
+              _buildInfoChip(
+                'Аутентификация',
+                integration.authType.displayName,
+                Colors.green,
+              ),
             ],
           ),
 
@@ -325,232 +325,228 @@ class _IntegrationManagementScreenState
     );
   }
 
-  Widget _buildCreateTab() {
-    return SingleChildScrollView(
-      child: ResponsiveCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ResponsiveText(
-              'Создать интеграцию',
-              isTitle: true,
-            ),
+  Widget _buildCreateTab() => SingleChildScrollView(
+        child: ResponsiveCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const ResponsiveText(
+                'Создать интеграцию',
+                isTitle: true,
+              ),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Форма создания интеграции
-            _buildCreateIntegrationForm(),
-          ],
+              // Форма создания интеграции
+              _buildCreateIntegrationForm(),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildCreateIntegrationForm() {
     final nameController = TextEditingController();
     final descriptionController = TextEditingController();
     final baseUrlController = TextEditingController();
-    IntegrationType selectedType = IntegrationType.api;
-    AuthenticationType selectedAuthType = AuthenticationType.none;
+    var selectedType = IntegrationType.api;
+    var selectedAuthType = AuthenticationType.none;
 
     return StatefulBuilder(
-      builder: (context, setState) {
-        return Column(
-          children: [
-            // Основная информация
-            TextField(
-              controller: nameController,
-              decoration: const InputDecoration(
-                labelText: 'Название интеграции',
-                border: OutlineInputBorder(),
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            TextField(
-              controller: descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Описание',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
-            ),
-
-            const SizedBox(height: 16),
-
-            TextField(
-              controller: baseUrlController,
-              decoration: const InputDecoration(
-                labelText: 'Базовый URL',
-                border: OutlineInputBorder(),
-                hintText: 'https://api.example.com',
-              ),
-            ),
-
-            const SizedBox(height: 16),
-
-            // Тип интеграции
-            DropdownButtonFormField<IntegrationType>(
-              initialValue: selectedType,
-              decoration: const InputDecoration(
-                labelText: 'Тип интеграции',
-                border: OutlineInputBorder(),
-              ),
-              items: IntegrationType.values.map((type) {
-                return DropdownMenuItem(
-                  value: type,
-                  child: Row(
-                    children: [
-                      Text(type.icon),
-                      const SizedBox(width: 8),
-                      Text(type.displayName),
-                    ],
-                  ),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedType = value!;
-                });
-              },
-            ),
-
-            const SizedBox(height: 16),
-
-            // Тип аутентификации
-            DropdownButtonFormField<AuthenticationType>(
-              initialValue: selectedAuthType,
-              decoration: const InputDecoration(
-                labelText: 'Тип аутентификации',
-                border: OutlineInputBorder(),
-              ),
-              items: AuthenticationType.values.map((type) {
-                return DropdownMenuItem(
-                  value: type,
-                  child: Text(type.displayName),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  selectedAuthType = value!;
-                });
-              },
-            ),
-
-            const SizedBox(height: 24),
-
-            // Кнопка создания
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () => _createIntegration(
-                  nameController.text,
-                  descriptionController.text,
-                  baseUrlController.text,
-                  selectedType,
-                  selectedAuthType,
-                ),
-                icon: const Icon(Icons.add),
-                label: const Text('Создать интеграцию'),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget _buildSyncHistoryTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'История синхронизации',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _loadIntegrations,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список истории синхронизации
-        Expanded(
-          child: _integrations.isEmpty
-              ? const Center(child: Text('Интеграции не найдены'))
-              : ListView.builder(
-                  itemCount: _integrations.length,
-                  itemBuilder: (context, index) {
-                    final integration = _integrations[index];
-                    return _buildSyncHistoryCard(integration);
-                  },
-                ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildSyncHistoryCard(ExternalIntegration integration) {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      builder: (context, setState) => Column(
         children: [
-          // Заголовок
-          Row(
-            children: [
-              Text(
-                integration.type.icon,
-                style: const TextStyle(fontSize: 24),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  integration.name,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              _buildStatusChip(integration.status),
-            ],
+          // Основная информация
+          TextField(
+            controller: nameController,
+            decoration: const InputDecoration(
+              labelText: 'Название интеграции',
+              border: OutlineInputBorder(),
+            ),
           ),
 
-          const SizedBox(height: 12),
+          const SizedBox(height: 16),
 
-          // История синхронизации
-          FutureBuilder<List<DataSync>>(
-            future:
-                _integrationService.getSyncHistory(integration.id, limit: 5),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return const Center(child: CircularProgressIndicator());
-              }
+          TextField(
+            controller: descriptionController,
+            decoration: const InputDecoration(
+              labelText: 'Описание',
+              border: OutlineInputBorder(),
+            ),
+            maxLines: 3,
+          ),
 
-              final syncHistory = snapshot.data!;
+          const SizedBox(height: 16),
 
-              if (syncHistory.isEmpty) {
-                return const Text('История синхронизации пуста');
-              }
+          TextField(
+            controller: baseUrlController,
+            decoration: const InputDecoration(
+              labelText: 'Базовый URL',
+              border: OutlineInputBorder(),
+              hintText: 'https://api.example.com',
+            ),
+          ),
 
-              return Column(
-                children:
-                    syncHistory.map((sync) => _buildSyncItem(sync)).toList(),
-              );
+          const SizedBox(height: 16),
+
+          // Тип интеграции
+          DropdownButtonFormField<IntegrationType>(
+            initialValue: selectedType,
+            decoration: const InputDecoration(
+              labelText: 'Тип интеграции',
+              border: OutlineInputBorder(),
+            ),
+            items: IntegrationType.values
+                .map(
+                  (type) => DropdownMenuItem(
+                    value: type,
+                    child: Row(
+                      children: [
+                        Text(type.icon),
+                        const SizedBox(width: 8),
+                        Text(type.displayName),
+                      ],
+                    ),
+                  ),
+                )
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                selectedType = value!;
+              });
             },
+          ),
+
+          const SizedBox(height: 16),
+
+          // Тип аутентификации
+          DropdownButtonFormField<AuthenticationType>(
+            initialValue: selectedAuthType,
+            decoration: const InputDecoration(
+              labelText: 'Тип аутентификации',
+              border: OutlineInputBorder(),
+            ),
+            items: AuthenticationType.values
+                .map(
+                  (type) => DropdownMenuItem(
+                    value: type,
+                    child: Text(type.displayName),
+                  ),
+                )
+                .toList(),
+            onChanged: (value) {
+              setState(() {
+                selectedAuthType = value!;
+              });
+            },
+          ),
+
+          const SizedBox(height: 24),
+
+          // Кнопка создания
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton.icon(
+              onPressed: () => _createIntegration(
+                nameController.text,
+                descriptionController.text,
+                baseUrlController.text,
+                selectedType,
+                selectedAuthType,
+              ),
+              icon: const Icon(Icons.add),
+              label: const Text('Создать интеграцию'),
+            ),
           ),
         ],
       ),
     );
   }
+
+  Widget _buildSyncHistoryTab() => Column(
+        children: [
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                const ResponsiveText(
+                  'История синхронизации',
+                  isTitle: true,
+                ),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadIntegrations,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список истории синхронизации
+          Expanded(
+            child: _integrations.isEmpty
+                ? const Center(child: Text('Интеграции не найдены'))
+                : ListView.builder(
+                    itemCount: _integrations.length,
+                    itemBuilder: (context, index) {
+                      final integration = _integrations[index];
+                      return _buildSyncHistoryCard(integration);
+                    },
+                  ),
+          ),
+        ],
+      );
+
+  Widget _buildSyncHistoryCard(ExternalIntegration integration) =>
+      ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Заголовок
+            Row(
+              children: [
+                Text(
+                  integration.type.icon,
+                  style: const TextStyle(fontSize: 24),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    integration.name,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                ),
+                _buildStatusChip(integration.status),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            // История синхронизации
+            FutureBuilder<List<DataSync>>(
+              future:
+                  _integrationService.getSyncHistory(integration.id, limit: 5),
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                final syncHistory = snapshot.data!;
+
+                if (syncHistory.isEmpty) {
+                  return const Text('История синхронизации пуста');
+                }
+
+                return Column(
+                  children: syncHistory.map(_buildSyncItem).toList(),
+                );
+              },
+            ),
+          ],
+        ),
+      );
 
   Widget _buildSyncItem(DataSync sync) {
     final statusColor = _getSyncStatusColor(sync.status);
@@ -658,24 +654,22 @@ class _IntegrationManagementScreenState
     );
   }
 
-  Widget _buildInfoChip(String label, String value, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color),
-      ),
-      child: Text(
-        '$label: $value',
-        style: TextStyle(
-          fontSize: 12,
-          color: color,
-          fontWeight: FontWeight.w500,
+  Widget _buildInfoChip(String label, String value, Color color) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color),
         ),
-      ),
-    );
-  }
+        child: Text(
+          '$label: $value',
+          style: TextStyle(
+            fontSize: 12,
+            color: color,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
 
   Color _getStatusColor(IntegrationStatus status) {
     switch (status) {
@@ -722,9 +716,8 @@ class _IntegrationManagementScreenState
     }
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDateTime(DateTime dateTime) =>
+      '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
 
   Future<void> _loadIntegrations() async {
     setState(() {
@@ -752,7 +745,9 @@ class _IntegrationManagementScreenState
   }
 
   void _handleIntegrationAction(
-      String action, ExternalIntegration integration) {
+    String action,
+    ExternalIntegration integration,
+  ) {
     switch (action) {
       case 'activate':
         _activateIntegration(integration);
@@ -839,7 +834,8 @@ class _IntegrationManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Редактирование интеграции "${integration.name}" будет реализовано'),
+          'Редактирование интеграции "${integration.name}" будет реализовано',
+        ),
       ),
     );
   }
@@ -849,7 +845,8 @@ class _IntegrationManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Тестирование интеграции "${integration.name}" будет реализовано'),
+          'Тестирование интеграции "${integration.name}" будет реализовано',
+        ),
       ),
     );
   }
@@ -860,7 +857,8 @@ class _IntegrationManagementScreenState
       builder: (context) => AlertDialog(
         title: const Text('Удалить интеграцию'),
         content: Text(
-            'Вы уверены, что хотите удалить интеграцию "${integration.name}"?'),
+          'Вы уверены, что хотите удалить интеграцию "${integration.name}"?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

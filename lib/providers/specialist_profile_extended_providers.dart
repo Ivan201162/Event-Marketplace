@@ -4,16 +4,15 @@ import '../services/specialist_profile_extended_service.dart';
 
 /// Провайдер сервиса расширенного профиля специалиста
 final specialistProfileExtendedServiceProvider =
-    Provider<SpecialistProfileExtendedService>((ref) {
-  return SpecialistProfileExtendedService();
-});
+    Provider<SpecialistProfileExtendedService>(
+        (ref) => SpecialistProfileExtendedService());
 
 /// Провайдер расширенного профиля специалиста
 final specialistProfileExtendedProvider =
     FutureProvider.family<SpecialistProfileExtended?, String>(
         (ref, specialistId) async {
   final service = ref.read(specialistProfileExtendedServiceProvider);
-  return await service.getExtendedProfile(specialistId);
+  return service.getExtendedProfile(specialistId);
 });
 
 /// Провайдер FAQ специалиста
@@ -62,7 +61,7 @@ final specialistFAQByCategoryProvider =
     FutureProvider.family<List<FAQItem>, (String, String)>((ref, params) async {
   final (specialistId, category) = params;
   final service = ref.read(specialistProfileExtendedServiceProvider);
-  return await service.getFAQByCategory(specialistId, category);
+  return service.getFAQByCategory(specialistId, category);
 });
 
 /// Провайдер публичных видео
@@ -70,7 +69,7 @@ final specialistPublicVideosProvider =
     FutureProvider.family<List<PortfolioVideo>, String>(
         (ref, specialistId) async {
   final service = ref.read(specialistProfileExtendedServiceProvider);
-  return await service.getPublicVideos(specialistId);
+  return service.getPublicVideos(specialistId);
 });
 
 /// Провайдер поиска по FAQ
@@ -78,7 +77,7 @@ final specialistFAQSearchProvider =
     FutureProvider.family<List<FAQItem>, (String, String)>((ref, params) async {
   final (specialistId, query) = params;
   final service = ref.read(specialistProfileExtendedServiceProvider);
-  return await service.searchFAQ(specialistId, query);
+  return service.searchFAQ(specialistId, query);
 });
 
 /// Провайдер поиска по видео
@@ -87,7 +86,7 @@ final specialistVideoSearchProvider =
         (ref, params) async {
   final (specialistId, query) = params;
   final service = ref.read(specialistProfileExtendedServiceProvider);
-  return await service.searchVideos(specialistId, query);
+  return service.searchVideos(specialistId, query);
 });
 
 /// Провайдер статистики профиля специалиста
@@ -95,7 +94,7 @@ final specialistProfileStatsProvider =
     FutureProvider.family<SpecialistProfileStats, String>(
         (ref, specialistId) async {
   final service = ref.read(specialistProfileExtendedServiceProvider);
-  return await service.getProfileStats(specialistId);
+  return service.getProfileStats(specialistId);
 });
 
 /// Нотификатор для состояния загрузки видео
@@ -115,7 +114,8 @@ class VideoUploadStateNotifier extends Notifier<Map<String, bool>> {
 /// Провайдер для управления состоянием загрузки видео
 final videoUploadStateProvider =
     NotifierProvider<VideoUploadStateNotifier, Map<String, bool>>(
-        () => VideoUploadStateNotifier());
+  VideoUploadStateNotifier.new,
+);
 
 /// Нотификатор для состояния создания FAQ
 class FaqCreationStateNotifier extends Notifier<Map<String, bool>> {
@@ -134,7 +134,8 @@ class FaqCreationStateNotifier extends Notifier<Map<String, bool>> {
 /// Провайдер для управления состоянием создания FAQ
 final faqCreationStateProvider =
     NotifierProvider<FaqCreationStateNotifier, Map<String, bool>>(
-        () => FaqCreationStateNotifier());
+  FaqCreationStateNotifier.new,
+);
 
 /// Нотификатор для состояния поиска специалистов
 class SpecialistSearchStateNotifier extends Notifier<Map<String, String>> {
@@ -153,7 +154,8 @@ class SpecialistSearchStateNotifier extends Notifier<Map<String, String>> {
 /// Провайдер для управления состоянием поиска
 final specialistSearchStateProvider =
     NotifierProvider<SpecialistSearchStateNotifier, Map<String, String>>(
-        () => SpecialistSearchStateNotifier());
+  SpecialistSearchStateNotifier.new,
+);
 
 /// Нотификатор для выбранных категорий FAQ
 class SelectedFAQCategoriesNotifier extends Notifier<Set<String>> {
@@ -176,7 +178,8 @@ class SelectedFAQCategoriesNotifier extends Notifier<Set<String>> {
 /// Провайдер для управления выбранными категориями FAQ
 final selectedFAQCategoriesProvider =
     NotifierProvider<SelectedFAQCategoriesNotifier, Set<String>>(
-        () => SelectedFAQCategoriesNotifier());
+  SelectedFAQCategoriesNotifier.new,
+);
 
 /// Нотификатор для фильтров FAQ
 class FaqFiltersNotifier extends Notifier<FAQFilters> {
@@ -194,7 +197,8 @@ class FaqFiltersNotifier extends Notifier<FAQFilters> {
 
 /// Провайдер для управления фильтрами FAQ
 final faqFiltersProvider = NotifierProvider<FaqFiltersNotifier, FAQFilters>(
-    () => FaqFiltersNotifier());
+  FaqFiltersNotifier.new,
+);
 
 /// Нотификатор для фильтров видео
 class VideoFiltersNotifier extends Notifier<VideoFilters> {
@@ -213,17 +217,11 @@ class VideoFiltersNotifier extends Notifier<VideoFilters> {
 /// Провайдер для управления фильтрами видео
 final videoFiltersProvider =
     NotifierProvider<VideoFiltersNotifier, VideoFilters>(
-        () => VideoFiltersNotifier());
+  VideoFiltersNotifier.new,
+);
 
 /// Фильтры для FAQ
 class FAQFilters {
-  final String? searchQuery;
-  final List<String> selectedCategories;
-  final bool showPublishedOnly;
-  final bool showByDate;
-  final DateTime? fromDate;
-  final DateTime? toDate;
-
   const FAQFilters({
     this.searchQuery,
     this.selectedCategories = const [],
@@ -232,6 +230,12 @@ class FAQFilters {
     this.fromDate,
     this.toDate,
   });
+  final String? searchQuery;
+  final List<String> selectedCategories;
+  final bool showPublishedOnly;
+  final bool showByDate;
+  final DateTime? fromDate;
+  final DateTime? toDate;
 
   FAQFilters copyWith({
     String? searchQuery,
@@ -240,28 +244,19 @@ class FAQFilters {
     bool? showByDate,
     DateTime? fromDate,
     DateTime? toDate,
-  }) {
-    return FAQFilters(
-      searchQuery: searchQuery ?? this.searchQuery,
-      selectedCategories: selectedCategories ?? this.selectedCategories,
-      showPublishedOnly: showPublishedOnly ?? this.showPublishedOnly,
-      showByDate: showByDate ?? this.showByDate,
-      fromDate: fromDate ?? this.fromDate,
-      toDate: toDate ?? this.toDate,
-    );
-  }
+  }) =>
+      FAQFilters(
+        searchQuery: searchQuery ?? this.searchQuery,
+        selectedCategories: selectedCategories ?? this.selectedCategories,
+        showPublishedOnly: showPublishedOnly ?? this.showPublishedOnly,
+        showByDate: showByDate ?? this.showByDate,
+        fromDate: fromDate ?? this.fromDate,
+        toDate: toDate ?? this.toDate,
+      );
 }
 
 /// Фильтры для видео
 class VideoFilters {
-  final String? searchQuery;
-  final List<String> selectedTags;
-  final List<String> selectedPlatforms;
-  final bool showPublicOnly;
-  final bool showByDate;
-  final DateTime? fromDate;
-  final DateTime? toDate;
-
   const VideoFilters({
     this.searchQuery,
     this.selectedTags = const [],
@@ -271,6 +266,13 @@ class VideoFilters {
     this.fromDate,
     this.toDate,
   });
+  final String? searchQuery;
+  final List<String> selectedTags;
+  final List<String> selectedPlatforms;
+  final bool showPublicOnly;
+  final bool showByDate;
+  final DateTime? fromDate;
+  final DateTime? toDate;
 
   VideoFilters copyWith({
     String? searchQuery,
@@ -280,15 +282,14 @@ class VideoFilters {
     bool? showByDate,
     DateTime? fromDate,
     DateTime? toDate,
-  }) {
-    return VideoFilters(
-      searchQuery: searchQuery ?? this.searchQuery,
-      selectedTags: selectedTags ?? this.selectedTags,
-      selectedPlatforms: selectedPlatforms ?? this.selectedPlatforms,
-      showPublicOnly: showPublicOnly ?? this.showPublicOnly,
-      showByDate: showByDate ?? this.showByDate,
-      fromDate: fromDate ?? this.fromDate,
-      toDate: toDate ?? this.toDate,
-    );
-  }
+  }) =>
+      VideoFilters(
+        searchQuery: searchQuery ?? this.searchQuery,
+        selectedTags: selectedTags ?? this.selectedTags,
+        selectedPlatforms: selectedPlatforms ?? this.selectedPlatforms,
+        showPublicOnly: showPublicOnly ?? this.showPublicOnly,
+        showByDate: showByDate ?? this.showByDate,
+        fromDate: fromDate ?? this.fromDate,
+        toDate: toDate ?? this.toDate,
+      );
 }

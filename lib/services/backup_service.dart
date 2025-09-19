@@ -1,20 +1,22 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+
 import '../models/backup.dart';
 
 /// Сервис бэкапов и восстановления
 class BackupService {
+  factory BackupService() => _instance;
+  BackupService._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
   final Uuid _uuid = const Uuid();
 
   static final BackupService _instance = BackupService._internal();
-  factory BackupService() => _instance;
-  BackupService._internal();
 
   /// Создать бэкап
   Future<String> createBackup({
@@ -41,7 +43,6 @@ class BackupService {
         filters: filters ?? {},
         createdBy: createdBy,
         createdAt: now,
-        status: BackupStatus.pending,
       );
 
       await _firestore.collection('backups').doc(backupId).set(backup.toMap());
@@ -73,7 +74,7 @@ class BackupService {
 
       // Собираем данные из коллекций
       final backupData = <String, dynamic>{};
-      int totalDocuments = 0;
+      var totalDocuments = 0;
 
       for (final collectionName in backup.collections) {
         try {
@@ -158,7 +159,7 @@ class BackupService {
     Map<String, dynamic> filters,
   ) async {
     try {
-      Query query = _firestore.collection(collectionName);
+      var query = _firestore.collection(collectionName);
 
       // Применяем фильтры
       for (final entry in filters.entries) {
@@ -228,7 +229,7 @@ class BackupService {
     int limit = 50,
   }) async {
     try {
-      Query query = _firestore.collection('backups');
+      var query = _firestore.collection('backups');
 
       if (createdBy != null) {
         query = query.where('createdBy', isEqualTo: createdBy);
@@ -244,7 +245,7 @@ class BackupService {
       final snapshot =
           await query.orderBy('createdAt', descending: true).limit(limit).get();
 
-      return snapshot.docs.map((doc) => Backup.fromDocument(doc)).toList();
+      return snapshot.docs.map(Backup.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка получения списка бэкапов: $e');
@@ -311,7 +312,6 @@ class BackupService {
         options: options ?? {},
         createdBy: createdBy,
         createdAt: now,
-        status: RestoreStatus.pending,
       );
 
       await _firestore
@@ -404,7 +404,10 @@ class BackupService {
         if (collectionData == null) continue;
 
         await _importCollection(
-            collectionName, collectionData, restore.options);
+          collectionName,
+          collectionData,
+          restore.options,
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -486,7 +489,7 @@ class BackupService {
     int limit = 50,
   }) async {
     try {
-      Query query = _firestore.collection('restores');
+      var query = _firestore.collection('restores');
 
       if (createdBy != null) {
         query = query.where('createdBy', isEqualTo: createdBy);
@@ -502,7 +505,7 @@ class BackupService {
       final snapshot =
           await query.orderBy('createdAt', descending: true).limit(limit).get();
 
-      return snapshot.docs.map((doc) => Restore.fromDocument(doc)).toList();
+      return snapshot.docs.map(Restore.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка получения списка восстановлений: $e');
@@ -516,11 +519,11 @@ class BackupService {
     try {
       final snapshot = await _firestore.collection('backups').get();
 
-      int totalBackups = 0;
-      int successfulBackups = 0;
-      int failedBackups = 0;
-      int totalSize = 0;
-      DateTime lastBackup = DateTime.fromMillisecondsSinceEpoch(0);
+      var totalBackups = 0;
+      var successfulBackups = 0;
+      var failedBackups = 0;
+      var totalSize = 0;
+      var lastBackup = DateTime.fromMillisecondsSinceEpoch(0);
       final backupsByType = <String, int>{};
       final backupsByStatus = <String, int>{};
 

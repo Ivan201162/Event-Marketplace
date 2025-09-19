@@ -1,17 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import '../models/environment_config.dart';
+
 import '../core/feature_flags.dart';
+import '../models/environment_config.dart';
 
 /// Сервис для управления конфигурацией окружения
 class EnvironmentConfigService {
-  static final EnvironmentConfigService _instance =
-      EnvironmentConfigService._internal();
   factory EnvironmentConfigService() => _instance;
   EnvironmentConfigService._internal();
+  static final EnvironmentConfigService _instance =
+      EnvironmentConfigService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -186,8 +188,9 @@ class EnvironmentConfigService {
       if (user == null) throw Exception('User not authenticated');
 
       final existingConfig = _environmentCache[id];
-      if (existingConfig == null)
+      if (existingConfig == null) {
         throw Exception('Environment config not found');
+      }
 
       final updatedConfig = existingConfig.copyWith(
         name: name,
@@ -225,24 +228,20 @@ class EnvironmentConfigService {
   }
 
   /// Получение конфигурации окружения
-  EnvironmentConfig? getEnvironmentConfig(String id) {
-    return _environmentCache[id];
-  }
+  EnvironmentConfig? getEnvironmentConfig(String id) => _environmentCache[id];
 
   /// Получение всех конфигураций окружений
-  List<EnvironmentConfig> getAllEnvironmentConfigs() {
-    return _environmentCache.values.toList();
-  }
+  List<EnvironmentConfig> getAllEnvironmentConfigs() =>
+      _environmentCache.values.toList();
 
   /// Получение активной конфигурации окружения
-  EnvironmentConfig? getActiveEnvironmentConfig() {
-    return _environmentCache.values.firstWhere(
-      (config) => config.isActive,
-      orElse: () => _environmentCache.values.isNotEmpty
-          ? _environmentCache.values.first
-          : null,
-    );
-  }
+  EnvironmentConfig? getActiveEnvironmentConfig() =>
+      _environmentCache.values.firstWhere(
+        (config) => config.isActive,
+        orElse: () => _environmentCache.values.isNotEmpty
+            ? _environmentCache.values.first
+            : null,
+      );
 
   /// Активация конфигурации окружения
   Future<void> activateEnvironmentConfig(String id) async {
@@ -366,8 +365,9 @@ class EnvironmentConfigService {
       if (user == null) throw Exception('User not authenticated');
 
       final existingVariable = _variableCache[id];
-      if (existingVariable == null)
+      if (existingVariable == null) {
         throw Exception('Environment variable not found');
+      }
 
       final updatedVariable = existingVariable.copyWith(
         key: key,
@@ -400,22 +400,18 @@ class EnvironmentConfigService {
   }
 
   /// Получение переменной окружения
-  EnvironmentVariable? getEnvironmentVariable(String id) {
-    return _variableCache[id];
-  }
+  EnvironmentVariable? getEnvironmentVariable(String id) => _variableCache[id];
 
   /// Получение переменной окружения по ключу
-  EnvironmentVariable? getEnvironmentVariableByKey(String key) {
-    return _variableCache.values.firstWhere(
-      (variable) => variable.key == key,
-      orElse: () => null,
-    );
-  }
+  EnvironmentVariable? getEnvironmentVariableByKey(String key) =>
+      _variableCache.values.firstWhere(
+        (variable) => variable.key == key,
+        orElse: () => null,
+      );
 
   /// Получение всех переменных окружения
-  List<EnvironmentVariable> getAllEnvironmentVariables() {
-    return _variableCache.values.toList();
-  }
+  List<EnvironmentVariable> getAllEnvironmentVariables() =>
+      _variableCache.values.toList();
 
   /// Создание конфигурации развертывания
   Future<DeploymentConfig> createDeploymentConfig({
@@ -494,8 +490,9 @@ class EnvironmentConfigService {
       if (user == null) throw Exception('User not authenticated');
 
       final existingDeployment = _deploymentCache[id];
-      if (existingDeployment == null)
+      if (existingDeployment == null) {
         throw Exception('Deployment config not found');
+      }
 
       final updatedDeployment = existingDeployment.copyWith(
         version: version,
@@ -530,26 +527,25 @@ class EnvironmentConfigService {
   }
 
   /// Получение конфигурации развертывания
-  DeploymentConfig? getDeploymentConfig(String id) {
-    return _deploymentCache[id];
-  }
+  DeploymentConfig? getDeploymentConfig(String id) => _deploymentCache[id];
 
   /// Получение всех конфигураций развертывания
-  List<DeploymentConfig> getAllDeploymentConfigs() {
-    return _deploymentCache.values.toList();
-  }
+  List<DeploymentConfig> getAllDeploymentConfigs() =>
+      _deploymentCache.values.toList();
 
   /// Получение конфигураций развертывания для окружения
   List<DeploymentConfig> getDeploymentConfigsForEnvironment(
-      String environmentId) {
-    return _deploymentCache.values
-        .where((deployment) => deployment.environmentId == environmentId)
-        .toList();
-  }
+    String environmentId,
+  ) =>
+      _deploymentCache.values
+          .where((deployment) => deployment.environmentId == environmentId)
+          .toList();
 
   /// Экспорт конфигурации окружения
-  Future<String> exportEnvironmentConfig(String id,
-      {String format = 'json'}) async {
+  Future<String> exportEnvironmentConfig(
+    String id, {
+    String format = 'json',
+  }) async {
     try {
       final config = _environmentCache[id];
       if (config == null) throw Exception('Environment config not found');
@@ -581,8 +577,10 @@ class EnvironmentConfigService {
   }
 
   /// Импорт конфигурации окружения
-  Future<EnvironmentConfig> importEnvironmentConfig(String data,
-      {String format = 'json'}) async {
+  Future<EnvironmentConfig> importEnvironmentConfig(
+    String data, {
+    String format = 'json',
+  }) async {
     try {
       final user = _auth.currentUser;
       if (user == null) throw Exception('User not authenticated');
@@ -604,7 +602,8 @@ class EnvironmentConfigService {
         id: _generateId(),
         name: environmentData['name'] ?? 'Imported Environment',
         type: EnvironmentType.fromString(
-            environmentData['type'] ?? 'development'),
+          environmentData['type'] ?? 'development',
+        ),
         config: Map<String, dynamic>.from(environmentData['config'] ?? {}),
         secrets: Map<String, dynamic>.from(environmentData['secrets'] ?? {}),
         featureFlags:
@@ -618,7 +617,8 @@ class EnvironmentConfigService {
         loggingConfig:
             Map<String, dynamic>.from(environmentData['loggingConfig'] ?? {}),
         monitoringConfig: Map<String, dynamic>.from(
-            environmentData['monitoringConfig'] ?? {}),
+          environmentData['monitoringConfig'] ?? {},
+        ),
         securityConfig:
             Map<String, dynamic>.from(environmentData['securityConfig'] ?? {}),
         isActive: false,
@@ -645,7 +645,8 @@ class EnvironmentConfigService {
           key: variableData['key'] ?? '',
           value: variableData['value'] ?? '',
           type: EnvironmentVariableType.fromString(
-              variableData['type'] ?? 'string'),
+            variableData['type'] ?? 'string',
+          ),
           isSecret: variableData['isSecret'] ?? false,
           description: variableData['description'],
           defaultValue: variableData['defaultValue'],
@@ -682,11 +683,13 @@ class EnvironmentConfigService {
           scalingConfig:
               Map<String, dynamic>.from(deploymentData['scalingConfig'] ?? {}),
           networkingConfig: Map<String, dynamic>.from(
-              deploymentData['networkingConfig'] ?? {}),
+            deploymentData['networkingConfig'] ?? {},
+          ),
           storageConfig:
               Map<String, dynamic>.from(deploymentData['storageConfig'] ?? {}),
           monitoringConfig: Map<String, dynamic>.from(
-              deploymentData['monitoringConfig'] ?? {}),
+            deploymentData['monitoringConfig'] ?? {},
+          ),
           description: deploymentData['description'],
           metadata: Map<String, dynamic>.from(deploymentData['metadata'] ?? {}),
           createdAt: now,
@@ -751,7 +754,8 @@ class EnvironmentConfigService {
       for (final variable in _variableCache.values) {
         if (variable.isRequired && !config.config.containsKey(variable.key)) {
           errors.add(
-              'Required environment variable "${variable.key}" is missing');
+            'Required environment variable "${variable.key}" is missing',
+          );
         }
       }
 
@@ -804,8 +808,9 @@ class EnvironmentConfigService {
 
   /// Группировка окружений по типу
   Map<String, int> _groupEnvironmentsByType(
-      List<EnvironmentConfig> environments) {
-    final Map<String, int> groups = {};
+    List<EnvironmentConfig> environments,
+  ) {
+    final groups = <String, int>{};
     for (final env in environments) {
       groups[env.type.value] = (groups[env.type.value] ?? 0) + 1;
     }
@@ -814,7 +819,7 @@ class EnvironmentConfigService {
 
   /// Группировка переменных по типу
   Map<String, int> _groupVariablesByType(List<EnvironmentVariable> variables) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final variable in variables) {
       groups[variable.type.value] = (groups[variable.type.value] ?? 0) + 1;
     }
@@ -823,8 +828,9 @@ class EnvironmentConfigService {
 
   /// Группировка развертываний по статусу
   Map<String, int> _groupDeploymentsByStatus(
-      List<DeploymentConfig> deployments) {
-    final Map<String, int> groups = {};
+    List<DeploymentConfig> deployments,
+  ) {
+    final groups = <String, int>{};
     for (final deployment in deployments) {
       groups[deployment.status.value] =
           (groups[deployment.status.value] ?? 0) + 1;
@@ -833,12 +839,11 @@ class EnvironmentConfigService {
   }
 
   /// Генерация уникального ID
-  String _generateId() {
-    return DateTime.now().millisecondsSinceEpoch.toString() +
-        (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
-            .round()
-            .toString();
-  }
+  String _generateId() =>
+      DateTime.now().millisecondsSinceEpoch.toString() +
+      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
+          .round()
+          .toString();
 
   /// Закрытие сервиса
   Future<void> dispose() async {

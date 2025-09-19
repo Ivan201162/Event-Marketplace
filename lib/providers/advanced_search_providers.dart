@@ -1,22 +1,19 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:event_marketplace_app/models/search_filters.dart';
-import 'package:event_marketplace_app/services/advanced_search_service.dart';
+import '../models/search_filters.dart';
+import '../services/advanced_search_service.dart';
 
 part 'advanced_search_providers.g.dart';
 
 /// Провайдер сервиса расширенного поиска
 @riverpod
-AdvancedSearchService advancedSearchService(AdvancedSearchServiceRef ref) {
-  return AdvancedSearchService();
-}
+AdvancedSearchService advancedSearchService(AdvancedSearchServiceRef ref) =>
+    AdvancedSearchService();
 
 /// Провайдер состояния поиска
 @riverpod
 class SearchStateNotifier extends _$SearchStateNotifier {
   @override
-  SearchState build() {
-    return const SearchState();
-  }
+  SearchState build() => const SearchState();
 
   /// Обновить фильтры
   void updateFilters(SpecialistSearchFilters filters) {

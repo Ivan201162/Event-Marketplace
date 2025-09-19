@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/specialist_profile_extended.dart';
 import '../providers/specialist_profile_extended_providers.dart';
 import '../services/specialist_profile_extended_service.dart';
-import '../widgets/faq_item_widget.dart';
 import '../widgets/faq_editor_widget.dart';
 import '../widgets/faq_filter_widget.dart';
+import '../widgets/faq_item_widget.dart';
 
 /// Экран управления FAQ специалиста
 class SpecialistFAQScreen extends ConsumerStatefulWidget {
-  final String specialistId;
-
   const SpecialistFAQScreen({
     super.key,
     required this.specialistId,
   });
+  final String specialistId;
 
   @override
   ConsumerState<SpecialistFAQScreen> createState() =>
@@ -72,7 +72,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
         children: [
           // Статистика
           statsAsync.when(
-            data: (stats) => _buildStatsCard(stats),
+            data: _buildStatsCard,
             loading: () => const LinearProgressIndicator(),
             error: (error, stack) => const SizedBox.shrink(),
           ),
@@ -97,81 +97,82 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
     );
   }
 
-  Widget _buildStatsCard(SpecialistProfileStats stats) {
-    return Card(
-      margin: const EdgeInsets.all(8.0),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildStatItem(
-                'Всего вопросов', stats.totalFAQItems, Icons.help_outline),
-            _buildStatItem(
-                'Опубликованных', stats.publishedFAQItems, Icons.public),
-            _buildStatItem('Категорий', _getCategoriesCount(), Icons.category),
-          ],
+  Widget _buildStatsCard(SpecialistProfileStats stats) => Card(
+        margin: const EdgeInsets.all(8),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildStatItem(
+                'Всего вопросов',
+                stats.totalFAQItems,
+                Icons.help_outline,
+              ),
+              _buildStatItem(
+                'Опубликованных',
+                stats.publishedFAQItems,
+                Icons.public,
+              ),
+              _buildStatItem(
+                  'Категорий', _getCategoriesCount(), Icons.category),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildStatItem(String label, int value, IconData icon) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 24),
-        const SizedBox(height: 4),
-        Text(
-          value.toString(),
-          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-        ),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 12, color: Colors.grey),
-        ),
-      ],
-    );
-  }
+  Widget _buildStatItem(String label, int value, IconData icon) => Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, size: 24),
+          const SizedBox(height: 4),
+          Text(
+            value.toString(),
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 12, color: Colors.grey),
+          ),
+        ],
+      );
 
-  Widget _buildAllFAQTab(AsyncValue<List<FAQItem>> faqAsync) {
-    return faqAsync.when(
-      data: (faqItems) {
-        if (faqItems.isEmpty) {
-          return _buildEmptyState(
-            'Нет вопросов',
-            'Добавьте часто задаваемые вопросы, чтобы помочь клиентам',
-            Icons.help_outline,
-          );
-        }
-
-        // Сортируем по категории и порядку
-        final sortedFAQ = List<FAQItem>.from(faqItems);
-        sortedFAQ.sort((a, b) {
-          final categoryCompare = a.category.compareTo(b.category);
-          if (categoryCompare != 0) return categoryCompare;
-          return a.order.compareTo(b.order);
-        });
-
-        return ListView.builder(
-          padding: const EdgeInsets.all(8.0),
-          itemCount: sortedFAQ.length,
-          itemBuilder: (context, index) {
-            final faqItem = sortedFAQ[index];
-            return FAQItemWidget(
-              faqItem: faqItem,
-              onTap: () => _showFAQDetails(faqItem),
-              onEdit: () => _showEditFAQDialog(faqItem),
-              onDelete: () => _deleteFAQ(faqItem),
-              onTogglePublish: () => _togglePublish(faqItem),
+  Widget _buildAllFAQTab(AsyncValue<List<FAQItem>> faqAsync) => faqAsync.when(
+        data: (faqItems) {
+          if (faqItems.isEmpty) {
+            return _buildEmptyState(
+              'Нет вопросов',
+              'Добавьте часто задаваемые вопросы, чтобы помочь клиентам',
+              Icons.help_outline,
             );
-          },
-        );
-      },
-      loading: () => const Center(child: CircularProgressIndicator()),
-      error: (error, stack) => _buildErrorState(error.toString()),
-    );
-  }
+          }
+
+          // Сортируем по категории и порядку
+          final sortedFAQ = List<FAQItem>.from(faqItems);
+          sortedFAQ.sort((a, b) {
+            final categoryCompare = a.category.compareTo(b.category);
+            if (categoryCompare != 0) return categoryCompare;
+            return a.order.compareTo(b.order);
+          });
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(8),
+            itemCount: sortedFAQ.length,
+            itemBuilder: (context, index) {
+              final faqItem = sortedFAQ[index];
+              return FAQItemWidget(
+                faqItem: faqItem,
+                onTap: () => _showFAQDetails(faqItem),
+                onEdit: () => _showEditFAQDialog(faqItem),
+                onDelete: () => _deleteFAQ(faqItem),
+                onTogglePublish: () => _togglePublish(faqItem),
+              );
+            },
+          );
+        },
+        loading: () => const Center(child: CircularProgressIndicator()),
+        error: (error, stack) => _buildErrorState(error.toString()),
+      );
 
   Widget _buildPublishedFAQTab() {
     final faqAsync = ref.watch(specialistFAQProvider(widget.specialistId));
@@ -190,7 +191,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
         }
 
         return ListView.builder(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8),
           itemCount: publishedItems.length,
           itemBuilder: (context, index) {
             final faqItem = publishedItems[index];
@@ -227,7 +228,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
         }
 
         return ListView.builder(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8),
           itemCount: categories.length,
           itemBuilder: (context, index) {
             final category = categories[index];
@@ -242,10 +243,11 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
 
   Widget _buildCategoryCard(String category) {
     final faqByCategoryAsync = ref.watch(
-        specialistFAQByCategoryProvider((widget.specialistId, category)));
+      specialistFAQByCategoryProvider((widget.specialistId, category)),
+    );
 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       child: ListTile(
         leading: const Icon(Icons.category),
         title: Text(_getCategoryDisplayName(category)),
@@ -260,46 +262,43 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
     );
   }
 
-  Widget _buildEmptyState(String title, String subtitle, IconData icon) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 64, color: Colors.grey),
-          const SizedBox(height: 16),
-          Text(
-            title,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            subtitle,
-            style: const TextStyle(color: Colors.grey),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildEmptyState(String title, String subtitle, IconData icon) =>
+      Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(icon, size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              subtitle,
+              style: const TextStyle(color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
 
-  Widget _buildErrorState(String error) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.error_outline, size: 64, color: Colors.red),
-          const SizedBox(height: 16),
-          Text('Ошибка: $error'),
-          const SizedBox(height: 16),
-          ElevatedButton(
-            onPressed: () =>
-                ref.refresh(specialistFAQProvider(widget.specialistId)),
-            child: const Text('Повторить'),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildErrorState(String error) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.error_outline, size: 64, color: Colors.red),
+            const SizedBox(height: 16),
+            Text('Ошибка: $error'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () =>
+                  ref.refresh(specialistFAQProvider(widget.specialistId)),
+              child: const Text('Повторить'),
+            ),
+          ],
+        ),
+      );
 
   void _showAddFAQDialog() {
     showDialog(
@@ -387,7 +386,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
               ),
               Expanded(
                 child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -407,7 +406,9 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
                           Text(
                             'Порядок: ${faqItem.order}',
                             style: const TextStyle(
-                                color: Colors.grey, fontSize: 12),
+                              color: Colors.grey,
+                              fontSize: 12,
+                            ),
                           ),
                         ],
                       ),
@@ -417,14 +418,18 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
                           Text(
                             'Создано: ${_formatDate(faqItem.createdAt)}',
                             style: const TextStyle(
-                                color: Colors.grey, fontSize: 12),
+                              color: Colors.grey,
+                              fontSize: 12,
+                            ),
                           ),
                           if (faqItem.updatedAt != faqItem.createdAt) ...[
                             const SizedBox(width: 16),
                             Text(
                               'Обновлено: ${_formatDate(faqItem.updatedAt)}',
                               style: const TextStyle(
-                                  color: Colors.grey, fontSize: 12),
+                                color: Colors.grey,
+                                fontSize: 12,
+                              ),
                             ),
                           ],
                         ],
@@ -482,7 +487,7 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
     );
   }
 
-  void _togglePublish(FAQItem faqItem) async {
+  Future<void> _togglePublish(FAQItem faqItem) async {
     final service = ref.read(specialistProfileExtendedServiceProvider);
     final updatedFAQ = faqItem.copyWith(isPublished: !faqItem.isPublished);
     await service.updateFAQItem(widget.specialistId, updatedFAQ);
@@ -542,21 +547,18 @@ class _SpecialistFAQScreenState extends ConsumerState<SpecialistFAQScreen>
     }
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day}.${date.month}.${date.year}';
-  }
+  String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 }
 
 /// Экран FAQ по категории
 class FAQByCategoryScreen extends ConsumerWidget {
-  final String specialistId;
-  final String category;
-
   const FAQByCategoryScreen({
     super.key,
     required this.specialistId,
     required this.category,
   });
+  final String specialistId;
+  final String category;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -576,7 +578,7 @@ class FAQByCategoryScreen extends ConsumerWidget {
           }
 
           return ListView.builder(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             itemCount: faqItems.length,
             itemBuilder: (context, index) {
               final faqItem = faqItems[index];
@@ -622,7 +624,10 @@ class FAQByCategoryScreen extends ConsumerWidget {
   }
 
   void _showEditFAQDialog(
-      BuildContext context, WidgetRef ref, FAQItem faqItem) {
+    BuildContext context,
+    WidgetRef ref,
+    FAQItem faqItem,
+  ) {
     // TODO: Редактировать FAQ
   }
 
@@ -637,14 +642,13 @@ class FAQByCategoryScreen extends ConsumerWidget {
 
 /// Экран результатов поиска FAQ
 class FAQSearchResultsScreen extends ConsumerWidget {
-  final String specialistId;
-  final String query;
-
   const FAQSearchResultsScreen({
     super.key,
     required this.specialistId,
     required this.query,
   });
+  final String specialistId;
+  final String query;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -664,7 +668,7 @@ class FAQSearchResultsScreen extends ConsumerWidget {
           }
 
           return ListView.builder(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             itemCount: faqItems.length,
             itemBuilder: (context, index) {
               final faqItem = faqItems[index];
@@ -691,7 +695,10 @@ class FAQSearchResultsScreen extends ConsumerWidget {
   }
 
   void _showEditFAQDialog(
-      BuildContext context, WidgetRef ref, FAQItem faqItem) {
+    BuildContext context,
+    WidgetRef ref,
+    FAQItem faqItem,
+  ) {
     // TODO: Редактировать FAQ
   }
 

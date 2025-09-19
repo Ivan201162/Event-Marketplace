@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:event_marketplace_app/core/feature_flags.dart';
+import '../core/feature_flags.dart';
 
 /// Сервис для системы предложений по улучшению
 class ImprovementSuggestionsService {
@@ -33,8 +33,6 @@ class ImprovementSuggestionsService {
         votes: 0,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        reviewedAt: null,
-        implementedAt: null,
         metadata: {},
       );
 
@@ -56,7 +54,7 @@ class ImprovementSuggestionsService {
     String? lastDocumentId,
   }) async {
     try {
-      Query query = _firestore.collection('improvement_suggestions');
+      var query = _firestore.collection('improvement_suggestions');
 
       if (status != null) {
         query = query.where('status', isEqualTo: status.name);
@@ -77,9 +75,7 @@ class ImprovementSuggestionsService {
       }
 
       final snapshot = await query.get();
-      return snapshot.docs
-          .map((doc) => ImprovementSuggestion.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(ImprovementSuggestion.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения предложений: $e');
     }
@@ -174,17 +170,16 @@ class ImprovementSuggestionsService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => ImprovementSuggestion.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(ImprovementSuggestion.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения предложений пользователя: $e');
     }
   }
 
   /// Получить популярные предложения
-  Future<List<ImprovementSuggestion>> getPopularSuggestions(
-      {int limit = 10}) async {
+  Future<List<ImprovementSuggestion>> getPopularSuggestions({
+    int limit = 10,
+  }) async {
     try {
       final snapshot = await _firestore
           .collection('improvement_suggestions')
@@ -193,9 +188,7 @@ class ImprovementSuggestionsService {
           .limit(limit)
           .get();
 
-      return snapshot.docs
-          .map((doc) => ImprovementSuggestion.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(ImprovementSuggestion.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения популярных предложений: $e');
     }
@@ -206,9 +199,8 @@ class ImprovementSuggestionsService {
     try {
       final snapshot =
           await _firestore.collection('improvement_suggestions').get();
-      final suggestions = snapshot.docs
-          .map((doc) => ImprovementSuggestion.fromDocument(doc))
-          .toList();
+      final suggestions =
+          snapshot.docs.map(ImprovementSuggestion.fromDocument).toList();
 
       final totalSuggestions = suggestions.length;
       final implementedSuggestions = suggestions
@@ -259,22 +251,6 @@ class ImprovementSuggestionsService {
 
 /// Модель предложения по улучшению
 class ImprovementSuggestion {
-  final String id;
-  final String userId;
-  final String title;
-  final String description;
-  final SuggestionCategory category;
-  final SuggestionPriority priority;
-  final SuggestionStatus status;
-  final List<String> tags;
-  final String? contactEmail;
-  final int votes;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final DateTime? reviewedAt;
-  final DateTime? implementedAt;
-  final Map<String, dynamic> metadata;
-
   const ImprovementSuggestion({
     required this.id,
     required this.userId,
@@ -327,27 +303,41 @@ class ImprovementSuggestion {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
+  final String id;
+  final String userId;
+  final String title;
+  final String description;
+  final SuggestionCategory category;
+  final SuggestionPriority priority;
+  final SuggestionStatus status;
+  final List<String> tags;
+  final String? contactEmail;
+  final int votes;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? reviewedAt;
+  final DateTime? implementedAt;
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'title': title,
-      'description': description,
-      'category': category.name,
-      'priority': priority.name,
-      'status': status.name,
-      'tags': tags,
-      'contactEmail': contactEmail,
-      'votes': votes,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'reviewedAt': reviewedAt != null ? Timestamp.fromDate(reviewedAt!) : null,
-      'implementedAt':
-          implementedAt != null ? Timestamp.fromDate(implementedAt!) : null,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'userId': userId,
+        'title': title,
+        'description': description,
+        'category': category.name,
+        'priority': priority.name,
+        'status': status.name,
+        'tags': tags,
+        'contactEmail': contactEmail,
+        'votes': votes,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'reviewedAt':
+            reviewedAt != null ? Timestamp.fromDate(reviewedAt!) : null,
+        'implementedAt':
+            implementedAt != null ? Timestamp.fromDate(implementedAt!) : null,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   ImprovementSuggestion copyWith({
@@ -366,35 +356,28 @@ class ImprovementSuggestion {
     DateTime? reviewedAt,
     DateTime? implementedAt,
     Map<String, dynamic>? metadata,
-  }) {
-    return ImprovementSuggestion(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      category: category ?? this.category,
-      priority: priority ?? this.priority,
-      status: status ?? this.status,
-      tags: tags ?? this.tags,
-      contactEmail: contactEmail ?? this.contactEmail,
-      votes: votes ?? this.votes,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      reviewedAt: reviewedAt ?? this.reviewedAt,
-      implementedAt: implementedAt ?? this.implementedAt,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      ImprovementSuggestion(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        category: category ?? this.category,
+        priority: priority ?? this.priority,
+        status: status ?? this.status,
+        tags: tags ?? this.tags,
+        contactEmail: contactEmail ?? this.contactEmail,
+        votes: votes ?? this.votes,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        reviewedAt: reviewedAt ?? this.reviewedAt,
+        implementedAt: implementedAt ?? this.implementedAt,
+        metadata: metadata ?? this.metadata,
+      );
 }
 
 /// Статистика предложений
 class SuggestionStatistics {
-  final int totalSuggestions;
-  final int implementedSuggestions;
-  final int pendingSuggestions;
-  final int reviewedSuggestions;
-  final Map<SuggestionCategory, int> categoryStatistics;
-
   const SuggestionStatistics({
     required this.totalSuggestions,
     required this.implementedSuggestions,
@@ -402,6 +385,11 @@ class SuggestionStatistics {
     required this.reviewedSuggestions,
     required this.categoryStatistics,
   });
+  final int totalSuggestions;
+  final int implementedSuggestions;
+  final int pendingSuggestions;
+  final int reviewedSuggestions;
+  final Map<SuggestionCategory, int> categoryStatistics;
 }
 
 /// Категории предложений

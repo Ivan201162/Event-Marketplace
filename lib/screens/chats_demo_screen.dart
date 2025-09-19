@@ -8,115 +8,112 @@ class ChatsDemoScreen extends ConsumerWidget {
   const ChatsDemoScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          // Современный AppBar с градиентом
-          SliverAppBar(
-            expandedHeight: 120,
-            floating: false,
-            pinned: true,
-            flexibleSpace: FlexibleSpaceBar(
-              title: const Text(
-                'Чаты',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              background: Container(
-                decoration: const BoxDecoration(
-                  gradient: BrandColors.primaryGradient,
-                ),
-                child: SafeArea(
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.only(top: 40, left: 16, right: 16),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text(
-                          'Чаты',
-                          style: TextStyle(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                        Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white.withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: IconButton(
-                            icon: const Icon(Icons.add, color: Colors.white),
-                            onPressed: () => _showNewChatDialog(context),
-                          ),
-                        ),
-                      ],
-                    ),
+  Widget build(BuildContext context, WidgetRef ref) => Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            // Современный AppBar с градиентом
+            SliverAppBar(
+              expandedHeight: 120,
+              pinned: true,
+              flexibleSpace: FlexibleSpaceBar(
+                title: const Text(
+                  'Чаты',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
                   ),
                 ),
-              ),
-            ),
-          ),
-
-          // Основной контент
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                children: [
-                  // Заголовок с описанием новых функций
-                  Card(
+                background: Container(
+                  decoration: const BoxDecoration(
+                    gradient: BrandColors.primaryGradient,
+                  ),
+                  child: SafeArea(
                     child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      padding:
+                          const EdgeInsets.only(top: 40, left: 16, right: 16),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Row(
-                            children: [
-                              Icon(
-                                Icons.record_voice_over,
-                                color: Theme.of(context).primaryColor,
-                                size: 24,
-                              ),
-                              const SizedBox(width: 8),
-                              const Text(
-                                'Новые возможности чата',
-                                style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          const SizedBox(height: 12),
                           const Text(
-                            '• Голосовые сообщения с визуализацией\n'
-                            '• Реакции на сообщения (эмодзи)\n'
-                            '• Улучшенный интерфейс чата\n'
-                            '• Статистика и аналитика',
-                            style: TextStyle(fontSize: 14),
+                            'Чаты',
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: IconButton(
+                              icon: const Icon(Icons.add, color: Colors.white),
+                              onPressed: () => _showNewChatDialog(context),
+                            ),
                           ),
                         ],
                       ),
                     ),
                   ),
-
-                  const SizedBox(height: 16),
-
-                  // Список чатов
-                  _buildChatList(context),
-                ],
+                ),
               ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+
+            // Основной контент
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    // Заголовок с описанием новых функций
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.record_voice_over,
+                                  color: Theme.of(context).primaryColor,
+                                  size: 24,
+                                ),
+                                const SizedBox(width: 8),
+                                const Text(
+                                  'Новые возможности чата',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 12),
+                            const Text(
+                              '• Голосовые сообщения с визуализацией\n'
+                              '• Реакции на сообщения (эмодзи)\n'
+                              '• Улучшенный интерфейс чата\n'
+                              '• Статистика и аналитика',
+                              style: TextStyle(fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Список чатов
+                    _buildChatList(context),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildChatList(BuildContext context) {
     final demoChats = [
@@ -165,86 +162,85 @@ class ChatsDemoScreen extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 8),
-        ...demoChats.map((chat) => _buildChatItem(context, chat)).toList(),
+        ...demoChats.map((chat) => _buildChatItem(context, chat)),
       ],
     );
   }
 
-  Widget _buildChatItem(BuildContext context, Map<String, dynamic> chat) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
-          child: Text(
-            chat['name'][0].toUpperCase(),
-            style: TextStyle(
-              color: Theme.of(context).primaryColor,
-              fontWeight: FontWeight.bold,
+  Widget _buildChatItem(BuildContext context, Map<String, dynamic> chat) =>
+      Card(
+        margin: const EdgeInsets.only(bottom: 8),
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
+            child: Text(
+              chat['name'][0].toUpperCase(),
+              style: TextStyle(
+                color: Theme.of(context).primaryColor,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-        ),
-        title: Text(
-          chat['name'],
-          style: const TextStyle(fontWeight: FontWeight.w500),
-        ),
-        subtitle: Row(
-          children: [
-            if (chat['isVoice'])
-              const Icon(Icons.mic, size: 16, color: Colors.grey),
-            if (chat['isVoice']) const SizedBox(width: 4),
-            Expanded(
-              child: Text(
-                chat['lastMessage'],
-                style: TextStyle(
-                  color: Colors.grey[600],
-                  fontSize: 14,
-                ),
-                overflow: TextOverflow.ellipsis,
-              ),
-            ),
-          ],
-        ),
-        trailing: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Text(
-              chat['time'],
-              style: TextStyle(
-                color: Colors.grey[600],
-                fontSize: 12,
-              ),
-            ),
-            if (chat['unread'] > 0) ...[
-              const SizedBox(height: 4),
-              Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor,
-                  shape: BoxShape.circle,
-                ),
-                constraints: const BoxConstraints(
-                  minWidth: 20,
-                  minHeight: 20,
-                ),
+          title: Text(
+            chat['name'],
+            style: const TextStyle(fontWeight: FontWeight.w500),
+          ),
+          subtitle: Row(
+            children: [
+              if (chat['isVoice'])
+                const Icon(Icons.mic, size: 16, color: Colors.grey),
+              if (chat['isVoice']) const SizedBox(width: 4),
+              Expanded(
                 child: Text(
-                  chat['unread'].toString(),
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
+                  chat['lastMessage'],
+                  style: TextStyle(
+                    color: Colors.grey[600],
+                    fontSize: 14,
                   ),
-                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ],
-          ],
+          ),
+          trailing: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                chat['time'],
+                style: TextStyle(
+                  color: Colors.grey[600],
+                  fontSize: 12,
+                ),
+              ),
+              if (chat['unread'] > 0) ...[
+                const SizedBox(height: 4),
+                Container(
+                  padding: const EdgeInsets.all(4),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).primaryColor,
+                    shape: BoxShape.circle,
+                  ),
+                  constraints: const BoxConstraints(
+                    minWidth: 20,
+                    minHeight: 20,
+                  ),
+                  child: Text(
+                    chat['unread'].toString(),
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ],
+          ),
+          onTap: () => _openChat(context, chat),
         ),
-        onTap: () => _openChat(context, chat),
-      ),
-    );
-  }
+      );
 
   void _openChat(BuildContext context, Map<String, dynamic> chat) {
     Navigator.push(
@@ -267,7 +263,8 @@ class ChatsDemoScreen extends ConsumerWidget {
       builder: (context) => AlertDialog(
         title: const Text('Новый чат'),
         content: const Text(
-            'Функция создания нового чата будет добавлена в следующих версиях.'),
+          'Функция создания нового чата будет добавлена в следующих версиях.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

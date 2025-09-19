@@ -29,47 +29,44 @@ class _VersionManagementScreenState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ResponsiveScaffold(
-      title: 'Управление версиями',
-      body: Column(
-        children: [
-          // Вкладки
-          _buildTabs(),
+  Widget build(BuildContext context) => ResponsiveScaffold(
+        title: 'Управление версиями',
+        body: Column(
+          children: [
+            // Вкладки
+            _buildTabs(),
 
-          // Контент
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _selectedTab == 'versions'
-                    ? _buildVersionsTab()
-                    : _selectedTab == 'updates'
-                        ? _buildUpdatesTab()
-                        : _buildStatisticsTab(),
-          ),
-        ],
-      ),
-    );
-  }
+            // Контент
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _selectedTab == 'versions'
+                      ? _buildVersionsTab()
+                      : _selectedTab == 'updates'
+                          ? _buildUpdatesTab()
+                          : _buildStatisticsTab(),
+            ),
+          ],
+        ),
+      );
 
-  Widget _buildTabs() {
-    return ResponsiveCard(
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildTabButton('versions', 'Версии', Icons.apps),
-          ),
-          Expanded(
-            child:
-                _buildTabButton('updates', 'Обновления', Icons.system_update),
-          ),
-          Expanded(
-            child: _buildTabButton('statistics', 'Статистика', Icons.analytics),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildTabs() => ResponsiveCard(
+        child: Row(
+          children: [
+            Expanded(
+              child: _buildTabButton('versions', 'Версии', Icons.apps),
+            ),
+            Expanded(
+              child:
+                  _buildTabButton('updates', 'Обновления', Icons.system_update),
+            ),
+            Expanded(
+              child:
+                  _buildTabButton('statistics', 'Статистика', Icons.analytics),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -112,86 +109,82 @@ class _VersionManagementScreenState
     );
   }
 
-  Widget _buildVersionsTab() {
-    return Column(
-      children: [
-        // Заголовок с фильтрами
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Версии приложения',
-                isTitle: true,
-              ),
-              const Spacer(),
-              DropdownButton<String?>(
-                value: null,
-                hint: const Text('Все платформы'),
-                items: [
-                  const DropdownMenuItem<String?>(
-                    value: null,
-                    child: Text('Все платформы'),
-                  ),
-                  const DropdownMenuItem<String?>(
-                    value: 'android',
-                    child: Text('Android'),
-                  ),
-                  const DropdownMenuItem<String?>(
-                    value: 'ios',
-                    child: Text('iOS'),
-                  ),
-                  const DropdownMenuItem<String?>(
-                    value: 'web',
-                    child: Text('Web'),
-                  ),
-                  const DropdownMenuItem<String?>(
-                    value: 'windows',
-                    child: Text('Windows'),
-                  ),
-                  const DropdownMenuItem<String?>(
-                    value: 'macos',
-                    child: Text('macOS'),
-                  ),
-                  const DropdownMenuItem<String?>(
-                    value: 'linux',
-                    child: Text('Linux'),
-                  ),
-                ],
-                onChanged: (value) {
-                  // TODO: Реализовать фильтрацию
-                },
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _showCreateVersionDialog,
-                icon: const Icon(Icons.add),
-                label: const Text('Создать версию'),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список версий
-        Expanded(
-          child: _versions.isEmpty
-              ? const Center(child: Text('Версии не найдены'))
-              : ListView.builder(
-                  itemCount: _versions.length,
-                  itemBuilder: (context, index) {
-                    final version = _versions[index];
-                    return _buildVersionCard(version);
+  Widget _buildVersionsTab() => Column(
+        children: [
+          // Заголовок с фильтрами
+          ResponsiveCard(
+            child: Row(
+              children: [
+                ResponsiveText(
+                  'Версии приложения',
+                  isTitle: true,
+                ),
+                const Spacer(),
+                DropdownButton<String?>(
+                  hint: const Text('Все платформы'),
+                  items: const [
+                    DropdownMenuItem<String?>(
+                      child: Text('Все платформы'),
+                    ),
+                    DropdownMenuItem<String?>(
+                      value: 'android',
+                      child: Text('Android'),
+                    ),
+                    DropdownMenuItem<String?>(
+                      value: 'ios',
+                      child: Text('iOS'),
+                    ),
+                    DropdownMenuItem<String?>(
+                      value: 'web',
+                      child: Text('Web'),
+                    ),
+                    DropdownMenuItem<String?>(
+                      value: 'windows',
+                      child: Text('Windows'),
+                    ),
+                    DropdownMenuItem<String?>(
+                      value: 'macos',
+                      child: Text('macOS'),
+                    ),
+                    DropdownMenuItem<String?>(
+                      value: 'linux',
+                      child: Text('Linux'),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    // TODO: Реализовать фильтрацию
                   },
                 ),
-        ),
-      ],
-    );
-  }
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _showCreateVersionDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Создать версию'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список версий
+          Expanded(
+            child: _versions.isEmpty
+                ? const Center(child: Text('Версии не найдены'))
+                : ListView.builder(
+                    itemCount: _versions.length,
+                    itemBuilder: (context, index) {
+                      final version = _versions[index];
+                      return _buildVersionCard(version);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildVersionCard(AppVersion version) {
     final typeColor = _getTypeColor(version.type);
@@ -333,9 +326,10 @@ class _VersionManagementScreenState
           Row(
             children: [
               _buildInfoChip(
-                  'Статус',
-                  version.isAvailable ? 'Доступна' : 'Недоступна',
-                  version.isAvailable ? Colors.green : Colors.grey),
+                'Статус',
+                version.isAvailable ? 'Доступна' : 'Недоступна',
+                version.isAvailable ? Colors.green : Colors.grey,
+              ),
               const SizedBox(width: 8),
               if (version.downloadUrl != null)
                 _buildInfoChip('Скачать', 'Да', Colors.blue),
@@ -367,42 +361,40 @@ class _VersionManagementScreenState
     );
   }
 
-  Widget _buildUpdatesTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Обновления приложения',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список обновлений
-        Expanded(
-          child: _updates.isEmpty
-              ? const Center(child: Text('Обновления не найдены'))
-              : ListView.builder(
-                  itemCount: _updates.length,
-                  itemBuilder: (context, index) {
-                    final update = _updates[index];
-                    return _buildUpdateCard(update);
-                  },
+  Widget _buildUpdatesTab() => Column(
+        children: [
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                ResponsiveText(
+                  'Обновления приложения',
+                  isTitle: true,
                 ),
-        ),
-      ],
-    );
-  }
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список обновлений
+          Expanded(
+            child: _updates.isEmpty
+                ? const Center(child: Text('Обновления не найдены'))
+                : ListView.builder(
+                    itemCount: _updates.length,
+                    itemBuilder: (context, index) {
+                      final update = _updates[index];
+                      return _buildUpdateCard(update);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildUpdateCard(AppUpdate update) {
     final statusColor = _getStatusColor(update.status);
@@ -530,227 +522,224 @@ class _VersionManagementScreenState
     );
   }
 
-  Widget _buildStatisticsTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Статистика версий',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список статистики
-        Expanded(
-          child: _statistics.isEmpty
-              ? const Center(child: Text('Статистика не найдена'))
-              : ListView.builder(
-                  itemCount: _statistics.length,
-                  itemBuilder: (context, index) {
-                    final stats = _statistics[index];
-                    return _buildStatisticsCard(stats);
-                  },
-                ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildStatisticsCard(VersionStatistics stats) {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildStatisticsTab() => Column(
         children: [
           // Заголовок
-          Row(
-            children: [
-              const Icon(Icons.analytics, size: 24, color: Colors.blue),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Версия ${stats.version}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-                    Text(
-                      'Платформа: ${stats.platform}',
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                  ],
+          ResponsiveCard(
+            child: Row(
+              children: [
+                ResponsiveText(
+                  'Статистика версий',
+                  isTitle: true,
                 ),
-              ),
-            ],
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
           ),
 
-          const SizedBox(height: 16),
-
-          // Основные метрики
-          Row(
-            children: [
-              Expanded(
-                child: _buildStatCard(
-                  'Всего пользователей',
-                  '${stats.totalUsers}',
-                  Colors.blue,
-                  Icons.people,
-                ),
-              ),
-              Expanded(
-                child: _buildStatCard(
-                  'Активных',
-                  '${stats.activeUsers}',
-                  Colors.green,
-                  Icons.check_circle,
-                ),
-              ),
-              Expanded(
-                child: _buildStatCard(
-                  'Крашей',
-                  '${stats.crashCount}',
-                  Colors.red,
-                  Icons.bug_report,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 16),
-
-          // Дополнительные метрики
-          Row(
-            children: [
-              Expanded(
-                child: _buildStatCard(
-                  'Краш-рейт',
-                  '${(stats.crashRate * 100).toStringAsFixed(2)}%',
-                  Colors.orange,
-                  Icons.trending_down,
-                ),
-              ),
-              Expanded(
-                child: _buildStatCard(
-                  'Средняя сессия',
-                  stats.formattedSessionDuration,
-                  Colors.purple,
-                  Icons.timer,
-                ),
-              ),
-              Expanded(
-                child: _buildStatCard(
-                  'Всего сессий',
-                  '${stats.totalSessions}',
-                  Colors.cyan,
-                  Icons.sessions,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 16),
-
-          // Прогресс-бар активных пользователей
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Активные пользователи: ${stats.activeUserPercentage.toStringAsFixed(1)}%',
-                style: const TextStyle(fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 4),
-              LinearProgressIndicator(
-                value: stats.activeUserPercentage / 100,
-                backgroundColor: Colors.grey.withValues(alpha: 0.3),
-                valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 8),
-
-          // Время обновления
-          Row(
-            children: [
-              const Icon(Icons.access_time, size: 16, color: Colors.grey),
-              const SizedBox(width: 4),
-              Text(
-                'Обновлено: ${_formatDateTime(stats.lastUpdated)}',
-                style: const TextStyle(color: Colors.grey, fontSize: 12),
-              ),
-            ],
+          // Список статистики
+          Expanded(
+            child: _statistics.isEmpty
+                ? const Center(child: Text('Статистика не найдена'))
+                : ListView.builder(
+                    itemCount: _statistics.length,
+                    itemBuilder: (context, index) {
+                      final stats = _statistics[index];
+                      return _buildStatisticsCard(stats);
+                    },
+                  ),
           ),
         ],
-      ),
-    );
-  }
+      );
+
+  Widget _buildStatisticsCard(VersionStatistics stats) => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Заголовок
+            Row(
+              children: [
+                const Icon(Icons.analytics, size: 24, color: Colors.blue),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Версия ${stats.version}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
+                      ),
+                      Text(
+                        'Платформа: ${stats.platform}',
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+
+            // Основные метрики
+            Row(
+              children: [
+                Expanded(
+                  child: _buildStatCard(
+                    'Всего пользователей',
+                    '${stats.totalUsers}',
+                    Colors.blue,
+                    Icons.people,
+                  ),
+                ),
+                Expanded(
+                  child: _buildStatCard(
+                    'Активных',
+                    '${stats.activeUsers}',
+                    Colors.green,
+                    Icons.check_circle,
+                  ),
+                ),
+                Expanded(
+                  child: _buildStatCard(
+                    'Крашей',
+                    '${stats.crashCount}',
+                    Colors.red,
+                    Icons.bug_report,
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+
+            // Дополнительные метрики
+            Row(
+              children: [
+                Expanded(
+                  child: _buildStatCard(
+                    'Краш-рейт',
+                    '${(stats.crashRate * 100).toStringAsFixed(2)}%',
+                    Colors.orange,
+                    Icons.trending_down,
+                  ),
+                ),
+                Expanded(
+                  child: _buildStatCard(
+                    'Средняя сессия',
+                    stats.formattedSessionDuration,
+                    Colors.purple,
+                    Icons.timer,
+                  ),
+                ),
+                Expanded(
+                  child: _buildStatCard(
+                    'Всего сессий',
+                    '${stats.totalSessions}',
+                    Colors.cyan,
+                    Icons.sessions,
+                  ),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 16),
+
+            // Прогресс-бар активных пользователей
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Активные пользователи: ${stats.activeUserPercentage.toStringAsFixed(1)}%',
+                  style: const TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 4),
+                LinearProgressIndicator(
+                  value: stats.activeUserPercentage / 100,
+                  backgroundColor: Colors.grey.withValues(alpha: 0.3),
+                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.green),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 8),
+
+            // Время обновления
+            Row(
+              children: [
+                const Icon(Icons.access_time, size: 16, color: Colors.grey),
+                const SizedBox(width: 4),
+                Text(
+                  'Обновлено: ${_formatDateTime(stats.lastUpdated)}',
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
 
   Widget _buildStatCard(
-      String title, String value, Color color, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 20),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
-          ),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 10,
-              color: Colors.grey,
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoChip(String label, String value, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color),
-      ),
-      child: Text(
-        '$label: $value',
-        style: TextStyle(
-          fontSize: 12,
-          color: color,
-          fontWeight: FontWeight.w500,
+    String title,
+    String value,
+    Color color,
+    IconData icon,
+  ) =>
+      Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color),
         ),
-      ),
-    );
-  }
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 20),
+            const SizedBox(height: 4),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 10,
+                color: Colors.grey,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildInfoChip(String label, String value, Color color) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color),
+        ),
+        child: Text(
+          '$label: $value',
+          style: TextStyle(
+            fontSize: 12,
+            color: color,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
 
   Color _getTypeColor(VersionType type) {
     switch (type) {
@@ -782,9 +771,8 @@ class _VersionManagementScreenState
     }
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDateTime(DateTime dateTime) =>
+      '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
 
   Future<void> _loadData() async {
     setState(() {
@@ -844,20 +832,26 @@ class _VersionManagementScreenState
                 const SizedBox(height: 8),
               ],
               if (version.features.isNotEmpty) ...[
-                const Text('Новые функции:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text(
+                  'Новые функции:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 ...version.features.map((feature) => Text('• $feature')),
                 const SizedBox(height: 8),
               ],
               if (version.bugFixes.isNotEmpty) ...[
-                const Text('Исправления:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text(
+                  'Исправления:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 ...version.bugFixes.map((fix) => Text('• $fix')),
                 const SizedBox(height: 8),
               ],
               if (version.breakingChanges.isNotEmpty) ...[
-                const Text('Критические изменения:',
-                    style: TextStyle(fontWeight: FontWeight.bold)),
+                const Text(
+                  'Критические изменения:',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 ...version.breakingChanges.map((change) => Text('• $change')),
                 const SizedBox(height: 8),
               ],
@@ -886,7 +880,8 @@ class _VersionManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Редактирование версии "${version.version}" будет реализовано'),
+          'Редактирование версии "${version.version}" будет реализовано',
+        ),
       ),
     );
   }

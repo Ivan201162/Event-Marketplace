@@ -1,11 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/badge_service.dart';
+
 import '../models/badge.dart';
+import '../services/badge_service.dart';
 
 /// Провайдер для сервиса бейджей
-final badgeServiceProvider = Provider<BadgeService>((ref) {
-  return BadgeService();
-});
+final badgeServiceProvider = Provider<BadgeService>((ref) => BadgeService());
 
 /// Провайдер для бейджей пользователя
 final userBadgesProvider =
@@ -65,25 +64,28 @@ final recentUserBadgesProvider =
 });
 
 /// Провайдер для управления бейджами
-final badgeManagerProvider = Provider<BadgeManager>((ref) {
-  return BadgeManager(ref.read(badgeServiceProvider));
-});
+final badgeManagerProvider = Provider<BadgeManager>(
+    (ref) => BadgeManager(ref.read(badgeServiceProvider)));
 
 /// Менеджер бейджей
 class BadgeManager {
-  final BadgeService _service;
-
   BadgeManager(this._service);
+  final BadgeService _service;
 
   /// Проверить бейджи после бронирования
   Future<void> checkBookingBadges(
-      String customerId, String specialistId) async {
+    String customerId,
+    String specialistId,
+  ) async {
     await _service.checkBookingBadges(customerId, specialistId);
   }
 
   /// Проверить бейджи после отзыва
   Future<void> checkReviewBadges(
-      String customerId, String specialistId, int rating) async {
+    String customerId,
+    String specialistId,
+    int rating,
+  ) async {
     await _service.checkReviewBadges(customerId, specialistId, rating);
   }
 
@@ -93,41 +95,35 @@ class BadgeManager {
   }
 
   /// Получить статистику бейджей
-  Future<BadgeStats> getBadgeStats(String userId) async {
-    return await _service.getBadgeStats(userId);
-  }
+  Future<BadgeStats> getBadgeStats(String userId) async =>
+      _service.getBadgeStats(userId);
 
   /// Получить таблицу лидеров
-  Future<List<BadgeLeaderboardEntry>> getLeaderboard({int limit = 10}) async {
-    return await _service.getBadgeLeaderboard(limit: limit);
-  }
+  Future<List<BadgeLeaderboardEntry>> getLeaderboard({int limit = 10}) async =>
+      _service.getBadgeLeaderboard(limit: limit);
 }
 
 /// Провайдер для проверки новых бейджей
 final newBadgeCheckerProvider =
-    NotifierProvider<NewBadgeChecker, NewBadgeState>(() {
-  return NewBadgeChecker();
-});
+    NotifierProvider<NewBadgeChecker, NewBadgeState>(NewBadgeChecker.new);
 
 /// Состояние новых бейджей
 class NewBadgeState {
-  final List<Badge> newBadges;
-  final bool hasNewBadges;
-
   const NewBadgeState({
     this.newBadges = const [],
     this.hasNewBadges = false,
   });
+  final List<Badge> newBadges;
+  final bool hasNewBadges;
 
   NewBadgeState copyWith({
     List<Badge>? newBadges,
     bool? hasNewBadges,
-  }) {
-    return NewBadgeState(
-      newBadges: newBadges ?? this.newBadges,
-      hasNewBadges: hasNewBadges ?? this.hasNewBadges,
-    );
-  }
+  }) =>
+      NewBadgeState(
+        newBadges: newBadges ?? this.newBadges,
+        hasNewBadges: hasNewBadges ?? this.hasNewBadges,
+      );
 }
 
 /// Нотификатор для проверки новых бейджей
@@ -149,9 +145,10 @@ class NewBadgeChecker extends Notifier<NewBadgeState> {
 
       if (_lastUserId == userId && _lastBadges.isNotEmpty) {
         // Проверяем новые бейджи
-        final newBadges = currentBadges.where((badge) {
-          return !_lastBadges.any((lastBadge) => lastBadge.id == badge.id);
-        }).toList();
+        final newBadges = currentBadges
+            .where((badge) =>
+                !_lastBadges.any((lastBadge) => lastBadge.id == badge.id))
+            .toList();
 
         if (newBadges.isNotEmpty) {
           state = state.copyWith(
@@ -199,15 +196,14 @@ final userAchievementsProvider =
 
 /// Достижения пользователя
 class UserAchievements {
-  final List<Badge> badges;
-  final BadgeStats stats;
-  final bool isLoading;
-
   const UserAchievements({
     required this.badges,
     required this.stats,
     required this.isLoading,
   });
+  final List<Badge> badges;
+  final BadgeStats stats;
+  final bool isLoading;
 
   /// Получить прогресс до следующего бейджа
   Map<String, int> get progressToNextBadge {
@@ -227,9 +223,7 @@ class UserAchievements {
   }
 
   /// Получить прогресс до следующего уровня
-  double get levelProgress {
-    return (stats.totalBadges % 5) / 5.0;
-  }
+  double get levelProgress => (stats.totalBadges % 5) / 5.0;
 
   /// Получить название уровня
   String get levelName {

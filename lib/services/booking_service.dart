@@ -10,7 +10,9 @@ class BookingService {
 
   /// Отправить уведомление о изменении статуса заявки
   Future<void> _sendStatusChangeNotification(
-      Booking booking, BookingStatus oldStatus) async {
+    Booking booking,
+    BookingStatus oldStatus,
+  ) async {
     if (booking.status == oldStatus) return;
 
     final statusMessages = {
@@ -53,8 +55,10 @@ class BookingService {
   }
 
   /// Создать новое бронирование
-  Future<String> createBooking(Booking booking,
-      {Duration confirmationTimeout = const Duration(hours: 24)}) async {
+  Future<String> createBooking(
+    Booking booking, {
+    Duration confirmationTimeout = const Duration(hours: 24),
+  }) async {
     try {
       // Проверяем, есть ли свободные места
       final eventDoc =
@@ -99,26 +103,24 @@ class BookingService {
   }
 
   /// Получить бронирования пользователя
-  Stream<List<Booking>> getUserBookings(String userId) {
-    return _firestore
-        .collection('bookings')
-        .where('userId', isEqualTo: userId)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Booking.fromDocument(doc)).toList());
-  }
+  Stream<List<Booking>> getUserBookings(String userId) => _firestore
+      .collection('bookings')
+      .where('userId', isEqualTo: userId)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(Booking.fromDocument).toList(),
+      );
 
   /// Получить бронирования для события
-  Stream<List<Booking>> getEventBookings(String eventId) {
-    return _firestore
-        .collection('bookings')
-        .where('eventId', isEqualTo: eventId)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Booking.fromDocument(doc)).toList());
-  }
+  Stream<List<Booking>> getEventBookings(String eventId) => _firestore
+      .collection('bookings')
+      .where('eventId', isEqualTo: eventId)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(Booking.fromDocument).toList(),
+      );
 
   /// Получить бронирование по ID
   Future<Booking?> getBookingById(String bookingId) async {
@@ -135,7 +137,9 @@ class BookingService {
 
   /// Обновить статус бронирования
   Future<void> updateBookingStatus(
-      String bookingId, BookingStatus status) async {
+    String bookingId,
+    BookingStatus status,
+  ) async {
     try {
       final booking = await getBookingById(bookingId);
       if (booking == null) {
@@ -285,11 +289,11 @@ class BookingService {
           .where('userId', isEqualTo: userId)
           .get();
 
-      int total = 0;
-      int pending = 0;
-      int confirmed = 0;
-      int cancelled = 0;
-      int completed = 0;
+      var total = 0;
+      var pending = 0;
+      var confirmed = 0;
+      var cancelled = 0;
+      var completed = 0;
 
       for (final doc in snapshot.docs) {
         final booking = Booking.fromDocument(doc);
@@ -334,12 +338,12 @@ class BookingService {
           .where('eventId', isEqualTo: eventId)
           .get();
 
-      int total = 0;
-      int pending = 0;
-      int confirmed = 0;
-      int cancelled = 0;
-      int completed = 0;
-      int totalParticipants = 0;
+      var total = 0;
+      var pending = 0;
+      var confirmed = 0;
+      var cancelled = 0;
+      var completed = 0;
+      var totalParticipants = 0;
 
       for (final doc in snapshot.docs) {
         final booking = Booking.fromDocument(doc);

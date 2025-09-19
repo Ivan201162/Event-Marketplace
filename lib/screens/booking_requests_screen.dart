@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/booking.dart';
-import '../providers/firestore_providers.dart';
 import '../providers/auth_providers.dart';
+import '../providers/firestore_providers.dart';
 
 class BookingRequestsScreen extends ConsumerStatefulWidget {
   const BookingRequestsScreen({super.key});
@@ -129,219 +130,219 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
     );
   }
 
-  Widget _buildBookingCard(Booking booking) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Заголовок с датой и временем
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        booking.title ?? 'Без названия',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        _formatDateTime(booking.eventDate),
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Colors.grey[600],
-                            ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color:
-                        _getStatusColor(booking.status).withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: _getStatusColor(booking.status)),
-                  ),
-                  child: Text(
-                    _getStatusText(booking.status),
-                    style: TextStyle(
-                      color: _getStatusColor(booking.status),
-                      fontWeight: FontWeight.w600,
-                      fontSize: 12,
+  Widget _buildBookingCard(Booking booking) => Card(
+        margin: const EdgeInsets.only(bottom: 16),
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Заголовок с датой и временем
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          booking.title ?? 'Без названия',
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          _formatDateTime(booking.eventDate),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Colors.grey[600],
+                                  ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 12),
-
-            // Информация о заказчике
-            Row(
-              children: [
-                const Icon(Icons.person, size: 16, color: Colors.grey),
-                const SizedBox(width: 8),
-                Text(
-                  'Заказчик: ${booking.customerName ?? 'Не указан'}',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-              ],
-            ),
-
-            if (booking.customerPhone != null) ...[
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  const Icon(Icons.phone, size: 16, color: Colors.grey),
-                  const SizedBox(width: 8),
-                  Text(
-                    booking.customerPhone!,
-                    style: Theme.of(context).textTheme.bodyMedium,
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: _getStatusColor(booking.status)
+                          .withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border:
+                          Border.all(color: _getStatusColor(booking.status)),
+                    ),
+                    child: Text(
+                      _getStatusText(booking.status),
+                      style: TextStyle(
+                        color: _getStatusColor(booking.status),
+                        fontWeight: FontWeight.w600,
+                        fontSize: 12,
+                      ),
+                    ),
                   ),
                 ],
               ),
-            ],
 
-            if (booking.customerEmail != null) ...[
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  const Icon(Icons.email, size: 16, color: Colors.grey),
-                  const SizedBox(width: 8),
-                  Text(
-                    booking.customerEmail!,
-                    style: Theme.of(context).textTheme.bodyMedium,
-                  ),
-                ],
-              ),
-            ],
-
-            const SizedBox(height: 12),
-
-            // Описание события
-            if (booking.description != null) ...[
-              Text(
-                'Описание:',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                booking.description!,
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
               const SizedBox(height: 12),
-            ],
 
-            // Стоимость
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
+              // Информация о заказчике
+              Row(
+                children: [
+                  const Icon(Icons.person, size: 16, color: Colors.grey),
+                  const SizedBox(width: 8),
+                  Text(
+                    'Заказчик: ${booking.customerName ?? 'Не указан'}',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+
+              if (booking.customerPhone != null) ...[
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    const Icon(Icons.phone, size: 16, color: Colors.grey),
+                    const SizedBox(width: 8),
+                    Text(
+                      booking.customerPhone!,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
+              ],
+
+              if (booking.customerEmail != null) ...[
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    const Icon(Icons.email, size: 16, color: Colors.grey),
+                    const SizedBox(width: 8),
+                    Text(
+                      booking.customerEmail!,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
+              ],
+
+              const SizedBox(height: 12),
+
+              // Описание события
+              if (booking.description != null) ...[
                 Text(
-                  'Стоимость:',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  'Описание:',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                 ),
+                const SizedBox(height: 4),
                 Text(
-                  '${booking.totalPrice.toStringAsFixed(0)} ₽',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                  booking.description!,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
+                const SizedBox(height: 12),
               ],
-            ),
 
-            if ((booking.prepayment ?? 0) > 0) ...[
-              const SizedBox(height: 4),
+              // Стоимость
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Аванс:',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
+                    'Стоимость:',
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
                         ),
                   ),
                   Text(
-                    '${(booking.prepayment ?? 0).toStringAsFixed(0)} ₽',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
+                    '${booking.totalPrice.toStringAsFixed(0)} ₽',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
                         ),
                   ),
                 ],
               ),
-            ],
 
-            const SizedBox(height: 16),
+              if ((booking.prepayment ?? 0) > 0) ...[
+                const SizedBox(height: 4),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      'Аванс:',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.grey[600],
+                          ),
+                    ),
+                    Text(
+                      '${(booking.prepayment ?? 0).toStringAsFixed(0)} ₽',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: Colors.grey[600],
+                          ),
+                    ),
+                  ],
+                ),
+              ],
 
-            // Действия для новых заявок
-            if (booking.status == 'pending') ...[
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => _rejectBooking(booking),
-                      icon: const Icon(Icons.close, size: 16),
-                      label: const Text('Отклонить'),
-                      style: OutlinedButton.styleFrom(
-                        foregroundColor: Colors.red,
-                        side: const BorderSide(color: Colors.red),
+              const SizedBox(height: 16),
+
+              // Действия для новых заявок
+              if (booking.status == 'pending') ...[
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => _rejectBooking(booking),
+                        icon: const Icon(Icons.close, size: 16),
+                        label: const Text('Отклонить'),
+                        style: OutlinedButton.styleFrom(
+                          foregroundColor: Colors.red,
+                          side: const BorderSide(color: Colors.red),
+                        ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () => _confirmBooking(booking),
-                      icon: const Icon(Icons.check, size: 16),
-                      label: const Text('Подтвердить'),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () => _confirmBooking(booking),
+                        icon: const Icon(Icons.check, size: 16),
+                        label: const Text('Подтвердить'),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+              ],
 
-            // Действия для подтвержденных заявок
-            if (booking.status == 'confirmed') ...[
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => _viewBookingDetails(booking),
-                      icon: const Icon(Icons.info, size: 16),
-                      label: const Text('Подробности'),
+              // Действия для подтвержденных заявок
+              if (booking.status == 'confirmed') ...[
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => _viewBookingDetails(booking),
+                        icon: const Icon(Icons.info, size: 16),
+                        label: const Text('Подробности'),
+                      ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => _contactCustomer(booking),
-                      icon: const Icon(Icons.message, size: 16),
-                      label: const Text('Связаться'),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => _contactCustomer(booking),
+                        icon: const Icon(Icons.message, size: 16),
+                        label: const Text('Связаться'),
+                      ),
                     ),
-                  ),
-                ],
-              ),
+                  ],
+                ),
+              ],
             ],
-          ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
-  void _confirmBooking(Booking booking) async {
+  Future<void> _confirmBooking(Booking booking) async {
     try {
       final firestoreService = ref.read(firestoreServiceProvider);
       await firestoreService.updateBookingStatus(booking.id, 'confirmed');
@@ -366,7 +367,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
     }
   }
 
-  void _rejectBooking(Booking booking) async {
+  Future<void> _rejectBooking(Booking booking) async {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -386,7 +387,7 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
       ),
     );
 
-    if (confirmed == true) {
+    if (confirmed ?? false) {
       try {
         final firestoreService = ref.read(firestoreServiceProvider);
         await firestoreService.updateBookingStatus(booking.id, 'rejected');
@@ -423,7 +424,9 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildDetailRow(
-                  'Дата и время:', _formatDateTime(booking.eventDate)),
+                'Дата и время:',
+                _formatDateTime(booking.eventDate),
+              ),
               _buildDetailRow('Заказчик:', booking.customerName ?? 'Не указан'),
               if (booking.customerPhone != null)
                 _buildDetailRow('Телефон:', booking.customerPhone!),
@@ -432,10 +435,14 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
               if (booking.description != null)
                 _buildDetailRow('Описание:', booking.description!),
               _buildDetailRow(
-                  'Стоимость:', '${booking.totalPrice.toStringAsFixed(0)} ₽'),
+                'Стоимость:',
+                '${booking.totalPrice.toStringAsFixed(0)} ₽',
+              ),
               if ((booking.prepayment ?? 0) > 0)
-                _buildDetailRow('Аванс:',
-                    '${(booking.prepayment ?? 0).toStringAsFixed(0)} ₽'),
+                _buildDetailRow(
+                  'Аванс:',
+                  '${(booking.prepayment ?? 0).toStringAsFixed(0)} ₽',
+                ),
               _buildDetailRow('Статус:', _getStatusText(booking.status)),
             ],
           ),
@@ -457,30 +464,27 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
     );
   }
 
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 100,
-            child: Text(
-              label,
-              style: const TextStyle(fontWeight: FontWeight.w600),
+  Widget _buildDetailRow(String label, String value) => Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 100,
+              child: Text(
+                label,
+                style: const TextStyle(fontWeight: FontWeight.w600),
+              ),
             ),
-          ),
-          Expanded(
-            child: Text(value),
-          ),
-        ],
-      ),
-    );
-  }
+            Expanded(
+              child: Text(value),
+            ),
+          ],
+        ),
+      );
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}.${dateTime.month}.${dateTime.year} в ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDateTime(DateTime dateTime) =>
+      '${dateTime.day}.${dateTime.month}.${dateTime.year} в ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
 
   IconData _getStatusIcon(String status) {
     switch (status) {

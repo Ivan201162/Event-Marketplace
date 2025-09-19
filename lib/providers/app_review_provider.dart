@@ -2,34 +2,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/app_review_service.dart';
 
 /// Провайдер для управления отзывами о приложении
-final appReviewProvider =
-    NotifierProvider<AppReviewNotifier, AppReviewState>((ref) {
-  return AppReviewNotifier();
-});
+final appReviewProvider = NotifierProvider<AppReviewNotifier, AppReviewState>(
+    (ref) => AppReviewNotifier());
 
 /// Провайдер для статистики отзывов
-final reviewStatsProvider = FutureProvider<ReviewStats>((ref) async {
-  return await AppReviewService.getReviewStats();
-});
+final reviewStatsProvider = FutureProvider<ReviewStats>(
+    (ref) async => AppReviewService.getReviewStats());
 
 /// Провайдер для проверки доступности in-app review
-final reviewAvailabilityProvider = FutureProvider<bool>((ref) async {
-  return await AppReviewService.isAvailable();
-});
+final reviewAvailabilityProvider =
+    FutureProvider<bool>((ref) async => AppReviewService.isAvailable());
 
 /// Провайдер для рекомендуемого времени запроса отзыва
-final reviewTimingProvider = FutureProvider<ReviewTiming>((ref) async {
-  return await AppReviewService.getRecommendedTiming();
-});
+final reviewTimingProvider = FutureProvider<ReviewTiming>(
+    (ref) async => AppReviewService.getRecommendedTiming());
 
 /// Состояние отзывов о приложении
 class AppReviewState {
-  final bool isRequesting;
-  final bool isAvailable;
-  final String? error;
-  final ReviewTiming recommendedTiming;
-  final bool shouldShowRequest;
-
   const AppReviewState({
     this.isRequesting = false,
     this.isAvailable = false,
@@ -37,6 +26,11 @@ class AppReviewState {
     this.recommendedTiming = ReviewTiming.notYet,
     this.shouldShowRequest = false,
   });
+  final bool isRequesting;
+  final bool isAvailable;
+  final String? error;
+  final ReviewTiming recommendedTiming;
+  final bool shouldShowRequest;
 
   AppReviewState copyWith({
     bool? isRequesting,
@@ -44,15 +38,14 @@ class AppReviewState {
     String? error,
     ReviewTiming? recommendedTiming,
     bool? shouldShowRequest,
-  }) {
-    return AppReviewState(
-      isRequesting: isRequesting ?? this.isRequesting,
-      isAvailable: isAvailable ?? this.isAvailable,
-      error: error ?? this.error,
-      recommendedTiming: recommendedTiming ?? this.recommendedTiming,
-      shouldShowRequest: shouldShowRequest ?? this.shouldShowRequest,
-    );
-  }
+  }) =>
+      AppReviewState(
+        isRequesting: isRequesting ?? this.isRequesting,
+        isAvailable: isAvailable ?? this.isAvailable,
+        error: error ?? this.error,
+        recommendedTiming: recommendedTiming ?? this.recommendedTiming,
+        shouldShowRequest: shouldShowRequest ?? this.shouldShowRequest,
+      );
 
   /// Получить статус отзыва
   String get reviewStatus {
@@ -116,7 +109,7 @@ class AppReviewNotifier extends Notifier<AppReviewState> {
 
   /// Запросить отзыв
   Future<void> requestReview() async {
-    state = state.copyWith(isRequesting: true, error: null);
+    state = state.copyWith(isRequesting: true);
 
     try {
       await AppReviewService.requestReview();
@@ -132,7 +125,7 @@ class AppReviewNotifier extends Notifier<AppReviewState> {
 
   /// Открыть страницу в магазине
   Future<void> openStoreListing() async {
-    state = state.copyWith(isRequesting: true, error: null);
+    state = state.copyWith(isRequesting: true);
 
     try {
       await AppReviewService.openStoreListing();
@@ -148,7 +141,7 @@ class AppReviewNotifier extends Notifier<AppReviewState> {
 
   /// Открыть страницу отзывов в браузере
   Future<void> openReviewPageInBrowser() async {
-    state = state.copyWith(isRequesting: true, error: null);
+    state = state.copyWith(isRequesting: true);
 
     try {
       await AppReviewService.openReviewPageInBrowser();
@@ -212,7 +205,7 @@ class AppReviewNotifier extends Notifier<AppReviewState> {
 
   /// Очистить ошибки
   void clearError() {
-    state = state.copyWith(error: null);
+    state = state.copyWith();
   }
 }
 

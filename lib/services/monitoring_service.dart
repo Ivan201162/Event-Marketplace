@@ -1,18 +1,20 @@
 import 'dart:async';
 import 'dart:math';
-import 'package:flutter/foundation.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+
 import '../models/monitoring.dart';
 
 /// Сервис мониторинга и алертов
 class MonitoringService {
+  factory MonitoringService() => _instance;
+  MonitoringService._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
 
   static final MonitoringService _instance = MonitoringService._internal();
-  factory MonitoringService() => _instance;
-  MonitoringService._internal();
 
   final Map<String, MonitoringMetric> _metricsCache = {};
   final Map<String, MonitoringAlert> _alertsCache = {};
@@ -565,54 +567,41 @@ class MonitoringService {
   }
 
   /// Получить метрики по категории
-  List<MonitoringMetric> getMetricsByCategory(String category) {
-    return _metricsCache.values
-        .where((metric) => metric.category == category)
-        .toList()
-      ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
-  }
+  List<MonitoringMetric> getMetricsByCategory(String category) =>
+      _metricsCache.values
+          .where((metric) => metric.category == category)
+          .toList()
+        ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
   /// Получить алерты по серьезности
-  List<MonitoringAlert> getAlertsBySeverity(AlertSeverity severity) {
-    return _alertsCache.values
-        .where((alert) => alert.severity == severity)
-        .toList()
-      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
-  }
+  List<MonitoringAlert> getAlertsBySeverity(AlertSeverity severity) =>
+      _alertsCache.values.where((alert) => alert.severity == severity).toList()
+        ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
   /// Получить активные алерты
-  List<MonitoringAlert> getActiveAlerts() {
-    return _alertsCache.values
-        .where((alert) => alert.status == AlertStatus.active)
-        .toList()
-      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
-  }
+  List<MonitoringAlert> getActiveAlerts() => _alertsCache.values
+      .where((alert) => alert.status == AlertStatus.active)
+      .toList()
+    ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
   /// Получить сработавшие алерты
-  List<MonitoringAlert> getTriggeredAlerts() {
-    return _alertsCache.values
-        .where((alert) => alert.status == AlertStatus.triggered)
-        .toList()
-      ..sort((a, b) => b.triggeredAt!.compareTo(a.triggeredAt!));
-  }
+  List<MonitoringAlert> getTriggeredAlerts() => _alertsCache.values
+      .where((alert) => alert.status == AlertStatus.triggered)
+      .toList()
+    ..sort((a, b) => b.triggeredAt!.compareTo(a.triggeredAt!));
 
   /// Получить все метрики
-  List<MonitoringMetric> getAllMetrics() {
-    return _metricsCache.values.toList()
-      ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
-  }
+  List<MonitoringMetric> getAllMetrics() => _metricsCache.values.toList()
+    ..sort((a, b) => b.timestamp.compareTo(a.timestamp));
 
   /// Получить все алерты
-  List<MonitoringAlert> getAllAlerts() {
-    return _alertsCache.values.toList()
-      ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
-  }
+  List<MonitoringAlert> getAllAlerts() => _alertsCache.values.toList()
+    ..sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
   /// Получить все дашборды
-  List<MonitoringDashboard> getAllDashboards() {
-    return _dashboardsCache.values.toList()
-      ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
-  }
+  List<MonitoringDashboard> getAllDashboards() =>
+      _dashboardsCache.values.toList()
+        ..sort((a, b) => b.updatedAt.compareTo(a.updatedAt));
 
   /// Получить поток метрик
   Stream<MonitoringMetric> get metricsStream => _metricsController.stream;

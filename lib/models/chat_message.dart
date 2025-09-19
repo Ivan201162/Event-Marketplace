@@ -22,25 +22,6 @@ enum MessageStatus {
 
 /// Модель сообщения в чате
 class ChatMessage {
-  final String id;
-  final String chatId;
-  final String senderId;
-  final String senderName;
-  final String? senderAvatar;
-  final MessageType type;
-  final String content;
-  final String? fileUrl;
-  final String? fileName;
-  final int? fileSize;
-  final String? thumbnailUrl;
-  final Map<String, dynamic>? metadata;
-  final MessageStatus status;
-  final DateTime timestamp;
-  final DateTime? editedAt;
-  final String? replyToMessageId;
-  final List<String> readBy;
-  final bool isDeleted;
-
   const ChatMessage({
     required this.id,
     required this.chatId,
@@ -95,29 +76,45 @@ class ChatMessage {
       isDeleted: data['isDeleted'] ?? false,
     );
   }
+  final String id;
+  final String chatId;
+  final String senderId;
+  final String senderName;
+  final String? senderAvatar;
+  final MessageType type;
+  final String content;
+  final String? fileUrl;
+  final String? fileName;
+  final int? fileSize;
+  final String? thumbnailUrl;
+  final Map<String, dynamic>? metadata;
+  final MessageStatus status;
+  final DateTime timestamp;
+  final DateTime? editedAt;
+  final String? replyToMessageId;
+  final List<String> readBy;
+  final bool isDeleted;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'chatId': chatId,
-      'senderId': senderId,
-      'senderName': senderName,
-      'senderAvatar': senderAvatar,
-      'type': type.name,
-      'content': content,
-      'fileUrl': fileUrl,
-      'fileName': fileName,
-      'fileSize': fileSize,
-      'thumbnailUrl': thumbnailUrl,
-      'metadata': metadata,
-      'status': status.name,
-      'timestamp': Timestamp.fromDate(timestamp),
-      'editedAt': editedAt != null ? Timestamp.fromDate(editedAt!) : null,
-      'replyToMessageId': replyToMessageId,
-      'readBy': readBy,
-      'isDeleted': isDeleted,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'chatId': chatId,
+        'senderId': senderId,
+        'senderName': senderName,
+        'senderAvatar': senderAvatar,
+        'type': type.name,
+        'content': content,
+        'fileUrl': fileUrl,
+        'fileName': fileName,
+        'fileSize': fileSize,
+        'thumbnailUrl': thumbnailUrl,
+        'metadata': metadata,
+        'status': status.name,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'editedAt': editedAt != null ? Timestamp.fromDate(editedAt!) : null,
+        'replyToMessageId': replyToMessageId,
+        'readBy': readBy,
+        'isDeleted': isDeleted,
+      };
 
   /// Создать копию с изменениями
   ChatMessage copyWith({
@@ -139,28 +136,27 @@ class ChatMessage {
     String? replyToMessageId,
     List<String>? readBy,
     bool? isDeleted,
-  }) {
-    return ChatMessage(
-      id: id ?? this.id,
-      chatId: chatId ?? this.chatId,
-      senderId: senderId ?? this.senderId,
-      senderName: senderName ?? this.senderName,
-      senderAvatar: senderAvatar ?? this.senderAvatar,
-      type: type ?? this.type,
-      content: content ?? this.content,
-      fileUrl: fileUrl ?? this.fileUrl,
-      fileName: fileName ?? this.fileName,
-      fileSize: fileSize ?? this.fileSize,
-      thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-      metadata: metadata ?? this.metadata,
-      status: status ?? this.status,
-      timestamp: timestamp ?? this.timestamp,
-      editedAt: editedAt ?? this.editedAt,
-      replyToMessageId: replyToMessageId ?? this.replyToMessageId,
-      readBy: readBy ?? this.readBy,
-      isDeleted: isDeleted ?? this.isDeleted,
-    );
-  }
+  }) =>
+      ChatMessage(
+        id: id ?? this.id,
+        chatId: chatId ?? this.chatId,
+        senderId: senderId ?? this.senderId,
+        senderName: senderName ?? this.senderName,
+        senderAvatar: senderAvatar ?? this.senderAvatar,
+        type: type ?? this.type,
+        content: content ?? this.content,
+        fileUrl: fileUrl ?? this.fileUrl,
+        fileName: fileName ?? this.fileName,
+        fileSize: fileSize ?? this.fileSize,
+        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+        metadata: metadata ?? this.metadata,
+        status: status ?? this.status,
+        timestamp: timestamp ?? this.timestamp,
+        editedAt: editedAt ?? this.editedAt,
+        replyToMessageId: replyToMessageId ?? this.replyToMessageId,
+        readBy: readBy ?? this.readBy,
+        isDeleted: isDeleted ?? this.isDeleted,
+      );
 
   /// Проверить, является ли сообщение вложением
   bool get isAttachment =>
@@ -229,9 +225,7 @@ class ChatMessage {
   }
 
   /// Проверить, прочитано ли сообщение пользователем
-  bool isReadBy(String userId) {
-    return readBy.contains(userId);
-  }
+  bool isReadBy(String userId) => readBy.contains(userId);
 
   /// Проверить, является ли сообщение ответом
   bool get isReply => replyToMessageId != null;
@@ -249,32 +243,12 @@ class ChatMessage {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'ChatMessage(id: $id, type: $type, content: $content, sender: $senderName)';
-  }
+  String toString() =>
+      'ChatMessage(id: $id, type: $type, content: $content, sender: $senderName)';
 }
 
 /// Модель чата
 class Chat {
-  final String id;
-  final String name;
-  final String? description;
-  final String? avatar;
-  final List<String> participants;
-  final Map<String, String> participantNames;
-  final Map<String, String> participantAvatars;
-  final String? lastMessageId;
-  final String? lastMessageContent;
-  final MessageType? lastMessageType;
-  final DateTime? lastMessageTime;
-  final String? lastMessageSenderId;
-  final int unreadCount;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final bool isGroup;
-  final String? createdBy;
-  final Map<String, dynamic>? settings;
-
   const Chat({
     required this.id,
     required this.name,
@@ -330,30 +304,47 @@ class Chat {
       settings: data['settings'],
     );
   }
+  final String id;
+  final String name;
+  final String? description;
+  final String? avatar;
+  final List<String> participants;
+  final Map<String, String> participantNames;
+  final Map<String, String> participantAvatars;
+  final String? lastMessageId;
+  final String? lastMessageContent;
+  final MessageType? lastMessageType;
+  final DateTime? lastMessageTime;
+  final String? lastMessageSenderId;
+  final int unreadCount;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final bool isGroup;
+  final String? createdBy;
+  final Map<String, dynamic>? settings;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'description': description,
-      'avatar': avatar,
-      'participants': participants,
-      'participantNames': participantNames,
-      'participantAvatars': participantAvatars,
-      'lastMessageId': lastMessageId,
-      'lastMessageContent': lastMessageContent,
-      'lastMessageType': lastMessageType?.name,
-      'lastMessageTime':
-          lastMessageTime != null ? Timestamp.fromDate(lastMessageTime!) : null,
-      'lastMessageSenderId': lastMessageSenderId,
-      'unreadCount': unreadCount,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'isGroup': isGroup,
-      'createdBy': createdBy,
-      'settings': settings,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'description': description,
+        'avatar': avatar,
+        'participants': participants,
+        'participantNames': participantNames,
+        'participantAvatars': participantAvatars,
+        'lastMessageId': lastMessageId,
+        'lastMessageContent': lastMessageContent,
+        'lastMessageType': lastMessageType?.name,
+        'lastMessageTime': lastMessageTime != null
+            ? Timestamp.fromDate(lastMessageTime!)
+            : null,
+        'lastMessageSenderId': lastMessageSenderId,
+        'unreadCount': unreadCount,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'isGroup': isGroup,
+        'createdBy': createdBy,
+        'settings': settings,
+      };
 
   /// Создать копию с изменениями
   Chat copyWith({
@@ -375,28 +366,27 @@ class Chat {
     bool? isGroup,
     String? createdBy,
     Map<String, dynamic>? settings,
-  }) {
-    return Chat(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      avatar: avatar ?? this.avatar,
-      participants: participants ?? this.participants,
-      participantNames: participantNames ?? this.participantNames,
-      participantAvatars: participantAvatars ?? this.participantAvatars,
-      lastMessageId: lastMessageId ?? this.lastMessageId,
-      lastMessageContent: lastMessageContent ?? this.lastMessageContent,
-      lastMessageType: lastMessageType ?? this.lastMessageType,
-      lastMessageTime: lastMessageTime ?? this.lastMessageTime,
-      lastMessageSenderId: lastMessageSenderId ?? this.lastMessageSenderId,
-      unreadCount: unreadCount ?? this.unreadCount,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      isGroup: isGroup ?? this.isGroup,
-      createdBy: createdBy ?? this.createdBy,
-      settings: settings ?? this.settings,
-    );
-  }
+  }) =>
+      Chat(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        avatar: avatar ?? this.avatar,
+        participants: participants ?? this.participants,
+        participantNames: participantNames ?? this.participantNames,
+        participantAvatars: participantAvatars ?? this.participantAvatars,
+        lastMessageId: lastMessageId ?? this.lastMessageId,
+        lastMessageContent: lastMessageContent ?? this.lastMessageContent,
+        lastMessageType: lastMessageType ?? this.lastMessageType,
+        lastMessageTime: lastMessageTime ?? this.lastMessageTime,
+        lastMessageSenderId: lastMessageSenderId ?? this.lastMessageSenderId,
+        unreadCount: unreadCount ?? this.unreadCount,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        isGroup: isGroup ?? this.isGroup,
+        createdBy: createdBy ?? this.createdBy,
+        settings: settings ?? this.settings,
+      );
 
   /// Получить название чата для пользователя
   String getDisplayName(String currentUserId) {
@@ -427,9 +417,7 @@ class Chat {
   }
 
   /// Проверить, является ли пользователь участником чата
-  bool isParticipant(String userId) {
-    return participants.contains(userId);
-  }
+  bool isParticipant(String userId) => participants.contains(userId);
 
   @override
   bool operator ==(Object other) {
@@ -441,7 +429,6 @@ class Chat {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'Chat(id: $id, name: $name, participants: ${participants.length})';
-  }
+  String toString() =>
+      'Chat(id: $id, name: $name, participants: ${participants.length})';
 }

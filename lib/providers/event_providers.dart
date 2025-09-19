@@ -1,11 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/event_service.dart';
+
 import '../models/event.dart';
+import '../services/event_service.dart';
 
 /// Провайдер сервиса событий
-final eventServiceProvider = Provider<EventService>((ref) {
-  return EventService();
-});
+final eventServiceProvider = Provider<EventService>((ref) => EventService());
 
 /// Провайдер всех событий
 final eventsProvider = FutureProvider<List<Event>>((ref) async {
@@ -17,7 +16,7 @@ final eventsProvider = FutureProvider<List<Event>>((ref) async {
 final userEventsProvider =
     FutureProvider.family<List<Event>, String>((ref, userId) async {
   final eventService = ref.read(eventServiceProvider);
-  return await eventService.getUserEvents(userId);
+  return eventService.getUserEvents(userId);
 });
 
 /// Провайдер события по ID

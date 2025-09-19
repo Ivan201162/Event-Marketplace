@@ -1,11 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/ideas_service.dart';
+
 import '../models/event_idea.dart';
+import '../services/ideas_service.dart';
 
 /// Провайдер сервиса идей
-final ideasServiceProvider = Provider<IdeasService>((ref) {
-  return IdeasService();
-});
+final ideasServiceProvider = Provider<IdeasService>((ref) => IdeasService());
 
 /// Провайдер для получения публичных идей
 final publicIdeasProvider = FutureProvider<List<EventIdea>>((ref) {
@@ -55,13 +54,12 @@ final isIdeaSavedProvider =
 
 /// Параметры для проверки лайка
 class IdeaLikeParams {
-  final String ideaId;
-  final String userId;
-
   IdeaLikeParams({
     required this.ideaId,
     required this.userId,
   });
+  final String ideaId;
+  final String userId;
 
   @override
   bool operator ==(Object other) {
@@ -77,13 +75,12 @@ class IdeaLikeParams {
 
 /// Параметры для проверки сохранения
 class IdeaSaveParams {
-  final String ideaId;
-  final String userId;
-
   IdeaSaveParams({
     required this.ideaId,
     required this.userId,
   });
+  final String ideaId;
+  final String userId;
 
   @override
   bool operator ==(Object other) {

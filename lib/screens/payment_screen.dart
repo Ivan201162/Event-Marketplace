@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../core/feature_flags.dart';
+import '../core/safe_log.dart';
 import '../models/booking.dart';
 import '../payments/payment_gateway.dart';
 import '../providers/payment_providers.dart';
-import '../core/feature_flags.dart';
-import '../core/safe_log.dart';
 
 /// Экран оплаты
 class PaymentScreen extends ConsumerStatefulWidget {
-  final Booking booking;
-
   const PaymentScreen({
     super.key,
     required this.booking,
   });
+  final Booking booking;
 
   @override
   ConsumerState<PaymentScreen> createState() => _PaymentScreenState();
@@ -39,21 +39,22 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       });
     } catch (e, stackTrace) {
       SafeLog.error(
-          'PaymentScreen: Error loading payment history', e, stackTrace);
+        'PaymentScreen: Error loading payment history',
+        e,
+        stackTrace,
+      );
     }
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Оплата'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-      ),
-      body: _buildBody(),
-    );
-  }
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Оплата'),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+        ),
+        body: _buildBody(),
+      );
 
   Widget _buildBody() {
     if (!FeatureFlags.paymentsEnabled) {
@@ -77,101 +78,100 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     );
   }
 
-  Widget _buildPaymentsDisabledState() {
-    return Container(
-      padding: const EdgeInsets.all(24),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.payment_outlined,
-            size: 120,
-            color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-          ),
-          const SizedBox(height: 32),
-          Text(
-            'Платежи временно недоступны',
-            style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Функция платежей отключена в настройках приложения. В демо-режиме вы можете просматривать информацию о платежах.',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                ),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 32),
-          ElevatedButton.icon(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.arrow_back),
-            label: const Text('Назад'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBookingInfo() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
+  Widget _buildPaymentsDisabledState() => Container(
+        padding: const EdgeInsets.all(24),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Icon(
+              Icons.payment_outlined,
+              size: 120,
+              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+            ),
+            const SizedBox(height: 32),
             Text(
-              'Информация о бронировании',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              'Платежи временно недоступны',
+              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                     fontWeight: FontWeight.bold,
                   ),
+              textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 12),
-            _buildInfoRow('Событие', widget.booking.eventTitle),
-            _buildInfoRow('Дата',
-                '${widget.booking.eventDate.day}.${widget.booking.eventDate.month}.${widget.booking.eventDate.year}'),
-            _buildInfoRow('Участников', '${widget.booking.participantsCount}'),
-            _buildInfoRow('Общая сумма', '${widget.booking.totalPrice} ₽'),
-            _buildInfoRow('Статус', widget.booking.statusText),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildInfoRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 100,
-            child: Text(
-              label,
+            const SizedBox(height: 16),
+            Text(
+              'Функция платежей отключена в настройках приложения. В демо-режиме вы можете просматривать информацию о платежах.',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
                         .withOpacity(0.7),
                   ),
+              textAlign: TextAlign.center,
             ),
-          ),
-          Expanded(
-            child: Text(
-              value,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w500,
-                  ),
+            const SizedBox(height: 32),
+            ElevatedButton.icon(
+              onPressed: () => Navigator.of(context).pop(),
+              icon: const Icon(Icons.arrow_back),
+              label: const Text('Назад'),
             ),
+          ],
+        ),
+      );
+
+  Widget _buildBookingInfo() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Информация о бронировании',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 12),
+              _buildInfoRow('Событие', widget.booking.eventTitle),
+              _buildInfoRow(
+                'Дата',
+                '${widget.booking.eventDate.day}.${widget.booking.eventDate.month}.${widget.booking.eventDate.year}',
+              ),
+              _buildInfoRow(
+                  'Участников', '${widget.booking.participantsCount}'),
+              _buildInfoRow('Общая сумма', '${widget.booking.totalPrice} ₽'),
+              _buildInfoRow('Статус', widget.booking.statusText),
+            ],
           ),
-        ],
-      ),
-    );
-  }
+        ),
+      );
+
+  Widget _buildInfoRow(String label, String value) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 100,
+              child: Text(
+                label,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.7),
+                    ),
+              ),
+            ),
+            Expanded(
+              child: Text(
+                value,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w500,
+                    ),
+              ),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildPaymentMethods() {
     final availableMethods = ref.watch(availablePaymentMethodsProvider);
@@ -189,8 +189,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                   ),
             ),
             const SizedBox(height: 12),
-            ...availableMethods
-                .map((method) => _buildPaymentMethodTile(method)),
+            ...availableMethods.map(_buildPaymentMethodTile),
           ],
         ),
       ),
@@ -225,55 +224,54 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
     );
   }
 
-  Widget _buildPaymentButtons() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        ElevatedButton.icon(
-          onPressed: _isProcessing
-              ? null
-              : () => _processPayment(PaymentType.prepayment),
-          icon: _isProcessing
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Icon(Icons.payment),
-          label: Text(_isProcessing ? 'Обработка...' : 'Оплатить аванс (30%)'),
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            backgroundColor: Colors.blue,
-            foregroundColor: Colors.white,
+  Widget _buildPaymentButtons() => Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          ElevatedButton.icon(
+            onPressed: _isProcessing
+                ? null
+                : () => _processPayment(PaymentType.prepayment),
+            icon: _isProcessing
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.payment),
+            label:
+                Text(_isProcessing ? 'Обработка...' : 'Оплатить аванс (30%)'),
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              backgroundColor: Colors.blue,
+              foregroundColor: Colors.white,
+            ),
           ),
-        ),
-        const SizedBox(height: 12),
-        ElevatedButton.icon(
-          onPressed: _isProcessing
-              ? null
-              : () => _processPayment(PaymentType.finalPayment),
-          icon: const Icon(Icons.account_balance_wallet),
-          label: const Text('Оплатить остаток (70%)'),
-          style: ElevatedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 16),
-            backgroundColor: Colors.green,
-            foregroundColor: Colors.white,
+          const SizedBox(height: 12),
+          ElevatedButton.icon(
+            onPressed: _isProcessing
+                ? null
+                : () => _processPayment(PaymentType.finalPayment),
+            icon: const Icon(Icons.account_balance_wallet),
+            label: const Text('Оплатить остаток (70%)'),
+            style: ElevatedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+              backgroundColor: Colors.green,
+              foregroundColor: Colors.white,
+            ),
           ),
-        ),
-        const SizedBox(height: 12),
-        OutlinedButton.icon(
-          onPressed: _isProcessing
-              ? null
-              : () => _processPayment(PaymentType.fullPayment),
-          icon: const Icon(Icons.payment),
-          label: const Text('Оплатить полностью'),
-          style: OutlinedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 16),
+          const SizedBox(height: 12),
+          OutlinedButton.icon(
+            onPressed: _isProcessing
+                ? null
+                : () => _processPayment(PaymentType.fullPayment),
+            icon: const Icon(Icons.payment),
+            label: const Text('Оплатить полностью'),
+            style: OutlinedButton.styleFrom(
+              padding: const EdgeInsets.symmetric(vertical: 16),
+            ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
 
   Widget _buildPaymentHistory() {
     if (_paymentHistory.isEmpty) {
@@ -316,79 +314,76 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
                   ),
             ),
             const SizedBox(height: 12),
-            ..._paymentHistory
-                .map((payment) => _buildPaymentHistoryItem(payment)),
+            ..._paymentHistory.map(_buildPaymentHistoryItem),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildPaymentHistoryItem(PaymentInfo payment) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Theme.of(context)
-            .colorScheme
-            .surfaceContainerHighest
-            .withOpacity(0.3),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            _getPaymentStatusIcon(payment.status),
-            color: _getPaymentStatusColor(payment.status),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildPaymentHistoryItem(PaymentInfo payment) => Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Theme.of(context)
+              .colorScheme
+              .surfaceContainerHighest
+              .withOpacity(0.3),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              _getPaymentStatusIcon(payment.status),
+              color: _getPaymentStatusColor(payment.status),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    _getPaymentTypeName(payment.type),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
+                        ),
+                  ),
+                  Text(
+                    '${payment.amount} ${payment.currency}',
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.7),
+                        ),
+                  ),
+                ],
+              ),
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  _getPaymentTypeName(payment.type),
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  _getPaymentStatusName(payment.status),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: _getPaymentStatusColor(payment.status),
                         fontWeight: FontWeight.w500,
                       ),
                 ),
                 Text(
-                  '${payment.amount} ${payment.currency}',
+                  '${payment.createdAt.day}.${payment.createdAt.month}.${payment.createdAt.year}',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.7),
+                            .withOpacity(0.5),
                       ),
                 ),
               ],
             ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                _getPaymentStatusName(payment.status),
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: _getPaymentStatusColor(payment.status),
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-              Text(
-                '${payment.createdAt.day}.${payment.createdAt.month}.${payment.createdAt.year}',
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.5),
-                    ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   Future<void> _processPayment(PaymentType type) async {
     if (!FeatureFlags.paymentsEnabled) {
@@ -446,7 +441,7 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('В демо-режиме платежи отключены.'),
+            const Text('В демо-режиме платежи отключены.'),
             const SizedBox(height: 12),
             Text(
               'Информация о платеже:',
@@ -458,7 +453,9 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             _buildInfoRow('Тип', typeName),
             _buildInfoRow('Сумма', '$amount ₽'),
             _buildInfoRow(
-                'Способ', _getPaymentMethodInfo(_selectedMethod).name),
+              'Способ',
+              _getPaymentMethodInfo(_selectedMethod).name,
+            ),
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(12),
@@ -499,7 +496,10 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
   }
 
   void _showPaymentConfirmationDialog(
-      PaymentType type, double amount, double fee) {
+    PaymentType type,
+    double amount,
+    double fee,
+  ) {
     final typeName = _getPaymentTypeName(type);
     final totalAmount = amount + fee;
 
@@ -517,7 +517,9 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
             _buildInfoRow('Комиссия', '$fee ₽'),
             _buildInfoRow('Итого', '$totalAmount ₽'),
             _buildInfoRow(
-                'Способ', _getPaymentMethodInfo(_selectedMethod).name),
+              'Способ',
+              _getPaymentMethodInfo(_selectedMethod).name,
+            ),
             const SizedBox(height: 12),
             Container(
               padding: const EdgeInsets.all(12),
@@ -624,50 +626,50 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
       case PaymentType.fullPayment:
         return widget.booking.totalPrice;
       case PaymentType.refund:
-        return 0.0;
+        return 0;
     }
   }
 
   PaymentMethodInfo _getPaymentMethodInfo(PaymentMethod method) {
     switch (method) {
       case PaymentMethod.card:
-        return PaymentMethodInfo(
+        return const PaymentMethodInfo(
           name: 'Банковская карта',
           description: 'Visa, MasterCard, МИР',
           icon: Icons.credit_card,
         );
       case PaymentMethod.applePay:
-        return PaymentMethodInfo(
+        return const PaymentMethodInfo(
           name: 'Apple Pay',
           description: 'Быстрая оплата через Apple Pay',
           icon: Icons.apple,
         );
       case PaymentMethod.googlePay:
-        return PaymentMethodInfo(
+        return const PaymentMethodInfo(
           name: 'Google Pay',
           description: 'Быстрая оплата через Google Pay',
           icon: Icons.g_mobiledata,
         );
       case PaymentMethod.yooMoney:
-        return PaymentMethodInfo(
+        return const PaymentMethodInfo(
           name: 'ЮMoney',
           description: 'Электронный кошелек ЮMoney',
           icon: Icons.account_balance_wallet,
         );
       case PaymentMethod.qiwi:
-        return PaymentMethodInfo(
+        return const PaymentMethodInfo(
           name: 'QIWI',
           description: 'Электронный кошелек QIWI',
           icon: Icons.account_balance_wallet,
         );
       case PaymentMethod.webmoney:
-        return PaymentMethodInfo(
+        return const PaymentMethodInfo(
           name: 'WebMoney',
           description: 'Электронный кошелек WebMoney',
           icon: Icons.account_balance_wallet,
         );
       case PaymentMethod.bankTransfer:
-        return PaymentMethodInfo(
+        return const PaymentMethodInfo(
           name: 'Банковский перевод',
           description: 'Перевод на банковский счет',
           icon: Icons.account_balance,
@@ -741,13 +743,12 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
 }
 
 class PaymentMethodInfo {
-  final String name;
-  final String description;
-  final IconData icon;
-
   const PaymentMethodInfo({
     required this.name,
     required this.description,
     required this.icon,
   });
+  final String name;
+  final String description;
+  final IconData icon;
 }

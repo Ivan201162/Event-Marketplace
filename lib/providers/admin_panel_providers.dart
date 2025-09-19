@@ -4,9 +4,8 @@ import '../models/user.dart';
 import '../services/admin_panel_service.dart';
 
 /// Провайдер для сервиса админ-панели
-final adminPanelServiceProvider = Provider<AdminPanelService>((ref) {
-  return AdminPanelService();
-});
+final adminPanelServiceProvider =
+    Provider<AdminPanelService>((ref) => AdminPanelService());
 
 /// Провайдер для проверки прав администратора
 final isAdminProvider = FutureProvider.family<bool, String>((ref, userId) {
@@ -85,11 +84,10 @@ final adminPermissionProvider =
 });
 
 /// Провайдер для фильтрации пользователей
-final filteredUsersProvider =
-    StreamProvider.family<List<AppUser>, UserFilter>((ref, filter) {
-  return ref.watch(allUsersProvider).when(
-        data: (users) {
-          return Stream.value(users.where((user) {
+final filteredUsersProvider = StreamProvider.family<List<AppUser>, UserFilter>(
+  (ref, filter) => ref.watch(allUsersProvider).when(
+        data: (users) => Stream.value(
+          users.where((user) {
             // Поиск по имени или email
             if (filter.searchQuery.isNotEmpty) {
               final query = filter.searchQuery.toLowerCase();
@@ -121,21 +119,15 @@ final filteredUsersProvider =
             }
 
             return true;
-          }).toList());
-        },
+          }).toList(),
+        ),
         loading: () => Stream.value([]),
         error: (_, __) => Stream.value([]),
-      );
-});
+      ),
+);
 
 /// Фильтр для пользователей
 class UserFilter {
-  final String searchQuery;
-  final UserRole? role;
-  final bool showBannedOnly;
-  final DateTime? startDate;
-  final DateTime? endDate;
-
   UserFilter({
     this.searchQuery = '',
     this.role,
@@ -143,6 +135,11 @@ class UserFilter {
     this.startDate,
     this.endDate,
   });
+  final String searchQuery;
+  final UserRole? role;
+  final bool showBannedOnly;
+  final DateTime? startDate;
+  final DateTime? endDate;
 
   UserFilter copyWith({
     String? searchQuery,
@@ -150,15 +147,14 @@ class UserFilter {
     bool? showBannedOnly,
     DateTime? startDate,
     DateTime? endDate,
-  }) {
-    return UserFilter(
-      searchQuery: searchQuery ?? this.searchQuery,
-      role: role ?? this.role,
-      showBannedOnly: showBannedOnly ?? this.showBannedOnly,
-      startDate: startDate ?? this.startDate,
-      endDate: endDate ?? this.endDate,
-    );
-  }
+  }) =>
+      UserFilter(
+        searchQuery: searchQuery ?? this.searchQuery,
+        role: role ?? this.role,
+        showBannedOnly: showBannedOnly ?? this.showBannedOnly,
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+      );
 }
 
 /// Нотификатор для фильтра пользователей
@@ -172,13 +168,12 @@ class UserFilterNotifier extends Notifier<UserFilter> {
 }
 
 /// Провайдер для фильтра пользователей
-final userFilterProvider = NotifierProvider<UserFilterNotifier, UserFilter>(() {
-  return UserFilterNotifier();
-});
+final userFilterProvider =
+    NotifierProvider<UserFilterNotifier, UserFilter>(UserFilterNotifier.new);
 
 /// Провайдер для статистики пользователей
-final userStatsProvider = StreamProvider((ref) {
-  return ref.watch(allUsersProvider).when(
+final userStatsProvider = StreamProvider(
+  (ref) => ref.watch(allUsersProvider).when(
         data: (users) {
           final totalUsers = users.length;
           final activeUsers = users.where((u) => u.isActive).length;
@@ -188,27 +183,23 @@ final userStatsProvider = StreamProvider((ref) {
           final specialists =
               users.where((u) => u.role == UserRole.specialist).length;
 
-          return Stream.value(UserStats(
-            totalUsers: totalUsers,
-            activeUsers: activeUsers,
-            bannedUsers: bannedUsers,
-            customers: customers,
-            specialists: specialists,
-          ));
+          return Stream.value(
+            UserStats(
+              totalUsers: totalUsers,
+              activeUsers: activeUsers,
+              bannedUsers: bannedUsers,
+              customers: customers,
+              specialists: specialists,
+            ),
+          );
         },
         loading: () => Stream.value(UserStats.empty()),
         error: (_, __) => Stream.value(UserStats.empty()),
-      );
-});
+      ),
+);
 
 /// Статистика пользователей
 class UserStats {
-  final int totalUsers;
-  final int activeUsers;
-  final int bannedUsers;
-  final int customers;
-  final int specialists;
-
   UserStats({
     required this.totalUsers,
     required this.activeUsers,
@@ -217,42 +208,47 @@ class UserStats {
     required this.specialists,
   });
 
-  factory UserStats.empty() {
-    return UserStats(
-      totalUsers: 0,
-      activeUsers: 0,
-      bannedUsers: 0,
-      customers: 0,
-      specialists: 0,
-    );
-  }
+  factory UserStats.empty() => UserStats(
+        totalUsers: 0,
+        activeUsers: 0,
+        bannedUsers: 0,
+        customers: 0,
+        specialists: 0,
+      );
+  final int totalUsers;
+  final int activeUsers;
+  final int bannedUsers;
+  final int customers;
+  final int specialists;
 }
 
 /// Провайдер для поиска пользователей
-final userSearchProvider =
-    StreamProvider.family<List<AppUser>, String>((ref, query) {
-  return ref.watch(allUsersProvider).when(
+final userSearchProvider = StreamProvider.family<List<AppUser>, String>(
+  (ref, query) => ref.watch(allUsersProvider).when(
         data: (users) {
           if (query.isEmpty) return Stream.value(users);
 
-          final filtered = users.where((user) {
-            return (user.displayName
-                        ?.toLowerCase()
-                        .contains(query.toLowerCase()) ??
-                    false) ||
-                user.email.toLowerCase().contains(query.toLowerCase());
-          }).toList();
+          final filtered = users
+              .where(
+                (user) =>
+                    (user.displayName
+                            ?.toLowerCase()
+                            .contains(query.toLowerCase()) ??
+                        false) ||
+                    user.email.toLowerCase().contains(query.toLowerCase()),
+              )
+              .toList();
 
           return Stream.value(filtered);
         },
         loading: () => Stream.value([]),
         error: (_, __) => Stream.value([]),
-      );
-});
+      ),
+);
 
 /// Провайдер для уведомлений о новых пользователях
-final newUsersNotificationsProvider = StreamProvider((ref) {
-  return ref.watch(allUsersProvider).when(
+final newUsersNotificationsProvider = StreamProvider(
+  (ref) => ref.watch(allUsersProvider).when(
         data: (users) {
           final now = DateTime.now();
           final oneDayAgo = now.subtract(const Duration(days: 1));
@@ -264,23 +260,22 @@ final newUsersNotificationsProvider = StreamProvider((ref) {
         },
         loading: () => Stream.value([]),
         error: (_, __) => Stream.value([]),
-      );
-});
+      ),
+);
 
 /// Провайдер для заблокированных пользователей
-final bannedUsersProvider = StreamProvider((ref) {
-  return ref.watch(allUsersProvider).when(
-        data: (users) {
-          return Stream.value(users.where((user) => !user.isActive).toList());
-        },
+final bannedUsersProvider = StreamProvider(
+  (ref) => ref.watch(allUsersProvider).when(
+        data: (users) =>
+            Stream.value(users.where((user) => !user.isActive).toList()),
         loading: () => Stream.value([]),
         error: (_, __) => Stream.value([]),
-      );
-});
+      ),
+);
 
 /// Провайдер для активных пользователей
-final activeUsersProvider = StreamProvider((ref) {
-  return ref.watch(allUsersProvider).when(
+final activeUsersProvider = StreamProvider(
+  (ref) => ref.watch(allUsersProvider).when(
         data: (users) {
           final now = DateTime.now();
           final thirtyDaysAgo = now.subtract(const Duration(days: 30));
@@ -295,5 +290,5 @@ final activeUsersProvider = StreamProvider((ref) {
         },
         loading: () => Stream.value([]),
         error: (_, __) => Stream.value([]),
-      );
-});
+      ),
+);

@@ -1,13 +1,13 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/profile_service.dart';
+
 import '../models/customer_profile.dart';
 import '../models/specialist_profile.dart';
 import '../models/user.dart';
+import '../services/profile_service.dart';
 
 /// Провайдер сервиса профилей
-final profileServiceProvider = Provider<ProfileService>((ref) {
-  return ProfileService();
-});
+final profileServiceProvider =
+    Provider<ProfileService>((ref) => ProfileService());
 
 /// Провайдер профиля заказчика
 final customerProfileProvider =
@@ -69,12 +69,6 @@ final profileStatsProvider =
 
 /// Параметры поиска специалистов
 class SearchSpecialistsParams {
-  final String? query;
-  final List<SpecialistCategory>? categories;
-  final double? minRating;
-  final double? maxHourlyRate;
-  final String? location;
-
   const SearchSpecialistsParams({
     this.query,
     this.categories,
@@ -82,6 +76,11 @@ class SearchSpecialistsParams {
     this.maxHourlyRate,
     this.location,
   });
+  final String? query;
+  final List<SpecialistCategory>? categories;
+  final double? minRating;
+  final double? maxHourlyRate;
+  final String? location;
 
   @override
   bool operator ==(Object other) {
@@ -95,44 +94,40 @@ class SearchSpecialistsParams {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(query, categories, minRating, maxHourlyRate, location);
-  }
+  int get hashCode =>
+      Object.hash(query, categories, minRating, maxHourlyRate, location);
 }
 
 /// Провайдер для управления состоянием редактирования профиля заказчика
 final customerProfileEditProvider =
-    NotifierProvider<CustomerProfileEditNotifier, CustomerProfileEditState>(() {
-  return CustomerProfileEditNotifier();
-});
+    NotifierProvider<CustomerProfileEditNotifier, CustomerProfileEditState>(
+        CustomerProfileEditNotifier.new);
 
 /// Состояние редактирования профиля заказчика
 class CustomerProfileEditState {
-  final CustomerProfile? profile;
-  final bool isLoading;
-  final String? errorMessage;
-  final bool isDirty;
-
   const CustomerProfileEditState({
     this.profile,
     this.isLoading = false,
     this.errorMessage,
     this.isDirty = false,
   });
+  final CustomerProfile? profile;
+  final bool isLoading;
+  final String? errorMessage;
+  final bool isDirty;
 
   CustomerProfileEditState copyWith({
     CustomerProfile? profile,
     bool? isLoading,
     String? errorMessage,
     bool? isDirty,
-  }) {
-    return CustomerProfileEditState(
-      profile: profile ?? this.profile,
-      isLoading: isLoading ?? this.isLoading,
-      errorMessage: errorMessage,
-      isDirty: isDirty ?? this.isDirty,
-    );
-  }
+  }) =>
+      CustomerProfileEditState(
+        profile: profile ?? this.profile,
+        isLoading: isLoading ?? this.isLoading,
+        errorMessage: errorMessage,
+        isDirty: isDirty ?? this.isDirty,
+      );
 }
 
 /// Нотификатор для редактирования профиля заказчика
@@ -147,7 +142,7 @@ class CustomerProfileEditNotifier extends Notifier<CustomerProfileEditState> {
 
   /// Загрузить профиль
   Future<void> loadProfile(String userId) async {
-    state = state.copyWith(isLoading: true, errorMessage: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       final profile = await _profileService.getCustomerProfile(userId);
@@ -201,7 +196,7 @@ class CustomerProfileEditNotifier extends Notifier<CustomerProfileEditState> {
   Future<void> saveProfile() async {
     if (state.profile == null) return;
 
-    state = state.copyWith(isLoading: true, errorMessage: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       await _profileService.createOrUpdateCustomerProfile(state.profile!);
@@ -219,44 +214,41 @@ class CustomerProfileEditNotifier extends Notifier<CustomerProfileEditState> {
 
   /// Сбросить изменения
   void reset() {
-    state = state.copyWith(isDirty: false, errorMessage: null);
+    state = state.copyWith(isDirty: false);
   }
 }
 
 /// Провайдер для управления состоянием редактирования профиля специалиста
 final specialistProfileEditProvider =
     NotifierProvider<SpecialistProfileEditNotifier, SpecialistProfileEditState>(
-        () {
-  return SpecialistProfileEditNotifier();
-});
+  SpecialistProfileEditNotifier.new,
+);
 
 /// Состояние редактирования профиля специалиста
 class SpecialistProfileEditState {
-  final SpecialistProfile? profile;
-  final bool isLoading;
-  final String? errorMessage;
-  final bool isDirty;
-
   const SpecialistProfileEditState({
     this.profile,
     this.isLoading = false,
     this.errorMessage,
     this.isDirty = false,
   });
+  final SpecialistProfile? profile;
+  final bool isLoading;
+  final String? errorMessage;
+  final bool isDirty;
 
   SpecialistProfileEditState copyWith({
     SpecialistProfile? profile,
     bool? isLoading,
     String? errorMessage,
     bool? isDirty,
-  }) {
-    return SpecialistProfileEditState(
-      profile: profile ?? this.profile,
-      isLoading: isLoading ?? this.isLoading,
-      errorMessage: errorMessage,
-      isDirty: isDirty ?? this.isDirty,
-    );
-  }
+  }) =>
+      SpecialistProfileEditState(
+        profile: profile ?? this.profile,
+        isLoading: isLoading ?? this.isLoading,
+        errorMessage: errorMessage,
+        isDirty: isDirty ?? this.isDirty,
+      );
 }
 
 /// Нотификатор для редактирования профиля специалиста
@@ -272,7 +264,7 @@ class SpecialistProfileEditNotifier
 
   /// Загрузить профиль
   Future<void> loadProfile(String userId) async {
-    state = state.copyWith(isLoading: true, errorMessage: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       final profile = await _profileService.getSpecialistProfile(userId);
@@ -362,7 +354,7 @@ class SpecialistProfileEditNotifier
   Future<void> saveProfile() async {
     if (state.profile == null) return;
 
-    state = state.copyWith(isLoading: true, errorMessage: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       await _profileService.createOrUpdateSpecialistProfile(state.profile!);
@@ -380,6 +372,6 @@ class SpecialistProfileEditNotifier
 
   /// Сбросить изменения
   void reset() {
-    state = state.copyWith(isDirty: false, errorMessage: null);
+    state = state.copyWith(isDirty: false);
   }
 }

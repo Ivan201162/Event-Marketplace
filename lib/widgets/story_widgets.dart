@@ -1,24 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:image_picker/image_picker.dart';
+
+import '../generated/l10n/app_localizations.dart';
 import '../models/story.dart';
 import '../models/story_type.dart';
-import '../services/story_service.dart';
-import '../services/image_picker_service.dart';
+import '../models/media_type.dart';
 import '../providers/story_providers.dart';
-import '../generated/l10n/app_localizations.dart';
+import '../services/story_service.dart';
 
 /// Виджет для отображения сториса
 class StoryWidget extends ConsumerWidget {
-  final Story story;
-  final VoidCallback? onTap;
-  final bool showProgress;
-
   const StoryWidget({
     super.key,
     required this.story,
     this.onTap,
     this.showProgress = true,
   });
+  final Story story;
+  final VoidCallback? onTap;
+  final bool showProgress;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -45,12 +46,10 @@ class StoryWidget extends ConsumerWidget {
                 Image.network(
                   story.mediaUrl,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[300],
-                      child: const Icon(Icons.image, color: Colors.grey),
-                    );
-                  },
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: Colors.grey[300],
+                    child: const Icon(Icons.image, color: Colors.grey),
+                  ),
                 )
               else if (story.type == StoryType.video)
                 Stack(
@@ -59,13 +58,10 @@ class StoryWidget extends ConsumerWidget {
                       Image.network(
                         story.thumbnailUrl!,
                         fit: BoxFit.cover,
-                        errorBuilder: (context, error, stackTrace) {
-                          return Container(
-                            color: Colors.grey[300],
-                            child:
-                                const Icon(Icons.videocam, color: Colors.grey),
-                          );
-                        },
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          color: Colors.grey[300],
+                          child: const Icon(Icons.videocam, color: Colors.grey),
+                        ),
                       )
                     else
                       Container(
@@ -124,11 +120,6 @@ class StoryWidget extends ConsumerWidget {
 
 /// Виджет для создания сториса
 class CreateStoryWidget extends ConsumerStatefulWidget {
-  final String specialistId;
-  final String specialistName;
-  final String? specialistPhotoUrl;
-  final VoidCallback? onStoryCreated;
-
   const CreateStoryWidget({
     super.key,
     required this.specialistId,
@@ -136,6 +127,10 @@ class CreateStoryWidget extends ConsumerStatefulWidget {
     this.specialistPhotoUrl,
     this.onStoryCreated,
   });
+  final String specialistId;
+  final String specialistName;
+  final String? specialistPhotoUrl;
+  final VoidCallback? onStoryCreated;
 
   @override
   ConsumerState<CreateStoryWidget> createState() => _CreateStoryWidgetState();
@@ -200,31 +195,39 @@ class _CreateStoryWidgetState extends ConsumerState<CreateStoryWidget> {
         _isUploading = true;
       });
 
-      final XFile? file = await _imagePicker.pickMedia(
-        mediaType: type == StoryType.image ? MediaType.image : MediaType.video,
-        source: source,
-      );
+      XFile? file;
+      if (type == StoryType.image) {
+        file = await _imagePicker.pickImage(source: source);
+      } else {
+        file = await _imagePicker.pickVideo(source: source);
+      }
 
       if (file == null) return;
 
       final service = ref.read(storyServiceProvider);
-      await service.createStory(
+      final story = Story(
+        id: '', // Будет установлен при создании
         specialistId: widget.specialistId,
         specialistName: widget.specialistName,
         specialistPhotoUrl: widget.specialistPhotoUrl,
-        type: type,
-        mediaFile: file,
+        mediaUrl: file.path,
+        mediaType: type == StoryType.image ? MediaType.image : MediaType.video,
+        createdAt: DateTime.now(),
+        expiresAt: DateTime.now().add(const Duration(hours: 24)),
       );
+      await service.createStory(story);
 
       widget.onStoryCreated?.call();
 
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(l10n.storyCreatedSuccessfully)),
         );
       }
     } catch (e) {
       if (mounted) {
+        final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('${l10n.errorCreatingStory}: $e'),
@@ -244,14 +247,13 @@ class _CreateStoryWidgetState extends ConsumerState<CreateStoryWidget> {
 
 /// Виджет для отображения списка сторисов
 class StoriesListWidget extends ConsumerWidget {
-  final List<Story> stories;
-  final Function(Story)? onStoryTap;
-
   const StoriesListWidget({
     super.key,
     required this.stories,
     this.onStoryTap,
   });
+  final List<Story> stories;
+  final Function(Story)? onStoryTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -282,14 +284,13 @@ class StoriesListWidget extends ConsumerWidget {
 
 /// Виджет для просмотра сториса в полноэкранном режиме
 class StoryViewerWidget extends ConsumerStatefulWidget {
-  final Story story;
-  final VoidCallback? onClose;
-
   const StoryViewerWidget({
     super.key,
     required this.story,
     this.onClose,
   });
+  final Story story;
+  final VoidCallback? onClose;
 
   @override
   ConsumerState<StoryViewerWidget> createState() => _StoryViewerWidgetState();
@@ -302,12 +303,12 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
     _markAsViewed();
   }
 
-  void _markAsViewed() async {
+  Future<void> _markAsViewed() async {
     try {
       final service = ref.read(storyServiceProvider);
       await service.markStoryAsViewed(
-        storyId: widget.story.id,
-        userId: 'current_user', // TODO: Получить реальный ID пользователя
+        widget.story.id,
+        'current_user', // TODO: Получить реальный ID пользователя
       );
     } catch (e) {
       // Игнорируем ошибки
@@ -315,137 +316,140 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          // Медиа контент
-          Center(
-            child: widget.story.type == StoryType.image
-                ? Image.network(
-                    widget.story.mediaUrl,
-                    fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) {
-                      return const Center(
+  Widget build(BuildContext context) => Scaffold(
+        backgroundColor: Colors.black,
+        body: Stack(
+          children: [
+            // Медиа контент
+            Center(
+              child: widget.story.type == StoryType.image
+                  ? Image.network(
+                      widget.story.mediaUrl,
+                      fit: BoxFit.contain,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Center(
                         child: Icon(Icons.error, color: Colors.white, size: 64),
-                      );
-                    },
-                  )
-                : widget.story.type == StoryType.video
-                    ? const Center(
-                        child: Icon(Icons.play_circle_fill,
-                            color: Colors.white, size: 64),
-                      )
-                    : Center(
-                        child: Text(
-                          widget.story.caption ?? '',
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 24),
-                          textAlign: TextAlign.center,
-                        ),
                       ),
-          ),
-
-          // Заголовок
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 16,
-            left: 16,
-            right: 16,
-            child: Row(
-              children: [
-                CircleAvatar(
-                  backgroundImage: widget.story.specialistPhotoUrl != null
-                      ? NetworkImage(widget.story.specialistPhotoUrl!)
-                      : null,
-                  child: widget.story.specialistPhotoUrl == null
-                      ? const Icon(Icons.person)
-                      : null,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.story.specialistName,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                    )
+                  : widget.story.type == StoryType.video
+                      ? const Center(
+                          child: Icon(
+                            Icons.play_circle_fill,
+                            color: Colors.white,
+                            size: 64,
+                          ),
+                        )
+                      : Center(
+                          child: Text(
+                            widget.story.caption ?? '',
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 24,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
-                      Text(
-                        _formatTimeAgo(widget.story.createdAt),
-                        style: const TextStyle(
-                          color: Colors.white70,
-                          fontSize: 12,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                IconButton(
-                  onPressed: widget.onClose,
-                  icon: const Icon(Icons.close, color: Colors.white),
-                ),
-              ],
             ),
-          ),
 
-          // Подпись
-          if (widget.story.caption != null && widget.story.caption!.isNotEmpty)
+            // Заголовок
             Positioned(
-              bottom: 100,
+              top: MediaQuery.of(context).padding.top + 16,
               left: 16,
               right: 16,
-              child: Container(
-                padding: const EdgeInsets.all(16),
-                decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.5),
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  widget.story.caption!,
-                  style: const TextStyle(color: Colors.white, fontSize: 16),
-                ),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    backgroundImage: widget.story.specialistPhotoUrl != null
+                        ? NetworkImage(widget.story.specialistPhotoUrl!)
+                        : null,
+                    child: widget.story.specialistPhotoUrl == null
+                        ? const Icon(Icons.person)
+                        : null,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.story.specialistName,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          _formatTimeAgo(widget.story.createdAt),
+                          style: const TextStyle(
+                            color: Colors.white70,
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: widget.onClose,
+                    icon: const Icon(Icons.close, color: Colors.white),
+                  ),
+                ],
               ),
             ),
 
-          // Действия
-          Positioned(
-            bottom: 40,
-            right: 16,
-            child: Column(
-              children: [
-                IconButton(
-                  onPressed: () => _likeStory(),
-                  icon: Icon(
-                    widget.story.likes > 0
-                        ? Icons.favorite
-                        : Icons.favorite_border,
-                    color: Colors.white,
-                    size: 32,
+            // Подпись
+            if (widget.story.caption != null &&
+                widget.story.caption!.isNotEmpty)
+              Positioned(
+                bottom: 100,
+                left: 16,
+                right: 16,
+                child: Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.5),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    widget.story.caption!,
+                    style: const TextStyle(color: Colors.white, fontSize: 16),
                   ),
                 ),
-                Text(
-                  widget.story.likes.toString(),
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+              ),
 
-  void _likeStory() async {
+            // Действия
+            Positioned(
+              bottom: 40,
+              right: 16,
+              child: Column(
+                children: [
+                  IconButton(
+                    onPressed: _likeStory,
+                    icon: Icon(
+                      widget.story.likes > 0
+                          ? Icons.favorite
+                          : Icons.favorite_border,
+                      color: Colors.white,
+                      size: 32,
+                    ),
+                  ),
+                  Text(
+                    widget.story.likes.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Future<void> _likeStory() async {
     try {
       final service = ref.read(storyServiceProvider);
       await service.likeStory(
-        storyId: widget.story.id,
-        userId: 'current_user', // TODO: Получить реальный ID пользователя
+        widget.story.id,
+        'current_user', // TODO: Получить реальный ID пользователя
       );
     } catch (e) {
       if (mounted) {

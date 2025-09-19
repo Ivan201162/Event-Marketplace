@@ -1,7 +1,9 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/review.dart';
+
 import '../core/safe_log.dart';
+import '../models/review.dart';
 
 /// Сервис для работы с отзывами
 class ReviewService {
@@ -27,7 +29,8 @@ class ReviewService {
   }) async {
     try {
       SafeLog.info(
-          'ReviewService: Creating review for $targetId by $reviewerId');
+        'ReviewService: Creating review for $targetId by $reviewerId',
+      );
 
       // Проверяем, не оставлял ли пользователь уже отзыв
       final existingReview =
@@ -81,7 +84,7 @@ class ReviewService {
     int limit = 20,
     DocumentSnapshot? startAfter,
   }) {
-    Query query = _firestore
+    var query = _firestore
         .collection(_reviewsCollection)
         .where('targetId', isEqualTo: targetId)
         .where('type', isEqualTo: type.name)
@@ -96,22 +99,26 @@ class ReviewService {
       if (filter.maxRating != null) {
         query = query.where('rating', isLessThanOrEqualTo: filter.maxRating);
       }
-      if (filter.verifiedOnly == true) {
+      if (filter.verifiedOnly ?? false) {
         query = query.where('isVerified', isEqualTo: true);
       }
-      if (filter.withImages == true) {
+      if (filter.withImages ?? false) {
         query = query.where('images', isNotEqualTo: []);
       }
-      if (filter.withResponse == true) {
+      if (filter.withResponse ?? false) {
         query = query.where('response', isNotEqualTo: null);
       }
       if (filter.fromDate != null) {
-        query = query.where('createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(filter.fromDate!));
+        query = query.where(
+          'createdAt',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(filter.fromDate!),
+        );
       }
       if (filter.toDate != null) {
-        query = query.where('createdAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(filter.toDate!));
+        query = query.where(
+          'createdAt',
+          isLessThanOrEqualTo: Timestamp.fromDate(filter.toDate!),
+        );
       }
     }
 
@@ -122,8 +129,7 @@ class ReviewService {
     query = query.limit(limit);
 
     return query.snapshots().map((snapshot) {
-      List<Review> reviews =
-          snapshot.docs.map((doc) => Review.fromDocument(doc)).toList();
+      List<Review> reviews = snapshot.docs.map(Review.fromDocument).toList();
 
       // Применяем клиентские фильтры
       if (filter != null) {
@@ -146,7 +152,9 @@ class ReviewService {
 
   /// Внутренний метод для получения отзыва пользователя
   Future<Review?> _getUserReviewForTarget(
-      String userId, String targetId) async {
+    String userId,
+    String targetId,
+  ) async {
     final query = await _firestore
         .collection(_reviewsCollection)
         .where('reviewerId', isEqualTo: userId)
@@ -298,7 +306,10 @@ class ReviewService {
 
   /// Голосовать за полезность отзыва
   Future<void> voteHelpful(
-      String reviewId, String userId, bool isHelpful) async {
+    String reviewId,
+    String userId,
+    bool isHelpful,
+  ) async {
     try {
       SafeLog.info('ReviewService: Voting helpful for review $reviewId');
 
@@ -380,12 +391,12 @@ class ReviewService {
       } else {
         // Создаем пустую статистику
         return ReviewStats(
-          averageRating: 0.0,
+          averageRating: 0,
           totalReviews: 0,
           ratingDistribution: {},
           verifiedReviews: 0,
           helpfulReviews: 0,
-          helpfulPercentage: 0.0,
+          helpfulPercentage: 0,
           lastUpdated: DateTime.now(),
         );
       }
@@ -396,27 +407,26 @@ class ReviewService {
   }
 
   /// Получить статистику отзывов (Stream)
-  Stream<ReviewStats> getReviewStatsStream(String targetId, ReviewType type) {
-    return _firestore
-        .collection(_reviewStatsCollection)
-        .doc('${targetId}_${type.name}')
-        .snapshots()
-        .map((doc) {
-      if (doc.exists) {
-        return ReviewStats.fromDocument(doc);
-      } else {
-        return ReviewStats(
-          averageRating: 0.0,
-          totalReviews: 0,
-          ratingDistribution: {},
-          verifiedReviews: 0,
-          helpfulReviews: 0,
-          helpfulPercentage: 0.0,
-          lastUpdated: DateTime.now(),
-        );
-      }
-    });
-  }
+  Stream<ReviewStats> getReviewStatsStream(String targetId, ReviewType type) =>
+      _firestore
+          .collection(_reviewStatsCollection)
+          .doc('${targetId}_${type.name}')
+          .snapshots()
+          .map((doc) {
+        if (doc.exists) {
+          return ReviewStats.fromDocument(doc);
+        } else {
+          return ReviewStats(
+            averageRating: 0,
+            totalReviews: 0,
+            ratingDistribution: {},
+            verifiedReviews: 0,
+            helpfulReviews: 0,
+            helpfulPercentage: 0,
+            lastUpdated: DateTime.now(),
+          );
+        }
+      });
 
   /// Поиск отзывов
   Stream<List<Review>> searchReviews({
@@ -425,7 +435,7 @@ class ReviewService {
     ReviewFilter? filter,
     int limit = 20,
   }) {
-    Query queryBuilder = _firestore
+    var queryBuilder = _firestore
         .collection(_reviewsCollection)
         .where('status', isEqualTo: ReviewStatus.approved.name)
         .orderBy('createdAt', descending: true);
@@ -442,8 +452,7 @@ class ReviewService {
     queryBuilder = queryBuilder.limit(limit);
 
     return queryBuilder.snapshots().map((snapshot) {
-      List<Review> reviews =
-          snapshot.docs.map((doc) => Review.fromDocument(doc)).toList();
+      List<Review> reviews = snapshot.docs.map(Review.fromDocument).toList();
 
       // Применяем клиентские фильтры
       if (filter != null) {
@@ -452,12 +461,16 @@ class ReviewService {
 
       // Применяем поисковый запрос
       if (query != null && query.isNotEmpty) {
-        reviews = reviews.where((review) {
-          return review.title.toLowerCase().contains(query.toLowerCase()) ||
-              review.content.toLowerCase().contains(query.toLowerCase()) ||
-              review.tags.any(
-                  (tag) => tag.toLowerCase().contains(query.toLowerCase()));
-        }).toList();
+        reviews = reviews
+            .where(
+              (review) =>
+                  review.title.toLowerCase().contains(query.toLowerCase()) ||
+                  review.content.toLowerCase().contains(query.toLowerCase()) ||
+                  review.tags.any(
+                    (tag) => tag.toLowerCase().contains(query.toLowerCase()),
+                  ),
+            )
+            .toList();
       }
 
       return reviews;
@@ -477,8 +490,7 @@ class ReviewService {
           .where('status', isEqualTo: ReviewStatus.approved.name)
           .get();
 
-      final reviews =
-          reviewsQuery.docs.map((doc) => Review.fromDocument(doc)).toList();
+      final reviews = reviewsQuery.docs.map(Review.fromDocument).toList();
 
       // Вычисляем статистику
       final totalReviews = reviews.length;
@@ -495,7 +507,7 @@ class ReviewService {
       final averageRating = totalRating / totalReviews;
 
       final ratingDistribution = <int, int>{};
-      for (int i = 1; i <= 5; i++) {
+      for (var i = 1; i <= 5; i++) {
         ratingDistribution[i] = reviews.where((r) => r.rating == i).length;
       }
 
@@ -523,49 +535,44 @@ class ReviewService {
       SafeLog.info('ReviewService: Review stats updated successfully');
     } catch (e, stackTrace) {
       SafeLog.error(
-          'ReviewService: Error updating review stats', e, stackTrace);
+        'ReviewService: Error updating review stats',
+        e,
+        stackTrace,
+      );
     }
   }
 
   /// Применить клиентские фильтры
-  List<Review> _applyClientFilters(List<Review> reviews, ReviewFilter filter) {
-    return reviews.where((review) {
-      // Фильтр по тегам
-      if (filter.tags != null && filter.tags!.isNotEmpty) {
-        if (!filter.tags!.any((tag) => review.tags.contains(tag))) {
-          return false;
+  List<Review> _applyClientFilters(List<Review> reviews, ReviewFilter filter) =>
+      reviews.where((review) {
+        // Фильтр по тегам
+        if (filter.tags != null && filter.tags!.isNotEmpty) {
+          if (!filter.tags!.any((tag) => review.tags.contains(tag))) {
+            return false;
+          }
         }
-      }
 
-      return true;
-    }).toList();
-  }
+        return true;
+      }).toList();
 
   /// Получить отзывы пользователя
-  Stream<List<Review>> getUserReviews(String userId, {int limit = 20}) {
-    return _firestore
-        .collection(_reviewsCollection)
-        .where('reviewerId', isEqualTo: userId)
-        .orderBy('createdAt', descending: true)
-        .limit(limit)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) => Review.fromDocument(doc)).toList();
-    });
-  }
+  Stream<List<Review>> getUserReviews(String userId, {int limit = 20}) =>
+      _firestore
+          .collection(_reviewsCollection)
+          .where('reviewerId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
+          .limit(limit)
+          .snapshots()
+          .map((snapshot) => snapshot.docs.map(Review.fromDocument).toList());
 
   /// Получить отзывы на рассмотрении (для админов)
-  Stream<List<Review>> getPendingReviews({int limit = 20}) {
-    return _firestore
-        .collection(_reviewsCollection)
-        .where('status', isEqualTo: ReviewStatus.pending.name)
-        .orderBy('createdAt', descending: true)
-        .limit(limit)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) => Review.fromDocument(doc)).toList();
-    });
-  }
+  Stream<List<Review>> getPendingReviews({int limit = 20}) => _firestore
+      .collection(_reviewsCollection)
+      .where('status', isEqualTo: ReviewStatus.pending.name)
+      .orderBy('createdAt', descending: true)
+      .limit(limit)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map(Review.fromDocument).toList());
 
   /// Отметить отзыв как проверенный
   Future<void> markAsVerified(String reviewId) async {
@@ -588,18 +595,19 @@ class ReviewService {
       SafeLog.info('ReviewService: Review marked as verified successfully');
     } catch (e, stackTrace) {
       SafeLog.error(
-          'ReviewService: Error marking review as verified', e, stackTrace);
+        'ReviewService: Error marking review as verified',
+        e,
+        stackTrace,
+      );
       rethrow;
     }
   }
 
   /// Получить статистику отзывов события (для совместимости)
-  Future<ReviewStats> getEventReviewStats(String eventId) async {
-    return await getReviewStats(eventId, ReviewType.event);
-  }
+  Future<ReviewStats> getEventReviewStats(String eventId) async =>
+      getReviewStats(eventId, ReviewType.event);
 
   /// Получить отзывы события (для совместимости)
-  Stream<List<Review>> getEventReviews(String eventId) {
-    return getReviewsForTarget(eventId, ReviewType.event);
-  }
+  Stream<List<Review>> getEventReviews(String eventId) =>
+      getReviewsForTarget(eventId, ReviewType.event);
 }

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/customer_profile.dart';
-import '../providers/profile_providers.dart';
 import '../providers/auth_providers.dart';
+import '../providers/profile_providers.dart';
 
 class CustomerProfileEditScreen extends ConsumerStatefulWidget {
   const CustomerProfileEditScreen({super.key});
@@ -132,224 +133,227 @@ class _CustomerProfileEditScreenState
     );
   }
 
-  Widget _buildProfilePhoto() {
-    return Center(
-      child: Stack(
-        children: [
-          CircleAvatar(
-            radius: 60,
-            backgroundColor:
-                Theme.of(context).colorScheme.primary.withOpacity(0.1),
-            child: const Icon(
-              Icons.person,
-              size: 60,
-              color: Colors.grey,
-            ),
-          ),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-                shape: BoxShape.circle,
+  Widget _buildProfilePhoto() => Center(
+        child: Stack(
+          children: [
+            CircleAvatar(
+              radius: 60,
+              backgroundColor:
+                  Theme.of(context).colorScheme.primary.withOpacity(0.1),
+              child: const Icon(
+                Icons.person,
+                size: 60,
+                color: Colors.grey,
               ),
-              child: IconButton(
-                icon: const Icon(Icons.camera_alt, color: Colors.white),
-                onPressed: () {
-                  // TODO: Реализовать загрузку фото
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Загрузка фото будет реализована позже')),
-                  );
+            ),
+            Positioned(
+              bottom: 0,
+              right: 0,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  shape: BoxShape.circle,
+                ),
+                child: IconButton(
+                  icon: const Icon(Icons.camera_alt, color: Colors.white),
+                  onPressed: () {
+                    // TODO: Реализовать загрузку фото
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Загрузка фото будет реализована позже'),
+                      ),
+                    );
+                  },
+                ),
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildBasicInfo() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Основная информация',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 16),
+
+              // Биография
+              TextFormField(
+                controller: _bioController,
+                decoration: const InputDecoration(
+                  labelText: 'О себе',
+                  hintText: 'Расскажите о себе и ваших интересах',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 3,
+                onChanged: (value) {
+                  ref
+                      .read(customerProfileEditProvider.notifier)
+                      .updateField(bio: value);
                 },
               ),
-            ),
+              const SizedBox(height: 16),
+
+              // Телефон
+              TextFormField(
+                controller: _phoneController,
+                decoration: const InputDecoration(
+                  labelText: 'Телефон',
+                  hintText: '+7 (999) 123-45-67',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.phone),
+                ),
+                keyboardType: TextInputType.phone,
+                onChanged: (value) {
+                  ref
+                      .read(customerProfileEditProvider.notifier)
+                      .updateField(phoneNumber: value);
+                },
+              ),
+              const SizedBox(height: 16),
+
+              // Локация
+              TextFormField(
+                controller: _locationController,
+                decoration: const InputDecoration(
+                  labelText: 'Город',
+                  hintText: 'Москва',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.location_on),
+                ),
+                onChanged: (value) {
+                  ref
+                      .read(customerProfileEditProvider.notifier)
+                      .updateField(location: value);
+                },
+              ),
+            ],
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildBasicInfo() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Основная информация',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 16),
-
-            // Биография
-            TextFormField(
-              controller: _bioController,
-              decoration: const InputDecoration(
-                labelText: 'О себе',
-                hintText: 'Расскажите о себе и ваших интересах',
-                border: OutlineInputBorder(),
-              ),
-              maxLines: 3,
-              onChanged: (value) {
-                ref
-                    .read(customerProfileEditProvider.notifier)
-                    .updateField(bio: value);
-              },
-            ),
-            const SizedBox(height: 16),
-
-            // Телефон
-            TextFormField(
-              controller: _phoneController,
-              decoration: const InputDecoration(
-                labelText: 'Телефон',
-                hintText: '+7 (999) 123-45-67',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.phone),
-              ),
-              keyboardType: TextInputType.phone,
-              onChanged: (value) {
-                ref
-                    .read(customerProfileEditProvider.notifier)
-                    .updateField(phoneNumber: value);
-              },
-            ),
-            const SizedBox(height: 16),
-
-            // Локация
-            TextFormField(
-              controller: _locationController,
-              decoration: const InputDecoration(
-                labelText: 'Город',
-                hintText: 'Москва',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.location_on),
-              ),
-              onChanged: (value) {
-                ref
-                    .read(customerProfileEditProvider.notifier)
-                    .updateField(location: value);
-              },
-            ),
-          ],
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildMaritalStatus() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Семейное положение',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 16),
-            Wrap(
-              spacing: 8,
-              children: MaritalStatus.values.map((status) {
-                return FilterChip(
-                  label: Text(_getMaritalStatusDisplayName(status)),
-                  selected: _selectedMaritalStatus == status,
-                  onSelected: (selected) {
+  Widget _buildMaritalStatus() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Семейное положение',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 16),
+              Wrap(
+                spacing: 8,
+                children: MaritalStatus.values
+                    .map(
+                      (status) => FilterChip(
+                        label: Text(_getMaritalStatusDisplayName(status)),
+                        selected: _selectedMaritalStatus == status,
+                        onSelected: (selected) {
+                          setState(() {
+                            _selectedMaritalStatus = selected ? status : null;
+                          });
+                          ref
+                              .read(customerProfileEditProvider.notifier)
+                              .updateField(
+                                maritalStatus: _selectedMaritalStatus,
+                              );
+                        },
+                      ),
+                    )
+                    .toList(),
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildImportantDates() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Важные даты',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 16),
+
+              // Дата свадьбы
+              ListTile(
+                leading: const Icon(Icons.favorite),
+                title: const Text('Дата свадьбы'),
+                subtitle: Text(
+                  _weddingDate != null
+                      ? '${_weddingDate!.day}.${_weddingDate!.month}.${_weddingDate!.year}'
+                      : 'Не указана',
+                ),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () async {
+                  final date = await showDatePicker(
+                    context: context,
+                    initialDate: _weddingDate ?? DateTime.now(),
+                    firstDate: DateTime(1900),
+                    lastDate:
+                        DateTime.now().add(const Duration(days: 365 * 10)),
+                  );
+                  if (date != null) {
                     setState(() {
-                      _selectedMaritalStatus = selected ? status : null;
+                      _weddingDate = date;
                     });
                     ref.read(customerProfileEditProvider.notifier).updateField(
-                          maritalStatus: _selectedMaritalStatus,
+                          weddingDate: _weddingDate,
                         );
-                  },
-                );
-              }).toList(),
-            ),
-          ],
+                  }
+                },
+              ),
+
+              // Дата годовщины
+              ListTile(
+                leading: const Icon(Icons.celebration),
+                title: const Text('Дата годовщины'),
+                subtitle: Text(
+                  _anniversaryDate != null
+                      ? '${_anniversaryDate!.day}.${_anniversaryDate!.month}.${_anniversaryDate!.year}'
+                      : 'Не указана',
+                ),
+                trailing: const Icon(Icons.arrow_forward_ios),
+                onTap: () async {
+                  final date = await showDatePicker(
+                    context: context,
+                    initialDate: _anniversaryDate ?? DateTime.now(),
+                    firstDate: DateTime(1900),
+                    lastDate:
+                        DateTime.now().add(const Duration(days: 365 * 10)),
+                  );
+                  if (date != null) {
+                    setState(() {
+                      _anniversaryDate = date;
+                    });
+                    ref.read(customerProfileEditProvider.notifier).updateField(
+                          anniversaryDate: _anniversaryDate,
+                        );
+                  }
+                },
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildImportantDates() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Важные даты',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 16),
-
-            // Дата свадьбы
-            ListTile(
-              leading: const Icon(Icons.favorite),
-              title: const Text('Дата свадьбы'),
-              subtitle: Text(_weddingDate != null
-                  ? '${_weddingDate!.day}.${_weddingDate!.month}.${_weddingDate!.year}'
-                  : 'Не указана'),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () async {
-                final date = await showDatePicker(
-                  context: context,
-                  initialDate: _weddingDate ?? DateTime.now(),
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
-                );
-                if (date != null) {
-                  setState(() {
-                    _weddingDate = date;
-                  });
-                  ref.read(customerProfileEditProvider.notifier).updateField(
-                        weddingDate: _weddingDate,
-                      );
-                }
-              },
-            ),
-
-            // Дата годовщины
-            ListTile(
-              leading: const Icon(Icons.celebration),
-              title: const Text('Дата годовщины'),
-              subtitle: Text(_anniversaryDate != null
-                  ? '${_anniversaryDate!.day}.${_anniversaryDate!.month}.${_anniversaryDate!.year}'
-                  : 'Не указана'),
-              trailing: const Icon(Icons.arrow_forward_ios),
-              onTap: () async {
-                final date = await showDatePicker(
-                  context: context,
-                  initialDate: _anniversaryDate ?? DateTime.now(),
-                  firstDate: DateTime(1900),
-                  lastDate: DateTime.now().add(const Duration(days: 365 * 10)),
-                );
-                if (date != null) {
-                  setState(() {
-                    _anniversaryDate = date;
-                  });
-                  ref.read(customerProfileEditProvider.notifier).updateField(
-                        anniversaryDate: _anniversaryDate,
-                      );
-                }
-              },
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+      );
 
   Widget _buildInterests() {
     final predefinedInterests = [
@@ -364,7 +368,7 @@ class _CustomerProfileEditScreenState
       'Театр',
       'Танцы',
       'Йога',
-      'Готовка'
+      'Готовка',
     ];
 
     return Card(
@@ -418,7 +422,7 @@ class _CustomerProfileEditScreenState
       'Выпускной',
       'Новый год',
       '8 марта',
-      '23 февраля'
+      '23 февраля',
     ];
 
     return Card(
@@ -472,28 +476,26 @@ class _CustomerProfileEditScreenState
     );
   }
 
-  Widget _buildErrorMessage(String message) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.red.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.red),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.error, color: Colors.red),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              message,
-              style: const TextStyle(color: Colors.red),
+  Widget _buildErrorMessage(String message) => Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.red.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.red),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.error, color: Colors.red),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                message,
+                style: const TextStyle(color: Colors.red),
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   String _getMaritalStatusDisplayName(MaritalStatus status) {
     switch (status) {

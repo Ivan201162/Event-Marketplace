@@ -1,256 +1,253 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../models/specialist.dart';
 import '../models/proposal.dart';
 import '../services/proposal_service.dart';
 import 'responsive_layout.dart';
 
 /// Виджет для отображения предложения специалистов
 class ProposalWidget extends ConsumerWidget {
-  final Proposal proposal;
-  final bool isOrganizer;
-  final VoidCallback? onProposalChanged;
-
   const ProposalWidget({
     super.key,
     required this.proposal,
     this.isOrganizer = false,
     this.onProposalChanged,
   });
+  final Proposal proposal;
+  final bool isOrganizer;
+  final VoidCallback? onProposalChanged;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Заголовок с статусом
-          Row(
-            children: [
-              Icon(
-                _getProposalIcon(),
-                color: proposal.status.color,
-                size: 24,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: ResponsiveText(
-                  'Предложение специалистов',
-                  isTitle: true,
-                ),
-              ),
-              _buildStatusChip(),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          // Информация о предложении
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: proposal.status.color.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: proposal.status.color),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+  Widget build(BuildContext context, WidgetRef ref) => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Заголовок с статусом
+            Row(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ResponsiveText(
-                      'Специалистов:',
-                      isSubtitle: true,
-                    ),
-                    ResponsiveText(
-                      '${proposal.specialistCount}',
-                      style: TextStyle(
-                        color: proposal.status.color,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                Icon(
+                  _getProposalIcon(),
+                  color: proposal.status.color,
+                  size: 24,
                 ),
-                const SizedBox(height: 4),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    ResponsiveText(
-                      'Общая стоимость:',
-                      isSubtitle: true,
-                    ),
-                    ResponsiveText(
-                      '${proposal.totalCost.toStringAsFixed(0)} ₽',
-                      style: TextStyle(
-                        color: proposal.status.color,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Предложение специалистов',
+                    style: Theme.of(context).textTheme.headlineSmall,
+                  ),
                 ),
+                _buildStatusChip(),
               ],
             ),
-          ),
 
-          // Сообщение организатора
-          if (proposal.message != null) ...[
             const SizedBox(height: 12),
+
+            // Информация о предложении
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.blue.withValues(alpha: 0.1),
+                color: proposal.status.color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.blue),
+                border: Border.all(color: proposal.status.color),
               ),
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.message, color: Colors.blue, size: 20),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: ResponsiveText(
-                      proposal.message!,
-                      isSubtitle: true,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Специалистов:',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      Text(
+                        '${proposal.specialistCount}',
+                        style: TextStyle(
+                          color: proposal.status.color,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Общая стоимость:',
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
+                      Text(
+                        '${proposal.totalCost.toStringAsFixed(0)} ₽',
+                        style: TextStyle(
+                          color: proposal.status.color,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
             ),
-          ],
 
-          // Список специалистов
-          const SizedBox(height: 12),
-          ResponsiveText(
-            'Предложенные специалисты:',
-            isTitle: true,
-          ),
-
-          const SizedBox(height: 8),
-
-          ...proposal.specialists
-              .map((specialist) => _buildSpecialistCard(specialist)),
-
-          // Кнопки действий
-          if (proposal.canRespond && !isOrganizer) ...[
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () => _acceptProposal(context, ref),
-                    icon: const Icon(Icons.check),
-                    label: const Text('Принять'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.green,
-                      foregroundColor: Colors.white,
-                    ),
-                  ),
+            // Сообщение организатора
+            if (proposal.message != null) ...[
+              const SizedBox(height: 12),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.blue.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.blue),
                 ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () => _rejectProposal(context, ref),
-                    icon: const Icon(Icons.close),
-                    label: const Text('Отклонить'),
-                    style: OutlinedButton.styleFrom(
-                      foregroundColor: Colors.red,
+                child: Row(
+                  children: [
+                    const Icon(Icons.message, color: Colors.blue, size: 20),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        proposal.message!,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-              ],
-            ),
-          ],
-
-          // Информация о времени
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              const Icon(Icons.access_time, size: 16, color: Colors.grey),
-              const SizedBox(width: 4),
-              ResponsiveText(
-                'Создано: ${_formatDate(proposal.createdAt)}',
-                isSubtitle: true,
               ),
             ],
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildStatusChip() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-      decoration: BoxDecoration(
-        color: proposal.status.color.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: proposal.status.color),
-      ),
-      child: Text(
-        proposal.status.displayName,
-        style: TextStyle(
-          color: proposal.status.color,
-          fontSize: 12,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
+            // Список специалистов
+            const SizedBox(height: 12),
+            Text(
+              'Предложенные специалисты:',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
 
-  Widget _buildSpecialistCard(ProposalSpecialist specialist) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ResponsiveText(
-                  specialist.specialistName,
-                  style: const TextStyle(fontWeight: FontWeight.w500),
-                ),
-                ResponsiveText(
-                  specialist.categoryName,
-                  isSubtitle: true,
-                ),
-                if (specialist.description != null) ...[
-                  const SizedBox(height: 4),
-                  ResponsiveText(
-                    specialist.description!,
-                    isSubtitle: true,
+            const SizedBox(height: 8),
+
+            ...proposal.specialists
+                .map((specialist) => _buildSpecialistCard(context, specialist)),
+
+            // Кнопки действий
+            if (proposal.canRespond && !isOrganizer) ...[
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => _acceptProposal(context, ref),
+                      icon: const Icon(Icons.check),
+                      label: const Text('Принять'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => _rejectProposal(context, ref),
+                      icon: const Icon(Icons.close),
+                      label: const Text('Отклонить'),
+                      style: OutlinedButton.styleFrom(
+                        foregroundColor: Colors.red,
+                      ),
+                    ),
                   ),
                 ],
+              ),
+            ],
+
+            // Информация о времени
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                const Icon(Icons.access_time, size: 16, color: Colors.grey),
+                const SizedBox(width: 4),
+                Text(
+                  'Создано: ${_formatDate(proposal.createdAt)}',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
               ],
             ),
+          ],
+        ),
+      );
+
+  Widget _buildStatusChip() => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: proposal.status.color.withValues(alpha: 0.2),
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: proposal.status.color),
+        ),
+        child: Text(
+          proposal.status.displayName,
+          style: TextStyle(
+            color: proposal.status.color,
+            fontSize: 12,
+            fontWeight: FontWeight.bold,
           ),
-          if (specialist.estimatedPrice != null) ...[
-            const SizedBox(width: 8),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              decoration: BoxDecoration(
-                color: Colors.green.withValues(alpha: 0.2),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Text(
-                '${specialist.estimatedPrice!.toStringAsFixed(0)} ₽',
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.green,
-                ),
+        ),
+      );
+
+  Widget _buildSpecialistCard(
+          BuildContext context, ProposalSpecialist specialist) =>
+      Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.grey.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    specialist.specialistName,
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    specialist.categoryName,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  if (specialist.description != null) ...[
+                    const SizedBox(height: 4),
+                    Text(
+                      specialist.description!,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
+                ],
               ),
             ),
+            if (specialist.estimatedPrice != null) ...[
+              const SizedBox(width: 8),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                decoration: BoxDecoration(
+                  color: Colors.green.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Text(
+                  '${specialist.estimatedPrice!.toStringAsFixed(0)} ₽',
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.green,
+                  ),
+                ),
+              ),
+            ],
           ],
-        ],
-      ),
-    );
-  }
+        ),
+      );
 
   IconData _getProposalIcon() {
     switch (proposal.status) {
@@ -278,7 +275,7 @@ class ProposalWidget extends ConsumerWidget {
     }
   }
 
-  void _acceptProposal(BuildContext context, WidgetRef ref) async {
+  Future<void> _acceptProposal(BuildContext context, WidgetRef ref) async {
     try {
       final service = ref.read(proposalServiceProvider);
       await service.acceptProposal(
@@ -319,11 +316,6 @@ class ProposalWidget extends ConsumerWidget {
 
 /// Виджет для создания предложения (для организаторов)
 class CreateProposalWidget extends ConsumerStatefulWidget {
-  final String chatId;
-  final String organizerId;
-  final String customerId;
-  final VoidCallback? onProposalCreated;
-
   const CreateProposalWidget({
     super.key,
     required this.chatId,
@@ -331,6 +323,10 @@ class CreateProposalWidget extends ConsumerStatefulWidget {
     required this.customerId,
     this.onProposalCreated,
   });
+  final String chatId;
+  final String organizerId;
+  final String customerId;
+  final VoidCallback? onProposalCreated;
 
   @override
   ConsumerState<CreateProposalWidget> createState() =>
@@ -349,126 +345,124 @@ class _CreateProposalWidgetState extends ConsumerState<CreateProposalWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.add_circle, color: Colors.blue),
-              const SizedBox(width: 8),
-              ResponsiveText(
-                'Предложить специалистов',
-                isTitle: true,
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          const Text(
-            'Выберите специалистов для предложения клиенту.',
-          ),
-
-          const SizedBox(height: 16),
-
-          // Кнопка выбора специалистов
-          ElevatedButton.icon(
-            onPressed: _isLoading ? null : _selectSpecialists,
-            icon: const Icon(Icons.people),
-            label: Text(_selectedSpecialists.isEmpty
-                ? 'Выбрать специалистов'
-                : 'Выбрано: ${_selectedSpecialists.length}'),
-          ),
-
-          // Список выбранных специалистов
-          if (_selectedSpecialists.isNotEmpty) ...[
-            const SizedBox(height: 16),
-            ResponsiveText(
-              'Выбранные специалисты:',
-              isTitle: true,
-            ),
-            const SizedBox(height: 8),
-            ..._selectedSpecialists
-                .map((specialist) => _buildSelectedSpecialistCard(specialist)),
-          ],
-
-          // Сообщение
-          const SizedBox(height: 16),
-          TextField(
-            controller: _messageController,
-            decoration: const InputDecoration(
-              labelText: 'Сообщение клиенту (необязательно)',
-              border: OutlineInputBorder(),
-              hintText: 'Добавьте комментарий к предложению...',
-            ),
-            maxLines: 3,
-          ),
-
-          // Кнопка создания предложения
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: ElevatedButton.icon(
-                  onPressed: _canCreateProposal() ? _createProposal : null,
-                  icon: _isLoading
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        )
-                      : const Icon(Icons.send),
-                  label:
-                      Text(_isLoading ? 'Создание...' : 'Создать предложение'),
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSelectedSpecialistCard(ProposalSpecialist specialist) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.blue.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.blue),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+  Widget build(BuildContext context) => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                ResponsiveText(
-                  specialist.specialistName,
-                  style: const TextStyle(fontWeight: FontWeight.w500),
-                ),
-                ResponsiveText(
-                  specialist.categoryName,
-                  isSubtitle: true,
+                const Icon(Icons.add_circle, color: Colors.blue),
+                const SizedBox(width: 8),
+                Text(
+                  'Предложить специалистов',
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
               ],
             ),
-          ),
-          IconButton(
-            onPressed: () => _removeSpecialist(specialist),
-            icon: const Icon(Icons.remove_circle, color: Colors.red),
-          ),
-        ],
-      ),
-    );
-  }
 
-  bool _canCreateProposal() {
-    return _selectedSpecialists.isNotEmpty && !_isLoading;
-  }
+            const SizedBox(height: 12),
+
+            const Text(
+              'Выберите специалистов для предложения клиенту.',
+            ),
+
+            const SizedBox(height: 16),
+
+            // Кнопка выбора специалистов
+            ElevatedButton.icon(
+              onPressed: _isLoading ? null : _selectSpecialists,
+              icon: const Icon(Icons.people),
+              label: Text(
+                _selectedSpecialists.isEmpty
+                    ? 'Выбрать специалистов'
+                    : 'Выбрано: ${_selectedSpecialists.length}',
+              ),
+            ),
+
+            // Список выбранных специалистов
+            if (_selectedSpecialists.isNotEmpty) ...[
+              const SizedBox(height: 16),
+              Text(
+                'Выбранные специалисты:',
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              const SizedBox(height: 8),
+              ..._selectedSpecialists.map((specialist) =>
+                  _buildSelectedSpecialistCard(context, specialist)),
+            ],
+
+            // Сообщение
+            const SizedBox(height: 16),
+            TextField(
+              controller: _messageController,
+              decoration: const InputDecoration(
+                labelText: 'Сообщение клиенту (необязательно)',
+                border: OutlineInputBorder(),
+                hintText: 'Добавьте комментарий к предложению...',
+              ),
+              maxLines: 3,
+            ),
+
+            // Кнопка создания предложения
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: ElevatedButton.icon(
+                    onPressed: _canCreateProposal() ? _createProposal : null,
+                    icon: _isLoading
+                        ? const SizedBox(
+                            width: 16,
+                            height: 16,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Icon(Icons.send),
+                    label: Text(
+                        _isLoading ? 'Создание...' : 'Создать предложение'),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildSelectedSpecialistCard(
+          BuildContext context, ProposalSpecialist specialist) =>
+      Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.blue.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.blue),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    specialist.specialistName,
+                    style: const TextStyle(fontWeight: FontWeight.w500),
+                  ),
+                  Text(
+                    specialist.categoryName,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                ],
+              ),
+            ),
+            IconButton(
+              onPressed: () => _removeSpecialist(specialist),
+              icon: const Icon(Icons.remove_circle, color: Colors.red),
+            ),
+          ],
+        ),
+      );
+
+  bool _canCreateProposal() => _selectedSpecialists.isNotEmpty && !_isLoading;
 
   void _selectSpecialists() {
     showDialog(
@@ -490,7 +484,7 @@ class _CreateProposalWidgetState extends ConsumerState<CreateProposalWidget> {
     });
   }
 
-  void _createProposal() async {
+  Future<void> _createProposal() async {
     setState(() {
       _isLoading = true;
     });
@@ -531,20 +525,20 @@ class _CreateProposalWidgetState extends ConsumerState<CreateProposalWidget> {
 }
 
 /// Диалог для отклонения предложения
-class _RejectProposalDialog extends StatefulWidget {
-  final Proposal proposal;
-  final VoidCallback onRejected;
-
+class _RejectProposalDialog extends ConsumerStatefulWidget {
   const _RejectProposalDialog({
     required this.proposal,
     required this.onRejected,
   });
+  final Proposal proposal;
+  final VoidCallback onRejected;
 
   @override
-  State<_RejectProposalDialog> createState() => _RejectProposalDialogState();
+  ConsumerState<_RejectProposalDialog> createState() =>
+      _RejectProposalDialogState();
 }
 
-class _RejectProposalDialogState extends State<_RejectProposalDialog> {
+class _RejectProposalDialogState extends ConsumerState<_RejectProposalDialog> {
   final _reasonController = TextEditingController();
   bool _isLoading = false;
 
@@ -555,48 +549,46 @@ class _RejectProposalDialogState extends State<_RejectProposalDialog> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Отклонить предложение'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text('Вы уверены, что хотите отклонить это предложение?'),
-          const SizedBox(height: 16),
-          TextField(
-            controller: _reasonController,
-            decoration: const InputDecoration(
-              labelText: 'Причина отклонения (необязательно)',
-              border: OutlineInputBorder(),
+  Widget build(BuildContext context) => AlertDialog(
+        title: const Text('Отклонить предложение'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Вы уверены, что хотите отклонить это предложение?'),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _reasonController,
+              decoration: const InputDecoration(
+                labelText: 'Причина отклонения (необязательно)',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
             ),
-            maxLines: 3,
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: _isLoading ? null : () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: _isLoading ? null : _rejectProposal,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: _isLoading
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Text('Отклонить'),
           ),
         ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: _isLoading ? null : () => Navigator.pop(context),
-          child: const Text('Отмена'),
-        ),
-        ElevatedButton(
-          onPressed: _isLoading ? null : _rejectProposal,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
-          ),
-          child: _isLoading
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Text('Отклонить'),
-        ),
-      ],
-    );
-  }
+      );
 
-  void _rejectProposal() async {
+  Future<void> _rejectProposal() async {
     setState(() {
       _isLoading = true;
     });
@@ -637,11 +629,10 @@ class _RejectProposalDialogState extends State<_RejectProposalDialog> {
 
 /// Диалог для выбора специалистов
 class _SelectSpecialistsDialog extends ConsumerStatefulWidget {
-  final Function(List<ProposalSpecialist>) onSpecialistsSelected;
-
   const _SelectSpecialistsDialog({
     required this.onSpecialistsSelected,
   });
+  final Function(List<ProposalSpecialist>) onSpecialistsSelected;
 
   @override
   ConsumerState<_SelectSpecialistsDialog> createState() =>
@@ -654,19 +645,17 @@ class _SelectSpecialistsDialogState
   final List<String> _selectedCategories = [
     'photographer',
     'videographer',
-    'host'
+    'host',
   ]; // TODO: Получить из контекста
 
   @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Выбрать специалистов'),
-      content: SizedBox(
-        width: double.maxFinite,
-        height: 400,
-        child: Consumer(
-          builder: (context, ref, child) {
-            return ref
+  Widget build(BuildContext context) => AlertDialog(
+        title: const Text('Выбрать специалистов'),
+        content: SizedBox(
+          width: double.maxFinite,
+          height: 400,
+          child: Consumer(
+            builder: (context, ref, child) => ref
                 .watch(specialistsForProposalProvider(_selectedCategories))
                 .when(
                   data: (specialists) => ListView.builder(
@@ -680,8 +669,10 @@ class _SelectSpecialistsDialogState
                         title: Text(specialist.name),
                         subtitle: Text(specialist.categories.join(', ')),
                         trailing: isSelected
-                            ? const Icon(Icons.check_circle,
-                                color: Colors.green)
+                            ? const Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                              )
                             : const Icon(Icons.radio_button_unchecked),
                         onTap: () => _toggleSpecialist(specialist),
                       );
@@ -690,27 +681,25 @@ class _SelectSpecialistsDialogState
                   loading: () =>
                       const Center(child: CircularProgressIndicator()),
                   error: (error, stack) => Text('Ошибка: $error'),
-                );
-          },
+                ),
+          ),
         ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: () => Navigator.pop(context),
-          child: const Text('Отмена'),
-        ),
-        ElevatedButton(
-          onPressed: _selectedSpecialists.isEmpty
-              ? null
-              : () {
-                  widget.onSpecialistsSelected(_selectedSpecialists);
-                  Navigator.pop(context);
-                },
-          child: Text('Выбрать (${_selectedSpecialists.length})'),
-        ),
-      ],
-    );
-  }
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: _selectedSpecialists.isEmpty
+                ? null
+                : () {
+                    widget.onSpecialistsSelected(_selectedSpecialists);
+                    Navigator.pop(context);
+                  },
+            child: Text('Выбрать (${_selectedSpecialists.length})'),
+          ),
+        ],
+      );
 
   void _toggleSpecialist(Specialist specialist) {
     setState(() {
@@ -720,27 +709,28 @@ class _SelectSpecialistsDialogState
       if (existingIndex != -1) {
         _selectedSpecialists.removeAt(existingIndex);
       } else {
-        _selectedSpecialists.add(ProposalSpecialist(
-          specialistId: specialist.id,
-          specialistName: specialist.name,
-          categoryId: specialist.categories.first,
-          categoryName: specialist.categories.first,
-          estimatedPrice: specialist.priceRange?.min,
-        ));
+        _selectedSpecialists.add(
+          ProposalSpecialist(
+            specialistId: specialist.id,
+            specialistName: specialist.name,
+            categoryId: specialist.categories.first.name,
+            categoryName: specialist.categories.first.name,
+            estimatedPrice: specialist.min,
+          ),
+        );
       }
     });
   }
 }
 
 /// Провайдер для сервиса предложений
-final proposalServiceProvider = Provider<ProposalService>((ref) {
-  return ProposalService();
-});
+final proposalServiceProvider =
+    Provider<ProposalService>((ref) => ProposalService());
 
 /// Провайдер для специалистов для предложения
 final specialistsForProposalProvider =
     FutureProvider.family<List<Specialist>, List<String>>(
         (ref, categoryIds) async {
   final service = ref.read(proposalServiceProvider);
-  return await service.getSpecialistsForProposal(categoryIds: categoryIds);
+  return service.getSpecialistsForProposal(categoryIds: categoryIds);
 });

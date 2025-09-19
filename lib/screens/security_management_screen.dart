@@ -31,55 +31,52 @@ class _SecurityManagementScreenState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ResponsiveScaffold(
-      body: Column(
-        children: [
-          // Вкладки
-          _buildTabs(),
+  Widget build(BuildContext context) => ResponsiveScaffold(
+        body: Column(
+          children: [
+            // Вкладки
+            _buildTabs(),
 
-          // Контент
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _selectedTab == 'overview'
-                    ? _buildOverviewTab()
-                    : _selectedTab == 'audits'
-                        ? _buildAuditsTab()
-                        : _selectedTab == 'policies'
-                            ? _buildPoliciesTab()
-                            : _selectedTab == 'statistics'
-                                ? _buildStatisticsTab()
-                                : _buildEncryptionTab(),
-          ),
-        ],
-      ),
-    );
-  }
+            // Контент
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _selectedTab == 'overview'
+                      ? _buildOverviewTab()
+                      : _selectedTab == 'audits'
+                          ? _buildAuditsTab()
+                          : _selectedTab == 'policies'
+                              ? _buildPoliciesTab()
+                              : _selectedTab == 'statistics'
+                                  ? _buildStatisticsTab()
+                                  : _buildEncryptionTab(),
+            ),
+          ],
+        ),
+      );
 
-  Widget _buildTabs() {
-    return ResponsiveCard(
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildTabButton('overview', 'Обзор', Icons.security),
-          ),
-          Expanded(
-            child: _buildTabButton('audits', 'Аудит', Icons.assignment),
-          ),
-          Expanded(
-            child: _buildTabButton('policies', 'Политики', Icons.policy),
-          ),
-          Expanded(
-            child: _buildTabButton('statistics', 'Статистика', Icons.analytics),
-          ),
-          Expanded(
-            child: _buildTabButton('encryption', 'Шифрование', Icons.lock),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildTabs() => ResponsiveCard(
+        child: Row(
+          children: [
+            Expanded(
+              child: _buildTabButton('overview', 'Обзор', Icons.security),
+            ),
+            Expanded(
+              child: _buildTabButton('audits', 'Аудит', Icons.assignment),
+            ),
+            Expanded(
+              child: _buildTabButton('policies', 'Политики', Icons.policy),
+            ),
+            Expanded(
+              child:
+                  _buildTabButton('statistics', 'Статистика', Icons.analytics),
+            ),
+            Expanded(
+              child: _buildTabButton('encryption', 'Шифрование', Icons.lock),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -126,183 +123,179 @@ class _SecurityManagementScreenState
     );
   }
 
-  Widget _buildOverviewTab() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          // Основная статистика
-          ResponsiveCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ResponsiveText(
-                  'Обзор безопасности',
-                  isTitle: true,
-                ),
-                const SizedBox(height: 16),
-                if (_statistics == null)
-                  const Center(child: Text('Статистика не загружена'))
-                else
-                  Column(
-                    children: [
-                      // Основные метрики
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildStatCard(
-                              'Всего событий',
-                              '${_statistics!.totalEvents}',
-                              Colors.blue,
-                              Icons.security,
-                            ),
-                          ),
-                          Expanded(
-                            child: _buildStatCard(
-                              'Критических',
-                              '${_statistics!.criticalEvents}',
-                              Colors.red,
-                              Icons.warning,
-                            ),
-                          ),
-                          Expanded(
-                            child: _buildStatCard(
-                              'Разрешено',
-                              '${_statistics!.resolvedEvents}',
-                              Colors.green,
-                              Icons.check_circle,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // Уровень риска
-                      Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: _getRiskColor(_statistics!.overallRiskLevel)
-                              .withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(8),
-                          border: Border.all(
-                              color:
-                                  _getRiskColor(_statistics!.overallRiskLevel)),
-                        ),
-                        child: Row(
+  Widget _buildOverviewTab() => SingleChildScrollView(
+        child: Column(
+          children: [
+            // Основная статистика
+            ResponsiveCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const ResponsiveText(
+                    'Обзор безопасности',
+                    isTitle: true,
+                  ),
+                  const SizedBox(height: 16),
+                  if (_statistics == null)
+                    const Center(child: Text('Статистика не загружена'))
+                  else
+                    Column(
+                      children: [
+                        // Основные метрики
+                        Row(
                           children: [
-                            Icon(
-                              _getRiskIcon(_statistics!.overallRiskLevel),
-                              color:
-                                  _getRiskColor(_statistics!.overallRiskLevel),
-                              size: 32,
-                            ),
-                            const SizedBox(width: 16),
                             Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Общий уровень риска',
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: _getRiskColor(
-                                          _statistics!.overallRiskLevel),
-                                    ),
-                                  ),
-                                  Text(
-                                    _statistics!.overallRiskLevel.displayName,
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      color: _getRiskColor(
-                                          _statistics!.overallRiskLevel),
-                                    ),
-                                  ),
-                                ],
+                              child: _buildStatCard(
+                                'Всего событий',
+                                '${_statistics!.totalEvents}',
+                                Colors.blue,
+                                Icons.security,
+                              ),
+                            ),
+                            Expanded(
+                              child: _buildStatCard(
+                                'Критических',
+                                '${_statistics!.criticalEvents}',
+                                Colors.red,
+                                Icons.warning,
+                              ),
+                            ),
+                            Expanded(
+                              child: _buildStatCard(
+                                'Разрешено',
+                                '${_statistics!.resolvedEvents}',
+                                Colors.green,
+                                Icons.check_circle,
                               ),
                             ),
                           ],
                         ),
+
+                        const SizedBox(height: 16),
+
+                        // Уровень риска
+                        Container(
+                          padding: const EdgeInsets.all(16),
+                          decoration: BoxDecoration(
+                            color: _getRiskColor(_statistics!.overallRiskLevel)
+                                .withValues(alpha: 0.1),
+                            borderRadius: BorderRadius.circular(8),
+                            border: Border.all(
+                              color:
+                                  _getRiskColor(_statistics!.overallRiskLevel),
+                            ),
+                          ),
+                          child: Row(
+                            children: [
+                              Icon(
+                                _getRiskIcon(_statistics!.overallRiskLevel),
+                                color: _getRiskColor(
+                                    _statistics!.overallRiskLevel),
+                                size: 32,
+                              ),
+                              const SizedBox(width: 16),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      'Общий уровень риска',
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        color: _getRiskColor(
+                                          _statistics!.overallRiskLevel,
+                                        ),
+                                      ),
+                                    ),
+                                    Text(
+                                      _statistics!.overallRiskLevel.displayName,
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold,
+                                        color: _getRiskColor(
+                                          _statistics!.overallRiskLevel,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Последние события
+            ResponsiveCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      const ResponsiveText(
+                        'Последние события',
+                        isTitle: true,
+                      ),
+                      const Spacer(),
+                      ElevatedButton.icon(
+                        onPressed: _loadAudits,
+                        icon: const Icon(Icons.refresh),
+                        label: const Text('Обновить'),
                       ),
                     ],
                   ),
+                  const SizedBox(height: 16),
+                  if (_audits.isEmpty)
+                    const Center(child: Text('События не найдены'))
+                  else
+                    ..._audits.take(5).map(_buildAuditCard),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildAuditsTab() => Column(
+        children: [
+          // Заголовок с фильтрами
+          ResponsiveCard(
+            child: Row(
+              children: [
+                const ResponsiveText(
+                  'События аудита',
+                  isTitle: true,
+                ),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadAudits,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
               ],
             ),
           ),
 
-          const SizedBox(height: 16),
-
-          // Последние события
-          ResponsiveCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    ResponsiveText(
-                      'Последние события',
-                      isTitle: true,
-                    ),
-                    const Spacer(),
-                    ElevatedButton.icon(
-                      onPressed: _loadAudits,
-                      icon: const Icon(Icons.refresh),
-                      label: const Text('Обновить'),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                if (_audits.isEmpty)
-                  const Center(child: Text('События не найдены'))
-                else
-                  ..._audits
-                      .take(5)
-                      .map((audit) => _buildAuditCard(audit))
-                      .toList(),
-              ],
-            ),
+          // Список событий
+          Expanded(
+            child: _audits.isEmpty
+                ? const Center(child: Text('События аудита не найдены'))
+                : ListView.builder(
+                    itemCount: _audits.length,
+                    itemBuilder: (context, index) {
+                      final audit = _audits[index];
+                      return _buildAuditCard(audit);
+                    },
+                  ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildAuditsTab() {
-    return Column(
-      children: [
-        // Заголовок с фильтрами
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'События аудита',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _loadAudits,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список событий
-        Expanded(
-          child: _audits.isEmpty
-              ? const Center(child: Text('События аудита не найдены'))
-              : ListView.builder(
-                  itemCount: _audits.length,
-                  itemBuilder: (context, index) {
-                    final audit = _audits[index];
-                    return _buildAuditCard(audit);
-                  },
-                ),
-        ),
-      ],
-    );
-  }
+      );
 
   Widget _buildAuditCard(SecurityAudit audit) {
     final levelColor = _getLevelColor(audit.level);
@@ -396,48 +389,46 @@ class _SecurityManagementScreenState
     );
   }
 
-  Widget _buildPoliciesTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Политики безопасности',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _loadPolicies,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _showCreatePolicyDialog,
-                icon: const Icon(Icons.add),
-                label: const Text('Создать'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список политик
-        Expanded(
-          child: _policies.isEmpty
-              ? const Center(child: Text('Политики не найдены'))
-              : ListView.builder(
-                  itemCount: _policies.length,
-                  itemBuilder: (context, index) {
-                    final policy = _policies[index];
-                    return _buildPolicyCard(policy);
-                  },
+  Widget _buildPoliciesTab() => Column(
+        children: [
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                const ResponsiveText(
+                  'Политики безопасности',
+                  isTitle: true,
                 ),
-        ),
-      ],
-    );
-  }
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadPolicies,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _showCreatePolicyDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Создать'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список политик
+          Expanded(
+            child: _policies.isEmpty
+                ? const Center(child: Text('Политики не найдены'))
+                : ListView.builder(
+                    itemCount: _policies.length,
+                    itemBuilder: (context, index) {
+                      final policy = _policies[index];
+                      return _buildPolicyCard(policy);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildPolicyCard(SecurityPolicy policy) {
     final severityColor = _getLevelColor(policy.severity);
@@ -488,7 +479,8 @@ class _SecurityManagementScreenState
                     value: policy.isEnabled ? 'disable' : 'enable',
                     child: ListTile(
                       leading: Icon(
-                          policy.isEnabled ? Icons.pause : Icons.play_arrow),
+                        policy.isEnabled ? Icons.pause : Icons.play_arrow,
+                      ),
                       title: Text(policy.isEnabled ? 'Отключить' : 'Включить'),
                     ),
                   ),
@@ -513,9 +505,10 @@ class _SecurityManagementScreenState
               _buildInfoChip('Тип', policy.type.displayName, Colors.blue),
               const SizedBox(width: 8),
               _buildInfoChip(
-                  'Статус',
-                  policy.isEnabled ? 'Включена' : 'Отключена',
-                  policy.isEnabled ? Colors.green : Colors.red),
+                'Статус',
+                policy.isEnabled ? 'Включена' : 'Отключена',
+                policy.isEnabled ? Colors.green : Colors.red,
+              ),
             ],
           ),
 
@@ -534,13 +527,15 @@ class _SecurityManagementScreenState
             Wrap(
               spacing: 8,
               runSpacing: 4,
-              children: policy.affectedRoles.map((role) {
-                return Chip(
-                  label: Text(role),
-                  backgroundColor: Colors.orange.withValues(alpha: 0.1),
-                  labelStyle: const TextStyle(fontSize: 12),
-                );
-              }).toList(),
+              children: policy.affectedRoles
+                  .map(
+                    (role) => Chip(
+                      label: Text(role),
+                      backgroundColor: Colors.orange.withValues(alpha: 0.1),
+                      labelStyle: const TextStyle(fontSize: 12),
+                    ),
+                  )
+                  .toList(),
             ),
           ],
 
@@ -567,257 +562,259 @@ class _SecurityManagementScreenState
     );
   }
 
-  Widget _buildStatisticsTab() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          // Основная статистика
-          ResponsiveCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ResponsiveText(
-                  'Статистика безопасности',
-                  isTitle: true,
-                ),
-                const SizedBox(height: 16),
-                if (_statistics == null)
-                  const Center(child: Text('Статистика не загружена'))
-                else
-                  Column(
-                    children: [
-                      // Основные метрики
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildStatCard(
-                              'Всего событий',
-                              '${_statistics!.totalEvents}',
-                              Colors.blue,
-                              Icons.security,
+  Widget _buildStatisticsTab() => SingleChildScrollView(
+        child: Column(
+          children: [
+            // Основная статистика
+            ResponsiveCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const ResponsiveText(
+                    'Статистика безопасности',
+                    isTitle: true,
+                  ),
+                  const SizedBox(height: 16),
+                  if (_statistics == null)
+                    const Center(child: Text('Статистика не загружена'))
+                  else
+                    Column(
+                      children: [
+                        // Основные метрики
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildStatCard(
+                                'Всего событий',
+                                '${_statistics!.totalEvents}',
+                                Colors.blue,
+                                Icons.security,
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: _buildStatCard(
-                              'Критических',
-                              '${_statistics!.criticalEvents}',
-                              Colors.red,
-                              Icons.warning,
+                            Expanded(
+                              child: _buildStatCard(
+                                'Критических',
+                                '${_statistics!.criticalEvents}',
+                                Colors.red,
+                                Icons.warning,
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: _buildStatCard(
-                              'Высоких',
-                              '${_statistics!.highEvents}',
-                              Colors.orange,
-                              Icons.error,
+                            Expanded(
+                              child: _buildStatCard(
+                                'Высоких',
+                                '${_statistics!.highEvents}',
+                                Colors.orange,
+                                Icons.error,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      Row(
-                        children: [
-                          Expanded(
-                            child: _buildStatCard(
-                              'Разрешено',
-                              '${_statistics!.resolvedEvents}',
-                              Colors.green,
-                              Icons.check_circle,
-                            ),
-                          ),
-                          Expanded(
-                            child: _buildStatCard(
-                              'Неразрешенных',
-                              '${_statistics!.unresolvedEvents}',
-                              Colors.red,
-                              Icons.pending,
-                            ),
-                          ),
-                          Expanded(
-                            child: _buildStatCard(
-                              'Процент разрешения',
-                              '${(_statistics!.resolutionRate * 100).toStringAsFixed(1)}%',
-                              Colors.purple,
-                              Icons.percent,
-                            ),
-                          ),
-                        ],
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // События по типам
-                      if (_statistics!.eventsByType.isNotEmpty) ...[
-                        Text(
-                          'События по типам:',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey[600],
-                          ),
+                          ],
                         ),
-                        const SizedBox(height: 8),
-                        ..._statistics!.eventsByType.entries.map((entry) {
-                          return Padding(
-                            padding: const EdgeInsets.only(bottom: 8),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(entry.key),
-                                    Text('${entry.value}'),
-                                  ],
-                                ),
-                                const SizedBox(height: 4),
-                                LinearProgressIndicator(
-                                  value: entry.value / _statistics!.totalEvents,
-                                  backgroundColor:
-                                      Colors.grey.withValues(alpha: 0.3),
-                                  valueColor: AlwaysStoppedAnimation<Color>(
-                                      Colors.blue),
-                                ),
-                              ],
+
+                        const SizedBox(height: 16),
+
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _buildStatCard(
+                                'Разрешено',
+                                '${_statistics!.resolvedEvents}',
+                                Colors.green,
+                                Icons.check_circle,
+                              ),
                             ),
-                          );
-                        }).toList(),
+                            Expanded(
+                              child: _buildStatCard(
+                                'Неразрешенных',
+                                '${_statistics!.unresolvedEvents}',
+                                Colors.red,
+                                Icons.pending,
+                              ),
+                            ),
+                            Expanded(
+                              child: _buildStatCard(
+                                'Процент разрешения',
+                                '${(_statistics!.resolutionRate * 100).toStringAsFixed(1)}%',
+                                Colors.purple,
+                                Icons.percent,
+                              ),
+                            ),
+                          ],
+                        ),
+
+                        const SizedBox(height: 16),
+
+                        // События по типам
+                        if (_statistics!.eventsByType.isNotEmpty) ...[
+                          Text(
+                            'События по типам:',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                          const SizedBox(height: 8),
+                          ..._statistics!.eventsByType.entries.map(
+                            (entry) => Padding(
+                              padding: const EdgeInsets.only(bottom: 8),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(entry.key),
+                                      Text('${entry.value}'),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 4),
+                                  LinearProgressIndicator(
+                                    value:
+                                        entry.value / _statistics!.totalEvents,
+                                    backgroundColor:
+                                        Colors.grey.withValues(alpha: 0.3),
+                                    valueColor:
+                                        const AlwaysStoppedAnimation<Color>(
+                                      Colors.blue,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       ],
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildEncryptionTab() => SingleChildScrollView(
+        child: Column(
+          children: [
+            // Информация о шифровании
+            ResponsiveCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const ResponsiveText(
+                    'Шифрование',
+                    isTitle: true,
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Активные ключи
+                  Row(
+                    children: [
+                      Expanded(
+                        child: _buildStatCard(
+                          'Активные ключи',
+                          '${_securityService.getActiveEncryptionKeys().length}',
+                          Colors.blue,
+                          Icons.vpn_key,
+                        ),
+                      ),
+                      Expanded(
+                        child: _buildStatCard(
+                          'Алгоритм',
+                          'AES-256-CBC',
+                          Colors.green,
+                          Icons.lock,
+                        ),
+                      ),
                     ],
                   ),
-              ],
+
+                  const SizedBox(height: 16),
+
+                  // Действия
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: _showCreateKeyDialog,
+                          icon: const Icon(Icons.add),
+                          label: const Text('Создать ключ'),
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: _testEncryption,
+                          icon: const Icon(Icons.security),
+                          label: const Text('Тест шифрования'),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildEncryptionTab() {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          // Информация о шифровании
-          ResponsiveCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ResponsiveText(
-                  'Шифрование',
-                  isTitle: true,
-                ),
+            const SizedBox(height: 16),
 
-                const SizedBox(height: 16),
-
-                // Активные ключи
-                Row(
-                  children: [
-                    Expanded(
-                      child: _buildStatCard(
-                        'Активные ключи',
-                        '${_securityService.getActiveEncryptionKeys().length}',
-                        Colors.blue,
-                        Icons.vpn_key,
-                      ),
-                    ),
-                    Expanded(
-                      child: _buildStatCard(
-                        'Алгоритм',
-                        'AES-256-CBC',
-                        Colors.green,
-                        Icons.lock,
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 16),
-
-                // Действия
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: _showCreateKeyDialog,
-                        icon: const Icon(Icons.add),
-                        label: const Text('Создать ключ'),
-                      ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: _testEncryption,
-                        icon: const Icon(Icons.security),
-                        label: const Text('Тест шифрования'),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+            // Информация о безопасности
+            ResponsiveCard(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const ResponsiveText(
+                    'Информация о безопасности',
+                    isTitle: true,
+                  ),
+                  const SizedBox(height: 16),
+                  _buildSecurityInfoItem('Версия шифрования', 'AES-256-CBC'),
+                  _buildSecurityInfoItem('Хеширование', 'SHA-256'),
+                  _buildSecurityInfoItem('Длина ключа', '256 бит'),
+                  _buildSecurityInfoItem('Режим шифрования', 'CBC'),
+                  _buildSecurityInfoItem('Заполнение', 'PKCS7'),
+                ],
+              ),
             ),
-          ),
-
-          const SizedBox(height: 16),
-
-          // Информация о безопасности
-          ResponsiveCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ResponsiveText(
-                  'Информация о безопасности',
-                  isTitle: true,
-                ),
-                const SizedBox(height: 16),
-                _buildSecurityInfoItem('Версия шифрования', 'AES-256-CBC'),
-                _buildSecurityInfoItem('Хеширование', 'SHA-256'),
-                _buildSecurityInfoItem('Длина ключа', '256 бит'),
-                _buildSecurityInfoItem('Режим шифрования', 'CBC'),
-                _buildSecurityInfoItem('Заполнение', 'PKCS7'),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   Widget _buildStatCard(
-      String title, String value, Color color, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: color,
+    String title,
+    String value,
+    Color color,
+    IconData icon,
+  ) =>
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 24),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
             ),
-          ),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   Widget _buildLevelChip(SecurityLevel level) {
     final color = _getLevelColor(level);
@@ -840,45 +837,41 @@ class _SecurityManagementScreenState
     );
   }
 
-  Widget _buildInfoChip(String label, String value, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color),
-      ),
-      child: Text(
-        '$label: $value',
-        style: TextStyle(
-          fontSize: 12,
-          color: color,
-          fontWeight: FontWeight.w500,
+  Widget _buildInfoChip(String label, String value, Color color) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color),
         ),
-      ),
-    );
-  }
+        child: Text(
+          '$label: $value',
+          style: TextStyle(
+            fontSize: 12,
+            color: color,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
 
-  Widget _buildSecurityInfoItem(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 150,
-            child: Text(
-              label,
-              style: const TextStyle(fontWeight: FontWeight.w500),
+  Widget _buildSecurityInfoItem(String label, String value) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: Row(
+          children: [
+            SizedBox(
+              width: 150,
+              child: Text(
+                label,
+                style: const TextStyle(fontWeight: FontWeight.w500),
+              ),
             ),
-          ),
-          const Text(': '),
-          Expanded(
-            child: Text(value),
-          ),
-        ],
-      ),
-    );
-  }
+            const Text(': '),
+            Expanded(
+              child: Text(value),
+            ),
+          ],
+        ),
+      );
 
   Color _getLevelColor(SecurityLevel level) {
     switch (level) {
@@ -910,13 +903,9 @@ class _SecurityManagementScreenState
     }
   }
 
-  Color _getRiskColor(SecurityLevel level) {
-    return _getLevelColor(level);
-  }
+  Color _getRiskColor(SecurityLevel level) => _getLevelColor(level);
 
-  IconData _getRiskIcon(SecurityLevel level) {
-    return _getLevelIcon(level);
-  }
+  IconData _getRiskIcon(SecurityLevel level) => _getLevelIcon(level);
 
   IconData _getPolicyIcon(SecurityPolicyType type) {
     switch (type) {
@@ -939,9 +928,8 @@ class _SecurityManagementScreenState
     }
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDateTime(DateTime dateTime) =>
+      '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
 
   Future<void> _loadData() async {
     setState(() {
@@ -1056,7 +1044,8 @@ class _SecurityManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            '${policy.isEnabled ? 'Отключение' : 'Включение'} политики "${policy.name}" будет реализовано'),
+          '${policy.isEnabled ? 'Отключение' : 'Включение'} политики "${policy.name}" будет реализовано',
+        ),
       ),
     );
   }

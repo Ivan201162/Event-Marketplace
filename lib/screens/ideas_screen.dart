@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../core/feature_flags.dart';
 import '../models/idea.dart';
 import '../services/idea_service.dart';
-import '../core/feature_flags.dart';
 
 /// Экран идей в стиле Pinterest
 class IdeasScreen extends ConsumerStatefulWidget {
@@ -92,222 +93,212 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen>
     );
   }
 
-  Widget _buildIdeasList() {
-    return StreamBuilder<List<Idea>>(
-      stream: _ideaService.getPublicIdeas(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+  Widget _buildIdeasList() => StreamBuilder<List<Idea>>(
+        stream: _ideaService.getPublicIdeas(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-        if (snapshot.hasError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.error, size: 64, color: Colors.red),
-                const SizedBox(height: 16),
-                Text('Ошибка загрузки идей: ${snapshot.error}'),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () => setState(() {}),
-                  child: const Text('Повторить'),
-                ),
-              ],
-            ),
-          );
-        }
-
-        final ideas = snapshot.data ?? [];
-        if (ideas.isEmpty) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.lightbulb_outline, size: 64, color: Colors.grey),
-                SizedBox(height: 16),
-                Text('Пока нет идей'),
-              ],
-            ),
-          );
-        }
-
-        return _buildPinterestGrid(ideas);
-      },
-    );
-  }
-
-  Widget _buildPopularIdeasList() {
-    return StreamBuilder<List<Idea>>(
-      stream: _ideaService.getPopularIdeas(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (snapshot.hasError) {
-          return Center(
-            child: Text('Ошибка загрузки популярных идей: ${snapshot.error}'),
-          );
-        }
-
-        final ideas = snapshot.data ?? [];
-        return _buildPinterestGrid(ideas);
-      },
-    );
-  }
-
-  Widget _buildCategoryIdeasList(String category) {
-    return StreamBuilder<List<Idea>>(
-      stream: _ideaService.getIdeasByCategory(category),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (snapshot.hasError) {
-          return Center(
-            child: Text('Ошибка загрузки идей категории: ${snapshot.error}'),
-          );
-        }
-
-        final ideas = snapshot.data ?? [];
-        return _buildPinterestGrid(ideas);
-      },
-    );
-  }
-
-  Widget _buildPinterestGrid(List<Idea> ideas) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: MasonryGridView.count(
-        crossAxisCount: 2,
-        mainAxisSpacing: 8,
-        crossAxisSpacing: 8,
-        itemCount: ideas.length,
-        itemBuilder: (context, index) {
-          final idea = ideas[index];
-          return _buildIdeaCard(idea);
-        },
-      ),
-    );
-  }
-
-  Widget _buildIdeaCard(Idea idea) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => _showIdeaDetails(idea),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (idea.images.isNotEmpty)
-              AspectRatio(
-                aspectRatio: 1.0,
-                child: Image.network(
-                  idea.images.first,
-                  fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[300],
-                      child:
-                          const Icon(Icons.image, size: 48, color: Colors.grey),
-                    );
-                  },
-                ),
-              ),
-            Padding(
-              padding: const EdgeInsets.all(12),
+          if (snapshot.hasError) {
+            return Center(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    idea.title,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    idea.description,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 12,
-                        backgroundImage: idea.authorAvatar != null
-                            ? NetworkImage(idea.authorAvatar!)
-                            : null,
-                        child: idea.authorAvatar == null
-                            ? const Icon(Icons.person, size: 16)
-                            : null,
-                      ),
-                      const SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          idea.authorName,
-                          style: const TextStyle(fontSize: 12),
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 8),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          idea.likedBy.contains(
-                                  'current_user_id') // TODO: Получить реальный ID
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                          color: idea.likedBy.contains('current_user_id')
-                              ? Colors.red
-                              : Colors.grey,
-                        ),
-                        onPressed: () => _toggleLike(idea),
-                        iconSize: 20,
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                      ),
-                      Text('${idea.likesCount}'),
-                      const SizedBox(width: 16),
-                      IconButton(
-                        icon: Icon(
-                          idea.savedBy.contains(
-                                  'current_user_id') // TODO: Получить реальный ID
-                              ? Icons.bookmark
-                              : Icons.bookmark_border,
-                          color: idea.savedBy.contains('current_user_id')
-                              ? Colors.blue
-                              : Colors.grey,
-                        ),
-                        onPressed: () => _toggleSave(idea),
-                        iconSize: 20,
-                        padding: EdgeInsets.zero,
-                        constraints: const BoxConstraints(),
-                      ),
-                      Text('${idea.savesCount}'),
-                    ],
+                  const Icon(Icons.error, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text('Ошибка загрузки идей: ${snapshot.error}'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => setState(() {}),
+                    child: const Text('Повторить'),
                   ),
                 ],
               ),
-            ),
-          ],
+            );
+          }
+
+          final ideas = snapshot.data ?? [];
+          if (ideas.isEmpty) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.lightbulb_outline, size: 64, color: Colors.grey),
+                  SizedBox(height: 16),
+                  Text('Пока нет идей'),
+                ],
+              ),
+            );
+          }
+
+          return _buildPinterestGrid(ideas);
+        },
+      );
+
+  Widget _buildPopularIdeasList() => StreamBuilder<List<Idea>>(
+        stream: _ideaService.getPopularIdeas(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Ошибка загрузки популярных идей: ${snapshot.error}'),
+            );
+          }
+
+          final ideas = snapshot.data ?? [];
+          return _buildPinterestGrid(ideas);
+        },
+      );
+
+  Widget _buildCategoryIdeasList(String category) => StreamBuilder<List<Idea>>(
+        stream: _ideaService.getIdeasByCategory(category),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Ошибка загрузки идей категории: ${snapshot.error}'),
+            );
+          }
+
+          final ideas = snapshot.data ?? [];
+          return _buildPinterestGrid(ideas);
+        },
+      );
+
+  Widget _buildPinterestGrid(List<Idea> ideas) => Padding(
+        padding: const EdgeInsets.all(8),
+        child: MasonryGridView.count(
+          crossAxisCount: 2,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+          itemCount: ideas.length,
+          itemBuilder: (context, index) {
+            final idea = ideas[index];
+            return _buildIdeaCard(idea);
+          },
         ),
-      ),
-    );
-  }
+      );
+
+  Widget _buildIdeaCard(Idea idea) => Card(
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () => _showIdeaDetails(idea),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if (idea.images.isNotEmpty)
+                AspectRatio(
+                  aspectRatio: 1,
+                  child: Image.network(
+                    idea.images.first,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) => Container(
+                      color: Colors.grey[300],
+                      child:
+                          const Icon(Icons.image, size: 48, color: Colors.grey),
+                    ),
+                  ),
+                ),
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      idea.title,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      idea.description,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.grey[600],
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        CircleAvatar(
+                          radius: 12,
+                          backgroundImage: idea.authorAvatar != null
+                              ? NetworkImage(idea.authorAvatar!)
+                              : null,
+                          child: idea.authorAvatar == null
+                              ? const Icon(Icons.person, size: 16)
+                              : null,
+                        ),
+                        const SizedBox(width: 8),
+                        Expanded(
+                          child: Text(
+                            idea.authorName,
+                            style: const TextStyle(fontSize: 12),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 8),
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(
+                            idea.likedBy.contains(
+                              'current_user_id',
+                            ) // TODO: Получить реальный ID
+                                ? Icons.favorite
+                                : Icons.favorite_border,
+                            color: idea.likedBy.contains('current_user_id')
+                                ? Colors.red
+                                : Colors.grey,
+                          ),
+                          onPressed: () => _toggleLike(idea),
+                          iconSize: 20,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                        Text('${idea.likesCount}'),
+                        const SizedBox(width: 16),
+                        IconButton(
+                          icon: Icon(
+                            idea.savedBy.contains(
+                              'current_user_id',
+                            ) // TODO: Получить реальный ID
+                                ? Icons.bookmark
+                                : Icons.bookmark_border,
+                            color: idea.savedBy.contains('current_user_id')
+                                ? Colors.blue
+                                : Colors.grey,
+                          ),
+                          onPressed: () => _toggleSave(idea),
+                          iconSize: 20,
+                          padding: EdgeInsets.zero,
+                          constraints: const BoxConstraints(),
+                        ),
+                        Text('${idea.savesCount}'),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
 
   void _showSearchDialog() {
     showDialog(
@@ -362,7 +353,8 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen>
       builder: (context) => AlertDialog(
         title: const Text('Создать идею'),
         content: const Text(
-            'Функция создания идей будет добавлена в следующих версиях'),
+          'Функция создания идей будет добавлена в следующих версиях',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
@@ -478,12 +470,14 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen>
               if (idea.tags.isNotEmpty)
                 Wrap(
                   spacing: 8,
-                  children: idea.tags.map((tag) {
-                    return Chip(
-                      label: Text(tag),
-                      backgroundColor: Colors.blue.withOpacity(0.1),
-                    );
-                  }).toList(),
+                  children: idea.tags
+                      .map(
+                        (tag) => Chip(
+                          label: Text(tag),
+                          backgroundColor: Colors.blue.withOpacity(0.1),
+                        ),
+                      )
+                      .toList(),
                 ),
             ],
           ),
@@ -516,12 +510,6 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen>
 
 /// Виджет для создания сетки в стиле Pinterest
 class MasonryGridView extends StatelessWidget {
-  final int crossAxisCount;
-  final double mainAxisSpacing;
-  final double crossAxisSpacing;
-  final int itemCount;
-  final Widget Function(BuildContext, int) itemBuilder;
-
   const MasonryGridView.count({
     super.key,
     required this.crossAxisCount,
@@ -530,31 +518,28 @@ class MasonryGridView extends StatelessWidget {
     this.mainAxisSpacing = 0.0,
     this.crossAxisSpacing = 0.0,
   });
+  final int crossAxisCount;
+  final double mainAxisSpacing;
+  final double crossAxisSpacing;
+  final int itemCount;
+  final Widget Function(BuildContext, int) itemBuilder;
 
   @override
-  Widget build(BuildContext context) {
-    return CustomScrollView(
-      slivers: [
-        SliverMasonryGrid.count(
-          crossAxisCount: crossAxisCount,
-          mainAxisSpacing: mainAxisSpacing,
-          crossAxisSpacing: crossAxisSpacing,
-          childCount: itemCount,
-          itemBuilder: itemBuilder,
-        ),
-      ],
-    );
-  }
+  Widget build(BuildContext context) => CustomScrollView(
+        slivers: [
+          SliverMasonryGrid.count(
+            crossAxisCount: crossAxisCount,
+            mainAxisSpacing: mainAxisSpacing,
+            crossAxisSpacing: crossAxisSpacing,
+            childCount: itemCount,
+            itemBuilder: itemBuilder,
+          ),
+        ],
+      );
 }
 
 /// Простая реализация SliverMasonryGrid
 class SliverMasonryGrid extends StatelessWidget {
-  final int crossAxisCount;
-  final double mainAxisSpacing;
-  final double crossAxisSpacing;
-  final int childCount;
-  final Widget Function(BuildContext, int) itemBuilder;
-
   const SliverMasonryGrid.count({
     super.key,
     required this.crossAxisCount,
@@ -563,22 +548,23 @@ class SliverMasonryGrid extends StatelessWidget {
     this.mainAxisSpacing = 0.0,
     this.crossAxisSpacing = 0.0,
   });
+  final int crossAxisCount;
+  final double mainAxisSpacing;
+  final double crossAxisSpacing;
+  final int childCount;
+  final Widget Function(BuildContext, int) itemBuilder;
 
   @override
-  Widget build(BuildContext context) {
-    return SliverList(
-      delegate: SliverChildBuilderDelegate(
-        (context, index) {
-          return Padding(
+  Widget build(BuildContext context) => SliverList(
+        delegate: SliverChildBuilderDelegate(
+          (context, index) => Padding(
             padding: EdgeInsets.only(
               bottom: mainAxisSpacing,
               right: (index + 1) % crossAxisCount == 0 ? 0 : crossAxisSpacing,
             ),
             child: itemBuilder(context, index),
-          );
-        },
-        childCount: childCount,
-      ),
-    );
-  }
+          ),
+          childCount: childCount,
+        ),
+      );
 }

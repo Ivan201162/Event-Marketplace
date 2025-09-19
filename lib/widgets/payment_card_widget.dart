@@ -3,12 +3,6 @@ import '../models/payment_extended.dart';
 
 /// Виджет карточки платежа
 class PaymentCardWidget extends StatelessWidget {
-  final PaymentExtended payment;
-  final VoidCallback? onTap;
-  final VoidCallback? onPay;
-  final VoidCallback? onDownloadReceipt;
-  final VoidCallback? onDownloadInvoice;
-
   const PaymentCardWidget({
     super.key,
     required this.payment,
@@ -17,93 +11,96 @@ class PaymentCardWidget extends StatelessWidget {
     this.onDownloadReceipt,
     this.onDownloadInvoice,
   });
+  final PaymentExtended payment;
+  final VoidCallback? onTap;
+  final VoidCallback? onPay;
+  final VoidCallback? onDownloadReceipt;
+  final VoidCallback? onDownloadInvoice;
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Заголовок с статусом
-              Row(
-                children: [
-                  _buildStatusIcon(),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      _getPaymentTypeText(),
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+  Widget build(BuildContext context) => Card(
+        margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Заголовок с статусом
+                Row(
+                  children: [
+                    _buildStatusIcon(),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        _getPaymentTypeText(),
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
-                  ),
-                  _buildStatusChip(),
-                ],
-              ),
+                    _buildStatusChip(),
+                  ],
+                ),
 
-              const SizedBox(height: 12),
-
-              // Суммы
-              _buildAmountsSection(),
-
-              const SizedBox(height: 12),
-
-              // Прогресс оплаты
-              _buildProgressSection(),
-
-              const SizedBox(height: 12),
-
-              // Взносы
-              if (payment.installments.isNotEmpty) ...[
-                _buildInstallmentsSection(),
                 const SizedBox(height: 12),
-              ],
 
-              // Действия
-              _buildActionsSection(context),
+                // Суммы
+                _buildAmountsSection(),
 
-              const SizedBox(height: 8),
+                const SizedBox(height: 12),
 
-              // Информация о дате
-              Row(
-                children: [
-                  Icon(
-                    Icons.access_time,
-                    size: 14,
-                    color: Colors.grey[600],
-                  ),
-                  const SizedBox(width: 4),
-                  Text(
-                    'Создан: ${_formatDate(payment.createdAt)}',
-                    style: TextStyle(
-                      fontSize: 12,
+                // Прогресс оплаты
+                _buildProgressSection(),
+
+                const SizedBox(height: 12),
+
+                // Взносы
+                if (payment.installments.isNotEmpty) ...[
+                  _buildInstallmentsSection(),
+                  const SizedBox(height: 12),
+                ],
+
+                // Действия
+                _buildActionsSection(context),
+
+                const SizedBox(height: 8),
+
+                // Информация о дате
+                Row(
+                  children: [
+                    Icon(
+                      Icons.access_time,
+                      size: 14,
                       color: Colors.grey[600],
                     ),
-                  ),
-                  const Spacer(),
-                  if (payment.updatedAt != payment.createdAt)
+                    const SizedBox(width: 4),
                     Text(
-                      'Обновлен: ${_formatDate(payment.updatedAt)}',
+                      'Создан: ${_formatDate(payment.createdAt)}',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.grey[600],
                       ),
                     ),
-                ],
-              ),
-            ],
+                    const Spacer(),
+                    if (payment.updatedAt != payment.createdAt)
+                      Text(
+                        'Обновлен: ${_formatDate(payment.updatedAt)}',
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildStatusIcon() {
     IconData icon;
@@ -187,186 +184,171 @@ class PaymentCardWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildAmountsSection() {
-    return Row(
-      children: [
-        Expanded(
-          child: _buildAmountItem(
-            'Общая сумма',
-            '${payment.totalAmount.toStringAsFixed(2)} ₽',
-            Colors.black87,
+  Widget _buildAmountsSection() => Row(
+        children: [
+          Expanded(
+            child: _buildAmountItem(
+              'Общая сумма',
+              '${payment.totalAmount.toStringAsFixed(2)} ₽',
+              Colors.black87,
+            ),
           ),
-        ),
-        Expanded(
-          child: _buildAmountItem(
-            'Оплачено',
-            '${payment.paidAmount.toStringAsFixed(2)} ₽',
-            Colors.green[700]!,
+          Expanded(
+            child: _buildAmountItem(
+              'Оплачено',
+              '${payment.paidAmount.toStringAsFixed(2)} ₽',
+              Colors.green[700]!,
+            ),
           ),
-        ),
-        Expanded(
-          child: _buildAmountItem(
-            'Остаток',
-            '${payment.remainingAmount.toStringAsFixed(2)} ₽',
-            Colors.orange[700]!,
+          Expanded(
+            child: _buildAmountItem(
+              'Остаток',
+              '${payment.remainingAmount.toStringAsFixed(2)} ₽',
+              Colors.orange[700]!,
+            ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
 
-  Widget _buildAmountItem(String label, String value, Color color) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Colors.grey[600],
+  Widget _buildAmountItem(String label, String value, Color color) => Column(
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.grey[600],
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          value,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-            color: color,
+          const SizedBox(height: 4),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
 
-  Widget _buildProgressSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
+  Widget _buildProgressSection() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Прогресс оплаты',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
+                ),
+              ),
+              Text(
+                '${payment.paymentProgress.toStringAsFixed(1)}%',
+                style: const TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 4),
+          LinearProgressIndicator(
+            value: payment.paymentProgress / 100,
+            backgroundColor: Colors.grey[300],
+            valueColor: AlwaysStoppedAnimation<Color>(
+              payment.paymentProgress >= 100 ? Colors.green : Colors.blue,
+            ),
+          ),
+        ],
+      );
+
+  Widget _buildInstallmentsSection() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Взносы (${payment.installments.length})',
+            style: const TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          ...payment.installments.take(3).map(_buildInstallmentItem),
+          if (payment.installments.length > 3) ...[
+            const SizedBox(height: 4),
             Text(
-              'Прогресс оплаты',
+              '... и ещё ${payment.installments.length - 3}',
               style: TextStyle(
                 fontSize: 12,
                 color: Colors.grey[600],
+                fontStyle: FontStyle.italic,
+              ),
+            ),
+          ],
+        ],
+      );
+
+  Widget _buildInstallmentItem(PaymentInstallment installment) => Padding(
+        padding: const EdgeInsets.only(bottom: 4),
+        child: Row(
+          children: [
+            Icon(
+              _getInstallmentStatusIcon(installment.status),
+              size: 16,
+              color: _getInstallmentStatusColor(installment.status),
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Text(
+                _formatDate(installment.dueDate),
+                style: const TextStyle(fontSize: 12),
               ),
             ),
             Text(
-              '${payment.paymentProgress.toStringAsFixed(1)}%',
+              '${installment.amount.toStringAsFixed(2)} ₽',
               style: const TextStyle(
                 fontSize: 12,
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.w500,
               ),
             ),
           ],
         ),
-        const SizedBox(height: 4),
-        LinearProgressIndicator(
-          value: payment.paymentProgress / 100,
-          backgroundColor: Colors.grey[300],
-          valueColor: AlwaysStoppedAnimation<Color>(
-            payment.paymentProgress >= 100 ? Colors.green : Colors.blue,
-          ),
-        ),
-      ],
-    );
-  }
+      );
 
-  Widget _buildInstallmentsSection() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Взносы (${payment.installments.length})',
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 8),
-        ...payment.installments.take(3).map((installment) {
-          return _buildInstallmentItem(installment);
-        }).toList(),
-        if (payment.installments.length > 3) ...[
-          const SizedBox(height: 4),
-          Text(
-            '... и ещё ${payment.installments.length - 3}',
-            style: TextStyle(
-              fontSize: 12,
-              color: Colors.grey[600],
-              fontStyle: FontStyle.italic,
-            ),
-          ),
-        ],
-      ],
-    );
-  }
-
-  Widget _buildInstallmentItem(PaymentInstallment installment) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Row(
+  Widget _buildActionsSection(BuildContext context) => Row(
         children: [
-          Icon(
-            _getInstallmentStatusIcon(installment.status),
-            size: 16,
-            color: _getInstallmentStatusColor(installment.status),
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              '${_formatDate(installment.dueDate)}',
-              style: const TextStyle(fontSize: 12),
-            ),
-          ),
-          Text(
-            '${installment.amount.toStringAsFixed(2)} ₽',
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActionsSection(BuildContext context) {
-    return Row(
-      children: [
-        if (payment.remainingAmount > 0 && onPay != null) ...[
-          Expanded(
-            child: ElevatedButton.icon(
-              onPressed: onPay,
-              icon: const Icon(Icons.payment, size: 16),
-              label: const Text('Оплатить'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Theme.of(context).primaryColor,
-                foregroundColor: Colors.white,
+          if (payment.remainingAmount > 0 && onPay != null) ...[
+            Expanded(
+              child: ElevatedButton.icon(
+                onPressed: onPay,
+                icon: const Icon(Icons.payment, size: 16),
+                label: const Text('Оплатить'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).primaryColor,
+                  foregroundColor: Colors.white,
+                ),
               ),
             ),
-          ),
-          const SizedBox(width: 8),
+            const SizedBox(width: 8),
+          ],
+          if (payment.receiptPdfUrl != null && onDownloadReceipt != null) ...[
+            IconButton(
+              onPressed: onDownloadReceipt,
+              icon: const Icon(Icons.receipt),
+              tooltip: 'Скачать квитанцию',
+            ),
+          ],
+          if (payment.invoicePdfUrl != null && onDownloadInvoice != null) ...[
+            IconButton(
+              onPressed: onDownloadInvoice,
+              icon: const Icon(Icons.description),
+              tooltip: 'Скачать счёт',
+            ),
+          ],
         ],
-        if (payment.receiptPdfUrl != null && onDownloadReceipt != null) ...[
-          IconButton(
-            onPressed: onDownloadReceipt,
-            icon: const Icon(Icons.receipt),
-            tooltip: 'Скачать квитанцию',
-          ),
-        ],
-        if (payment.invoicePdfUrl != null && onDownloadInvoice != null) ...[
-          IconButton(
-            onPressed: onDownloadInvoice,
-            icon: const Icon(Icons.description),
-            tooltip: 'Скачать счёт',
-          ),
-        ],
-      ],
-    );
-  }
+      );
 
   IconData _getInstallmentStatusIcon(PaymentStatus status) {
     switch (status) {
@@ -424,7 +406,5 @@ class PaymentCardWidget extends StatelessWidget {
     }
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day}.${date.month}.${date.year}';
-  }
+  String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 }

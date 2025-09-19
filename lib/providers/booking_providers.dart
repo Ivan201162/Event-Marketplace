@@ -3,9 +3,8 @@ import '../models/booking.dart';
 import '../services/booking_service.dart';
 
 /// Провайдер сервиса бронирований
-final bookingServiceProvider = Provider<BookingService>((ref) {
-  return BookingService();
-});
+final bookingServiceProvider =
+    Provider<BookingService>((ref) => BookingService());
 
 /// Провайдер бронирований пользователя
 final userBookingsProvider =
@@ -52,19 +51,11 @@ final eventBookingStatsProvider =
 
 /// Провайдер для управления состоянием создания бронирования
 final createBookingProvider =
-    NotifierProvider<CreateBookingNotifier, CreateBookingState>(() {
-  return CreateBookingNotifier();
-});
+    NotifierProvider<CreateBookingNotifier, CreateBookingState>(
+        CreateBookingNotifier.new);
 
 /// Состояние создания бронирования
 class CreateBookingState {
-  final int participantsCount;
-  final String? notes;
-  final String? userEmail;
-  final String? userPhone;
-  final bool isLoading;
-  final String? errorMessage;
-
   const CreateBookingState({
     this.participantsCount = 1,
     this.notes,
@@ -73,6 +64,12 @@ class CreateBookingState {
     this.isLoading = false,
     this.errorMessage,
   });
+  final int participantsCount;
+  final String? notes;
+  final String? userEmail;
+  final String? userPhone;
+  final bool isLoading;
+  final String? errorMessage;
 
   CreateBookingState copyWith({
     int? participantsCount,
@@ -81,16 +78,15 @@ class CreateBookingState {
     String? userPhone,
     bool? isLoading,
     String? errorMessage,
-  }) {
-    return CreateBookingState(
-      participantsCount: participantsCount ?? this.participantsCount,
-      notes: notes ?? this.notes,
-      userEmail: userEmail ?? this.userEmail,
-      userPhone: userPhone ?? this.userPhone,
-      isLoading: isLoading ?? this.isLoading,
-      errorMessage: errorMessage,
-    );
-  }
+  }) =>
+      CreateBookingState(
+        participantsCount: participantsCount ?? this.participantsCount,
+        notes: notes ?? this.notes,
+        userEmail: userEmail ?? this.userEmail,
+        userPhone: userPhone ?? this.userPhone,
+        isLoading: isLoading ?? this.isLoading,
+        errorMessage: errorMessage,
+      );
 }
 
 /// Нотификатор для создания бронирования
@@ -105,22 +101,22 @@ class CreateBookingNotifier extends Notifier<CreateBookingState> {
 
   /// Обновить количество участников
   void updateParticipantsCount(int count) {
-    state = state.copyWith(participantsCount: count, errorMessage: null);
+    state = state.copyWith(participantsCount: count);
   }
 
   /// Обновить заметки
   void updateNotes(String? notes) {
-    state = state.copyWith(notes: notes, errorMessage: null);
+    state = state.copyWith(notes: notes);
   }
 
   /// Обновить email пользователя
   void updateUserEmail(String? email) {
-    state = state.copyWith(userEmail: email, errorMessage: null);
+    state = state.copyWith(userEmail: email);
   }
 
   /// Обновить телефон пользователя
   void updateUserPhone(String? phone) {
-    state = state.copyWith(userPhone: phone, errorMessage: null);
+    state = state.copyWith(userPhone: phone);
   }
 
   /// Создать бронирование
@@ -136,11 +132,12 @@ class CreateBookingNotifier extends Notifier<CreateBookingState> {
   }) async {
     if (state.participantsCount <= 0) {
       state = state.copyWith(
-          errorMessage: 'Количество участников должно быть больше 0');
+        errorMessage: 'Количество участников должно быть больше 0',
+      );
       return null;
     }
 
-    state = state.copyWith(isLoading: true, errorMessage: null);
+    state = state.copyWith(isLoading: true);
 
     try {
       final booking = Booking(
@@ -182,6 +179,6 @@ class CreateBookingNotifier extends Notifier<CreateBookingState> {
 
   /// Очистить ошибку
   void clearError() {
-    state = state.copyWith(errorMessage: null);
+    state = state.copyWith();
   }
 }

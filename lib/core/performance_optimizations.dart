@@ -38,38 +38,34 @@ class PerformanceOptimizations {
     double? width,
     double? height,
     BoxFit fit = BoxFit.cover,
-  }) {
-    return Image.network(
-      imageUrl,
-      width: width,
-      height: height,
-      fit: fit,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) return child;
-        return Container(
-          width: width,
-          height: height,
-          color: Colors.grey[300],
-          child: const Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
-      },
-      errorBuilder: (context, error, stackTrace) {
-        return Container(
+  }) =>
+      Image.network(
+        imageUrl,
+        width: width,
+        height: height,
+        fit: fit,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) return child;
+          return Container(
+            width: width,
+            height: height,
+            color: Colors.grey[300],
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
+        },
+        errorBuilder: (context, error, stackTrace) => Container(
           width: width,
           height: height,
           color: Colors.grey[300],
           child: const Icon(Icons.error),
-        );
-      },
-      // Оптимизации для производительности
-      cacheWidth: width?.toInt(),
-      cacheHeight: height?.toInt(),
-      filterQuality: FilterQuality.low,
-      isAntiAlias: false,
-    );
-  }
+        ),
+        // Оптимизации для производительности
+        cacheWidth: width?.toInt(),
+        cacheHeight: height?.toInt(),
+        filterQuality: FilterQuality.low,
+      );
 
   /// Оптимизация списков
   static Widget optimizeList({
@@ -77,22 +73,19 @@ class PerformanceOptimizations {
     ScrollController? controller,
     bool shrinkWrap = false,
     ScrollPhysics? physics,
-  }) {
-    return ListView.builder(
-      controller: controller,
-      shrinkWrap: shrinkWrap,
-      physics: physics,
-      itemCount: children.length,
-      itemBuilder: (context, index) {
-        return children[index];
-      },
-      // Оптимизации для производительности
-      addAutomaticKeepAlives: false,
-      addRepaintBoundaries: false,
-      addSemanticIndexes: false,
-      cacheExtent: 250.0,
-    );
-  }
+  }) =>
+      ListView.builder(
+        controller: controller,
+        shrinkWrap: shrinkWrap,
+        physics: physics,
+        itemCount: children.length,
+        itemBuilder: (context, index) => children[index],
+        // Оптимизации для производительности
+        addAutomaticKeepAlives: false,
+        addRepaintBoundaries: false,
+        addSemanticIndexes: false,
+        cacheExtent: 250,
+      );
 
   /// Оптимизация сеток
   static Widget optimizeGrid({
@@ -103,78 +96,68 @@ class PerformanceOptimizations {
     ScrollController? controller,
     bool shrinkWrap = false,
     ScrollPhysics? physics,
-  }) {
-    return GridView.builder(
-      controller: controller,
-      shrinkWrap: shrinkWrap,
-      physics: physics,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount,
-        mainAxisSpacing: mainAxisSpacing,
-        crossAxisSpacing: crossAxisSpacing,
-        childAspectRatio: 1.0,
-      ),
-      itemCount: children.length,
-      itemBuilder: (context, index) {
-        return children[index];
-      },
-      // Оптимизации для производительности
-      addAutomaticKeepAlives: false,
-      addRepaintBoundaries: false,
-      addSemanticIndexes: false,
-      cacheExtent: 250.0,
-    );
-  }
+  }) =>
+      GridView.builder(
+        controller: controller,
+        shrinkWrap: shrinkWrap,
+        physics: physics,
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: crossAxisCount,
+          mainAxisSpacing: mainAxisSpacing,
+          crossAxisSpacing: crossAxisSpacing,
+        ),
+        itemCount: children.length,
+        itemBuilder: (context, index) => children[index],
+        // Оптимизации для производительности
+        addAutomaticKeepAlives: false,
+        addRepaintBoundaries: false,
+        addSemanticIndexes: false,
+        cacheExtent: 250,
+      );
 
   /// Оптимизация анимаций
   static Widget optimizeAnimation({
     required Widget child,
     Duration duration = const Duration(milliseconds: 300),
     Curve curve = Curves.easeInOut,
-  }) {
-    return AnimatedSwitcher(
-      duration: duration,
-      switchInCurve: curve,
-      switchOutCurve: curve,
-      transitionBuilder: (child, animation) {
-        return FadeTransition(
+  }) =>
+      AnimatedSwitcher(
+        duration: duration,
+        switchInCurve: curve,
+        switchOutCurve: curve,
+        transitionBuilder: (child, animation) => FadeTransition(
           opacity: animation,
           child: child,
-        );
-      },
-      child: child,
-    );
-  }
+        ),
+        child: child,
+      );
 
   /// Оптимизация переходов между страницами
   static PageRouteBuilder optimizePageRoute({
     required Widget child,
     Duration duration = const Duration(milliseconds: 300),
     Curve curve = Curves.easeInOut,
-  }) {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => child,
-      transitionDuration: duration,
-      reverseTransitionDuration: duration,
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return FadeTransition(
+  }) =>
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => child,
+        transitionDuration: duration,
+        reverseTransitionDuration: duration,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+            FadeTransition(
           opacity: animation,
           child: child,
-        );
-      },
-    );
-  }
+        ),
+      );
 
   /// Оптимизация провайдеров
   static Provider<T> optimizeProvider<T>({
     required T Function() create,
     String? name,
-  }) {
-    return Provider<T>(
-      create: (ref) => create(),
-      name: name,
-    );
-  }
+  }) =>
+      Provider<T>(
+        create: (ref) => create(),
+        name: name,
+      );
 
   /// Оптимизация состояния
   static StateNotifierProvider<T, U>
@@ -182,25 +165,23 @@ class PerformanceOptimizations {
     required T Function() create,
     required U initial,
     String? name,
-  }) {
-    return StateNotifierProvider<T, U>(
-      create: (ref) => create(),
-      name: name,
-    );
-  }
+  }) =>
+          StateNotifierProvider<T, U>(
+            create: (ref) => create(),
+            name: name,
+          );
 
   /// Оптимизация кэширования
   static Widget optimizeCache({
     required Widget child,
     required String key,
     Duration duration = const Duration(minutes: 30),
-  }) {
-    return CacheProvider(
-      key: key,
-      duration: duration,
-      child: child,
-    );
-  }
+  }) =>
+      CacheProvider(
+        key: key,
+        duration: duration,
+        child: child,
+      );
 
   /// Оптимизация ленивой загрузки
   static Widget optimizeLazyLoad({
@@ -218,21 +199,18 @@ class PerformanceOptimizations {
     required List<Widget> children,
     required double itemHeight,
     ScrollController? controller,
-  }) {
-    return ListView.builder(
-      controller: controller,
-      itemCount: children.length,
-      itemExtent: itemHeight,
-      itemBuilder: (context, index) {
-        return children[index];
-      },
-      // Оптимизации для виртуализации
-      addAutomaticKeepAlives: false,
-      addRepaintBoundaries: false,
-      addSemanticIndexes: false,
-      cacheExtent: 250.0,
-    );
-  }
+  }) =>
+      ListView.builder(
+        controller: controller,
+        itemCount: children.length,
+        itemExtent: itemHeight,
+        itemBuilder: (context, index) => children[index],
+        // Оптимизации для виртуализации
+        addAutomaticKeepAlives: false,
+        addRepaintBoundaries: false,
+        addSemanticIndexes: false,
+        cacheExtent: 250,
+      );
 
   /// Оптимизация рендеринга
   static Widget optimizeRendering({
@@ -254,30 +232,28 @@ class PerformanceOptimizations {
     double? width,
     double? height,
     BoxFit fit = BoxFit.cover,
-  }) {
-    return Image.network(
-      imageUrl,
-      width: width,
-      height: height,
-      fit: fit,
-      // Оптимизации для памяти
-      cacheWidth: width?.toInt(),
-      cacheHeight: height?.toInt(),
-      filterQuality: FilterQuality.low,
-      isAntiAlias: false,
-      // Очистка кэша при нехватке памяти
-      errorBuilder: (context, error, stackTrace) {
-        // Очищаем кэш изображения
-        imageCache.clear();
-        return Container(
-          width: width,
-          height: height,
-          color: Colors.grey[300],
-          child: const Icon(Icons.error),
-        );
-      },
-    );
-  }
+  }) =>
+      Image.network(
+        imageUrl,
+        width: width,
+        height: height,
+        fit: fit,
+        // Оптимизации для памяти
+        cacheWidth: width?.toInt(),
+        cacheHeight: height?.toInt(),
+        filterQuality: FilterQuality.low,
+        // Очистка кэша при нехватке памяти
+        errorBuilder: (context, error, stackTrace) {
+          // Очищаем кэш изображения
+          imageCache.clear();
+          return Container(
+            width: width,
+            height: height,
+            color: Colors.grey[300],
+            child: const Icon(Icons.error),
+          );
+        },
+      );
 
   /// Оптимизация сети
   static Widget optimizeNetwork({
@@ -399,16 +375,16 @@ class PerformanceOptimizations {
 
 /// Провайдер кэша
 class CacheProvider extends StatefulWidget {
-  final Widget child;
-  final String key;
-  final Duration duration;
-
   const CacheProvider({
     super.key,
     required this.child,
     required this.key,
     required this.duration,
   });
+  final Widget child;
+  @override
+  final String key;
+  final Duration duration;
 
   @override
   State<CacheProvider> createState() => _CacheProviderState();
@@ -448,14 +424,13 @@ class _MemoryOptimizer extends WidgetsBindingObserver {
 
 /// Оптимизатор производительности
 class PerformanceOptimizer extends StatefulWidget {
-  final Widget child;
-  final bool enableOptimizations;
-
   const PerformanceOptimizer({
     super.key,
     required this.child,
     this.enableOptimizations = true,
   });
+  final Widget child;
+  final bool enableOptimizations;
 
   @override
   State<PerformanceOptimizer> createState() => _PerformanceOptimizerState();
@@ -471,7 +446,5 @@ class _PerformanceOptimizerState extends State<PerformanceOptimizer> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return widget.child;
-  }
+  Widget build(BuildContext context) => widget.child;
 }

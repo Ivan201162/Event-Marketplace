@@ -2,24 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель идеи для мероприятия
 class EventIdea {
-  final String id;
-  final String title;
-  final String description;
-  final String category;
-  final List<String> imageUrls;
-  final List<String> videoUrls;
-  final String? authorId;
-  final String? authorName;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final List<String> tags;
-  final int likesCount;
-  final int savesCount;
-  final bool isPublic;
-  final String? eventType; // свадьба, день рождения, корпоратив и т.д.
-  final String? budget; // бюджетный, средний, премиум
-  final String? season; // весна, лето, осень, зима
-  final String? venue; // помещение, улица, смешанный
+  // помещение, улица, смешанный
 
   EventIdea({
     required this.id,
@@ -42,29 +25,6 @@ class EventIdea {
     this.venue,
   })  : createdAt = createdAt ?? DateTime.now(),
         updatedAt = updatedAt ?? DateTime.now();
-
-  /// Преобразование в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'title': title,
-      'description': description,
-      'category': category,
-      'imageUrls': imageUrls,
-      'videoUrls': videoUrls,
-      'authorId': authorId,
-      'authorName': authorName,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'tags': tags,
-      'likesCount': likesCount,
-      'savesCount': savesCount,
-      'isPublic': isPublic,
-      'eventType': eventType,
-      'budget': budget,
-      'season': season,
-      'venue': venue,
-    };
-  }
 
   /// Создание из документа Firestore
   factory EventIdea.fromDocument(DocumentSnapshot doc) {
@@ -94,6 +54,45 @@ class EventIdea {
       venue: data['venue'],
     );
   }
+  final String id;
+  final String title;
+  final String description;
+  final String category;
+  final List<String> imageUrls;
+  final List<String> videoUrls;
+  final String? authorId;
+  final String? authorName;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final List<String> tags;
+  final int likesCount;
+  final int savesCount;
+  final bool isPublic;
+  final String? eventType; // свадьба, день рождения, корпоратив и т.д.
+  final String? budget; // бюджетный, средний, премиум
+  final String? season; // весна, лето, осень, зима
+  final String? venue;
+
+  /// Преобразование в Map для Firestore
+  Map<String, dynamic> toMap() => {
+        'title': title,
+        'description': description,
+        'category': category,
+        'imageUrls': imageUrls,
+        'videoUrls': videoUrls,
+        'authorId': authorId,
+        'authorName': authorName,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'tags': tags,
+        'likesCount': likesCount,
+        'savesCount': savesCount,
+        'isPublic': isPublic,
+        'eventType': eventType,
+        'budget': budget,
+        'season': season,
+        'venue': venue,
+      };
 
   /// Копирование с изменениями
   EventIdea copyWith({
@@ -115,33 +114,31 @@ class EventIdea {
     String? budget,
     String? season,
     String? venue,
-  }) {
-    return EventIdea(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      category: category ?? this.category,
-      imageUrls: imageUrls ?? this.imageUrls,
-      videoUrls: videoUrls ?? this.videoUrls,
-      authorId: authorId ?? this.authorId,
-      authorName: authorName ?? this.authorName,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      tags: tags ?? this.tags,
-      likesCount: likesCount ?? this.likesCount,
-      savesCount: savesCount ?? this.savesCount,
-      isPublic: isPublic ?? this.isPublic,
-      eventType: eventType ?? this.eventType,
-      budget: budget ?? this.budget,
-      season: season ?? this.season,
-      venue: venue ?? this.venue,
-    );
-  }
+  }) =>
+      EventIdea(
+        id: id ?? this.id,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        category: category ?? this.category,
+        imageUrls: imageUrls ?? this.imageUrls,
+        videoUrls: videoUrls ?? this.videoUrls,
+        authorId: authorId ?? this.authorId,
+        authorName: authorName ?? this.authorName,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        tags: tags ?? this.tags,
+        likesCount: likesCount ?? this.likesCount,
+        savesCount: savesCount ?? this.savesCount,
+        isPublic: isPublic ?? this.isPublic,
+        eventType: eventType ?? this.eventType,
+        budget: budget ?? this.budget,
+        season: season ?? this.season,
+        venue: venue ?? this.venue,
+      );
 
   @override
-  String toString() {
-    return 'EventIdea(id: $id, title: $title, category: $category, authorId: $authorId)';
-  }
+  String toString() =>
+      'EventIdea(id: $id, title: $title, category: $category, authorId: $authorId)';
 
   @override
   bool operator ==(Object other) {

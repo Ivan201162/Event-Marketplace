@@ -2,22 +2,24 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
-import 'package:flutter/foundation.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:crypto/crypto.dart';
+import 'package:flutter/foundation.dart';
 import 'package:pointycastle/export.dart';
 import 'package:uuid/uuid.dart';
+
 import '../models/security_audit.dart';
 
 /// Сервис безопасности и шифрования
 class SecurityService {
+  factory SecurityService() => _instance;
+  SecurityService._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
   final Random _random = Random.secure();
 
   static final SecurityService _instance = SecurityService._internal();
-  factory SecurityService() => _instance;
-  SecurityService._internal();
 
   final Map<String, String> _encryptionKeys = {};
   final Map<String, SecurityPolicy> _policies = {};
@@ -118,8 +120,9 @@ class SecurityService {
     // Проверяем уровень события
     if (policy.rules.containsKey('minLevel')) {
       final minLevel = SecurityLevel.values.firstWhere(
-          (e) => e.toString().split('.').last == policy.rules['minLevel'],
-          orElse: () => SecurityLevel.info);
+        (e) => e.toString().split('.').last == policy.rules['minLevel'],
+        orElse: () => SecurityLevel.info,
+      );
       if (audit.level.priority < minLevel.priority) return false;
     }
 
@@ -133,7 +136,9 @@ class SecurityService {
 
   /// Применить политику безопасности
   Future<void> _enforcePolicy(
-      SecurityPolicy policy, SecurityAudit audit) async {
+    SecurityPolicy policy,
+    SecurityAudit audit,
+  ) async {
     try {
       final action = policy.rules['action'] as String?;
 
@@ -188,7 +193,9 @@ class SecurityService {
 
   /// Отправить алерт безопасности
   Future<void> _sendSecurityAlert(
-      SecurityPolicy policy, SecurityAudit audit) async {
+    SecurityPolicy policy,
+    SecurityAudit audit,
+  ) async {
     try {
       // TODO: Интеграция с системой уведомлений
       if (kDebugMode) {
@@ -203,7 +210,9 @@ class SecurityService {
 
   /// Применить ограничение скорости
   Future<void> _applyRateLimit(
-      String? userId, Map<String, dynamic> rules) async {
+    String? userId,
+    Map<String, dynamic> rules,
+  ) async {
     if (userId == null) return;
 
     try {
@@ -213,7 +222,8 @@ class SecurityService {
       // TODO: Реализовать rate limiting
       if (kDebugMode) {
         print(
-            'Rate limit applied to user $userId: $limit requests per ${window.inMinutes} minutes');
+          'Rate limit applied to user $userId: $limit requests per ${window.inMinutes} minutes',
+        );
       }
     } catch (e) {
       if (kDebugMode) {
@@ -324,21 +334,23 @@ class SecurityService {
   String generateRandomString(int length, {bool includeSpecialChars = false}) {
     const chars =
         'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    const specialChars = '!@#\$%^&*()_+-=[]{}|;:,.<>?';
+    const specialChars = r'!@#$%^&*()_+-=[]{}|;:,.<>?';
 
     final charSet = includeSpecialChars ? chars + specialChars : chars;
     final random = Random.secure();
 
     return String.fromCharCodes(
       Iterable.generate(
-          length, (_) => charSet.codeUnitAt(random.nextInt(charSet.length))),
+        length,
+        (_) => charSet.codeUnitAt(random.nextInt(charSet.length)),
+      ),
     );
   }
 
   /// Сгенерировать IV
   Uint8List _generateIV() {
     final iv = Uint8List(16);
-    for (int i = 0; i < 16; i++) {
+    for (var i = 0; i < 16; i++) {
       iv[i] = _random.nextInt(256);
     }
     return iv;
@@ -408,7 +420,7 @@ class SecurityService {
     int limit = 100,
   }) async {
     try {
-      Query query = _firestore.collection('securityAudits');
+      var query = _firestore.collection('securityAudits');
 
       if (level != null) {
         query =
@@ -421,20 +433,22 @@ class SecurityService {
         query = query.where('userId', isEqualTo: userId);
       }
       if (startDate != null) {
-        query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where(
+          'timestamp',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+        );
       }
       if (endDate != null) {
-        query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where(
+          'timestamp',
+          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
+        );
       }
 
       final snapshot =
           await query.orderBy('timestamp', descending: true).limit(limit).get();
 
-      return snapshot.docs
-          .map((doc) => SecurityAudit.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(SecurityAudit.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка получения событий аудита: $e');
@@ -508,7 +522,9 @@ class SecurityService {
 
   /// Обновить политику безопасности
   Future<void> updateSecurityPolicy(
-      String policyId, SecurityPolicy updatedPolicy) async {
+    String policyId,
+    SecurityPolicy updatedPolicy,
+  ) async {
     try {
       await _firestore.collection('securityPolicies').doc(policyId).update({
         ...updatedPolicy.toMap(),
@@ -601,9 +617,9 @@ class SecurityService {
   /// Проверить безопасность пароля
   bool validatePassword(String password) {
     if (password.length < 8) return false;
-    if (!password.contains(RegExp(r'[A-Z]'))) return false;
-    if (!password.contains(RegExp(r'[a-z]'))) return false;
-    if (!password.contains(RegExp(r'[0-9]'))) return false;
+    if (!password.contains(RegExp('[A-Z]'))) return false;
+    if (!password.contains(RegExp('[a-z]'))) return false;
+    if (!password.contains(RegExp('[0-9]'))) return false;
     if (!password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) return false;
     return true;
   }
@@ -611,24 +627,19 @@ class SecurityService {
   /// Проверить безопасность токена
   bool validateToken(String token) {
     if (token.length < 32) return false;
-    if (!token.contains(RegExp(r'[A-Za-z0-9]'))) return false;
+    if (!token.contains(RegExp('[A-Za-z0-9]'))) return false;
     return true;
   }
 
   /// Получить недавние события аудита
-  List<SecurityAudit> getRecentAudits() {
-    return List.from(_recentAudits);
-  }
+  List<SecurityAudit> getRecentAudits() => List.from(_recentAudits);
 
   /// Получить активные политики
-  List<SecurityPolicy> getActivePolicies() {
-    return _policies.values.where((policy) => policy.isEnabled).toList();
-  }
+  List<SecurityPolicy> getActivePolicies() =>
+      _policies.values.where((policy) => policy.isEnabled).toList();
 
   /// Получить активные ключи шифрования
-  List<String> getActiveEncryptionKeys() {
-    return _encryptionKeys.keys.toList();
-  }
+  List<String> getActiveEncryptionKeys() => _encryptionKeys.keys.toList();
 
   /// Очистить старые события аудита
   Future<void> cleanupOldAudits({int daysToKeep = 90}) async {

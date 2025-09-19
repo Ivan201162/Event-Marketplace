@@ -1,18 +1,18 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
+
+import 'package:flutter/material.dart';
 
 /// Виджет с ленивой загрузкой
 class LazyLoadWidget extends StatefulWidget {
-  final Widget child;
-  final double? height;
-  final VoidCallback? onVisible;
-
   const LazyLoadWidget({
     super.key,
     required this.child,
     this.height,
     this.onVisible,
   });
+  final Widget child;
+  final double? height;
+  final VoidCallback? onVisible;
 
   @override
   State<LazyLoadWidget> createState() => _LazyLoadWidgetState();
@@ -22,34 +22,31 @@ class _LazyLoadWidgetState extends State<LazyLoadWidget> {
   bool _isVisible = false;
 
   @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: widget.height,
-      child: VisibilityDetector(
-        onVisibilityChanged: (visibilityInfo) {
-          if (visibilityInfo.visibleFraction > 0.1 && !_isVisible) {
-            setState(() {
-              _isVisible = true;
-            });
-            widget.onVisible?.call();
-          }
-        },
-        child: _isVisible ? widget.child : const SizedBox.shrink(),
-      ),
-    );
-  }
+  Widget build(BuildContext context) => SizedBox(
+        height: widget.height,
+        child: VisibilityDetector(
+          onVisibilityChanged: (visibilityInfo) {
+            if (visibilityInfo.visibleFraction > 0.1 && !_isVisible) {
+              setState(() {
+                _isVisible = true;
+              });
+              widget.onVisible?.call();
+            }
+          },
+          child: _isVisible ? widget.child : const SizedBox.shrink(),
+        ),
+      );
 }
 
 /// Простой детектор видимости
 class VisibilityDetector extends StatefulWidget {
-  final Widget child;
-  final Function(VisibilityInfo) onVisibilityChanged;
-
   const VisibilityDetector({
     super.key,
     required this.child,
     required this.onVisibilityChanged,
   });
+  final Widget child;
+  final Function(VisibilityInfo) onVisibilityChanged;
 
   @override
   State<VisibilityDetector> createState() => _VisibilityDetectorState();
@@ -59,22 +56,20 @@ class _VisibilityDetectorState extends State<VisibilityDetector> {
   final GlobalKey _key = GlobalKey();
 
   @override
-  Widget build(BuildContext context) {
-    return NotificationListener<ScrollNotification>(
-      onNotification: (notification) {
-        _checkVisibility();
-        return false;
-      },
-      child: Container(
-        key: _key,
-        child: widget.child,
-      ),
-    );
-  }
+  Widget build(BuildContext context) =>
+      NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          _checkVisibility();
+          return false;
+        },
+        child: Container(
+          key: _key,
+          child: widget.child,
+        ),
+      );
 
   void _checkVisibility() {
-    final RenderBox? renderBox =
-        _key.currentContext?.findRenderObject() as RenderBox?;
+    final renderBox = _key.currentContext?.findRenderObject() as RenderBox?;
     if (renderBox != null) {
       final position = renderBox.localToGlobal(Offset.zero);
       final size = renderBox.size;
@@ -90,7 +85,8 @@ class _VisibilityDetectorState extends State<VisibilityDetector> {
         final visibleFraction = visibleHeight / size.height;
 
         widget.onVisibilityChanged(
-            VisibilityInfo(visibleFraction: visibleFraction));
+          VisibilityInfo(visibleFraction: visibleFraction),
+        );
       }
     }
   }
@@ -98,20 +94,12 @@ class _VisibilityDetectorState extends State<VisibilityDetector> {
 
 /// Информация о видимости
 class VisibilityInfo {
-  final double visibleFraction;
-
   const VisibilityInfo({required this.visibleFraction});
+  final double visibleFraction;
 }
 
 /// Виджет с кэшированием изображений
 class CachedImageWidget extends StatelessWidget {
-  final String imageUrl;
-  final double? width;
-  final double? height;
-  final BoxFit? fit;
-  final Widget? placeholder;
-  final Widget? errorWidget;
-
   const CachedImageWidget({
     super.key,
     required this.imageUrl,
@@ -121,41 +109,39 @@ class CachedImageWidget extends StatelessWidget {
     this.placeholder,
     this.errorWidget,
   });
+  final String imageUrl;
+  final double? width;
+  final double? height;
+  final BoxFit? fit;
+  final Widget? placeholder;
+  final Widget? errorWidget;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width,
-      height: height,
-      child: Image.network(
-        imageUrl,
-        fit: fit,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return placeholder ??
-              const Center(
-                child: CircularProgressIndicator(),
-              );
-        },
-        errorBuilder: (context, error, stackTrace) {
-          return errorWidget ??
+  Widget build(BuildContext context) => SizedBox(
+        width: width,
+        height: height,
+        child: Image.network(
+          imageUrl,
+          fit: fit,
+          loadingBuilder: (context, child, loadingProgress) {
+            if (loadingProgress == null) return child;
+            return placeholder ??
+                const Center(
+                  child: CircularProgressIndicator(),
+                );
+          },
+          errorBuilder: (context, error, stackTrace) =>
+              errorWidget ??
               Container(
                 color: Colors.grey[300],
                 child: const Icon(Icons.error),
-              );
-        },
-      ),
-    );
-  }
+              ),
+        ),
+      );
 }
 
 /// Виджет с виртуализацией списка
 class VirtualizedList extends StatelessWidget {
-  final int itemCount;
-  final Widget Function(BuildContext context, int index) itemBuilder;
-  final double? itemHeight;
-  final EdgeInsets? padding;
-
   const VirtualizedList({
     super.key,
     required this.itemCount,
@@ -163,6 +149,10 @@ class VirtualizedList extends StatelessWidget {
     this.itemHeight,
     this.padding,
   });
+  final int itemCount;
+  final Widget Function(BuildContext context, int index) itemBuilder;
+  final double? itemHeight;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -185,13 +175,6 @@ class VirtualizedList extends StatelessWidget {
 
 /// Виджет с пагинацией
 class PaginatedList extends StatefulWidget {
-  final Future<List<dynamic>> Function(int page, int limit) loadData;
-  final Widget Function(BuildContext context, dynamic item) itemBuilder;
-  final int itemsPerPage;
-  final Widget? loadingWidget;
-  final Widget? errorWidget;
-  final Widget? emptyWidget;
-
   const PaginatedList({
     super.key,
     required this.loadData,
@@ -201,6 +184,12 @@ class PaginatedList extends StatefulWidget {
     this.errorWidget,
     this.emptyWidget,
   });
+  final Future<List<dynamic>> Function(int page, int limit) loadData;
+  final Widget Function(BuildContext context, dynamic item) itemBuilder;
+  final int itemsPerPage;
+  final Widget? loadingWidget;
+  final Widget? errorWidget;
+  final Widget? emptyWidget;
 
   @override
   State<PaginatedList> createState() => _PaginatedListState();
@@ -313,16 +302,15 @@ class _PaginatedListState extends State<PaginatedList> {
 
 /// Виджет с дебаунсом
 class DebouncedWidget extends StatefulWidget {
-  final Widget child;
-  final Duration delay;
-  final VoidCallback? onDebounce;
-
   const DebouncedWidget({
     super.key,
     required this.child,
     this.delay = const Duration(milliseconds: 300),
     this.onDebounce,
   });
+  final Widget child;
+  final Duration delay;
+  final VoidCallback? onDebounce;
 
   @override
   State<DebouncedWidget> createState() => _DebouncedWidgetState();
@@ -345,26 +333,23 @@ class _DebouncedWidgetState extends State<DebouncedWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _debounce,
-      child: widget.child,
-    );
-  }
+  Widget build(BuildContext context) => GestureDetector(
+        onTap: _debounce,
+        child: widget.child,
+      );
 }
 
 /// Виджет с троттлингом
 class ThrottledWidget extends StatefulWidget {
-  final Widget child;
-  final Duration interval;
-  final VoidCallback? onThrottle;
-
   const ThrottledWidget({
     super.key,
     required this.child,
     this.interval = const Duration(milliseconds: 1000),
     this.onThrottle,
   });
+  final Widget child;
+  final Duration interval;
+  final VoidCallback? onThrottle;
 
   @override
   State<ThrottledWidget> createState() => _ThrottledWidgetState();
@@ -382,26 +367,23 @@ class _ThrottledWidgetState extends State<ThrottledWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _throttle,
-      child: widget.child,
-    );
-  }
+  Widget build(BuildContext context) => GestureDetector(
+        onTap: _throttle,
+        child: widget.child,
+      );
 }
 
 /// Виджет с предзагрузкой
 class PreloadWidget extends StatefulWidget {
-  final Widget child;
-  final Future<void> Function() preloadFunction;
-  final Widget? loadingWidget;
-
   const PreloadWidget({
     super.key,
     required this.child,
     required this.preloadFunction,
     this.loadingWidget,
   });
+  final Widget child;
+  final Future<void> Function() preloadFunction;
+  final Widget? loadingWidget;
 
   @override
   State<PreloadWidget> createState() => _PreloadWidgetState();

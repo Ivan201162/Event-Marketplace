@@ -243,6 +243,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Retry'**
   String get retry;
+
+  /// Take photo button text
+  ///
+  /// In en, this message translates to:
+  /// **'Take Photo'**
+  String get takePhoto;
+
+  /// Choose from gallery button text
+  ///
+  /// In en, this message translates to:
+  /// **'Choose from Gallery'**
+  String get chooseFromGallery;
+
+  /// Take video button text
+  ///
+  /// In en, this message translates to:
+  /// **'Take Video'**
+  String get takeVideo;
+
+  /// Choose video from gallery button text
+  ///
+  /// In en, this message translates to:
+  /// **'Choose Video from Gallery'**
+  String get chooseVideoFromGallery;
+
+  /// Story created successfully message
+  ///
+  /// In en, this message translates to:
+  /// **'Story created successfully'**
+  String get storyCreatedSuccessfully;
+
+  /// Error creating story message
+  ///
+  /// In en, this message translates to:
+  /// **'Error creating story'**
+  String get errorCreatingStory;
 }
 
 class _AppLocalizationsDelegate

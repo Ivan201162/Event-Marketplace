@@ -75,167 +75,173 @@ class MyBookingsScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.event_busy,
-            size: 64,
-            color: Colors.grey[400],
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'У вас нет бронирований',
-            style: TextStyle(
-              fontSize: 18,
-              color: Colors.grey[600],
+  Widget _buildEmptyState() => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.event_busy,
+              size: 64,
+              color: Colors.grey[400],
             ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Найдите интересное мероприятие и забронируйте участие',
-            style: TextStyle(color: Colors.grey[500]),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
+            const SizedBox(height: 16),
+            Text(
+              'У вас нет бронирований',
+              style: TextStyle(
+                fontSize: 18,
+                color: Colors.grey[600],
+              ),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Найдите интересное мероприятие и забронируйте участие',
+              style: TextStyle(color: Colors.grey[500]),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
 
   Widget _buildBookingCard(
-      BuildContext context, WidgetRef ref, Booking booking) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 12),
-      child: InkWell(
-        onTap: () {
-          // TODO: Переход к деталям события
-        },
-        borderRadius: BorderRadius.circular(12),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Заголовок и статус
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      booking.eventTitle,
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: _getStatusColor(booking.status).withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color: _getStatusColor(booking.status).withOpacity(0.3),
-                      ),
-                    ),
-                    child: Text(
-                      booking.statusText,
-                      style: TextStyle(
-                        color: _getStatusColor(booking.status),
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 12),
-
-              // Дата мероприятия
-              Row(
-                children: [
-                  const Icon(Icons.calendar_today,
-                      size: 16, color: Colors.grey),
-                  const SizedBox(width: 8),
-                  Text(
-                    '${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year}',
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                  const SizedBox(width: 16),
-                  const Icon(Icons.access_time, size: 16, color: Colors.grey),
-                  const SizedBox(width: 8),
-                  Text(
-                    '${booking.eventDate.hour.toString().padLeft(2, '0')}:${booking.eventDate.minute.toString().padLeft(2, '0')}',
-                    style: const TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 8),
-
-              // Количество участников и стоимость
-              Row(
-                children: [
-                  const Icon(Icons.people, size: 16, color: Colors.blue),
-                  const SizedBox(width: 8),
-                  Text(
-                    '${booking.participantsCount} участник${booking.participantsCount > 1 ? 'а' : ''}',
-                    style: const TextStyle(color: Colors.blue),
-                  ),
-                  const Spacer(),
-                  const Icon(Icons.attach_money, size: 16, color: Colors.green),
-                  const SizedBox(width: 8),
-                  Text(
-                    booking.totalPrice == 0
-                        ? 'Бесплатно'
-                        : '${booking.totalPrice.toStringAsFixed(0)} ₽',
-                    style: const TextStyle(
-                      color: Colors.green,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ],
-              ),
-
-              const SizedBox(height: 12),
-
-              // Кнопки действий
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () {
-                        // TODO: Переход к деталям события
-                      },
-                      icon: const Icon(Icons.visibility, size: 16),
-                      label: const Text('Подробнее'),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  if (booking.canBeCancelled)
+    BuildContext context,
+    WidgetRef ref,
+    Booking booking,
+  ) =>
+      Card(
+        margin: const EdgeInsets.only(bottom: 12),
+        child: InkWell(
+          onTap: () {
+            // TODO: Переход к деталям события
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Заголовок и статус
+                Row(
+                  children: [
                     Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: () =>
-                            _showCancelDialog(context, ref, booking),
-                        icon: const Icon(Icons.cancel, size: 16),
-                        label: const Text('Отменить'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
+                      child: Text(
+                        booking.eventTitle,
+                        style:
+                            Theme.of(context).textTheme.titleMedium?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: _getStatusColor(booking.status).withOpacity(0.1),
+                        borderRadius: BorderRadius.circular(12),
+                        border: Border.all(
+                          color:
+                              _getStatusColor(booking.status).withOpacity(0.3),
+                        ),
+                      ),
+                      child: Text(
+                        booking.statusText,
+                        style: TextStyle(
+                          color: _getStatusColor(booking.status),
+                          fontSize: 12,
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
                     ),
-                ],
-              ),
-            ],
+                  ],
+                ),
+
+                const SizedBox(height: 12),
+
+                // Дата мероприятия
+                Row(
+                  children: [
+                    const Icon(
+                      Icons.calendar_today,
+                      size: 16,
+                      color: Colors.grey,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year}',
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                    const SizedBox(width: 16),
+                    const Icon(Icons.access_time, size: 16, color: Colors.grey),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${booking.eventDate.hour.toString().padLeft(2, '0')}:${booking.eventDate.minute.toString().padLeft(2, '0')}',
+                      style: const TextStyle(color: Colors.grey),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 8),
+
+                // Количество участников и стоимость
+                Row(
+                  children: [
+                    const Icon(Icons.people, size: 16, color: Colors.blue),
+                    const SizedBox(width: 8),
+                    Text(
+                      '${booking.participantsCount} участник${booking.participantsCount > 1 ? 'а' : ''}',
+                      style: const TextStyle(color: Colors.blue),
+                    ),
+                    const Spacer(),
+                    const Icon(Icons.attach_money,
+                        size: 16, color: Colors.green),
+                    const SizedBox(width: 8),
+                    Text(
+                      booking.totalPrice == 0
+                          ? 'Бесплатно'
+                          : '${booking.totalPrice.toStringAsFixed(0)} ₽',
+                      style: const TextStyle(
+                        color: Colors.green,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 12),
+
+                // Кнопки действий
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () {
+                          // TODO: Переход к деталям события
+                        },
+                        icon: const Icon(Icons.visibility, size: 16),
+                        label: const Text('Подробнее'),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    if (booking.canBeCancelled)
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: () =>
+                              _showCancelDialog(context, ref, booking),
+                          icon: const Icon(Icons.cancel, size: 16),
+                          label: const Text('Отменить'),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
   Color _getStatusColor(BookingStatus status) {
     switch (status) {

@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import '../models/group_chat.dart';
+
 import '../models/event.dart';
+import '../models/group_chat.dart';
 
 /// Сервис для работы с групповыми чатами
 class GroupChatService {
@@ -51,7 +52,7 @@ class GroupChatService {
           'allowImageUploads': true,
           'allowVideoUploads': true,
           'maxFileSize': 10 * 1024 * 1024, // 10MB
-        }
+        },
       };
 
       final docRef = await _firestore.collection('group_chats').add(chatData);
@@ -138,23 +139,23 @@ class GroupChatService {
   }
 
   /// Получить сообщения группового чата
-  Stream<List<GroupChatMessage>> getChatMessages(String chatId) {
-    return _firestore
-        .collection('group_chats')
-        .doc(chatId)
-        .collection('messages')
-        .orderBy('createdAt', descending: true)
-        .limit(50)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => GroupChatMessage.fromMap({
+  Stream<List<GroupChatMessage>> getChatMessages(String chatId) => _firestore
+      .collection('group_chats')
+      .doc(chatId)
+      .collection('messages')
+      .orderBy('createdAt', descending: true)
+      .limit(50)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs
+            .map(
+              (doc) => GroupChatMessage.fromMap({
                 'id': doc.id,
                 ...doc.data(),
-              }))
-          .toList();
-    });
-  }
+              }),
+            )
+            .toList(),
+      );
 
   /// Получить групповой чат по ID
   Future<GroupChat?> getGroupChat(String chatId) async {
@@ -199,24 +200,27 @@ class GroupChatService {
   }
 
   /// Получить все групповые чаты пользователя
-  Stream<List<GroupChat>> getUserGroupChats(String userId) {
-    return _firestore
-        .collection('group_chats')
-        .where('participants', arrayContains: {
+  Stream<List<GroupChat>> getUserGroupChats(String userId) => _firestore
+      .collection('group_chats')
+      .where(
+        'participants',
+        arrayContains: {
           'userId': userId,
           'isActive': true,
-        })
-        .orderBy('lastActivityAt', descending: true)
-        .snapshots()
-        .map((snapshot) {
-          return snapshot.docs
-              .map((doc) => GroupChat.fromMap({
-                    'id': doc.id,
-                    ...doc.data(),
-                  }))
-              .toList();
-        });
-  }
+        },
+      )
+      .orderBy('lastActivityAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs
+            .map(
+              (doc) => GroupChat.fromMap({
+                'id': doc.id,
+                ...doc.data(),
+              }),
+            )
+            .toList(),
+      );
 
   /// Добавить гостя в чат по ссылке
   Future<void> addGuestToChat(
@@ -232,9 +236,6 @@ class GroupChatService {
         userPhoto: guestPhoto,
         type: GroupChatParticipantType.guest,
         joinedAt: DateTime.now(),
-        isActive: true,
-        canSendMessages: true,
-        canUploadFiles: true,
       );
 
       await addParticipantToChat(chatId, guest);

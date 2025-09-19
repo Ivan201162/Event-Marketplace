@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/event.dart';
+import '../models/user.dart';
 import '../providers/auth_providers.dart';
 import '../providers/event_providers.dart';
-import '../models/user.dart';
 
 /// Экран создания/редактирования события
 class CreateEventScreen extends ConsumerStatefulWidget {
-  final Event? event; // Для редактирования существующего события
+  // Для редактирования существующего события
 
   const CreateEventScreen({
     super.key,
     this.event,
   });
+  final Event? event;
 
   @override
   ConsumerState<CreateEventScreen> createState() => _CreateEventScreenState();
@@ -32,7 +34,7 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
   DateTime? _endDate;
   EventCategory _category = EventCategory.other;
   int _maxParticipants = 50;
-  double _price = 0.0;
+  double _price = 0;
   bool _isPublic = true;
   List<String> _tags = [];
 
@@ -82,9 +84,11 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.event != null
-            ? 'Редактировать мероприятие'
-            : 'Создать мероприятие'),
+        title: Text(
+          widget.event != null
+              ? 'Редактировать мероприятие'
+              : 'Создать мероприятие',
+        ),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
           TextButton(
@@ -152,9 +156,11 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
                             Text('Сохранение...'),
                           ],
                         )
-                      : Text(widget.event != null
-                          ? 'Обновить мероприятие'
-                          : 'Создать мероприятие'),
+                      : Text(
+                          widget.event != null
+                              ? 'Обновить мероприятие'
+                              : 'Создать мероприятие',
+                        ),
                 ),
               ),
 
@@ -188,295 +194,289 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
     );
   }
 
-  Widget _buildBasicInfoSection() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Основная информация',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+  Widget _buildBasicInfoSection() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Основная информация',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Название мероприятия
-            TextFormField(
-              controller: _titleController,
-              decoration: const InputDecoration(
-                labelText: 'Название мероприятия *',
-                border: OutlineInputBorder(),
-                hintText: 'Введите название мероприятия',
-                prefixIcon: Icon(Icons.event),
+              // Название мероприятия
+              TextFormField(
+                controller: _titleController,
+                decoration: const InputDecoration(
+                  labelText: 'Название мероприятия *',
+                  border: OutlineInputBorder(),
+                  hintText: 'Введите название мероприятия',
+                  prefixIcon: Icon(Icons.event),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Пожалуйста, введите название мероприятия';
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Пожалуйста, введите название мероприятия';
-                }
-                return null;
-              },
-            ),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Описание
-            TextFormField(
-              controller: _descriptionController,
-              decoration: const InputDecoration(
-                labelText: 'Описание *',
-                border: OutlineInputBorder(),
-                hintText: 'Опишите ваше мероприятие',
-                prefixIcon: Icon(Icons.description),
+              // Описание
+              TextFormField(
+                controller: _descriptionController,
+                decoration: const InputDecoration(
+                  labelText: 'Описание *',
+                  border: OutlineInputBorder(),
+                  hintText: 'Опишите ваше мероприятие',
+                  prefixIcon: Icon(Icons.description),
+                ),
+                maxLines: 4,
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Пожалуйста, введите описание мероприятия';
+                  }
+                  return null;
+                },
               ),
-              maxLines: 4,
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Пожалуйста, введите описание мероприятия';
-                }
-                return null;
-              },
-            ),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Место проведения
-            TextFormField(
-              controller: _locationController,
-              decoration: const InputDecoration(
-                labelText: 'Место проведения *',
-                border: OutlineInputBorder(),
-                hintText: 'Введите адрес или название места',
-                prefixIcon: Icon(Icons.location_on),
+              // Место проведения
+              TextFormField(
+                controller: _locationController,
+                decoration: const InputDecoration(
+                  labelText: 'Место проведения *',
+                  border: OutlineInputBorder(),
+                  hintText: 'Введите адрес или название места',
+                  prefixIcon: Icon(Icons.location_on),
+                ),
+                validator: (value) {
+                  if (value == null || value.trim().isEmpty) {
+                    return 'Пожалуйста, введите место проведения';
+                  }
+                  return null;
+                },
               ),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Пожалуйста, введите место проведения';
-                }
-                return null;
-              },
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildDateTimeSection() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Дата и время',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+  Widget _buildDateTimeSection() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Дата и время',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Дата мероприятия
-            ListTile(
-              leading: const Icon(Icons.calendar_today),
-              title: const Text('Дата мероприятия'),
-              subtitle: Text(_formatDate(_eventDate)),
-              onTap: _selectDate,
-            ),
+              // Дата мероприятия
+              ListTile(
+                leading: const Icon(Icons.calendar_today),
+                title: const Text('Дата мероприятия'),
+                subtitle: Text(_formatDate(_eventDate)),
+                onTap: _selectDate,
+              ),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Дата окончания (опционально)
-            ListTile(
-              leading: const Icon(Icons.event_available),
-              title: const Text('Дата окончания (опционально)'),
-              subtitle: Text(
-                  _endDate != null ? _formatDate(_endDate!) : 'Не указана'),
-              onTap: _selectEndDate,
-              trailing: _endDate != null
-                  ? IconButton(
-                      icon: const Icon(Icons.clear),
-                      onPressed: () {
-                        setState(() {
-                          _endDate = null;
-                        });
-                      },
+              // Дата окончания (опционально)
+              ListTile(
+                leading: const Icon(Icons.event_available),
+                title: const Text('Дата окончания (опционально)'),
+                subtitle: Text(
+                  _endDate != null ? _formatDate(_endDate!) : 'Не указана',
+                ),
+                onTap: _selectEndDate,
+                trailing: _endDate != null
+                    ? IconButton(
+                        icon: const Icon(Icons.clear),
+                        onPressed: () {
+                          setState(() {
+                            _endDate = null;
+                          });
+                        },
+                      )
+                    : null,
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildCategoryAndPriceSection() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Категория и цена',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+
+              // Категория мероприятия
+              DropdownButtonFormField<EventCategory>(
+                initialValue: _category,
+                decoration: const InputDecoration(
+                  labelText: 'Категория мероприятия',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.category),
+                ),
+                items: EventCategory.values
+                    .map(
+                      (category) => DropdownMenuItem(
+                        value: category,
+                        child: Row(
+                          children: [
+                            Icon(category.categoryIcon, size: 20),
+                            const SizedBox(width: 8),
+                            Text(category.categoryName),
+                          ],
+                        ),
+                      ),
                     )
-                  : null,
-            ),
-          ],
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _category = value ?? EventCategory.other;
+                  });
+                },
+              ),
+
+              const SizedBox(height: 16),
+
+              // Цена
+              TextFormField(
+                controller: _priceController,
+                decoration: const InputDecoration(
+                  labelText: 'Цена (₽)',
+                  border: OutlineInputBorder(),
+                  hintText: '0 - для бесплатного мероприятия',
+                  prefixIcon: Icon(Icons.attach_money),
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  _price = double.tryParse(value) ?? 0.0;
+                },
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildCategoryAndPriceSection() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Категория и цена',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+  Widget _buildParticipantsAndSettingsSection() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Участники и настройки',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Категория мероприятия
-            DropdownButtonFormField<EventCategory>(
-              initialValue: _category,
-              decoration: const InputDecoration(
-                labelText: 'Категория мероприятия',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.category),
+              // Максимальное количество участников
+              TextFormField(
+                controller: _maxParticipantsController,
+                decoration: const InputDecoration(
+                  labelText: 'Максимальное количество участников',
+                  border: OutlineInputBorder(),
+                  hintText: '50',
+                  prefixIcon: Icon(Icons.people),
+                ),
+                keyboardType: TextInputType.number,
+                onChanged: (value) {
+                  _maxParticipants = int.tryParse(value) ?? 50;
+                },
               ),
-              items: EventCategory.values.map((category) {
-                return DropdownMenuItem(
-                  value: category,
-                  child: Row(
-                    children: [
-                      Icon(category.categoryIcon, size: 20),
-                      const SizedBox(width: 8),
-                      Text(category.categoryName),
-                    ],
-                  ),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _category = value ?? EventCategory.other;
-                });
-              },
-            ),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Цена
-            TextFormField(
-              controller: _priceController,
-              decoration: const InputDecoration(
-                labelText: 'Цена (₽)',
-                border: OutlineInputBorder(),
-                hintText: '0 - для бесплатного мероприятия',
-                prefixIcon: Icon(Icons.attach_money),
+              // Публичность мероприятия
+              SwitchListTile(
+                title: const Text('Публичное мероприятие'),
+                subtitle: const Text(
+                  'Другие пользователи смогут найти и забронировать ваше мероприятие',
+                ),
+                value: _isPublic,
+                onChanged: (value) {
+                  setState(() {
+                    _isPublic = value;
+                  });
+                },
               ),
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                _price = double.tryParse(value) ?? 0.0;
-              },
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildParticipantsAndSettingsSection() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Участники и настройки',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+  Widget _buildAdditionalInfoSection() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Дополнительная информация',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Максимальное количество участников
-            TextFormField(
-              controller: _maxParticipantsController,
-              decoration: const InputDecoration(
-                labelText: 'Максимальное количество участников',
-                border: OutlineInputBorder(),
-                hintText: '50',
-                prefixIcon: Icon(Icons.people),
+              // Контактная информация
+              TextFormField(
+                controller: _contactInfoController,
+                decoration: const InputDecoration(
+                  labelText: 'Контактная информация',
+                  border: OutlineInputBorder(),
+                  hintText: 'Телефон, email или другие способы связи',
+                  prefixIcon: Icon(Icons.contact_phone),
+                ),
+                maxLines: 2,
               ),
-              keyboardType: TextInputType.number,
-              onChanged: (value) {
-                _maxParticipants = int.tryParse(value) ?? 50;
-              },
-            ),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Публичность мероприятия
-            SwitchListTile(
-              title: const Text('Публичное мероприятие'),
-              subtitle: const Text(
-                  'Другие пользователи смогут найти и забронировать ваше мероприятие'),
-              value: _isPublic,
-              onChanged: (value) {
-                setState(() {
-                  _isPublic = value;
-                });
-              },
-            ),
-          ],
+              // Требования к участникам
+              TextFormField(
+                controller: _requirementsController,
+                decoration: const InputDecoration(
+                  labelText: 'Требования к участникам',
+                  border: OutlineInputBorder(),
+                  hintText: 'Возраст, опыт, специальные требования',
+                  prefixIcon: Icon(Icons.info),
+                ),
+                maxLines: 3,
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
-
-  Widget _buildAdditionalInfoSection() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Дополнительная информация',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-
-            // Контактная информация
-            TextFormField(
-              controller: _contactInfoController,
-              decoration: const InputDecoration(
-                labelText: 'Контактная информация',
-                border: OutlineInputBorder(),
-                hintText: 'Телефон, email или другие способы связи',
-                prefixIcon: Icon(Icons.contact_phone),
-              ),
-              maxLines: 2,
-            ),
-
-            const SizedBox(height: 16),
-
-            // Требования к участникам
-            TextFormField(
-              controller: _requirementsController,
-              decoration: const InputDecoration(
-                labelText: 'Требования к участникам',
-                border: OutlineInputBorder(),
-                hintText: 'Возраст, опыт, специальные требования',
-                prefixIcon: Icon(Icons.info),
-              ),
-              maxLines: 3,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+      );
 
   Future<void> _selectDate() async {
     final date = await showDatePicker(
@@ -561,13 +561,15 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
       createEventNotifier.updateCategory(_category);
       createEventNotifier.updateMaxParticipants(_maxParticipants);
       createEventNotifier.updateContactInfo(
-          _contactInfoController.text.trim().isEmpty
-              ? null
-              : _contactInfoController.text.trim());
+        _contactInfoController.text.trim().isEmpty
+            ? null
+            : _contactInfoController.text.trim(),
+      );
       createEventNotifier.updateRequirements(
-          _requirementsController.text.trim().isEmpty
-              ? null
-              : _requirementsController.text.trim());
+        _requirementsController.text.trim().isEmpty
+            ? null
+            : _requirementsController.text.trim(),
+      );
       createEventNotifier.updateIsPublic(_isPublic);
 
       if (widget.event != null) {
@@ -657,7 +659,6 @@ class _CreateEventScreenState extends ConsumerState<CreateEventScreen> {
     });
   }
 
-  String _formatDate(DateTime dateTime) {
-    return '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDate(DateTime dateTime) =>
+      '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
 }

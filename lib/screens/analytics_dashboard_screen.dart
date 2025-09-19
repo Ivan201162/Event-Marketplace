@@ -29,70 +29,68 @@ class _AnalyticsDashboardScreenState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ResponsiveScaffold(
-      title: 'Аналитика приложения',
-      body: Column(
-        children: [
-          // Фильтры по дате
-          _buildDateFilters(),
+  Widget build(BuildContext context) => ResponsiveScaffold(
+        title: 'Аналитика приложения',
+        body: Column(
+          children: [
+            // Фильтры по дате
+            _buildDateFilters(),
 
-          // Основная статистика
-          if (_isLoading)
-            const Center(child: CircularProgressIndicator())
-          else if (_statistics != null)
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    _buildMainStats(),
-                    const SizedBox(height: 16),
-                    _buildCharts(),
-                    const SizedBox(height: 16),
-                    _buildTopScreens(),
-                    const SizedBox(height: 16),
-                    _buildTopEvents(),
-                  ],
+            // Основная статистика
+            if (_isLoading)
+              const Center(child: CircularProgressIndicator())
+            else if (_statistics != null)
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      _buildMainStats(),
+                      const SizedBox(height: 16),
+                      _buildCharts(),
+                      const SizedBox(height: 16),
+                      _buildTopScreens(),
+                      const SizedBox(height: 16),
+                      _buildTopEvents(),
+                    ],
+                  ),
                 ),
-              ),
-            )
-          else
-            const Center(child: Text('Ошибка загрузки данных')),
-        ],
-      ),
-    );
-  }
+              )
+            else
+              const Center(child: Text('Ошибка загрузки данных')),
+          ],
+        ),
+      );
 
-  Widget _buildDateFilters() {
-    return ResponsiveCard(
-      child: Row(
-        children: [
-          Expanded(
-            child: ListTile(
-              title: const Text('Начальная дата'),
-              subtitle: Text(
-                  '${_selectedStartDate.day}.${_selectedStartDate.month}.${_selectedStartDate.year}'),
-              trailing: const Icon(Icons.calendar_today),
-              onTap: () => _selectStartDate(),
+  Widget _buildDateFilters() => ResponsiveCard(
+        child: Row(
+          children: [
+            Expanded(
+              child: ListTile(
+                title: const Text('Начальная дата'),
+                subtitle: Text(
+                  '${_selectedStartDate.day}.${_selectedStartDate.month}.${_selectedStartDate.year}',
+                ),
+                trailing: const Icon(Icons.calendar_today),
+                onTap: _selectStartDate,
+              ),
             ),
-          ),
-          Expanded(
-            child: ListTile(
-              title: const Text('Конечная дата'),
-              subtitle: Text(
-                  '${_selectedEndDate.day}.${_selectedEndDate.month}.${_selectedEndDate.year}'),
-              trailing: const Icon(Icons.calendar_today),
-              onTap: () => _selectEndDate(),
+            Expanded(
+              child: ListTile(
+                title: const Text('Конечная дата'),
+                subtitle: Text(
+                  '${_selectedEndDate.day}.${_selectedEndDate.month}.${_selectedEndDate.year}',
+                ),
+                trailing: const Icon(Icons.calendar_today),
+                onTap: _selectEndDate,
+              ),
             ),
-          ),
-          ElevatedButton(
-            onPressed: _loadStatistics,
-            child: const Text('Обновить'),
-          ),
-        ],
-      ),
-    );
-  }
+            ElevatedButton(
+              onPressed: _loadStatistics,
+              child: const Text('Обновить'),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildMainStats() {
     if (_statistics == null) return const SizedBox.shrink();
@@ -140,7 +138,7 @@ class _AnalyticsDashboardScreenState
               Expanded(
                 child: _buildStatCard(
                   'Среднее событий на пользователя',
-                  '${_statistics!.averageEventsPerUser.toStringAsFixed(1)}',
+                  _statistics!.averageEventsPerUser.toStringAsFixed(1),
                   Colors.purple,
                   Icons.trending_up,
                 ),
@@ -148,7 +146,7 @@ class _AnalyticsDashboardScreenState
               Expanded(
                 child: _buildStatCard(
                   'Среднее событий на сессию',
-                  '${_statistics!.averageEventsPerSession.toStringAsFixed(1)}',
+                  _statistics!.averageEventsPerSession.toStringAsFixed(1),
                   Colors.teal,
                   Icons.timeline,
                 ),
@@ -161,38 +159,41 @@ class _AnalyticsDashboardScreenState
   }
 
   Widget _buildStatCard(
-      String title, String value, Color color, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 32),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: color,
+    String title,
+    String value,
+    Color color,
+    IconData icon,
+  ) =>
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 32),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
             ),
-          ),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   Widget _buildCharts() {
     if (_statistics == null) return const SizedBox.shrink();
@@ -210,95 +211,93 @@ class _AnalyticsDashboardScreenState
     );
   }
 
-  Widget _buildCategoryChart() {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ResponsiveText(
-            'События по категориям',
-            isTitle: true,
-          ),
-          const SizedBox(height: 16),
-          ..._statistics!.eventsByCategory.entries.map((entry) {
-            final percentage = _statistics!.totalEvents > 0
-                ? (entry.value / _statistics!.totalEvents) * 100
-                : 0.0;
+  Widget _buildCategoryChart() => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ResponsiveText(
+              'События по категориям',
+              isTitle: true,
+            ),
+            const SizedBox(height: 16),
+            ..._statistics!.eventsByCategory.entries.map((entry) {
+              final percentage = _statistics!.totalEvents > 0
+                  ? (entry.value / _statistics!.totalEvents) * 100
+                  : 0.0;
 
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(entry.key),
-                      Text(
-                          '${entry.value} (${percentage.toStringAsFixed(1)}%)'),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  LinearProgressIndicator(
-                    value: percentage / 100,
-                    backgroundColor: Colors.grey.withValues(alpha: 0.3),
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      _getCategoryColor(entry.key),
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(entry.key),
+                        Text(
+                          '${entry.value} (${percentage.toStringAsFixed(1)}%)',
+                        ),
+                      ],
                     ),
-                  ),
-                ],
-              ),
-            );
-          }).toList(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPlatformChart() {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ResponsiveText(
-            'События по платформам',
-            isTitle: true,
-          ),
-          const SizedBox(height: 16),
-          ..._statistics!.eventsByPlatform.entries.map((entry) {
-            final percentage = _statistics!.totalEvents > 0
-                ? (entry.value / _statistics!.totalEvents) * 100
-                : 0.0;
-
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 8),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(entry.key),
-                      Text(
-                          '${entry.value} (${percentage.toStringAsFixed(1)}%)'),
-                    ],
-                  ),
-                  const SizedBox(height: 4),
-                  LinearProgressIndicator(
-                    value: percentage / 100,
-                    backgroundColor: Colors.grey.withValues(alpha: 0.3),
-                    valueColor: AlwaysStoppedAnimation<Color>(
-                      _getPlatformColor(entry.key),
+                    const SizedBox(height: 4),
+                    LinearProgressIndicator(
+                      value: percentage / 100,
+                      backgroundColor: Colors.grey.withValues(alpha: 0.3),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        _getCategoryColor(entry.key),
+                      ),
                     ),
-                  ),
-                ],
-              ),
-            );
-          }).toList(),
-        ],
-      ),
-    );
-  }
+                  ],
+                ),
+              );
+            }),
+          ],
+        ),
+      );
+
+  Widget _buildPlatformChart() => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ResponsiveText(
+              'События по платформам',
+              isTitle: true,
+            ),
+            const SizedBox(height: 16),
+            ..._statistics!.eventsByPlatform.entries.map((entry) {
+              final percentage = _statistics!.totalEvents > 0
+                  ? (entry.value / _statistics!.totalEvents) * 100
+                  : 0.0;
+
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(entry.key),
+                        Text(
+                          '${entry.value} (${percentage.toStringAsFixed(1)}%)',
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 4),
+                    LinearProgressIndicator(
+                      value: percentage / 100,
+                      backgroundColor: Colors.grey.withValues(alpha: 0.3),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        _getPlatformColor(entry.key),
+                      ),
+                    ),
+                  ],
+                ),
+              );
+            }),
+          ],
+        ),
+      );
 
   Widget _buildTopScreens() {
     if (_statistics == null) return const SizedBox.shrink();
@@ -314,75 +313,76 @@ class _AnalyticsDashboardScreenState
           const SizedBox(height: 16),
           ..._statistics!.eventsByScreen.entries.toList()
             ..sort((a, b) => b.value.compareTo(a.value))
-            ..take(10).map((entry) {
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundColor: Colors.blue.withValues(alpha: 0.2),
-                  child: Text(
-                    '${_statistics!.eventsByScreen.entries.toList().indexOf(entry) + 1}',
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: Colors.blue,
+            ..take(10)
+                .map(
+                  (entry) => ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.blue.withValues(alpha: 0.2),
+                      child: Text(
+                        '${_statistics!.eventsByScreen.entries.toList().indexOf(entry) + 1}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                    ),
+                    title: Text(entry.key),
+                    trailing: Text('${entry.value}'),
+                    subtitle: LinearProgressIndicator(
+                      value: entry.value /
+                          _statistics!.eventsByScreen.values
+                              .reduce((a, b) => a > b ? a : b),
+                      backgroundColor: Colors.grey.withValues(alpha: 0.3),
+                      valueColor:
+                          const AlwaysStoppedAnimation<Color>(Colors.blue),
                     ),
                   ),
-                ),
-                title: Text(entry.key),
-                trailing: Text('${entry.value}'),
-                subtitle: LinearProgressIndicator(
-                  value: entry.value /
-                      _statistics!.eventsByScreen.values
-                          .reduce((a, b) => a > b ? a : b),
-                  backgroundColor: Colors.grey.withValues(alpha: 0.3),
-                  valueColor: const AlwaysStoppedAnimation<Color>(Colors.blue),
-                ),
-              );
-            }).toList(),
+                )
+                .toList(),
         ],
       ),
     );
   }
 
-  Widget _buildTopEvents() {
-    return FutureBuilder<List<MapEntry<String, int>>>(
-      future: _analyticsService.getTopEvents(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const SizedBox.shrink();
-        }
+  Widget _buildTopEvents() => FutureBuilder<List<MapEntry<String, int>>>(
+        future: _analyticsService.getTopEvents(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const SizedBox.shrink();
+          }
 
-        final topEvents = snapshot.data!;
+          final topEvents = snapshot.data!;
 
-        return ResponsiveCard(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ResponsiveText(
-                'Топ событий',
-                isTitle: true,
-              ),
-              const SizedBox(height: 16),
-              ...topEvents.map((entry) {
-                return ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.green.withValues(alpha: 0.2),
-                    child: Text(
-                      '${topEvents.indexOf(entry) + 1}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green,
+          return ResponsiveCard(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ResponsiveText(
+                  'Топ событий',
+                  isTitle: true,
+                ),
+                const SizedBox(height: 16),
+                ...topEvents.map(
+                  (entry) => ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.green.withValues(alpha: 0.2),
+                      child: Text(
+                        '${topEvents.indexOf(entry) + 1}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
                       ),
                     ),
+                    title: Text(entry.key),
+                    trailing: Text('${entry.value}'),
                   ),
-                  title: Text(entry.key),
-                  trailing: Text('${entry.value}'),
-                );
-              }).toList(),
-            ],
-          ),
-        );
-      },
-    );
-  }
+                ),
+              ],
+            ),
+          );
+        },
+      );
 
   Color _getCategoryColor(String category) {
     switch (category) {

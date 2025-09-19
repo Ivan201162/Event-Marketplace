@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/specialist_service.dart';
+
 import '../models/specialist.dart';
+import '../services/specialist_service.dart';
 
 /// Провайдер сервиса специалистов
-final specialistServiceProvider = Provider<SpecialistService>((ref) {
-  return SpecialistService();
-});
+final specialistServiceProvider =
+    Provider<SpecialistService>((ref) => SpecialistService());
 
 /// Провайдер всех специалистов
 final allSpecialistsProvider = StreamProvider<List<Specialist>>((ref) {
@@ -43,9 +43,8 @@ final specialistsByCategoryProvider =
 
 /// Провайдер фильтров поиска
 final specialistFiltersProvider =
-    NotifierProvider<SpecialistFiltersNotifier, SpecialistFilters>(() {
-  return SpecialistFiltersNotifier();
-});
+    NotifierProvider<SpecialistFiltersNotifier, SpecialistFilters>(
+        SpecialistFiltersNotifier.new);
 
 class SpecialistFiltersNotifier extends Notifier<SpecialistFilters> {
   @override
@@ -69,7 +68,9 @@ final specialistAvailabilityProvider =
     FutureProvider.family<bool, SpecialistAvailabilityParams>((ref, params) {
   final specialistService = ref.watch(specialistServiceProvider);
   return specialistService.isSpecialistAvailableOnDate(
-      params.specialistId, params.date);
+    params.specialistId,
+    params.date,
+  );
 });
 
 /// Провайдер доступных временных слотов специалиста
@@ -86,31 +87,26 @@ final specialistTimeSlotsProvider =
 
 /// Провайдер состояния поиска
 final searchStateProvider =
-    NotifierProvider<SearchStateNotifier, SearchState>(() {
-  return SearchStateNotifier();
-});
+    NotifierProvider<SearchStateNotifier, SearchState>(SearchStateNotifier.new);
 
 /// Провайдер избранных специалистов
 final favoriteSpecialistsProvider =
-    NotifierProvider<FavoriteSpecialistsNotifier, List<String>>(() {
-  return FavoriteSpecialistsNotifier();
-});
+    NotifierProvider<FavoriteSpecialistsNotifier, List<String>>(
+        FavoriteSpecialistsNotifier.new);
 
 /// Провайдер истории поиска
 final searchHistoryProvider =
-    NotifierProvider<SearchHistoryNotifier, List<String>>(() {
-  return SearchHistoryNotifier();
-});
+    NotifierProvider<SearchHistoryNotifier, List<String>>(
+        SearchHistoryNotifier.new);
 
 /// Параметры для проверки доступности специалиста
 class SpecialistAvailabilityParams {
-  final String specialistId;
-  final DateTime date;
-
   const SpecialistAvailabilityParams({
     required this.specialistId,
     required this.date,
   });
+  final String specialistId;
+  final DateTime date;
 
   @override
   bool operator ==(Object other) =>
@@ -126,15 +122,14 @@ class SpecialistAvailabilityParams {
 
 /// Параметры для получения временных слотов специалиста
 class SpecialistTimeSlotsParams {
-  final String specialistId;
-  final DateTime date;
-  final Duration slotDuration;
-
   const SpecialistTimeSlotsParams({
     required this.specialistId,
     required this.date,
     this.slotDuration = const Duration(hours: 1),
   });
+  final String specialistId;
+  final DateTime date;
+  final Duration slotDuration;
 
   @override
   bool operator ==(Object other) =>
@@ -152,12 +147,6 @@ class SpecialistTimeSlotsParams {
 
 /// Состояние поиска
 class SearchState {
-  final bool isSearching;
-  final String? currentQuery;
-  final SpecialistFilters currentFilters;
-  final List<Specialist> results;
-  final String? error;
-
   const SearchState({
     this.isSearching = false,
     this.currentQuery,
@@ -165,6 +154,11 @@ class SearchState {
     this.results = const [],
     this.error,
   });
+  final bool isSearching;
+  final String? currentQuery;
+  final SpecialistFilters currentFilters;
+  final List<Specialist> results;
+  final String? error;
 
   SearchState copyWith({
     bool? isSearching,
@@ -172,15 +166,14 @@ class SearchState {
     SpecialistFilters? currentFilters,
     List<Specialist>? results,
     String? error,
-  }) {
-    return SearchState(
-      isSearching: isSearching ?? this.isSearching,
-      currentQuery: currentQuery ?? this.currentQuery,
-      currentFilters: currentFilters ?? this.currentFilters,
-      results: results ?? this.results,
-      error: error ?? this.error,
-    );
-  }
+  }) =>
+      SearchState(
+        isSearching: isSearching ?? this.isSearching,
+        currentQuery: currentQuery ?? this.currentQuery,
+        currentFilters: currentFilters ?? this.currentFilters,
+        results: results ?? this.results,
+        error: error ?? this.error,
+      );
 }
 
 /// Нотификатор состояния поиска
@@ -194,7 +187,6 @@ class SearchStateNotifier extends Notifier<SearchState> {
       isSearching: true,
       currentQuery: query,
       currentFilters: filters,
-      error: null,
     );
   }
 
@@ -203,7 +195,6 @@ class SearchStateNotifier extends Notifier<SearchState> {
     state = state.copyWith(
       isSearching: false,
       results: results,
-      error: null,
     );
   }
 
@@ -219,8 +210,6 @@ class SearchStateNotifier extends Notifier<SearchState> {
   void clearResults() {
     state = state.copyWith(
       results: [],
-      currentQuery: null,
-      error: null,
     );
   }
 
@@ -253,9 +242,7 @@ class FavoriteSpecialistsNotifier extends Notifier<List<String>> {
   }
 
   /// Проверить, в избранном ли
-  bool isFavorite(String specialistId) {
-    return state.contains(specialistId);
-  }
+  bool isFavorite(String specialistId) => state.contains(specialistId);
 
   /// Очистить избранное
   void clearFavorites() {
@@ -357,13 +344,6 @@ final searchStatsProvider = Provider<SearchStats>((ref) {
 
 /// Статистика поиска
 class SearchStats {
-  final int totalResults;
-  final int verifiedCount;
-  final double averageRating;
-  final PriceRange priceRange;
-  final Map<SpecialistCategory, int> categoryDistribution;
-  final bool hasActiveFilters;
-
   const SearchStats({
     required this.totalResults,
     required this.verifiedCount,
@@ -372,17 +352,22 @@ class SearchStats {
     required this.categoryDistribution,
     required this.hasActiveFilters,
   });
+  final int totalResults;
+  final int verifiedCount;
+  final double averageRating;
+  final PriceRange priceRange;
+  final Map<SpecialistCategory, int> categoryDistribution;
+  final bool hasActiveFilters;
 }
 
 /// Диапазон цен
 class PriceRange {
-  final double min;
-  final double max;
-
   const PriceRange({
     required this.min,
     required this.max,
   });
+  final double min;
+  final double max;
 
   String get displayText {
     if (min == max) {
@@ -394,7 +379,8 @@ class PriceRange {
 
 /// Получить распределение по категориям
 Map<SpecialistCategory, int> _getCategoryDistribution(
-    List<Specialist> specialists) {
+  List<Specialist> specialists,
+) {
   final distribution = <SpecialistCategory, int>{};
 
   for (final specialist in specialists) {

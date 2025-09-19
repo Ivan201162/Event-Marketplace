@@ -2,29 +2,19 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/app_update_service.dart';
 
 /// Провайдер для управления обновлениями приложения
-final appUpdateProvider =
-    NotifierProvider<AppUpdateNotifier, AppUpdateState>((ref) {
-  return AppUpdateNotifier();
-});
+final appUpdateProvider = NotifierProvider<AppUpdateNotifier, AppUpdateState>(
+    (ref) => AppUpdateNotifier());
 
 /// Провайдер для информации о текущей версии
-final currentVersionProvider = FutureProvider<PackageInfo>((ref) async {
-  return await AppUpdateService.getCurrentVersionInfo();
-});
+final currentVersionProvider = FutureProvider<PackageInfo>(
+    (ref) async => AppUpdateService.getCurrentVersionInfo());
 
 /// Провайдер для проверки обновлений
-final updateCheckProvider = FutureProvider<UpdateInfo?>((ref) async {
-  return await AppUpdateService.checkForUpdates();
-});
+final updateCheckProvider = FutureProvider<UpdateInfo?>(
+    (ref) async => AppUpdateService.checkForUpdates());
 
 /// Состояние обновлений приложения
 class AppUpdateState {
-  final bool isChecking;
-  final UpdateInfo? updateInfo;
-  final String? error;
-  final bool isDismissed;
-  final DateTime? lastCheckTime;
-
   const AppUpdateState({
     this.isChecking = false,
     this.updateInfo,
@@ -32,6 +22,11 @@ class AppUpdateState {
     this.isDismissed = false,
     this.lastCheckTime,
   });
+  final bool isChecking;
+  final UpdateInfo? updateInfo;
+  final String? error;
+  final bool isDismissed;
+  final DateTime? lastCheckTime;
 
   AppUpdateState copyWith({
     bool? isChecking,
@@ -39,21 +34,20 @@ class AppUpdateState {
     String? error,
     bool? isDismissed,
     DateTime? lastCheckTime,
-  }) {
-    return AppUpdateState(
-      isChecking: isChecking ?? this.isChecking,
-      updateInfo: updateInfo ?? this.updateInfo,
-      error: error ?? this.error,
-      isDismissed: isDismissed ?? this.isDismissed,
-      lastCheckTime: lastCheckTime ?? this.lastCheckTime,
-    );
-  }
+  }) =>
+      AppUpdateState(
+        isChecking: isChecking ?? this.isChecking,
+        updateInfo: updateInfo ?? this.updateInfo,
+        error: error ?? this.error,
+        isDismissed: isDismissed ?? this.isDismissed,
+        lastCheckTime: lastCheckTime ?? this.lastCheckTime,
+      );
 
   /// Получить статус обновления
   String get updateStatus {
     if (isChecking) return 'Проверка обновлений...';
     if (error != null) return 'Ошибка проверки';
-    if (updateInfo?.isUpdateAvailable == true) return 'Доступно обновление';
+    if (updateInfo?.isUpdateAvailable ?? false) return 'Доступно обновление';
     return 'Приложение актуально';
   }
 
@@ -61,7 +55,7 @@ class AppUpdateState {
   int get statusColor {
     if (isChecking) return 0xFF2196F3; // Синий
     if (error != null) return 0xFFF44336; // Красный
-    if (updateInfo?.isUpdateAvailable == true) return 0xFFFF9800; // Оранжевый
+    if (updateInfo?.isUpdateAvailable ?? false) return 0xFFFF9800; // Оранжевый
     return 0xFF4CAF50; // Зеленый
   }
 }
@@ -81,7 +75,7 @@ class AppUpdateNotifier extends Notifier<AppUpdateState> {
 
   /// Проверить наличие обновлений
   Future<void> checkForUpdates() async {
-    state = state.copyWith(isChecking: true, error: null);
+    state = state.copyWith(isChecking: true);
 
     try {
       final updateInfo = await AppUpdateService.checkForUpdates();
@@ -113,7 +107,7 @@ class AppUpdateNotifier extends Notifier<AppUpdateState> {
 
   /// Принудительная проверка обновлений
   Future<void> forceCheckForUpdates() async {
-    state = state.copyWith(isChecking: true, error: null);
+    state = state.copyWith(isChecking: true);
 
     try {
       final updateInfo = await AppUpdateService.forceCheckForUpdates();
@@ -161,15 +155,13 @@ class AppUpdateNotifier extends Notifier<AppUpdateState> {
   Future<void> clearUpdateCache() async {
     await AppUpdateService.clearUpdateCache();
     state = state.copyWith(
-      updateInfo: null,
       isDismissed: false,
-      lastCheckTime: null,
     );
   }
 
   /// Очистить ошибки
   void clearError() {
-    state = state.copyWith(error: null);
+    state = state.copyWith();
   }
 
   /// Сбросить состояние отклонения
@@ -182,9 +174,8 @@ class AppUpdateNotifier extends Notifier<AppUpdateState> {
 final shouldShowUpdateNotificationProvider = Provider<bool>((ref) {
   final updateState = ref.watch(appUpdateProvider);
 
-  return updateState.updateInfo?.isUpdateAvailable == true &&
-      !updateState.isDismissed &&
-      !updateState.isChecking;
+  return updateState.updateInfo?.isUpdateAvailable ??
+      false && !updateState.isDismissed && !updateState.isChecking;
 });
 
 /// Провайдер для получения информации о версии для отображения
@@ -219,12 +210,6 @@ final versionDetailsProvider = Provider<VersionDetails?>((ref) {
 
 /// Детальная информация о версии
 class VersionDetails {
-  final String currentVersion;
-  final String buildNumber;
-  final String packageName;
-  final String appName;
-  final UpdateInfo? updateInfo;
-
   const VersionDetails({
     required this.currentVersion,
     required this.buildNumber,
@@ -232,21 +217,21 @@ class VersionDetails {
     required this.appName,
     this.updateInfo,
   });
+  final String currentVersion;
+  final String buildNumber;
+  final String packageName;
+  final String appName;
+  final UpdateInfo? updateInfo;
 
   /// Получить полную информацию о версии
-  String get fullVersionInfo {
-    return '$appName v$currentVersion (build $buildNumber)';
-  }
+  String get fullVersionInfo =>
+      '$appName v$currentVersion (build $buildNumber)';
 
   /// Проверить, доступно ли обновление
-  bool get hasUpdateAvailable {
-    return updateInfo?.isUpdateAvailable == true;
-  }
+  bool get hasUpdateAvailable => updateInfo?.isUpdateAvailable ?? false;
 
   /// Получить тип обновления
-  UpdateType? get updateType {
-    return updateInfo?.updateType;
-  }
+  UpdateType? get updateType => updateInfo?.updateType;
 
   /// Получить описание обновления
   String get updateDescription {

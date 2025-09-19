@@ -15,30 +15,31 @@ class ChatService {
           .orderBy('lastMessageAt', descending: true)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => chat_model.Chat.fromDocument(doc))
-          .toList();
+      return querySnapshot.docs.map(chat_model.Chat.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения чатов: $e');
     }
   }
 
   /// Получить сообщения чата
-  Stream<List<message_model.ChatMessage>> getChatMessages(String chatId) {
-    return _firestore
-        .collection('chats')
-        .doc(chatId)
-        .collection('messages')
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) => snapshot.docs
-            .map((doc) => message_model.ChatMessage.fromDocument(doc))
-            .toList());
-  }
+  Stream<List<message_model.ChatMessage>> getChatMessages(String chatId) =>
+      _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map(
+            (snapshot) => snapshot.docs
+                .map(message_model.ChatMessage.fromDocument)
+                .toList(),
+          );
 
   /// Отправить сообщение
   Future<void> sendMessage(
-      String chatId, message_model.ChatMessage message) async {
+    String chatId,
+    message_model.ChatMessage message,
+  ) async {
     try {
       await _firestore
           .collection('chats')
@@ -69,7 +70,10 @@ class ChatService {
 
   /// Обновить статус сообщения
   Future<void> updateMessageStatus(
-      String chatId, String messageId, MessageStatus status) async {
+    String chatId,
+    String messageId,
+    MessageStatus status,
+  ) async {
     try {
       await _firestore
           .collection('chats')
@@ -131,22 +135,25 @@ class ChatService {
           .where('participants', arrayContains: userId)
           .get();
 
-      int totalUnread = 0;
+      var totalUnread = 0;
       for (final chatDoc in querySnapshot.docs) {
         final messagesSnapshot = await _firestore
             .collection('chats')
             .doc(chatDoc.id)
             .collection('messages')
             .where('senderId', isNotEqualTo: userId)
-            .where('status',
-                isNotEqualTo: message_model.MessageStatus.read.name)
+            .where(
+              'status',
+              isNotEqualTo: message_model.MessageStatus.read.name,
+            )
             .get();
         totalUnread += messagesSnapshot.docs.length;
       }
       return totalUnread;
     } catch (e) {
       throw Exception(
-          'Ошибка получения количества непрочитанных сообщений: $e');
+        'Ошибка получения количества непрочитанных сообщений: $e',
+      );
     }
   }
 }

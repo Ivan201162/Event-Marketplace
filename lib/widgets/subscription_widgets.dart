@@ -1,19 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/subscription.dart';
+
 import '../models/notification_type.dart';
+import '../models/subscription.dart';
 import '../models/subscription_notification.dart';
-import '../services/subscription_service.dart';
 import '../providers/subscription_providers.dart';
 
 /// Виджет кнопки подписки
 class SubscribeButton extends ConsumerStatefulWidget {
-  final String specialistId;
-  final String specialistName;
-  final String? specialistPhotoUrl;
-  final String userId;
-  final VoidCallback? onSubscriptionChanged;
-
   const SubscribeButton({
     super.key,
     required this.specialistId,
@@ -22,6 +16,11 @@ class SubscribeButton extends ConsumerStatefulWidget {
     required this.userId,
     this.onSubscriptionChanged,
   });
+  final String specialistId;
+  final String specialistName;
+  final String? specialistPhotoUrl;
+  final String userId;
+  final VoidCallback? onSubscriptionChanged;
 
   @override
   ConsumerState<SubscribeButton> createState() => _SubscribeButtonState();
@@ -32,30 +31,29 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
 
   @override
   Widget build(BuildContext context) {
-    final isSubscribedAsync = ref.watch(isSubscribedProvider(
-      userId: widget.userId,
-      specialistId: widget.specialistId,
-    ));
+    final isSubscribedAsync = ref.watch(
+      isSubscribedProvider(IsSubscribedParams(
+        userId: widget.userId,
+        specialistId: widget.specialistId,
+      )),
+    );
 
     return isSubscribedAsync.when(
-      data: (isSubscribed) {
-        return ElevatedButton.icon(
-          onPressed:
-              _isLoading ? null : () => _toggleSubscription(isSubscribed),
-          icon: _isLoading
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : Icon(isSubscribed ? Icons.person_remove : Icons.person_add),
-          label: Text(isSubscribed ? 'Отписаться' : 'Подписаться'),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: isSubscribed ? Colors.grey : Colors.blue,
-            foregroundColor: Colors.white,
-          ),
-        );
-      },
+      data: (isSubscribed) => ElevatedButton.icon(
+        onPressed: _isLoading ? null : () => _toggleSubscription(isSubscribed),
+        icon: _isLoading
+            ? const SizedBox(
+                width: 16,
+                height: 16,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : Icon(isSubscribed ? Icons.person_remove : Icons.person_add),
+        label: Text(isSubscribed ? 'Отписаться' : 'Подписаться'),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: isSubscribed ? Colors.grey : Colors.blue,
+          foregroundColor: Colors.white,
+        ),
+      ),
       loading: () => const CircularProgressIndicator(),
       error: (error, stack) => TextButton(
         onPressed: () => _toggleSubscription(false),
@@ -74,8 +72,8 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
 
       if (isSubscribed) {
         await service.unsubscribeFromSpecialist(
-          userId: widget.userId,
-          specialistId: widget.specialistId,
+          widget.userId,
+          widget.specialistId,
         );
       } else {
         await service.subscribeToSpecialist(
@@ -87,19 +85,23 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
       }
 
       // Обновляем состояние
-      ref.invalidate(isSubscribedProvider(
-        userId: widget.userId,
-        specialistId: widget.specialistId,
-      ));
+      ref.invalidate(
+        isSubscribedProvider(IsSubscribedParams(
+          userId: widget.userId,
+          specialistId: widget.specialistId,
+        )),
+      );
 
       widget.onSubscriptionChanged?.call();
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(isSubscribed
-                ? 'Отписались от специалиста'
-                : 'Подписались на специалиста'),
+            content: Text(
+              isSubscribed
+                  ? 'Отписались от специалиста'
+                  : 'Подписались на специалиста',
+            ),
             backgroundColor: Colors.green,
           ),
         );
@@ -125,12 +127,11 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
 
 /// Виджет списка подписок
 class SubscriptionsListWidget extends ConsumerWidget {
-  final String userId;
-
   const SubscriptionsListWidget({
     super.key,
     required this.userId,
   });
+  final String userId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -216,12 +217,12 @@ class SubscriptionsListWidget extends ConsumerWidget {
     );
   }
 
-  void _unsubscribe(WidgetRef ref, Subscription subscription) async {
+  Future<void> _unsubscribe(WidgetRef ref, Subscription subscription) async {
     try {
       final service = ref.read(subscriptionServiceProvider);
       await service.unsubscribeFromSpecialist(
-        userId: subscription.userId,
-        specialistId: subscription.specialistId,
+        subscription.userId,
+        subscription.specialistId,
       );
 
       ref.invalidate(userSubscriptionsProvider(subscription.userId));
@@ -233,78 +234,72 @@ class SubscriptionsListWidget extends ConsumerWidget {
 
 /// Виджет элемента подписки
 class SubscriptionTile extends StatelessWidget {
-  final Subscription subscription;
-  final VoidCallback? onUnsubscribe;
-
   const SubscriptionTile({
     super.key,
     required this.subscription,
     this.onUnsubscribe,
   });
+  final Subscription subscription;
+  final VoidCallback? onUnsubscribe;
 
   @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundImage: subscription.specialistPhotoUrl != null
-            ? NetworkImage(subscription.specialistPhotoUrl!)
-            : null,
-        child: subscription.specialistPhotoUrl == null
-            ? const Icon(Icons.person)
-            : null,
-      ),
-      title: Text(subscription.specialistName),
-      subtitle: Text('Подписан с ${_formatDate(subscription.createdAt)}'),
-      trailing: PopupMenuButton<String>(
-        onSelected: (value) {
-          switch (value) {
-            case 'unsubscribe':
-              onUnsubscribe?.call();
-              break;
-            case 'view_profile':
-              // TODO: Перейти к профилю специалиста
-              break;
-          }
-        },
-        itemBuilder: (context) => [
-          const PopupMenuItem(
-            value: 'view_profile',
-            child: Row(
-              children: [
-                Icon(Icons.person, size: 20),
-                SizedBox(width: 8),
-                Text('Профиль'),
-              ],
+  Widget build(BuildContext context) => ListTile(
+        leading: CircleAvatar(
+          backgroundImage: subscription.specialistPhotoUrl != null
+              ? NetworkImage(subscription.specialistPhotoUrl!)
+              : null,
+          child: subscription.specialistPhotoUrl == null
+              ? const Icon(Icons.person)
+              : null,
+        ),
+        title: Text(subscription.specialistName),
+        subtitle: Text('Подписан с ${_formatDate(subscription.createdAt)}'),
+        trailing: PopupMenuButton<String>(
+          onSelected: (value) {
+            switch (value) {
+              case 'unsubscribe':
+                onUnsubscribe?.call();
+                break;
+              case 'view_profile':
+                // TODO: Перейти к профилю специалиста
+                break;
+            }
+          },
+          itemBuilder: (context) => [
+            const PopupMenuItem(
+              value: 'view_profile',
+              child: Row(
+                children: [
+                  Icon(Icons.person, size: 20),
+                  SizedBox(width: 8),
+                  Text('Профиль'),
+                ],
+              ),
             ),
-          ),
-          const PopupMenuItem(
-            value: 'unsubscribe',
-            child: Row(
-              children: [
-                Icon(Icons.person_remove, size: 20),
-                SizedBox(width: 8),
-                Text('Отписаться'),
-              ],
+            const PopupMenuItem(
+              value: 'unsubscribe',
+              child: Row(
+                children: [
+                  Icon(Icons.person_remove, size: 20),
+                  SizedBox(width: 8),
+                  Text('Отписаться'),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
-  String _formatDate(DateTime date) {
-    return '${date.day}.${date.month}.${date.year}';
-  }
+  String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 }
 
 /// Виджет уведомлений о подписках
 class SubscriptionNotificationsWidget extends ConsumerWidget {
-  final String userId;
-
   const SubscriptionNotificationsWidget({
     super.key,
     required this.userId,
   });
+  final String userId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -355,7 +350,7 @@ class SubscriptionNotificationsWidget extends ConsumerWidget {
     );
   }
 
-  void _handleNotificationTap(
+  Future<void> _handleNotificationTap(
     BuildContext context,
     WidgetRef ref,
     SubscriptionNotification notification,
@@ -381,6 +376,33 @@ class SubscriptionNotificationsWidget extends ConsumerWidget {
         case NotificationType.announcement:
           // Показать объявление
           break;
+        case NotificationType.booking:
+          // Перейти к бронированию
+          break;
+        case NotificationType.payment:
+          // Перейти к платежу
+          break;
+        case NotificationType.review:
+          // Перейти к отзыву
+          break;
+        case NotificationType.message:
+          // Перейти к сообщению
+          break;
+        case NotificationType.system:
+          // Показать системное уведомление
+          break;
+        case NotificationType.promotion:
+          // Перейти к акции
+          break;
+        case NotificationType.reminder:
+          // Показать напоминание
+          break;
+        case NotificationType.update:
+          // Показать информацию об обновлении
+          break;
+        case NotificationType.general:
+          // Показать общее уведомление
+          break;
       }
     } catch (e) {
       // Обработка ошибки
@@ -390,49 +412,46 @@ class SubscriptionNotificationsWidget extends ConsumerWidget {
 
 /// Виджет элемента уведомления
 class NotificationTile extends StatelessWidget {
-  final SubscriptionNotification notification;
-  final VoidCallback? onTap;
-
   const NotificationTile({
     super.key,
     required this.notification,
     this.onTap,
   });
+  final SubscriptionNotification notification;
+  final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundImage: notification.specialistPhotoUrl != null
-            ? NetworkImage(notification.specialistPhotoUrl!)
-            : null,
-        child: notification.specialistPhotoUrl == null
-            ? const Icon(Icons.person)
-            : null,
-      ),
-      title: Text(notification.title),
-      subtitle: Text(notification.body),
-      trailing: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            _formatTimeAgo(notification.createdAt),
-            style: const TextStyle(fontSize: 12, color: Colors.grey),
-          ),
-          if (!notification.isRead)
-            Container(
-              width: 8,
-              height: 8,
-              decoration: const BoxDecoration(
-                color: Colors.blue,
-                shape: BoxShape.circle,
-              ),
+  Widget build(BuildContext context) => ListTile(
+        leading: CircleAvatar(
+          backgroundImage: notification.specialistPhotoUrl != null
+              ? NetworkImage(notification.specialistPhotoUrl!)
+              : null,
+          child: notification.specialistPhotoUrl == null
+              ? const Icon(Icons.person)
+              : null,
+        ),
+        title: Text(notification.title),
+        subtitle: Text(notification.body),
+        trailing: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              _formatTimeAgo(notification.createdAt),
+              style: const TextStyle(fontSize: 12, color: Colors.grey),
             ),
-        ],
-      ),
-      onTap: onTap,
-    );
-  }
+            if (!notification.isRead)
+              Container(
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: Colors.blue,
+                  shape: BoxShape.circle,
+                ),
+              ),
+          ],
+        ),
+        onTap: onTap,
+      );
 
   String _formatTimeAgo(DateTime dateTime) {
     final now = DateTime.now();

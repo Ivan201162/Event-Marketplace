@@ -2,13 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Роль пользователя
 class UserRole {
-  final String id;
-  final String userId;
-  final String roleName;
-  final List<String> permissions;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
   const UserRole({
     required this.id,
     required this.userId,
@@ -29,30 +22,24 @@ class UserRole {
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
     );
   }
+  final String id;
+  final String userId;
+  final String roleName;
+  final List<String> permissions;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'roleName': roleName,
-      'permissions': permissions,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'userId': userId,
+        'roleName': roleName,
+        'permissions': permissions,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 }
 
 /// Аудит-лог
 class AuditLog {
-  final String id;
-  final String userId;
-  final String action;
-  final String resource;
-  final String? resourceId;
-  final Map<String, dynamic> metadata;
-  final String? ipAddress;
-  final String? userAgent;
-  final DateTime timestamp;
-
   const AuditLog({
     required this.id,
     required this.userId,
@@ -79,34 +66,30 @@ class AuditLog {
       timestamp: (data['timestamp'] as Timestamp).toDate(),
     );
   }
+  final String id;
+  final String userId;
+  final String action;
+  final String resource;
+  final String? resourceId;
+  final Map<String, dynamic> metadata;
+  final String? ipAddress;
+  final String? userAgent;
+  final DateTime timestamp;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'action': action,
-      'resource': resource,
-      'resourceId': resourceId,
-      'metadata': metadata,
-      'ipAddress': ipAddress,
-      'userAgent': userAgent,
-      'timestamp': Timestamp.fromDate(timestamp),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'userId': userId,
+        'action': action,
+        'resource': resource,
+        'resourceId': resourceId,
+        'metadata': metadata,
+        'ipAddress': ipAddress,
+        'userAgent': userAgent,
+        'timestamp': Timestamp.fromDate(timestamp),
+      };
 }
 
 /// Сессия безопасности
 class SecuritySession {
-  final String id;
-  final String userId;
-  final String deviceId;
-  final String? ipAddress;
-  final String? userAgent;
-  final SecuritySessionStatus status;
-  final DateTime createdAt;
-  final DateTime lastActivityAt;
-  final DateTime expiresAt;
-  final Map<String, dynamic> metadata;
-
   const SecuritySession({
     required this.id,
     required this.userId,
@@ -138,20 +121,28 @@ class SecuritySession {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
+  final String id;
+  final String userId;
+  final String deviceId;
+  final String? ipAddress;
+  final String? userAgent;
+  final SecuritySessionStatus status;
+  final DateTime createdAt;
+  final DateTime lastActivityAt;
+  final DateTime expiresAt;
+  final Map<String, dynamic> metadata;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'deviceId': deviceId,
-      'ipAddress': ipAddress,
-      'userAgent': userAgent,
-      'status': status.name,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'lastActivityAt': Timestamp.fromDate(lastActivityAt),
-      'expiresAt': Timestamp.fromDate(expiresAt),
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'userId': userId,
+        'deviceId': deviceId,
+        'ipAddress': ipAddress,
+        'userAgent': userAgent,
+        'status': status.name,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'lastActivityAt': Timestamp.fromDate(lastActivityAt),
+        'expiresAt': Timestamp.fromDate(expiresAt),
+        'metadata': metadata,
+      };
 
   SecuritySession copyWith({
     String? id,
@@ -164,34 +155,23 @@ class SecuritySession {
     DateTime? lastActivityAt,
     DateTime? expiresAt,
     Map<String, dynamic>? metadata,
-  }) {
-    return SecuritySession(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      deviceId: deviceId ?? this.deviceId,
-      ipAddress: ipAddress ?? this.ipAddress,
-      userAgent: userAgent ?? this.userAgent,
-      status: status ?? this.status,
-      createdAt: createdAt ?? this.createdAt,
-      lastActivityAt: lastActivityAt ?? this.lastActivityAt,
-      expiresAt: expiresAt ?? this.expiresAt,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      SecuritySession(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        deviceId: deviceId ?? this.deviceId,
+        ipAddress: ipAddress ?? this.ipAddress,
+        userAgent: userAgent ?? this.userAgent,
+        status: status ?? this.status,
+        createdAt: createdAt ?? this.createdAt,
+        lastActivityAt: lastActivityAt ?? this.lastActivityAt,
+        expiresAt: expiresAt ?? this.expiresAt,
+        metadata: metadata ?? this.metadata,
+      );
 }
 
 /// Предупреждение безопасности
 class SecurityAlert {
-  final String id;
-  final String userId;
-  final SecurityAlertType type;
-  final String description;
-  final SecurityAlertStatus status;
-  final SecurityAlertSeverity severity;
-  final DateTime createdAt;
-  final DateTime? resolvedAt;
-  final Map<String, dynamic> metadata;
-
   const SecurityAlert({
     required this.id,
     required this.userId,
@@ -229,32 +209,31 @@ class SecurityAlert {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
+  final String id;
+  final String userId;
+  final SecurityAlertType type;
+  final String description;
+  final SecurityAlertStatus status;
+  final SecurityAlertSeverity severity;
+  final DateTime createdAt;
+  final DateTime? resolvedAt;
+  final Map<String, dynamic> metadata;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'type': type.name,
-      'description': description,
-      'status': status.name,
-      'severity': severity.name,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'userId': userId,
+        'type': type.name,
+        'description': description,
+        'status': status.name,
+        'severity': severity.name,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'resolvedAt':
+            resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+        'metadata': metadata,
+      };
 }
 
 /// Блокировка пользователя
 class UserBlock {
-  final String id;
-  final String userId;
-  final String reason;
-  final String? blockedBy;
-  final UserBlockStatus status;
-  final DateTime createdAt;
-  final DateTime expiresAt;
-  final Map<String, dynamic> metadata;
-
   const UserBlock({
     required this.id,
     required this.userId,
@@ -282,18 +261,24 @@ class UserBlock {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
+  final String id;
+  final String userId;
+  final String reason;
+  final String? blockedBy;
+  final UserBlockStatus status;
+  final DateTime createdAt;
+  final DateTime expiresAt;
+  final Map<String, dynamic> metadata;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'reason': reason,
-      'blockedBy': blockedBy,
-      'status': status.name,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'expiresAt': Timestamp.fromDate(expiresAt),
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'userId': userId,
+        'reason': reason,
+        'blockedBy': blockedBy,
+        'status': status.name,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'expiresAt': Timestamp.fromDate(expiresAt),
+        'metadata': metadata,
+      };
 }
 
 /// Статусы сессий безопасности

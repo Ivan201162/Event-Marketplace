@@ -1,8 +1,8 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:event_marketplace_app/screens/booking_form_screen.dart';
 import 'package:event_marketplace_app/models/specialist.dart';
+import 'package:event_marketplace_app/screens/booking_form_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('BookingFormScreen', () {
@@ -18,14 +18,13 @@ void main() {
         subcategories: ['свадебная фотография'],
         experienceLevel: ExperienceLevel.advanced,
         yearsOfExperience: 5,
-        hourlyRate: 3000.0,
-        minBookingHours: 2.0,
-        maxBookingHours: 12.0,
+        hourlyRate: 3000,
+        minBookingHours: 2,
+        maxBookingHours: 12,
         serviceAreas: ['Москва'],
         languages: ['Русский'],
         equipment: ['Canon EOS R5'],
         portfolio: ['https://example.com/portfolio'],
-        isAvailable: true,
         isVerified: true,
         rating: 4.8,
         reviewCount: 47,
@@ -34,11 +33,10 @@ void main() {
       );
     });
 
-    testWidgets('should display specialist information',
-        (WidgetTester tester) async {
+    testWidgets('should display specialist information', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: BookingFormScreen(specialistId: 'specialist_1'),
           ),
@@ -54,10 +52,10 @@ void main() {
       expect(find.text('3000 ₽/час'), findsOneWidget);
     });
 
-    testWidgets('should display form fields', (WidgetTester tester) async {
+    testWidgets('should display form fields', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: BookingFormScreen(specialistId: 'specialist_1'),
           ),
@@ -75,11 +73,10 @@ void main() {
       expect(find.text('Дополнительные пожелания'), findsOneWidget);
     });
 
-    testWidgets('should display date and time selection',
-        (WidgetTester tester) async {
+    testWidgets('should display date and time selection', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: BookingFormScreen(specialistId: 'specialist_1'),
           ),
@@ -93,11 +90,10 @@ void main() {
       expect(find.text('Продолжительность'), findsOneWidget);
     });
 
-    testWidgets('should display price calculation',
-        (WidgetTester tester) async {
+    testWidgets('should display price calculation', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: BookingFormScreen(specialistId: 'specialist_1'),
           ),
@@ -114,10 +110,10 @@ void main() {
       expect(find.text('Итого'), findsOneWidget);
     });
 
-    testWidgets('should display submit button', (WidgetTester tester) async {
+    testWidgets('should display submit button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: BookingFormScreen(specialistId: 'specialist_1'),
           ),
@@ -130,10 +126,10 @@ void main() {
       expect(find.text('Создать заявку'), findsOneWidget);
     });
 
-    testWidgets('should validate required fields', (WidgetTester tester) async {
+    testWidgets('should validate required fields', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: BookingFormScreen(specialistId: 'specialist_1'),
           ),
@@ -150,11 +146,10 @@ void main() {
       expect(find.text('Создать заявку'), findsOneWidget);
     });
 
-    testWidgets('should allow entering event name',
-        (WidgetTester tester) async {
+    testWidgets('should allow entering event name', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: BookingFormScreen(specialistId: 'specialist_1'),
           ),
@@ -171,11 +166,10 @@ void main() {
       expect(find.text('Test Event'), findsOneWidget);
     });
 
-    testWidgets('should allow entering event description',
-        (WidgetTester tester) async {
+    testWidgets('should allow entering event description', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: BookingFormScreen(specialistId: 'specialist_1'),
           ),
@@ -193,11 +187,10 @@ void main() {
       expect(find.text('Test description'), findsOneWidget);
     });
 
-    testWidgets('should allow entering event location',
-        (WidgetTester tester) async {
+    testWidgets('should allow entering event location', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: BookingFormScreen(specialistId: 'specialist_1'),
           ),
@@ -215,11 +208,10 @@ void main() {
       expect(find.text('Test Location'), findsOneWidget);
     });
 
-    testWidgets('should allow entering contact phone',
-        (WidgetTester tester) async {
+    testWidgets('should allow entering contact phone', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: BookingFormScreen(specialistId: 'specialist_1'),
           ),
@@ -237,11 +229,10 @@ void main() {
       expect(find.text('+7 (999) 123-45-67'), findsOneWidget);
     });
 
-    testWidgets('should allow entering contact email',
-        (WidgetTester tester) async {
+    testWidgets('should allow entering contact email', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: BookingFormScreen(specialistId: 'specialist_1'),
           ),
@@ -259,11 +250,10 @@ void main() {
       expect(find.text('test@example.com'), findsOneWidget);
     });
 
-    testWidgets('should allow entering special requests',
-        (WidgetTester tester) async {
+    testWidgets('should allow entering special requests', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: BookingFormScreen(specialistId: 'specialist_1'),
           ),
@@ -281,11 +271,10 @@ void main() {
       expect(find.text('Special requests'), findsOneWidget);
     });
 
-    testWidgets('should show loading state initially',
-        (WidgetTester tester) async {
+    testWidgets('should show loading state initially', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: BookingFormScreen(specialistId: 'specialist_1'),
           ),
@@ -297,10 +286,10 @@ void main() {
     });
 
     testWidgets('should show error state when specialist not found',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: BookingFormScreen(specialistId: 'nonexistent_specialist'),
           ),

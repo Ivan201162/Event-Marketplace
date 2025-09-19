@@ -111,7 +111,10 @@ class ProposalService {
 
       // Отправляем уведомление организатору
       await _sendProposalRejectedNotification(
-          proposal.organizerId, proposal, reason);
+        proposal.organizerId,
+        proposal,
+        reason,
+      );
 
       // Логируем отклонение предложения
       await _logProposalAction(proposalId, 'rejected', customerId);
@@ -129,7 +132,7 @@ class ProposalService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => Proposal.fromDocument(doc)).toList();
+      return snapshot.docs.map(Proposal.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения предложений чата: $e');
     }
@@ -144,7 +147,7 @@ class ProposalService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => Proposal.fromDocument(doc)).toList();
+      return snapshot.docs.map(Proposal.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения предложений организатора: $e');
     }
@@ -159,7 +162,7 @@ class ProposalService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => Proposal.fromDocument(doc)).toList();
+      return snapshot.docs.map(Proposal.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения предложений клиента: $e');
     }
@@ -186,7 +189,7 @@ class ProposalService {
     int limit = 10,
   }) async {
     try {
-      Query query = _firestore
+      var query = _firestore
           .collection('specialists')
           .where('isActive', isEqualTo: true)
           .where('categories', arrayContainsAny: categoryIds);
@@ -197,7 +200,7 @@ class ProposalService {
 
       final snapshot = await query.limit(limit).get();
 
-      return snapshot.docs.map((doc) => Specialist.fromDocument(doc)).toList();
+      return snapshot.docs.map(Specialist.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения специалистов для предложения: $e');
     }
@@ -211,10 +214,10 @@ class ProposalService {
           .where('organizerId', isEqualTo: organizerId)
           .get();
 
-      int totalProposals = 0;
-      int acceptedProposals = 0;
-      int rejectedProposals = 0;
-      int pendingProposals = 0;
+      var totalProposals = 0;
+      var acceptedProposals = 0;
+      var rejectedProposals = 0;
+      var pendingProposals = 0;
       double totalRevenue = 0;
 
       for (final doc in snapshot.docs) {
@@ -255,7 +258,9 @@ class ProposalService {
 
   /// Создать бронирование из предложения
   Future<void> _createBookingFromProposal(
-      Proposal proposal, ProposalSpecialist specialist) async {
+    Proposal proposal,
+    ProposalSpecialist specialist,
+  ) async {
     try {
       final now = DateTime.now();
 
@@ -283,14 +288,16 @@ class ProposalService {
 
   /// Отправить уведомление о предложении
   Future<void> _sendProposalNotification(
-      String customerId, Proposal proposal) async {
+    String customerId,
+    Proposal proposal,
+  ) async {
     try {
       // Получаем FCM токены клиента
       final customerDoc =
           await _firestore.collection('users').doc(customerId).get();
       if (!customerDoc.exists) return;
 
-      final customerData = customerDoc.data()!;
+      final customerData = customerDoc.data();
       final fcmTokens = List<String>.from(customerData['fcmTokens'] ?? []);
 
       if (fcmTokens.isEmpty) return;
@@ -324,14 +331,16 @@ class ProposalService {
 
   /// Отправить уведомление о принятии предложения
   Future<void> _sendProposalAcceptedNotification(
-      String organizerId, Proposal proposal) async {
+    String organizerId,
+    Proposal proposal,
+  ) async {
     try {
       // Получаем FCM токены организатора
       final organizerDoc =
           await _firestore.collection('users').doc(organizerId).get();
       if (!organizerDoc.exists) return;
 
-      final organizerData = organizerDoc.data()!;
+      final organizerData = organizerDoc.data();
       final fcmTokens = List<String>.from(organizerData['fcmTokens'] ?? []);
 
       if (fcmTokens.isEmpty) return;
@@ -364,14 +373,17 @@ class ProposalService {
 
   /// Отправить уведомление об отклонении предложения
   Future<void> _sendProposalRejectedNotification(
-      String organizerId, Proposal proposal, String? reason) async {
+    String organizerId,
+    Proposal proposal,
+    String? reason,
+  ) async {
     try {
       // Получаем FCM токены организатора
       final organizerDoc =
           await _firestore.collection('users').doc(organizerId).get();
       if (!organizerDoc.exists) return;
 
-      final organizerData = organizerDoc.data()!;
+      final organizerData = organizerDoc.data();
       final fcmTokens = List<String>.from(organizerData['fcmTokens'] ?? []);
 
       if (fcmTokens.isEmpty) return;
@@ -403,7 +415,10 @@ class ProposalService {
 
   /// Логировать действие с предложением
   Future<void> _logProposalAction(
-      String proposalId, String action, String userId) async {
+    String proposalId,
+    String action,
+    String userId,
+  ) async {
     try {
       await _firestore.collection('proposalLogs').add({
         'proposalId': proposalId,

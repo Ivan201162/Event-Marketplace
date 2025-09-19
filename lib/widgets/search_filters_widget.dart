@@ -3,14 +3,13 @@ import '../models/specialist.dart';
 
 /// Виджет фильтров поиска
 class SearchFiltersWidget extends StatefulWidget {
-  final Function(SpecialistFilters) onFiltersChanged;
-  final SpecialistFilters? initialFilters;
-
   const SearchFiltersWidget({
     super.key,
     required this.onFiltersChanged,
     this.initialFilters,
   });
+  final Function(SpecialistFilters) onFiltersChanged;
+  final SpecialistFilters? initialFilters;
 
   @override
   State<SearchFiltersWidget> createState() => _SearchFiltersWidgetState();
@@ -41,124 +40,119 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Заголовок
-        Row(
-          children: [
-            const Text(
-              'Фильтры',
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.bold,
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Заголовок
+          Row(
+            children: [
+              const Text(
+                'Фильтры',
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const Spacer(),
-            TextButton(
-              onPressed: _clearFilters,
-              child: const Text('Сбросить'),
-            ),
-          ],
-        ),
+              const Spacer(),
+              TextButton(
+                onPressed: _clearFilters,
+                child: const Text('Сбросить'),
+              ),
+            ],
+          ),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        // Категория
-        _buildCategoryFilter(),
+          // Категория
+          _buildCategoryFilter(),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        // Подкатегории
-        _buildSubcategoriesFilter(),
+          // Подкатегории
+          _buildSubcategoriesFilter(),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        // Уровень опыта
-        _buildExperienceFilter(),
+          // Уровень опыта
+          _buildExperienceFilter(),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        // Цена и рейтинг
-        Row(
-          children: [
-            Expanded(child: _buildPriceFilter()),
-            const SizedBox(width: 16),
-            Expanded(child: _buildRatingFilter()),
-          ],
-        ),
+          // Цена и рейтинг
+          Row(
+            children: [
+              Expanded(child: _buildPriceFilter()),
+              const SizedBox(width: 16),
+              Expanded(child: _buildRatingFilter()),
+            ],
+          ),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        // Области обслуживания
-        _buildServiceAreasFilter(),
+          // Области обслуживания
+          _buildServiceAreasFilter(),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        // Языки
-        _buildLanguagesFilter(),
+          // Языки
+          _buildLanguagesFilter(),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        // Дополнительные фильтры
-        _buildAdditionalFilters(),
+          // Дополнительные фильтры
+          _buildAdditionalFilters(),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        // Фильтр по дате
-        _buildDateFilter(),
+          // Фильтр по дате
+          _buildDateFilter(),
 
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        // Сортировка
-        _buildSortFilter(),
-      ],
-    );
-  }
+          // Сортировка
+          _buildSortFilter(),
+        ],
+      );
 
   /// Построить фильтр категории
-  Widget _buildCategoryFilter() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Категория',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 8),
-        DropdownButtonFormField<SpecialistCategory?>(
-          initialValue: _filters.category,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          ),
-          hint: const Text('Все категории'),
-          items: [
-            const DropdownMenuItem<SpecialistCategory?>(
-              value: null,
-              child: Text('Все категории'),
+  Widget _buildCategoryFilter() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Категория',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
             ),
-            ...SpecialistCategory.values.map((category) {
-              return DropdownMenuItem<SpecialistCategory?>(
-                value: category,
-                child: Text(category.displayName),
-              );
-            }),
-          ],
-          onChanged: (value) {
-            setState(() {
-              _filters = _filters.copyWith(category: value);
-            });
-            widget.onFiltersChanged(_filters);
-          },
-        ),
-      ],
-    );
-  }
+          ),
+          const SizedBox(height: 8),
+          DropdownButtonFormField<SpecialistCategory?>(
+            initialValue: _filters.category,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            ),
+            hint: const Text('Все категории'),
+            items: [
+              const DropdownMenuItem<SpecialistCategory?>(
+                child: Text('Все категории'),
+              ),
+              ...SpecialistCategory.values.map(
+                (category) => DropdownMenuItem<SpecialistCategory?>(
+                  value: category,
+                  child: Text(category.displayName),
+                ),
+              ),
+            ],
+            onChanged: (value) {
+              setState(() {
+                _filters = _filters.copyWith(category: value);
+              });
+              widget.onFiltersChanged(_filters);
+            },
+          ),
+        ],
+      );
 
   /// Построить фильтр подкатегорий
   Widget _buildSubcategoriesFilter() {
@@ -211,113 +205,106 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
   }
 
   /// Построить фильтр опыта
-  Widget _buildExperienceFilter() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Минимальный опыт',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 8),
-        DropdownButtonFormField<ExperienceLevel?>(
-          initialValue: _filters.minExperienceLevel,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          ),
-          hint: const Text('Любой опыт'),
-          items: [
-            const DropdownMenuItem<ExperienceLevel?>(
-              value: null,
-              child: Text('Любой опыт'),
+  Widget _buildExperienceFilter() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Минимальный опыт',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
             ),
-            ...ExperienceLevel.values.map((level) {
-              return DropdownMenuItem<ExperienceLevel?>(
-                value: level,
-                child: Text(level.displayName),
-              );
-            }),
-          ],
-          onChanged: (value) {
-            setState(() {
-              _filters = _filters.copyWith(minExperienceLevel: value);
-            });
-            widget.onFiltersChanged(_filters);
-          },
-        ),
-      ],
-    );
-  }
+          ),
+          const SizedBox(height: 8),
+          DropdownButtonFormField<ExperienceLevel?>(
+            initialValue: _filters.minExperienceLevel,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            ),
+            hint: const Text('Любой опыт'),
+            items: [
+              const DropdownMenuItem<ExperienceLevel?>(
+                child: Text('Любой опыт'),
+              ),
+              ...ExperienceLevel.values.map(
+                (level) => DropdownMenuItem<ExperienceLevel?>(
+                  value: level,
+                  child: Text(level.displayName),
+                ),
+              ),
+            ],
+            onChanged: (value) {
+              setState(() {
+                _filters = _filters.copyWith(minExperienceLevel: value);
+              });
+              widget.onFiltersChanged(_filters);
+            },
+          ),
+        ],
+      );
 
   /// Построить фильтр цены
-  Widget _buildPriceFilter() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Максимальная цена (₽/час)',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
+  Widget _buildPriceFilter() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Максимальная цена (₽/час)',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
-          controller: _priceController,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            hintText: 'Не ограничено',
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: _priceController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              hintText: 'Не ограничено',
+            ),
+            keyboardType: TextInputType.number,
+            onChanged: (value) {
+              final price = double.tryParse(value);
+              setState(() {
+                _filters = _filters.copyWith(maxHourlyRate: price);
+              });
+              widget.onFiltersChanged(_filters);
+            },
           ),
-          keyboardType: TextInputType.number,
-          onChanged: (value) {
-            final price = double.tryParse(value);
-            setState(() {
-              _filters = _filters.copyWith(maxHourlyRate: price);
-            });
-            widget.onFiltersChanged(_filters);
-          },
-        ),
-      ],
-    );
-  }
+        ],
+      );
 
   /// Построить фильтр рейтинга
-  Widget _buildRatingFilter() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Минимальный рейтинг',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
+  Widget _buildRatingFilter() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Минимальный рейтинг',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
-        TextFormField(
-          controller: _ratingController,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            hintText: 'Любой рейтинг',
+          const SizedBox(height: 8),
+          TextFormField(
+            controller: _ratingController,
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              hintText: 'Любой рейтинг',
+            ),
+            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+            onChanged: (value) {
+              final rating = double.tryParse(value);
+              setState(() {
+                _filters = _filters.copyWith(minRating: rating);
+              });
+              widget.onFiltersChanged(_filters);
+            },
           ),
-          keyboardType: TextInputType.numberWithOptions(decimal: true),
-          onChanged: (value) {
-            final rating = double.tryParse(value);
-            setState(() {
-              _filters = _filters.copyWith(minRating: rating);
-            });
-            widget.onFiltersChanged(_filters);
-          },
-        ),
-      ],
-    );
-  }
+        ],
+      );
 
   /// Построить фильтр областей обслуживания
   Widget _buildServiceAreasFilter() {
@@ -415,110 +402,110 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
   }
 
   /// Построить дополнительные фильтры
-  Widget _buildAdditionalFilters() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Дополнительно',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
+  Widget _buildAdditionalFilters() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Дополнительно',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: CheckboxListTile(
-                title: const Text('Только верифицированные'),
-                value: _filters.isVerified ?? false,
-                onChanged: (value) {
-                  setState(() {
-                    _filters = _filters.copyWith(isVerified: value);
-                  });
-                  widget.onFiltersChanged(_filters);
-                },
-                contentPadding: EdgeInsets.zero,
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: CheckboxListTile(
+                  title: const Text('Только верифицированные'),
+                  value: _filters.isVerified ?? false,
+                  onChanged: (value) {
+                    setState(() {
+                      _filters = _filters.copyWith(isVerified: value);
+                    });
+                    widget.onFiltersChanged(_filters);
+                  },
+                  contentPadding: EdgeInsets.zero,
+                ),
               ),
-            ),
-            Expanded(
-              child: CheckboxListTile(
-                title: const Text('Только доступные'),
-                value: _filters.isAvailable ?? false,
-                onChanged: (value) {
-                  setState(() {
-                    _filters = _filters.copyWith(isAvailable: value);
-                  });
-                  widget.onFiltersChanged(_filters);
-                },
-                contentPadding: EdgeInsets.zero,
+              Expanded(
+                child: CheckboxListTile(
+                  title: const Text('Только доступные'),
+                  value: _filters.isAvailable ?? false,
+                  onChanged: (value) {
+                    setState(() {
+                      _filters = _filters.copyWith(isAvailable: value);
+                    });
+                    widget.onFiltersChanged(_filters);
+                  },
+                  contentPadding: EdgeInsets.zero,
+                ),
               ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+            ],
+          ),
+        ],
+      );
 
   /// Построить фильтр сортировки
-  Widget _buildSortFilter() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Сортировка',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
+  Widget _buildSortFilter() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Сортировка',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
           ),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          children: [
-            Expanded(
-              child: DropdownButtonFormField<String>(
-                initialValue: _filters.sortBy,
-                decoration: const InputDecoration(
-                  border: OutlineInputBorder(),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Expanded(
+                child: DropdownButtonFormField<String>(
+                  initialValue: _filters.sortBy,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    contentPadding:
+                        EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  ),
+                  items: const [
+                    DropdownMenuItem(
+                        value: 'rating', child: Text('По рейтингу')),
+                    DropdownMenuItem(value: 'price', child: Text('По цене')),
+                    DropdownMenuItem(
+                      value: 'experience',
+                      child: Text('По опыту'),
+                    ),
+                    DropdownMenuItem(
+                        value: 'reviews', child: Text('По отзывам')),
+                  ],
+                  onChanged: (value) {
+                    setState(() {
+                      _filters = _filters.copyWith(sortBy: value);
+                    });
+                    widget.onFiltersChanged(_filters);
+                  },
                 ),
-                items: const [
-                  DropdownMenuItem(value: 'rating', child: Text('По рейтингу')),
-                  DropdownMenuItem(value: 'price', child: Text('По цене')),
-                  DropdownMenuItem(
-                      value: 'experience', child: Text('По опыту')),
-                  DropdownMenuItem(value: 'reviews', child: Text('По отзывам')),
-                ],
-                onChanged: (value) {
+              ),
+              const SizedBox(width: 12),
+              IconButton(
+                icon: Icon(
+                  _filters.sortAscending
+                      ? Icons.arrow_upward
+                      : Icons.arrow_downward,
+                ),
+                onPressed: () {
                   setState(() {
-                    _filters = _filters.copyWith(sortBy: value);
+                    _filters = _filters.copyWith(
+                        sortAscending: !_filters.sortAscending);
                   });
                   widget.onFiltersChanged(_filters);
                 },
               ),
-            ),
-            const SizedBox(width: 12),
-            IconButton(
-              icon: Icon(
-                _filters.sortAscending
-                    ? Icons.arrow_upward
-                    : Icons.arrow_downward,
-              ),
-              onPressed: () {
-                setState(() {
-                  _filters =
-                      _filters.copyWith(sortAscending: !_filters.sortAscending);
-                });
-                widget.onFiltersChanged(_filters);
-              },
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+            ],
+          ),
+        ],
+      );
 
   /// Получить доступные подкатегории
   List<String> _getAvailableSubcategories() {
@@ -537,81 +524,75 @@ class _SearchFiltersWidgetState extends State<SearchFiltersWidget> {
   }
 
   /// Получить доступные области обслуживания
-  List<String> _getAvailableServiceAreas() {
-    return [
-      'Москва',
-      'Санкт-Петербург',
-      'Московская область',
-      'Калужская область',
-      'Тверская область',
-    ];
-  }
+  List<String> _getAvailableServiceAreas() => [
+        'Москва',
+        'Санкт-Петербург',
+        'Московская область',
+        'Калужская область',
+        'Тверская область',
+      ];
 
   /// Получить доступные языки
-  List<String> _getAvailableLanguages() {
-    return [
-      'Русский',
-      'Английский',
-      'Французский',
-      'Немецкий',
-      'Испанский',
-    ];
-  }
+  List<String> _getAvailableLanguages() => [
+        'Русский',
+        'Английский',
+        'Французский',
+        'Немецкий',
+        'Испанский',
+      ];
 
   /// Построить фильтр по дате
-  Widget _buildDateFilter() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'Доступность на дату',
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 8),
-        InkWell(
-          onTap: _selectDate,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(4),
+  Widget _buildDateFilter() => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Доступность на дату',
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
             ),
-            child: Row(
-              children: [
-                const Icon(Icons.calendar_today, size: 20),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    _filters.availableDate != null
-                        ? '${_filters.availableDate!.day}.${_filters.availableDate!.month}.${_filters.availableDate!.year}'
-                        : 'Выберите дату',
-                    style: TextStyle(
-                      color: _filters.availableDate != null
-                          ? Colors.black
-                          : Colors.grey[600],
+          ),
+          const SizedBox(height: 8),
+          InkWell(
+            onTap: _selectDate,
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 16),
+              decoration: BoxDecoration(
+                border: Border.all(color: Colors.grey),
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: Row(
+                children: [
+                  const Icon(Icons.calendar_today, size: 20),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      _filters.availableDate != null
+                          ? '${_filters.availableDate!.day}.${_filters.availableDate!.month}.${_filters.availableDate!.year}'
+                          : 'Выберите дату',
+                      style: TextStyle(
+                        color: _filters.availableDate != null
+                            ? Colors.black
+                            : Colors.grey[600],
+                      ),
                     ),
                   ),
-                ),
-                if (_filters.availableDate != null)
-                  IconButton(
-                    icon: const Icon(Icons.clear, size: 16),
-                    onPressed: () {
-                      setState(() {
-                        _filters = _filters.copyWith(availableDate: null);
-                      });
-                      widget.onFiltersChanged(_filters);
-                    },
-                  ),
-              ],
+                  if (_filters.availableDate != null)
+                    IconButton(
+                      icon: const Icon(Icons.clear, size: 16),
+                      onPressed: () {
+                        setState(() {
+                          _filters = _filters.copyWith();
+                        });
+                        widget.onFiltersChanged(_filters);
+                      },
+                    ),
+                ],
+              ),
             ),
           ),
-        ),
-      ],
-    );
-  }
+        ],
+      );
 
   /// Выбрать дату
   Future<void> _selectDate() async {

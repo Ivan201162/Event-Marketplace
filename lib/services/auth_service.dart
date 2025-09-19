@@ -1,10 +1,12 @@
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+import '../core/safe_log.dart';
 import '../models/user.dart';
 import 'storage_service.dart';
-import '../core/safe_log.dart';
 
 /// Сервис для управления аутентификацией пользователей
 class AuthService {
@@ -62,7 +64,8 @@ class AuthService {
       final appUser = await getCurrentUser();
       if (appUser != null) {
         SafeLog.info(
-            'Сессия успешно восстановлена для пользователя: ${appUser.displayName}');
+          'Сессия успешно восстановлена для пользователя: ${appUser.displayName}',
+        );
         return appUser;
       } else {
         SafeLog.warning('Пользователь не найден в Firestore');
@@ -90,23 +93,22 @@ class AuthService {
   }
 
   /// Поток текущего пользователя
-  Stream<AppUser?> get currentUserStream {
-    return authStateChanges.asyncMap((firebaseUser) async {
-      if (firebaseUser == null) return null;
+  Stream<AppUser?> get currentUserStream =>
+      authStateChanges.asyncMap((firebaseUser) async {
+        if (firebaseUser == null) return null;
 
-      try {
-        final doc =
-            await _firestore.collection('users').doc(firebaseUser.uid).get();
-        if (doc.exists) {
-          return AppUser.fromDocument(doc);
+        try {
+          final doc =
+              await _firestore.collection('users').doc(firebaseUser.uid).get();
+          if (doc.exists) {
+            return AppUser.fromDocument(doc);
+          }
+          return null;
+        } catch (e) {
+          print('Ошибка получения пользователя: $e');
+          return null;
         }
-        return null;
-      } catch (e) {
-        print('Ошибка получения пользователя: $e');
-        return null;
-      }
-    });
-  }
+      });
 
   /// Регистрация с email и паролем
   Future<AppUser?> signUpWithEmailAndPassword({
@@ -208,14 +210,13 @@ class AuthService {
     try {
       SafeLog.info('Начало входа через Google...');
 
-      final GoogleSignInAccount? googleUser = await _googleSignIn.signIn();
+      final googleUser = await _googleSignIn.signIn();
       if (googleUser == null) {
         SafeLog.info('Пользователь отменил вход через Google');
         return null; // Пользователь отменил вход
       }
 
-      final GoogleSignInAuthentication googleAuth =
-          await googleUser.authentication;
+      final googleAuth = await googleUser.authentication;
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
@@ -230,7 +231,8 @@ class AuthService {
       }
 
       SafeLog.info(
-          'Firebase аутентификация успешна для: ${firebaseUser.email}');
+        'Firebase аутентификация успешна для: ${firebaseUser.email}',
+      );
 
       // Проверяем, существует ли пользователь в Firestore
       final userDoc =
@@ -244,7 +246,6 @@ class AuthService {
           firebaseUser.email ?? '',
           displayName: firebaseUser.displayName,
           photoURL: firebaseUser.photoURL,
-          role: UserRole.customer,
           socialProvider: 'google',
           socialId: googleUser.id,
         );
@@ -277,7 +278,8 @@ class AuthService {
       // Это требует дополнительной настройки VK SDK
       // Пока возвращаем заглушку
       throw Exception(
-          'VK Sign-In пока не реализован. Требуется настройка VK SDK.');
+        'VK Sign-In пока не реализован. Требуется настройка VK SDK.',
+      );
     } catch (e) {
       throw Exception('Ошибка входа через VK: $e');
     }

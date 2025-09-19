@@ -1,30 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/share_service.dart';
-import '../models/event.dart';
-import '../models/user.dart';
-import '../models/booking.dart';
+
 import '../core/feature_flags.dart';
 import '../core/safe_log.dart';
+import '../models/booking.dart';
+import '../models/event.dart';
+import '../models/user.dart';
+import '../services/share_service.dart';
 
 /// Виджет для шаринга контента
 class ShareWidget extends ConsumerWidget {
-  final Event? event;
-  final AppUser? user;
-  final Booking? booking;
-  final String? text;
-  final String? filePath;
-  final List<String>? filePaths;
-  final String? url;
-  final String? title;
-  final String? customMessage;
-  final IconData? icon;
-  final bool showAsButton;
-  final bool showAsIconButton;
-  final bool showAsListTile;
-  final VoidCallback? onSuccess;
-  final VoidCallback? onError;
-
   const ShareWidget({
     super.key,
     this.event,
@@ -43,6 +28,21 @@ class ShareWidget extends ConsumerWidget {
     this.onSuccess,
     this.onError,
   });
+  final Event? event;
+  final AppUser? user;
+  final Booking? booking;
+  final String? text;
+  final String? filePath;
+  final List<String>? filePaths;
+  final String? url;
+  final String? title;
+  final String? customMessage;
+  final IconData? icon;
+  final bool showAsButton;
+  final bool showAsIconButton;
+  final bool showAsListTile;
+  final VoidCallback? onSuccess;
+  final VoidCallback? onError;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -61,55 +61,62 @@ class ShareWidget extends ConsumerWidget {
     }
   }
 
-  Widget _buildIconButton(BuildContext context) {
-    return IconButton(
-      onPressed: () => _shareContent(context),
-      icon: Icon(icon ?? Icons.share),
-      tooltip: title ?? 'Поделиться',
-    );
-  }
+  Widget _buildIconButton(BuildContext context) => IconButton(
+        onPressed: () => _shareContent(context),
+        icon: Icon(icon ?? Icons.share),
+        tooltip: title ?? 'Поделиться',
+      );
 
-  Widget _buildButton(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: () => _shareContent(context),
-      icon: Icon(icon ?? Icons.share),
-      label: Text(title ?? 'Поделиться'),
-    );
-  }
+  Widget _buildButton(BuildContext context) => ElevatedButton.icon(
+        onPressed: () => _shareContent(context),
+        icon: Icon(icon ?? Icons.share),
+        label: Text(title ?? 'Поделиться'),
+      );
 
-  Widget _buildListTile(BuildContext context) {
-    return ListTile(
-      leading: Icon(icon ?? Icons.share),
-      title: Text(title ?? 'Поделиться'),
-      subtitle: const Text('Поделиться с друзьями'),
-      onTap: () => _shareContent(context),
-    );
-  }
+  Widget _buildListTile(BuildContext context) => ListTile(
+        leading: Icon(icon ?? Icons.share),
+        title: Text(title ?? 'Поделиться'),
+        subtitle: const Text('Поделиться с друзьями'),
+        onTap: () => _shareContent(context),
+      );
 
   Future<void> _shareContent(BuildContext context) async {
     try {
-      bool success = false;
+      var success = false;
 
       if (event != null) {
         success =
             await ShareService.shareEvent(event!, customMessage: customMessage);
       } else if (user != null) {
-        success = await ShareService.shareProfile(user!,
-            customMessage: customMessage);
+        success = await ShareService.shareProfile(
+          user!,
+          customMessage: customMessage,
+        );
       } else if (booking != null) {
-        success = await ShareService.shareBooking(booking!,
-            customMessage: customMessage);
+        success = await ShareService.shareBooking(
+          booking!,
+          customMessage: customMessage,
+        );
       } else if (text != null) {
         success = await ShareService.shareText(text!, subject: title);
       } else if (filePath != null) {
-        success = await ShareService.shareFile(filePath!,
-            text: customMessage, subject: title);
+        success = await ShareService.shareFile(
+          filePath!,
+          text: customMessage,
+          subject: title,
+        );
       } else if (filePaths != null) {
-        success = await ShareService.shareFiles(filePaths!,
-            text: customMessage, subject: title);
+        success = await ShareService.shareFiles(
+          filePaths!,
+          text: customMessage,
+          subject: title,
+        );
       } else if (url != null) {
-        success = await ShareService.shareLink(url!,
-            title: title, description: customMessage);
+        success = await ShareService.shareLink(
+          url!,
+          title: title,
+          description: customMessage,
+        );
       }
 
       if (success) {
@@ -151,14 +158,6 @@ class ShareWidget extends ConsumerWidget {
 
 /// Виджет для шаринга события
 class EventShareWidget extends StatelessWidget {
-  final Event event;
-  final String? title;
-  final IconData? icon;
-  final bool showAsButton;
-  final bool showAsIconButton;
-  final bool showAsListTile;
-  final String? customMessage;
-
   const EventShareWidget({
     super.key,
     required this.event,
@@ -169,24 +168,7 @@ class EventShareWidget extends StatelessWidget {
     this.showAsListTile = false,
     this.customMessage,
   });
-
-  @override
-  Widget build(BuildContext context) {
-    return ShareWidget(
-      event: event,
-      title: title ?? 'Поделиться событием',
-      icon: icon ?? Icons.share,
-      showAsButton: showAsButton,
-      showAsIconButton: showAsIconButton,
-      showAsListTile: showAsListTile,
-      customMessage: customMessage,
-    );
-  }
-}
-
-/// Виджет для шаринга профиля
-class ProfileShareWidget extends StatelessWidget {
-  final AppUser user;
+  final Event event;
   final String? title;
   final IconData? icon;
   final bool showAsButton;
@@ -194,6 +176,20 @@ class ProfileShareWidget extends StatelessWidget {
   final bool showAsListTile;
   final String? customMessage;
 
+  @override
+  Widget build(BuildContext context) => ShareWidget(
+        event: event,
+        title: title ?? 'Поделиться событием',
+        icon: icon ?? Icons.share,
+        showAsButton: showAsButton,
+        showAsIconButton: showAsIconButton,
+        showAsListTile: showAsListTile,
+        customMessage: customMessage,
+      );
+}
+
+/// Виджет для шаринга профиля
+class ProfileShareWidget extends StatelessWidget {
   const ProfileShareWidget({
     super.key,
     required this.user,
@@ -204,24 +200,7 @@ class ProfileShareWidget extends StatelessWidget {
     this.showAsListTile = false,
     this.customMessage,
   });
-
-  @override
-  Widget build(BuildContext context) {
-    return ShareWidget(
-      user: user,
-      title: title ?? 'Поделиться профилем',
-      icon: icon ?? Icons.share,
-      showAsButton: showAsButton,
-      showAsIconButton: showAsIconButton,
-      showAsListTile: showAsListTile,
-      customMessage: customMessage,
-    );
-  }
-}
-
-/// Виджет для шаринга бронирования
-class BookingShareWidget extends StatelessWidget {
-  final Booking booking;
+  final AppUser user;
   final String? title;
   final IconData? icon;
   final bool showAsButton;
@@ -229,6 +208,20 @@ class BookingShareWidget extends StatelessWidget {
   final bool showAsListTile;
   final String? customMessage;
 
+  @override
+  Widget build(BuildContext context) => ShareWidget(
+        user: user,
+        title: title ?? 'Поделиться профилем',
+        icon: icon ?? Icons.share,
+        showAsButton: showAsButton,
+        showAsIconButton: showAsIconButton,
+        showAsListTile: showAsListTile,
+        customMessage: customMessage,
+      );
+}
+
+/// Виджет для шаринга бронирования
+class BookingShareWidget extends StatelessWidget {
   const BookingShareWidget({
     super.key,
     required this.booking,
@@ -239,30 +232,28 @@ class BookingShareWidget extends StatelessWidget {
     this.showAsListTile = false,
     this.customMessage,
   });
-
-  @override
-  Widget build(BuildContext context) {
-    return ShareWidget(
-      booking: booking,
-      title: title ?? 'Поделиться бронированием',
-      icon: icon ?? Icons.share,
-      showAsButton: showAsButton,
-      showAsIconButton: showAsIconButton,
-      showAsListTile: showAsListTile,
-      customMessage: customMessage,
-    );
-  }
-}
-
-/// Виджет для шаринга текста
-class TextShareWidget extends StatelessWidget {
-  final String text;
+  final Booking booking;
   final String? title;
   final IconData? icon;
   final bool showAsButton;
   final bool showAsIconButton;
   final bool showAsListTile;
+  final String? customMessage;
 
+  @override
+  Widget build(BuildContext context) => ShareWidget(
+        booking: booking,
+        title: title ?? 'Поделиться бронированием',
+        icon: icon ?? Icons.share,
+        showAsButton: showAsButton,
+        showAsIconButton: showAsIconButton,
+        showAsListTile: showAsListTile,
+        customMessage: customMessage,
+      );
+}
+
+/// Виджет для шаринга текста
+class TextShareWidget extends StatelessWidget {
   const TextShareWidget({
     super.key,
     required this.text,
@@ -272,30 +263,26 @@ class TextShareWidget extends StatelessWidget {
     this.showAsIconButton = false,
     this.showAsListTile = false,
   });
-
-  @override
-  Widget build(BuildContext context) {
-    return ShareWidget(
-      text: text,
-      title: title ?? 'Поделиться текстом',
-      icon: icon ?? Icons.share,
-      showAsButton: showAsButton,
-      showAsIconButton: showAsIconButton,
-      showAsListTile: showAsListTile,
-    );
-  }
-}
-
-/// Виджет для шаринга ссылки
-class LinkShareWidget extends StatelessWidget {
-  final String url;
+  final String text;
   final String? title;
-  final String? description;
   final IconData? icon;
   final bool showAsButton;
   final bool showAsIconButton;
   final bool showAsListTile;
 
+  @override
+  Widget build(BuildContext context) => ShareWidget(
+        text: text,
+        title: title ?? 'Поделиться текстом',
+        icon: icon ?? Icons.share,
+        showAsButton: showAsButton,
+        showAsIconButton: showAsIconButton,
+        showAsListTile: showAsListTile,
+      );
+}
+
+/// Виджет для шаринга ссылки
+class LinkShareWidget extends StatelessWidget {
   const LinkShareWidget({
     super.key,
     required this.url,
@@ -306,33 +293,28 @@ class LinkShareWidget extends StatelessWidget {
     this.showAsIconButton = false,
     this.showAsListTile = false,
   });
+  final String url;
+  final String? title;
+  final String? description;
+  final IconData? icon;
+  final bool showAsButton;
+  final bool showAsIconButton;
+  final bool showAsListTile;
 
   @override
-  Widget build(BuildContext context) {
-    return ShareWidget(
-      url: url,
-      title: title ?? 'Поделиться ссылкой',
-      icon: icon ?? Icons.share,
-      showAsButton: showAsButton,
-      showAsIconButton: showAsIconButton,
-      showAsListTile: showAsListTile,
-      customMessage: description,
-    );
-  }
+  Widget build(BuildContext context) => ShareWidget(
+        url: url,
+        title: title ?? 'Поделиться ссылкой',
+        icon: icon ?? Icons.share,
+        showAsButton: showAsButton,
+        showAsIconButton: showAsIconButton,
+        showAsListTile: showAsListTile,
+        customMessage: description,
+      );
 }
 
 /// Диалог для выбора способа шаринга
 class ShareDialog extends StatelessWidget {
-  final Event? event;
-  final AppUser? user;
-  final Booking? booking;
-  final String? text;
-  final String? filePath;
-  final List<String>? filePaths;
-  final String? url;
-  final String? title;
-  final String? customMessage;
-
   const ShareDialog({
     super.key,
     this.event,
@@ -345,6 +327,15 @@ class ShareDialog extends StatelessWidget {
     this.title,
     this.customMessage,
   });
+  final Event? event;
+  final AppUser? user;
+  final Booking? booking;
+  final String? text;
+  final String? filePath;
+  final List<String>? filePaths;
+  final String? url;
+  final String? title;
+  final String? customMessage;
 
   @override
   Widget build(BuildContext context) {
@@ -416,50 +407,64 @@ class ShareDialog extends StatelessWidget {
     required String title,
     required String subtitle,
     required VoidCallback onTap,
-  }) {
-    return ListTile(
-      leading: Icon(icon),
-      title: Text(title),
-      subtitle: Text(subtitle),
-      onTap: onTap,
-      contentPadding: EdgeInsets.zero,
-    );
-  }
+  }) =>
+      ListTile(
+        leading: Icon(icon),
+        title: Text(title),
+        subtitle: Text(subtitle),
+        onTap: onTap,
+        contentPadding: EdgeInsets.zero,
+      );
 
   Future<void> _shareContent(BuildContext context) async {
     Navigator.of(context).pop();
 
     try {
-      bool success = false;
+      var success = false;
 
       if (event != null) {
         success =
             await ShareService.shareEvent(event!, customMessage: customMessage);
       } else if (user != null) {
-        success = await ShareService.shareProfile(user!,
-            customMessage: customMessage);
+        success = await ShareService.shareProfile(
+          user!,
+          customMessage: customMessage,
+        );
       } else if (booking != null) {
-        success = await ShareService.shareBooking(booking!,
-            customMessage: customMessage);
+        success = await ShareService.shareBooking(
+          booking!,
+          customMessage: customMessage,
+        );
       } else if (text != null) {
         success = await ShareService.shareText(text!, subject: title);
       } else if (filePath != null) {
-        success = await ShareService.shareFile(filePath!,
-            text: customMessage, subject: title);
+        success = await ShareService.shareFile(
+          filePath!,
+          text: customMessage,
+          subject: title,
+        );
       } else if (filePaths != null) {
-        success = await ShareService.shareFiles(filePaths!,
-            text: customMessage, subject: title);
+        success = await ShareService.shareFiles(
+          filePaths!,
+          text: customMessage,
+          subject: title,
+        );
       } else if (url != null) {
-        success = await ShareService.shareLink(url!,
-            title: title, description: customMessage);
+        success = await ShareService.shareLink(
+          url!,
+          title: title,
+          description: customMessage,
+        );
       }
 
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text(success
-                ? 'Контент успешно поделен'
-                : 'Ошибка при попытке поделиться'),
+            content: Text(
+              success
+                  ? 'Контент успешно поделен'
+                  : 'Ошибка при попытке поделиться',
+            ),
             backgroundColor: success ? Colors.green : Colors.red,
           ),
         );
@@ -497,7 +502,7 @@ class ShareDialog extends StatelessWidget {
   Future<void> _copyText(BuildContext context) async {
     Navigator.of(context).pop();
 
-    String textToCopy = '';
+    var textToCopy = '';
 
     if (text != null) {
       textToCopy = text!;
@@ -558,8 +563,12 @@ class ShareUtils {
   }
 
   /// Показать диалог шаринга для ссылки
-  static void showLinkShareDialog(BuildContext context, String url,
-      {String? title, String? description}) {
+  static void showLinkShareDialog(
+    BuildContext context,
+    String url, {
+    String? title,
+    String? description,
+  }) {
     showDialog(
       context: context,
       builder: (context) => ShareDialog(
@@ -571,29 +580,30 @@ class ShareUtils {
   }
 
   /// Быстрый шаринг события
-  static Future<bool> quickShare(Event event) async {
-    return await ShareService.shareEvent(event);
-  }
+  static Future<bool> quickShare(Event event) async =>
+      ShareService.shareEvent(event);
 
   /// Быстрый шаринг профиля
-  static Future<bool> quickShareProfile(AppUser user) async {
-    return await ShareService.shareProfile(user);
-  }
+  static Future<bool> quickShareProfile(AppUser user) async =>
+      ShareService.shareProfile(user);
 
   /// Быстрый шаринг бронирования
-  static Future<bool> quickShareBooking(Booking booking) async {
-    return await ShareService.shareBooking(booking);
-  }
+  static Future<bool> quickShareBooking(Booking booking) async =>
+      ShareService.shareBooking(booking);
 
   /// Быстрый шаринг текста
-  static Future<bool> quickShareText(String text) async {
-    return await ShareService.shareText(text);
-  }
+  static Future<bool> quickShareText(String text) async =>
+      ShareService.shareText(text);
 
   /// Быстрый шаринг ссылки
-  static Future<bool> quickShareLink(String url,
-      {String? title, String? description}) async {
-    return await ShareService.shareLink(url,
-        title: title, description: description);
-  }
+  static Future<bool> quickShareLink(
+    String url, {
+    String? title,
+    String? description,
+  }) async =>
+      ShareService.shareLink(
+        url,
+        title: title,
+        description: description,
+      );
 }

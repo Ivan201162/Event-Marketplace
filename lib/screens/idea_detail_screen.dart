@@ -1,20 +1,20 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+
 import '../models/idea.dart';
 import '../services/idea_service.dart';
 import '../widgets/idea_comment_widget.dart';
 
 /// Экран детального просмотра идеи
 class IdeaDetailScreen extends ConsumerStatefulWidget {
-  final Idea idea;
-  final String userId;
-
   const IdeaDetailScreen({
     super.key,
     required this.idea,
     required this.userId,
   });
+  final Idea idea;
+  final String userId;
 
   @override
   ConsumerState<IdeaDetailScreen> createState() => _IdeaDetailScreenState();
@@ -48,276 +48,270 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Идея'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: _shareIdea,
-          ),
-          PopupMenuButton<String>(
-            onSelected: _handleMenuAction,
-            itemBuilder: (context) => [
-              const PopupMenuItem(
-                value: 'save',
-                child: ListTile(
-                  leading: Icon(Icons.bookmark),
-                  title: Text('Сохранить'),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Идея'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.share),
+              onPressed: _shareIdea,
+            ),
+            PopupMenuButton<String>(
+              onSelected: _handleMenuAction,
+              itemBuilder: (context) => [
+                const PopupMenuItem(
+                  value: 'save',
+                  child: ListTile(
+                    leading: Icon(Icons.bookmark),
+                    title: Text('Сохранить'),
+                  ),
                 ),
-              ),
-              const PopupMenuItem(
-                value: 'report',
-                child: ListTile(
-                  leading: Icon(Icons.report),
-                  title: Text('Пожаловаться'),
+                const PopupMenuItem(
+                  value: 'report',
+                  child: ListTile(
+                    leading: Icon(Icons.report),
+                    title: Text('Пожаловаться'),
+                  ),
                 ),
-              ),
+              ],
+            ),
+          ],
+        ),
+        body: SingleChildScrollView(
+          controller: _scrollController,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Изображения
+              if (_idea.images.isNotEmpty) _buildImagesSection(),
+
+              // Основная информация
+              _buildMainInfoSection(),
+
+              // Действия
+              _buildActionsSection(),
+
+              // Комментарии
+              _buildCommentsSection(),
             ],
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        controller: _scrollController,
+        ),
+        bottomNavigationBar: _buildBottomBar(),
+      );
+
+  Widget _buildImagesSection() => SizedBox(
+        height: 300,
+        child: PageView.builder(
+          itemCount: _idea.images.length,
+          itemBuilder: (context, index) {
+            final image = _idea.images[index];
+            return CachedNetworkImage(
+              imageUrl: image.url,
+              fit: BoxFit.cover,
+              placeholder: (context, url) => Container(
+                color: Colors.grey[200],
+                child: const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+              errorWidget: (context, url, error) => Container(
+                color: Colors.grey[200],
+                child: const Icon(Icons.error),
+              ),
+            );
+          },
+        ),
+      );
+
+  Widget _buildMainInfoSection() => Padding(
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Изображения
-            if (_idea.images.isNotEmpty) _buildImagesSection(),
+            // Заголовок и категория
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    _idea.title,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                  decoration: BoxDecoration(
+                    color: _idea.categoryColor.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(16),
+                    border: Border.all(
+                      color: _idea.categoryColor.withOpacity(0.3),
+                    ),
+                  ),
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(
+                        _idea.categoryIcon,
+                        size: 16,
+                        color: _idea.categoryColor,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        _idea.category,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: _idea.categoryColor,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
 
-            // Основная информация
-            _buildMainInfoSection(),
+            const SizedBox(height: 16),
 
-            // Действия
-            _buildActionsSection(),
+            // Автор и дата
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 20,
+                  backgroundImage: _idea.authorPhotoUrl != null
+                      ? CachedNetworkImageProvider(_idea.authorPhotoUrl!)
+                      : null,
+                  child: _idea.authorPhotoUrl == null
+                      ? Text(
+                          _idea.authorName.isNotEmpty
+                              ? _idea.authorName[0].toUpperCase()
+                              : '?',
+                          style: const TextStyle(fontSize: 16),
+                        )
+                      : null,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _idea.authorName,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                      Text(
+                        _formatDate(_idea.createdAt),
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
 
-            // Комментарии
-            _buildCommentsSection(),
+            const SizedBox(height: 16),
+
+            // Описание
+            Text(
+              _idea.description,
+              style: const TextStyle(
+                fontSize: 16,
+                height: 1.5,
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Теги
+            if (_idea.tags.isNotEmpty) ...[
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: _idea.tags
+                    .map(
+                      (tag) => Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 4),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Text(
+                          '#$tag',
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.grey[700],
+                          ),
+                        ),
+                      ),
+                    )
+                    .toList(),
+              ),
+              const SizedBox(height: 16),
+            ],
           ],
         ),
-      ),
-      bottomNavigationBar: _buildBottomBar(),
-    );
-  }
+      );
 
-  Widget _buildImagesSection() {
-    return Container(
-      height: 300,
-      child: PageView.builder(
-        itemCount: _idea.images.length,
-        itemBuilder: (context, index) {
-          final image = _idea.images[index];
-          return CachedNetworkImage(
-            imageUrl: image.url,
-            fit: BoxFit.cover,
-            placeholder: (context, url) => Container(
-              color: Colors.grey[200],
-              child: const Center(
-                child: CircularProgressIndicator(),
+  Widget _buildActionsSection() => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        child: Row(
+          children: [
+            // Лайк
+            Expanded(
+              child: _buildActionButton(
+                icon: Icons.favorite,
+                label: 'Лайк',
+                count: _idea.likesCount,
+                isActive: _idea.isLikedBy(widget.userId),
+                onTap: _toggleLike,
               ),
             ),
-            errorWidget: (context, url, error) => Container(
-              color: Colors.grey[200],
-              child: const Icon(Icons.error),
+
+            // Сохранение
+            Expanded(
+              child: _buildActionButton(
+                icon: Icons.bookmark,
+                label: 'Сохранить',
+                count: _idea.savesCount,
+                isActive: _idea.isSavedBy(widget.userId),
+                onTap: _toggleSave,
+              ),
             ),
-          );
-        },
-      ),
-    );
-  }
 
-  Widget _buildMainInfoSection() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Заголовок и категория
-          Row(
-            children: [
-              Expanded(
-                child: Text(
-                  _idea.title,
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+            // Комментарии
+            Expanded(
+              child: _buildActionButton(
+                icon: Icons.comment,
+                label: 'Комментарии',
+                count: _idea.commentsCount,
+                isActive: _showComments,
+                onTap: _toggleComments,
               ),
-              const SizedBox(width: 8),
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                decoration: BoxDecoration(
-                  color: _idea.categoryColor.withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(16),
-                  border: Border.all(
-                    color: _idea.categoryColor.withOpacity(0.3),
-                  ),
-                ),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      _idea.categoryIcon,
-                      size: 16,
-                      color: _idea.categoryColor,
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      _idea.category,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: _idea.categoryColor,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 16),
-
-          // Автор и дата
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 20,
-                backgroundImage: _idea.authorPhotoUrl != null
-                    ? CachedNetworkImageProvider(_idea.authorPhotoUrl!)
-                    : null,
-                child: _idea.authorPhotoUrl == null
-                    ? Text(
-                        _idea.authorName.isNotEmpty
-                            ? _idea.authorName[0].toUpperCase()
-                            : '?',
-                        style: const TextStyle(fontSize: 16),
-                      )
-                    : null,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _idea.authorName,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                    Text(
-                      _formatDate(_idea.createdAt),
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 16),
-
-          // Описание
-          Text(
-            _idea.description,
-            style: const TextStyle(
-              fontSize: 16,
-              height: 1.5,
             ),
-          ),
 
-          const SizedBox(height: 16),
-
-          // Теги
-          if (_idea.tags.isNotEmpty) ...[
-            Wrap(
-              spacing: 8,
-              runSpacing: 8,
-              children: _idea.tags.map((tag) {
-                return Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    '#$tag',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[700],
-                    ),
-                  ),
-                );
-              }).toList(),
+            // Шаринг
+            Expanded(
+              child: _buildActionButton(
+                icon: Icons.share,
+                label: 'Поделиться',
+                count: 0,
+                isActive: false,
+                onTap: _shareIdea,
+              ),
             ),
-            const SizedBox(height: 16),
           ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildActionsSection() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Row(
-        children: [
-          // Лайк
-          Expanded(
-            child: _buildActionButton(
-              icon: Icons.favorite,
-              label: 'Лайк',
-              count: _idea.likesCount,
-              isActive: _idea.isLikedBy(widget.userId),
-              onTap: _toggleLike,
-            ),
-          ),
-
-          // Сохранение
-          Expanded(
-            child: _buildActionButton(
-              icon: Icons.bookmark,
-              label: 'Сохранить',
-              count: _idea.savesCount,
-              isActive: _idea.isSavedBy(widget.userId),
-              onTap: _toggleSave,
-            ),
-          ),
-
-          // Комментарии
-          Expanded(
-            child: _buildActionButton(
-              icon: Icons.comment,
-              label: 'Комментарии',
-              count: _idea.commentsCount,
-              isActive: _showComments,
-              onTap: _toggleComments,
-            ),
-          ),
-
-          // Шаринг
-          Expanded(
-            child: _buildActionButton(
-              icon: Icons.share,
-              label: 'Поделиться',
-              count: 0,
-              isActive: false,
-              onTap: _shareIdea,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+        ),
+      );
 
   Widget _buildActionButton({
     required IconData icon,
@@ -325,40 +319,39 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
     required int count,
     required bool isActive,
     required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        child: Column(
-          children: [
-            Icon(
-              icon,
-              color: isActive ? Colors.blue : Colors.grey[600],
-              size: 24,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              count.toString(),
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
+  }) =>
+      InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          child: Column(
+            children: [
+              Icon(
+                icon,
                 color: isActive ? Colors.blue : Colors.grey[600],
+                size: 24,
               ),
-            ),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 10,
-                color: Colors.grey[600],
+              const SizedBox(height: 4),
+              Text(
+                count.toString(),
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  color: isActive ? Colors.blue : Colors.grey[600],
+                ),
               ),
-            ),
-          ],
+              Text(
+                label,
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildCommentsSection() {
     if (!_showComments) return const SizedBox.shrink();
@@ -426,44 +419,42 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
     );
   }
 
-  Widget _buildBottomBar() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          top: BorderSide(color: Colors.grey[300]!),
+  Widget _buildBottomBar() => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            top: BorderSide(color: Colors.grey[300]!),
+          ),
         ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: _commentController,
-              decoration: const InputDecoration(
-                hintText: 'Добавить комментарий...',
-                border: OutlineInputBorder(),
-                contentPadding:
-                    EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _commentController,
+                decoration: const InputDecoration(
+                  hintText: 'Добавить комментарий...',
+                  border: OutlineInputBorder(),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                ),
+                maxLines: null,
               ),
-              maxLines: null,
             ),
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-            onPressed: _isLoading ? null : _addComment,
-            icon: _isLoading
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.send),
-          ),
-        ],
-      ),
-    );
-  }
+            const SizedBox(width: 8),
+            IconButton(
+              onPressed: _isLoading ? null : _addComment,
+              icon: _isLoading
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Icon(Icons.send),
+            ),
+          ],
+        ),
+      );
 
   Future<void> _toggleLike() async {
     if (_isLoading) return;

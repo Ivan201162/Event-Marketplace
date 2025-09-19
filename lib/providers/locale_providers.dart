@@ -1,37 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 import '../generated/l10n/app_localizations.dart';
 
 /// Провайдер для текущей локали
-final localeProvider = NotifierProvider<LocaleNotifier, Locale>(() {
-  return LocaleNotifier();
-});
+final localeProvider =
+    NotifierProvider<LocaleNotifier, Locale>(LocaleNotifier.new);
 
 /// Провайдер для списка поддерживаемых локалей
-final supportedLocalesProvider = Provider<List<Locale>>((ref) {
-  return const [
+final supportedLocalesProvider = Provider<List<Locale>>(
+  (ref) => const [
     Locale('en', ''), // English
     Locale('ru', ''), // Russian
-  ];
-});
+  ],
+);
 
 /// Провайдер для делегатов локализации
-final localizationDelegatesProvider =
-    Provider<List<LocalizationsDelegate>>((ref) {
-  return const [
+final localizationDelegatesProvider = Provider<List<LocalizationsDelegate>>(
+  (ref) => const [
     AppLocalizations.delegate,
     GlobalMaterialLocalizations.delegate,
     GlobalWidgetsLocalizations.delegate,
     GlobalCupertinoLocalizations.delegate,
-  ];
-});
+  ],
+);
 
 /// Провайдер для списка поддерживаемых локалей для MaterialApp
-final supportedLocalesListProvider = Provider<List<Locale>>((ref) {
-  return ref.watch(supportedLocalesProvider);
-});
+final supportedLocalesListProvider =
+    Provider<List<Locale>>((ref) => ref.watch(supportedLocalesProvider));
 
 /// Провайдер для текущего языка
 final currentLanguageProvider = Provider<String>((ref) {
@@ -71,12 +69,12 @@ final languageNameProvider = Provider<String>((ref) {
 });
 
 /// Провайдер для получения списка языков с названиями
-final languageListProvider = Provider<List<Map<String, String>>>((ref) {
-  return const [
+final languageListProvider = Provider<List<Map<String, String>>>(
+  (ref) => const [
     {'code': 'en', 'name': 'English'},
     {'code': 'ru', 'name': 'Русский'},
-  ];
-});
+  ],
+);
 
 /// Нотификатор для управления локалью
 class LocaleNotifier extends Notifier<Locale> {
@@ -175,38 +173,28 @@ class LocalizationUtils {
   }
 
   /// Проверить, поддерживается ли язык
-  static bool isLanguageSupported(String languageCode) {
-    return ['en', 'ru'].contains(languageCode);
-  }
+  static bool isLanguageSupported(String languageCode) =>
+      ['en', 'ru'].contains(languageCode);
 
   /// Получить локаль по коду языка
-  static Locale getLocaleFromCode(String languageCode) {
-    return Locale(languageCode, '');
-  }
+  static Locale getLocaleFromCode(String languageCode) =>
+      Locale(languageCode, '');
 
   /// Получить код языка из локали
-  static String getCodeFromLocale(Locale locale) {
-    return locale.languageCode;
-  }
+  static String getCodeFromLocale(Locale locale) => locale.languageCode;
 
   /// Получить список всех поддерживаемых языков
-  static List<Map<String, String>> getAllLanguages() {
-    return const [
-      {'code': 'en', 'name': 'English'},
-      {'code': 'ru', 'name': 'Русский'},
-    ];
-  }
+  static List<Map<String, String>> getAllLanguages() => const [
+        {'code': 'en', 'name': 'English'},
+        {'code': 'ru', 'name': 'Русский'},
+      ];
 
   /// Получить язык по умолчанию
-  static Locale getDefaultLocale() {
-    return const Locale('en', '');
-  }
+  static Locale getDefaultLocale() => const Locale('en', '');
 
   /// Получить список поддерживаемых локалей
-  static List<Locale> getSupportedLocales() {
-    return const [
-      Locale('en', ''),
-      Locale('ru', ''),
-    ];
-  }
+  static List<Locale> getSupportedLocales() => const [
+        Locale('en', ''),
+        Locale('ru', ''),
+      ];
 }

@@ -2,21 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель настроек приложения
 class AppSettings {
-  final String id;
-  final String key;
-  final dynamic value;
-  final SettingType type;
-  final String? description;
-  final String? category;
-  final bool isPublic;
-  final bool isRequired;
-  final dynamic defaultValue;
-  final List<String>? allowedValues;
-  final Map<String, dynamic>? validation;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String? updatedBy;
-
   const AppSettings({
     required this.id,
     required this.key,
@@ -42,8 +27,9 @@ class AppSettings {
       key: data['key'] ?? '',
       value: data['value'],
       type: SettingType.values.firstWhere(
-          (e) => e.toString().split('.').last == data['type'],
-          orElse: () => SettingType.string),
+        (e) => e.toString().split('.').last == data['type'],
+        orElse: () => SettingType.string,
+      ),
       description: data['description'],
       category: data['category'],
       isPublic: data['isPublic'] ?? false,
@@ -62,84 +48,94 @@ class AppSettings {
   }
 
   /// Создать из Map
-  factory AppSettings.fromMap(Map<String, dynamic> data) {
-    return AppSettings(
-      id: data['id'] ?? '',
-      key: data['key'] ?? '',
-      value: data['value'],
-      type: SettingType.values.firstWhere(
+  factory AppSettings.fromMap(Map<String, dynamic> data) => AppSettings(
+        id: data['id'] ?? '',
+        key: data['key'] ?? '',
+        value: data['value'],
+        type: SettingType.values.firstWhere(
           (e) => e.toString().split('.').last == data['type'],
-          orElse: () => SettingType.string),
-      description: data['description'],
-      category: data['category'],
-      isPublic: data['isPublic'] ?? false,
-      isRequired: data['isRequired'] ?? false,
-      defaultValue: data['defaultValue'],
-      allowedValues: data['allowedValues'] != null
-          ? List<String>.from(data['allowedValues'])
-          : null,
-      validation: data['validation'] != null
-          ? Map<String, dynamic>.from(data['validation'])
-          : null,
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      updatedBy: data['updatedBy'],
-    );
-  }
+          orElse: () => SettingType.string,
+        ),
+        description: data['description'],
+        category: data['category'],
+        isPublic: data['isPublic'] ?? false,
+        isRequired: data['isRequired'] ?? false,
+        defaultValue: data['defaultValue'],
+        allowedValues: data['allowedValues'] != null
+            ? List<String>.from(data['allowedValues'])
+            : null,
+        validation: data['validation'] != null
+            ? Map<String, dynamic>.from(data['validation'])
+            : null,
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+        updatedBy: data['updatedBy'],
+      );
+  final String id;
+  final String key;
+  final dynamic value;
+  final SettingType type;
+  final String? description;
+  final String? category;
+  final bool isPublic;
+  final bool isRequired;
+  final dynamic defaultValue;
+  final List<String>? allowedValues;
+  final Map<String, dynamic>? validation;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String? updatedBy;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'key': key,
-      'value': value,
-      'type': type.toString().split('.').last,
-      'description': description,
-      'category': category,
-      'isPublic': isPublic,
-      'isRequired': isRequired,
-      'defaultValue': defaultValue,
-      'allowedValues': allowedValues,
-      'validation': validation,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'updatedBy': updatedBy,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'key': key,
+        'value': value,
+        'type': type.toString().split('.').last,
+        'description': description,
+        'category': category,
+        'isPublic': isPublic,
+        'isRequired': isRequired,
+        'defaultValue': defaultValue,
+        'allowedValues': allowedValues,
+        'validation': validation,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'updatedBy': updatedBy,
+      };
 
   /// Создать копию с изменениями
   AppSettings copyWith({
     String? id,
     String? key,
-    dynamic value,
+    value,
     SettingType? type,
     String? description,
     String? category,
     bool? isPublic,
     bool? isRequired,
-    dynamic defaultValue,
+    defaultValue,
     List<String>? allowedValues,
     Map<String, dynamic>? validation,
     DateTime? createdAt,
     DateTime? updatedAt,
     String? updatedBy,
-  }) {
-    return AppSettings(
-      id: id ?? this.id,
-      key: key ?? this.key,
-      value: value ?? this.value,
-      type: type ?? this.type,
-      description: description ?? this.description,
-      category: category ?? this.category,
-      isPublic: isPublic ?? this.isPublic,
-      isRequired: isRequired ?? this.isRequired,
-      defaultValue: defaultValue ?? this.defaultValue,
-      allowedValues: allowedValues ?? this.allowedValues,
-      validation: validation ?? this.validation,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      updatedBy: updatedBy ?? this.updatedBy,
-    );
-  }
+  }) =>
+      AppSettings(
+        id: id ?? this.id,
+        key: key ?? this.key,
+        value: value ?? this.value,
+        type: type ?? this.type,
+        description: description ?? this.description,
+        category: category ?? this.category,
+        isPublic: isPublic ?? this.isPublic,
+        isRequired: isRequired ?? this.isRequired,
+        defaultValue: defaultValue ?? this.defaultValue,
+        allowedValues: allowedValues ?? this.allowedValues,
+        validation: validation ?? this.validation,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        updatedBy: updatedBy ?? this.updatedBy,
+      );
 
   /// Получить типизированное значение
   T getTypedValue<T>() {
@@ -284,45 +280,30 @@ class AppSettings {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      key,
-      value,
-      type,
-      description,
-      category,
-      isPublic,
-      isRequired,
-      defaultValue,
-      allowedValues,
-      validation,
-      createdAt,
-      updatedAt,
-      updatedBy,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        key,
+        value,
+        type,
+        description,
+        category,
+        isPublic,
+        isRequired,
+        defaultValue,
+        allowedValues,
+        validation,
+        createdAt,
+        updatedAt,
+        updatedBy,
+      );
 
   @override
-  String toString() {
-    return 'AppSettings(id: $id, key: $key, type: $type, value: $value)';
-  }
+  String toString() =>
+      'AppSettings(id: $id, key: $key, type: $type, value: $value)';
 }
 
 /// Модель конфигурации приложения
 class AppConfiguration {
-  final String id;
-  final String name;
-  final String description;
-  final Map<String, dynamic> config;
-  final ConfigurationType type;
-  final String? environment;
-  final bool isActive;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String? createdBy;
-  final String? updatedBy;
-
   const AppConfiguration({
     required this.id,
     required this.name,
@@ -346,8 +327,9 @@ class AppConfiguration {
       description: data['description'] ?? '',
       config: Map<String, dynamic>.from(data['config'] ?? {}),
       type: ConfigurationType.values.firstWhere(
-          (e) => e.toString().split('.').last == data['type'],
-          orElse: () => ConfigurationType.general),
+        (e) => e.toString().split('.').last == data['type'],
+        orElse: () => ConfigurationType.general,
+      ),
       environment: data['environment'],
       isActive: data['isActive'] ?? false,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
@@ -358,39 +340,48 @@ class AppConfiguration {
   }
 
   /// Создать из Map
-  factory AppConfiguration.fromMap(Map<String, dynamic> data) {
-    return AppConfiguration(
-      id: data['id'] ?? '',
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
-      config: Map<String, dynamic>.from(data['config'] ?? {}),
-      type: ConfigurationType.values.firstWhere(
+  factory AppConfiguration.fromMap(Map<String, dynamic> data) =>
+      AppConfiguration(
+        id: data['id'] ?? '',
+        name: data['name'] ?? '',
+        description: data['description'] ?? '',
+        config: Map<String, dynamic>.from(data['config'] ?? {}),
+        type: ConfigurationType.values.firstWhere(
           (e) => e.toString().split('.').last == data['type'],
-          orElse: () => ConfigurationType.general),
-      environment: data['environment'],
-      isActive: data['isActive'] ?? false,
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      createdBy: data['createdBy'],
-      updatedBy: data['updatedBy'],
-    );
-  }
+          orElse: () => ConfigurationType.general,
+        ),
+        environment: data['environment'],
+        isActive: data['isActive'] ?? false,
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+        createdBy: data['createdBy'],
+        updatedBy: data['updatedBy'],
+      );
+  final String id;
+  final String name;
+  final String description;
+  final Map<String, dynamic> config;
+  final ConfigurationType type;
+  final String? environment;
+  final bool isActive;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String? createdBy;
+  final String? updatedBy;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'description': description,
-      'config': config,
-      'type': type.toString().split('.').last,
-      'environment': environment,
-      'isActive': isActive,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'createdBy': createdBy,
-      'updatedBy': updatedBy,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'description': description,
+        'config': config,
+        'type': type.toString().split('.').last,
+        'environment': environment,
+        'isActive': isActive,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'createdBy': createdBy,
+        'updatedBy': updatedBy,
+      };
 
   /// Создать копию с изменениями
   AppConfiguration copyWith({
@@ -405,29 +396,26 @@ class AppConfiguration {
     DateTime? updatedAt,
     String? createdBy,
     String? updatedBy,
-  }) {
-    return AppConfiguration(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      config: config ?? this.config,
-      type: type ?? this.type,
-      environment: environment ?? this.environment,
-      isActive: isActive ?? this.isActive,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      createdBy: createdBy ?? this.createdBy,
-      updatedBy: updatedBy ?? this.updatedBy,
-    );
-  }
+  }) =>
+      AppConfiguration(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        config: config ?? this.config,
+        type: type ?? this.type,
+        environment: environment ?? this.environment,
+        isActive: isActive ?? this.isActive,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        createdBy: createdBy ?? this.createdBy,
+        updatedBy: updatedBy ?? this.updatedBy,
+      );
 
   /// Получить значение конфигурации
-  T? getConfigValue<T>(String key) {
-    return config[key] as T?;
-  }
+  T? getConfigValue<T>(String key) => config[key] as T?;
 
   /// Установить значение конфигурации
-  AppConfiguration setConfigValue(String key, dynamic value) {
+  AppConfiguration setConfigValue(String key, value) {
     final newConfig = Map<String, dynamic>.from(config);
     newConfig[key] = value;
     return copyWith(config: newConfig);
@@ -451,40 +439,27 @@ class AppConfiguration {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      name,
-      description,
-      config,
-      type,
-      environment,
-      isActive,
-      createdAt,
-      updatedAt,
-      createdBy,
-      updatedBy,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        name,
+        description,
+        config,
+        type,
+        environment,
+        isActive,
+        createdAt,
+        updatedAt,
+        createdBy,
+        updatedBy,
+      );
 
   @override
-  String toString() {
-    return 'AppConfiguration(id: $id, name: $name, type: $type, isActive: $isActive)';
-  }
+  String toString() =>
+      'AppConfiguration(id: $id, name: $name, type: $type, isActive: $isActive)';
 }
 
 /// Модель истории изменений настроек
 class SettingsHistory {
-  final String id;
-  final String settingId;
-  final String settingKey;
-  final dynamic oldValue;
-  final dynamic newValue;
-  final String changedBy;
-  final String? reason;
-  final DateTime changedAt;
-  final Map<String, dynamic> metadata;
-
   const SettingsHistory({
     required this.id,
     required this.settingId,
@@ -514,58 +489,62 @@ class SettingsHistory {
   }
 
   /// Создать из Map
-  factory SettingsHistory.fromMap(Map<String, dynamic> data) {
-    return SettingsHistory(
-      id: data['id'] ?? '',
-      settingId: data['settingId'] ?? '',
-      settingKey: data['settingKey'] ?? '',
-      oldValue: data['oldValue'],
-      newValue: data['newValue'],
-      changedBy: data['changedBy'] ?? '',
-      reason: data['reason'],
-      changedAt: (data['changedAt'] as Timestamp).toDate(),
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-    );
-  }
+  factory SettingsHistory.fromMap(Map<String, dynamic> data) => SettingsHistory(
+        id: data['id'] ?? '',
+        settingId: data['settingId'] ?? '',
+        settingKey: data['settingKey'] ?? '',
+        oldValue: data['oldValue'],
+        newValue: data['newValue'],
+        changedBy: data['changedBy'] ?? '',
+        reason: data['reason'],
+        changedAt: (data['changedAt'] as Timestamp).toDate(),
+        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      );
+  final String id;
+  final String settingId;
+  final String settingKey;
+  final dynamic oldValue;
+  final dynamic newValue;
+  final String changedBy;
+  final String? reason;
+  final DateTime changedAt;
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'settingId': settingId,
-      'settingKey': settingKey,
-      'oldValue': oldValue,
-      'newValue': newValue,
-      'changedBy': changedBy,
-      'reason': reason,
-      'changedAt': Timestamp.fromDate(changedAt),
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'settingId': settingId,
+        'settingKey': settingKey,
+        'oldValue': oldValue,
+        'newValue': newValue,
+        'changedBy': changedBy,
+        'reason': reason,
+        'changedAt': Timestamp.fromDate(changedAt),
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   SettingsHistory copyWith({
     String? id,
     String? settingId,
     String? settingKey,
-    dynamic oldValue,
-    dynamic newValue,
+    oldValue,
+    newValue,
     String? changedBy,
     String? reason,
     DateTime? changedAt,
     Map<String, dynamic>? metadata,
-  }) {
-    return SettingsHistory(
-      id: id ?? this.id,
-      settingId: settingId ?? this.settingId,
-      settingKey: settingKey ?? this.settingKey,
-      oldValue: oldValue ?? this.oldValue,
-      newValue: newValue ?? this.newValue,
-      changedBy: changedBy ?? this.changedBy,
-      reason: reason ?? this.reason,
-      changedAt: changedAt ?? this.changedAt,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      SettingsHistory(
+        id: id ?? this.id,
+        settingId: settingId ?? this.settingId,
+        settingKey: settingKey ?? this.settingKey,
+        oldValue: oldValue ?? this.oldValue,
+        newValue: newValue ?? this.newValue,
+        changedBy: changedBy ?? this.changedBy,
+        reason: reason ?? this.reason,
+        changedAt: changedAt ?? this.changedAt,
+        metadata: metadata ?? this.metadata,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -583,24 +562,21 @@ class SettingsHistory {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      settingId,
-      settingKey,
-      oldValue,
-      newValue,
-      changedBy,
-      reason,
-      changedAt,
-      metadata,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        settingId,
+        settingKey,
+        oldValue,
+        newValue,
+        changedBy,
+        reason,
+        changedAt,
+        metadata,
+      );
 
   @override
-  String toString() {
-    return 'SettingsHistory(id: $id, settingKey: $settingKey, changedBy: $changedBy)';
-  }
+  String toString() =>
+      'SettingsHistory(id: $id, settingKey: $settingKey, changedBy: $changedBy)';
 }
 
 /// Типы настроек

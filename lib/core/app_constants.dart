@@ -30,11 +30,11 @@ class AppConstants {
   static const Duration imageCacheExpiration = Duration(days: 7);
 
   // UI константы
-  static const double defaultPadding = 16.0;
-  static const double smallPadding = 8.0;
-  static const double largePadding = 24.0;
-  static const double borderRadius = 12.0;
-  static const double cardElevation = 2.0;
+  static const double defaultPadding = 16;
+  static const double smallPadding = 8;
+  static const double largePadding = 24;
+  static const double borderRadius = 12;
+  static const double cardElevation = 2;
 
   // Анимации
   static const Duration shortAnimation = Duration(milliseconds: 200);
@@ -67,28 +67,28 @@ class AppConstants {
     'jpeg',
     'png',
     'gif',
-    'webp'
+    'webp',
   ];
   static const List<String> supportedVideoFormats = [
     'mp4',
     'avi',
     'mov',
     'wmv',
-    'flv'
+    'flv',
   ];
   static const List<String> supportedAudioFormats = [
     'mp3',
     'wav',
     'aac',
     'ogg',
-    'm4a'
+    'm4a',
   ];
   static const List<String> supportedDocumentFormats = [
     'pdf',
     'doc',
     'docx',
     'txt',
-    'rtf'
+    'rtf',
   ];
 
   // Лимиты загрузки файлов

@@ -1,15 +1,17 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:uuid/uuid.dart';
+
 import '../models/support_ticket.dart';
 
 /// Сервис поддержки
 class SupportService {
-  static final SupportService _instance = SupportService._internal();
   factory SupportService() => _instance;
   SupportService._internal();
+  static final SupportService _instance = SupportService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -31,10 +33,10 @@ class SupportService {
       final ticketRef = _firestore.collection('support_tickets').doc();
 
       // Загружаем вложения
-      List<String> attachmentUrls = [];
+      final attachmentUrls = <String>[];
       if (attachments != null) {
-        for (File file in attachments) {
-          String? url = await _uploadAttachment(file, ticketRef.id);
+        for (final file in attachments) {
+          final url = await _uploadAttachment(file, ticketRef.id);
           if (url != null) {
             attachmentUrls.add(url);
           }
@@ -73,31 +75,23 @@ class SupportService {
   }
 
   /// Получить тикеты пользователя
-  Stream<List<SupportTicket>> getUserTickets(String userId) {
-    return _firestore
-        .collection('support_tickets')
-        .where('userId', isEqualTo: userId)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => SupportTicket.fromDocument(doc))
-          .toList();
-    });
-  }
+  Stream<List<SupportTicket>> getUserTickets(String userId) => _firestore
+      .collection('support_tickets')
+      .where('userId', isEqualTo: userId)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(SupportTicket.fromDocument).toList(),
+      );
 
   /// Получить все тикеты (для админов)
-  Stream<List<SupportTicket>> getAllTickets() {
-    return _firestore
-        .collection('support_tickets')
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => SupportTicket.fromDocument(doc))
-          .toList();
-    });
-  }
+  Stream<List<SupportTicket>> getAllTickets() => _firestore
+      .collection('support_tickets')
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(SupportTicket.fromDocument).toList(),
+      );
 
   /// Получить тикет по ID
   Future<SupportTicket?> getTicket(String ticketId) async {
@@ -142,10 +136,10 @@ class SupportService {
       final messageRef = _firestore.collection('support_messages').doc();
 
       // Загружаем вложения
-      List<String> attachmentUrls = [];
+      final attachmentUrls = <String>[];
       if (attachments != null) {
-        for (File file in attachments) {
-          String? url = await _uploadAttachment(file, ticketId);
+        for (final file in attachments) {
+          final url = await _uploadAttachment(file, ticketId);
           if (url != null) {
             attachmentUrls.add(url);
           }
@@ -191,18 +185,16 @@ class SupportService {
   }
 
   /// Получить сообщения тикета
-  Stream<List<SupportMessage>> getTicketMessages(String ticketId) {
-    return _firestore
-        .collection('support_messages')
-        .where('ticketId', isEqualTo: ticketId)
-        .orderBy('createdAt', ascending: true)
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => SupportMessage.fromMap(doc.data()))
-          .toList();
-    });
-  }
+  Stream<List<SupportMessage>> getTicketMessages(String ticketId) => _firestore
+      .collection('support_messages')
+      .where('ticketId', isEqualTo: ticketId)
+      .orderBy('createdAt', ascending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs
+            .map((doc) => SupportMessage.fromMap(doc.data()))
+            .toList(),
+      );
 
   /// Изменить статус тикета
   Future<bool> updateTicketStatus(String ticketId, SupportStatus status) async {
@@ -225,7 +217,10 @@ class SupportService {
 
   /// Назначить тикет агенту поддержки
   Future<bool> assignTicket(
-      String ticketId, String agentId, String agentName) async {
+    String ticketId,
+    String agentId,
+    String agentName,
+  ) async {
     try {
       final ticket = await getTicket(ticketId);
       if (ticket == null) return false;
@@ -246,7 +241,7 @@ class SupportService {
 
   /// Получить FAQ
   Stream<List<FAQItem>> getFAQ({SupportCategory? category}) {
-    Query query =
+    var query =
         _firestore.collection('faq').where('isPublished', isEqualTo: true);
 
     if (category != null) {
@@ -256,9 +251,7 @@ class SupportService {
     return query
         .orderBy('viewsCount', descending: true)
         .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) => FAQItem.fromDocument(doc)).toList();
-    });
+        .map((snapshot) => snapshot.docs.map(FAQItem.fromDocument).toList());
   }
 
   /// Увеличить счетчик просмотров FAQ
@@ -305,8 +298,7 @@ class SupportService {
   Future<SupportStats> getSupportStats() async {
     try {
       final snapshot = await _firestore.collection('support_tickets').get();
-      final tickets =
-          snapshot.docs.map((doc) => SupportTicket.fromDocument(doc)).toList();
+      final tickets = snapshot.docs.map(SupportTicket.fromDocument).toList();
 
       return _calculateSupportStats(tickets);
     } catch (e) {
@@ -318,10 +310,10 @@ class SupportService {
   /// Загрузить вложение
   Future<String?> _uploadAttachment(File file, String ticketId) async {
     try {
-      String fileName =
+      final fileName =
           'support_attachments/$ticketId/${_uuid.v4()}_${file.path.split('/').last}';
-      UploadTask uploadTask = _storage.ref().child(fileName).putFile(file);
-      TaskSnapshot snapshot = await uploadTask;
+      final uploadTask = _storage.ref().child(fileName).putFile(file);
+      final snapshot = await uploadTask;
       return await snapshot.ref.getDownloadURL();
     } catch (e) {
       print('Ошибка загрузки вложения: $e');
@@ -380,7 +372,9 @@ class SupportService {
 
   /// Отправить уведомление о новом сообщении
   Future<void> _sendMessageNotificationEmail(
-      String ticketId, SupportMessage message) async {
+    String ticketId,
+    SupportMessage message,
+  ) async {
     try {
       // TODO: Настроить SMTP сервер
       // final smtpServer = SmtpServer('smtp.gmail.com', username: 'support@example.com', password: 'password');
@@ -410,14 +404,14 @@ class SupportService {
         tickets.where((t) => t.status == SupportStatus.closed).length;
 
     // Среднее время решения
-    double averageResolutionTime = 0.0;
+    var averageResolutionTime = 0;
     final resolvedTicketsWithTime =
         tickets.where((t) => t.resolvedAt != null).toList();
     if (resolvedTicketsWithTime.isNotEmpty) {
-      final totalResolutionTime =
-          resolvedTicketsWithTime.fold<int>(0, (sum, ticket) {
-        return sum + ticket.resolvedAt!.difference(ticket.createdAt).inHours;
-      });
+      final totalResolutionTime = resolvedTicketsWithTime.fold<int>(
+          0,
+          (sum, ticket) =>
+              sum + ticket.resolvedAt!.difference(ticket.createdAt).inHours);
       averageResolutionTime =
           totalResolutionTime / resolvedTicketsWithTime.length;
     }
@@ -459,8 +453,7 @@ class SupportService {
   }
 
   /// HTML для email о создании тикета
-  String _buildTicketCreatedEmailHtml(SupportTicket ticket) {
-    return '''
+  String _buildTicketCreatedEmailHtml(SupportTicket ticket) => '''
     <html>
       <body>
         <h2>Тикет поддержки создан</h2>
@@ -478,12 +471,13 @@ class SupportService {
       </body>
     </html>
     ''';
-  }
 
   /// HTML для уведомления о новом сообщении
   String _buildMessageNotificationEmailHtml(
-      String ticketId, SupportMessage message) {
-    return '''
+    String ticketId,
+    SupportMessage message,
+  ) =>
+      '''
     <html>
       <body>
         <h2>Новый ответ в тикете поддержки</h2>
@@ -497,5 +491,4 @@ class SupportService {
       </body>
     </html>
     ''';
-  }
 }

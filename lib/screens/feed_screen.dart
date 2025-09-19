@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:event_marketplace_app/providers/feed_providers.dart';
-import 'package:event_marketplace_app/widgets/feed_widgets.dart';
+import '../providers/feed_providers.dart';
+import '../widgets/feed_widgets.dart';
 
 /// Экран ленты новостей специалистов
 class FeedScreen extends ConsumerStatefulWidget {
@@ -147,7 +147,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
     );
   }
 
-  void _likePost(String postId) async {
+  Future<void> _likePost(String postId) async {
     try {
       final service = ref.read(feedServiceProvider);
       await service.likePost(
@@ -177,7 +177,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
     );
   }
 
-  void _sharePost(String postId) async {
+  Future<void> _sharePost(String postId) async {
     try {
       final service = ref.read(feedServiceProvider);
       await service.sharePost(

@@ -55,27 +55,27 @@ class AppStyles {
   ];
 
   // Радиусы скругления
-  static const double radiusSmall = 8.0;
-  static const double radiusMedium = 12.0;
-  static const double radiusLarge = 16.0;
-  static const double radiusXLarge = 24.0;
+  static const double radiusSmall = 8;
+  static const double radiusMedium = 12;
+  static const double radiusLarge = 16;
+  static const double radiusXLarge = 24;
 
   // Отступы
-  static const double paddingSmall = 8.0;
-  static const double paddingMedium = 16.0;
-  static const double paddingLarge = 24.0;
-  static const double paddingXLarge = 32.0;
+  static const double paddingSmall = 8;
+  static const double paddingMedium = 16;
+  static const double paddingLarge = 24;
+  static const double paddingXLarge = 32;
 
   // Размеры иконок
-  static const double iconSmall = 16.0;
-  static const double iconMedium = 24.0;
-  static const double iconLarge = 32.0;
-  static const double iconXLarge = 48.0;
+  static const double iconSmall = 16;
+  static const double iconMedium = 24;
+  static const double iconLarge = 32;
+  static const double iconXLarge = 48;
 
   // Высоты кнопок
-  static const double buttonHeightSmall = 32.0;
-  static const double buttonHeightMedium = 48.0;
-  static const double buttonHeightLarge = 56.0;
+  static const double buttonHeightSmall = 32;
+  static const double buttonHeightMedium = 48;
+  static const double buttonHeightLarge = 56;
 
   // Стили текста
   static const TextStyle headline1 = TextStyle(
@@ -168,7 +168,7 @@ class AppStyles {
 
   static ButtonStyle secondaryButtonStyle = OutlinedButton.styleFrom(
     foregroundColor: primaryColor,
-    side: const BorderSide(color: primaryColor, width: 1),
+    side: const BorderSide(color: primaryColor),
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(radiusMedium),
     ),
@@ -261,7 +261,7 @@ class AppStyles {
 
   // Стили Chip
   static ChipThemeData chipTheme = ChipThemeData(
-    backgroundColor: Colors.grey[100]!,
+    backgroundColor: Colors.grey[100],
     selectedColor: primaryColor.withOpacity(0.2),
     labelStyle: bodyText2,
     shape: RoundedRectangleBorder(
@@ -353,18 +353,16 @@ class AppStyles {
   static const double desktopBreakpoint = 1200;
 
   // Утилиты для адаптивности
-  static bool isMobile(BuildContext context) {
-    return MediaQuery.of(context).size.width < mobileBreakpoint;
-  }
+  static bool isMobile(BuildContext context) =>
+      MediaQuery.of(context).size.width < mobileBreakpoint;
 
   static bool isTablet(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
     return width >= mobileBreakpoint && width < tabletBreakpoint;
   }
 
-  static bool isDesktop(BuildContext context) {
-    return MediaQuery.of(context).size.width >= desktopBreakpoint;
-  }
+  static bool isDesktop(BuildContext context) =>
+      MediaQuery.of(context).size.width >= desktopBreakpoint;
 
   // Утилиты для отступов
   static EdgeInsets getPadding(

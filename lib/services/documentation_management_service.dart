@@ -1,17 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import '../models/documentation_management.dart';
+
 import '../core/feature_flags.dart';
+import '../models/documentation_management.dart';
 
 /// Сервис для управления документацией
 class DocumentationManagementService {
-  static final DocumentationManagementService _instance =
-      DocumentationManagementService._internal();
   factory DocumentationManagementService() => _instance;
   DocumentationManagementService._internal();
+  static final DocumentationManagementService _instance =
+      DocumentationManagementService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -230,47 +232,39 @@ class DocumentationManagementService {
   }
 
   /// Получение документа
-  Documentation? getDocument(String id) {
-    return _documentCache[id];
-  }
+  Documentation? getDocument(String id) => _documentCache[id];
 
   /// Получение всех документов
-  List<Documentation> getAllDocuments() {
-    return _documentCache.values.toList();
-  }
+  List<Documentation> getAllDocuments() => _documentCache.values.toList();
 
   /// Получение документов по типу
-  List<Documentation> getDocumentsByType(DocumentType type) {
-    return _documentCache.values.where((doc) => doc.type == type).toList();
-  }
+  List<Documentation> getDocumentsByType(DocumentType type) =>
+      _documentCache.values.where((doc) => doc.type == type).toList();
 
   /// Получение документов по категории
-  List<Documentation> getDocumentsByCategory(DocumentCategory category) {
-    return _documentCache.values
-        .where((doc) => doc.category == category)
-        .toList();
-  }
+  List<Documentation> getDocumentsByCategory(DocumentCategory category) =>
+      _documentCache.values.where((doc) => doc.category == category).toList();
 
   /// Получение документов по статусу
-  List<Documentation> getDocumentsByStatus(DocumentStatus status) {
-    return _documentCache.values.where((doc) => doc.status == status).toList();
-  }
+  List<Documentation> getDocumentsByStatus(DocumentStatus status) =>
+      _documentCache.values.where((doc) => doc.status == status).toList();
 
   /// Получение публичных документов
-  List<Documentation> getPublicDocuments() {
-    return _documentCache.values
-        .where((doc) => doc.isPublic && doc.status == DocumentStatus.published)
-        .toList();
-  }
+  List<Documentation> getPublicDocuments() => _documentCache.values
+      .where((doc) => doc.isPublic && doc.status == DocumentStatus.published)
+      .toList();
 
   /// Поиск документов
   List<Documentation> searchDocuments(String query) {
     final lowercaseQuery = query.toLowerCase();
-    return _documentCache.values.where((doc) {
-      return doc.title.toLowerCase().contains(lowercaseQuery) ||
-          doc.content.toLowerCase().contains(lowercaseQuery) ||
-          doc.tags.any((tag) => tag.toLowerCase().contains(lowercaseQuery));
-    }).toList();
+    return _documentCache.values
+        .where(
+          (doc) =>
+              doc.title.toLowerCase().contains(lowercaseQuery) ||
+              doc.content.toLowerCase().contains(lowercaseQuery) ||
+              doc.tags.any((tag) => tag.toLowerCase().contains(lowercaseQuery)),
+        )
+        .toList();
   }
 
   /// Увеличение счетчика просмотров
@@ -392,21 +386,14 @@ class DocumentationManagementService {
   }
 
   /// Получение шаблона
-  DocumentTemplate? getTemplate(String id) {
-    return _templateCache[id];
-  }
+  DocumentTemplate? getTemplate(String id) => _templateCache[id];
 
   /// Получение всех шаблонов
-  List<DocumentTemplate> getAllTemplates() {
-    return _templateCache.values.toList();
-  }
+  List<DocumentTemplate> getAllTemplates() => _templateCache.values.toList();
 
   /// Получение шаблонов по типу
-  List<DocumentTemplate> getTemplatesByType(DocumentType type) {
-    return _templateCache.values
-        .where((template) => template.type == type)
-        .toList();
-  }
+  List<DocumentTemplate> getTemplatesByType(DocumentType type) =>
+      _templateCache.values.where((template) => template.type == type).toList();
 
   /// Увеличение счетчика использования шаблона
   Future<void> incrementTemplateUsage(String templateId) async {
@@ -508,16 +495,13 @@ class DocumentationManagementService {
   }
 
   /// Получение комментариев к документу
-  List<DocumentComment> getDocumentComments(String documentId) {
-    return _commentCache.values
-        .where((comment) => comment.documentId == documentId)
-        .toList();
-  }
+  List<DocumentComment> getDocumentComments(String documentId) =>
+      _commentCache.values
+          .where((comment) => comment.documentId == documentId)
+          .toList();
 
   /// Получение всех комментариев
-  List<DocumentComment> getAllComments() {
-    return _commentCache.values.toList();
-  }
+  List<DocumentComment> getAllComments() => _commentCache.values.toList();
 
   /// Лайк комментария
   Future<void> likeComment(String commentId) async {
@@ -594,7 +578,7 @@ class DocumentationManagementService {
 
   /// Группировка документов по типу
   Map<String, int> _groupDocumentsByType(List<Documentation> documents) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final doc in documents) {
       groups[doc.type.value] = (groups[doc.type.value] ?? 0) + 1;
     }
@@ -603,7 +587,7 @@ class DocumentationManagementService {
 
   /// Группировка документов по категории
   Map<String, int> _groupDocumentsByCategory(List<Documentation> documents) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final doc in documents) {
       groups[doc.category.value] = (groups[doc.category.value] ?? 0) + 1;
     }
@@ -612,7 +596,7 @@ class DocumentationManagementService {
 
   /// Группировка документов по статусу
   Map<String, int> _groupDocumentsByStatus(List<Documentation> documents) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final doc in documents) {
       groups[doc.status.value] = (groups[doc.status.value] ?? 0) + 1;
     }
@@ -621,7 +605,7 @@ class DocumentationManagementService {
 
   /// Группировка шаблонов по типу
   Map<String, int> _groupTemplatesByType(List<DocumentTemplate> templates) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final template in templates) {
       groups[template.type.value] = (groups[template.type.value] ?? 0) + 1;
     }
@@ -630,7 +614,7 @@ class DocumentationManagementService {
 
   /// Группировка шаблонов по категории
   Map<String, int> _groupTemplatesByCategory(List<DocumentTemplate> templates) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final template in templates) {
       groups[template.category.value] =
           (groups[template.category.value] ?? 0) + 1;
@@ -675,19 +659,19 @@ class DocumentationManagementService {
 
     for (final document in data['documents']) {
       buffer.writeln(
-          '${document['title']},${document['type']},${document['category']},${document['status']},${document['viewCount']},${document['likeCount']},${document['authorName']}');
+        '${document['title']},${document['type']},${document['category']},${document['status']},${document['viewCount']},${document['likeCount']},${document['authorName']}',
+      );
     }
 
     return buffer.toString();
   }
 
   /// Генерация уникального ID
-  String _generateId() {
-    return DateTime.now().millisecondsSinceEpoch.toString() +
-        (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
-            .round()
-            .toString();
-  }
+  String _generateId() =>
+      DateTime.now().millisecondsSinceEpoch.toString() +
+      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
+          .round()
+          .toString();
 
   /// Закрытие сервиса
   Future<void> dispose() async {

@@ -31,25 +31,20 @@ class ImagePicker {
 
 /// Заглушка для XFile
 class XFile {
-  final String path;
-  final String name;
-  final int? length;
-  final String? mimeType;
-
   const XFile(
     this.path, {
     this.name = '',
     this.length,
     this.mimeType,
   });
+  final String path;
+  final String name;
+  final int? length;
+  final String? mimeType;
 
-  Future<String> readAsString() async {
-    return '';
-  }
+  Future<String> readAsString() async => '';
 
-  Future<List<int>> readAsBytes() async {
-    return [];
-  }
+  Future<List<int>> readAsBytes() async => [];
 }
 
 /// Источник изображения

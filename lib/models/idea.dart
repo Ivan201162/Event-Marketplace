@@ -2,26 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель идеи для мероприятий
 class Idea {
-  final String id;
-  final String title;
-  final String description;
-  final List<String> images;
-  final String category;
-  final List<String> tags;
-  final String authorId;
-  final String authorName;
-  final String? authorAvatar;
-  final int likesCount;
-  final int savesCount;
-  final int commentsCount;
-  final List<String> likedBy;
-  final List<String> savedBy;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final bool isPublic;
-  final String? sourceUrl;
-  final Map<String, dynamic> metadata;
-
   const Idea({
     required this.id,
     required this.title,
@@ -45,54 +25,69 @@ class Idea {
   });
 
   /// Создать из Map
-  factory Idea.fromMap(Map<String, dynamic> data) {
-    return Idea(
-      id: data['id'] ?? '',
-      title: data['title'] ?? '',
-      description: data['description'] ?? '',
-      images: List<String>.from(data['images'] ?? []),
-      category: data['category'] ?? '',
-      tags: List<String>.from(data['tags'] ?? []),
-      authorId: data['authorId'] ?? '',
-      authorName: data['authorName'] ?? '',
-      authorAvatar: data['authorAvatar'],
-      likesCount: data['likesCount'] ?? 0,
-      savesCount: data['savesCount'] ?? 0,
-      commentsCount: data['commentsCount'] ?? 0,
-      likedBy: List<String>.from(data['likedBy'] ?? []),
-      savedBy: List<String>.from(data['savedBy'] ?? []),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      isPublic: data['isPublic'] ?? true,
-      sourceUrl: data['sourceUrl'],
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-    );
-  }
+  factory Idea.fromMap(Map<String, dynamic> data) => Idea(
+        id: data['id'] ?? '',
+        title: data['title'] ?? '',
+        description: data['description'] ?? '',
+        images: List<String>.from(data['images'] ?? []),
+        category: data['category'] ?? '',
+        tags: List<String>.from(data['tags'] ?? []),
+        authorId: data['authorId'] ?? '',
+        authorName: data['authorName'] ?? '',
+        authorAvatar: data['authorAvatar'],
+        likesCount: data['likesCount'] ?? 0,
+        savesCount: data['savesCount'] ?? 0,
+        commentsCount: data['commentsCount'] ?? 0,
+        likedBy: List<String>.from(data['likedBy'] ?? []),
+        savedBy: List<String>.from(data['savedBy'] ?? []),
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+        isPublic: data['isPublic'] ?? true,
+        sourceUrl: data['sourceUrl'],
+        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      );
+  final String id;
+  final String title;
+  final String description;
+  final List<String> images;
+  final String category;
+  final List<String> tags;
+  final String authorId;
+  final String authorName;
+  final String? authorAvatar;
+  final int likesCount;
+  final int savesCount;
+  final int commentsCount;
+  final List<String> likedBy;
+  final List<String> savedBy;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final bool isPublic;
+  final String? sourceUrl;
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'title': title,
-      'description': description,
-      'images': images,
-      'category': category,
-      'tags': tags,
-      'authorId': authorId,
-      'authorName': authorName,
-      'authorAvatar': authorAvatar,
-      'likesCount': likesCount,
-      'savesCount': savesCount,
-      'commentsCount': commentsCount,
-      'likedBy': likedBy,
-      'savedBy': savedBy,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'isPublic': isPublic,
-      'sourceUrl': sourceUrl,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'title': title,
+        'description': description,
+        'images': images,
+        'category': category,
+        'tags': tags,
+        'authorId': authorId,
+        'authorName': authorName,
+        'authorAvatar': authorAvatar,
+        'likesCount': likesCount,
+        'savesCount': savesCount,
+        'commentsCount': commentsCount,
+        'likedBy': likedBy,
+        'savedBy': savedBy,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'isPublic': isPublic,
+        'sourceUrl': sourceUrl,
+        'metadata': metadata,
+      };
 
   /// Геттеры для совместимости с виджетами
   String? get authorPhotoUrl => authorAvatar;
@@ -160,48 +155,32 @@ class Idea {
     bool? isPublic,
     String? sourceUrl,
     Map<String, dynamic>? metadata,
-  }) {
-    return Idea(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      images: images ?? this.images,
-      category: category ?? this.category,
-      tags: tags ?? this.tags,
-      authorId: authorId ?? this.authorId,
-      authorName: authorName ?? this.authorName,
-      authorAvatar: authorAvatar ?? this.authorAvatar,
-      likesCount: likesCount ?? this.likesCount,
-      savesCount: savesCount ?? this.savesCount,
-      commentsCount: commentsCount ?? this.commentsCount,
-      likedBy: likedBy ?? this.likedBy,
-      savedBy: savedBy ?? this.savedBy,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      isPublic: isPublic ?? this.isPublic,
-      sourceUrl: sourceUrl ?? this.sourceUrl,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      Idea(
+        id: id ?? this.id,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        images: images ?? this.images,
+        category: category ?? this.category,
+        tags: tags ?? this.tags,
+        authorId: authorId ?? this.authorId,
+        authorName: authorName ?? this.authorName,
+        authorAvatar: authorAvatar ?? this.authorAvatar,
+        likesCount: likesCount ?? this.likesCount,
+        savesCount: savesCount ?? this.savesCount,
+        commentsCount: commentsCount ?? this.commentsCount,
+        likedBy: likedBy ?? this.likedBy,
+        savedBy: savedBy ?? this.savedBy,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        isPublic: isPublic ?? this.isPublic,
+        sourceUrl: sourceUrl ?? this.sourceUrl,
+        metadata: metadata ?? this.metadata,
+      );
 }
 
 /// Модель коллекции идей
 class IdeaCollection {
-  final String id;
-  final String name;
-  final String description;
-  final String ownerId;
-  final String ownerName;
-  final String? ownerAvatar;
-  final List<String> ideaIds;
-  final List<String> images; // Превью изображений
-  final bool isPublic;
-  final int followersCount;
-  final List<String> followers;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final Map<String, dynamic> metadata;
-
   const IdeaCollection({
     required this.id,
     required this.name,
@@ -220,44 +199,54 @@ class IdeaCollection {
   });
 
   /// Создать из Map
-  factory IdeaCollection.fromMap(Map<String, dynamic> data) {
-    return IdeaCollection(
-      id: data['id'] ?? '',
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
-      ownerId: data['ownerId'] ?? '',
-      ownerName: data['ownerName'] ?? '',
-      ownerAvatar: data['ownerAvatar'],
-      ideaIds: List<String>.from(data['ideaIds'] ?? []),
-      images: List<String>.from(data['images'] ?? []),
-      isPublic: data['isPublic'] ?? true,
-      followersCount: data['followersCount'] ?? 0,
-      followers: List<String>.from(data['followers'] ?? []),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-    );
-  }
+  factory IdeaCollection.fromMap(Map<String, dynamic> data) => IdeaCollection(
+        id: data['id'] ?? '',
+        name: data['name'] ?? '',
+        description: data['description'] ?? '',
+        ownerId: data['ownerId'] ?? '',
+        ownerName: data['ownerName'] ?? '',
+        ownerAvatar: data['ownerAvatar'],
+        ideaIds: List<String>.from(data['ideaIds'] ?? []),
+        images: List<String>.from(data['images'] ?? []),
+        isPublic: data['isPublic'] ?? true,
+        followersCount: data['followersCount'] ?? 0,
+        followers: List<String>.from(data['followers'] ?? []),
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      );
+  final String id;
+  final String name;
+  final String description;
+  final String ownerId;
+  final String ownerName;
+  final String? ownerAvatar;
+  final List<String> ideaIds;
+  final List<String> images; // Превью изображений
+  final bool isPublic;
+  final int followersCount;
+  final List<String> followers;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'name': name,
-      'description': description,
-      'ownerId': ownerId,
-      'ownerName': ownerName,
-      'ownerAvatar': ownerAvatar,
-      'ideaIds': ideaIds,
-      'images': images,
-      'isPublic': isPublic,
-      'followersCount': followersCount,
-      'followers': followers,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'name': name,
+        'description': description,
+        'ownerId': ownerId,
+        'ownerName': ownerName,
+        'ownerAvatar': ownerAvatar,
+        'ideaIds': ideaIds,
+        'images': images,
+        'isPublic': isPublic,
+        'followersCount': followersCount,
+        'followers': followers,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'metadata': metadata,
+      };
 
   /// Копировать с изменениями
   IdeaCollection copyWith({
@@ -275,39 +264,28 @@ class IdeaCollection {
     DateTime? createdAt,
     DateTime? updatedAt,
     Map<String, dynamic>? metadata,
-  }) {
-    return IdeaCollection(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      ownerId: ownerId ?? this.ownerId,
-      ownerName: ownerName ?? this.ownerName,
-      ownerAvatar: ownerAvatar ?? this.ownerAvatar,
-      ideaIds: ideaIds ?? this.ideaIds,
-      images: images ?? this.images,
-      isPublic: isPublic ?? this.isPublic,
-      followersCount: followersCount ?? this.followersCount,
-      followers: followers ?? this.followers,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      IdeaCollection(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        ownerId: ownerId ?? this.ownerId,
+        ownerName: ownerName ?? this.ownerName,
+        ownerAvatar: ownerAvatar ?? this.ownerAvatar,
+        ideaIds: ideaIds ?? this.ideaIds,
+        images: images ?? this.images,
+        isPublic: isPublic ?? this.isPublic,
+        followersCount: followersCount ?? this.followersCount,
+        followers: followers ?? this.followers,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        metadata: metadata ?? this.metadata,
+      );
 }
 
 /// Модель комментария к идее
 class IdeaComment {
-  final String id;
-  final String ideaId;
-  final String authorId;
-  final String authorName;
-  final String? authorAvatar;
-  final String content;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final List<String> likedBy;
-  final int likesCount;
-  final String? parentCommentId; // Для ответов на комментарии
+  // Для ответов на комментарии
 
   const IdeaComment({
     required this.id,
@@ -324,38 +302,45 @@ class IdeaComment {
   });
 
   /// Создать из Map
-  factory IdeaComment.fromMap(Map<String, dynamic> data) {
-    return IdeaComment(
-      id: data['id'] ?? '',
-      ideaId: data['ideaId'] ?? '',
-      authorId: data['authorId'] ?? '',
-      authorName: data['authorName'] ?? '',
-      authorAvatar: data['authorAvatar'],
-      content: data['content'] ?? '',
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      likedBy: List<String>.from(data['likedBy'] ?? []),
-      likesCount: data['likesCount'] ?? 0,
-      parentCommentId: data['parentCommentId'],
-    );
-  }
+  factory IdeaComment.fromMap(Map<String, dynamic> data) => IdeaComment(
+        id: data['id'] ?? '',
+        ideaId: data['ideaId'] ?? '',
+        authorId: data['authorId'] ?? '',
+        authorName: data['authorName'] ?? '',
+        authorAvatar: data['authorAvatar'],
+        content: data['content'] ?? '',
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+        likedBy: List<String>.from(data['likedBy'] ?? []),
+        likesCount: data['likesCount'] ?? 0,
+        parentCommentId: data['parentCommentId'],
+      );
+  final String id;
+  final String ideaId;
+  final String authorId;
+  final String authorName;
+  final String? authorAvatar;
+  final String content;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final List<String> likedBy;
+  final int likesCount;
+  final String? parentCommentId;
 
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'ideaId': ideaId,
-      'authorId': authorId,
-      'authorName': authorName,
-      'authorAvatar': authorAvatar,
-      'content': content,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'likedBy': likedBy,
-      'likesCount': likesCount,
-      'parentCommentId': parentCommentId,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'ideaId': ideaId,
+        'authorId': authorId,
+        'authorName': authorName,
+        'authorAvatar': authorAvatar,
+        'content': content,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'likedBy': likedBy,
+        'likesCount': likesCount,
+        'parentCommentId': parentCommentId,
+      };
 
   /// Копировать с изменениями
   IdeaComment copyWith({
@@ -370,21 +355,20 @@ class IdeaComment {
     List<String>? likedBy,
     int? likesCount,
     String? parentCommentId,
-  }) {
-    return IdeaComment(
-      id: id ?? this.id,
-      ideaId: ideaId ?? this.ideaId,
-      authorId: authorId ?? this.authorId,
-      authorName: authorName ?? this.authorName,
-      authorAvatar: authorAvatar ?? this.authorAvatar,
-      content: content ?? this.content,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      likedBy: likedBy ?? this.likedBy,
-      likesCount: likesCount ?? this.likesCount,
-      parentCommentId: parentCommentId ?? this.parentCommentId,
-    );
-  }
+  }) =>
+      IdeaComment(
+        id: id ?? this.id,
+        ideaId: ideaId ?? this.ideaId,
+        authorId: authorId ?? this.authorId,
+        authorName: authorName ?? this.authorName,
+        authorAvatar: authorAvatar ?? this.authorAvatar,
+        content: content ?? this.content,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        likedBy: likedBy ?? this.likedBy,
+        likesCount: likesCount ?? this.likesCount,
+        parentCommentId: parentCommentId ?? this.parentCommentId,
+      );
 }
 
 /// Категории идей

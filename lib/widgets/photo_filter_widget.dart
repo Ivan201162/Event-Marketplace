@@ -3,14 +3,13 @@ import '../providers/customer_profile_extended_providers.dart';
 
 /// Виджет фильтрации фото
 class PhotoFilterWidget extends StatefulWidget {
-  final PhotoFilters currentFilters;
-  final Function(PhotoFilters) onFiltersChanged;
-
   const PhotoFilterWidget({
     super.key,
     required this.currentFilters,
     required this.onFiltersChanged,
   });
+  final PhotoFilters currentFilters;
+  final Function(PhotoFilters) onFiltersChanged;
 
   @override
   State<PhotoFilterWidget> createState() => _PhotoFilterWidgetState();
@@ -43,118 +42,121 @@ class _PhotoFilterWidgetState extends State<PhotoFilterWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
-        constraints: const BoxConstraints(maxWidth: 500, maxHeight: 600),
-        child: Column(
-          children: [
-            AppBar(
-              title: const Text('Фильтры фото'),
-              actions: [
-                TextButton(
-                  onPressed: _clearFilters,
-                  child: const Text('Сбросить'),
-                ),
-                TextButton(
-                  onPressed: _applyFilters,
-                  child: const Text('Применить'),
-                ),
-              ],
-            ),
-            Expanded(
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Поиск
-                    TextField(
-                      controller: _searchController,
-                      decoration: const InputDecoration(
-                        labelText: 'Поиск',
-                        hintText: 'Поиск по подписи или тегам',
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(),
+  Widget build(BuildContext context) => Dialog(
+        child: Container(
+          constraints: const BoxConstraints(maxWidth: 500, maxHeight: 600),
+          child: Column(
+            children: [
+              AppBar(
+                title: const Text('Фильтры фото'),
+                actions: [
+                  TextButton(
+                    onPressed: _clearFilters,
+                    child: const Text('Сбросить'),
+                  ),
+                  TextButton(
+                    onPressed: _applyFilters,
+                    child: const Text('Применить'),
+                  ),
+                ],
+              ),
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Поиск
+                      TextField(
+                        controller: _searchController,
+                        decoration: const InputDecoration(
+                          labelText: 'Поиск',
+                          hintText: 'Поиск по подписи или тегам',
+                          prefixIcon: Icon(Icons.search),
+                          border: OutlineInputBorder(),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 16),
+                      const SizedBox(height: 16),
 
-                    // Публичность
-                    SwitchListTile(
-                      title: const Text('Только публичные фото'),
-                      subtitle: const Text(
-                          'Показать только фото, доступные другим пользователям'),
-                      value: _showPublicOnly,
-                      onChanged: (value) {
-                        setState(() {
-                          _showPublicOnly = value;
-                        });
-                      },
-                    ),
+                      // Публичность
+                      SwitchListTile(
+                        title: const Text('Только публичные фото'),
+                        subtitle: const Text(
+                          'Показать только фото, доступные другим пользователям',
+                        ),
+                        value: _showPublicOnly,
+                        onChanged: (value) {
+                          setState(() {
+                            _showPublicOnly = value;
+                          });
+                        },
+                      ),
 
-                    const Divider(),
+                      const Divider(),
 
-                    // Фильтр по дате
-                    SwitchListTile(
-                      title: const Text('Фильтр по дате'),
-                      subtitle:
-                          const Text('Показать фото за определённый период'),
-                      value: _showByDate,
-                      onChanged: (value) {
-                        setState(() {
-                          _showByDate = value;
-                        });
-                      },
-                    ),
+                      // Фильтр по дате
+                      SwitchListTile(
+                        title: const Text('Фильтр по дате'),
+                        subtitle:
+                            const Text('Показать фото за определённый период'),
+                        value: _showByDate,
+                        onChanged: (value) {
+                          setState(() {
+                            _showByDate = value;
+                          });
+                        },
+                      ),
 
-                    if (_showByDate) ...[
+                      if (_showByDate) ...[
+                        const SizedBox(height: 8),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: ListTile(
+                                title: const Text('От'),
+                                subtitle: Text(
+                                  _fromDate != null
+                                      ? '${_fromDate!.day}.${_fromDate!.month}.${_fromDate!.year}'
+                                      : 'Не выбрано',
+                                ),
+                                trailing: const Icon(Icons.calendar_today),
+                                onTap: _selectFromDate,
+                              ),
+                            ),
+                            Expanded(
+                              child: ListTile(
+                                title: const Text('До'),
+                                subtitle: Text(
+                                  _toDate != null
+                                      ? '${_toDate!.day}.${_toDate!.month}.${_toDate!.year}'
+                                      : 'Не выбрано',
+                                ),
+                                trailing: const Icon(Icons.calendar_today),
+                                onTap: _selectToDate,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+
+                      const Divider(),
+
+                      // Теги
+                      const Text(
+                        'Теги',
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.bold),
+                      ),
                       const SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Expanded(
-                            child: ListTile(
-                              title: const Text('От'),
-                              subtitle: Text(_fromDate != null
-                                  ? '${_fromDate!.day}.${_fromDate!.month}.${_fromDate!.year}'
-                                  : 'Не выбрано'),
-                              trailing: const Icon(Icons.calendar_today),
-                              onTap: _selectFromDate,
-                            ),
-                          ),
-                          Expanded(
-                            child: ListTile(
-                              title: const Text('До'),
-                              subtitle: Text(_toDate != null
-                                  ? '${_toDate!.day}.${_toDate!.month}.${_toDate!.year}'
-                                  : 'Не выбрано'),
-                              trailing: const Icon(Icons.calendar_today),
-                              onTap: _selectToDate,
-                            ),
-                          ),
-                        ],
-                      ),
+                      _buildTagFilters(),
                     ],
-
-                    const Divider(),
-
-                    // Теги
-                    const Text(
-                      'Теги',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 8),
-                    _buildTagFilters(),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildTagFilters() {
     // Предустановленные теги для фильтрации
@@ -183,7 +185,7 @@ class _PhotoFilterWidgetState extends State<PhotoFilterWidget> {
       'природа',
       'интерьер',
       'улица',
-      'дом'
+      'дом',
     ];
 
     return Column(
@@ -198,19 +200,21 @@ class _PhotoFilterWidgetState extends State<PhotoFilterWidget> {
           spacing: 4,
           runSpacing: 4,
           children: commonTags
-              .map((tag) => FilterChip(
-                    label: Text(tag),
-                    selected: _selectedTags.contains(tag),
-                    onSelected: (selected) {
-                      setState(() {
-                        if (selected) {
-                          _selectedTags.add(tag);
-                        } else {
-                          _selectedTags.remove(tag);
-                        }
-                      });
-                    },
-                  ))
+              .map(
+                (tag) => FilterChip(
+                  label: Text(tag),
+                  selected: _selectedTags.contains(tag),
+                  onSelected: (selected) {
+                    setState(() {
+                      if (selected) {
+                        _selectedTags.add(tag);
+                      } else {
+                        _selectedTags.remove(tag);
+                      }
+                    });
+                  },
+                ),
+              )
               .toList(),
         ),
         if (_selectedTags.isNotEmpty) ...[
@@ -224,15 +228,17 @@ class _PhotoFilterWidgetState extends State<PhotoFilterWidget> {
             spacing: 4,
             runSpacing: 4,
             children: _selectedTags
-                .map((tag) => Chip(
-                      label: Text(tag),
-                      deleteIcon: const Icon(Icons.close, size: 16),
-                      onDeleted: () {
-                        setState(() {
-                          _selectedTags.remove(tag);
-                        });
-                      },
-                    ))
+                .map(
+                  (tag) => Chip(
+                    label: Text(tag),
+                    deleteIcon: const Icon(Icons.close, size: 16),
+                    onDeleted: () {
+                      setState(() {
+                        _selectedTags.remove(tag);
+                      });
+                    },
+                  ),
+                )
                 .toList(),
           ),
         ],
@@ -240,7 +246,7 @@ class _PhotoFilterWidgetState extends State<PhotoFilterWidget> {
     );
   }
 
-  void _selectFromDate() async {
+  Future<void> _selectFromDate() async {
     final date = await showDatePicker(
       context: context,
       initialDate: _fromDate ?? DateTime.now(),
@@ -259,7 +265,7 @@ class _PhotoFilterWidgetState extends State<PhotoFilterWidget> {
     }
   }
 
-  void _selectToDate() async {
+  Future<void> _selectToDate() async {
     final date = await showDatePicker(
       context: context,
       initialDate: _toDate ?? _fromDate ?? DateTime.now(),

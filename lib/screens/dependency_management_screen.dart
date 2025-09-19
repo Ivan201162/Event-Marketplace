@@ -37,49 +37,45 @@ class _DependencyManagementScreenState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ResponsiveScaffold(
-      title: 'Управление зависимостями',
-      body: Column(
-        children: [
-          // Вкладки
-          _buildTabs(),
+  Widget build(BuildContext context) => ResponsiveScaffold(
+        title: 'Управление зависимостями',
+        body: Column(
+          children: [
+            // Вкладки
+            _buildTabs(),
 
-          // Фильтры
-          _buildFilters(),
+            // Фильтры
+            _buildFilters(),
 
-          // Анализ
-          _buildAnalysis(),
+            // Анализ
+            _buildAnalysis(),
 
-          // Контент
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _selectedTab == 'dependencies'
-                    ? _buildDependenciesTab()
-                    : _buildUpdatesTab(),
-          ),
-        ],
-      ),
-    );
-  }
+            // Контент
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _selectedTab == 'dependencies'
+                      ? _buildDependenciesTab()
+                      : _buildUpdatesTab(),
+            ),
+          ],
+        ),
+      );
 
-  Widget _buildTabs() {
-    return ResponsiveCard(
-      child: Row(
-        children: [
-          Expanded(
-            child:
-                _buildTabButton('dependencies', 'Зависимости', Icons.inventory),
-          ),
-          Expanded(
-            child:
-                _buildTabButton('updates', 'Обновления', Icons.system_update),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildTabs() => ResponsiveCard(
+        child: Row(
+          children: [
+            Expanded(
+              child: _buildTabButton(
+                  'dependencies', 'Зависимости', Icons.inventory),
+            ),
+            Expanded(
+              child:
+                  _buildTabButton('updates', 'Обновления', Icons.system_update),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -122,130 +118,129 @@ class _DependencyManagementScreenState
     );
   }
 
-  Widget _buildFilters() {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ResponsiveText(
-            'Фильтры',
-            isTitle: true,
-          ),
-          const SizedBox(height: 16),
-          Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: [
-              // Фильтр по типу
-              DropdownButton<DependencyType?>(
-                value: _selectedType,
-                hint: const Text('Все типы'),
-                items: [
-                  const DropdownMenuItem<DependencyType?>(
-                    value: null,
-                    child: Text('Все типы'),
-                  ),
-                  ...DependencyType.values
-                      .map((type) => DropdownMenuItem<DependencyType?>(
-                            value: type,
-                            child: Text('${type.icon} ${type.displayName}'),
-                          )),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedType = value;
-                  });
-                },
-              ),
-
-              // Фильтр по статусу
-              DropdownButton<DependencyStatus?>(
-                value: _selectedStatus,
-                hint: const Text('Все статусы'),
-                items: [
-                  const DropdownMenuItem<DependencyStatus?>(
-                    value: null,
-                    child: Text('Все статусы'),
-                  ),
-                  ...DependencyStatus.values
-                      .map((status) => DropdownMenuItem<DependencyStatus?>(
-                            value: status,
-                            child: Text('${status.icon} ${status.displayName}'),
-                          )),
-                ],
-                onChanged: (value) {
-                  setState(() {
-                    _selectedStatus = value;
-                  });
-                },
-              ),
-
-              // Фильтр по типу обновления
-              if (_selectedTab == 'updates')
-                DropdownButton<UpdateType?>(
-                  value: _selectedUpdateType,
-                  hint: const Text('Все типы обновлений'),
+  Widget _buildFilters() => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ResponsiveText(
+              'Фильтры',
+              isTitle: true,
+            ),
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                // Фильтр по типу
+                DropdownButton<DependencyType?>(
+                  value: _selectedType,
+                  hint: const Text('Все типы'),
                   items: [
-                    const DropdownMenuItem<UpdateType?>(
-                      value: null,
-                      child: Text('Все типы обновлений'),
+                    const DropdownMenuItem<DependencyType?>(
+                      child: Text('Все типы'),
                     ),
-                    ...UpdateType.values
-                        .map((type) => DropdownMenuItem<UpdateType?>(
-                              value: type,
-                              child: Text('${type.icon} ${type.displayName}'),
-                            )),
+                    ...DependencyType.values.map(
+                      (type) => DropdownMenuItem<DependencyType?>(
+                        value: type,
+                        child: Text('${type.icon} ${type.displayName}'),
+                      ),
+                    ),
                   ],
                   onChanged: (value) {
                     setState(() {
-                      _selectedUpdateType = value;
+                      _selectedType = value;
                     });
                   },
                 ),
 
-              // Фильтр по приоритету
-              if (_selectedTab == 'updates')
-                DropdownButton<UpdatePriority?>(
-                  value: _selectedPriority,
-                  hint: const Text('Все приоритеты'),
+                // Фильтр по статусу
+                DropdownButton<DependencyStatus?>(
+                  value: _selectedStatus,
+                  hint: const Text('Все статусы'),
                   items: [
-                    const DropdownMenuItem<UpdatePriority?>(
-                      value: null,
-                      child: Text('Все приоритеты'),
+                    const DropdownMenuItem<DependencyStatus?>(
+                      child: Text('Все статусы'),
                     ),
-                    ...UpdatePriority.values
-                        .map((priority) => DropdownMenuItem<UpdatePriority?>(
-                              value: priority,
-                              child: Text(
-                                  '${priority.icon} ${priority.displayName}'),
-                            )),
+                    ...DependencyStatus.values.map(
+                      (status) => DropdownMenuItem<DependencyStatus?>(
+                        value: status,
+                        child: Text('${status.icon} ${status.displayName}'),
+                      ),
+                    ),
                   ],
                   onChanged: (value) {
                     setState(() {
-                      _selectedPriority = value;
+                      _selectedStatus = value;
                     });
                   },
                 ),
 
-              // Кнопка сброса фильтров
-              ElevatedButton.icon(
-                onPressed: _resetFilters,
-                icon: const Icon(Icons.clear),
-                label: const Text('Сбросить'),
-              ),
+                // Фильтр по типу обновления
+                if (_selectedTab == 'updates')
+                  DropdownButton<UpdateType?>(
+                    value: _selectedUpdateType,
+                    hint: const Text('Все типы обновлений'),
+                    items: [
+                      const DropdownMenuItem<UpdateType?>(
+                        child: Text('Все типы обновлений'),
+                      ),
+                      ...UpdateType.values.map(
+                        (type) => DropdownMenuItem<UpdateType?>(
+                          value: type,
+                          child: Text('${type.icon} ${type.displayName}'),
+                        ),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedUpdateType = value;
+                      });
+                    },
+                  ),
 
-              // Кнопка проверки обновлений
-              ElevatedButton.icon(
-                onPressed: _checkForUpdates,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Проверить обновления'),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+                // Фильтр по приоритету
+                if (_selectedTab == 'updates')
+                  DropdownButton<UpdatePriority?>(
+                    value: _selectedPriority,
+                    hint: const Text('Все приоритеты'),
+                    items: [
+                      const DropdownMenuItem<UpdatePriority?>(
+                        child: Text('Все приоритеты'),
+                      ),
+                      ...UpdatePriority.values.map(
+                        (priority) => DropdownMenuItem<UpdatePriority?>(
+                          value: priority,
+                          child: Text(
+                            '${priority.icon} ${priority.displayName}',
+                          ),
+                        ),
+                      ),
+                    ],
+                    onChanged: (value) {
+                      setState(() {
+                        _selectedPriority = value;
+                      });
+                    },
+                  ),
+
+                // Кнопка сброса фильтров
+                ElevatedButton.icon(
+                  onPressed: _resetFilters,
+                  icon: const Icon(Icons.clear),
+                  label: const Text('Сбросить'),
+                ),
+
+                // Кнопка проверки обновлений
+                ElevatedButton.icon(
+                  onPressed: _checkForUpdates,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Проверить обновления'),
+                ),
+              ],
+            ),
+          ],
+        ),
+      );
 
   Widget _buildAnalysis() {
     if (_analysis.isEmpty) return const SizedBox.shrink();
@@ -304,79 +299,80 @@ class _DependencyManagementScreenState
   }
 
   Widget _buildAnalysisCard(
-      String title, String value, IconData icon, Color color) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color),
-      ),
-      child: Column(
+    String title,
+    String value,
+    IconData icon,
+    Color color,
+  ) =>
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 32),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              title,
+              style: const TextStyle(fontSize: 12),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildDependenciesTab() => Column(
         children: [
-          Icon(icon, color: color, size: 32),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              color: color,
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                ResponsiveText(
+                  'Зависимости',
+                  isTitle: true,
+                ),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _showAddDependencyDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Добавить'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
             ),
           ),
-          const SizedBox(height: 4),
-          Text(
-            title,
-            style: const TextStyle(fontSize: 12),
-            textAlign: TextAlign.center,
+
+          // Список зависимостей
+          Expanded(
+            child: _getFilteredDependencies().isEmpty
+                ? const Center(child: Text('Зависимости не найдены'))
+                : ListView.builder(
+                    itemCount: _getFilteredDependencies().length,
+                    itemBuilder: (context, index) {
+                      final dependency = _getFilteredDependencies()[index];
+                      return _buildDependencyCard(dependency);
+                    },
+                  ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildDependenciesTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Зависимости',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _showAddDependencyDialog,
-                icon: const Icon(Icons.add),
-                label: const Text('Добавить'),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список зависимостей
-        Expanded(
-          child: _getFilteredDependencies().isEmpty
-              ? const Center(child: Text('Зависимости не найдены'))
-              : ListView.builder(
-                  itemCount: _getFilteredDependencies().length,
-                  itemBuilder: (context, index) {
-                    final dependency = _getFilteredDependencies()[index];
-                    return _buildDependencyCard(dependency);
-                  },
-                ),
-        ),
-      ],
-    );
-  }
+      );
 
   Widget _buildDependencyCard(Dependency dependency) {
     final typeColor = _getTypeColor(dependency.type);
@@ -491,14 +487,23 @@ class _DependencyManagementScreenState
           Row(
             children: [
               if (dependency.latestVersion != null)
-                _buildInfoChip('Последняя версия',
-                    'v${dependency.latestVersion}', Colors.green),
+                _buildInfoChip(
+                  'Последняя версия',
+                  'v${dependency.latestVersion}',
+                  Colors.green,
+                ),
               const SizedBox(width: 8),
-              _buildInfoChip('Зависимости', '${dependency.dependencies.length}',
-                  Colors.blue),
+              _buildInfoChip(
+                'Зависимости',
+                '${dependency.dependencies.length}',
+                Colors.blue,
+              ),
               const SizedBox(width: 8),
-              _buildInfoChip('Зависимые', '${dependency.dependents.length}',
-                  Colors.orange),
+              _buildInfoChip(
+                'Зависимые',
+                '${dependency.dependents.length}',
+                Colors.orange,
+              ),
             ],
           ),
 
@@ -520,42 +525,40 @@ class _DependencyManagementScreenState
     );
   }
 
-  Widget _buildUpdatesTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Обновления',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _checkForUpdates,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Проверить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список обновлений
-        Expanded(
-          child: _getFilteredUpdates().isEmpty
-              ? const Center(child: Text('Обновления не найдены'))
-              : ListView.builder(
-                  itemCount: _getFilteredUpdates().length,
-                  itemBuilder: (context, index) {
-                    final update = _getFilteredUpdates()[index];
-                    return _buildUpdateCard(update);
-                  },
+  Widget _buildUpdatesTab() => Column(
+        children: [
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                ResponsiveText(
+                  'Обновления',
+                  isTitle: true,
                 ),
-        ),
-      ],
-    );
-  }
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _checkForUpdates,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Проверить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список обновлений
+          Expanded(
+            child: _getFilteredUpdates().isEmpty
+                ? const Center(child: Text('Обновления не найдены'))
+                : ListView.builder(
+                    itemCount: _getFilteredUpdates().length,
+                    itemBuilder: (context, index) {
+                      final update = _getFilteredUpdates()[index];
+                      return _buildUpdateCard(update);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildUpdateCard(DependencyUpdate update) {
     final typeColor = _getUpdateTypeColor(update.type);
@@ -681,16 +684,25 @@ class _DependencyManagementScreenState
           Row(
             children: [
               if (update.securityFixes.isNotEmpty)
-                _buildInfoChip('Исправления безопасности',
-                    '${update.securityFixes.length}', Colors.red),
+                _buildInfoChip(
+                  'Исправления безопасности',
+                  '${update.securityFixes.length}',
+                  Colors.red,
+                ),
               const SizedBox(width: 8),
               if (update.bugFixes.isNotEmpty)
-                _buildInfoChip('Исправления ошибок',
-                    '${update.bugFixes.length}', Colors.orange),
+                _buildInfoChip(
+                  'Исправления ошибок',
+                  '${update.bugFixes.length}',
+                  Colors.orange,
+                ),
               const SizedBox(width: 8),
               if (update.newFeatures.isNotEmpty)
-                _buildInfoChip('Новые функции', '${update.newFeatures.length}',
-                    Colors.green),
+                _buildInfoChip(
+                  'Новые функции',
+                  '${update.newFeatures.length}',
+                  Colors.green,
+                ),
             ],
           ),
 
@@ -712,24 +724,22 @@ class _DependencyManagementScreenState
     );
   }
 
-  Widget _buildInfoChip(String label, String value, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color),
-      ),
-      child: Text(
-        '$label: $value',
-        style: TextStyle(
-          fontSize: 12,
-          color: color,
-          fontWeight: FontWeight.w500,
+  Widget _buildInfoChip(String label, String value, Color color) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color),
         ),
-      ),
-    );
-  }
+        child: Text(
+          '$label: $value',
+          style: TextStyle(
+            fontSize: 12,
+            color: color,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
 
   Color _getTypeColor(DependencyType type) {
     switch (type) {
@@ -801,9 +811,8 @@ class _DependencyManagementScreenState
     }
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDateTime(DateTime dateTime) =>
+      '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
 
   List<Dependency> _getFilteredDependencies() {
     var filtered = _dependencies;
@@ -894,7 +903,7 @@ class _DependencyManagementScreenState
     });
   }
 
-  void _checkForUpdates() async {
+  Future<void> _checkForUpdates() async {
     try {
       final updates = await _dependencyService.checkForUpdates();
       setState(() {
@@ -957,7 +966,8 @@ class _DependencyManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Редактирование зависимости "${dependency.name}" будет реализовано'),
+          'Редактирование зависимости "${dependency.name}" будет реализовано',
+        ),
       ),
     );
   }
@@ -967,7 +977,8 @@ class _DependencyManagementScreenState
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Обновление зависимости "${dependency.name}" будет реализовано'),
+          'Обновление зависимости "${dependency.name}" будет реализовано',
+        ),
       ),
     );
   }
@@ -975,18 +986,18 @@ class _DependencyManagementScreenState
   void _viewUpdate(DependencyUpdate update) {
     // TODO: Реализовать просмотр обновления
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
+      const SnackBar(
         content: Text('Просмотр обновления будет реализован'),
       ),
     );
   }
 
-  void _applyUpdate(DependencyUpdate update) async {
+  Future<void> _applyUpdate(DependencyUpdate update) async {
     try {
       final success = await _dependencyService.applyUpdate(update.id);
       if (success) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Обновление применено успешно'),
             backgroundColor: Colors.green,
           ),
@@ -994,7 +1005,7 @@ class _DependencyManagementScreenState
         _loadData();
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
+          const SnackBar(
             content: Text('Ошибка применения обновления'),
             backgroundColor: Colors.red,
           ),

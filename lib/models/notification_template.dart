@@ -2,17 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель шаблона уведомления
 class NotificationTemplate {
-  final String id;
-  final String name;
-  final String title;
-  final String body;
-  final NotificationType type;
-  final NotificationChannel channel;
-  final Map<String, String> variables;
-  final bool isActive;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
   const NotificationTemplate({
     required this.id,
     required this.name,
@@ -35,11 +24,13 @@ class NotificationTemplate {
       title: data['title'] ?? '',
       body: data['body'] ?? '',
       type: NotificationType.values.firstWhere(
-          (e) => e.toString().split('.').last == data['type'],
-          orElse: () => NotificationType.general),
+        (e) => e.toString().split('.').last == data['type'],
+        orElse: () => NotificationType.general,
+      ),
       channel: NotificationChannel.values.firstWhere(
-          (e) => e.toString().split('.').last == data['channel'],
-          orElse: () => NotificationChannel.push),
+        (e) => e.toString().split('.').last == data['channel'],
+        orElse: () => NotificationChannel.push,
+      ),
       variables: Map<String, String>.from(data['variables'] ?? {}),
       isActive: data['isActive'] ?? true,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
@@ -48,39 +39,48 @@ class NotificationTemplate {
   }
 
   /// Создать из Map
-  factory NotificationTemplate.fromMap(Map<String, dynamic> data) {
-    return NotificationTemplate(
-      id: data['id'] ?? '',
-      name: data['name'] ?? '',
-      title: data['title'] ?? '',
-      body: data['body'] ?? '',
-      type: NotificationType.values.firstWhere(
+  factory NotificationTemplate.fromMap(Map<String, dynamic> data) =>
+      NotificationTemplate(
+        id: data['id'] ?? '',
+        name: data['name'] ?? '',
+        title: data['title'] ?? '',
+        body: data['body'] ?? '',
+        type: NotificationType.values.firstWhere(
           (e) => e.toString().split('.').last == data['type'],
-          orElse: () => NotificationType.general),
-      channel: NotificationChannel.values.firstWhere(
+          orElse: () => NotificationType.general,
+        ),
+        channel: NotificationChannel.values.firstWhere(
           (e) => e.toString().split('.').last == data['channel'],
-          orElse: () => NotificationChannel.push),
-      variables: Map<String, String>.from(data['variables'] ?? {}),
-      isActive: data['isActive'] ?? true,
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-    );
-  }
+          orElse: () => NotificationChannel.push,
+        ),
+        variables: Map<String, String>.from(data['variables'] ?? {}),
+        isActive: data['isActive'] ?? true,
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      );
+  final String id;
+  final String name;
+  final String title;
+  final String body;
+  final NotificationType type;
+  final NotificationChannel channel;
+  final Map<String, String> variables;
+  final bool isActive;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'title': title,
-      'body': body,
-      'type': type.toString().split('.').last,
-      'channel': channel.toString().split('.').last,
-      'variables': variables,
-      'isActive': isActive,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'title': title,
+        'body': body,
+        'type': type.toString().split('.').last,
+        'channel': channel.toString().split('.').last,
+        'variables': variables,
+        'isActive': isActive,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   /// Создать копию с изменениями
   NotificationTemplate copyWith({
@@ -94,24 +94,23 @@ class NotificationTemplate {
     bool? isActive,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) {
-    return NotificationTemplate(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      title: title ?? this.title,
-      body: body ?? this.body,
-      type: type ?? this.type,
-      channel: channel ?? this.channel,
-      variables: variables ?? this.variables,
-      isActive: isActive ?? this.isActive,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
+  }) =>
+      NotificationTemplate(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        title: title ?? this.title,
+        body: body ?? this.body,
+        type: type ?? this.type,
+        channel: channel ?? this.channel,
+        variables: variables ?? this.variables,
+        isActive: isActive ?? this.isActive,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   /// Заменить переменные в тексте
   String replaceVariables(Map<String, String> values) {
-    String result = body;
+    var result = body;
     for (final entry in values.entries) {
       result = result.replaceAll('{{${entry.key}}}', entry.value);
     }
@@ -120,7 +119,7 @@ class NotificationTemplate {
 
   /// Заменить переменные в заголовке
   String replaceTitleVariables(Map<String, String> values) {
-    String result = title;
+    var result = title;
     for (final entry in values.entries) {
       result = result.replaceAll('{{${entry.key}}}', entry.value);
     }
@@ -144,25 +143,22 @@ class NotificationTemplate {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      name,
-      title,
-      body,
-      type,
-      channel,
-      variables,
-      isActive,
-      createdAt,
-      updatedAt,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        name,
+        title,
+        body,
+        type,
+        channel,
+        variables,
+        isActive,
+        createdAt,
+        updatedAt,
+      );
 
   @override
-  String toString() {
-    return 'NotificationTemplate(id: $id, name: $name, type: $type)';
-  }
+  String toString() =>
+      'NotificationTemplate(id: $id, name: $name, type: $type)';
 }
 
 /// Типы уведомлений
@@ -188,20 +184,6 @@ enum NotificationChannel {
 
 /// Модель отправленного уведомления
 class SentNotification {
-  final String id;
-  final String templateId;
-  final String? userId;
-  final String title;
-  final String body;
-  final NotificationType type;
-  final NotificationChannel channel;
-  final Map<String, dynamic> data;
-  final NotificationStatus status;
-  final DateTime sentAt;
-  final DateTime? deliveredAt;
-  final DateTime? readAt;
-  final String? errorMessage;
-
   const SentNotification({
     required this.id,
     required this.templateId,
@@ -228,15 +210,18 @@ class SentNotification {
       title: data['title'] ?? '',
       body: data['body'] ?? '',
       type: NotificationType.values.firstWhere(
-          (e) => e.toString().split('.').last == data['type'],
-          orElse: () => NotificationType.general),
+        (e) => e.toString().split('.').last == data['type'],
+        orElse: () => NotificationType.general,
+      ),
       channel: NotificationChannel.values.firstWhere(
-          (e) => e.toString().split('.').last == data['channel'],
-          orElse: () => NotificationChannel.push),
+        (e) => e.toString().split('.').last == data['channel'],
+        orElse: () => NotificationChannel.push,
+      ),
       data: Map<String, dynamic>.from(data['data'] ?? {}),
       status: NotificationStatus.values.firstWhere(
-          (e) => e.toString().split('.').last == data['status'],
-          orElse: () => NotificationStatus.pending),
+        (e) => e.toString().split('.').last == data['status'],
+        orElse: () => NotificationStatus.pending,
+      ),
       sentAt: (data['sentAt'] as Timestamp).toDate(),
       deliveredAt: data['deliveredAt'] != null
           ? (data['deliveredAt'] as Timestamp).toDate()
@@ -249,52 +234,65 @@ class SentNotification {
   }
 
   /// Создать из Map
-  factory SentNotification.fromMap(Map<String, dynamic> data) {
-    return SentNotification(
-      id: data['id'] ?? '',
-      templateId: data['templateId'] ?? '',
-      userId: data['userId'],
-      title: data['title'] ?? '',
-      body: data['body'] ?? '',
-      type: NotificationType.values.firstWhere(
+  factory SentNotification.fromMap(Map<String, dynamic> data) =>
+      SentNotification(
+        id: data['id'] ?? '',
+        templateId: data['templateId'] ?? '',
+        userId: data['userId'],
+        title: data['title'] ?? '',
+        body: data['body'] ?? '',
+        type: NotificationType.values.firstWhere(
           (e) => e.toString().split('.').last == data['type'],
-          orElse: () => NotificationType.general),
-      channel: NotificationChannel.values.firstWhere(
+          orElse: () => NotificationType.general,
+        ),
+        channel: NotificationChannel.values.firstWhere(
           (e) => e.toString().split('.').last == data['channel'],
-          orElse: () => NotificationChannel.push),
-      data: Map<String, dynamic>.from(data['data'] ?? {}),
-      status: NotificationStatus.values.firstWhere(
+          orElse: () => NotificationChannel.push,
+        ),
+        data: Map<String, dynamic>.from(data['data'] ?? {}),
+        status: NotificationStatus.values.firstWhere(
           (e) => e.toString().split('.').last == data['status'],
-          orElse: () => NotificationStatus.pending),
-      sentAt: (data['sentAt'] as Timestamp).toDate(),
-      deliveredAt: data['deliveredAt'] != null
-          ? (data['deliveredAt'] as Timestamp).toDate()
-          : null,
-      readAt: data['readAt'] != null
-          ? (data['readAt'] as Timestamp).toDate()
-          : null,
-      errorMessage: data['errorMessage'],
-    );
-  }
+          orElse: () => NotificationStatus.pending,
+        ),
+        sentAt: (data['sentAt'] as Timestamp).toDate(),
+        deliveredAt: data['deliveredAt'] != null
+            ? (data['deliveredAt'] as Timestamp).toDate()
+            : null,
+        readAt: data['readAt'] != null
+            ? (data['readAt'] as Timestamp).toDate()
+            : null,
+        errorMessage: data['errorMessage'],
+      );
+  final String id;
+  final String templateId;
+  final String? userId;
+  final String title;
+  final String body;
+  final NotificationType type;
+  final NotificationChannel channel;
+  final Map<String, dynamic> data;
+  final NotificationStatus status;
+  final DateTime sentAt;
+  final DateTime? deliveredAt;
+  final DateTime? readAt;
+  final String? errorMessage;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'templateId': templateId,
-      'userId': userId,
-      'title': title,
-      'body': body,
-      'type': type.toString().split('.').last,
-      'channel': channel.toString().split('.').last,
-      'data': data,
-      'status': status.toString().split('.').last,
-      'sentAt': Timestamp.fromDate(sentAt),
-      'deliveredAt':
-          deliveredAt != null ? Timestamp.fromDate(deliveredAt!) : null,
-      'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
-      'errorMessage': errorMessage,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'templateId': templateId,
+        'userId': userId,
+        'title': title,
+        'body': body,
+        'type': type.toString().split('.').last,
+        'channel': channel.toString().split('.').last,
+        'data': data,
+        'status': status.toString().split('.').last,
+        'sentAt': Timestamp.fromDate(sentAt),
+        'deliveredAt':
+            deliveredAt != null ? Timestamp.fromDate(deliveredAt!) : null,
+        'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
+        'errorMessage': errorMessage,
+      };
 
   /// Создать копию с изменениями
   SentNotification copyWith({
@@ -311,23 +309,22 @@ class SentNotification {
     DateTime? deliveredAt,
     DateTime? readAt,
     String? errorMessage,
-  }) {
-    return SentNotification(
-      id: id ?? this.id,
-      templateId: templateId ?? this.templateId,
-      userId: userId ?? this.userId,
-      title: title ?? this.title,
-      body: body ?? this.body,
-      type: type ?? this.type,
-      channel: channel ?? this.channel,
-      data: data ?? this.data,
-      status: status ?? this.status,
-      sentAt: sentAt ?? this.sentAt,
-      deliveredAt: deliveredAt ?? this.deliveredAt,
-      readAt: readAt ?? this.readAt,
-      errorMessage: errorMessage ?? this.errorMessage,
-    );
-  }
+  }) =>
+      SentNotification(
+        id: id ?? this.id,
+        templateId: templateId ?? this.templateId,
+        userId: userId ?? this.userId,
+        title: title ?? this.title,
+        body: body ?? this.body,
+        type: type ?? this.type,
+        channel: channel ?? this.channel,
+        data: data ?? this.data,
+        status: status ?? this.status,
+        sentAt: sentAt ?? this.sentAt,
+        deliveredAt: deliveredAt ?? this.deliveredAt,
+        readAt: readAt ?? this.readAt,
+        errorMessage: errorMessage ?? this.errorMessage,
+      );
 
   /// Проверить, доставлено ли уведомление
   bool get isDelivered => status == NotificationStatus.delivered;
@@ -358,28 +355,25 @@ class SentNotification {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      templateId,
-      userId,
-      title,
-      body,
-      type,
-      channel,
-      data,
-      status,
-      sentAt,
-      deliveredAt,
-      readAt,
-      errorMessage,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        templateId,
+        userId,
+        title,
+        body,
+        type,
+        channel,
+        data,
+        status,
+        sentAt,
+        deliveredAt,
+        readAt,
+        errorMessage,
+      );
 
   @override
-  String toString() {
-    return 'SentNotification(id: $id, title: $title, status: $status)';
-  }
+  String toString() =>
+      'SentNotification(id: $id, title: $title, status: $status)';
 }
 
 /// Статусы уведомлений
@@ -393,17 +387,6 @@ enum NotificationStatus {
 
 /// Статистика уведомлений
 class NotificationStatistics {
-  final int totalSent;
-  final int totalDelivered;
-  final int totalRead;
-  final int totalFailed;
-  final Map<String, int> sentByType;
-  final Map<String, int> sentByChannel;
-  final double deliveryRate;
-  final double readRate;
-  final DateTime periodStart;
-  final DateTime periodEnd;
-
   const NotificationStatistics({
     required this.totalSent,
     required this.totalDelivered,
@@ -416,6 +399,16 @@ class NotificationStatistics {
     required this.periodStart,
     required this.periodEnd,
   });
+  final int totalSent;
+  final int totalDelivered;
+  final int totalRead;
+  final int totalFailed;
+  final Map<String, int> sentByType;
+  final Map<String, int> sentByChannel;
+  final double deliveryRate;
+  final double readRate;
+  final DateTime periodStart;
+  final DateTime periodEnd;
 
   /// Процент доставленных уведомлений
   double get deliveryPercentage {
@@ -436,7 +429,6 @@ class NotificationStatistics {
   }
 
   @override
-  String toString() {
-    return 'NotificationStatistics(totalSent: $totalSent, deliveryRate: ${deliveryRate.toStringAsFixed(2)}%)';
-  }
+  String toString() =>
+      'NotificationStatistics(totalSent: $totalSent, deliveryRate: ${deliveryRate.toStringAsFixed(2)}%)';
 }

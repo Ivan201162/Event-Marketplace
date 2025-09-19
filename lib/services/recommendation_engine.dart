@@ -1,16 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:event_marketplace_app/models/specialist.dart';
-import 'package:event_marketplace_app/models/booking.dart';
-import 'package:event_marketplace_app/models/review.dart';
-import 'package:event_marketplace_app/models/app_user.dart';
-import 'package:event_marketplace_app/core/feature_flags.dart';
+
+import '../core/feature_flags.dart';
+import '../models/app_user.dart';
+import '../models/booking.dart';
+import '../models/review.dart';
+import '../models/specialist.dart';
+import '../models/specialist_recommendation.dart';
 
 /// Движок рекомендаций для специалистов
 class RecommendationEngine {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Получить рекомендации для пользователя
-  Future<List<Specialist>> getRecommendations({
+  Future<List<SpecialistRecommendation>> getRecommendations({
     required String userId,
     int limit = 10,
   }) async {
@@ -26,13 +28,23 @@ class RecommendationEngine {
       final preferences = _analyzePreferences(userHistory);
 
       // Получаем рекомендации на основе предпочтений
-      final recommendations = await _getSpecialistsByPreferences(
+      final specialists = await _getSpecialistsByPreferences(
         preferences: preferences,
         excludeIds: userHistory.bookedSpecialistIds,
         limit: limit,
       );
 
-      return recommendations;
+      // Преобразуем в SpecialistRecommendation
+      return specialists.map((specialist) {
+        return SpecialistRecommendation(
+          id: '${userId}_${specialist.id}',
+          specialistId: specialist.id,
+          reason: 'Рекомендуется на основе ваших предпочтений',
+          score: 0.8, // Заглушка
+          timestamp: DateTime.now(),
+          specialist: specialist,
+        );
+      }).toList();
     } catch (e) {
       throw Exception('Ошибка получения рекомендаций: $e');
     }
@@ -46,8 +58,7 @@ class RecommendationEngine {
         .where('customerId', isEqualTo: userId)
         .get();
 
-    final bookings =
-        bookingsSnapshot.docs.map((doc) => Booking.fromDocument(doc)).toList();
+    final bookings = bookingsSnapshot.docs.map(Booking.fromDocument).toList();
 
     // Получаем отзывы пользователя
     final reviewsSnapshot = await _firestore
@@ -55,8 +66,7 @@ class RecommendationEngine {
         .where('userId', isEqualTo: userId)
         .get();
 
-    final reviews =
-        reviewsSnapshot.docs.map((doc) => Review.fromDocument(doc)).toList();
+    final reviews = reviewsSnapshot.docs.map(Review.fromDocument).toList();
 
     // Получаем просмотренные события
     final viewedEventsSnapshot = await _firestore
@@ -90,9 +100,7 @@ class RecommendationEngine {
       categoryCount['Свадьба'] = (categoryCount['Свадьба'] ?? 0) + 1;
       serviceCount['Фотограф'] = (serviceCount['Фотограф'] ?? 0) + 1;
 
-      if (booking.totalPrice != null) {
-        priceRange.add(booking.totalPrice!);
-      }
+      priceRange.add(booking.totalPrice);
     }
 
     // Анализируем отзывы
@@ -144,18 +152,22 @@ class RecommendationEngine {
     required List<String> excludeIds,
     int limit = 10,
   }) async {
-    Query query = _firestore.collection('specialists');
+    var query = _firestore.collection('specialists');
 
     // Фильтр по категориям
     if (preferences.preferredCategories.isNotEmpty) {
-      query = query.where('categories',
-          arrayContainsAny: preferences.preferredCategories);
+      query = query.where(
+        'categories',
+        arrayContainsAny: preferences.preferredCategories,
+      );
     }
 
     // Фильтр по услугам
     if (preferences.preferredServices.isNotEmpty) {
-      query = query.where('services',
-          arrayContainsAny: preferences.preferredServices);
+      query = query.where(
+        'services',
+        arrayContainsAny: preferences.preferredServices,
+      );
     }
 
     // Фильтр по локациям
@@ -164,8 +176,10 @@ class RecommendationEngine {
     }
 
     // Фильтр по рейтингу
-    query = query.where('rating',
-        isGreaterThanOrEqualTo: preferences.preferredRating);
+    query = query.where(
+      'rating',
+      isGreaterThanOrEqualTo: preferences.preferredRating,
+    );
 
     // Фильтр по цене (в пределах бюджета)
     final maxPrice = (preferences.averageBudget * 1.5).round();
@@ -236,33 +250,24 @@ class RecommendationEngine {
 
 /// История пользователя
 class UserHistory {
-  final List<Booking> bookings;
-  final List<Review> reviews;
-  final List<String> viewedEventIds;
-
   const UserHistory({
     required this.bookings,
     required this.reviews,
     required this.viewedEventIds,
   });
+  final List<Booking> bookings;
+  final List<Review> reviews;
+  final List<String> viewedEventIds;
 
-  List<String> get bookedSpecialistIds {
-    return bookings
-        .map((booking) => booking.specialistId)
-        .where((id) => id != null)
-        .cast<String>()
-        .toList();
-  }
+  List<String> get bookedSpecialistIds => bookings
+      .map((booking) => booking.specialistId)
+      .where((id) => id != null)
+      .cast<String>()
+      .toList();
 }
 
 /// Предпочтения пользователя
 class UserPreferences {
-  final List<String> preferredCategories;
-  final List<String> preferredServices;
-  final List<String> preferredLocations;
-  final int averageBudget;
-  final double preferredRating;
-
   const UserPreferences({
     required this.preferredCategories,
     required this.preferredServices,
@@ -270,4 +275,9 @@ class UserPreferences {
     required this.averageBudget,
     required this.preferredRating,
   });
+  final List<String> preferredCategories;
+  final List<String> preferredServices;
+  final List<String> preferredLocations;
+  final int averageBudget;
+  final double preferredRating;
 }

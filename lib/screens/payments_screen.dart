@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/payment_providers.dart';
-import '../providers/auth_providers.dart';
-import '../widgets/payment_widgets.dart';
+
 import '../models/payment.dart';
+import '../providers/auth_providers.dart';
+import '../providers/payment_providers.dart';
+import '../widgets/payment_widgets.dart';
 
 class PaymentsScreen extends ConsumerStatefulWidget {
   const PaymentsScreen({super.key});
@@ -119,9 +120,11 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
 
         return RefreshIndicator(
           onRefresh: () async {
-            ref.invalidate(isSpecialist
-                ? paymentsBySpecialistProvider(userId)
-                : paymentsByCustomerProvider(userId));
+            ref.invalidate(
+              isSpecialist
+                  ? paymentsBySpecialistProvider(userId)
+                  : paymentsByCustomerProvider(userId),
+            );
           },
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
@@ -151,9 +154,11 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
-                ref.invalidate(isSpecialist
-                    ? paymentsBySpecialistProvider(userId)
-                    : paymentsByCustomerProvider(userId));
+                ref.invalidate(
+                  isSpecialist
+                      ? paymentsBySpecialistProvider(userId)
+                      : paymentsByCustomerProvider(userId),
+                );
               },
               child: const Text('Повторить'),
             ),
@@ -196,9 +201,11 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
 
         return RefreshIndicator(
           onRefresh: () async {
-            ref.invalidate(isSpecialist
-                ? paymentsBySpecialistProvider(userId)
-                : paymentsByCustomerProvider(userId));
+            ref.invalidate(
+              isSpecialist
+                  ? paymentsBySpecialistProvider(userId)
+                  : paymentsByCustomerProvider(userId),
+            );
           },
           child: ListView.builder(
             padding: const EdgeInsets.all(16),
@@ -233,33 +240,33 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
 
   /// Вкладка статистики
   Widget _buildStatisticsTab(String userId, bool isSpecialist) {
-    final statisticsAsync = ref.watch(paymentStatisticsProvider(
-      PaymentStatisticsParams(userId: userId, isSpecialist: isSpecialist),
-    ));
+    final statisticsAsync = ref.watch(
+      paymentStatisticsProvider(
+        PaymentStatisticsParams(userId: userId, isSpecialist: isSpecialist),
+      ),
+    );
 
     return statisticsAsync.when(
-      data: (statistics) {
-        return SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Статистика
-              PaymentStatisticsWidget(statistics: statistics),
+      data: (statistics) => SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Статистика
+            PaymentStatisticsWidget(statistics: statistics),
 
-              const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-              // Быстрые действия
-              _buildQuickActionsCard(context, userId, isSpecialist),
+            // Быстрые действия
+            _buildQuickActionsCard(context, userId, isSpecialist),
 
-              const SizedBox(height: 16),
+            const SizedBox(height: 16),
 
-              // Информация о типах организаций
-              _buildOrganizationTypesCard(context),
-            ],
-          ),
-        );
-      },
+            // Информация о типах организаций
+            _buildOrganizationTypesCard(context),
+          ],
+        ),
+      ),
       loading: () => const Center(child: CircularProgressIndicator()),
       error: (error, stack) => Center(
         child: Column(
@@ -276,92 +283,92 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
 
   /// Карточка быстрых действий
   Widget _buildQuickActionsCard(
-      BuildContext context, String userId, bool isSpecialist) {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Быстрые действия',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 16),
-            if (!isSpecialist) ...[
-              ElevatedButton.icon(
-                onPressed: () => _showPaymentCalculationDialog(context),
-                icon: const Icon(Icons.calculate),
-                label: const Text('Рассчитать платежи'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.blue,
-                  foregroundColor: Colors.white,
-                ),
+    BuildContext context,
+    String userId,
+    bool isSpecialist,
+  ) =>
+      Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Быстрые действия',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
-              const SizedBox(height: 12),
+              const SizedBox(height: 16),
+              if (!isSpecialist) ...[
+                ElevatedButton.icon(
+                  onPressed: () => _showPaymentCalculationDialog(context),
+                  icon: const Icon(Icons.calculate),
+                  label: const Text('Рассчитать платежи'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.blue,
+                    foregroundColor: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 12),
+              ],
+              OutlinedButton.icon(
+                onPressed: () => _showTestDataDialog(context),
+                icon: const Icon(Icons.science),
+                label: const Text('Добавить тестовые данные'),
+              ),
             ],
-            OutlinedButton.icon(
-              onPressed: () => _showTestDataDialog(context),
-              icon: const Icon(Icons.science),
-              label: const Text('Добавить тестовые данные'),
-            ),
-          ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   /// Карточка типов организаций
-  Widget _buildOrganizationTypesCard(BuildContext context) {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Типы организаций и платежи',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 16),
-            _buildOrganizationTypeInfo(
-              context,
-              'Физические лица',
-              'Аванс 30% + доплата 70%',
-              Colors.blue,
-            ),
-            const SizedBox(height: 12),
-            _buildOrganizationTypeInfo(
-              context,
-              'Коммерческие организации',
-              'Аванс 30% + доплата 70%',
-              Colors.green,
-            ),
-            const SizedBox(height: 12),
-            _buildOrganizationTypeInfo(
-              context,
-              'Государственные учреждения',
-              'Постоплата 100% (или 70/30)',
-              Colors.orange,
-            ),
-            const SizedBox(height: 12),
-            _buildOrganizationTypeInfo(
-              context,
-              'Некоммерческие организации',
-              'Аванс 20% + доплата 80%',
-              Colors.purple,
-            ),
-          ],
+  Widget _buildOrganizationTypesCard(BuildContext context) => Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Типы организаций и платежи',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 16),
+              _buildOrganizationTypeInfo(
+                context,
+                'Физические лица',
+                'Аванс 30% + доплата 70%',
+                Colors.blue,
+              ),
+              const SizedBox(height: 12),
+              _buildOrganizationTypeInfo(
+                context,
+                'Коммерческие организации',
+                'Аванс 30% + доплата 70%',
+                Colors.green,
+              ),
+              const SizedBox(height: 12),
+              _buildOrganizationTypeInfo(
+                context,
+                'Государственные учреждения',
+                'Постоплата 100% (или 70/30)',
+                Colors.orange,
+              ),
+              const SizedBox(height: 12),
+              _buildOrganizationTypeInfo(
+                context,
+                'Некоммерческие организации',
+                'Аванс 20% + доплата 80%',
+                Colors.purple,
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   /// Информация о типе организации
   Widget _buildOrganizationTypeInfo(
@@ -369,53 +376,52 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
     String title,
     String description,
     Color color,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 8,
-            height: 8,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
+  ) =>
+      Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: color.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color.withOpacity(0.3)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: color,
+                shape: BoxShape.circle,
+              ),
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.w600,
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 4),
-                Text(
-                  description,
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.7),
+                  const SizedBox(height: 4),
+                  Text(
+                    description,
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.7),
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   /// Показать детали платежа
   void _showPaymentDetails(BuildContext context, Payment payment) {
@@ -429,11 +435,15 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
             mainAxisSize: MainAxisSize.min,
             children: [
               _buildDetailRow('ID платежа', payment.id),
-              _buildDetailRow('Сумма',
-                  '${payment.amount.toStringAsFixed(0)} ${payment.currency}'),
+              _buildDetailRow(
+                'Сумма',
+                '${payment.amount.toStringAsFixed(0)} ${payment.currency}',
+              ),
               _buildDetailRow('Статус', payment.statusDisplayName),
-              _buildDetailRow('Тип организации',
-                  _getOrganizationTypeName(payment.organizationType)),
+              _buildDetailRow(
+                'Тип организации',
+                _getOrganizationTypeName(payment.organizationType),
+              ),
               if (payment.description != null)
                 _buildDetailRow('Описание', payment.description!),
               if (payment.paymentMethod != null)
@@ -461,7 +471,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
   /// Показать диалог расчета платежей
   void _showPaymentCalculationDialog(BuildContext context) {
     final amountController = TextEditingController();
-    OrganizationType selectedType = OrganizationType.individual;
+    var selectedType = OrganizationType.individual;
 
     showDialog(
       context: context,
@@ -483,15 +493,16 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
                 const SizedBox(height: 16),
                 const Text('Тип организации:'),
                 const SizedBox(height: 8),
-                ...OrganizationType.values
-                    .map((type) => RadioListTile<OrganizationType>(
-                          title: Text(_getOrganizationTypeName(type)),
-                          value: type,
-                          groupValue: selectedType,
-                          onChanged: (value) {
-                            setState(() => selectedType = value!);
-                          },
-                        )),
+                ...OrganizationType.values.map(
+                  (type) => RadioListTile<OrganizationType>(
+                    title: Text(_getOrganizationTypeName(type)),
+                    value: type,
+                    groupValue: selectedType,
+                    onChanged: (value) {
+                      setState(() => selectedType = value!);
+                    },
+                  ),
+                ),
                 if (amountController.text.isNotEmpty) ...[
                   const SizedBox(height: 16),
                   PaymentCalculationWidget(
@@ -548,24 +559,22 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
   }
 
   /// Построить строку деталей
-  Widget _buildDetailRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 120,
-            child: Text(
-              '$label:',
-              style: const TextStyle(fontWeight: FontWeight.w500),
+  Widget _buildDetailRow(String label, String value) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 120,
+              child: Text(
+                '$label:',
+                style: const TextStyle(fontWeight: FontWeight.w500),
+              ),
             ),
-          ),
-          Expanded(child: Text(value)),
-        ],
-      ),
-    );
-  }
+            Expanded(child: Text(value)),
+          ],
+        ),
+      );
 
   /// Получить название типа организации
   String _getOrganizationTypeName(OrganizationType type) {
@@ -582,7 +591,6 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
   }
 
   /// Форматировать дату
-  String _formatDate(DateTime date) {
-    return '${date.day}.${date.month}.${date.year} ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDate(DateTime date) =>
+      '${date.day}.${date.month}.${date.year} ${date.hour}:${date.minute.toString().padLeft(2, '0')}';
 }

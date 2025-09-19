@@ -7,16 +7,15 @@ import 'responsive_layout.dart';
 
 /// Виджет для отображения скидки у заказчика
 class CustomerDiscountDisplayWidget extends ConsumerWidget {
-  final String bookingId;
-  final BookingDiscount? discount;
-  final VoidCallback? onDiscountChanged;
-
   const CustomerDiscountDisplayWidget({
     super.key,
     required this.bookingId,
     this.discount,
     this.onDiscountChanged,
   });
+  final String bookingId;
+  final BookingDiscount? discount;
+  final VoidCallback? onDiscountChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -274,96 +273,90 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildPriceHistorySection(BuildContext context, WidgetRef ref) {
-    return Consumer(
-      builder: (context, ref, child) {
-        return ref.watch(priceHistoryProvider(bookingId)).when(
-              data: (priceHistory) {
-                if (priceHistory.isEmpty) {
-                  return const SizedBox.shrink();
-                }
+  Widget _buildPriceHistorySection(BuildContext context, WidgetRef ref) =>
+      Consumer(
+        builder: (context, ref, child) =>
+            ref.watch(priceHistoryProvider(bookingId)).when(
+                  data: (priceHistory) {
+                    if (priceHistory.isEmpty) {
+                      return const SizedBox.shrink();
+                    }
 
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Icon(Icons.history, size: 20),
-                        const SizedBox(width: 8),
-                        ResponsiveText(
-                          'История изменений цены',
-                          isTitle: true,
+                        Row(
+                          children: [
+                            const Icon(Icons.history, size: 20),
+                            const SizedBox(width: 8),
+                            ResponsiveText(
+                              'История изменений цены',
+                              isTitle: true,
+                            ),
+                          ],
                         ),
+                        const SizedBox(height: 8),
+                        ...priceHistory.take(3).map(_buildPriceHistoryItem),
+                        if (priceHistory.length > 3) ...[
+                          const SizedBox(height: 8),
+                          TextButton(
+                            onPressed: () =>
+                                _showFullPriceHistory(context, priceHistory),
+                            child: const Text('Показать всю историю'),
+                          ),
+                        ],
                       ],
-                    ),
-                    const SizedBox(height: 8),
-                    ...priceHistory
-                        .take(3)
-                        .map((history) => _buildPriceHistoryItem(history)),
-                    if (priceHistory.length > 3) ...[
-                      const SizedBox(height: 8),
-                      TextButton(
-                        onPressed: () =>
-                            _showFullPriceHistory(context, priceHistory),
-                        child: const Text('Показать всю историю'),
-                      ),
-                    ],
-                  ],
-                );
-              },
-              loading: () => const SizedBox.shrink(),
-              error: (error, stack) => const SizedBox.shrink(),
-            );
-      },
-    );
-  }
+                    );
+                  },
+                  loading: () => const SizedBox.shrink(),
+                  error: (error, stack) => const SizedBox.shrink(),
+                ),
+      );
 
-  Widget _buildPriceHistoryItem(PriceHistory history) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            history.isDiscount ? Icons.trending_down : Icons.trending_up,
-            color: history.isDiscount ? Colors.green : Colors.red,
-            size: 16,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${history.oldPrice.toStringAsFixed(0)} ₽ → ${history.newPrice.toStringAsFixed(0)} ₽',
-                  style: const TextStyle(fontWeight: FontWeight.w500),
-                ),
-                Text(
-                  history.reason,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
+  Widget _buildPriceHistoryItem(PriceHistory history) => Container(
+        margin: const EdgeInsets.only(bottom: 8),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.grey.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
+        ),
+        child: Row(
+          children: [
+            Icon(
+              history.isDiscount ? Icons.trending_down : Icons.trending_up,
+              color: history.isDiscount ? Colors.green : Colors.red,
+              size: 16,
+            ),
+            const SizedBox(width: 8),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '${history.oldPrice.toStringAsFixed(0)} ₽ → ${history.newPrice.toStringAsFixed(0)} ₽',
+                    style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
-                ),
-              ],
+                  Text(
+                    history.reason,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          Text(
-            _formatDate(history.changedAt),
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
+            Text(
+              _formatDate(history.changedAt),
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   IconData _getDiscountIcon() {
     switch (discount!.status) {
@@ -405,9 +398,9 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
     final minutes = timeUntilExpiry.inMinutes % 60;
 
     if (hours > 0) {
-      return 'Осталось: ${hours}ч ${minutes}м';
+      return 'Осталось: $hoursч $minutesм';
     } else {
-      return 'Осталось: ${minutes}м';
+      return 'Осталось: $minutesм';
     }
   }
 
@@ -424,7 +417,7 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
     }
   }
 
-  void _acceptDiscount(BuildContext context, WidgetRef ref) async {
+  Future<void> _acceptDiscount(BuildContext context, WidgetRef ref) async {
     try {
       final service = ref.read(discountServiceProvider);
       await service.acceptDiscount(
@@ -463,7 +456,9 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
   }
 
   void _showFullPriceHistory(
-      BuildContext context, List<PriceHistory> priceHistory) {
+    BuildContext context,
+    List<PriceHistory> priceHistory,
+  ) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -492,13 +487,12 @@ class CustomerDiscountDisplayWidget extends ConsumerWidget {
 
 /// Диалог для отклонения скидки
 class _RejectDiscountDialog extends StatefulWidget {
-  final String bookingId;
-  final VoidCallback onRejected;
-
   const _RejectDiscountDialog({
     required this.bookingId,
     required this.onRejected,
   });
+  final String bookingId;
+  final VoidCallback onRejected;
 
   @override
   State<_RejectDiscountDialog> createState() => _RejectDiscountDialogState();
@@ -515,48 +509,46 @@ class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Отклонить скидку'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text('Вы уверены, что хотите отклонить предложение скидки?'),
-          const SizedBox(height: 16),
-          TextField(
-            controller: _reasonController,
-            decoration: const InputDecoration(
-              labelText: 'Причина отклонения (необязательно)',
-              border: OutlineInputBorder(),
+  Widget build(BuildContext context) => AlertDialog(
+        title: const Text('Отклонить скидку'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Вы уверены, что хотите отклонить предложение скидки?'),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _reasonController,
+              decoration: const InputDecoration(
+                labelText: 'Причина отклонения (необязательно)',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
             ),
-            maxLines: 3,
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: _isLoading ? null : () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: _isLoading ? null : _rejectDiscount,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: _isLoading
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Text('Отклонить'),
           ),
         ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: _isLoading ? null : () => Navigator.pop(context),
-          child: const Text('Отмена'),
-        ),
-        ElevatedButton(
-          onPressed: _isLoading ? null : _rejectDiscount,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
-          ),
-          child: _isLoading
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Text('Отклонить'),
-        ),
-      ],
-    );
-  }
+      );
 
-  void _rejectDiscount() async {
+  Future<void> _rejectDiscount() async {
     setState(() {
       _isLoading = true;
     });
@@ -599,15 +591,13 @@ class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
 final priceHistoryProvider =
     FutureProvider.family<List<PriceHistory>, String>((ref, bookingId) async {
   final service = ref.read(priceHistoryServiceProvider);
-  return await service.getBookingPriceHistory(bookingId);
+  return service.getBookingPriceHistory(bookingId);
 });
 
 /// Провайдер для сервиса истории цен
-final priceHistoryServiceProvider = Provider<PriceHistoryService>((ref) {
-  return PriceHistoryService();
-});
+final priceHistoryServiceProvider =
+    Provider<PriceHistoryService>((ref) => PriceHistoryService());
 
 /// Провайдер для сервиса скидок
-final discountServiceProvider = Provider<DiscountService>((ref) {
-  return DiscountService();
-});
+final discountServiceProvider =
+    Provider<DiscountService>((ref) => DiscountService());

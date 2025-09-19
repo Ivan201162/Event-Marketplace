@@ -3,15 +3,6 @@ import '../../core/extensions/context_extensions.dart';
 
 /// Адаптивный текстовый виджет
 class ResponsiveText extends StatelessWidget {
-  final String text;
-  final TextStyle? style;
-  final TextAlign? textAlign;
-  final int? maxLines;
-  final TextOverflow? overflow;
-  final double? fontSize;
-  final FontWeight? fontWeight;
-  final Color? color;
-
   const ResponsiveText(
     this.text, {
     super.key,
@@ -23,6 +14,14 @@ class ResponsiveText extends StatelessWidget {
     this.fontWeight,
     this.color,
   });
+  final String text;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final int? maxLines;
+  final TextOverflow? overflow;
+  final double? fontSize;
+  final FontWeight? fontWeight;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +37,7 @@ class ResponsiveText extends StatelessWidget {
   }
 
   TextStyle _getResponsiveStyle(BuildContext context) {
-    double baseFontSize = fontSize ?? 14.0;
+    var baseFontSize = fontSize ?? 14.0;
 
     if (context.isMobile) {
       baseFontSize = fontSize ?? 14.0;
@@ -58,14 +57,6 @@ class ResponsiveText extends StatelessWidget {
 
 /// Адаптивная карточка
 class ResponsiveCard extends StatelessWidget {
-  final Widget child;
-  final EdgeInsetsGeometry? padding;
-  final EdgeInsetsGeometry? margin;
-  final Color? color;
-  final double? elevation;
-  final BorderRadiusGeometry? borderRadius;
-  final VoidCallback? onTap;
-
   const ResponsiveCard({
     super.key,
     required this.child,
@@ -76,6 +67,13 @@ class ResponsiveCard extends StatelessWidget {
     this.borderRadius,
     this.onTap,
   });
+  final Widget child;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final Color? color;
+  final double? elevation;
+  final BorderRadiusGeometry? borderRadius;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +81,7 @@ class ResponsiveCard extends StatelessWidget {
     final responsiveElevation = _getResponsiveElevation(context);
     final responsiveBorderRadius = _getResponsiveBorderRadius(context);
 
-    Widget card = Card(
+    final Widget card = Card(
       margin: margin,
       color: color,
       elevation: elevation ?? responsiveElevation,
@@ -109,46 +107,37 @@ class ResponsiveCard extends StatelessWidget {
 
   EdgeInsetsGeometry _getResponsivePadding(BuildContext context) {
     if (context.isMobile) {
-      return const EdgeInsets.all(12.0);
+      return const EdgeInsets.all(12);
     } else if (context.isTablet) {
-      return const EdgeInsets.all(16.0);
+      return const EdgeInsets.all(16);
     } else {
-      return const EdgeInsets.all(20.0);
+      return const EdgeInsets.all(20);
     }
   }
 
   double _getResponsiveElevation(BuildContext context) {
     if (context.isMobile) {
-      return 2.0;
+      return 2;
     } else if (context.isTablet) {
-      return 4.0;
+      return 4;
     } else {
-      return 6.0;
+      return 6;
     }
   }
 
   BorderRadiusGeometry _getResponsiveBorderRadius(BuildContext context) {
     if (context.isMobile) {
-      return BorderRadius.circular(8.0);
+      return BorderRadius.circular(8);
     } else if (context.isTablet) {
-      return BorderRadius.circular(12.0);
+      return BorderRadius.circular(12);
     } else {
-      return BorderRadius.circular(16.0);
+      return BorderRadius.circular(16);
     }
   }
 }
 
 /// Адаптивный контейнер
 class ResponsiveContainer extends StatelessWidget {
-  final Widget child;
-  final EdgeInsetsGeometry? padding;
-  final EdgeInsetsGeometry? margin;
-  final Color? color;
-  final double? width;
-  final double? height;
-  final BoxDecoration? decoration;
-  final AlignmentGeometry? alignment;
-
   const ResponsiveContainer({
     super.key,
     required this.child,
@@ -160,6 +149,14 @@ class ResponsiveContainer extends StatelessWidget {
     this.decoration,
     this.alignment,
   });
+  final Widget child;
+  final EdgeInsetsGeometry? padding;
+  final EdgeInsetsGeometry? margin;
+  final Color? color;
+  final double? width;
+  final double? height;
+  final BoxDecoration? decoration;
+  final AlignmentGeometry? alignment;
 
   @override
   Widget build(BuildContext context) {
@@ -180,11 +177,11 @@ class ResponsiveContainer extends StatelessWidget {
 
   EdgeInsetsGeometry _getResponsivePadding(BuildContext context) {
     if (context.isMobile) {
-      return const EdgeInsets.all(8.0);
+      return const EdgeInsets.all(8);
     } else if (context.isTablet) {
-      return const EdgeInsets.all(12.0);
+      return const EdgeInsets.all(12);
     } else {
-      return const EdgeInsets.all(16.0);
+      return const EdgeInsets.all(16);
     }
   }
 
@@ -201,14 +198,6 @@ class ResponsiveContainer extends StatelessWidget {
 
 /// Адаптивная сетка
 class ResponsiveGrid extends StatelessWidget {
-  final List<Widget> children;
-  final double? spacing;
-  final double? runSpacing;
-  final int? crossAxisCount;
-  final double? childAspectRatio;
-  final MainAxisAlignment mainAxisAlignment;
-  final CrossAxisAlignment crossAxisAlignment;
-
   const ResponsiveGrid({
     super.key,
     required this.children,
@@ -219,6 +208,13 @@ class ResponsiveGrid extends StatelessWidget {
     this.mainAxisAlignment = MainAxisAlignment.start,
     this.crossAxisAlignment = CrossAxisAlignment.start,
   });
+  final List<Widget> children;
+  final double? spacing;
+  final double? runSpacing;
+  final int? crossAxisCount;
+  final double? childAspectRatio;
+  final MainAxisAlignment mainAxisAlignment;
+  final CrossAxisAlignment crossAxisAlignment;
 
   @override
   Widget build(BuildContext context) {
@@ -249,11 +245,11 @@ class ResponsiveGrid extends StatelessWidget {
 
   double _getResponsiveSpacing(BuildContext context) {
     if (context.isMobile) {
-      return 8.0;
+      return 8;
     } else if (context.isTablet) {
-      return 12.0;
+      return 12;
     } else {
-      return 16.0;
+      return 16;
     }
   }
 
@@ -270,12 +266,6 @@ class ResponsiveGrid extends StatelessWidget {
 
 /// Адаптивный список
 class ResponsiveList extends StatelessWidget {
-  final List<Widget> children;
-  final EdgeInsetsGeometry? padding;
-  final double? spacing;
-  final ScrollPhysics? physics;
-  final bool shrinkWrap;
-
   const ResponsiveList({
     super.key,
     required this.children,
@@ -284,6 +274,11 @@ class ResponsiveList extends StatelessWidget {
     this.physics,
     this.shrinkWrap = false,
   });
+  final List<Widget> children;
+  final EdgeInsetsGeometry? padding;
+  final double? spacing;
+  final ScrollPhysics? physics;
+  final bool shrinkWrap;
 
   @override
   Widget build(BuildContext context) {
@@ -302,37 +297,36 @@ class ResponsiveList extends StatelessWidget {
 
   EdgeInsetsGeometry _getResponsivePadding(BuildContext context) {
     if (context.isMobile) {
-      return const EdgeInsets.all(8.0);
+      return const EdgeInsets.all(8);
     } else if (context.isTablet) {
-      return const EdgeInsets.all(12.0);
+      return const EdgeInsets.all(12);
     } else {
-      return const EdgeInsets.all(16.0);
+      return const EdgeInsets.all(16);
     }
   }
 
   double _getResponsiveSpacing(BuildContext context) {
     if (context.isMobile) {
-      return 8.0;
+      return 8;
     } else if (context.isTablet) {
-      return 12.0;
+      return 12;
     } else {
-      return 16.0;
+      return 16;
     }
   }
 }
 
 /// Адаптивный виджет (базовый)
 class ResponsiveWidget extends StatelessWidget {
-  final Widget mobile;
-  final Widget? tablet;
-  final Widget? desktop;
-
   const ResponsiveWidget({
     super.key,
     required this.mobile,
     this.tablet,
     this.desktop,
   });
+  final Widget mobile;
+  final Widget? tablet;
+  final Widget? desktop;
 
   @override
   Widget build(BuildContext context) {

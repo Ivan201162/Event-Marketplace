@@ -6,183 +6,180 @@ import 'responsive_layout.dart';
 
 /// Виджет для отображения карточки фотостудии
 class PhotoStudioCard extends ConsumerWidget {
-  final PhotoStudio studio;
-  final VoidCallback? onTap;
-
   const PhotoStudioCard({
     super.key,
     required this.studio,
     this.onTap,
   });
+  final PhotoStudio studio;
+  final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ResponsiveCard(
-      onTap: onTap,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Заголовок с рейтингом
-          Row(
+  Widget build(BuildContext context, WidgetRef ref) => GestureDetector(
+        onTap: onTap,
+        child: ResponsiveCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Expanded(
-                child: ResponsiveText(
-                  studio.name,
-                  isTitle: true,
-                ),
-              ),
-              if (studio.rating != null) ...[
-                const Icon(Icons.star, color: Colors.amber, size: 16),
-                const SizedBox(width: 4),
-                Text(
-                  studio.rating!.toStringAsFixed(1),
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.amber,
-                  ),
-                ),
-                if (studio.reviewCount != null) ...[
-                  const SizedBox(width: 4),
-                  Text(
-                    '(${studio.reviewCount})',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ],
-              ],
-            ],
-          ),
-
-          const SizedBox(height: 8),
-
-          // Описание
-          ResponsiveText(
-            studio.description,
-            isSubtitle: true,
-          ),
-
-          const SizedBox(height: 8),
-
-          // Адрес
-          Row(
-            children: [
-              const Icon(Icons.location_on, size: 16, color: Colors.grey),
-              const SizedBox(width: 4),
-              Expanded(
-                child: Text(
-                  studio.address,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          // Цены и опции
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              if (studio.priceRange != null) ...[
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: Colors.green.withValues(alpha: 0.2),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Text(
-                    studio.priceRange!,
-                    style: const TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                  ),
-                ),
-              ],
+              // Заголовок с рейтингом
               Row(
                 children: [
-                  const Icon(Icons.photo_library, size: 16, color: Colors.grey),
+                  Expanded(
+                    child: Text(
+                      studio.name,
+                      style: Theme.of(context).textTheme.headlineSmall,
+                    ),
+                  ),
+                  if (studio.rating != null) ...[
+                    const Icon(Icons.star, color: Colors.amber, size: 16),
+                    const SizedBox(width: 4),
+                    Text(
+                      studio.rating!.toStringAsFixed(1),
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.amber,
+                      ),
+                    ),
+                    if (studio.reviewCount != null) ...[
+                      const SizedBox(width: 4),
+                      Text(
+                        '(${studio.reviewCount})',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ],
+                ],
+              ),
+
+              const SizedBox(height: 8),
+
+              // Описание
+              Text(
+                studio.description ?? 'Описание отсутствует',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+
+              const SizedBox(height: 8),
+
+              // Адрес
+              Row(
+                children: [
+                  const Icon(Icons.location_on, size: 16, color: Colors.grey),
                   const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      studio.address,
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 12),
+
+              // Цены и опции
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  if (studio.priceRange != null) ...[
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: Colors.green.withValues(alpha: 0.2),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Text(
+                        studio.priceRange!,
+                        style: const TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                  ],
+                  Row(
+                    children: [
+                      const Icon(Icons.photo_library,
+                          size: 16, color: Colors.grey),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${studio.photosCount} фото',
+                        style: const TextStyle(
+                          fontSize: 12,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+
+              const SizedBox(height: 8),
+
+              // Опции студии
+              if (studio.studioOptions.isNotEmpty) ...[
+                Wrap(
+                  spacing: 8,
+                  runSpacing: 4,
+                  children: studio.studioOptions
+                      .take(3)
+                      .map(_buildOptionChip)
+                      .toList(),
+                ),
+                if (studio.studioOptions.length > 3) ...[
+                  const SizedBox(height: 4),
                   Text(
-                    '${studio.photosCount} фото',
+                    '+${studio.studioOptions.length - 3} еще',
                     style: const TextStyle(
                       fontSize: 12,
                       color: Colors.grey,
                     ),
                   ),
                 ],
-              ),
+              ],
             ],
           ),
-
-          const SizedBox(height: 8),
-
-          // Опции студии
-          if (studio.studioOptions.isNotEmpty) ...[
-            Wrap(
-              spacing: 8,
-              runSpacing: 4,
-              children: studio.studioOptions
-                  .take(3)
-                  .map((option) => _buildOptionChip(option))
-                  .toList(),
-            ),
-            if (studio.studioOptions.length > 3) ...[
-              const SizedBox(height: 4),
-              Text(
-                '+${studio.studioOptions.length - 3} еще',
-                style: const TextStyle(
-                  fontSize: 12,
-                  color: Colors.grey,
-                ),
-              ),
-            ],
-          ],
-        ],
-      ),
-    );
-  }
-
-  Widget _buildOptionChip(StudioOption option) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: Colors.blue.withValues(alpha: 0.2),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Text(
-        option.name,
-        style: const TextStyle(
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-          color: Colors.blue,
         ),
-      ),
-    );
-  }
+      );
+
+  Widget _buildOptionChip(StudioOption option) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.blue.withValues(alpha: 0.2),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          option.name,
+          style: const TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w500,
+            color: Colors.blue,
+          ),
+        ),
+      );
 }
 
 /// Виджет для отображения детальной информации о фотостудии
 class PhotoStudioDetailWidget extends ConsumerWidget {
-  final String studioId;
-
   const PhotoStudioDetailWidget({
     super.key,
     required this.studioId,
   });
+  final String studioId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Consumer(
-      builder: (context, ref, child) {
-        return ref.watch(photoStudioProvider(studioId)).when(
+  Widget build(BuildContext context, WidgetRef ref) => Consumer(
+        builder: (context, ref, child) => ref
+            .watch(photoStudioProvider(studioId))
+            .when(
               data: (studio) {
                 if (studio == null) {
                   return const Center(child: Text('Фотостудия не найдена'));
@@ -200,9 +197,11 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                             Row(
                               children: [
                                 Expanded(
-                                  child: ResponsiveText(
+                                  child: Text(
                                     studio.name,
-                                    isTitle: true,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall,
                                   ),
                                 ),
                                 if (studio.rating != null) ...[
@@ -230,15 +229,18 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                               ],
                             ),
                             const SizedBox(height: 12),
-                            ResponsiveText(
-                              studio.description,
-                              isSubtitle: true,
+                            Text(
+                              studio.description ?? 'Описание отсутствует',
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             const SizedBox(height: 8),
                             Row(
                               children: [
-                                const Icon(Icons.location_on,
-                                    size: 16, color: Colors.grey),
+                                const Icon(
+                                  Icons.location_on,
+                                  size: 16,
+                                  color: Colors.grey,
+                                ),
                                 const SizedBox(width: 4),
                                 Expanded(
                                   child: Text(
@@ -260,13 +262,13 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            ResponsiveText(
+                            Text(
                               'Опции студии',
-                              isTitle: true,
+                              style: Theme.of(context).textTheme.headlineSmall,
                             ),
                             const SizedBox(height: 12),
-                            ...studio.studioOptions
-                                .map((option) => _buildOptionCard(option)),
+                            ...studio.studioOptions.map(
+                                (option) => _buildOptionCard(context, option)),
                           ],
                         ),
                       ),
@@ -278,9 +280,10 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                           children: [
                             Row(
                               children: [
-                                ResponsiveText(
+                                Text(
                                   'Фотографии',
-                                  isTitle: true,
+                                  style:
+                                      Theme.of(context).textTheme.headlineSmall,
                                 ),
                                 const Spacer(),
                                 Text(
@@ -328,70 +331,66 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
               },
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, stack) => Center(child: Text('Ошибка: $error')),
-            );
-      },
-    );
-  }
+            ),
+      );
 
-  Widget _buildOptionCard(StudioOption option) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Expanded(
-                child: ResponsiveText(
-                  option.name,
-                  style: const TextStyle(fontWeight: FontWeight.w500),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.green.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: Text(
-                  '${option.pricePerHour.toStringAsFixed(0)} ₽/час',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.green,
+  Widget _buildOptionCard(BuildContext context, StudioOption option) =>
+      Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.grey.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    option.name,
+                    style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
                 ),
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          ResponsiveText(
-            option.description,
-            isSubtitle: true,
-          ),
-          if (option.photos.isNotEmpty) ...[
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.green.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: Text(
+                    '${option.pricePerHour.toStringAsFixed(0)} ₽/час',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                    ),
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: 8),
-            _buildOptionPhotos(option.photos),
+            Text(
+              option.description ?? 'Описание отсутствует',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+            if (option.photos.isNotEmpty) ...[
+              const SizedBox(height: 8),
+              _buildOptionPhotos(option.photos),
+            ],
           ],
-        ],
-      ),
-    );
-  }
+        ),
+      );
 
-  Widget _buildOptionPhotos(List<String> photos) {
-    return SizedBox(
-      height: 80,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: photos.length,
-        itemBuilder: (context, index) {
-          return Container(
+  Widget _buildOptionPhotos(List<String> photos) => SizedBox(
+        height: 80,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: photos.length,
+          itemBuilder: (context, index) => Container(
             margin: const EdgeInsets.only(right: 8),
             width: 80,
             height: 80,
@@ -408,25 +407,20 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                     const Center(child: Icon(Icons.broken_image)),
               ),
             ),
-          );
-        },
-      ),
-    );
-  }
+          ),
+        ),
+      );
 
-  Widget _buildPhotosGrid(List<String> photos) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        crossAxisSpacing: 8,
-        mainAxisSpacing: 8,
-        childAspectRatio: 1,
-      ),
-      itemCount: photos.length,
-      itemBuilder: (context, index) {
-        return GestureDetector(
+  Widget _buildPhotosGrid(List<String> photos) => GridView.builder(
+        shrinkWrap: true,
+        physics: const NeverScrollableScrollPhysics(),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          crossAxisSpacing: 8,
+          mainAxisSpacing: 8,
+        ),
+        itemCount: photos.length,
+        itemBuilder: (context, index) => GestureDetector(
           onTap: () => _showPhotoPreview(context, photos[index]),
           child: Container(
             decoration: BoxDecoration(
@@ -443,10 +437,8 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
               ),
             ),
           ),
-        );
-      },
-    );
-  }
+        ),
+      );
 
   void _showPhotoPreview(BuildContext context, String photoUrl) {
     showDialog(
@@ -483,7 +475,10 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
   }
 
   void _showBookingDialog(
-      BuildContext context, WidgetRef ref, PhotoStudio studio) {
+    BuildContext context,
+    WidgetRef ref,
+    PhotoStudio studio,
+  ) {
     showDialog(
       context: context,
       builder: (context) => _BookingDialog(
@@ -504,11 +499,6 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
 
 /// Виджет для списка фотостудий
 class PhotoStudioListWidget extends ConsumerWidget {
-  final String? location;
-  final double? minPrice;
-  final double? maxPrice;
-  final Function(PhotoStudio)? onStudioSelected;
-
   const PhotoStudioListWidget({
     super.key,
     this.location,
@@ -516,17 +506,21 @@ class PhotoStudioListWidget extends ConsumerWidget {
     this.maxPrice,
     this.onStudioSelected,
   });
+  final String? location;
+  final double? minPrice;
+  final double? maxPrice;
+  final Function(PhotoStudio)? onStudioSelected;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Consumer(
-      builder: (context, ref, child) {
-        return ref
-            .watch(photoStudiosProvider(
-              location: location,
-              minPrice: minPrice,
-              maxPrice: maxPrice,
-            ))
+  Widget build(BuildContext context, WidgetRef ref) => Consumer(
+        builder: (context, ref, child) => ref
+            .watch(
+              photoStudiosProvider({
+                'location': location,
+                'minPrice': minPrice,
+                'maxPrice': maxPrice,
+              }),
+            )
             .when(
               data: (studios) {
                 if (studios.isEmpty) {
@@ -548,27 +542,24 @@ class PhotoStudioListWidget extends ConsumerWidget {
               },
               loading: () => const Center(child: CircularProgressIndicator()),
               error: (error, stack) => Center(child: Text('Ошибка: $error')),
-            );
-      },
-    );
-  }
+            ),
+      );
 }
 
 /// Диалог бронирования
-class _BookingDialog extends StatefulWidget {
-  final PhotoStudio studio;
-  final VoidCallback onBookingCreated;
-
+class _BookingDialog extends ConsumerStatefulWidget {
   const _BookingDialog({
     required this.studio,
     required this.onBookingCreated,
   });
+  final PhotoStudio studio;
+  final VoidCallback onBookingCreated;
 
   @override
-  State<_BookingDialog> createState() => _BookingDialogState();
+  ConsumerState<_BookingDialog> createState() => _BookingDialogState();
 }
 
-class _BookingDialogState extends State<_BookingDialog> {
+class _BookingDialogState extends ConsumerState<_BookingDialog> {
   StudioOption? _selectedOption;
   DateTime? _selectedDate;
   TimeOfDay? _startTime;
@@ -583,113 +574,119 @@ class _BookingDialogState extends State<_BookingDialog> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: Text('Бронирование ${widget.studio.name}'),
-      content: SizedBox(
-        width: double.maxFinite,
-        height: 400,
-        child: Column(
-          children: [
-            // Выбор опции
-            DropdownButtonFormField<StudioOption>(
-              initialValue: _selectedOption,
-              decoration: const InputDecoration(
-                labelText: 'Выберите опцию',
-                border: OutlineInputBorder(),
-              ),
-              items: widget.studio.studioOptions.map((option) {
-                return DropdownMenuItem(
-                  value: option,
-                  child: Text(
-                      '${option.name} - ${option.pricePerHour.toStringAsFixed(0)} ₽/час'),
-                );
-              }).toList(),
-              onChanged: (value) {
-                setState(() {
-                  _selectedOption = value;
-                });
-              },
-            ),
-
-            const SizedBox(height: 16),
-
-            // Выбор даты
-            ListTile(
-              title: const Text('Дата'),
-              subtitle: Text(_selectedDate != null
-                  ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
-                  : 'Выберите дату'),
-              trailing: const Icon(Icons.calendar_today),
-              onTap: _selectDate,
-            ),
-
-            // Выбор времени
-            Row(
-              children: [
-                Expanded(
-                  child: ListTile(
-                    title: const Text('Начало'),
-                    subtitle: Text(_startTime != null
-                        ? '${_startTime!.hour.toString().padLeft(2, '0')}:${_startTime!.minute.toString().padLeft(2, '0')}'
-                        : 'Выберите время'),
-                    trailing: const Icon(Icons.access_time),
-                    onTap: _selectStartTime,
-                  ),
+  Widget build(BuildContext context) => AlertDialog(
+        title: Text('Бронирование ${widget.studio.name}'),
+        content: SizedBox(
+          width: double.maxFinite,
+          height: 400,
+          child: Column(
+            children: [
+              // Выбор опции
+              DropdownButtonFormField<StudioOption>(
+                initialValue: _selectedOption,
+                decoration: const InputDecoration(
+                  labelText: 'Выберите опцию',
+                  border: OutlineInputBorder(),
                 ),
-                Expanded(
-                  child: ListTile(
-                    title: const Text('Окончание'),
-                    subtitle: Text(_endTime != null
-                        ? '${_endTime!.hour.toString().padLeft(2, '0')}:${_endTime!.minute.toString().padLeft(2, '0')}'
-                        : 'Выберите время'),
-                    trailing: const Icon(Icons.access_time),
-                    onTap: _selectEndTime,
-                  ),
-                ),
-              ],
-            ),
-
-            // Заметки
-            TextField(
-              controller: _notesController,
-              decoration: const InputDecoration(
-                labelText: 'Заметки (необязательно)',
-                border: OutlineInputBorder(),
+                items: widget.studio.studioOptions
+                    .map(
+                      (option) => DropdownMenuItem(
+                        value: option,
+                        child: Text(
+                          '${option.name} - ${option.pricePerHour.toStringAsFixed(0)} ₽/час',
+                        ),
+                      ),
+                    )
+                    .toList(),
+                onChanged: (value) {
+                  setState(() {
+                    _selectedOption = value;
+                  });
+                },
               ),
-              maxLines: 2,
-            ),
-          ],
-        ),
-      ),
-      actions: [
-        TextButton(
-          onPressed: _isLoading ? null : () => Navigator.pop(context),
-          child: const Text('Отмена'),
-        ),
-        ElevatedButton(
-          onPressed: _canCreateBooking() ? _createBooking : null,
-          child: _isLoading
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Text('Забронировать'),
-        ),
-      ],
-    );
-  }
 
-  bool _canCreateBooking() {
-    return _selectedOption != null &&
-        _selectedDate != null &&
-        _startTime != null &&
-        _endTime != null &&
-        !_isLoading;
-  }
+              const SizedBox(height: 16),
 
-  void _selectDate() async {
+              // Выбор даты
+              ListTile(
+                title: const Text('Дата'),
+                subtitle: Text(
+                  _selectedDate != null
+                      ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
+                      : 'Выберите дату',
+                ),
+                trailing: const Icon(Icons.calendar_today),
+                onTap: _selectDate,
+              ),
+
+              // Выбор времени
+              Row(
+                children: [
+                  Expanded(
+                    child: ListTile(
+                      title: const Text('Начало'),
+                      subtitle: Text(
+                        _startTime != null
+                            ? '${_startTime!.hour.toString().padLeft(2, '0')}:${_startTime!.minute.toString().padLeft(2, '0')}'
+                            : 'Выберите время',
+                      ),
+                      trailing: const Icon(Icons.access_time),
+                      onTap: _selectStartTime,
+                    ),
+                  ),
+                  Expanded(
+                    child: ListTile(
+                      title: const Text('Окончание'),
+                      subtitle: Text(
+                        _endTime != null
+                            ? '${_endTime!.hour.toString().padLeft(2, '0')}:${_endTime!.minute.toString().padLeft(2, '0')}'
+                            : 'Выберите время',
+                      ),
+                      trailing: const Icon(Icons.access_time),
+                      onTap: _selectEndTime,
+                    ),
+                  ),
+                ],
+              ),
+
+              // Заметки
+              TextField(
+                controller: _notesController,
+                decoration: const InputDecoration(
+                  labelText: 'Заметки (необязательно)',
+                  border: OutlineInputBorder(),
+                ),
+                maxLines: 2,
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: _isLoading ? null : () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: _canCreateBooking() ? _createBooking : null,
+            child: _isLoading
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Text('Забронировать'),
+          ),
+        ],
+      );
+
+  bool _canCreateBooking() =>
+      _selectedOption != null &&
+      _selectedDate != null &&
+      _startTime != null &&
+      _endTime != null &&
+      !_isLoading;
+
+  Future<void> _selectDate() async {
     final date = await showDatePicker(
       context: context,
       initialDate: DateTime.now(),
@@ -704,7 +701,7 @@ class _BookingDialogState extends State<_BookingDialog> {
     }
   }
 
-  void _selectStartTime() async {
+  Future<void> _selectStartTime() async {
     final time = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
@@ -717,7 +714,7 @@ class _BookingDialogState extends State<_BookingDialog> {
     }
   }
 
-  void _selectEndTime() async {
+  Future<void> _selectEndTime() async {
     final time = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
@@ -730,7 +727,7 @@ class _BookingDialogState extends State<_BookingDialog> {
     }
   }
 
-  void _createBooking() async {
+  Future<void> _createBooking() async {
     setState(() {
       _isLoading = true;
     });
@@ -785,7 +782,7 @@ class _BookingDialogState extends State<_BookingDialog> {
 final photoStudioProvider =
     FutureProvider.family<PhotoStudio?, String>((ref, studioId) async {
   final service = ref.read(photoStudioServiceProvider);
-  return await service.getPhotoStudio(studioId);
+  return service.getPhotoStudio(studioId);
 });
 
 /// Провайдер для списка фотостудий
@@ -793,15 +790,14 @@ final photoStudiosProvider =
     FutureProvider.family<List<PhotoStudio>, Map<String, dynamic>>(
         (ref, params) async {
   final service = ref.read(photoStudioServiceProvider);
-  return await service.getPhotoStudios(
-    location: params['location'],
-    minPrice: params['minPrice'],
-    maxPrice: params['maxPrice'],
-    limit: params['limit'] ?? 20,
+  return service.getPhotoStudios(
+    location: params['location'] as String?,
+    minPrice: params['minPrice'] as double?,
+    maxPrice: params['maxPrice'] as double?,
+    limit: params['limit'] as int? ?? 20,
   );
 });
 
 /// Провайдер для сервиса фотостудий
-final photoStudioServiceProvider = Provider<PhotoStudioService>((ref) {
-  return PhotoStudioService();
-});
+final photoStudioServiceProvider =
+    Provider<PhotoStudioService>((ref) => PhotoStudioService());

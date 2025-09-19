@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:event_marketplace_app/core/feature_flags.dart';
+import '../core/feature_flags.dart';
 
 /// Сервис аналитики трендов
 class TrendsAnalyticsService {
@@ -36,14 +36,17 @@ class TrendsAnalyticsService {
       final sortedCategories = categoryCounts.entries.toList()
         ..sort((a, b) => b.value.compareTo(a.value));
 
-      return sortedCategories.take(limit).map((entry) {
-        return CategoryTrend(
-          category: entry.key,
-          count: entry.value,
-          percentage: (entry.value / events.length * 100).round(),
-          growth: _calculateGrowth(entry.key, startDate, endDate),
-        );
-      }).toList();
+      return sortedCategories
+          .take(limit)
+          .map(
+            (entry) => CategoryTrend(
+              category: entry.key,
+              count: entry.value,
+              percentage: (entry.value / events.length * 100).round(),
+              growth: _calculateGrowth(entry.key, startDate, endDate),
+            ),
+          )
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения трендов по категориям: $e');
     }
@@ -78,14 +81,17 @@ class TrendsAnalyticsService {
       final sortedServices = serviceCounts.entries.toList()
         ..sort((a, b) => b.value.compareTo(a.value));
 
-      return sortedServices.take(limit).map((entry) {
-        return ServiceTrend(
-          service: entry.key,
-          count: entry.value,
-          percentage: (entry.value / bookings.length * 100).round(),
-          growth: _calculateServiceGrowth(entry.key, startDate, endDate),
-        );
-      }).toList();
+      return sortedServices
+          .take(limit)
+          .map(
+            (entry) => ServiceTrend(
+              service: entry.key,
+              count: entry.value,
+              percentage: (entry.value / bookings.length * 100).round(),
+              growth: _calculateServiceGrowth(entry.key, startDate, endDate),
+            ),
+          )
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения трендов по услугам: $e');
     }
@@ -96,7 +102,7 @@ class TrendsAnalyticsService {
     required int year,
   }) async {
     try {
-      final startDate = DateTime(year, 1, 1);
+      final startDate = DateTime(year);
       final endDate = DateTime(year, 12, 31);
 
       final eventsSnapshot = await _firestore
@@ -170,14 +176,18 @@ class TrendsAnalyticsService {
       final sortedLocations = locationCounts.entries.toList()
         ..sort((a, b) => b.value.compareTo(a.value));
 
-      return sortedLocations.take(limit).map((entry) {
-        return GeographicTrend(
-          location: entry.key,
-          count: entry.value,
-          percentage: (entry.value / events.length * 100).round(),
-          averagePrice: _calculateAveragePrice(entry.key, startDate, endDate),
-        );
-      }).toList();
+      return sortedLocations
+          .take(limit)
+          .map(
+            (entry) => GeographicTrend(
+              location: entry.key,
+              count: entry.value,
+              percentage: (entry.value / events.length * 100).round(),
+              averagePrice:
+                  _calculateAveragePrice(entry.key, startDate, endDate),
+            ),
+          )
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения географических трендов: $e');
     }
@@ -198,11 +208,11 @@ class TrendsAnalyticsService {
       final bookings = bookingsSnapshot.docs.map((doc) => doc.data()).toList();
 
       if (bookings.isEmpty) {
-        return PriceTrends(
-          averagePrice: 0.0,
-          medianPrice: 0.0,
-          minPrice: 0.0,
-          maxPrice: 0.0,
+        return const PriceTrends(
+          averagePrice: 0,
+          medianPrice: 0,
+          minPrice: 0,
+          maxPrice: 0,
           priceRanges: {},
         );
       }
@@ -283,78 +293,77 @@ class TrendsAnalyticsService {
   // Приватные методы
 
   double _calculateGrowth(
-      String category, DateTime startDate, DateTime endDate) {
+    String category,
+    DateTime startDate,
+    DateTime endDate,
+  ) {
     // TODO: Реализовать расчет роста по сравнению с предыдущим периодом
-    return 0.0;
+    return 0;
   }
 
   double _calculateServiceGrowth(
-      String service, DateTime startDate, DateTime endDate) {
+    String service,
+    DateTime startDate,
+    DateTime endDate,
+  ) {
     // TODO: Реализовать расчет роста услуги по сравнению с предыдущим периодом
-    return 0.0;
+    return 0;
   }
 
   double _calculateAveragePrice(
-      String location, DateTime startDate, DateTime endDate) {
+    String location,
+    DateTime startDate,
+    DateTime endDate,
+  ) {
     // TODO: Реализовать расчет средней цены для локации
-    return 0.0;
+    return 0;
   }
 }
 
 /// Тренд по категории
 class CategoryTrend {
-  final String category;
-  final int count;
-  final int percentage;
-  final double growth;
-
   const CategoryTrend({
     required this.category,
     required this.count,
     required this.percentage,
     required this.growth,
   });
+  final String category;
+  final int count;
+  final int percentage;
+  final double growth;
 }
 
 /// Тренд по услуге
 class ServiceTrend {
-  final String service;
-  final int count;
-  final int percentage;
-  final double growth;
-
   const ServiceTrend({
     required this.service,
     required this.count,
     required this.percentage,
     required this.growth,
   });
+  final String service;
+  final int count;
+  final int percentage;
+  final double growth;
 }
 
 /// Географический тренд
 class GeographicTrend {
-  final String location;
-  final int count;
-  final int percentage;
-  final double averagePrice;
-
   const GeographicTrend({
     required this.location,
     required this.count,
     required this.percentage,
     required this.averagePrice,
   });
+  final String location;
+  final int count;
+  final int percentage;
+  final double averagePrice;
 }
 
 /// Сезонные тренды
 class SeasonalityTrends {
-  final int year;
-  final Map<int, int> monthlyTrends;
-  final Map<int, int> weeklyTrends;
-  final int totalEvents;
-  final int? peakMonth;
-  final int? peakWeekday;
-
   const SeasonalityTrends({
     required this.year,
     required this.monthlyTrends,
@@ -363,16 +372,16 @@ class SeasonalityTrends {
     this.peakMonth,
     this.peakWeekday,
   });
+  final int year;
+  final Map<int, int> monthlyTrends;
+  final Map<int, int> weeklyTrends;
+  final int totalEvents;
+  final int? peakMonth;
+  final int? peakWeekday;
 }
 
 /// Тренды по ценам
 class PriceTrends {
-  final double averagePrice;
-  final double medianPrice;
-  final double minPrice;
-  final double maxPrice;
-  final Map<String, int> priceRanges;
-
   const PriceTrends({
     required this.averagePrice,
     required this.medianPrice,
@@ -380,28 +389,25 @@ class PriceTrends {
     required this.maxPrice,
     required this.priceRanges,
   });
+  final double averagePrice;
+  final double medianPrice;
+  final double minPrice;
+  final double maxPrice;
+  final Map<String, int> priceRanges;
 }
 
 /// Период аналитики
 class AnalyticsPeriod {
-  final DateTime startDate;
-  final DateTime endDate;
-
   const AnalyticsPeriod({
     required this.startDate,
     required this.endDate,
   });
+  final DateTime startDate;
+  final DateTime endDate;
 }
 
 /// Общая аналитика трендов
 class TrendsAnalytics {
-  final AnalyticsPeriod period;
-  final List<CategoryTrend> categoryTrends;
-  final List<ServiceTrend> serviceTrends;
-  final List<GeographicTrend> geographicTrends;
-  final PriceTrends priceTrends;
-  final DateTime generatedAt;
-
   const TrendsAnalytics({
     required this.period,
     required this.categoryTrends,
@@ -410,4 +416,10 @@ class TrendsAnalytics {
     required this.priceTrends,
     required this.generatedAt,
   });
+  final AnalyticsPeriod period;
+  final List<CategoryTrend> categoryTrends;
+  final List<ServiceTrend> serviceTrends;
+  final List<GeographicTrend> geographicTrends;
+  final PriceTrends priceTrends;
+  final DateTime generatedAt;
 }

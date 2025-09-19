@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/specialist.dart';
+
 import '../models/recommendation_interaction.dart';
+import '../models/specialist.dart';
 
 /// Сервис для работы с рекомендациями
 class RecommendationService {
@@ -17,12 +18,12 @@ class RecommendationService {
         return [];
       }
 
-      final specialistData = specialistDoc.data()!;
+      final specialistData = specialistDoc.data();
       final categories = List<String>.from(specialistData['categories'] ?? []);
       final location = specialistData['location'] as String?;
 
       // Найти специалистов с похожими категориями
-      Query query = _firestore
+      final query = _firestore
           .collection('specialists')
           .where('categories', arrayContainsAny: categories)
           .where('isAvailable', isEqualTo: true)
@@ -31,7 +32,7 @@ class RecommendationService {
       final querySnapshot = await query.get();
       final specialists = querySnapshot.docs
           .where((doc) => doc.id != specialistId)
-          .map((doc) => Specialist.fromDocument(doc))
+          .map(Specialist.fromDocument)
           .toList();
 
       // Сортировать по рейтингу
@@ -71,8 +72,8 @@ class RecommendationService {
       }
 
       // Анализировать взаимодействия для определения предпочтений
-      final Map<String, int> categoryScores = {};
-      final Map<String, int> specialistScores = {};
+      final categoryScores = <String, int>{};
+      final specialistScores = <String, int>{};
 
       for (final doc in interactionsQuery.docs) {
         final data = doc.data();
@@ -84,7 +85,7 @@ class RecommendationService {
             await _firestore.collection('specialists').doc(specialistId).get();
 
         if (specialistDoc.exists) {
-          final specialistData = specialistDoc.data()!;
+          final specialistData = specialistDoc.data();
           final categories =
               List<String>.from(specialistData['categories'] ?? []);
 
@@ -148,9 +149,7 @@ class RecommendationService {
           .limit(20)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => Specialist.fromDocument(doc))
-          .toList();
+      return querySnapshot.docs.map(Specialist.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения популярных специалистов: $e');
     }
@@ -188,7 +187,10 @@ class RecommendationService {
 
   /// Получить рекомендации на основе местоположения
   Future<List<Specialist>> getLocationBasedRecommendations(
-      double latitude, double longitude, double radiusKm) async {
+    double latitude,
+    double longitude,
+    double radiusKm,
+  ) async {
     try {
       // Простая реализация - получить всех специалистов и фильтровать по расстоянию
       final querySnapshot = await _firestore
@@ -196,9 +198,8 @@ class RecommendationService {
           .where('isAvailable', isEqualTo: true)
           .get();
 
-      final specialists = querySnapshot.docs
-          .map((doc) => Specialist.fromDocument(doc))
-          .where((specialist) {
+      final specialists =
+          querySnapshot.docs.map(Specialist.fromDocument).where((specialist) {
         // Здесь должна быть логика расчета расстояния
         // Пока возвращаем всех специалистов
         return true;

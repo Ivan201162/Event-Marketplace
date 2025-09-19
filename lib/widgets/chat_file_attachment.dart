@@ -1,22 +1,23 @@
 import 'dart:io';
 import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:file_picker/file_picker.dart';
-import 'package:event_marketplace_app/services/chat_file_service.dart';
-import 'package:event_marketplace_app/core/app_constants.dart';
+
+import '../core/app_constants.dart';
+import '../services/chat_file_service.dart';
 
 /// Виджет для прикрепления файлов в чате
 class ChatFileAttachment extends ConsumerStatefulWidget {
-  final Function(String fileUrl, String fileName, int fileSize, String fileType)
-      onFileSelected;
-  final Function()? onCancel;
-
   const ChatFileAttachment({
     super.key,
     required this.onFileSelected,
     this.onCancel,
   });
+  final Function(String fileUrl, String fileName, int fileSize, String fileType)
+      onFileSelected;
+  final Function()? onCancel;
 
   @override
   ConsumerState<ChatFileAttachment> createState() => _ChatFileAttachmentState();
@@ -25,196 +26,197 @@ class ChatFileAttachment extends ConsumerStatefulWidget {
 class _ChatFileAttachmentState extends ConsumerState<ChatFileAttachment> {
   final ChatFileService _fileService = ChatFileService();
   bool _isUploading = false;
-  double _uploadProgress = 0.0;
+  double _uploadProgress = 0;
   String? _uploadingFileName;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Заголовок
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Прикрепить файл',
-                style: TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              IconButton(
-                icon: const Icon(Icons.close),
-                onPressed: widget.onCancel,
-              ),
-            ],
-          ),
-          const SizedBox(height: 16),
-
-          // Кнопки выбора файлов
-          if (!_isUploading) ...[
-            _buildFileTypeButton(
-              icon: Icons.image,
-              label: 'Фото',
-              description: 'JPG, PNG, GIF',
-              onTap: () => _pickFiles(FileType.image),
-            ),
-            const SizedBox(height: 12),
-            _buildFileTypeButton(
-              icon: Icons.videocam,
-              label: 'Видео',
-              description: 'MP4, MOV, AVI',
-              onTap: () => _pickFiles(FileType.video),
-            ),
-            const SizedBox(height: 12),
-            _buildFileTypeButton(
-              icon: Icons.audiotrack,
-              label: 'Аудио',
-              description: 'MP3, WAV, AAC',
-              onTap: () => _pickFiles(FileType.audio),
-            ),
-            const SizedBox(height: 12),
-            _buildFileTypeButton(
-              icon: Icons.description,
-              label: 'Документы',
-              description: 'PDF, DOC, TXT',
-              onTap: () => _pickFiles(FileType.custom,
-                  allowedExtensions: AppConstants.supportedDocumentFormats),
-            ),
-            const SizedBox(height: 12),
-            _buildFileTypeButton(
-              icon: Icons.folder,
-              label: 'Любой файл',
-              description: 'Выбрать файл',
-              onTap: () => _pickFiles(FileType.any),
-            ),
-          ],
-
-          // Прогресс загрузки
-          if (_isUploading) ...[
-            const SizedBox(height: 16),
+  Widget build(BuildContext context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Заголовок
             Row(
-              children: [
-                const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Загрузка: $_uploadingFileName',
-                        style: const TextStyle(fontWeight: FontWeight.w500),
-                      ),
-                      const SizedBox(height: 4),
-                      LinearProgressIndicator(
-                        value: _uploadProgress,
-                        backgroundColor: Colors.grey[300],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ],
-
-          // Информация о поддерживаемых форматах
-          const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: Colors.grey[100],
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Text(
-                  'Поддерживаемые форматы:',
+                  'Прикрепить файл',
                   style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 12,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 8),
-                ..._fileService.getSupportedFileTypes().entries.map((entry) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 2),
-                    child: Text(
-                      '${entry.key}: ${entry.value.join(', ').toUpperCase()}',
-                      style: const TextStyle(fontSize: 11),
-                    ),
-                  );
-                }),
-                const SizedBox(height: 8),
-                Text(
-                  'Максимальный размер: ${AppConstants.maxImageUploadSizeMB}MB (изображения), ${AppConstants.maxVideoUploadSizeMB}MB (видео), ${AppConstants.maxAudioUploadSizeMB}MB (аудио), 10MB (документы)',
-                  style: const TextStyle(fontSize: 11),
+                IconButton(
+                  icon: const Icon(Icons.close),
+                  onPressed: widget.onCancel,
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
+            const SizedBox(height: 16),
+
+            // Кнопки выбора файлов
+            if (!_isUploading) ...[
+              _buildFileTypeButton(
+                icon: Icons.image,
+                label: 'Фото',
+                description: 'JPG, PNG, GIF',
+                onTap: () => _pickFiles(FileType.image),
+              ),
+              const SizedBox(height: 12),
+              _buildFileTypeButton(
+                icon: Icons.videocam,
+                label: 'Видео',
+                description: 'MP4, MOV, AVI',
+                onTap: () => _pickFiles(FileType.video),
+              ),
+              const SizedBox(height: 12),
+              _buildFileTypeButton(
+                icon: Icons.audiotrack,
+                label: 'Аудио',
+                description: 'MP3, WAV, AAC',
+                onTap: () => _pickFiles(FileType.audio),
+              ),
+              const SizedBox(height: 12),
+              _buildFileTypeButton(
+                icon: Icons.description,
+                label: 'Документы',
+                description: 'PDF, DOC, TXT',
+                onTap: () => _pickFiles(
+                  FileType.custom,
+                  allowedExtensions: AppConstants.supportedDocumentFormats,
+                ),
+              ),
+              const SizedBox(height: 12),
+              _buildFileTypeButton(
+                icon: Icons.folder,
+                label: 'Любой файл',
+                description: 'Выбрать файл',
+                onTap: () => _pickFiles(FileType.any),
+              ),
+            ],
+
+            // Прогресс загрузки
+            if (_isUploading) ...[
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Загрузка: $_uploadingFileName',
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        const SizedBox(height: 4),
+                        LinearProgressIndicator(
+                          value: _uploadProgress,
+                          backgroundColor: Colors.grey[300],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+
+            // Информация о поддерживаемых форматах
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Поддерживаемые форматы:',
+                    style: TextStyle(
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  ..._fileService.getSupportedFileTypes().entries.map(
+                        (entry) => Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 2),
+                          child: Text(
+                            '${entry.key}: ${entry.value.join(', ').toUpperCase()}',
+                            style: const TextStyle(fontSize: 11),
+                          ),
+                        ),
+                      ),
+                  const SizedBox(height: 8),
+                  const Text(
+                    'Максимальный размер: ${AppConstants.maxImageUploadSizeMB}MB (изображения), ${AppConstants.maxVideoUploadSizeMB}MB (видео), ${AppConstants.maxAudioUploadSizeMB}MB (аудио), 10MB (документы)',
+                    style: TextStyle(fontSize: 11),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildFileTypeButton({
     required IconData icon,
     required String label,
     required String description,
     required VoidCallback onTap,
-  }) {
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(8),
-      child: Container(
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey[300]!),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          children: [
-            Icon(icon, size: 24, color: Colors.blue[600]),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    label,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16,
+  }) =>
+      InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(8),
+        child: Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.grey[300]!),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Row(
+            children: [
+              Icon(icon, size: 24, color: Colors.blue[600]),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      label,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16,
+                      ),
                     ),
-                  ),
-                  Text(
-                    description,
-                    style: TextStyle(
-                      color: Colors.grey[600],
-                      fontSize: 12,
+                    Text(
+                      description,
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 12,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
-          ],
+              Icon(Icons.arrow_forward_ios, size: 16, color: Colors.grey[400]),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
-  Future<void> _pickFiles(FileType fileType,
-      {List<String>? allowedExtensions}) async {
+  Future<void> _pickFiles(
+    FileType fileType, {
+    List<String>? allowedExtensions,
+  }) async {
     try {
       final result = await FilePicker.platform.pickFiles(
         type: fileType,
@@ -330,13 +332,6 @@ class _ChatFileAttachmentState extends ConsumerState<ChatFileAttachment> {
 
 /// Виджет для отображения прикрепленного файла в чате
 class ChatFileMessage extends StatelessWidget {
-  final String fileUrl;
-  final String fileName;
-  final int fileSize;
-  final String fileType;
-  final String? thumbnailUrl;
-  final VoidCallback? onTap;
-
   const ChatFileMessage({
     super.key,
     required this.fileUrl,
@@ -346,60 +341,64 @@ class ChatFileMessage extends StatelessWidget {
     this.thumbnailUrl,
     this.onTap,
   });
+  final String fileUrl;
+  final String fileName;
+  final int fileSize;
+  final String fileType;
+  final String? thumbnailUrl;
+  final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(vertical: 4),
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
-        child: Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: Colors.grey[100],
-            border: Border.all(color: Colors.grey[300]!),
-            borderRadius: BorderRadius.circular(12),
-          ),
-          child: Row(
-            children: [
-              _buildFileIcon(),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      fileName,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w500,
-                        fontSize: 14,
+  Widget build(BuildContext context) => Container(
+        margin: const EdgeInsets.symmetric(vertical: 4),
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: Colors.grey[100],
+              border: Border.all(color: Colors.grey[300]!),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Row(
+              children: [
+                _buildFileIcon(),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        fileName,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w500,
+                          fontSize: 14,
+                        ),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      _formatFileSize(fileSize),
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 12,
+                      const SizedBox(height: 2),
+                      Text(
+                        _formatFileSize(fileSize),
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 12,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Icon(
-                Icons.download,
-                size: 20,
-                color: Colors.grey[600],
-              ),
-            ],
+                Icon(
+                  Icons.download,
+                  size: 20,
+                  color: Colors.grey[600],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildFileIcon() {
     IconData icon;
@@ -440,8 +439,9 @@ class ChatFileMessage extends StatelessWidget {
   String _formatFileSize(int bytes) {
     if (bytes < 1024) return '$bytes B';
     if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    if (bytes < 1024 * 1024 * 1024)
+    if (bytes < 1024 * 1024 * 1024) {
       return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+    }
     return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
   }
 }

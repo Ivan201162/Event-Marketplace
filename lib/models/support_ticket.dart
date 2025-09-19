@@ -3,24 +3,6 @@ import 'package:flutter/material.dart';
 
 /// Модель тикета поддержки
 class SupportTicket {
-  final String id;
-  final String userId;
-  final String userName;
-  final String userEmail;
-  final String subject;
-  final String description;
-  final SupportCategory category;
-  final SupportPriority priority;
-  final SupportStatus status;
-  final List<SupportMessage> messages;
-  final List<String> attachments;
-  final String? assignedTo;
-  final String? assignedToName;
-  final Map<String, dynamic> metadata;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final DateTime? resolvedAt;
-
   const SupportTicket({
     required this.id,
     required this.userId,
@@ -76,28 +58,44 @@ class SupportTicket {
       resolvedAt: (data['resolvedAt'] as Timestamp?)?.toDate(),
     );
   }
+  final String id;
+  final String userId;
+  final String userName;
+  final String userEmail;
+  final String subject;
+  final String description;
+  final SupportCategory category;
+  final SupportPriority priority;
+  final SupportStatus status;
+  final List<SupportMessage> messages;
+  final List<String> attachments;
+  final String? assignedTo;
+  final String? assignedToName;
+  final Map<String, dynamic> metadata;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? resolvedAt;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'userId': userId,
-      'userName': userName,
-      'userEmail': userEmail,
-      'subject': subject,
-      'description': description,
-      'category': category.name,
-      'priority': priority.name,
-      'status': status.name,
-      'messages': messages.map((e) => e.toMap()).toList(),
-      'attachments': attachments,
-      'assignedTo': assignedTo,
-      'assignedToName': assignedToName,
-      'metadata': metadata,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'userId': userId,
+        'userName': userName,
+        'userEmail': userEmail,
+        'subject': subject,
+        'description': description,
+        'category': category.name,
+        'priority': priority.name,
+        'status': status.name,
+        'messages': messages.map((e) => e.toMap()).toList(),
+        'attachments': attachments,
+        'assignedTo': assignedTo,
+        'assignedToName': assignedToName,
+        'metadata': metadata,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'resolvedAt':
+            resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+      };
 
   SupportTicket copyWith({
     String? id,
@@ -117,27 +115,26 @@ class SupportTicket {
     DateTime? createdAt,
     DateTime? updatedAt,
     DateTime? resolvedAt,
-  }) {
-    return SupportTicket(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      userName: userName ?? this.userName,
-      userEmail: userEmail ?? this.userEmail,
-      subject: subject ?? this.subject,
-      description: description ?? this.description,
-      category: category ?? this.category,
-      priority: priority ?? this.priority,
-      status: status ?? this.status,
-      messages: messages ?? this.messages,
-      attachments: attachments ?? this.attachments,
-      assignedTo: assignedTo ?? this.assignedTo,
-      assignedToName: assignedToName ?? this.assignedToName,
-      metadata: metadata ?? this.metadata,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      resolvedAt: resolvedAt ?? this.resolvedAt,
-    );
-  }
+  }) =>
+      SupportTicket(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        userName: userName ?? this.userName,
+        userEmail: userEmail ?? this.userEmail,
+        subject: subject ?? this.subject,
+        description: description ?? this.description,
+        category: category ?? this.category,
+        priority: priority ?? this.priority,
+        status: status ?? this.status,
+        messages: messages ?? this.messages,
+        attachments: attachments ?? this.attachments,
+        assignedTo: assignedTo ?? this.assignedTo,
+        assignedToName: assignedToName ?? this.assignedToName,
+        metadata: metadata ?? this.metadata,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        resolvedAt: resolvedAt ?? this.resolvedAt,
+      );
 
   /// Получить цвет статуса
   Color get statusColor {
@@ -320,17 +317,6 @@ enum SupportStatus {
 
 /// Сообщение в тикете поддержки
 class SupportMessage {
-  final String id;
-  final String ticketId;
-  final String authorId;
-  final String authorName;
-  final String authorEmail;
-  final bool isFromSupport;
-  final String content;
-  final List<String> attachments;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
   const SupportMessage({
     required this.id,
     required this.ticketId,
@@ -344,35 +330,41 @@ class SupportMessage {
     required this.updatedAt,
   });
 
-  factory SupportMessage.fromMap(Map<String, dynamic> map) {
-    return SupportMessage(
-      id: map['id'] ?? '',
-      ticketId: map['ticketId'] ?? '',
-      authorId: map['authorId'] ?? '',
-      authorName: map['authorName'] ?? '',
-      authorEmail: map['authorEmail'] ?? '',
-      isFromSupport: map['isFromSupport'] ?? false,
-      content: map['content'] ?? '',
-      attachments: List<String>.from(map['attachments'] ?? []),
-      createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      updatedAt: (map['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-    );
-  }
+  factory SupportMessage.fromMap(Map<String, dynamic> map) => SupportMessage(
+        id: map['id'] ?? '',
+        ticketId: map['ticketId'] ?? '',
+        authorId: map['authorId'] ?? '',
+        authorName: map['authorName'] ?? '',
+        authorEmail: map['authorEmail'] ?? '',
+        isFromSupport: map['isFromSupport'] ?? false,
+        content: map['content'] ?? '',
+        attachments: List<String>.from(map['attachments'] ?? []),
+        createdAt: (map['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+        updatedAt: (map['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      );
+  final String id;
+  final String ticketId;
+  final String authorId;
+  final String authorName;
+  final String authorEmail;
+  final bool isFromSupport;
+  final String content;
+  final List<String> attachments;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'ticketId': ticketId,
-      'authorId': authorId,
-      'authorName': authorName,
-      'authorEmail': authorEmail,
-      'isFromSupport': isFromSupport,
-      'content': content,
-      'attachments': attachments,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'ticketId': ticketId,
+        'authorId': authorId,
+        'authorName': authorName,
+        'authorEmail': authorEmail,
+        'isFromSupport': isFromSupport,
+        'content': content,
+        'attachments': attachments,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   SupportMessage copyWith({
     String? id,
@@ -385,34 +377,23 @@ class SupportMessage {
     List<String>? attachments,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) {
-    return SupportMessage(
-      id: id ?? this.id,
-      ticketId: ticketId ?? this.ticketId,
-      authorId: authorId ?? this.authorId,
-      authorName: authorName ?? this.authorName,
-      authorEmail: authorEmail ?? this.authorEmail,
-      isFromSupport: isFromSupport ?? this.isFromSupport,
-      content: content ?? this.content,
-      attachments: attachments ?? this.attachments,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
+  }) =>
+      SupportMessage(
+        id: id ?? this.id,
+        ticketId: ticketId ?? this.ticketId,
+        authorId: authorId ?? this.authorId,
+        authorName: authorName ?? this.authorName,
+        authorEmail: authorEmail ?? this.authorEmail,
+        isFromSupport: isFromSupport ?? this.isFromSupport,
+        content: content ?? this.content,
+        attachments: attachments ?? this.attachments,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 }
 
 /// FAQ элемент
 class FAQItem {
-  final String id;
-  final String question;
-  final String answer;
-  final SupportCategory category;
-  final List<String> tags;
-  final int viewsCount;
-  final bool isPublished;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
   const FAQItem({
     required this.id,
     required this.question,
@@ -443,20 +424,27 @@ class FAQItem {
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
+  final String id;
+  final String question;
+  final String answer;
+  final SupportCategory category;
+  final List<String> tags;
+  final int viewsCount;
+  final bool isPublished;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'question': question,
-      'answer': answer,
-      'category': category.name,
-      'tags': tags,
-      'viewsCount': viewsCount,
-      'isPublished': isPublished,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'question': question,
+        'answer': answer,
+        'category': category.name,
+        'tags': tags,
+        'viewsCount': viewsCount,
+        'isPublished': isPublished,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   FAQItem copyWith({
     String? id,
@@ -468,33 +456,22 @@ class FAQItem {
     bool? isPublished,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) {
-    return FAQItem(
-      id: id ?? this.id,
-      question: question ?? this.question,
-      answer: answer ?? this.answer,
-      category: category ?? this.category,
-      tags: tags ?? this.tags,
-      viewsCount: viewsCount ?? this.viewsCount,
-      isPublished: isPublished ?? this.isPublished,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
+  }) =>
+      FAQItem(
+        id: id ?? this.id,
+        question: question ?? this.question,
+        answer: answer ?? this.answer,
+        category: category ?? this.category,
+        tags: tags ?? this.tags,
+        viewsCount: viewsCount ?? this.viewsCount,
+        isPublished: isPublished ?? this.isPublished,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 }
 
 /// Статистика поддержки
 class SupportStats {
-  final int totalTickets;
-  final int openTickets;
-  final int inProgressTickets;
-  final int resolvedTickets;
-  final int closedTickets;
-  final double averageResolutionTime; // в часах
-  final Map<SupportCategory, int> ticketsByCategory;
-  final Map<SupportPriority, int> ticketsByPriority;
-  final List<String> topIssues;
-
   const SupportStats({
     required this.totalTickets,
     required this.openTickets,
@@ -507,17 +484,24 @@ class SupportStats {
     required this.topIssues,
   });
 
-  factory SupportStats.empty() {
-    return const SupportStats(
-      totalTickets: 0,
-      openTickets: 0,
-      inProgressTickets: 0,
-      resolvedTickets: 0,
-      closedTickets: 0,
-      averageResolutionTime: 0.0,
-      ticketsByCategory: {},
-      ticketsByPriority: {},
-      topIssues: [],
-    );
-  }
+  factory SupportStats.empty() => const SupportStats(
+        totalTickets: 0,
+        openTickets: 0,
+        inProgressTickets: 0,
+        resolvedTickets: 0,
+        closedTickets: 0,
+        averageResolutionTime: 0,
+        ticketsByCategory: {},
+        ticketsByPriority: {},
+        topIssues: [],
+      );
+  final int totalTickets;
+  final int openTickets;
+  final int inProgressTickets;
+  final int resolvedTickets;
+  final int closedTickets;
+  final double averageResolutionTime; // в часах
+  final Map<SupportCategory, int> ticketsByCategory;
+  final Map<SupportPriority, int> ticketsByPriority;
+  final List<String> topIssues;
 }

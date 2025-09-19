@@ -1,15 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:event_marketplace_app/screens/search_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('SearchScreen', () {
-    testWidgets('should display search input field',
-        (WidgetTester tester) async {
+    testWidgets('should display search input field', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -23,10 +22,10 @@ void main() {
       expect(find.byIcon(Icons.search), findsOneWidget);
     });
 
-    testWidgets('should display filter button', (WidgetTester tester) async {
+    testWidgets('should display filter button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -40,10 +39,10 @@ void main() {
     });
 
     testWidgets('should display empty state when no search results',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -57,11 +56,10 @@ void main() {
       expect(find.text('Введите запрос для поиска'), findsOneWidget);
     });
 
-    testWidgets('should display loading state when searching',
-        (WidgetTester tester) async {
+    testWidgets('should display loading state when searching', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -78,11 +76,10 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('should display search results when available',
-        (WidgetTester tester) async {
+    testWidgets('should display search results when available', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -96,10 +93,10 @@ void main() {
     });
 
     testWidgets('should show filter dialog when filter button tapped',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -120,11 +117,10 @@ void main() {
       expect(find.text('Цена'), findsOneWidget);
     });
 
-    testWidgets('should allow entering search query',
-        (WidgetTester tester) async {
+    testWidgets('should allow entering search query', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -141,11 +137,10 @@ void main() {
       expect(find.text('photographer'), findsOneWidget);
     });
 
-    testWidgets('should clear search when clear button tapped',
-        (WidgetTester tester) async {
+    testWidgets('should clear search when clear button tapped', (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -168,11 +163,10 @@ void main() {
       expect(find.text('test'), findsNothing);
     });
 
-    testWidgets('should display search history when available',
-        (WidgetTester tester) async {
+    testWidgets('should display search history when available', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -186,10 +180,10 @@ void main() {
     });
 
     testWidgets('should display popular searches when available',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -203,10 +197,10 @@ void main() {
     });
 
     testWidgets('should display search suggestions when typing',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -223,11 +217,10 @@ void main() {
       expect(find.text('ph'), findsOneWidget);
     });
 
-    testWidgets('should display search results count',
-        (WidgetTester tester) async {
+    testWidgets('should display search results count', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -241,10 +234,10 @@ void main() {
     });
 
     testWidgets('should display search error when error occurs',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -257,11 +250,10 @@ void main() {
       expect(find.text('Поиск специалистов'), findsOneWidget);
     });
 
-    testWidgets('should display search filters when applied',
-        (WidgetTester tester) async {
+    testWidgets('should display search filters when applied', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -274,11 +266,10 @@ void main() {
       expect(find.text('Поиск специалистов'), findsOneWidget);
     });
 
-    testWidgets('should display search sort options',
-        (WidgetTester tester) async {
+    testWidgets('should display search sort options', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -291,11 +282,10 @@ void main() {
       expect(find.text('Поиск специалистов'), findsOneWidget);
     });
 
-    testWidgets('should display search pagination when needed',
-        (WidgetTester tester) async {
+    testWidgets('should display search pagination when needed', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -309,10 +299,10 @@ void main() {
     });
 
     testWidgets('should display search loading more when loading more results',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -326,10 +316,10 @@ void main() {
     });
 
     testWidgets('should display search no more results when no more results',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -343,10 +333,10 @@ void main() {
     });
 
     testWidgets('should display search retry button when error occurs',
-        (WidgetTester tester) async {
+        (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),
@@ -359,11 +349,10 @@ void main() {
       expect(find.text('Поиск специалистов'), findsOneWidget);
     });
 
-    testWidgets('should display search refresh button',
-        (WidgetTester tester) async {
+    testWidgets('should display search refresh button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: SearchScreen(),
           ),

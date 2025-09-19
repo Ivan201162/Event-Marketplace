@@ -2,15 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель для админ-панели
 class AdminPanel {
-  final String id;
-  final String adminId;
-  final String adminName;
-  final AdminRole role;
-  final List<String> permissions;
-  final DateTime createdAt;
-  final DateTime lastLogin;
-  final bool isActive;
-
   const AdminPanel({
     required this.id,
     required this.adminId,
@@ -39,19 +30,25 @@ class AdminPanel {
       isActive: data['isActive'] ?? true,
     );
   }
+  final String id;
+  final String adminId;
+  final String adminName;
+  final AdminRole role;
+  final List<String> permissions;
+  final DateTime createdAt;
+  final DateTime lastLogin;
+  final bool isActive;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'adminId': adminId,
-      'adminName': adminName,
-      'role': role.name,
-      'permissions': permissions,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'lastLogin': Timestamp.fromDate(lastLogin),
-      'isActive': isActive,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'adminId': adminId,
+        'adminName': adminName,
+        'role': role.name,
+        'permissions': permissions,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'lastLogin': Timestamp.fromDate(lastLogin),
+        'isActive': isActive,
+      };
 
   AdminPanel copyWith({
     String? id,
@@ -62,18 +59,17 @@ class AdminPanel {
     DateTime? createdAt,
     DateTime? lastLogin,
     bool? isActive,
-  }) {
-    return AdminPanel(
-      id: id ?? this.id,
-      adminId: adminId ?? this.adminId,
-      adminName: adminName ?? this.adminName,
-      role: role ?? this.role,
-      permissions: permissions ?? this.permissions,
-      createdAt: createdAt ?? this.createdAt,
-      lastLogin: lastLogin ?? this.lastLogin,
-      isActive: isActive ?? this.isActive,
-    );
-  }
+  }) =>
+      AdminPanel(
+        id: id ?? this.id,
+        adminId: adminId ?? this.adminId,
+        adminName: adminName ?? this.adminName,
+        role: role ?? this.role,
+        permissions: permissions ?? this.permissions,
+        createdAt: createdAt ?? this.createdAt,
+        lastLogin: lastLogin ?? this.lastLogin,
+        isActive: isActive ?? this.isActive,
+      );
 }
 
 /// Роли администратора
@@ -131,18 +127,6 @@ enum AdminPermission {
 
 /// Статистика админ-панели
 class AdminStats {
-  final int totalUsers;
-  final int totalSpecialists;
-  final int totalBookings;
-  final int totalPayments;
-  final int totalReviews;
-  final double totalRevenue;
-  final int activeUsers;
-  final int pendingBookings;
-  final int pendingReviews;
-  final int bannedUsers;
-  final DateTime lastUpdated;
-
   const AdminStats({
     required this.totalUsers,
     required this.totalSpecialists,
@@ -157,68 +141,63 @@ class AdminStats {
     required this.lastUpdated,
   });
 
-  factory AdminStats.empty() {
-    return AdminStats(
-      totalUsers: 0,
-      totalSpecialists: 0,
-      totalBookings: 0,
-      totalPayments: 0,
-      totalReviews: 0,
-      totalRevenue: 0.0,
-      activeUsers: 0,
-      pendingBookings: 0,
-      pendingReviews: 0,
-      bannedUsers: 0,
-      lastUpdated: DateTime.now(),
-    );
-  }
+  factory AdminStats.empty() => AdminStats(
+        totalUsers: 0,
+        totalSpecialists: 0,
+        totalBookings: 0,
+        totalPayments: 0,
+        totalReviews: 0,
+        totalRevenue: 0,
+        activeUsers: 0,
+        pendingBookings: 0,
+        pendingReviews: 0,
+        bannedUsers: 0,
+        lastUpdated: DateTime.now(),
+      );
 
-  factory AdminStats.fromMap(Map<String, dynamic> map) {
-    return AdminStats(
-      totalUsers: map['totalUsers'] ?? 0,
-      totalSpecialists: map['totalSpecialists'] ?? 0,
-      totalBookings: map['totalBookings'] ?? 0,
-      totalPayments: map['totalPayments'] ?? 0,
-      totalReviews: map['totalReviews'] ?? 0,
-      totalRevenue: (map['totalRevenue'] ?? 0.0).toDouble(),
-      activeUsers: map['activeUsers'] ?? 0,
-      pendingBookings: map['pendingBookings'] ?? 0,
-      pendingReviews: map['pendingReviews'] ?? 0,
-      bannedUsers: map['bannedUsers'] ?? 0,
-      lastUpdated:
-          (map['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
-    );
-  }
+  factory AdminStats.fromMap(Map<String, dynamic> map) => AdminStats(
+        totalUsers: map['totalUsers'] ?? 0,
+        totalSpecialists: map['totalSpecialists'] ?? 0,
+        totalBookings: map['totalBookings'] ?? 0,
+        totalPayments: map['totalPayments'] ?? 0,
+        totalReviews: map['totalReviews'] ?? 0,
+        totalRevenue: (map['totalRevenue'] ?? 0.0).toDouble(),
+        activeUsers: map['activeUsers'] ?? 0,
+        pendingBookings: map['pendingBookings'] ?? 0,
+        pendingReviews: map['pendingReviews'] ?? 0,
+        bannedUsers: map['bannedUsers'] ?? 0,
+        lastUpdated:
+            (map['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      );
+  final int totalUsers;
+  final int totalSpecialists;
+  final int totalBookings;
+  final int totalPayments;
+  final int totalReviews;
+  final double totalRevenue;
+  final int activeUsers;
+  final int pendingBookings;
+  final int pendingReviews;
+  final int bannedUsers;
+  final DateTime lastUpdated;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'totalUsers': totalUsers,
-      'totalSpecialists': totalSpecialists,
-      'totalBookings': totalBookings,
-      'totalPayments': totalPayments,
-      'totalReviews': totalReviews,
-      'totalRevenue': totalRevenue,
-      'activeUsers': activeUsers,
-      'pendingBookings': pendingBookings,
-      'pendingReviews': pendingReviews,
-      'bannedUsers': bannedUsers,
-      'lastUpdated': Timestamp.fromDate(lastUpdated),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'totalUsers': totalUsers,
+        'totalSpecialists': totalSpecialists,
+        'totalBookings': totalBookings,
+        'totalPayments': totalPayments,
+        'totalReviews': totalReviews,
+        'totalRevenue': totalRevenue,
+        'activeUsers': activeUsers,
+        'pendingBookings': pendingBookings,
+        'pendingReviews': pendingReviews,
+        'bannedUsers': bannedUsers,
+        'lastUpdated': Timestamp.fromDate(lastUpdated),
+      };
 }
 
 /// Действие администратора
 class AdminAction {
-  final String id;
-  final String adminId;
-  final String adminName;
-  final AdminActionType type;
-  final String targetId;
-  final String targetType;
-  final String description;
-  final Map<String, dynamic> metadata;
-  final DateTime timestamp;
-
   const AdminAction({
     required this.id,
     required this.adminId,
@@ -249,20 +228,27 @@ class AdminAction {
       timestamp: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
   }
+  final String id;
+  final String adminId;
+  final String adminName;
+  final AdminActionType type;
+  final String targetId;
+  final String targetType;
+  final String description;
+  final Map<String, dynamic> metadata;
+  final DateTime timestamp;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'adminId': adminId,
-      'adminName': adminName,
-      'type': type.name,
-      'targetId': targetId,
-      'targetType': targetType,
-      'description': description,
-      'metadata': metadata,
-      'timestamp': Timestamp.fromDate(timestamp),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'adminId': adminId,
+        'adminName': adminName,
+        'type': type.name,
+        'targetId': targetId,
+        'targetType': targetType,
+        'description': description,
+        'metadata': metadata,
+        'timestamp': Timestamp.fromDate(timestamp),
+      };
 }
 
 /// Типы действий администратора
@@ -292,16 +278,6 @@ enum AdminActionType {
 
 /// Уведомление для администратора
 class AdminNotification {
-  final String id;
-  final String title;
-  final String message;
-  final AdminNotificationType type;
-  final String? targetId;
-  final String? targetType;
-  final bool isRead;
-  final DateTime createdAt;
-  final Map<String, dynamic> metadata;
-
   const AdminNotification({
     required this.id,
     required this.title,
@@ -332,20 +308,27 @@ class AdminNotification {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
+  final String id;
+  final String title;
+  final String message;
+  final AdminNotificationType type;
+  final String? targetId;
+  final String? targetType;
+  final bool isRead;
+  final DateTime createdAt;
+  final Map<String, dynamic> metadata;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'title': title,
-      'message': message,
-      'type': type.name,
-      'targetId': targetId,
-      'targetType': targetType,
-      'isRead': isRead,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'title': title,
+        'message': message,
+        'type': type.name,
+        'targetId': targetId,
+        'targetType': targetType,
+        'isRead': isRead,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'metadata': metadata,
+      };
 
   AdminNotification copyWith({
     String? id,
@@ -357,19 +340,18 @@ class AdminNotification {
     bool? isRead,
     DateTime? createdAt,
     Map<String, dynamic>? metadata,
-  }) {
-    return AdminNotification(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      message: message ?? this.message,
-      type: type ?? this.type,
-      targetId: targetId ?? this.targetId,
-      targetType: targetType ?? this.targetType,
-      isRead: isRead ?? this.isRead,
-      createdAt: createdAt ?? this.createdAt,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      AdminNotification(
+        id: id ?? this.id,
+        title: title ?? this.title,
+        message: message ?? this.message,
+        type: type ?? this.type,
+        targetId: targetId ?? this.targetId,
+        targetType: targetType ?? this.targetType,
+        isRead: isRead ?? this.isRead,
+        createdAt: createdAt ?? this.createdAt,
+        metadata: metadata ?? this.metadata,
+      );
 }
 
 /// Типы уведомлений для администратора
@@ -385,17 +367,6 @@ enum AdminNotificationType {
 
 /// Настройки админ-панели
 class AdminSettings {
-  final bool enableUserRegistration;
-  final bool enableSpecialistVerification;
-  final bool enableAutoModeration;
-  final bool enableEmailNotifications;
-  final bool enableSmsNotifications;
-  final int maxFileSize;
-  final List<String> allowedFileTypes;
-  final Map<String, dynamic> paymentSettings;
-  final Map<String, dynamic> notificationSettings;
-  final DateTime lastUpdated;
-
   const AdminSettings({
     this.enableUserRegistration = true,
     this.enableSpecialistVerification = true,
@@ -409,38 +380,48 @@ class AdminSettings {
     required this.lastUpdated,
   });
 
-  factory AdminSettings.fromMap(Map<String, dynamic> map) {
-    return AdminSettings(
-      enableUserRegistration: map['enableUserRegistration'] ?? true,
-      enableSpecialistVerification: map['enableSpecialistVerification'] ?? true,
-      enableAutoModeration: map['enableAutoModeration'] ?? false,
-      enableEmailNotifications: map['enableEmailNotifications'] ?? true,
-      enableSmsNotifications: map['enableSmsNotifications'] ?? false,
-      maxFileSize: map['maxFileSize'] ?? 10485760,
-      allowedFileTypes: List<String>.from(map['allowedFileTypes'] ??
-          ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx']),
-      paymentSettings: Map<String, dynamic>.from(map['paymentSettings'] ?? {}),
-      notificationSettings:
-          Map<String, dynamic>.from(map['notificationSettings'] ?? {}),
-      lastUpdated:
-          (map['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
-    );
-  }
+  factory AdminSettings.fromMap(Map<String, dynamic> map) => AdminSettings(
+        enableUserRegistration: map['enableUserRegistration'] ?? true,
+        enableSpecialistVerification:
+            map['enableSpecialistVerification'] ?? true,
+        enableAutoModeration: map['enableAutoModeration'] ?? false,
+        enableEmailNotifications: map['enableEmailNotifications'] ?? true,
+        enableSmsNotifications: map['enableSmsNotifications'] ?? false,
+        maxFileSize: map['maxFileSize'] ?? 10485760,
+        allowedFileTypes: List<String>.from(
+          map['allowedFileTypes'] ??
+              ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx'],
+        ),
+        paymentSettings:
+            Map<String, dynamic>.from(map['paymentSettings'] ?? {}),
+        notificationSettings:
+            Map<String, dynamic>.from(map['notificationSettings'] ?? {}),
+        lastUpdated:
+            (map['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      );
+  final bool enableUserRegistration;
+  final bool enableSpecialistVerification;
+  final bool enableAutoModeration;
+  final bool enableEmailNotifications;
+  final bool enableSmsNotifications;
+  final int maxFileSize;
+  final List<String> allowedFileTypes;
+  final Map<String, dynamic> paymentSettings;
+  final Map<String, dynamic> notificationSettings;
+  final DateTime lastUpdated;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'enableUserRegistration': enableUserRegistration,
-      'enableSpecialistVerification': enableSpecialistVerification,
-      'enableAutoModeration': enableAutoModeration,
-      'enableEmailNotifications': enableEmailNotifications,
-      'enableSmsNotifications': enableSmsNotifications,
-      'maxFileSize': maxFileSize,
-      'allowedFileTypes': allowedFileTypes,
-      'paymentSettings': paymentSettings,
-      'notificationSettings': notificationSettings,
-      'lastUpdated': Timestamp.fromDate(lastUpdated),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'enableUserRegistration': enableUserRegistration,
+        'enableSpecialistVerification': enableSpecialistVerification,
+        'enableAutoModeration': enableAutoModeration,
+        'enableEmailNotifications': enableEmailNotifications,
+        'enableSmsNotifications': enableSmsNotifications,
+        'maxFileSize': maxFileSize,
+        'allowedFileTypes': allowedFileTypes,
+        'paymentSettings': paymentSettings,
+        'notificationSettings': notificationSettings,
+        'lastUpdated': Timestamp.fromDate(lastUpdated),
+      };
 
   AdminSettings copyWith({
     bool? enableUserRegistration,
@@ -453,22 +434,21 @@ class AdminSettings {
     Map<String, dynamic>? paymentSettings,
     Map<String, dynamic>? notificationSettings,
     DateTime? lastUpdated,
-  }) {
-    return AdminSettings(
-      enableUserRegistration:
-          enableUserRegistration ?? this.enableUserRegistration,
-      enableSpecialistVerification:
-          enableSpecialistVerification ?? this.enableSpecialistVerification,
-      enableAutoModeration: enableAutoModeration ?? this.enableAutoModeration,
-      enableEmailNotifications:
-          enableEmailNotifications ?? this.enableEmailNotifications,
-      enableSmsNotifications:
-          enableSmsNotifications ?? this.enableSmsNotifications,
-      maxFileSize: maxFileSize ?? this.maxFileSize,
-      allowedFileTypes: allowedFileTypes ?? this.allowedFileTypes,
-      paymentSettings: paymentSettings ?? this.paymentSettings,
-      notificationSettings: notificationSettings ?? this.notificationSettings,
-      lastUpdated: lastUpdated ?? this.lastUpdated,
-    );
-  }
+  }) =>
+      AdminSettings(
+        enableUserRegistration:
+            enableUserRegistration ?? this.enableUserRegistration,
+        enableSpecialistVerification:
+            enableSpecialistVerification ?? this.enableSpecialistVerification,
+        enableAutoModeration: enableAutoModeration ?? this.enableAutoModeration,
+        enableEmailNotifications:
+            enableEmailNotifications ?? this.enableEmailNotifications,
+        enableSmsNotifications:
+            enableSmsNotifications ?? this.enableSmsNotifications,
+        maxFileSize: maxFileSize ?? this.maxFileSize,
+        allowedFileTypes: allowedFileTypes ?? this.allowedFileTypes,
+        paymentSettings: paymentSettings ?? this.paymentSettings,
+        notificationSettings: notificationSettings ?? this.notificationSettings,
+        lastUpdated: lastUpdated ?? this.lastUpdated,
+      );
 }

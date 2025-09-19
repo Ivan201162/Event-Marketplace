@@ -28,46 +28,42 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ResponsiveScaffold(
-      title: 'Мониторинг и алерты',
-      body: Column(
-        children: [
-          // Вкладки
-          _buildTabs(),
+  Widget build(BuildContext context) => ResponsiveScaffold(
+        title: 'Мониторинг и алерты',
+        body: Column(
+          children: [
+            // Вкладки
+            _buildTabs(),
 
-          // Контент
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _selectedTab == 'metrics'
-                    ? _buildMetricsTab()
-                    : _selectedTab == 'alerts'
-                        ? _buildAlertsTab()
-                        : _buildDashboardsTab(),
-          ),
-        ],
-      ),
-    );
-  }
+            // Контент
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _selectedTab == 'metrics'
+                      ? _buildMetricsTab()
+                      : _selectedTab == 'alerts'
+                          ? _buildAlertsTab()
+                          : _buildDashboardsTab(),
+            ),
+          ],
+        ),
+      );
 
-  Widget _buildTabs() {
-    return ResponsiveCard(
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildTabButton('metrics', 'Метрики', Icons.analytics),
-          ),
-          Expanded(
-            child: _buildTabButton('alerts', 'Алерты', Icons.warning),
-          ),
-          Expanded(
-            child: _buildTabButton('dashboards', 'Дашборды', Icons.dashboard),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildTabs() => ResponsiveCard(
+        child: Row(
+          children: [
+            Expanded(
+              child: _buildTabButton('metrics', 'Метрики', Icons.analytics),
+            ),
+            Expanded(
+              child: _buildTabButton('alerts', 'Алерты', Icons.warning),
+            ),
+            Expanded(
+              child: _buildTabButton('dashboards', 'Дашборды', Icons.dashboard),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -110,76 +106,72 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
     );
   }
 
-  Widget _buildMetricsTab() {
-    return Column(
-      children: [
-        // Заголовок с фильтрами
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Метрики системы',
-                isTitle: true,
-              ),
-              const Spacer(),
-              DropdownButton<String?>(
-                value: null,
-                hint: const Text('Все категории'),
-                items: [
-                  const DropdownMenuItem<String?>(
-                    value: null,
-                    child: Text('Все категории'),
-                  ),
-                  const DropdownMenuItem<String?>(
-                    value: 'system',
-                    child: Text('Система'),
-                  ),
-                  const DropdownMenuItem<String?>(
-                    value: 'network',
-                    child: Text('Сеть'),
-                  ),
-                  const DropdownMenuItem<String?>(
-                    value: 'database',
-                    child: Text('База данных'),
-                  ),
-                  const DropdownMenuItem<String?>(
-                    value: 'users',
-                    child: Text('Пользователи'),
-                  ),
-                  const DropdownMenuItem<String?>(
-                    value: 'errors',
-                    child: Text('Ошибки'),
-                  ),
-                ],
-                onChanged: (value) {
-                  // TODO: Реализовать фильтрацию
-                },
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список метрик
-        Expanded(
-          child: _metrics.isEmpty
-              ? const Center(child: Text('Метрики не найдены'))
-              : ListView.builder(
-                  itemCount: _metrics.length,
-                  itemBuilder: (context, index) {
-                    final metric = _metrics[index];
-                    return _buildMetricCard(metric);
+  Widget _buildMetricsTab() => Column(
+        children: [
+          // Заголовок с фильтрами
+          ResponsiveCard(
+            child: Row(
+              children: [
+                ResponsiveText(
+                  'Метрики системы',
+                  isTitle: true,
+                ),
+                const Spacer(),
+                DropdownButton<String?>(
+                  hint: const Text('Все категории'),
+                  items: const [
+                    DropdownMenuItem<String?>(
+                      child: Text('Все категории'),
+                    ),
+                    DropdownMenuItem<String?>(
+                      value: 'system',
+                      child: Text('Система'),
+                    ),
+                    DropdownMenuItem<String?>(
+                      value: 'network',
+                      child: Text('Сеть'),
+                    ),
+                    DropdownMenuItem<String?>(
+                      value: 'database',
+                      child: Text('База данных'),
+                    ),
+                    DropdownMenuItem<String?>(
+                      value: 'users',
+                      child: Text('Пользователи'),
+                    ),
+                    DropdownMenuItem<String?>(
+                      value: 'errors',
+                      child: Text('Ошибки'),
+                    ),
+                  ],
+                  onChanged: (value) {
+                    // TODO: Реализовать фильтрацию
                   },
                 ),
-        ),
-      ],
-    );
-  }
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список метрик
+          Expanded(
+            child: _metrics.isEmpty
+                ? const Center(child: Text('Метрики не найдены'))
+                : ListView.builder(
+                    itemCount: _metrics.length,
+                    itemBuilder: (context, index) {
+                      final metric = _metrics[index];
+                      return _buildMetricCard(metric);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildMetricCard(MonitoringMetric metric) {
     final typeColor = _getTypeColor(metric.type);
@@ -284,48 +276,46 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
     );
   }
 
-  Widget _buildAlertsTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Алерты мониторинга',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _showCreateAlertDialog,
-                icon: const Icon(Icons.add),
-                label: const Text('Создать алерт'),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список алертов
-        Expanded(
-          child: _alerts.isEmpty
-              ? const Center(child: Text('Алерты не найдены'))
-              : ListView.builder(
-                  itemCount: _alerts.length,
-                  itemBuilder: (context, index) {
-                    final alert = _alerts[index];
-                    return _buildAlertCard(alert);
-                  },
+  Widget _buildAlertsTab() => Column(
+        children: [
+          // Заголовок
+          ResponsiveCard(
+            child: Row(
+              children: [
+                ResponsiveText(
+                  'Алерты мониторинга',
+                  isTitle: true,
                 ),
-        ),
-      ],
-    );
-  }
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _showCreateAlertDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Создать алерт'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список алертов
+          Expanded(
+            child: _alerts.isEmpty
+                ? const Center(child: Text('Алерты не найдены'))
+                : ListView.builder(
+                    itemCount: _alerts.length,
+                    itemBuilder: (context, index) {
+                      final alert = _alerts[index];
+                      return _buildAlertCard(alert);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildAlertCard(MonitoringAlert alert) {
     final severityColor = _getSeverityColor(alert.severity);
@@ -459,8 +449,11 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
             children: [
               _buildInfoChip('Метрика', alert.metricName, Colors.blue),
               const SizedBox(width: 8),
-              _buildInfoChip('Каналы', '${alert.notificationChannels.length}',
-                  Colors.green),
+              _buildInfoChip(
+                'Каналы',
+                '${alert.notificationChannels.length}',
+                Colors.green,
+              ),
             ],
           ),
 
@@ -489,196 +482,198 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
     );
   }
 
-  Widget _buildDashboardsTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Дашборды мониторинга',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _showCreateDashboardDialog,
-                icon: const Icon(Icons.add),
-                label: const Text('Создать дашборд'),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: _loadData,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список дашбордов
-        Expanded(
-          child: _dashboards.isEmpty
-              ? const Center(child: Text('Дашборды не найдены'))
-              : ListView.builder(
-                  itemCount: _dashboards.length,
-                  itemBuilder: (context, index) {
-                    final dashboard = _dashboards[index];
-                    return _buildDashboardCard(dashboard);
-                  },
-                ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDashboardCard(MonitoringDashboard dashboard) {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildDashboardsTab() => Column(
         children: [
           // Заголовок
-          Row(
-            children: [
-              const Icon(Icons.dashboard, size: 24, color: Colors.blue),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      dashboard.name,
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 16,
+          ResponsiveCard(
+            child: Row(
+              children: [
+                ResponsiveText(
+                  'Дашборды мониторинга',
+                  isTitle: true,
+                ),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _showCreateDashboardDialog,
+                  icon: const Icon(Icons.add),
+                  label: const Text('Создать дашборд'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: _loadData,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список дашбордов
+          Expanded(
+            child: _dashboards.isEmpty
+                ? const Center(child: Text('Дашборды не найдены'))
+                : ListView.builder(
+                    itemCount: _dashboards.length,
+                    itemBuilder: (context, index) {
+                      final dashboard = _dashboards[index];
+                      return _buildDashboardCard(dashboard);
+                    },
+                  ),
+          ),
+        ],
+      );
+
+  Widget _buildDashboardCard(MonitoringDashboard dashboard) => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Заголовок
+            Row(
+              children: [
+                const Icon(Icons.dashboard, size: 24, color: Colors.blue),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        dashboard.name,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
-                    ),
-                    Text(
-                      dashboard.description,
-                      style: const TextStyle(fontSize: 14),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withValues(alpha: 0.2),
-                  borderRadius: BorderRadius.circular(12),
-                  border: Border.all(color: Colors.blue),
-                ),
-                child: Text(
-                  dashboard.layout.displayName,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.blue,
-                    fontWeight: FontWeight.bold,
+                      Text(
+                        dashboard.description,
+                        style: const TextStyle(fontSize: 14),
+                      ),
+                    ],
                   ),
                 ),
-              ),
-              if (dashboard.isPublic)
                 Container(
-                  margin: const EdgeInsets.only(left: 8),
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
-                    color: Colors.green.withValues(alpha: 0.2),
+                    color: Colors.blue.withValues(alpha: 0.2),
                     borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: Colors.green),
+                    border: Border.all(color: Colors.blue),
                   ),
-                  child: const Text(
-                    'Публичный',
-                    style: TextStyle(
+                  child: Text(
+                    dashboard.layout.displayName,
+                    style: const TextStyle(
                       fontSize: 12,
-                      color: Colors.green,
+                      color: Colors.blue,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
-              PopupMenuButton<String>(
-                onSelected: (value) => _handleDashboardAction(value, dashboard),
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    value: 'view',
-                    child: ListTile(
-                      leading: Icon(Icons.visibility),
-                      title: Text('Просмотр'),
+                if (dashboard.isPublic)
+                  Container(
+                    margin: const EdgeInsets.only(left: 8),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.green.withValues(alpha: 0.2),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(color: Colors.green),
+                    ),
+                    child: const Text(
+                      'Публичный',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.green,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                  const PopupMenuItem(
-                    value: 'edit',
-                    child: ListTile(
-                      leading: Icon(Icons.edit),
-                      title: Text('Редактировать'),
+                PopupMenuButton<String>(
+                  onSelected: (value) =>
+                      _handleDashboardAction(value, dashboard),
+                  itemBuilder: (context) => [
+                    const PopupMenuItem(
+                      value: 'view',
+                      child: ListTile(
+                        leading: Icon(Icons.visibility),
+                        title: Text('Просмотр'),
+                      ),
                     ),
-                  ),
-                  const PopupMenuItem(
-                    value: 'export',
-                    child: ListTile(
-                      leading: Icon(Icons.download),
-                      title: Text('Экспорт'),
+                    const PopupMenuItem(
+                      value: 'edit',
+                      child: ListTile(
+                        leading: Icon(Icons.edit),
+                        title: Text('Редактировать'),
+                      ),
                     ),
-                  ),
-                ],
-                child: const Icon(Icons.more_vert),
-              ),
-            ],
-          ),
+                    const PopupMenuItem(
+                      value: 'export',
+                      child: ListTile(
+                        leading: Icon(Icons.download),
+                        title: Text('Экспорт'),
+                      ),
+                    ),
+                  ],
+                  child: const Icon(Icons.more_vert),
+                ),
+              ],
+            ),
 
-          const SizedBox(height: 12),
+            const SizedBox(height: 12),
 
-          // Метаданные
-          Row(
-            children: [
-              _buildInfoChip(
-                  'Метрики', '${dashboard.metricCount}', Colors.blue),
-              const SizedBox(width: 8),
-              _buildInfoChip(
-                  'Алерты', '${dashboard.alertCount}', Colors.orange),
-            ],
-          ),
+            // Метаданные
+            Row(
+              children: [
+                _buildInfoChip(
+                  'Метрики',
+                  '${dashboard.metricCount}',
+                  Colors.blue,
+                ),
+                const SizedBox(width: 8),
+                _buildInfoChip(
+                  'Алерты',
+                  '${dashboard.alertCount}',
+                  Colors.orange,
+                ),
+              ],
+            ),
 
-          const SizedBox(height: 8),
+            const SizedBox(height: 8),
 
-          // Время
-          Row(
-            children: [
-              const Icon(Icons.access_time, size: 16, color: Colors.grey),
-              const SizedBox(width: 4),
-              Text(
-                'Создан: ${_formatDateTime(dashboard.createdAt)}',
-                style: const TextStyle(color: Colors.grey, fontSize: 12),
-              ),
-              const Spacer(),
-              Text(
-                'Обновлен: ${_formatDateTime(dashboard.updatedAt)}',
-                style: const TextStyle(color: Colors.grey, fontSize: 12),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildInfoChip(String label, String value, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color),
-      ),
-      child: Text(
-        '$label: $value',
-        style: TextStyle(
-          fontSize: 12,
-          color: color,
-          fontWeight: FontWeight.w500,
+            // Время
+            Row(
+              children: [
+                const Icon(Icons.access_time, size: 16, color: Colors.grey),
+                const SizedBox(width: 4),
+                Text(
+                  'Создан: ${_formatDateTime(dashboard.createdAt)}',
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+                const Spacer(),
+                Text(
+                  'Обновлен: ${_formatDateTime(dashboard.updatedAt)}',
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+              ],
+            ),
+          ],
         ),
-      ),
-    );
-  }
+      );
+
+  Widget _buildInfoChip(String label, String value, Color color) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color),
+        ),
+        child: Text(
+          '$label: $value',
+          style: TextStyle(
+            fontSize: 12,
+            color: color,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
 
   Color _getTypeColor(MetricType type) {
     switch (type) {
@@ -721,9 +716,8 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
     }
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDateTime(DateTime dateTime) =>
+      '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
 
   Future<void> _loadData() async {
     setState(() {
@@ -813,7 +807,8 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
               if (alert.notificationChannels.isNotEmpty) ...[
                 const SizedBox(height: 8),
                 Text(
-                    'Каналы уведомлений: ${alert.notificationChannels.join(', ')}'),
+                  'Каналы уведомлений: ${alert.notificationChannels.join(', ')}',
+                ),
               ],
             ],
           ),
@@ -884,7 +879,8 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Редактирование дашборда "${dashboard.name}" будет реализовано'),
+          'Редактирование дашборда "${dashboard.name}" будет реализовано',
+        ),
       ),
     );
   }

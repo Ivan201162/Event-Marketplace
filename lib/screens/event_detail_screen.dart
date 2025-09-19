@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/event.dart';
-import '../providers/auth_providers.dart';
-import '../providers/event_providers.dart';
-import '../providers/booking_providers.dart';
-import '../providers/favorites_providers.dart';
 import '../models/review.dart';
+import '../providers/auth_providers.dart';
+import '../providers/booking_providers.dart';
+import '../providers/event_providers.dart';
+import '../providers/favorites_providers.dart';
 import '../services/review_service.dart';
-import 'create_event_screen.dart';
 import 'create_booking_screen.dart';
+import 'create_event_screen.dart';
 
 /// Экран детального просмотра события
 class EventDetailScreen extends ConsumerWidget {
-  final Event event;
-
   const EventDetailScreen({
     super.key,
     required this.event,
   });
+  final Event event;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,8 +42,9 @@ class EventDetailScreen extends ConsumerWidget {
 
                   return FutureBuilder<bool>(
                     future: ref.read(
-                        isFavoriteProvider((userId: user.id, eventId: event.id))
-                            .future),
+                      isFavoriteProvider((userId: user.id, eventId: event.id))
+                          .future,
+                    ),
                     builder: (context, snapshot) {
                       final isFavorite = snapshot.data ?? false;
 
@@ -58,21 +59,30 @@ class EventDetailScreen extends ConsumerWidget {
                                 ref.read(favoritesServiceProvider);
                             if (isFavorite) {
                               await favoritesService.removeFromFavorites(
-                                  user.id, event.id);
+                                user.id,
+                                event.id,
+                              );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                    content: Text('Удалено из избранного')),
+                                  content: Text('Удалено из избранного'),
+                                ),
                               );
                             } else {
                               await favoritesService.addToFavorites(
-                                  user.id, event.id);
+                                user.id,
+                                event.id,
+                              );
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                    content: Text('Добавлено в избранное')),
+                                  content: Text('Добавлено в избранное'),
+                                ),
                               );
                             }
-                            ref.invalidate(isFavoriteProvider(
-                                (userId: user.id, eventId: event.id)));
+                            ref.invalidate(
+                              isFavoriteProvider(
+                                (userId: user.id, eventId: event.id),
+                              ),
+                            );
                           } catch (e) {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(content: Text('Ошибка: $e')),
@@ -180,434 +190,429 @@ class EventDetailScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildHeaderSection(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(
-                  event.categoryIcon,
-                  size: 32,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        event.title,
-                        style:
-                            Theme.of(context).textTheme.headlineSmall?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
+  Widget _buildHeaderSection(BuildContext context) => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(
+                    event.categoryIcon,
+                    size: 32,
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          event.title,
+                          style: Theme.of(context)
+                              .textTheme
+                              .headlineSmall
+                              ?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          event.categoryName,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    decoration: BoxDecoration(
+                      color: event.statusColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: event.statusColor.withOpacity(0.3),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        event.categoryName,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
+                    ),
+                    child: Text(
+                      event.statusText,
+                      style: TextStyle(
+                        color: event.statusColor,
+                        fontWeight: FontWeight.w500,
                       ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                  decoration: BoxDecoration(
-                    color: event.statusColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(
-                      color: event.statusColor.withOpacity(0.3),
                     ),
                   ),
-                  child: Text(
-                    event.statusText,
-                    style: TextStyle(
-                      color: event.statusColor,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBasicInfoSection(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Описание',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+                ],
               ),
-            ),
-            const SizedBox(height: 12),
-            Text(
-              event.description,
-              style: Theme.of(context).textTheme.bodyLarge,
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildDateTimeSection(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Дата и время',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                const Icon(Icons.calendar_today, color: Colors.blue),
-                const SizedBox(width: 12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Text('Дата начала'),
-                    Text(
-                      event.formattedDate,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    Text(
-                      event.formattedTime,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                  ],
+  Widget _buildBasicInfoSection(BuildContext context) => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Описание',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
-              ],
-            ),
-            if (event.endDate != null) ...[
+              ),
+              const SizedBox(height: 12),
+              Text(
+                event.description,
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildDateTimeSection(BuildContext context) => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Дата и время',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
               const SizedBox(height: 16),
               Row(
                 children: [
-                  const Icon(Icons.event_available, color: Colors.green),
+                  const Icon(Icons.calendar_today, color: Colors.blue),
                   const SizedBox(width: 12),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Дата окончания'),
+                      const Text('Дата начала'),
                       Text(
-                        '${event.endDate!.day}.${event.endDate!.month}.${event.endDate!.year}',
+                        event.formattedDate,
                         style: const TextStyle(fontWeight: FontWeight.w500),
                       ),
                       Text(
-                        '${event.endDate!.hour.toString().padLeft(2, '0')}:${event.endDate!.minute.toString().padLeft(2, '0')}',
+                        event.formattedTime,
                         style: const TextStyle(fontWeight: FontWeight.w500),
                       ),
                     ],
                   ),
                 ],
               ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildLocationSection(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Место проведения',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                const Icon(Icons.location_on, color: Colors.red),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Text(
-                    event.location,
-                    style: const TextStyle(fontWeight: FontWeight.w500),
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPriceAndParticipantsSection(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Цена и участники',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: Row(
-                    children: [
-                      const Icon(Icons.attach_money, color: Colors.green),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Цена'),
-                          Text(
-                            event.formattedPrice,
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                Expanded(
-                  child: Row(
-                    children: [
-                      const Icon(Icons.people, color: Colors.blue),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Участники'),
-                          Text(
-                            '${event.currentParticipants}/${event.maxParticipants}',
-                            style: const TextStyle(
-                              fontWeight: FontWeight.w500,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            if (event.hasAvailableSpots) ...[
-              const SizedBox(height: 8),
-              Text(
-                'Свободных мест: ${event.availableSpots}',
-                style: TextStyle(
-                  color: Colors.green[700],
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ] else ...[
-              const SizedBox(height: 8),
-              Text(
-                'Мест нет',
-                style: TextStyle(
-                  color: Colors.red[700],
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-            ],
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAdditionalInfoSection(BuildContext context) {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Дополнительная информация',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 16),
-            if (event.contactInfo != null) ...[
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Icon(Icons.contact_phone, color: Colors.orange),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
+              if (event.endDate != null) ...[
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    const Icon(Icons.event_available, color: Colors.green),
+                    const SizedBox(width: 12),
+                    Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text('Контактная информация'),
+                        const Text('Дата окончания'),
                         Text(
-                          event.contactInfo!,
+                          '${event.endDate!.day}.${event.endDate!.month}.${event.endDate!.year}',
+                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        ),
+                        Text(
+                          '${event.endDate!.hour.toString().padLeft(2, '0')}:${event.endDate!.minute.toString().padLeft(2, '0')}',
                           style: const TextStyle(fontWeight: FontWeight.w500),
                         ),
                       ],
                     ),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildLocationSection(BuildContext context) => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Место проведения',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  const Icon(Icons.location_on, color: Colors.red),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Text(
+                      event.location,
+                      style: const TextStyle(fontWeight: FontWeight.w500),
+                    ),
                   ),
                 ],
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildPriceAndParticipantsSection(BuildContext context) => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Цена и участники',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
               const SizedBox(height: 16),
-            ],
-            if (event.requirements != null) ...[
               Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Icon(Icons.info, color: Colors.purple),
-                  const SizedBox(width: 12),
                   Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
                       children: [
-                        const Text('Требования к участникам'),
-                        Text(
-                          event.requirements!,
-                          style: const TextStyle(fontWeight: FontWeight.w500),
+                        const Icon(Icons.attach_money, color: Colors.green),
+                        const SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Цена'),
+                            Text(
+                              event.formattedPrice,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: [
+                        const Icon(Icons.people, color: Colors.blue),
+                        const SizedBox(width: 12),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Участники'),
+                            Text(
+                              '${event.currentParticipants}/${event.maxParticipants}',
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                              ),
+                            ),
+                          ],
                         ),
                       ],
                     ),
                   ),
                 ],
               ),
+              if (event.hasAvailableSpots) ...[
+                const SizedBox(height: 8),
+                Text(
+                  'Свободных мест: ${event.availableSpots}',
+                  style: TextStyle(
+                    color: Colors.green[700],
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ] else ...[
+                const SizedBox(height: 8),
+                Text(
+                  'Мест нет',
+                  style: TextStyle(
+                    color: Colors.red[700],
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
-      ),
-    );
-  }
+      );
+
+  Widget _buildAdditionalInfoSection(BuildContext context) => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Дополнительная информация',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              if (event.contactInfo != null) ...[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.contact_phone, color: Colors.orange),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Контактная информация'),
+                          Text(
+                            event.contactInfo!,
+                            style: const TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+              ],
+              if (event.requirements != null) ...[
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Icon(Icons.info, color: Colors.purple),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Требования к участникам'),
+                          Text(
+                            event.requirements!,
+                            style: const TextStyle(fontWeight: FontWeight.w500),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ],
+          ),
+        ),
+      );
 
   Widget _buildActionButtons(
-      BuildContext context, WidgetRef ref, bool isOwner) {
-    return Column(
-      children: [
-        if (isOwner) ...[
-          // Кнопки для организатора
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CreateEventScreen(event: event),
+    BuildContext context,
+    WidgetRef ref,
+    bool isOwner,
+  ) =>
+      Column(
+        children: [
+          if (isOwner) ...[
+            // Кнопки для организатора
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton.icon(
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => CreateEventScreen(event: event),
+                    ),
+                  );
+                },
+                icon: const Icon(Icons.edit),
+                label: const Text('Редактировать мероприятие'),
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
+              ),
+            ),
+            const SizedBox(height: 12),
+            if (event.status == EventStatus.active) ...[
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () => _completeEvent(context, ref),
+                  icon: const Icon(Icons.check_circle),
+                  label: const Text('Завершить мероприятие'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                   ),
-                );
-              },
-              icon: const Icon(Icons.edit),
-              label: const Text('Редактировать мероприятие'),
-              style: ElevatedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 16),
+                ),
               ),
-            ),
-          ),
-          const SizedBox(height: 12),
-          if (event.status == EventStatus.active) ...[
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () => _cancelEvent(context, ref),
+                  icon: const Icon(Icons.cancel),
+                  label: const Text('Отменить мероприятие'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.orange,
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+            ],
             SizedBox(
               width: double.infinity,
               child: ElevatedButton.icon(
-                onPressed: () => _completeEvent(context, ref),
-                icon: const Icon(Icons.check_circle),
-                label: const Text('Завершить мероприятие'),
+                onPressed: () => _showDeleteDialog(context, ref),
+                icon: const Icon(Icons.delete),
+                label: const Text('Удалить мероприятие'),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.green,
+                  backgroundColor: Colors.red,
                   padding: const EdgeInsets.symmetric(vertical: 16),
                 ),
               ),
             ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () => _cancelEvent(context, ref),
-                icon: const Icon(Icons.cancel),
-                label: const Text('Отменить мероприятие'),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orange,
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-              ),
-            ),
-            const SizedBox(height: 12),
-          ],
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: () => _showDeleteDialog(context, ref),
-              icon: const Icon(Icons.delete),
-              label: const Text('Удалить мероприятие'),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
+          ] else ...[
+            // Кнопки для участника
+            if (event.status == EventStatus.active &&
+                event.hasAvailableSpots) ...[
+              _buildBookingButton(context, ref),
+            ] else if (event.status == EventStatus.active &&
+                !event.hasAvailableSpots) ...[
+              Container(
+                width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 16),
-              ),
-            ),
-          ),
-        ] else ...[
-          // Кнопки для участника
-          if (event.status == EventStatus.active &&
-              event.hasAvailableSpots) ...[
-            _buildBookingButton(context, ref),
-          ] else if (event.status == EventStatus.active &&
-              !event.hasAvailableSpots) ...[
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              decoration: BoxDecoration(
-                color: Colors.grey[300],
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Text(
-                'Мест нет',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.grey,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: const Text(
+                  'Мест нет',
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.grey,
+                  ),
                 ),
               ),
-            ),
+            ],
           ],
         ],
-      ],
-    );
-  }
+      );
 
   void _completeEvent(BuildContext context, WidgetRef ref) {
     showDialog(
@@ -627,7 +632,9 @@ class EventDetailScreen extends ConsumerWidget {
               try {
                 final eventService = ref.read(eventServiceProvider);
                 await eventService.updateEventStatus(
-                    event.id, EventStatus.completed);
+                  event.id,
+                  EventStatus.completed,
+                );
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Мероприятие завершено')),
@@ -665,7 +672,9 @@ class EventDetailScreen extends ConsumerWidget {
               try {
                 final eventService = ref.read(eventServiceProvider);
                 await eventService.updateEventStatus(
-                    event.id, EventStatus.cancelled);
+                  event.id,
+                  EventStatus.cancelled,
+                );
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(content: Text('Мероприятие отменено')),
@@ -693,7 +702,8 @@ class EventDetailScreen extends ConsumerWidget {
       builder: (context) => AlertDialog(
         title: const Text('Удалить мероприятие'),
         content: const Text(
-            'Вы уверены, что хотите удалить это мероприятие? Это действие нельзя будет отменить.'),
+          'Вы уверены, что хотите удалить это мероприятие? Это действие нельзя будет отменить.',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -787,15 +797,16 @@ class EventDetailScreen extends ConsumerWidget {
                       children: [
                         // Звезды рейтинга
                         Row(
-                          children: List.generate(5, (index) {
-                            return Icon(
+                          children: List.generate(
+                            5,
+                            (index) => Icon(
                               index < averageRating
                                   ? Icons.star
                                   : Icons.star_border,
                               size: 24,
                               color: Colors.amber,
-                            );
-                          }),
+                            ),
+                          ),
                         ),
                         const SizedBox(width: 8),
                         Text(
@@ -821,7 +832,8 @@ class EventDetailScreen extends ConsumerWidget {
                         if (snapshot.connectionState ==
                             ConnectionState.waiting) {
                           return const Center(
-                              child: CircularProgressIndicator());
+                            child: CircularProgressIndicator(),
+                          );
                         }
 
                         final reviews = snapshot.data ?? [];
@@ -832,9 +844,8 @@ class EventDetailScreen extends ConsumerWidget {
                         }
 
                         return Column(
-                          children: recentReviews.map((review) {
-                            return _buildReviewItem(review);
-                          }).toList(),
+                          children:
+                              recentReviews.map(_buildReviewItem).toList(),
                         );
                       },
                     ),
@@ -849,94 +860,93 @@ class EventDetailScreen extends ConsumerWidget {
   }
 
   /// Построить элемент отзыва
-  Widget _buildReviewItem(Review review) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[200]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                radius: 16,
-                backgroundImage: review.userPhotoUrl != null
-                    ? NetworkImage(review.userPhotoUrl!)
-                    : null,
-                child: review.userPhotoUrl == null
-                    ? Text(review.userName[0].toUpperCase())
-                    : null,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      review.userName,
-                      style: const TextStyle(fontWeight: FontWeight.w500),
-                    ),
-                    Row(
-                      children: [
-                        Row(
-                          children: List.generate(5, (index) {
-                            return Icon(
-                              index < review.rating
-                                  ? Icons.star
-                                  : Icons.star_border,
-                              size: 16,
-                              color: Colors.amber,
-                            );
-                          }),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          review.ratingText,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: _getRatingColor(review.rating),
+  Widget _buildReviewItem(Review review) => Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.grey[200]!),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                CircleAvatar(
+                  radius: 16,
+                  backgroundImage: review.userPhotoUrl != null
+                      ? NetworkImage(review.userPhotoUrl!)
+                      : null,
+                  child: review.userPhotoUrl == null
+                      ? Text(review.userName[0].toUpperCase())
+                      : null,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        review.userName,
+                        style: const TextStyle(fontWeight: FontWeight.w500),
+                      ),
+                      Row(
+                        children: [
+                          Row(
+                            children: List.generate(
+                              5,
+                              (index) => Icon(
+                                index < review.rating
+                                    ? Icons.star
+                                    : Icons.star_border,
+                                size: 16,
+                                color: Colors.amber,
+                              ),
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              if (review.isVerified)
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(
-                    color: Colors.green[100],
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: const Text(
-                    '✓',
-                    style: TextStyle(
-                      color: Colors.green,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
+                          const SizedBox(width: 8),
+                          Text(
+                            review.ratingText,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: _getRatingColor(review.rating),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Text(
-            review.content,
-            style: const TextStyle(fontSize: 14),
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    );
-  }
+                if (review.isVerified)
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                    decoration: BoxDecoration(
+                      color: Colors.green[100],
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: const Text(
+                      '✓',
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            Text(
+              review.content,
+              style: const TextStyle(fontSize: 14),
+              maxLines: 3,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ],
+        ),
+      );
 
   Color _getRatingColor(int rating) {
     if (rating >= 4) return Colors.green;
@@ -1036,8 +1046,9 @@ class EventDetailScreen extends ConsumerWidget {
 
         return FutureBuilder<bool>(
           future: ref.read(
-              hasUserBookedEventProvider((userId: user.id, eventId: event.id))
-                  .future),
+            hasUserBookedEventProvider((userId: user.id, eventId: event.id))
+                .future,
+          ),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return Container(
@@ -1082,8 +1093,11 @@ class EventDetailScreen extends ConsumerWidget {
                   ).then((result) {
                     if (result == true) {
                       // Обновляем данные после создания бронирования
-                      ref.invalidate(hasUserBookedEventProvider(
-                          (userId: user.id, eventId: event.id)));
+                      ref.invalidate(
+                        hasUserBookedEventProvider(
+                          (userId: user.id, eventId: event.id),
+                        ),
+                      );
                     }
                   });
                 },

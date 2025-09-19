@@ -2,35 +2,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/offline_service.dart';
 
 /// Провайдер для статуса подключения к интернету
-final connectivityProvider = StreamProvider<bool>((ref) {
-  return OfflineService.isOnline().asStream();
-});
+final connectivityProvider =
+    StreamProvider<bool>((ref) => OfflineService.isOnline().asStream());
 
 /// Провайдер для статуса офлайн-режима
 final offlineModeProvider =
-    NotifierProvider<OfflineModeNotifier, OfflineModeState>((ref) {
-  return OfflineModeNotifier();
-});
+    NotifierProvider<OfflineModeNotifier, OfflineModeState>(
+        (ref) => OfflineModeNotifier());
 
 /// Провайдер для информации о кэше
-final cacheInfoProvider =
-    NotifierProvider<CacheInfoNotifier, CacheInfoState>((ref) {
-  return CacheInfoNotifier();
-});
+final cacheInfoProvider = NotifierProvider<CacheInfoNotifier, CacheInfoState>(
+    (ref) => CacheInfoNotifier());
 
 /// Провайдер для синхронизации данных
-final syncProvider = NotifierProvider<SyncNotifier, SyncState>((ref) {
-  return SyncNotifier();
-});
+final syncProvider =
+    NotifierProvider<SyncNotifier, SyncState>((ref) => SyncNotifier());
 
 /// Состояние офлайн-режима
 class OfflineModeState {
-  final bool isOfflineMode;
-  final bool isOnline;
-  final DateTime? lastSyncTime;
-  final bool isCacheStale;
-  final String? error;
-
   const OfflineModeState({
     this.isOfflineMode = false,
     this.isOnline = true,
@@ -38,6 +27,11 @@ class OfflineModeState {
     this.isCacheStale = false,
     this.error,
   });
+  final bool isOfflineMode;
+  final bool isOnline;
+  final DateTime? lastSyncTime;
+  final bool isCacheStale;
+  final String? error;
 
   OfflineModeState copyWith({
     bool? isOfflineMode,
@@ -45,15 +39,14 @@ class OfflineModeState {
     DateTime? lastSyncTime,
     bool? isCacheStale,
     String? error,
-  }) {
-    return OfflineModeState(
-      isOfflineMode: isOfflineMode ?? this.isOfflineMode,
-      isOnline: isOnline ?? this.isOnline,
-      lastSyncTime: lastSyncTime ?? this.lastSyncTime,
-      isCacheStale: isCacheStale ?? this.isCacheStale,
-      error: error ?? this.error,
-    );
-  }
+  }) =>
+      OfflineModeState(
+        isOfflineMode: isOfflineMode ?? this.isOfflineMode,
+        isOnline: isOnline ?? this.isOnline,
+        lastSyncTime: lastSyncTime ?? this.lastSyncTime,
+        isCacheStale: isCacheStale ?? this.isCacheStale,
+        error: error ?? this.error,
+      );
 
   /// Получить статус подключения
   String get connectionStatus {
@@ -79,12 +72,6 @@ class OfflineModeState {
 
 /// Состояние информации о кэше
 class CacheInfoState {
-  final bool isLoading;
-  final int cacheSize;
-  final List<String> cacheKeys;
-  final int cacheVersion;
-  final String? error;
-
   const CacheInfoState({
     this.isLoading = false,
     this.cacheSize = 0,
@@ -92,6 +79,11 @@ class CacheInfoState {
     this.cacheVersion = 0,
     this.error,
   });
+  final bool isLoading;
+  final int cacheSize;
+  final List<String> cacheKeys;
+  final int cacheVersion;
+  final String? error;
 
   CacheInfoState copyWith({
     bool? isLoading,
@@ -99,15 +91,14 @@ class CacheInfoState {
     List<String>? cacheKeys,
     int? cacheVersion,
     String? error,
-  }) {
-    return CacheInfoState(
-      isLoading: isLoading ?? this.isLoading,
-      cacheSize: cacheSize ?? this.cacheSize,
-      cacheKeys: cacheKeys ?? this.cacheKeys,
-      cacheVersion: cacheVersion ?? this.cacheVersion,
-      error: error ?? this.error,
-    );
-  }
+  }) =>
+      CacheInfoState(
+        isLoading: isLoading ?? this.isLoading,
+        cacheSize: cacheSize ?? this.cacheSize,
+        cacheKeys: cacheKeys ?? this.cacheKeys,
+        cacheVersion: cacheVersion ?? this.cacheVersion,
+        error: error ?? this.error,
+      );
 
   /// Получить отформатированный размер кэша
   String get formattedCacheSize => OfflineService.formatBytes(cacheSize);
@@ -118,12 +109,6 @@ class CacheInfoState {
 
 /// Состояние синхронизации
 class SyncState {
-  final bool isSyncing;
-  final DateTime? lastSyncTime;
-  final String? error;
-  final int syncProgress;
-  final String? currentOperation;
-
   const SyncState({
     this.isSyncing = false,
     this.lastSyncTime,
@@ -131,6 +116,11 @@ class SyncState {
     this.syncProgress = 0,
     this.currentOperation,
   });
+  final bool isSyncing;
+  final DateTime? lastSyncTime;
+  final String? error;
+  final int syncProgress;
+  final String? currentOperation;
 
   SyncState copyWith({
     bool? isSyncing,
@@ -138,15 +128,14 @@ class SyncState {
     String? error,
     int? syncProgress,
     String? currentOperation,
-  }) {
-    return SyncState(
-      isSyncing: isSyncing ?? this.isSyncing,
-      lastSyncTime: lastSyncTime ?? this.lastSyncTime,
-      error: error ?? this.error,
-      syncProgress: syncProgress ?? this.syncProgress,
-      currentOperation: currentOperation ?? this.currentOperation,
-    );
-  }
+  }) =>
+      SyncState(
+        isSyncing: isSyncing ?? this.isSyncing,
+        lastSyncTime: lastSyncTime ?? this.lastSyncTime,
+        error: error ?? this.error,
+        syncProgress: syncProgress ?? this.syncProgress,
+        currentOperation: currentOperation ?? this.currentOperation,
+      );
 
   /// Получить время последней синхронизации в читаемом виде
   String get formattedLastSyncTime {
@@ -264,7 +253,7 @@ class OfflineModeNotifier extends Notifier<OfflineModeState> {
 
   /// Очистить ошибки
   void clearError() {
-    state = state.copyWith(error: null);
+    state = state.copyWith();
   }
 }
 
@@ -288,7 +277,6 @@ class CacheInfoNotifier extends Notifier<CacheInfoState> {
         cacheSize: cacheSize,
         cacheKeys: cacheKeys,
         cacheVersion: cacheVersion,
-        error: null,
       );
     } catch (e) {
       state = state.copyWith(
@@ -308,7 +296,6 @@ class CacheInfoNotifier extends Notifier<CacheInfoState> {
         isLoading: false,
         cacheSize: 0,
         cacheKeys: [],
-        error: null,
       );
     } catch (e) {
       state = state.copyWith(
@@ -325,7 +312,7 @@ class CacheInfoNotifier extends Notifier<CacheInfoState> {
 
   /// Очистить ошибки
   void clearError() {
-    state = state.copyWith(error: null);
+    state = state.copyWith();
   }
 }
 
@@ -353,7 +340,6 @@ class SyncNotifier extends Notifier<SyncState> {
       isSyncing: true,
       syncProgress: 0,
       currentOperation: 'Подготовка к синхронизации...',
-      error: null,
     );
 
     try {
@@ -405,14 +391,12 @@ class SyncNotifier extends Notifier<SyncState> {
         isSyncing: false,
         lastSyncTime: DateTime.now(),
         syncProgress: 0,
-        currentOperation: null,
       );
     } catch (e) {
       state = state.copyWith(
         isSyncing: false,
         error: e.toString(),
         syncProgress: 0,
-        currentOperation: null,
       );
     }
   }
@@ -422,13 +406,12 @@ class SyncNotifier extends Notifier<SyncState> {
     state = state.copyWith(
       isSyncing: false,
       syncProgress: 0,
-      currentOperation: null,
     );
   }
 
   /// Очистить ошибки
   void clearError() {
-    state = state.copyWith(error: null);
+    state = state.copyWith();
   }
 }
 
@@ -458,6 +441,5 @@ final operationLimitationProvider =
 });
 
 /// Провайдер для рекомендаций офлайн-режима
-final offlineRecommendationsProvider = Provider<List<String>>((ref) {
-  return OfflineUtils.getOfflineRecommendations();
-});
+final offlineRecommendationsProvider =
+    Provider<List<String>>((ref) => OfflineUtils.getOfflineRecommendations());

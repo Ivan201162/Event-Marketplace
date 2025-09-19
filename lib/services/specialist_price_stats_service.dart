@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../models/specialist_price_stats.dart';
+
 import '../models/booking.dart';
+import '../models/specialist_price_stats.dart';
 
 /// Сервис для работы со статистикой цен специалистов
 class SpecialistPriceStatsService {
@@ -40,7 +41,8 @@ class SpecialistPriceStatsService {
 
   /// Получить статистику цен специалиста
   Future<SpecialistPriceAggregate?> getSpecialistPriceStats(
-      String specialistId) async {
+    String specialistId,
+  ) async {
     try {
       final snapshot = await _firestore
           .collection('specialistPriceStats')
@@ -51,8 +53,8 @@ class SpecialistPriceStatsService {
 
       final categoryStats = <String, SpecialistPriceStats>{};
       double totalRevenue = 0;
-      int totalBookings = 0;
-      DateTime lastUpdated = DateTime.now();
+      var totalBookings = 0;
+      var lastUpdated = DateTime.now();
 
       for (final doc in snapshot.docs) {
         final stats = SpecialistPriceStats.fromDocument(doc);
@@ -83,7 +85,9 @@ class SpecialistPriceStatsService {
 
   /// Получить статистику по категории
   Future<SpecialistPriceStats?> getCategoryStats(
-      String specialistId, String categoryId) async {
+    String specialistId,
+    String categoryId,
+  ) async {
     try {
       final snapshot = await _firestore
           .collection('specialistPriceStats')
@@ -101,8 +105,10 @@ class SpecialistPriceStatsService {
   }
 
   /// Получить топ специалистов по средней цене в категории
-  Future<List<SpecialistPriceStats>> getTopSpecialistsByPrice(String categoryId,
-      {int limit = 10}) async {
+  Future<List<SpecialistPriceStats>> getTopSpecialistsByPrice(
+    String categoryId, {
+    int limit = 10,
+  }) async {
     try {
       final snapshot = await _firestore
           .collection('specialistPriceStats')
@@ -111,9 +117,7 @@ class SpecialistPriceStatsService {
           .limit(limit)
           .get();
 
-      return snapshot.docs
-          .map((doc) => SpecialistPriceStats.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(SpecialistPriceStats.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения топ специалистов: $e');
     }
@@ -180,7 +184,7 @@ class SpecialistPriceStatsService {
           .where('status', isEqualTo: BookingStatus.completed.name)
           .get();
 
-      return snapshot.docs.map((doc) => Booking.fromDocument(doc)).toList();
+      return snapshot.docs.map(Booking.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения завершенных бронирований: $e');
     }
@@ -188,7 +192,10 @@ class SpecialistPriceStatsService {
 
   /// Обновить статистику по категории
   Future<void> _updateCategoryStats(
-      String specialistId, String categoryId, List<Booking> bookings) async {
+    String specialistId,
+    String categoryId,
+    List<Booking> bookings,
+  ) async {
     try {
       if (bookings.isEmpty) return;
 
@@ -242,10 +249,12 @@ class SpecialistPriceStatsService {
 
   /// Обновить общую статистику
   Future<void> _updateOverallStats(
-      String specialistId, Map<String, List<Booking>> categoryGroups) async {
+    String specialistId,
+    Map<String, List<Booking>> categoryGroups,
+  ) async {
     try {
       double totalRevenue = 0;
-      int totalBookings = 0;
+      var totalBookings = 0;
       final allPrices = <double>[];
 
       for (final bookings in categoryGroups.values) {
@@ -312,7 +321,9 @@ class SpecialistPriceStatsService {
 
   /// Вычислить месячный тренд
   Future<Map<String, double>> _calculateMonthlyTrend(
-      String specialistId, String categoryId) async {
+    String specialistId,
+    String categoryId,
+  ) async {
     try {
       final now = DateTime.now();
       final sixMonthsAgo = DateTime(now.year, now.month - 6, now.day);

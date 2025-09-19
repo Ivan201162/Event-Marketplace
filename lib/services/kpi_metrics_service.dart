@@ -1,16 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
-import '../models/kpi_metrics.dart';
+
 import '../core/feature_flags.dart';
+import '../models/kpi_metrics.dart';
 
 /// Сервис для управления KPI метриками
 class KPIMetricsService {
-  static final KPIMetricsService _instance = KPIMetricsService._internal();
   factory KPIMetricsService() => _instance;
   KPIMetricsService._internal();
+  static final KPIMetricsService _instance = KPIMetricsService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -228,33 +230,24 @@ class KPIMetricsService {
   }
 
   /// Получение метрики
-  KPIMetric? getMetric(String id) {
-    return _metricCache[id];
-  }
+  KPIMetric? getMetric(String id) => _metricCache[id];
 
   /// Получение всех метрик
-  List<KPIMetric> getAllMetrics() {
-    return _metricCache.values.toList();
-  }
+  List<KPIMetric> getAllMetrics() => _metricCache.values.toList();
 
   /// Получение метрик по категории
-  List<KPIMetric> getMetricsByCategory(MetricCategory category) {
-    return _metricCache.values
-        .where((metric) => metric.category == category)
-        .toList();
-  }
+  List<KPIMetric> getMetricsByCategory(MetricCategory category) =>
+      _metricCache.values
+          .where((metric) => metric.category == category)
+          .toList();
 
   /// Получение метрик по типу
-  List<KPIMetric> getMetricsByType(MetricType type) {
-    return _metricCache.values.where((metric) => metric.type == type).toList();
-  }
+  List<KPIMetric> getMetricsByType(MetricType type) =>
+      _metricCache.values.where((metric) => metric.type == type).toList();
 
   /// Получение метрик по статусу
-  List<KPIMetric> getMetricsByStatus(MetricStatus status) {
-    return _metricCache.values
-        .where((metric) => metric.status == status)
-        .toList();
-  }
+  List<KPIMetric> getMetricsByStatus(MetricStatus status) =>
+      _metricCache.values.where((metric) => metric.status == status).toList();
 
   /// Создание дашборда
   Future<KPIDashboard> createDashboard({
@@ -351,28 +344,19 @@ class KPIMetricsService {
   }
 
   /// Получение дашборда
-  KPIDashboard? getDashboard(String id) {
-    return _dashboardCache[id];
-  }
+  KPIDashboard? getDashboard(String id) => _dashboardCache[id];
 
   /// Получение всех дашбордов
-  List<KPIDashboard> getAllDashboards() {
-    return _dashboardCache.values.toList();
-  }
+  List<KPIDashboard> getAllDashboards() => _dashboardCache.values.toList();
 
   /// Получение публичных дашбордов
-  List<KPIDashboard> getPublicDashboards() {
-    return _dashboardCache.values
-        .where((dashboard) => dashboard.isPublic)
-        .toList();
-  }
+  List<KPIDashboard> getPublicDashboards() =>
+      _dashboardCache.values.where((dashboard) => dashboard.isPublic).toList();
 
   /// Получение дашборда по умолчанию
-  KPIDashboard? getDefaultDashboard() {
-    return _dashboardCache.values
-        .where((dashboard) => dashboard.isDefault)
-        .firstOrNull;
-  }
+  KPIDashboard? getDefaultDashboard() => _dashboardCache.values
+      .where((dashboard) => dashboard.isDefault)
+      .firstOrNull;
 
   /// Создание отчета
   Future<KPIReport> createReport({
@@ -453,7 +437,7 @@ class KPIMetricsService {
       // Обновляем статус на "готов"
       final readyReport = generatingReport.copyWith(
         status: ReportStatus.ready,
-        fileUrl: 'https://example.com/reports/${reportId}.pdf',
+        fileUrl: 'https://example.com/reports/$reportId.pdf',
         updatedAt: DateTime.now(),
         updatedBy: _auth.currentUser?.uid ?? '',
       );
@@ -474,21 +458,14 @@ class KPIMetricsService {
   }
 
   /// Получение отчета
-  KPIReport? getReport(String id) {
-    return _reportCache[id];
-  }
+  KPIReport? getReport(String id) => _reportCache[id];
 
   /// Получение всех отчетов
-  List<KPIReport> getAllReports() {
-    return _reportCache.values.toList();
-  }
+  List<KPIReport> getAllReports() => _reportCache.values.toList();
 
   /// Получение отчетов по статусу
-  List<KPIReport> getReportsByStatus(ReportStatus status) {
-    return _reportCache.values
-        .where((report) => report.status == status)
-        .toList();
-  }
+  List<KPIReport> getReportsByStatus(ReportStatus status) =>
+      _reportCache.values.where((report) => report.status == status).toList();
 
   /// Анализ метрик
   Future<Map<String, dynamic>> analyzeMetrics() async {
@@ -530,7 +507,7 @@ class KPIMetricsService {
 
   /// Группировка метрик по категории
   Map<String, int> _groupMetricsByCategory(List<KPIMetric> metrics) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final metric in metrics) {
       groups[metric.category.value] = (groups[metric.category.value] ?? 0) + 1;
     }
@@ -539,7 +516,7 @@ class KPIMetricsService {
 
   /// Группировка метрик по типу
   Map<String, int> _groupMetricsByType(List<KPIMetric> metrics) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final metric in metrics) {
       groups[metric.type.value] = (groups[metric.type.value] ?? 0) + 1;
     }
@@ -548,7 +525,7 @@ class KPIMetricsService {
 
   /// Группировка метрик по статусу
   Map<String, int> _groupMetricsByStatus(List<KPIMetric> metrics) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final metric in metrics) {
       groups[metric.status.value] = (groups[metric.status.value] ?? 0) + 1;
     }
@@ -557,7 +534,7 @@ class KPIMetricsService {
 
   /// Группировка отчетов по статусу
   Map<String, int> _groupReportsByStatus(List<KPIReport> reports) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final report in reports) {
       groups[report.status.value] = (groups[report.status.value] ?? 0) + 1;
     }
@@ -566,7 +543,7 @@ class KPIMetricsService {
 
   /// Группировка отчетов по типу
   Map<String, int> _groupReportsByType(List<KPIReport> reports) {
-    final Map<String, int> groups = {};
+    final groups = <String, int>{};
     for (final report in reports) {
       groups[report.type.value] = (groups[report.type.value] ?? 0) + 1;
     }
@@ -622,19 +599,19 @@ class KPIMetricsService {
 
     for (final metric in data['metrics']) {
       buffer.writeln(
-          '${metric['name']},${metric['type']},${metric['category']},${metric['value']},${metric['target'] ?? 'N/A'},${metric['status']},${metric['unit']}');
+        '${metric['name']},${metric['type']},${metric['category']},${metric['value']},${metric['target'] ?? 'N/A'},${metric['status']},${metric['unit']}',
+      );
     }
 
     return buffer.toString();
   }
 
   /// Генерация уникального ID
-  String _generateId() {
-    return DateTime.now().millisecondsSinceEpoch.toString() +
-        (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
-            .round()
-            .toString();
-  }
+  String _generateId() =>
+      DateTime.now().millisecondsSinceEpoch.toString() +
+      (1000 + (9999 - 1000) * (DateTime.now().microsecond / 1000000))
+          .round()
+          .toString();
 
   /// Закрытие сервиса
   Future<void> dispose() async {

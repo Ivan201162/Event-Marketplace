@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/recommendation_engine.dart';
+
 import '../models/user.dart';
+import '../services/recommendation_engine.dart';
 
 /// Экран рекомендаций
 class RecommendationsScreen extends ConsumerStatefulWidget {
@@ -37,40 +38,38 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Рекомендации'),
-        bottom: TabBar(
-          controller: _tabController,
-          isScrollable: true,
-          tabs: const [
-            Tab(text: 'Все', icon: Icon(Icons.recommend)),
-            Tab(text: 'Специалисты', icon: Icon(Icons.person)),
-            Tab(text: 'События', icon: Icon(Icons.event)),
-            Tab(text: 'Идеи', icon: Icon(Icons.lightbulb)),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Рекомендации'),
+          bottom: TabBar(
+            controller: _tabController,
+            isScrollable: true,
+            tabs: const [
+              Tab(text: 'Все', icon: Icon(Icons.recommend)),
+              Tab(text: 'Специалисты', icon: Icon(Icons.person)),
+              Tab(text: 'События', icon: Icon(Icons.event)),
+              Tab(text: 'Идеи', icon: Icon(Icons.lightbulb)),
+            ],
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: _refreshRecommendations,
+            ),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: _refreshRecommendations,
-          ),
-        ],
-      ),
-      body: _isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : TabBarView(
-              controller: _tabController,
-              children: [
-                _buildAllRecommendations(),
-                _buildRecommendationsByType(RecommendationType.specialist),
-                _buildRecommendationsByType(RecommendationType.event),
-                _buildRecommendationsByType(RecommendationType.idea),
-              ],
-            ),
-    );
-  }
+        body: _isLoading
+            ? const Center(child: CircularProgressIndicator())
+            : TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildAllRecommendations(),
+                  _buildRecommendationsByType(RecommendationType.specialist),
+                  _buildRecommendationsByType(RecommendationType.event),
+                  _buildRecommendationsByType(RecommendationType.idea),
+                ],
+              ),
+      );
 
   Widget _buildAllRecommendations() {
     if (_recommendations.isEmpty) {
@@ -111,83 +110,80 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
     );
   }
 
-  Widget _buildRecommendationCard(Recommendation recommendation) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: InkWell(
-        onTap: () => _handleRecommendationTap(recommendation),
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Изображение
-              Container(
-                width: 80,
-                height: 80,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  color: Colors.grey[200],
+  Widget _buildRecommendationCard(Recommendation recommendation) => Card(
+        margin: const EdgeInsets.only(bottom: 16),
+        child: InkWell(
+          onTap: () => _handleRecommendationTap(recommendation),
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Изображение
+                Container(
+                  width: 80,
+                  height: 80,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.grey[200],
+                  ),
+                  child: recommendation.imageUrl != null
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
+                          child: Image.network(
+                            recommendation.imageUrl!,
+                            fit: BoxFit.cover,
+                            errorBuilder: (context, error, stackTrace) =>
+                                _buildDefaultIcon(recommendation.type),
+                          ),
+                        )
+                      : _buildDefaultIcon(recommendation.type),
                 ),
-                child: recommendation.imageUrl != null
-                    ? ClipRRect(
-                        borderRadius: BorderRadius.circular(8),
-                        child: Image.network(
-                          recommendation.imageUrl!,
-                          fit: BoxFit.cover,
-                          errorBuilder: (context, error, stackTrace) {
-                            return _buildDefaultIcon(recommendation.type);
-                          },
+                const SizedBox(width: 16),
+                // Контент
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          _buildTypeChip(recommendation.type),
+                          const Spacer(),
+                          _buildScoreIndicator(recommendation.score),
+                        ],
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        recommendation.title,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
-                      )
-                    : _buildDefaultIcon(recommendation.type),
-              ),
-              const SizedBox(width: 16),
-              // Контент
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        _buildTypeChip(recommendation.type),
-                        const Spacer(),
-                        _buildScoreIndicator(recommendation.score),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      recommendation.title,
-                      style: const TextStyle(
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      recommendation.description,
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey[600],
+                      const SizedBox(height: 4),
+                      Text(
+                        recommendation.description,
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey[600],
+                        ),
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
                       ),
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    const SizedBox(height: 8),
-                    if (recommendation.metadata.isNotEmpty)
-                      _buildMetadata(recommendation.metadata),
-                  ],
+                      const SizedBox(height: 8),
+                      if (recommendation.metadata.isNotEmpty)
+                        _buildMetadata(recommendation.metadata),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildDefaultIcon(RecommendationType type) {
     IconData iconData;
@@ -248,35 +244,33 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
     );
   }
 
-  Widget _buildScoreIndicator(double score) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: _getScoreColor(score).withOpacity(0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: _getScoreColor(score)),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(
-            Icons.star,
-            size: 16,
-            color: _getScoreColor(score),
-          ),
-          const SizedBox(width: 4),
-          Text(
-            '${(score * 100).toInt()}%',
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
+  Widget _buildScoreIndicator(double score) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: _getScoreColor(score).withOpacity(0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: _getScoreColor(score)),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(
+              Icons.star,
+              size: 16,
               color: _getScoreColor(score),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+            const SizedBox(width: 4),
+            Text(
+              '${(score * 100).toInt()}%',
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.bold,
+                color: _getScoreColor(score),
+              ),
+            ),
+          ],
+        ),
+      );
 
   Color _getScoreColor(double score) {
     if (score >= 0.8) return Colors.green;
@@ -284,22 +278,22 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
     return Colors.red;
   }
 
-  Widget _buildMetadata(Map<String, dynamic> metadata) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 4,
-      children: metadata.entries.map((entry) {
-        return Chip(
-          label: Text(
-            '${entry.key}: ${entry.value}',
-            style: const TextStyle(fontSize: 10),
-          ),
-          backgroundColor: Colors.grey[100],
-          materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-        );
-      }).toList(),
-    );
-  }
+  Widget _buildMetadata(Map<String, dynamic> metadata) => Wrap(
+        spacing: 8,
+        runSpacing: 4,
+        children: metadata.entries
+            .map(
+              (entry) => Chip(
+                label: Text(
+                  '${entry.key}: ${entry.value}',
+                  style: const TextStyle(fontSize: 10),
+                ),
+                backgroundColor: Colors.grey[100],
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+              ),
+            )
+            .toList(),
+      );
 
   Widget _buildEmptyState({RecommendationType? type}) {
     String message;

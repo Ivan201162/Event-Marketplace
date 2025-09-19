@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/calendar_providers.dart';
-import '../providers/auth_providers.dart';
-import '../widgets/calendar_widget.dart';
+
 import '../models/specialist_schedule.dart';
+import '../providers/auth_providers.dart';
+import '../providers/calendar_providers.dart';
+import '../widgets/calendar_widget.dart';
 
 class SpecialistCalendarScreen extends ConsumerStatefulWidget {
   const SpecialistCalendarScreen({super.key});
@@ -85,7 +86,6 @@ class _SpecialistCalendarScreenState
                 // Календарь
                 CalendarWidget(
                   specialistId: user.id,
-                  showEvents: true,
                   showTimeSlots: true,
                   onDateSelected: (date) {
                     // Обработка выбора даты
@@ -153,13 +153,29 @@ class _SpecialistCalendarScreenState
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     _buildStatItem(
-                        context, 'Всего событий', totalEvents, Colors.blue),
+                      context,
+                      'Всего событий',
+                      totalEvents,
+                      Colors.blue,
+                    ),
                     _buildStatItem(
-                        context, 'Бронирования', bookingEvents, Colors.green),
-                    _buildStatItem(context, 'Недоступность', unavailableEvents,
-                        Colors.red),
+                      context,
+                      'Бронирования',
+                      bookingEvents,
+                      Colors.green,
+                    ),
                     _buildStatItem(
-                        context, 'Отпуск', vacationEvents, Colors.orange),
+                      context,
+                      'Недоступность',
+                      unavailableEvents,
+                      Colors.red,
+                    ),
+                    _buildStatItem(
+                      context,
+                      'Отпуск',
+                      vacationEvents,
+                      Colors.orange,
+                    ),
                   ],
                 );
               },
@@ -174,96 +190,98 @@ class _SpecialistCalendarScreenState
 
   /// Элемент статистики
   Widget _buildStatItem(
-      BuildContext context, String label, int count, Color color) {
-    return Column(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
-            shape: BoxShape.circle,
-          ),
-          child: Text(
-            count.toString(),
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: color,
+    BuildContext context,
+    String label,
+    int count,
+    Color color,
+  ) =>
+      Column(
+        children: [
+          Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: color.withOpacity(0.1),
+              shape: BoxShape.circle,
             ),
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 12,
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
-  }
-
-  /// Карточка быстрых действий
-  Widget _buildQuickActionsCard(BuildContext context, String specialistId) {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Быстрые действия',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () =>
-                        _showAddUnavailableDialog(context, specialistId),
-                    icon: const Icon(Icons.block),
-                    label: const Text('Недоступность'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.red,
-                      foregroundColor: Colors.white,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: ElevatedButton.icon(
-                    onPressed: () =>
-                        _showAddVacationDialog(context, specialistId),
-                    icon: const Icon(Icons.beach_access),
-                    label: const Text('Отпуск'),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.orange,
-                      foregroundColor: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            SizedBox(
-              width: double.infinity,
-              child: OutlinedButton.icon(
-                onPressed: () => _showTestDataDialog(context),
-                icon: const Icon(Icons.science),
-                label: const Text('Добавить тестовые данные'),
+            child: Text(
+              count.toString(),
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: color,
               ),
             ),
-          ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      );
+
+  /// Карточка быстрых действий
+  Widget _buildQuickActionsCard(BuildContext context, String specialistId) =>
+      Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Быстрые действия',
+                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () =>
+                          _showAddUnavailableDialog(context, specialistId),
+                      icon: const Icon(Icons.block),
+                      label: const Text('Недоступность'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () =>
+                          _showAddVacationDialog(context, specialistId),
+                      icon: const Icon(Icons.beach_access),
+                      label: const Text('Отпуск'),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.orange,
+                        foregroundColor: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                child: OutlinedButton.icon(
+                  onPressed: () => _showTestDataDialog(context),
+                  icon: const Icon(Icons.science),
+                  label: const Text('Добавить тестовые данные'),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   /// Показать диалог добавления события
   void _showAddEventDialog(BuildContext context) {
@@ -322,9 +340,11 @@ class _SpecialistCalendarScreenState
                 ),
                 const SizedBox(height: 16),
                 ListTile(
-                  title: Text(startDate == null
-                      ? 'Выберите дату начала'
-                      : 'Начало: ${_formatDate(startDate!)}'),
+                  title: Text(
+                    startDate == null
+                        ? 'Выберите дату начала'
+                        : 'Начало: ${_formatDate(startDate!)}',
+                  ),
                   trailing: const Icon(Icons.calendar_today),
                   onTap: () async {
                     final date = await showDatePicker(
@@ -339,9 +359,11 @@ class _SpecialistCalendarScreenState
                   },
                 ),
                 ListTile(
-                  title: Text(endDate == null
-                      ? 'Выберите дату окончания'
-                      : 'Окончание: ${_formatDate(endDate!)}'),
+                  title: Text(
+                    endDate == null
+                        ? 'Выберите дату окончания'
+                        : 'Окончание: ${_formatDate(endDate!)}',
+                  ),
                   trailing: const Icon(Icons.calendar_today),
                   onTap: () async {
                     final date = await showDatePicker(
@@ -370,7 +392,8 @@ class _SpecialistCalendarScreenState
                     endDate == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                        content: Text('Заполните все обязательные поля')),
+                      content: Text('Заполните все обязательные поля'),
+                    ),
                   );
                   return;
                 }
@@ -443,9 +466,11 @@ class _SpecialistCalendarScreenState
                 ),
                 const SizedBox(height: 16),
                 ListTile(
-                  title: Text(startDate == null
-                      ? 'Выберите дату начала'
-                      : 'Начало: ${_formatDate(startDate!)}'),
+                  title: Text(
+                    startDate == null
+                        ? 'Выберите дату начала'
+                        : 'Начало: ${_formatDate(startDate!)}',
+                  ),
                   trailing: const Icon(Icons.calendar_today),
                   onTap: () async {
                     final date = await showDatePicker(
@@ -460,9 +485,11 @@ class _SpecialistCalendarScreenState
                   },
                 ),
                 ListTile(
-                  title: Text(endDate == null
-                      ? 'Выберите дату окончания'
-                      : 'Окончание: ${_formatDate(endDate!)}'),
+                  title: Text(
+                    endDate == null
+                        ? 'Выберите дату окончания'
+                        : 'Окончание: ${_formatDate(endDate!)}',
+                  ),
                   trailing: const Icon(Icons.calendar_today),
                   onTap: () async {
                     final date = await showDatePicker(
@@ -491,7 +518,8 @@ class _SpecialistCalendarScreenState
                     endDate == null) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                        content: Text('Заполните все обязательные поля')),
+                      content: Text('Заполните все обязательные поля'),
+                    ),
                   );
                   return;
                 }
@@ -568,7 +596,5 @@ class _SpecialistCalendarScreenState
   }
 
   /// Форматировать дату
-  String _formatDate(DateTime date) {
-    return '${date.day}.${date.month}.${date.year}';
-  }
+  String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 }

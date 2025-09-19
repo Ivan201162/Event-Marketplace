@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../core/feature_flags.dart';
 import '../models/wedding_anniversary.dart';
 import '../services/anniversary_service.dart';
-import '../core/feature_flags.dart';
 
 /// Экран управления годовщинами свадьбы
 class AnniversaryScreen extends ConsumerStatefulWidget {
@@ -79,253 +80,244 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
     );
   }
 
-  Widget _buildMyAnniversariesTab() {
-    return StreamBuilder<List<WeddingAnniversary>>(
-      stream: _anniversaryService.getCustomerAnniversaries(
-          'current_user_id'), // TODO: Получить реальный ID
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
+  Widget _buildMyAnniversariesTab() => StreamBuilder<List<WeddingAnniversary>>(
+        stream: _anniversaryService.getCustomerAnniversaries(
+          'current_user_id',
+        ), // TODO: Получить реальный ID
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-        if (snapshot.hasError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.error, size: 64, color: Colors.red),
-                const SizedBox(height: 16),
-                Text('Ошибка загрузки годовщин: ${snapshot.error}'),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () => setState(() {}),
-                  child: const Text('Повторить'),
-                ),
-              ],
-            ),
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text('Ошибка загрузки годовщин: ${snapshot.error}'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => setState(() {}),
+                    child: const Text('Повторить'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          final anniversaries = snapshot.data ?? [];
+          if (anniversaries.isEmpty) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.favorite_outline, size: 64, color: Colors.grey),
+                  SizedBox(height: 16),
+                  Text(
+                    'У вас пока нет годовщин',
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'Добавьте дату свадьбы, чтобы отслеживать годовщины',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: anniversaries.length,
+            itemBuilder: (context, index) {
+              final anniversary = anniversaries[index];
+              return _buildAnniversaryCard(anniversary);
+            },
           );
-        }
+        },
+      );
 
-        final anniversaries = snapshot.data ?? [];
-        if (anniversaries.isEmpty) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.favorite_outline, size: 64, color: Colors.grey),
-                SizedBox(height: 16),
-                Text(
-                  'У вас пока нет годовщин',
-                  style: TextStyle(fontSize: 18, color: Colors.grey),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'Добавьте дату свадьбы, чтобы отслеживать годовщины',
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ],
-            ),
-          );
-        }
-
-        return ListView.builder(
+  Widget _buildAnniversaryCard(WeddingAnniversary anniversary) => Card(
+        margin: const EdgeInsets.only(bottom: 16),
+        child: Padding(
           padding: const EdgeInsets.all(16),
-          itemCount: anniversaries.length,
-          itemBuilder: (context, index) {
-            final anniversary = anniversaries[index];
-            return _buildAnniversaryCard(anniversary);
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildAnniversaryCard(WeddingAnniversary anniversary) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.favorite, color: Colors.pink[600], size: 32),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        anniversary.anniversaryName,
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.favorite, color: Colors.pink[600], size: 32),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          anniversary.anniversaryName,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Text(
+                          '${anniversary.yearsMarried} лет вместе',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  PopupMenuButton<String>(
+                    onSelected: (value) =>
+                        _handleAnniversaryAction(value, anniversary),
+                    itemBuilder: (context) => [
+                      const PopupMenuItem(
+                        value: 'edit',
+                        child: Row(
+                          children: [
+                            Icon(Icons.edit),
+                            SizedBox(width: 8),
+                            Text('Редактировать'),
+                          ],
                         ),
                       ),
-                      Text(
-                        '${anniversary.yearsMarried} лет вместе',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: Colors.grey[600],
+                      const PopupMenuItem(
+                        value: 'delete',
+                        child: Row(
+                          children: [
+                            Icon(Icons.delete, color: Colors.red),
+                            SizedBox(width: 8),
+                            Text('Удалить',
+                                style: TextStyle(color: Colors.red)),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                ),
-                PopupMenuButton<String>(
-                  onSelected: (value) =>
-                      _handleAnniversaryAction(value, anniversary),
-                  itemBuilder: (context) => [
-                    const PopupMenuItem(
-                      value: 'edit',
-                      child: Row(
-                        children: [
-                          Icon(Icons.edit),
-                          SizedBox(width: 8),
-                          Text('Редактировать'),
-                        ],
-                      ),
-                    ),
-                    const PopupMenuItem(
-                      value: 'delete',
-                      child: Row(
-                        children: [
-                          Icon(Icons.delete, color: Colors.red),
-                          SizedBox(width: 8),
-                          Text('Удалить', style: TextStyle(color: Colors.red)),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _buildAnniversaryDetails(anniversary),
-            const SizedBox(height: 16),
-            _buildAnniversaryActions(anniversary),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildAnniversaryDetails(WeddingAnniversary anniversary) {
-    return Column(
-      children: [
-        _buildDetailRow(
-          Icons.calendar_today,
-          'Дата свадьбы',
-          '${anniversary.weddingDate.day}.${anniversary.weddingDate.month}.${anniversary.weddingDate.year}',
-        ),
-        _buildDetailRow(
-          Icons.cake,
-          'Следующая годовщина',
-          '${anniversary.nextAnniversary.day}.${anniversary.nextAnniversary.month}.${anniversary.nextAnniversary.year}',
-        ),
-        _buildDetailRow(
-          Icons.schedule,
-          'Дней до годовщины',
-          '${anniversary.nextAnniversary.difference(DateTime.now()).inDays}',
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDetailRow(IconData icon, String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          Icon(icon, size: 20, color: Colors.grey[600]),
-          const SizedBox(width: 12),
-          Text(
-            '$label: ',
-            style: const TextStyle(fontWeight: FontWeight.w500),
+                ],
+              ),
+              const SizedBox(height: 16),
+              _buildAnniversaryDetails(anniversary),
+              const SizedBox(height: 16),
+              _buildAnniversaryActions(anniversary),
+            ],
           ),
-          Expanded(
-            child: Text(value),
+        ),
+      );
+
+  Widget _buildAnniversaryDetails(WeddingAnniversary anniversary) => Column(
+        children: [
+          _buildDetailRow(
+            Icons.calendar_today,
+            'Дата свадьбы',
+            '${anniversary.weddingDate.day}.${anniversary.weddingDate.month}.${anniversary.weddingDate.year}',
+          ),
+          _buildDetailRow(
+            Icons.cake,
+            'Следующая годовщина',
+            '${anniversary.nextAnniversary.day}.${anniversary.nextAnniversary.month}.${anniversary.nextAnniversary.year}',
+          ),
+          _buildDetailRow(
+            Icons.schedule,
+            'Дней до годовщины',
+            '${anniversary.nextAnniversary.difference(DateTime.now()).inDays}',
           ),
         ],
-      ),
-    );
-  }
+      );
 
-  Widget _buildAnniversaryActions(WeddingAnniversary anniversary) {
-    return Row(
-      children: [
-        Expanded(
-          child: OutlinedButton.icon(
-            onPressed: () => _showRecommendations(anniversary),
-            icon: const Icon(Icons.lightbulb),
-            label: const Text('Рекомендации'),
-          ),
+  Widget _buildDetailRow(IconData icon, String label, String value) => Padding(
+        padding: const EdgeInsets.symmetric(vertical: 4),
+        child: Row(
+          children: [
+            Icon(icon, size: 20, color: Colors.grey[600]),
+            const SizedBox(width: 12),
+            Text(
+              '$label: ',
+              style: const TextStyle(fontWeight: FontWeight.w500),
+            ),
+            Expanded(
+              child: Text(value),
+            ),
+          ],
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: ElevatedButton.icon(
-            onPressed: () => _showSpecialists(anniversary),
-            icon: const Icon(Icons.people),
-            label: const Text('Специалисты'),
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.pink[600],
-              foregroundColor: Colors.white,
+      );
+
+  Widget _buildAnniversaryActions(WeddingAnniversary anniversary) => Row(
+        children: [
+          Expanded(
+            child: OutlinedButton.icon(
+              onPressed: () => _showRecommendations(anniversary),
+              icon: const Icon(Icons.lightbulb),
+              label: const Text('Рекомендации'),
             ),
           ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildUpcomingAnniversariesTab() {
-    return StreamBuilder<List<WeddingAnniversary>>(
-      stream: _anniversaryService.getUpcomingAnniversaries(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (snapshot.hasError) {
-          return Center(
-            child:
-                Text('Ошибка загрузки предстоящих годовщин: ${snapshot.error}'),
-          );
-        }
-
-        final anniversaries = snapshot.data ?? [];
-        if (anniversaries.isEmpty) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.calendar_today, size: 64, color: Colors.grey),
-                SizedBox(height: 16),
-                Text(
-                  'Нет предстоящих годовщин',
-                  style: TextStyle(fontSize: 18, color: Colors.grey),
-                ),
-                SizedBox(height: 8),
-                Text(
-                  'В ближайшие 30 дней годовщин не ожидается',
-                  style: TextStyle(color: Colors.grey),
-                ),
-              ],
+          const SizedBox(width: 12),
+          Expanded(
+            child: ElevatedButton.icon(
+              onPressed: () => _showSpecialists(anniversary),
+              icon: const Icon(Icons.people),
+              label: const Text('Специалисты'),
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.pink[600],
+                foregroundColor: Colors.white,
+              ),
             ),
-          );
-        }
+          ),
+        ],
+      );
 
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: anniversaries.length,
-          itemBuilder: (context, index) {
-            final anniversary = anniversaries[index];
-            return _buildUpcomingAnniversaryCard(anniversary);
-          },
-        );
-      },
-    );
-  }
+  Widget _buildUpcomingAnniversariesTab() =>
+      StreamBuilder<List<WeddingAnniversary>>(
+        stream: _anniversaryService.getUpcomingAnniversaries(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(
+                  'Ошибка загрузки предстоящих годовщин: ${snapshot.error}'),
+            );
+          }
+
+          final anniversaries = snapshot.data ?? [];
+          if (anniversaries.isEmpty) {
+            return const Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.calendar_today, size: 64, color: Colors.grey),
+                  SizedBox(height: 16),
+                  Text(
+                    'Нет предстоящих годовщин',
+                    style: TextStyle(fontSize: 18, color: Colors.grey),
+                  ),
+                  SizedBox(height: 8),
+                  Text(
+                    'В ближайшие 30 дней годовщин не ожидается',
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: anniversaries.length,
+            itemBuilder: (context, index) {
+              final anniversary = anniversaries[index];
+              return _buildUpcomingAnniversaryCard(anniversary);
+            },
+          );
+        },
+      );
 
   Widget _buildUpcomingAnniversaryCard(WeddingAnniversary anniversary) {
     final daysUntil =
@@ -402,99 +394,93 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
     );
   }
 
-  Widget _buildAddAnniversaryTab() {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildHeader(),
-          const SizedBox(height: 24),
-          _buildWeddingDateInput(),
-          const SizedBox(height: 24),
-          _buildPreviewSection(),
-          const SizedBox(height: 24),
-          _buildSubmitButton(),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildHeader() {
-    return Card(
-      child: Padding(
+  Widget _buildAddAnniversaryTab() => SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Icon(Icons.favorite, color: Colors.pink[600], size: 32),
-                const SizedBox(width: 12),
-                const Expanded(
-                  child: Text(
-                    'Добавить годовщину',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
+            _buildHeader(),
+            const SizedBox(height: 24),
+            _buildWeddingDateInput(),
+            const SizedBox(height: 24),
+            _buildPreviewSection(),
+            const SizedBox(height: 24),
+            _buildSubmitButton(),
+          ],
+        ),
+      );
+
+  Widget _buildHeader() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Icon(Icons.favorite, color: Colors.pink[600], size: 32),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Text(
+                      'Добавить годовщину',
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Укажите дату вашей свадьбы, и мы будем отслеживать ваши годовщины, отправлять напоминания и предлагать идеи для празднования',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.grey[600],
+                ],
               ),
-            ),
-          ],
+              const SizedBox(height: 12),
+              Text(
+                'Укажите дату вашей свадьбы, и мы будем отслеживать ваши годовщины, отправлять напоминания и предлагать идеи для празднования',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[600],
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildWeddingDateInput() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Дата свадьбы',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 12),
-            TextField(
-              controller: _dateController,
-              decoration: InputDecoration(
-                hintText: 'Выберите дату свадьбы',
-                border: const OutlineInputBorder(),
-                prefixIcon: const Icon(Icons.calendar_today),
-                suffixIcon: IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () {
-                    _dateController.clear();
-                    setState(() {
-                      _selectedWeddingDate = null;
-                    });
-                  },
+  Widget _buildWeddingDateInput() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Дата свадьбы',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-              readOnly: true,
-              onTap: _selectWeddingDate,
-            ),
-          ],
+              const SizedBox(height: 12),
+              TextField(
+                controller: _dateController,
+                decoration: InputDecoration(
+                  hintText: 'Выберите дату свадьбы',
+                  border: const OutlineInputBorder(),
+                  prefixIcon: const Icon(Icons.calendar_today),
+                  suffixIcon: IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _dateController.clear();
+                      setState(() {
+                        _selectedWeddingDate = null;
+                      });
+                    },
+                  ),
+                ),
+                readOnly: true,
+                onTap: _selectWeddingDate,
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildPreviewSection() {
     if (_selectedWeddingDate == null) {
@@ -567,21 +553,19 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
     );
   }
 
-  Widget _buildSubmitButton() {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton.icon(
-        onPressed: _selectedWeddingDate != null ? _addAnniversary : null,
-        icon: const Icon(Icons.add),
-        label: const Text('Добавить годовщину'),
-        style: ElevatedButton.styleFrom(
-          backgroundColor: Colors.pink[600],
-          foregroundColor: Colors.white,
-          padding: const EdgeInsets.symmetric(vertical: 12),
+  Widget _buildSubmitButton() => SizedBox(
+        width: double.infinity,
+        child: ElevatedButton.icon(
+          onPressed: _selectedWeddingDate != null ? _addAnniversary : null,
+          icon: const Icon(Icons.add),
+          label: const Text('Добавить годовщину'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.pink[600],
+            foregroundColor: Colors.white,
+            padding: const EdgeInsets.symmetric(vertical: 12),
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Future<void> _selectWeddingDate() async {
     final date = await showDatePicker(
@@ -740,7 +724,8 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
     // TODO: Показать специалистов для организации годовщины
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-          content: Text('Функция поиска специалистов будет добавлена')),
+        content: Text('Функция поиска специалистов будет добавлена'),
+      ),
     );
   }
 

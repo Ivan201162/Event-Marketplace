@@ -104,7 +104,9 @@ class AppReviewService {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(_lastFeatureUsedKey, featureName);
       await prefs.setInt(
-          '${_lastFeatureUsedKey}_time', DateTime.now().millisecondsSinceEpoch);
+        '${_lastFeatureUsedKey}_time',
+        DateTime.now().millisecondsSinceEpoch,
+      );
     } catch (e) {
       debugPrint('Ошибка отметки использования функции: $e');
     }
@@ -157,13 +159,10 @@ class AppReviewService {
       );
     } catch (e) {
       debugPrint('Ошибка получения статистики отзывов: $e');
-      return ReviewStats(
+      return const ReviewStats(
         appLaunchCount: 0,
         reviewRequestCount: 0,
-        lastReviewRequest: null,
         isDismissed: false,
-        lastFeatureUsed: null,
-        lastFeatureUsedTime: null,
       );
     }
   }
@@ -187,7 +186,9 @@ class AppReviewService {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setInt(
-          _lastReviewRequestKey, DateTime.now().millisecondsSinceEpoch);
+        _lastReviewRequestKey,
+        DateTime.now().millisecondsSinceEpoch,
+      );
     } catch (e) {
       debugPrint('Ошибка обновления времени запроса: $e');
     }
@@ -293,13 +294,6 @@ class AppReviewService {
 
 /// Статистика отзывов
 class ReviewStats {
-  final int appLaunchCount;
-  final int reviewRequestCount;
-  final DateTime? lastReviewRequest;
-  final bool isDismissed;
-  final String? lastFeatureUsed;
-  final DateTime? lastFeatureUsedTime;
-
   const ReviewStats({
     required this.appLaunchCount,
     required this.reviewRequestCount,
@@ -308,6 +302,12 @@ class ReviewStats {
     this.lastFeatureUsed,
     this.lastFeatureUsedTime,
   });
+  final int appLaunchCount;
+  final int reviewRequestCount;
+  final DateTime? lastReviewRequest;
+  final bool isDismissed;
+  final String? lastFeatureUsed;
+  final DateTime? lastFeatureUsedTime;
 
   /// Получить время последнего запроса в читаемом виде
   String get formattedLastRequest {
@@ -346,14 +346,13 @@ class ReviewStats {
   }
 
   /// Проверить, можно ли запросить отзыв
-  bool get canRequestReview {
-    return appLaunchCount >= AppReviewService._minLaunchesBeforeReview &&
-        reviewRequestCount < AppReviewService._maxReviewRequests &&
-        !isDismissed &&
-        (lastReviewRequest == null ||
-            DateTime.now().difference(lastReviewRequest!).inDays >=
-                AppReviewService._minDaysBetweenReviews);
-  }
+  bool get canRequestReview =>
+      appLaunchCount >= AppReviewService._minLaunchesBeforeReview &&
+      reviewRequestCount < AppReviewService._maxReviewRequests &&
+      !isDismissed &&
+      (lastReviewRequest == null ||
+          DateTime.now().difference(lastReviewRequest!).inDays >=
+              AppReviewService._minDaysBetweenReviews);
 }
 
 /// Время для запроса отзыва

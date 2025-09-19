@@ -1,18 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:event_marketplace_app/services/bank_integration_service.dart';
+import '../services/bank_integration_service.dart';
 
 /// Виджет для выбора банка и оплаты
 class BankPaymentWidget extends ConsumerStatefulWidget {
-  final double amount;
-  final String currency;
-  final String orderId;
-  final String description;
-  final String customerEmail;
-  final String customerPhone;
-  final Function(PaymentInitiationResult)? onPaymentInitiated;
-  final Function(PaymentStatusResult)? onPaymentCompleted;
-
   const BankPaymentWidget({
     super.key,
     required this.amount,
@@ -24,6 +15,14 @@ class BankPaymentWidget extends ConsumerStatefulWidget {
     this.onPaymentInitiated,
     this.onPaymentCompleted,
   });
+  final double amount;
+  final String currency;
+  final String orderId;
+  final String description;
+  final String customerEmail;
+  final String customerPhone;
+  final Function(PaymentInitiationResult)? onPaymentInitiated;
+  final Function(PaymentStatusResult)? onPaymentCompleted;
 
   @override
   ConsumerState<BankPaymentWidget> createState() => _BankPaymentWidgetState();
@@ -62,191 +61,194 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        // Заголовок
-        const Text(
-          'Выберите способ оплаты',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.bold,
+  Widget build(BuildContext context) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Заголовок
+          const Text(
+            'Выберите способ оплаты',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            ),
           ),
-        ),
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        // Сумма к оплате
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: Colors.blue[50],
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: Colors.blue[200]!),
-          ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text(
-                'Сумма к оплате:',
-                style: TextStyle(fontSize: 16),
-              ),
-              Text(
-                '${widget.amount.toStringAsFixed(2)} ${widget.currency}',
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ],
-          ),
-        ),
-
-        if (_bankFee != null) ...[
-          const SizedBox(height: 8),
+          // Сумма к оплате
           Container(
-            padding: const EdgeInsets.all(12),
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.grey[100],
+              color: Colors.blue[50],
               borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.blue[200]!),
             ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  'Комиссия банка (${_bankFee!.feePercentage}%):',
-                  style: const TextStyle(fontSize: 14),
+                const Text(
+                  'Сумма к оплате:',
+                  style: TextStyle(fontSize: 16),
                 ),
                 Text(
-                  '${_bankFee!.totalFee.toStringAsFixed(2)} ${_bankFee!.currency}',
+                  '${widget.amount.toStringAsFixed(2)} ${widget.currency}',
                   style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
               ],
             ),
           ),
-        ],
 
-        const SizedBox(height: 24),
-
-        // Выбор банка
-        const Text(
-          'Выберите банк:',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 12),
-
-        ..._bankService.getSupportedBanks().map((bank) {
-          return _buildBankOption(bank);
-        }),
-
-        const SizedBox(height: 24),
-
-        // Выбор способа оплаты
-        const Text(
-          'Способ оплаты:',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
-        const SizedBox(height: 12),
-
-        _buildPaymentMethodOption(
-            'card', 'Банковская карта', Icons.credit_card),
-        _buildPaymentMethodOption('qr', 'QR-код', Icons.qr_code),
-        _buildPaymentMethodOption(
-            'sbp', 'Система быстрых платежей', Icons.payment),
-
-        const SizedBox(height: 24),
-
-        // Кнопка оплаты
-        SizedBox(
-          width: double.infinity,
-          child: ElevatedButton(
-            onPressed:
-                _isLoading || _selectedBankId == null ? null : _initiatePayment,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.blue[600],
-              foregroundColor: Colors.white,
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
+          if (_bankFee != null) ...[
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey[100],
                 borderRadius: BorderRadius.circular(8),
               ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Комиссия банка (${_bankFee!.feePercentage}%):',
+                    style: const TextStyle(fontSize: 14),
+                  ),
+                  Text(
+                    '${_bankFee!.totalFee.toStringAsFixed(2)} ${_bankFee!.currency}',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
             ),
-            child: _isLoading
-                ? const Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+          ],
+
+          const SizedBox(height: 24),
+
+          // Выбор банка
+          const Text(
+            'Выберите банк:',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          ..._bankService.getSupportedBanks().map(_buildBankOption),
+
+          const SizedBox(height: 24),
+
+          // Выбор способа оплаты
+          const Text(
+            'Способ оплаты:',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 12),
+
+          _buildPaymentMethodOption(
+            'card',
+            'Банковская карта',
+            Icons.credit_card,
+          ),
+          _buildPaymentMethodOption('qr', 'QR-код', Icons.qr_code),
+          _buildPaymentMethodOption(
+            'sbp',
+            'Система быстрых платежей',
+            Icons.payment,
+          ),
+
+          const SizedBox(height: 24),
+
+          // Кнопка оплаты
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _isLoading || _selectedBankId == null
+                  ? null
+                  : _initiatePayment,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue[600],
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: _isLoading
+                  ? const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 2,
+                            valueColor:
+                                AlwaysStoppedAnimation<Color>(Colors.white),
+                          ),
+                        ),
+                        SizedBox(width: 12),
+                        Text('Обработка...'),
+                      ],
+                    )
+                  : const Text(
+                      'Оплатить',
+                      style: TextStyle(fontSize: 16),
+                    ),
+            ),
+          ),
+
+          // Результат инициализации платежа
+          if (_paymentResult != null) ...[
+            const SizedBox(height: 16),
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.green[50],
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.green[200]!),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor:
-                              AlwaysStoppedAnimation<Color>(Colors.white),
+                      Icon(Icons.check_circle, color: Colors.green[600]),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Платеж инициализирован',
+                        style: TextStyle(
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
                         ),
                       ),
-                      SizedBox(width: 12),
-                      Text('Обработка...'),
                     ],
-                  )
-                : const Text(
-                    'Оплатить',
-                    style: TextStyle(fontSize: 16),
                   ),
-          ),
-        ),
-
-        // Результат инициализации платежа
-        if (_paymentResult != null) ...[
-          const SizedBox(height: 16),
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.green[50],
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.green[200]!),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    Icon(Icons.check_circle, color: Colors.green[600]),
-                    const SizedBox(width: 8),
-                    const Text(
-                      'Платеж инициализирован',
-                      style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 16,
-                      ),
+                  const SizedBox(height: 8),
+                  Text('ID платежа: ${_paymentResult!.paymentId}'),
+                  Text('Статус: ${_getStatusText(_paymentResult!.status)}'),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: _openPaymentPage,
+                      child: const Text('Перейти к оплате'),
                     ),
-                  ],
-                ),
-                const SizedBox(height: 8),
-                Text('ID платежа: ${_paymentResult!.paymentId}'),
-                Text('Статус: ${_getStatusText(_paymentResult!.status)}'),
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    onPressed: () => _openPaymentPage(),
-                    child: const Text('Перейти к оплате'),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
+          ],
         ],
-      ],
-    );
-  }
+      );
 
   Widget _buildBankOption(BankInfo bank) {
     final isSelected = _selectedBankId == bank.id;
@@ -337,9 +339,11 @@ class _BankPaymentWidgetState extends ConsumerState<BankPaymentWidget> {
           ),
           child: Row(
             children: [
-              Icon(icon,
-                  size: 24,
-                  color: isSelected ? Colors.blue[600] : Colors.grey[600]),
+              Icon(
+                icon,
+                size: 24,
+                color: isSelected ? Colors.blue[600] : Colors.grey[600],
+              ),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(

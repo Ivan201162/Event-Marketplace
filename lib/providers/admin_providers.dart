@@ -1,19 +1,17 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/admin_service.dart';
-import '../models/user.dart';
-import '../models/event.dart';
-import '../models/booking.dart';
+
 import '../core/feature_flags.dart';
+import '../models/booking.dart';
+import '../models/event.dart';
+import '../models/user.dart';
+import '../services/admin_service.dart';
 
 /// Провайдер сервиса администрирования
-final adminServiceProvider = Provider<AdminService>((ref) {
-  return AdminService();
-});
+final adminServiceProvider = Provider<AdminService>((ref) => AdminService());
 
 /// Провайдер для проверки доступности админ-панели
-final adminPanelAvailableProvider = Provider<bool>((ref) {
-  return FeatureFlags.adminPanelEnabled;
-});
+final adminPanelAvailableProvider =
+    Provider<bool>((ref) => FeatureFlags.adminPanelEnabled);
 
 /// Провайдер для получения всех пользователей
 final allUsersProvider = StreamProvider<List<AppUser>>((ref) {
@@ -122,14 +120,13 @@ class AdminActionStatusNotifier extends Notifier<String> {
 
 /// Провайдер для статуса админ-действий
 final adminActionStatusProvider =
-    NotifierProvider<AdminActionStatusNotifier, String>(() {
-  return AdminActionStatusNotifier();
-});
+    NotifierProvider<AdminActionStatusNotifier, String>(
+        AdminActionStatusNotifier.new);
 
 /// Нотификатор для отслеживания прогресса админ-действий
 class AdminActionProgressNotifier extends Notifier<double> {
   @override
-  double build() => 0.0;
+  double build() => 0;
 
   void setProgress(double progress) {
     state = progress;
@@ -138,9 +135,8 @@ class AdminActionProgressNotifier extends Notifier<double> {
 
 /// Провайдер для отслеживания прогресса админ-действий
 final adminActionProgressProvider =
-    NotifierProvider<AdminActionProgressNotifier, double>(() {
-  return AdminActionProgressNotifier();
-});
+    NotifierProvider<AdminActionProgressNotifier, double>(
+        AdminActionProgressNotifier.new);
 
 /// Нотификатор для последней ошибки админ-действий
 class AdminActionErrorNotifier extends Notifier<String?> {
@@ -154,9 +150,8 @@ class AdminActionErrorNotifier extends Notifier<String?> {
 
 /// Провайдер для последней ошибки админ-действий
 final adminActionErrorProvider =
-    NotifierProvider<AdminActionErrorNotifier, String?>(() {
-  return AdminActionErrorNotifier();
-});
+    NotifierProvider<AdminActionErrorNotifier, String?>(
+        AdminActionErrorNotifier.new);
 
 /// Нотификатор для истории админ-действий
 class AdminActionHistoryNotifier extends Notifier<List<Map<String, dynamic>>> {
@@ -175,9 +170,8 @@ class AdminActionHistoryNotifier extends Notifier<List<Map<String, dynamic>>> {
 /// Провайдер для истории админ-действий
 final adminActionHistoryProvider =
     NotifierProvider<AdminActionHistoryNotifier, List<Map<String, dynamic>>>(
-        () {
-  return AdminActionHistoryNotifier();
-});
+  AdminActionHistoryNotifier.new,
+);
 
 /// Нотификатор для активных админ-действий
 class ActiveAdminActionsNotifier extends Notifier<Set<String>> {
@@ -199,9 +193,8 @@ class ActiveAdminActionsNotifier extends Notifier<Set<String>> {
 
 /// Провайдер для активных админ-действий
 final activeAdminActionsProvider =
-    NotifierProvider<ActiveAdminActionsNotifier, Set<String>>(() {
-  return ActiveAdminActionsNotifier();
-});
+    NotifierProvider<ActiveAdminActionsNotifier, Set<String>>(
+        ActiveAdminActionsNotifier.new);
 
 /// Нотификатор для очереди админ-действий
 class AdminActionQueueNotifier extends Notifier<List<Map<String, dynamic>>> {
@@ -223,9 +216,8 @@ class AdminActionQueueNotifier extends Notifier<List<Map<String, dynamic>>> {
 
 /// Провайдер для очереди админ-действий
 final adminActionQueueProvider =
-    NotifierProvider<AdminActionQueueNotifier, List<Map<String, dynamic>>>(() {
-  return AdminActionQueueNotifier();
-});
+    NotifierProvider<AdminActionQueueNotifier, List<Map<String, dynamic>>>(
+        AdminActionQueueNotifier.new);
 
 /// Провайдер для проверки, идет ли админ-действие
 final isAdminActionInProgressProvider = Provider<bool>((ref) {
@@ -287,9 +279,8 @@ class AdminActionStatsNotifier extends Notifier<Map<String, int>> {
 
 /// Провайдер для статистики админ-действий
 final adminActionStatsProvider =
-    NotifierProvider<AdminActionStatsNotifier, Map<String, int>>(() {
-  return AdminActionStatsNotifier();
-});
+    NotifierProvider<AdminActionStatsNotifier, Map<String, int>>(
+        AdminActionStatsNotifier.new);
 
 /// Нотификатор для последнего админ-действия
 class LastAdminActionNotifier extends Notifier<Map<String, dynamic>?> {
@@ -303,9 +294,8 @@ class LastAdminActionNotifier extends Notifier<Map<String, dynamic>?> {
 
 /// Провайдер для последнего админ-действия
 final lastAdminActionProvider =
-    NotifierProvider<LastAdminActionNotifier, Map<String, dynamic>?>(() {
-  return LastAdminActionNotifier();
-});
+    NotifierProvider<LastAdminActionNotifier, Map<String, dynamic>?>(
+        LastAdminActionNotifier.new);
 
 /// Провайдер для получения информации об админ-панели
 final adminPanelInfoProvider = Provider<Map<String, dynamic>>((ref) {

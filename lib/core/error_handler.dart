@@ -1,20 +1,22 @@
 import 'dart:async';
 import 'dart:developer' as developer;
+
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+
 import 'feature_flags.dart';
 
 /// Глобальный обработчик ошибок для приложения
 class GlobalErrorHandler {
-  static final GlobalErrorHandler _instance = GlobalErrorHandler._internal();
   factory GlobalErrorHandler() => _instance;
   GlobalErrorHandler._internal();
+  static final GlobalErrorHandler _instance = GlobalErrorHandler._internal();
 
   /// Инициализация обработчика ошибок
   static void initialize() {
     // Обработка ошибок Flutter
-    FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.onError = (details) {
       if (kDebugMode) {
         FlutterError.presentError(details);
       } else {
@@ -29,15 +31,16 @@ class GlobalErrorHandler {
     };
 
     // Обработка ошибок в зонах
-    runZonedGuarded(() {
-      // Здесь будет запуск приложения
-    }, (error, stack) {
-      _logError(error, stack);
-    });
+    runZonedGuarded(
+      () {
+        // Здесь будет запуск приложения
+      },
+      _logError,
+    );
   }
 
   /// Логирование ошибки
-  static void _logError(dynamic error, StackTrace? stack) {
+  static void _logError(error, StackTrace? stack) {
     if (FeatureFlags.debugMode) {
       developer.log(
         'Error: $error',
@@ -56,7 +59,7 @@ class GlobalErrorHandler {
   /// Обработка ошибки с показом пользователю
   static void handleError(
     BuildContext context,
-    dynamic error, {
+    error, {
     String? title,
     String? message,
     VoidCallback? onRetry,
@@ -94,7 +97,7 @@ class GlobalErrorHandler {
   }
 
   /// Получение понятного сообщения об ошибке
-  static String _getErrorMessage(dynamic error) {
+  static String _getErrorMessage(error) {
     if (error is String) {
       return error;
     }
@@ -114,14 +117,14 @@ class GlobalErrorHandler {
   }
 
   /// Обработка ошибки без показа диалога
-  static void logError(dynamic error, [StackTrace? stack]) {
+  static void logError(error, [StackTrace? stack]) {
     _logError(error, stack);
   }
 
   /// Обработка ошибки с контекстом
   static void logErrorWithContext(
     String context,
-    dynamic error, [
+    error, [
     StackTrace? stack,
   ]) {
     if (FeatureFlags.debugMode) {
@@ -145,14 +148,13 @@ class GlobalErrorHandler {
 
 /// Виджет для отлова ошибок в UI
 class ErrorBoundary extends StatefulWidget {
-  final Widget child;
-  final Widget Function(BuildContext context, Object error)? errorBuilder;
-
   const ErrorBoundary({
     super.key,
     required this.child,
     this.errorBuilder,
   });
+  final Widget child;
+  final Widget Function(BuildContext context, Object error)? errorBuilder;
 
   @override
   State<ErrorBoundary> createState() => _ErrorBoundaryState();
@@ -175,7 +177,7 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
   @override
   void initState() {
     super.initState();
-    FlutterError.onError = (FlutterErrorDetails details) {
+    FlutterError.onError = (details) {
       setState(() {
         _error = details.exception;
       });
@@ -186,54 +188,51 @@ class _ErrorBoundaryState extends State<ErrorBoundary> {
 
 /// Виджет по умолчанию для отображения ошибок
 class _DefaultErrorWidget extends StatelessWidget {
+  const _DefaultErrorWidget({required this.error});
   final Object error;
 
-  const _DefaultErrorWidget({required this.error});
-
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(
-              Icons.error_outline,
-              size: 64,
-              color: Colors.red,
-            ),
-            const SizedBox(height: 16),
-            const Text(
-              'Что-то пошло не так',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+  Widget build(BuildContext context) => Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(
+                Icons.error_outline,
+                size: 64,
+                color: Colors.red,
               ),
-            ),
-            const SizedBox(height: 8),
-            if (FeatureFlags.debugMode)
-              Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Text(
-                  error.toString(),
-                  style: const TextStyle(fontSize: 12),
-                  textAlign: TextAlign.center,
+              const SizedBox(height: 16),
+              const Text(
+                'Что-то пошло не так',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
-            const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: () {
-                // Перезапуск приложения
-                Navigator.of(context).pushNamedAndRemoveUntil(
-                  '/',
-                  (route) => false,
-                );
-              },
-              child: const Text('Перезапустить'),
-            ),
-          ],
+              const SizedBox(height: 8),
+              if (FeatureFlags.debugMode)
+                Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Text(
+                    error.toString(),
+                    style: const TextStyle(fontSize: 12),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () {
+                  // Перезапуск приложения
+                  Navigator.of(context).pushNamedAndRemoveUntil(
+                    '/',
+                    (route) => false,
+                  );
+                },
+                child: const Text('Перезапустить'),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 }

@@ -1,18 +1,20 @@
 import 'dart:io';
+
+import 'package:audioplayers/audioplayers.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 // import 'dart:typed_data';
 import 'package:record/record.dart';
-import 'package:audioplayers/audioplayers.dart';
-import 'package:permission_handler/permission_handler.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 // import 'package:firebase_storage/firebase_storage.dart';
 import '../models/chat_message_extended.dart';
 
 /// Сервис для работы с голосовыми сообщениями
 class VoiceMessageService {
-  static final VoiceMessageService _instance = VoiceMessageService._internal();
   factory VoiceMessageService() => _instance;
   VoiceMessageService._internal();
+  static final VoiceMessageService _instance = VoiceMessageService._internal();
 
   final AudioRecorder _recorder = AudioRecorder();
   final AudioPlayer _player = AudioPlayer();
@@ -99,7 +101,10 @@ class VoiceMessageService {
 
   /// Загрузить голосовое сообщение в Firebase Storage
   Future<String?> uploadVoiceMessage(
-      String filePath, String chatId, String senderId) async {
+    String filePath,
+    String chatId,
+    String senderId,
+  ) async {
     try {
       final file = File(filePath);
       if (!await file.exists()) return null;

@@ -1,15 +1,9 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
+
+import 'package:flutter/material.dart';
 
 /// Виджет с поддержкой свайпов
 class SwipeableWidget extends StatefulWidget {
-  final Widget child;
-  final Widget? leftAction;
-  final Widget? rightAction;
-  final VoidCallback? onSwipeLeft;
-  final VoidCallback? onSwipeRight;
-  final double threshold;
-
   const SwipeableWidget({
     super.key,
     required this.child,
@@ -19,6 +13,12 @@ class SwipeableWidget extends StatefulWidget {
     this.onSwipeRight,
     this.threshold = 100.0,
   });
+  final Widget child;
+  final Widget? leftAction;
+  final Widget? rightAction;
+  final VoidCallback? onSwipeLeft;
+  final VoidCallback? onSwipeRight;
+  final double threshold;
 
   @override
   State<SwipeableWidget> createState() => _SwipeableWidgetState();
@@ -28,7 +28,7 @@ class _SwipeableWidgetState extends State<SwipeableWidget>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<Offset> _animation;
-  double _dragExtent = 0.0;
+  double _dragExtent = 0;
   bool _isAnimating = false;
 
   @override
@@ -40,11 +40,13 @@ class _SwipeableWidgetState extends State<SwipeableWidget>
     );
     _animation = Tween<Offset>(
       begin: Offset.zero,
-      end: const Offset(1.0, 0.0),
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+      end: const Offset(1, 0),
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
   }
 
   @override
@@ -54,51 +56,47 @@ class _SwipeableWidgetState extends State<SwipeableWidget>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onHorizontalDragStart: _onDragStart,
-      onHorizontalDragUpdate: _onDragUpdate,
-      onHorizontalDragEnd: _onDragEnd,
-      child: Stack(
-        children: [
-          // Фоновые действия
-          if (widget.leftAction != null || widget.rightAction != null)
-            Positioned.fill(
-              child: Row(
-                children: [
-                  if (widget.leftAction != null)
-                    Expanded(
-                      child: Container(
-                        color: Colors.red.withOpacity(0.1),
-                        child: widget.leftAction,
+  Widget build(BuildContext context) => GestureDetector(
+        onHorizontalDragStart: _onDragStart,
+        onHorizontalDragUpdate: _onDragUpdate,
+        onHorizontalDragEnd: _onDragEnd,
+        child: Stack(
+          children: [
+            // Фоновые действия
+            if (widget.leftAction != null || widget.rightAction != null)
+              Positioned.fill(
+                child: Row(
+                  children: [
+                    if (widget.leftAction != null)
+                      Expanded(
+                        child: Container(
+                          color: Colors.red.withOpacity(0.1),
+                          child: widget.leftAction,
+                        ),
                       ),
-                    ),
-                  const Spacer(),
-                  if (widget.rightAction != null)
-                    Expanded(
-                      child: Container(
-                        color: Colors.green.withOpacity(0.1),
-                        child: widget.rightAction,
+                    const Spacer(),
+                    if (widget.rightAction != null)
+                      Expanded(
+                        child: Container(
+                          color: Colors.green.withOpacity(0.1),
+                          child: widget.rightAction,
+                        ),
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
-            ),
 
-          // Основной контент
-          AnimatedBuilder(
-            animation: _animation,
-            builder: (context, child) {
-              return Transform.translate(
+            // Основной контент
+            AnimatedBuilder(
+              animation: _animation,
+              builder: (context, child) => Transform.translate(
                 offset: Offset(_dragExtent, 0),
                 child: widget.child,
-              );
-            },
-          ),
-        ],
-      ),
-    );
-  }
+              ),
+            ),
+          ],
+        ),
+      );
 
   void _onDragStart(DragStartDetails details) {
     _isAnimating = false;
@@ -147,7 +145,7 @@ class _SwipeableWidgetState extends State<SwipeableWidget>
 
   void _animateBack() {
     _isAnimating = true;
-    _controller.animateTo(0.0).then((_) {
+    _controller.animateTo(0).then((_) {
       _reset();
     });
   }
@@ -162,12 +160,6 @@ class _SwipeableWidgetState extends State<SwipeableWidget>
 
 /// Виджет с поддержкой долгого нажатия
 class LongPressWidget extends StatefulWidget {
-  final Widget child;
-  final VoidCallback? onLongPress;
-  final VoidCallback? onLongPressStart;
-  final VoidCallback? onLongPressEnd;
-  final Duration duration;
-
   const LongPressWidget({
     super.key,
     required this.child,
@@ -176,6 +168,11 @@ class LongPressWidget extends StatefulWidget {
     this.onLongPressEnd,
     this.duration = const Duration(milliseconds: 500),
   });
+  final Widget child;
+  final VoidCallback? onLongPress;
+  final VoidCallback? onLongPressStart;
+  final VoidCallback? onLongPressEnd;
+  final Duration duration;
 
   @override
   State<LongPressWidget> createState() => _LongPressWidgetState();
@@ -195,12 +192,14 @@ class _LongPressWidgetState extends State<LongPressWidget>
       vsync: this,
     );
     _scaleAnimation = Tween<double>(
-      begin: 1.0,
+      begin: 1,
       end: 0.95,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: Curves.easeInOut,
-    ));
+    ).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: Curves.easeInOut,
+      ),
+    );
   }
 
   @override
@@ -210,22 +209,18 @@ class _LongPressWidgetState extends State<LongPressWidget>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTapDown: _onTapDown,
-      onTapUp: _onTapUp,
-      onTapCancel: _onTapCancel,
-      child: AnimatedBuilder(
-        animation: _scaleAnimation,
-        builder: (context, child) {
-          return Transform.scale(
+  Widget build(BuildContext context) => GestureDetector(
+        onTapDown: _onTapDown,
+        onTapUp: _onTapUp,
+        onTapCancel: _onTapCancel,
+        child: AnimatedBuilder(
+          animation: _scaleAnimation,
+          builder: (context, child) => Transform.scale(
             scale: _scaleAnimation.value,
             child: widget.child,
-          );
-        },
-      ),
-    );
-  }
+          ),
+        ),
+      );
 
   void _onTapDown(TapDownDetails details) {
     _isLongPressing = true;
@@ -256,12 +251,6 @@ class _LongPressWidgetState extends State<LongPressWidget>
 
 /// Виджет с поддержкой пинча (зума)
 class PinchZoomWidget extends StatefulWidget {
-  final Widget child;
-  final double minScale;
-  final double maxScale;
-  final VoidCallback? onScaleStart;
-  final VoidCallback? onScaleEnd;
-
   const PinchZoomWidget({
     super.key,
     required this.child,
@@ -270,31 +259,34 @@ class PinchZoomWidget extends StatefulWidget {
     this.onScaleStart,
     this.onScaleEnd,
   });
+  final Widget child;
+  final double minScale;
+  final double maxScale;
+  final VoidCallback? onScaleStart;
+  final VoidCallback? onScaleEnd;
 
   @override
   State<PinchZoomWidget> createState() => _PinchZoomWidgetState();
 }
 
 class _PinchZoomWidgetState extends State<PinchZoomWidget> {
-  double _scale = 1.0;
-  double _previousScale = 1.0;
+  double _scale = 1;
+  double _previousScale = 1;
   Offset _offset = Offset.zero;
   Offset _previousOffset = Offset.zero;
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onScaleStart: _onScaleStart,
-      onScaleUpdate: _onScaleUpdate,
-      onScaleEnd: _onScaleEnd,
-      child: Transform(
-        transform: Matrix4.identity()
-          ..translate(_offset.dx, _offset.dy)
-          ..scale(_scale),
-        child: widget.child,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => GestureDetector(
+        onScaleStart: _onScaleStart,
+        onScaleUpdate: _onScaleUpdate,
+        onScaleEnd: _onScaleEnd,
+        child: Transform(
+          transform: Matrix4.identity()
+            ..translate(_offset.dx, _offset.dy)
+            ..scale(_scale),
+          child: widget.child,
+        ),
+      );
 
   void _onScaleStart(ScaleStartDetails details) {
     _previousScale = _scale;
@@ -320,11 +312,6 @@ class _PinchZoomWidgetState extends State<PinchZoomWidget> {
 
 /// Виджет с поддержкой двойного нажатия
 class DoubleTapWidget extends StatefulWidget {
-  final Widget child;
-  final VoidCallback? onDoubleTap;
-  final VoidCallback? onSingleTap;
-  final Duration doubleTapTimeout;
-
   const DoubleTapWidget({
     super.key,
     required this.child,
@@ -332,6 +319,10 @@ class DoubleTapWidget extends StatefulWidget {
     this.onSingleTap,
     this.doubleTapTimeout = const Duration(milliseconds: 300),
   });
+  final Widget child;
+  final VoidCallback? onDoubleTap;
+  final VoidCallback? onSingleTap;
+  final Duration doubleTapTimeout;
 
   @override
   State<DoubleTapWidget> createState() => _DoubleTapWidgetState();
@@ -348,12 +339,10 @@ class _DoubleTapWidgetState extends State<DoubleTapWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: _onTap,
-      child: widget.child,
-    );
-  }
+  Widget build(BuildContext context) => GestureDetector(
+        onTap: _onTap,
+        child: widget.child,
+      );
 
   void _onTap() {
     _tapCount++;
@@ -375,12 +364,6 @@ class _DoubleTapWidgetState extends State<DoubleTapWidget> {
 
 /// Виджет с поддержкой перетаскивания
 class DraggableWidget extends StatefulWidget {
-  final Widget child;
-  final Widget? feedback;
-  final VoidCallback? onDragStarted;
-  final VoidCallback? onDragEnd;
-  final bool canDrag;
-
   const DraggableWidget({
     super.key,
     required this.child,
@@ -389,6 +372,11 @@ class DraggableWidget extends StatefulWidget {
     this.onDragEnd,
     this.canDrag = true,
   });
+  final Widget child;
+  final Widget? feedback;
+  final VoidCallback? onDragStarted;
+  final VoidCallback? onDragEnd;
+  final bool canDrag;
 
   @override
   State<DraggableWidget> createState() => _DraggableWidgetState();
@@ -435,13 +423,6 @@ class _DraggableWidgetState extends State<DraggableWidget> {
 
 /// Виджет с поддержкой сброса
 class DismissibleWidget extends StatelessWidget {
-  final Widget child;
-  final String key;
-  final VoidCallback? onDismissed;
-  final Widget? background;
-  final Widget? secondaryBackground;
-  final DismissDirection direction;
-
   const DismissibleWidget({
     super.key,
     required this.child,
@@ -451,47 +432,41 @@ class DismissibleWidget extends StatelessWidget {
     this.secondaryBackground,
     this.direction = DismissDirection.horizontal,
   });
+  final Widget child;
+  @override
+  final String key;
+  final VoidCallback? onDismissed;
+  final Widget? background;
+  final Widget? secondaryBackground;
+  final DismissDirection direction;
 
   @override
-  Widget build(BuildContext context) {
-    return Dismissible(
-      key: Key(key),
-      direction: direction,
-      background: background ??
-          Container(
-            color: Colors.red,
-            alignment: Alignment.centerLeft,
-            padding: const EdgeInsets.only(left: 20),
-            child: const Icon(Icons.delete, color: Colors.white),
-          ),
-      secondaryBackground: secondaryBackground ??
-          Container(
-            color: Colors.green,
-            alignment: Alignment.centerRight,
-            padding: const EdgeInsets.only(right: 20),
-            child: const Icon(Icons.archive, color: Colors.white),
-          ),
-      onDismissed: (direction) {
-        onDismissed?.call();
-      },
-      child: child,
-    );
-  }
+  Widget build(BuildContext context) => Dismissible(
+        key: Key(key),
+        direction: direction,
+        background: background ??
+            Container(
+              color: Colors.red,
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.only(left: 20),
+              child: const Icon(Icons.delete, color: Colors.white),
+            ),
+        secondaryBackground: secondaryBackground ??
+            Container(
+              color: Colors.green,
+              alignment: Alignment.centerRight,
+              padding: const EdgeInsets.only(right: 20),
+              child: const Icon(Icons.archive, color: Colors.white),
+            ),
+        onDismissed: (direction) {
+          onDismissed?.call();
+        },
+        child: child,
+      );
 }
 
 /// Виджет с поддержкой жестов
 class GestureDetectorWidget extends StatelessWidget {
-  final Widget child;
-  final VoidCallback? onTap;
-  final VoidCallback? onDoubleTap;
-  final VoidCallback? onLongPress;
-  final VoidCallback? onPanStart;
-  final VoidCallback? onPanUpdate;
-  final VoidCallback? onPanEnd;
-  final VoidCallback? onScaleStart;
-  final VoidCallback? onScaleUpdate;
-  final VoidCallback? onScaleEnd;
-
   const GestureDetectorWidget({
     super.key,
     required this.child,
@@ -505,20 +480,28 @@ class GestureDetectorWidget extends StatelessWidget {
     this.onScaleUpdate,
     this.onScaleEnd,
   });
+  final Widget child;
+  final VoidCallback? onTap;
+  final VoidCallback? onDoubleTap;
+  final VoidCallback? onLongPress;
+  final VoidCallback? onPanStart;
+  final VoidCallback? onPanUpdate;
+  final VoidCallback? onPanEnd;
+  final VoidCallback? onScaleStart;
+  final VoidCallback? onScaleUpdate;
+  final VoidCallback? onScaleEnd;
 
   @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      onDoubleTap: onDoubleTap,
-      onLongPress: onLongPress,
-      onPanStart: onPanStart != null ? (_) => onPanStart!() : null,
-      onPanUpdate: onPanUpdate != null ? (_) => onPanUpdate!() : null,
-      onPanEnd: onPanEnd != null ? (_) => onPanEnd!() : null,
-      onScaleStart: onScaleStart != null ? (_) => onScaleStart!() : null,
-      onScaleUpdate: onScaleUpdate != null ? (_) => onScaleUpdate!() : null,
-      onScaleEnd: onScaleEnd != null ? (_) => onScaleEnd!() : null,
-      child: child,
-    );
-  }
+  Widget build(BuildContext context) => GestureDetector(
+        onTap: onTap,
+        onDoubleTap: onDoubleTap,
+        onLongPress: onLongPress,
+        onPanStart: onPanStart != null ? (_) => onPanStart!() : null,
+        onPanUpdate: onPanUpdate != null ? (_) => onPanUpdate!() : null,
+        onPanEnd: onPanEnd != null ? (_) => onPanEnd!() : null,
+        onScaleStart: onScaleStart != null ? (_) => onScaleStart!() : null,
+        onScaleUpdate: onScaleUpdate != null ? (_) => onScaleUpdate!() : null,
+        onScaleEnd: onScaleEnd != null ? (_) => onScaleEnd!() : null,
+        child: child,
+      );
 }

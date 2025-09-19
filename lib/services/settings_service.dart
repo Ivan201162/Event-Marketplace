@@ -1,19 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:flutter/foundation.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
+
 import '../models/app_settings.dart';
 
 /// Сервис управления настройками и конфигурацией
 class SettingsService {
+  factory SettingsService() => _instance;
+  SettingsService._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
 
   static final SettingsService _instance = SettingsService._internal();
-  factory SettingsService() => _instance;
-  SettingsService._internal();
 
   final Map<String, AppSettings> _settingsCache = {};
   final Map<String, AppConfiguration> _configurationsCache = {};
@@ -280,8 +282,10 @@ class SettingsService {
   }
 
   /// Активировать конфигурацию
-  Future<void> activateConfiguration(String configId,
-      {String? activatedBy}) async {
+  Future<void> activateConfiguration(
+    String configId, {
+    String? activatedBy,
+  }) async {
     try {
       // Деактивируем все конфигурации того же типа
       final configuration = _configurationsCache[configId];
@@ -291,7 +295,8 @@ class SettingsService {
 
       final sameTypeConfigs = _configurationsCache.values
           .where(
-              (config) => config.type == configuration.type && config.isActive)
+            (config) => config.type == configuration.type && config.isActive,
+          )
           .toList();
 
       for (final config in sameTypeConfigs) {
@@ -333,22 +338,22 @@ class SettingsService {
   }
 
   /// Получить активную конфигурацию по типу
-  AppConfiguration? getActiveConfiguration(ConfigurationType type) {
-    return _configurationsCache.values
-        .where((config) => config.type == type && config.isActive)
-        .firstOrNull;
-  }
+  AppConfiguration? getActiveConfiguration(ConfigurationType type) =>
+      _configurationsCache.values
+          .where((config) => config.type == type && config.isActive)
+          .firstOrNull;
 
   /// Получить конфигурации по типу
-  List<AppConfiguration> getConfigurationsByType(ConfigurationType type) {
-    return _configurationsCache.values
-        .where((config) => config.type == type)
-        .toList();
-  }
+  List<AppConfiguration> getConfigurationsByType(ConfigurationType type) =>
+      _configurationsCache.values
+          .where((config) => config.type == type)
+          .toList();
 
   /// Получить историю изменений настроек
-  Future<List<SettingsHistory>> getSettingsHistory(String settingKey,
-      {int limit = 50}) async {
+  Future<List<SettingsHistory>> getSettingsHistory(
+    String settingKey, {
+    int limit = 50,
+  }) async {
     try {
       final snapshot = await _firestore
           .collection('settingsHistory')
@@ -357,9 +362,7 @@ class SettingsService {
           .limit(limit)
           .get();
 
-      return snapshot.docs
-          .map((doc) => SettingsHistory.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(SettingsHistory.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка получения истории настроек: $e');
@@ -414,8 +417,9 @@ class SettingsService {
         }
 
         final settingType = SettingType.values.firstWhere(
-            (e) => e.toString().split('.').last == data['type'],
-            orElse: () => SettingType.string);
+          (e) => e.toString().split('.').last == data['type'],
+          orElse: () => SettingType.string,
+        );
 
         await setSetting(
           key,
@@ -472,12 +476,12 @@ class SettingsService {
   }
 
   /// Определить тип значения
-  SettingType _inferType(dynamic value) {
+  SettingType _inferType(value) {
     if (value is String) {
       if (RegExp(r'^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$').hasMatch(value)) {
         return SettingType.color;
       }
-      if (RegExp(r'^https?://').hasMatch(value)) {
+      if (RegExp('^https?://').hasMatch(value)) {
         return SettingType.url;
       }
       if (RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value)) {
@@ -494,7 +498,7 @@ class SettingsService {
   }
 
   /// Сохранить настройку локально
-  Future<void> _saveLocalSetting(String key, dynamic value) async {
+  Future<void> _saveLocalSetting(String key, value) async {
     try {
       if (_prefs == null) return;
 
@@ -564,8 +568,8 @@ class SettingsService {
   Future<void> _logSettingChange({
     required String settingId,
     required String settingKey,
-    required dynamic oldValue,
-    required dynamic newValue,
+    required oldValue,
+    required newValue,
     required String changedBy,
     String? reason,
   }) async {
@@ -635,14 +639,11 @@ class SettingsService {
   }
 
   /// Получить все настройки
-  List<AppSettings> getAllSettings() {
-    return _settingsCache.values.toList();
-  }
+  List<AppSettings> getAllSettings() => _settingsCache.values.toList();
 
   /// Получить все конфигурации
-  List<AppConfiguration> getAllConfigurations() {
-    return _configurationsCache.values.toList();
-  }
+  List<AppConfiguration> getAllConfigurations() =>
+      _configurationsCache.values.toList();
 
   /// Закрыть сервис
   void dispose() {

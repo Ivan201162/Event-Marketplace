@@ -1,7 +1,8 @@
 import 'dart:developer' as developer;
-import 'package:flutter/foundation.dart';
+
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
+import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 /// Уровни логирования
@@ -40,9 +41,8 @@ class LoggingService {
             .setCrashlyticsCollectionEnabled(true);
 
         // Устанавливаем обработчик ошибок Flutter
-        FlutterError.onError = (FlutterErrorDetails details) {
-          FirebaseCrashlytics.instance.recordFlutterFatalError(details);
-        };
+        FlutterError.onError =
+            FirebaseCrashlytics.instance.recordFlutterFatalError;
 
         // Устанавливаем обработчик ошибок платформы
         PlatformDispatcher.instance.onError = (error, stack) {
@@ -118,19 +118,25 @@ class LoggingService {
   }
 
   /// Логирование отладочной информации
-  static void debug(String message,
-      {String? tag, Map<String, dynamic>? extra}) {
+  static void debug(
+    String message, {
+    String? tag,
+    Map<String, dynamic>? extra,
+  }) {
     log(message, level: LogLevel.debug, tag: tag, extra: extra);
   }
 
   /// Логирование информационных сообщений
   static void info(String message, {String? tag, Map<String, dynamic>? extra}) {
-    log(message, level: LogLevel.info, tag: tag, extra: extra);
+    log(message, tag: tag, extra: extra);
   }
 
   /// Логирование предупреждений
-  static void warning(String message,
-      {String? tag, Map<String, dynamic>? extra}) {
+  static void warning(
+    String message, {
+    String? tag,
+    Map<String, dynamic>? extra,
+  }) {
     log(message, level: LogLevel.warning, tag: tag, extra: extra);
   }
 
@@ -311,7 +317,7 @@ class LoggingService {
   }
 
   /// Установить пользовательские данные для Crashlytics
-  static Future<void> setCustomKey(String key, dynamic value) async {
+  static Future<void> setCustomKey(String key, value) async {
     if (_enableCrashlytics) {
       await FirebaseCrashlytics.instance.setCustomKey(key, value);
     }
@@ -348,7 +354,9 @@ class LoggingService {
 
   /// Создать HTTP метрику
   static Future<HttpMetric> startHttpMetric(
-      String url, HttpMethod method) async {
+    String url,
+    HttpMethod method,
+  ) async {
     if (_enablePerformance) {
       return FirebasePerformance.instance.newHttpMetric(url, method);
     }

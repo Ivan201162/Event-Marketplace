@@ -1,15 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_test/flutter_test.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:event_marketplace_app/screens/home_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 void main() {
   group('HomeScreen', () {
-    testWidgets('should display home screen title',
-        (WidgetTester tester) async {
+    testWidgets('should display home screen title', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -22,10 +21,10 @@ void main() {
       expect(find.text('Главная'), findsOneWidget);
     });
 
-    testWidgets('should display welcome message', (WidgetTester tester) async {
+    testWidgets('should display welcome message', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -36,14 +35,15 @@ void main() {
 
       // Assert
       expect(
-          find.text('Добро пожаловать в Event Marketplace!'), findsOneWidget);
+        find.text('Добро пожаловать в Event Marketplace!'),
+        findsOneWidget,
+      );
     });
 
-    testWidgets('should display featured specialists section',
-        (WidgetTester tester) async {
+    testWidgets('should display featured specialists section', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -56,11 +56,10 @@ void main() {
       expect(find.text('Рекомендуемые специалисты'), findsOneWidget);
     });
 
-    testWidgets('should display recent bookings section',
-        (WidgetTester tester) async {
+    testWidgets('should display recent bookings section', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -73,11 +72,10 @@ void main() {
       expect(find.text('Последние заявки'), findsOneWidget);
     });
 
-    testWidgets('should display quick actions section',
-        (WidgetTester tester) async {
+    testWidgets('should display quick actions section', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -90,10 +88,10 @@ void main() {
       expect(find.text('Быстрые действия'), findsOneWidget);
     });
 
-    testWidgets('should display search button', (WidgetTester tester) async {
+    testWidgets('should display search button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -106,11 +104,10 @@ void main() {
       expect(find.text('Поиск специалистов'), findsOneWidget);
     });
 
-    testWidgets('should display my bookings button',
-        (WidgetTester tester) async {
+    testWidgets('should display my bookings button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -123,10 +120,10 @@ void main() {
       expect(find.text('Мои заявки'), findsOneWidget);
     });
 
-    testWidgets('should display calendar button', (WidgetTester tester) async {
+    testWidgets('should display calendar button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -139,10 +136,10 @@ void main() {
       expect(find.text('Календарь'), findsOneWidget);
     });
 
-    testWidgets('should display payments button', (WidgetTester tester) async {
+    testWidgets('should display payments button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -155,11 +152,10 @@ void main() {
       expect(find.text('Платежи'), findsOneWidget);
     });
 
-    testWidgets('should display notifications button',
-        (WidgetTester tester) async {
+    testWidgets('should display notifications button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -172,10 +168,10 @@ void main() {
       expect(find.text('Уведомления'), findsOneWidget);
     });
 
-    testWidgets('should display reviews button', (WidgetTester tester) async {
+    testWidgets('should display reviews button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -188,10 +184,10 @@ void main() {
       expect(find.text('Отзывы'), findsOneWidget);
     });
 
-    testWidgets('should display analytics button', (WidgetTester tester) async {
+    testWidgets('should display analytics button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -204,10 +200,10 @@ void main() {
       expect(find.text('Аналитика'), findsOneWidget);
     });
 
-    testWidgets('should display profile button', (WidgetTester tester) async {
+    testWidgets('should display profile button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -220,10 +216,10 @@ void main() {
       expect(find.text('Профиль'), findsOneWidget);
     });
 
-    testWidgets('should display settings button', (WidgetTester tester) async {
+    testWidgets('should display settings button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -236,10 +232,10 @@ void main() {
       expect(find.text('Настройки'), findsOneWidget);
     });
 
-    testWidgets('should display help button', (WidgetTester tester) async {
+    testWidgets('should display help button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -252,10 +248,10 @@ void main() {
       expect(find.text('Помощь'), findsOneWidget);
     });
 
-    testWidgets('should display about button', (WidgetTester tester) async {
+    testWidgets('should display about button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -268,10 +264,10 @@ void main() {
       expect(find.text('О приложении'), findsOneWidget);
     });
 
-    testWidgets('should display contact button', (WidgetTester tester) async {
+    testWidgets('should display contact button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -284,10 +280,10 @@ void main() {
       expect(find.text('Контакты'), findsOneWidget);
     });
 
-    testWidgets('should display privacy button', (WidgetTester tester) async {
+    testWidgets('should display privacy button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -300,10 +296,10 @@ void main() {
       expect(find.text('Конфиденциальность'), findsOneWidget);
     });
 
-    testWidgets('should display terms button', (WidgetTester tester) async {
+    testWidgets('should display terms button', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),
@@ -316,10 +312,10 @@ void main() {
       expect(find.text('Условия использования'), findsOneWidget);
     });
 
-    testWidgets('should display version info', (WidgetTester tester) async {
+    testWidgets('should display version info', (tester) async {
       // Arrange & Act
       await tester.pumpWidget(
-        ProviderScope(
+        const ProviderScope(
           child: MaterialApp(
             home: HomeScreen(),
           ),

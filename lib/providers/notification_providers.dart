@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/notification_service.dart';
+
 import '../models/notification.dart' as app_notification;
+import '../services/notification_service.dart';
 
 /// Провайдер для сервиса уведомлений
-final notificationServiceProvider = Provider<NotificationService>((ref) {
-  return NotificationService();
-});
+final notificationServiceProvider =
+    Provider<NotificationService>((ref) => NotificationService());
 
 /// Провайдер для списка уведомлений пользователя
 final userNotificationsProvider =
@@ -16,15 +16,15 @@ final userNotificationsProvider =
 });
 
 /// Провайдер для количества непрочитанных уведомлений
-final unreadNotificationsCountProvider = StreamProvider<int>((ref) {
-  return ref.watch(userNotificationsProvider).when(
+final unreadNotificationsCountProvider = StreamProvider<int>(
+  (ref) => ref.watch(userNotificationsProvider).when(
         data: (notifications) => Stream.value(
           notifications.where((n) => !n.isRead).length,
         ),
         loading: () => Stream.value(0),
         error: (_, __) => Stream.value(0),
-      );
-});
+      ),
+);
 
 /// Провайдер для FCM токена
 final fcmTokenProvider = FutureProvider<String?>((ref) async {
@@ -34,19 +34,11 @@ final fcmTokenProvider = FutureProvider<String?>((ref) async {
 
 /// Провайдер для управления настройками уведомлений
 final notificationSettingsProvider =
-    NotifierProvider<NotificationSettingsNotifier, NotificationSettings>(() {
-  return NotificationSettingsNotifier();
-});
+    NotifierProvider<NotificationSettingsNotifier, NotificationSettings>(
+        NotificationSettingsNotifier.new);
 
 /// Настройки уведомлений
 class NotificationSettings {
-  final bool reviewNotifications;
-  final bool bookingNotifications;
-  final bool paymentNotifications;
-  final bool reminderNotifications;
-  final bool marketingNotifications;
-  final int reminderHoursBefore;
-
   const NotificationSettings({
     this.reviewNotifications = true,
     this.bookingNotifications = true,
@@ -56,6 +48,22 @@ class NotificationSettings {
     this.reminderHoursBefore = 24,
   });
 
+  factory NotificationSettings.fromMap(Map<String, dynamic> map) =>
+      NotificationSettings(
+        reviewNotifications: map['reviewNotifications'] ?? true,
+        bookingNotifications: map['bookingNotifications'] ?? true,
+        paymentNotifications: map['paymentNotifications'] ?? true,
+        reminderNotifications: map['reminderNotifications'] ?? true,
+        marketingNotifications: map['marketingNotifications'] ?? false,
+        reminderHoursBefore: map['reminderHoursBefore'] ?? 24,
+      );
+  final bool reviewNotifications;
+  final bool bookingNotifications;
+  final bool paymentNotifications;
+  final bool reminderNotifications;
+  final bool marketingNotifications;
+  final int reminderHoursBefore;
+
   NotificationSettings copyWith({
     bool? reviewNotifications,
     bool? bookingNotifications,
@@ -63,40 +71,26 @@ class NotificationSettings {
     bool? reminderNotifications,
     bool? marketingNotifications,
     int? reminderHoursBefore,
-  }) {
-    return NotificationSettings(
-      reviewNotifications: reviewNotifications ?? this.reviewNotifications,
-      bookingNotifications: bookingNotifications ?? this.bookingNotifications,
-      paymentNotifications: paymentNotifications ?? this.paymentNotifications,
-      reminderNotifications:
-          reminderNotifications ?? this.reminderNotifications,
-      marketingNotifications:
-          marketingNotifications ?? this.marketingNotifications,
-      reminderHoursBefore: reminderHoursBefore ?? this.reminderHoursBefore,
-    );
-  }
+  }) =>
+      NotificationSettings(
+        reviewNotifications: reviewNotifications ?? this.reviewNotifications,
+        bookingNotifications: bookingNotifications ?? this.bookingNotifications,
+        paymentNotifications: paymentNotifications ?? this.paymentNotifications,
+        reminderNotifications:
+            reminderNotifications ?? this.reminderNotifications,
+        marketingNotifications:
+            marketingNotifications ?? this.marketingNotifications,
+        reminderHoursBefore: reminderHoursBefore ?? this.reminderHoursBefore,
+      );
 
-  Map<String, dynamic> toMap() {
-    return {
-      'reviewNotifications': reviewNotifications,
-      'bookingNotifications': bookingNotifications,
-      'paymentNotifications': paymentNotifications,
-      'reminderNotifications': reminderNotifications,
-      'marketingNotifications': marketingNotifications,
-      'reminderHoursBefore': reminderHoursBefore,
-    };
-  }
-
-  factory NotificationSettings.fromMap(Map<String, dynamic> map) {
-    return NotificationSettings(
-      reviewNotifications: map['reviewNotifications'] ?? true,
-      bookingNotifications: map['bookingNotifications'] ?? true,
-      paymentNotifications: map['paymentNotifications'] ?? true,
-      reminderNotifications: map['reminderNotifications'] ?? true,
-      marketingNotifications: map['marketingNotifications'] ?? false,
-      reminderHoursBefore: map['reminderHoursBefore'] ?? 24,
-    );
-  }
+  Map<String, dynamic> toMap() => {
+        'reviewNotifications': reviewNotifications,
+        'bookingNotifications': bookingNotifications,
+        'paymentNotifications': paymentNotifications,
+        'reminderNotifications': reminderNotifications,
+        'marketingNotifications': marketingNotifications,
+        'reminderHoursBefore': reminderHoursBefore,
+      };
 }
 
 /// Нотификатор для настроек уведомлений
@@ -157,20 +151,17 @@ class NotificationSettingsNotifier extends Notifier<NotificationSettings> {
 
 /// Провайдер для состояния уведомлений
 final notificationStateProvider =
-    NotifierProvider<NotificationStateNotifier, NotificationState>(() {
-  return NotificationStateNotifier();
-});
+    NotifierProvider<NotificationStateNotifier, NotificationState>(
+        NotificationStateNotifier.new);
 
 /// Провайдер для отправки уведомлений
-final sendNotificationProvider = Provider<SendNotificationNotifier>((ref) {
-  return SendNotificationNotifier(ref.read(notificationServiceProvider));
-});
+final sendNotificationProvider = Provider<SendNotificationNotifier>(
+    (ref) => SendNotificationNotifier(ref.read(notificationServiceProvider)));
 
 /// Нотификатор для отправки уведомлений
 class SendNotificationNotifier {
-  final NotificationService _service;
-
   SendNotificationNotifier(this._service);
+  final NotificationService _service;
 
   /// Отправить уведомление о новом отзыве
   Future<void> sendReviewNotification({
@@ -227,35 +218,31 @@ class SendNotificationNotifier {
 
 /// Состояние уведомлений
 class NotificationState {
-  final List<app_notification.AppNotification> notifications;
-  final bool isLoading;
-  final String? error;
-
   const NotificationState({
     this.notifications = const [],
     this.isLoading = false,
     this.error,
   });
+  final List<app_notification.AppNotification> notifications;
+  final bool isLoading;
+  final String? error;
 
   NotificationState copyWith({
     List<app_notification.AppNotification>? notifications,
     bool? isLoading,
     String? error,
-  }) {
-    return NotificationState(
-      notifications: notifications ?? this.notifications,
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
-    );
-  }
+  }) =>
+      NotificationState(
+        notifications: notifications ?? this.notifications,
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+      );
 }
 
 /// Нотификатор для состояния уведомлений
 class NotificationStateNotifier extends Notifier<NotificationState> {
   @override
-  NotificationState build() {
-    return const NotificationState();
-  }
+  NotificationState build() => const NotificationState();
 
   /// Отметить уведомление как прочитанное
   void markAsRead(String notificationId) {

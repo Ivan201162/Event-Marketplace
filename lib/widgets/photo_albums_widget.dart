@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../core/responsive_utils.dart';
+import '../ui/responsive/responsive_widgets.dart' hide ResponsiveText;
+import '../models/photo_album.dart';
 
 /// Виджет для отображения фотоальбомов
 class PhotoAlbumsWidget extends ConsumerWidget {
-  final String specialistId;
-  final bool showCreateAlbum;
-
   const PhotoAlbumsWidget({
     super.key,
     required this.specialistId,
     this.showCreateAlbum = false,
   });
+  final String specialistId;
+  final bool showCreateAlbum;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // TODO: Заменить на реальные данные из провайдера
     final albums = _getMockAlbums();
 
-    return ResponsiveGrid(
+    return GridView.count(
       crossAxisCount: _getCrossAxisCount(context),
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       children: [
         if (showCreateAlbum) _buildCreateAlbumCard(context),
         ...albums.map((album) => _buildAlbumCard(context, album)),
@@ -34,11 +37,7 @@ class PhotoAlbumsWidget extends ConsumerWidget {
     return 5;
   }
 
-  Widget _buildCreateAlbumCard(BuildContext context) {
-    return AnimatedContent(
-      delay: Duration.zero,
-      type: AnimationType.scale,
-      child: ResponsiveCard(
+  Widget _buildCreateAlbumCard(BuildContext context) => ResponsiveCard(
         child: InkWell(
           onTap: () => _createNewAlbum(context),
           borderRadius: BorderRadius.circular(12),
@@ -47,7 +46,6 @@ class PhotoAlbumsWidget extends ConsumerWidget {
             decoration: BoxDecoration(
               border: Border.all(
                 color: Theme.of(context).colorScheme.primary,
-                style: BorderStyle.solid,
                 width: 2,
               ),
               borderRadius: BorderRadius.circular(12),
@@ -61,9 +59,8 @@ class PhotoAlbumsWidget extends ConsumerWidget {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 const SizedBox(height: 12),
-                ResponsiveText(
+                Text(
                   'Создать альбом',
-                  isTitle: true,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.primary,
                   ),
@@ -72,15 +69,10 @@ class PhotoAlbumsWidget extends ConsumerWidget {
             ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildAlbumCard(BuildContext context, PhotoAlbum album) {
-    return AnimatedContent(
-      delay: Duration(milliseconds: albums.indexOf(album) * 100),
-      type: AnimationType.scale,
-      child: ResponsiveCard(
+  Widget _buildAlbumCard(BuildContext context, PhotoAlbum album) =>
+      ResponsiveCard(
         child: InkWell(
           onTap: () => _openAlbum(context, album),
           borderRadius: BorderRadius.circular(12),
@@ -108,7 +100,9 @@ class PhotoAlbumsWidget extends ConsumerWidget {
                         right: 8,
                         child: Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 4),
+                            horizontal: 8,
+                            vertical: 4,
+                          ),
                           decoration: BoxDecoration(
                             color: Colors.black.withOpacity(0.7),
                             borderRadius: BorderRadius.circular(12),
@@ -158,22 +152,19 @@ class PhotoAlbumsWidget extends ConsumerWidget {
               ),
               // Информация об альбоме
               Expanded(
-                flex: 1,
                 child: Padding(
                   padding: const EdgeInsets.all(12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ResponsiveText(
+                      Text(
                         album.title,
-                        isTitle: true,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
                       const SizedBox(height: 4),
-                      ResponsiveText(
+                      Text(
                         album.description,
-                        isSubtitle: true,
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -215,74 +206,70 @@ class PhotoAlbumsWidget extends ConsumerWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
+      );
 
-  List<PhotoAlbum> _getMockAlbums() {
-    return [
-      PhotoAlbum(
-        id: '1',
-        title: 'Свадебные фото',
-        description: 'Красивые моменты свадебных церемоний',
-        coverImageUrl: 'https://via.placeholder.com/300x200?text=Свадьба',
-        photoCount: 24,
-        hasVideos: true,
-        isPublic: true,
-        createdAt: DateTime.now().subtract(const Duration(days: 2)),
-      ),
-      PhotoAlbum(
-        id: '2',
-        title: 'Портреты',
-        description: 'Профессиональные портретные съемки',
-        coverImageUrl: 'https://via.placeholder.com/300x200?text=Портреты',
-        photoCount: 18,
-        hasVideos: false,
-        isPublic: true,
-        createdAt: DateTime.now().subtract(const Duration(days: 5)),
-      ),
-      PhotoAlbum(
-        id: '3',
-        title: 'Семейные фото',
-        description: 'Теплые семейные моменты',
-        coverImageUrl: 'https://via.placeholder.com/300x200?text=Семья',
-        photoCount: 32,
-        hasVideos: true,
-        isPublic: false,
-        createdAt: DateTime.now().subtract(const Duration(days: 7)),
-      ),
-      PhotoAlbum(
-        id: '4',
-        title: 'Корпоративы',
-        description: 'Корпоративные мероприятия и события',
-        coverImageUrl: 'https://via.placeholder.com/300x200?text=Корпоратив',
-        photoCount: 15,
-        hasVideos: false,
-        isPublic: true,
-        createdAt: DateTime.now().subtract(const Duration(days: 10)),
-      ),
-      PhotoAlbum(
-        id: '5',
-        title: 'Детские фото',
-        description: 'Милые детские портреты',
-        coverImageUrl: 'https://via.placeholder.com/300x200?text=Дети',
-        photoCount: 28,
-        hasVideos: true,
-        isPublic: true,
-        createdAt: DateTime.now().subtract(const Duration(days: 12)),
-      ),
-      PhotoAlbum(
-        id: '6',
-        title: 'Природа',
-        description: 'Пейзажи и природные красоты',
-        coverImageUrl: 'https://via.placeholder.com/300x200?text=Природа',
-        photoCount: 42,
-        hasVideos: false,
-        isPublic: true,
-        createdAt: DateTime.now().subtract(const Duration(days: 15)),
-      ),
-    ];
-  }
+  List<PhotoAlbum> _getMockAlbums() => [
+        PhotoAlbum(
+          id: '1',
+          title: 'Свадебные фото',
+          description: 'Красивые моменты свадебных церемоний',
+          coverImageUrl: 'https://via.placeholder.com/300x200?text=Свадьба',
+          photoCount: 24,
+          hasVideos: true,
+          isPublic: true,
+          createdAt: DateTime.now().subtract(const Duration(days: 2)),
+        ),
+        PhotoAlbum(
+          id: '2',
+          title: 'Портреты',
+          description: 'Профессиональные портретные съемки',
+          coverImageUrl: 'https://via.placeholder.com/300x200?text=Портреты',
+          photoCount: 18,
+          hasVideos: false,
+          isPublic: true,
+          createdAt: DateTime.now().subtract(const Duration(days: 5)),
+        ),
+        PhotoAlbum(
+          id: '3',
+          title: 'Семейные фото',
+          description: 'Теплые семейные моменты',
+          coverImageUrl: 'https://via.placeholder.com/300x200?text=Семья',
+          photoCount: 32,
+          hasVideos: true,
+          isPublic: false,
+          createdAt: DateTime.now().subtract(const Duration(days: 7)),
+        ),
+        PhotoAlbum(
+          id: '4',
+          title: 'Корпоративы',
+          description: 'Корпоративные мероприятия и события',
+          coverImageUrl: 'https://via.placeholder.com/300x200?text=Корпоратив',
+          photoCount: 15,
+          hasVideos: false,
+          isPublic: true,
+          createdAt: DateTime.now().subtract(const Duration(days: 10)),
+        ),
+        PhotoAlbum(
+          id: '5',
+          title: 'Детские фото',
+          description: 'Милые детские портреты',
+          coverImageUrl: 'https://via.placeholder.com/300x200?text=Дети',
+          photoCount: 28,
+          hasVideos: true,
+          isPublic: true,
+          createdAt: DateTime.now().subtract(const Duration(days: 12)),
+        ),
+        PhotoAlbum(
+          id: '6',
+          title: 'Природа',
+          description: 'Пейзажи и природные красоты',
+          coverImageUrl: 'https://via.placeholder.com/300x200?text=Природа',
+          photoCount: 42,
+          hasVideos: false,
+          isPublic: true,
+          createdAt: DateTime.now().subtract(const Duration(days: 15)),
+        ),
+      ];
 
   String _formatDate(DateTime date) {
     final now = DateTime.now();
@@ -302,7 +289,7 @@ class PhotoAlbumsWidget extends ConsumerWidget {
   void _createNewAlbum(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => CreateAlbumScreen(),
+        builder: (context) => const CreateAlbumScreen(),
       ),
     );
   }
@@ -318,15 +305,6 @@ class PhotoAlbumsWidget extends ConsumerWidget {
 
 /// Модель фотоальбома
 class PhotoAlbum {
-  final String id;
-  final String title;
-  final String description;
-  final String coverImageUrl;
-  final int photoCount;
-  final bool hasVideos;
-  final bool isPublic;
-  final DateTime createdAt;
-
   const PhotoAlbum({
     required this.id,
     required this.title,
@@ -337,6 +315,14 @@ class PhotoAlbum {
     required this.isPublic,
     required this.createdAt,
   });
+  final String id;
+  final String title;
+  final String description;
+  final String coverImageUrl;
+  final int photoCount;
+  final bool hasVideos;
+  final bool isPublic;
+  final DateTime createdAt;
 }
 
 /// Экран создания нового альбома
@@ -362,128 +348,120 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Создать альбом'),
-        actions: [
-          TextButton(
-            onPressed: _canCreate() ? _createAlbum : null,
-            child: const Text('Создать'),
-          ),
-        ],
-      ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Название альбома
-              TextFormField(
-                controller: _titleController,
-                decoration: const InputDecoration(
-                  labelText: 'Название альбома',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Введите название альбома';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              // Описание
-              TextFormField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                  labelText: 'Описание',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 3,
-              ),
-              const SizedBox(height: 16),
-              // Настройки приватности
-              SwitchListTile(
-                title: const Text('Публичный альбом'),
-                subtitle: const Text('Альбом будет виден всем пользователям'),
-                value: _isPublic,
-                onChanged: (value) {
-                  setState(() {
-                    _isPublic = value;
-                  });
-                },
-              ),
-              const SizedBox(height: 24),
-              // Выбор фотографий
-              ResponsiveText(
-                'Фотографии',
-                isTitle: true,
-              ),
-              const SizedBox(height: 16),
-              _buildImageSelector(),
-              const SizedBox(height: 16),
-              // Предварительный просмотр
-              if (_selectedImages.isNotEmpty) ...[
-                ResponsiveText(
-                  'Предварительный просмотр',
-                  isTitle: true,
-                ),
-                const SizedBox(height: 16),
-                _buildImagePreview(),
-              ],
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildImageSelector() {
-    return Container(
-      height: 120,
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline,
-          style: BorderStyle.solid,
-        ),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: InkWell(
-        onTap: _selectImages,
-        borderRadius: BorderRadius.circular(8),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              Icons.add_photo_alternate,
-              size: 48,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Добавить фотографии',
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.primary,
-                fontWeight: FontWeight.w500,
-              ),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Создать альбом'),
+          actions: [
+            TextButton(
+              onPressed: _canCreate() ? _createAlbum : null,
+              child: const Text('Создать'),
             ),
           ],
         ),
-      ),
-    );
-  }
+        body: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Название альбома
+                TextFormField(
+                  controller: _titleController,
+                  decoration: const InputDecoration(
+                    labelText: 'Название альбома',
+                    border: OutlineInputBorder(),
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Введите название альбома';
+                    }
+                    return null;
+                  },
+                ),
+                const SizedBox(height: 16),
+                // Описание
+                TextFormField(
+                  controller: _descriptionController,
+                  decoration: const InputDecoration(
+                    labelText: 'Описание',
+                    border: OutlineInputBorder(),
+                  ),
+                  maxLines: 3,
+                ),
+                const SizedBox(height: 16),
+                // Настройки приватности
+                SwitchListTile(
+                  title: const Text('Публичный альбом'),
+                  subtitle: const Text('Альбом будет виден всем пользователям'),
+                  value: _isPublic,
+                  onChanged: (value) {
+                    setState(() {
+                      _isPublic = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 24),
+                // Выбор фотографий
+                const ResponsiveText(
+                  'Фотографии',
+                  isTitle: true,
+                ),
+                const SizedBox(height: 16),
+                _buildImageSelector(),
+                const SizedBox(height: 16),
+                // Предварительный просмотр
+                if (_selectedImages.isNotEmpty) ...[
+                  const ResponsiveText(
+                    'Предварительный просмотр',
+                  ),
+                  const SizedBox(height: 16),
+                  _buildImagePreview(),
+                ],
+              ],
+            ),
+          ),
+        ),
+      );
 
-  Widget _buildImagePreview() {
-    return SizedBox(
-      height: 200,
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: _selectedImages.length,
-        itemBuilder: (context, index) {
-          return Padding(
+  Widget _buildImageSelector() => Container(
+        height: 120,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Theme.of(context).colorScheme.outline,
+          ),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: InkWell(
+          onTap: _selectImages,
+          borderRadius: BorderRadius.circular(8),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                Icons.add_photo_alternate,
+                size: 48,
+                color: Theme.of(context).colorScheme.primary,
+              ),
+              const SizedBox(height: 8),
+              Text(
+                'Добавить фотографии',
+                style: TextStyle(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildImagePreview() => SizedBox(
+        height: 200,
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          itemCount: _selectedImages.length,
+          itemBuilder: (context, index) => Padding(
             padding: const EdgeInsets.only(right: 8),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
@@ -494,15 +472,12 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
                 fit: BoxFit.cover,
               ),
             ),
-          );
-        },
-      ),
-    );
-  }
+          ),
+        ),
+      );
 
-  bool _canCreate() {
-    return _titleController.text.isNotEmpty && _selectedImages.isNotEmpty;
-  }
+  bool _canCreate() =>
+      _titleController.text.isNotEmpty && _selectedImages.isNotEmpty;
 
   void _selectImages() {
     // TODO: Реализовать выбор изображений
@@ -528,12 +503,11 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
 
 /// Экран детального просмотра альбома
 class AlbumDetailScreen extends StatefulWidget {
-  final PhotoAlbum album;
-
   const AlbumDetailScreen({
     super.key,
     required this.album,
   });
+  final PhotoAlbum album;
 
   @override
   State<AlbumDetailScreen> createState() => _AlbumDetailScreenState();
@@ -541,81 +515,77 @@ class AlbumDetailScreen extends StatefulWidget {
 
 class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.album.title),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: _shareAlbum,
-          ),
-          IconButton(
-            icon: const Icon(Icons.more_vert),
-            onPressed: _showAlbumOptions,
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Информация об альбоме
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ResponsiveText(
-                  widget.album.title,
-                  isTitle: true,
-                ),
-                const SizedBox(height: 8),
-                ResponsiveText(
-                  widget.album.description,
-                  isSubtitle: true,
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.photo,
-                      size: 16,
-                      color: Colors.grey[600],
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      '${widget.album.photoCount} фотографий',
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
-                    ),
-                    const SizedBox(width: 16),
-                    Icon(
-                      Icons.access_time,
-                      size: 16,
-                      color: Colors.grey[600],
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      _formatDate(widget.album.createdAt),
-                      style: TextStyle(
-                        color: Colors.grey[600],
-                        fontSize: 14,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: Text(widget.album.title),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.share),
+              onPressed: _shareAlbum,
             ),
-          ),
-          // Сетка фотографий
-          Expanded(
-            child: _buildPhotoGrid(),
-          ),
-        ],
-      ),
-    );
-  }
+            IconButton(
+              icon: const Icon(Icons.more_vert),
+              onPressed: _showAlbumOptions,
+            ),
+          ],
+        ),
+        body: Column(
+          children: [
+            // Информация об альбоме
+            Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.album.title,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    widget.album.description,
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    children: [
+                      Icon(
+                        Icons.photo,
+                        size: 16,
+                        color: Colors.grey[600],
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        '${widget.album.photoCount} фотографий',
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Icon(
+                        Icons.access_time,
+                        size: 16,
+                        color: Colors.grey[600],
+                      ),
+                      const SizedBox(width: 4),
+                      Text(
+                        _formatDate(widget.album.createdAt),
+                        style: TextStyle(
+                          color: Colors.grey[600],
+                          fontSize: 14,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+            // Сетка фотографий
+            Expanded(
+              child: _buildPhotoGrid(),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildPhotoGrid() {
     // TODO: Заменить на реальные данные
@@ -632,18 +602,16 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
         mainAxisSpacing: 8,
       ),
       itemCount: photos.length,
-      itemBuilder: (context, index) {
-        return GestureDetector(
-          onTap: () => _openPhotoViewer(photos, index),
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(8),
-            child: Image.network(
-              photos[index],
-              fit: BoxFit.cover,
-            ),
+      itemBuilder: (context, index) => GestureDetector(
+        onTap: () => _openPhotoViewer(photos, index),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(8),
+          child: Image.network(
+            photos[index],
+            fit: BoxFit.cover,
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 
@@ -716,14 +684,13 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
 
 /// Экран просмотра фотографий
 class PhotoViewerScreen extends StatefulWidget {
-  final List<String> photos;
-  final int initialIndex;
-
   const PhotoViewerScreen({
     super.key,
     required this.photos,
     this.initialIndex = 0,
   });
+  final List<String> photos;
+  final int initialIndex;
 
   @override
   State<PhotoViewerScreen> createState() => _PhotoViewerScreenState();
@@ -747,42 +714,38 @@ class _PhotoViewerScreenState extends State<PhotoViewerScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: Text('${_currentIndex + 1} из ${widget.photos.length}'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.share, color: Colors.white),
-            onPressed: _sharePhoto,
-          ),
-          IconButton(
-            icon: const Icon(Icons.download, color: Colors.white),
-            onPressed: _downloadPhoto,
-          ),
-        ],
-      ),
-      body: PageView.builder(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        itemCount: widget.photos.length,
-        itemBuilder: (context, index) {
-          return Center(
+  Widget build(BuildContext context) => Scaffold(
+        backgroundColor: Colors.black,
+        appBar: AppBar(
+          backgroundColor: Colors.transparent,
+          title: Text('${_currentIndex + 1} из ${widget.photos.length}'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.share, color: Colors.white),
+              onPressed: _sharePhoto,
+            ),
+            IconButton(
+              icon: const Icon(Icons.download, color: Colors.white),
+              onPressed: _downloadPhoto,
+            ),
+          ],
+        ),
+        body: PageView.builder(
+          controller: _pageController,
+          onPageChanged: (index) {
+            setState(() {
+              _currentIndex = index;
+            });
+          },
+          itemCount: widget.photos.length,
+          itemBuilder: (context, index) => Center(
             child: Image.network(
               widget.photos[index],
               fit: BoxFit.contain,
             ),
-          );
-        },
-      ),
-    );
-  }
+          ),
+        ),
+      );
 
   void _sharePhoto() {
     ScaffoldMessenger.of(context).showSnackBar(

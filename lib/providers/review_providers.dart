@@ -1,17 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/review_service.dart';
-import '../models/review.dart';
+
 import '../core/feature_flags.dart';
+import '../models/review.dart';
+import '../services/review_service.dart';
 
 /// Провайдер сервиса отзывов
-final reviewServiceProvider = Provider<ReviewService>((ref) {
-  return ReviewService();
-});
+final reviewServiceProvider = Provider<ReviewService>((ref) => ReviewService());
 
 /// Провайдер для проверки доступности отзывов
-final reviewsAvailableProvider = Provider<bool>((ref) {
-  return FeatureFlags.reviewsEnabled;
-});
+final reviewsAvailableProvider =
+    Provider<bool>((ref) => FeatureFlags.reviewsEnabled);
 
 /// Провайдер отзывов для цели
 final reviewsForTargetProvider = StreamProvider.family<List<Review>,
@@ -37,8 +35,10 @@ final userReviewForTargetProvider =
     FutureProvider.family<Review?, ({String userId, String targetId})>(
         (ref, params) async {
   final reviewService = ref.read(reviewServiceProvider);
-  return await reviewService.getUserReviewForTarget(
-      params.userId, params.targetId);
+  return reviewService.getUserReviewForTarget(
+    params.userId,
+    params.targetId,
+  );
 });
 
 /// Провайдер отзывов пользователя
@@ -67,18 +67,6 @@ final searchReviewsProvider = StreamProvider.family<List<Review>,
 
 /// Состояние формы отзыва
 class ReviewFormState {
-  final String title;
-  final String content;
-  final String comment;
-  final int rating;
-  final List<String> tags;
-  final List<String> selectedTags;
-  final List<String> images;
-  final bool isSubmitting;
-  final bool isPublic;
-  final String? error;
-  final String? errorMessage;
-
   const ReviewFormState({
     this.title = '',
     this.content = '',
@@ -92,6 +80,17 @@ class ReviewFormState {
     this.error,
     this.errorMessage,
   });
+  final String title;
+  final String content;
+  final String comment;
+  final int rating;
+  final List<String> tags;
+  final List<String> selectedTags;
+  final List<String> images;
+  final bool isSubmitting;
+  final bool isPublic;
+  final String? error;
+  final String? errorMessage;
 
   ReviewFormState copyWith({
     String? title,
@@ -105,28 +104,26 @@ class ReviewFormState {
     bool? isPublic,
     String? error,
     String? errorMessage,
-  }) {
-    return ReviewFormState(
-      title: title ?? this.title,
-      content: content ?? this.content,
-      comment: comment ?? this.comment,
-      rating: rating ?? this.rating,
-      tags: tags ?? this.tags,
-      selectedTags: selectedTags ?? this.selectedTags,
-      images: images ?? this.images,
-      isSubmitting: isSubmitting ?? this.isSubmitting,
-      isPublic: isPublic ?? this.isPublic,
-      error: error ?? this.error,
-      errorMessage: errorMessage ?? this.errorMessage,
-    );
-  }
+  }) =>
+      ReviewFormState(
+        title: title ?? this.title,
+        content: content ?? this.content,
+        comment: comment ?? this.comment,
+        rating: rating ?? this.rating,
+        tags: tags ?? this.tags,
+        selectedTags: selectedTags ?? this.selectedTags,
+        images: images ?? this.images,
+        isSubmitting: isSubmitting ?? this.isSubmitting,
+        isPublic: isPublic ?? this.isPublic,
+        error: error ?? this.error,
+        errorMessage: errorMessage ?? this.errorMessage,
+      );
 }
 
 /// Провайдер состояния формы отзыва
 final reviewFormProvider =
-    NotifierProvider<ReviewFormNotifier, ReviewFormState>(() {
-  return ReviewFormNotifier();
-});
+    NotifierProvider<ReviewFormNotifier, ReviewFormState>(
+        ReviewFormNotifier.new);
 
 /// Notifier для формы отзыва
 class ReviewFormNotifier extends Notifier<ReviewFormState> {
@@ -199,14 +196,11 @@ class ReviewFormNotifier extends Notifier<ReviewFormState> {
     state = state.copyWith(isPublic: !state.isPublic);
   }
 
-  bool get isValid {
-    return state.title.isNotEmpty &&
-        state.content.isNotEmpty &&
-        state.rating > 0;
-  }
+  bool get isValid =>
+      state.title.isNotEmpty && state.content.isNotEmpty && state.rating > 0;
 
   void startSubmitting() {
-    state = state.copyWith(isSubmitting: true, error: null);
+    state = state.copyWith(isSubmitting: true);
   }
 
   void finishSubmitting() {
@@ -225,34 +219,30 @@ class ReviewFormNotifier extends Notifier<ReviewFormState> {
 
 /// Состояние отзывов
 class ReviewState {
-  final List<Review> reviews;
-  final bool isLoading;
-  final String? error;
-
   const ReviewState({
     this.reviews = const [],
     this.isLoading = false,
     this.error,
   });
+  final List<Review> reviews;
+  final bool isLoading;
+  final String? error;
 
   ReviewState copyWith({
     List<Review>? reviews,
     bool? isLoading,
     String? error,
-  }) {
-    return ReviewState(
-      reviews: reviews ?? this.reviews,
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
-    );
-  }
+  }) =>
+      ReviewState(
+        reviews: reviews ?? this.reviews,
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+      );
 }
 
 /// Провайдер состояния отзывов
 final reviewStateProvider =
-    NotifierProvider<ReviewStateNotifier, ReviewState>(() {
-  return ReviewStateNotifier();
-});
+    NotifierProvider<ReviewStateNotifier, ReviewState>(ReviewStateNotifier.new);
 
 /// Notifier для состояния отзывов
 class ReviewStateNotifier extends Notifier<ReviewState> {
@@ -294,11 +284,10 @@ final specialistReviewsProvider =
 
 /// Параметры отзывов специалиста
 class SpecialistReviewsParams {
-  final String targetId;
-  final ReviewType type;
-
   const SpecialistReviewsParams({
     required this.targetId,
     required this.type,
   });
+  final String targetId;
+  final ReviewType type;
 }

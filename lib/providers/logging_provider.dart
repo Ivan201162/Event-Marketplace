@@ -2,20 +2,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/logging_service.dart';
 
 /// Провайдер для сервиса логирования
-final loggingServiceProvider = Provider<LoggingService>((ref) {
-  return LoggingService();
-});
+final loggingServiceProvider =
+    Provider<LoggingService>((ref) => LoggingService());
 
 /// Провайдер для уровня логирования
-final logLevelProvider = NotifierProvider<LogLevelNotifier, LogLevel>((ref) {
-  return LogLevelNotifier();
-});
+final logLevelProvider =
+    NotifierProvider<LogLevelNotifier, LogLevel>((ref) => LogLevelNotifier());
 
 /// Провайдер для настроек логирования
 final loggingSettingsProvider =
-    NotifierProvider<LoggingSettingsNotifier, LoggingSettings>((ref) {
-  return LoggingSettingsNotifier();
-});
+    NotifierProvider<LoggingSettingsNotifier, LoggingSettings>(
+        (ref) => LoggingSettingsNotifier());
 
 /// Нотификатор для уровня логирования
 class LogLevelNotifier extends Notifier<LogLevel> {
@@ -37,13 +34,6 @@ class LogLevelNotifier extends Notifier<LogLevel> {
 
 /// Настройки логирования
 class LoggingSettings {
-  final bool enableCrashlytics;
-  final bool enablePerformance;
-  final bool enableConsoleLogging;
-  final bool enableFileLogging;
-  final int maxLogFileSize;
-  final int maxLogFiles;
-
   const LoggingSettings({
     this.enableCrashlytics = true,
     this.enablePerformance = true,
@@ -52,6 +42,12 @@ class LoggingSettings {
     this.maxLogFileSize = 10 * 1024 * 1024, // 10MB
     this.maxLogFiles = 5,
   });
+  final bool enableCrashlytics;
+  final bool enablePerformance;
+  final bool enableConsoleLogging;
+  final bool enableFileLogging;
+  final int maxLogFileSize;
+  final int maxLogFiles;
 
   LoggingSettings copyWith({
     bool? enableCrashlytics,
@@ -60,16 +56,15 @@ class LoggingSettings {
     bool? enableFileLogging,
     int? maxLogFileSize,
     int? maxLogFiles,
-  }) {
-    return LoggingSettings(
-      enableCrashlytics: enableCrashlytics ?? this.enableCrashlytics,
-      enablePerformance: enablePerformance ?? this.enablePerformance,
-      enableConsoleLogging: enableConsoleLogging ?? this.enableConsoleLogging,
-      enableFileLogging: enableFileLogging ?? this.enableFileLogging,
-      maxLogFileSize: maxLogFileSize ?? this.maxLogFileSize,
-      maxLogFiles: maxLogFiles ?? this.maxLogFiles,
-    );
-  }
+  }) =>
+      LoggingSettings(
+        enableCrashlytics: enableCrashlytics ?? this.enableCrashlytics,
+        enablePerformance: enablePerformance ?? this.enablePerformance,
+        enableConsoleLogging: enableConsoleLogging ?? this.enableConsoleLogging,
+        enableFileLogging: enableFileLogging ?? this.enableFileLogging,
+        maxLogFileSize: maxLogFileSize ?? this.maxLogFileSize,
+        maxLogFiles: maxLogFiles ?? this.maxLogFiles,
+      );
 }
 
 /// Нотификатор для настроек логирования
@@ -157,19 +152,11 @@ final loggingStatsProvider = FutureProvider<LoggingStats>((ref) async {
     warningLogs: 0,
     infoLogs: 0,
     debugLogs: 0,
-    lastLogTime: null,
   );
 });
 
 /// Статистика логирования
 class LoggingStats {
-  final int totalLogs;
-  final int errorLogs;
-  final int warningLogs;
-  final int infoLogs;
-  final int debugLogs;
-  final DateTime? lastLogTime;
-
   const LoggingStats({
     required this.totalLogs,
     required this.errorLogs,
@@ -178,28 +165,34 @@ class LoggingStats {
     required this.debugLogs,
     this.lastLogTime,
   });
+  final int totalLogs;
+  final int errorLogs;
+  final int warningLogs;
+  final int infoLogs;
+  final int debugLogs;
+  final DateTime? lastLogTime;
 
   /// Получить процент ошибок
   double get errorPercentage {
-    if (totalLogs == 0) return 0.0;
+    if (totalLogs == 0) return 0;
     return (errorLogs / totalLogs) * 100;
   }
 
   /// Получить процент предупреждений
   double get warningPercentage {
-    if (totalLogs == 0) return 0.0;
+    if (totalLogs == 0) return 0;
     return (warningLogs / totalLogs) * 100;
   }
 
   /// Получить процент информационных сообщений
   double get infoPercentage {
-    if (totalLogs == 0) return 0.0;
+    if (totalLogs == 0) return 0;
     return (infoLogs / totalLogs) * 100;
   }
 
   /// Получить процент отладочных сообщений
   double get debugPercentage {
-    if (totalLogs == 0) return 0.0;
+    if (totalLogs == 0) return 0;
     return (debugLogs / totalLogs) * 100;
   }
 }

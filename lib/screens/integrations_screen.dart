@@ -20,219 +20,208 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
   String _searchQuery = '';
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Интеграции'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search),
-            onPressed: _showSearchDialog,
-          ),
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFilterDialog,
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Быстрые действия
-          _buildQuickActions(),
-
-          // Типы интеграций
-          _buildTypeSelector(),
-
-          // Список интеграций
-          Expanded(
-            child: _buildIntegrationsList(),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQuickActions() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildQuickActionCard(
-              icon: Icons.location_on,
-              title: 'Геолокация',
-              color: Colors.blue,
-              onTap: _showLocationSettings,
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Интеграции'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.search),
+              onPressed: _showSearchDialog,
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: _buildQuickActionCard(
-              icon: Icons.share,
-              title: 'Шаринг',
-              color: Colors.green,
-              onTap: _showSharingOptions,
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFilterDialog,
             ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: _buildQuickActionCard(
-              icon: Icons.wifi,
-              title: 'Подключение',
-              color: Colors.orange,
-              onTap: _showConnectionStatus,
+          ],
+        ),
+        body: Column(
+          children: [
+            // Быстрые действия
+            _buildQuickActions(),
+
+            // Типы интеграций
+            _buildTypeSelector(),
+
+            // Список интеграций
+            Expanded(
+              child: _buildIntegrationsList(),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
+
+  Widget _buildQuickActions() => Container(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Expanded(
+              child: _buildQuickActionCard(
+                icon: Icons.location_on,
+                title: 'Геолокация',
+                color: Colors.blue,
+                onTap: _showLocationSettings,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildQuickActionCard(
+                icon: Icons.share,
+                title: 'Шаринг',
+                color: Colors.green,
+                onTap: _showSharingOptions,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: _buildQuickActionCard(
+                icon: Icons.wifi,
+                title: 'Подключение',
+                color: Colors.orange,
+                onTap: _showConnectionStatus,
+              ),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildQuickActionCard({
     required IconData icon,
     required String title,
     required Color color,
     required VoidCallback onTap,
-  }) {
-    return Card(
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(8),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Icon(icon, color: color, size: 32),
-              const SizedBox(height: 8),
-              Text(
-                title,
-                style: const TextStyle(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
+  }) =>
+      Card(
+        child: InkWell(
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(8),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              children: [
+                Icon(icon, color: color, size: 32),
+                const SizedBox(height: 8),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                  textAlign: TextAlign.center,
                 ),
-                textAlign: TextAlign.center,
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildTypeSelector() {
-    return Container(
-      height: 50,
-      padding: const EdgeInsets.symmetric(vertical: 8),
-      child: ListView.builder(
-        scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        itemCount: IntegrationType.values.length + 1,
-        itemBuilder: (context, index) {
-          if (index == 0) {
-            final isSelected = _selectedType == null;
+  Widget _buildTypeSelector() => Container(
+        height: 50,
+        padding: const EdgeInsets.symmetric(vertical: 8),
+        child: ListView.builder(
+          scrollDirection: Axis.horizontal,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          itemCount: IntegrationType.values.length + 1,
+          itemBuilder: (context, index) {
+            if (index == 0) {
+              final isSelected = _selectedType == null;
+              return Container(
+                margin: const EdgeInsets.only(right: 8),
+                child: FilterChip(
+                  label: const Text('Все'),
+                  selected: isSelected,
+                  onSelected: (selected) {
+                    setState(() {
+                      _selectedType = null;
+                    });
+                  },
+                ),
+              );
+            }
+
+            final type = IntegrationType.values[index - 1];
+            final isSelected = _selectedType == type;
+
             return Container(
               margin: const EdgeInsets.only(right: 8),
               child: FilterChip(
-                label: const Text('Все'),
+                label: Text(_getTypeText(type)),
                 selected: isSelected,
                 onSelected: (selected) {
                   setState(() {
-                    _selectedType = null;
+                    _selectedType = selected ? type : null;
                   });
                 },
               ),
             );
+          },
+        ),
+      );
+
+  Widget _buildIntegrationsList() => StreamBuilder<List<Integration>>(
+        stream: _integrationService.getAvailableIntegrations(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
           }
 
-          final type = IntegrationType.values[index - 1];
-          final isSelected = _selectedType == type;
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Icon(Icons.error, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text('Ошибка: ${snapshot.error}'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => setState(() {}),
+                    child: const Text('Повторить'),
+                  ),
+                ],
+              ),
+            );
+          }
 
-          return Container(
-            margin: const EdgeInsets.only(right: 8),
-            child: FilterChip(
-              label: Text(_getTypeText(type)),
-              selected: isSelected,
-              onSelected: (selected) {
-                setState(() {
-                  _selectedType = selected ? type : null;
-                });
-              },
-            ),
+          final integrations = snapshot.data ?? [];
+          final filteredIntegrations = _filterIntegrations(integrations);
+
+          if (filteredIntegrations.isEmpty) {
+            return _buildEmptyState();
+          }
+
+          return ListView.builder(
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            itemCount: filteredIntegrations.length,
+            itemBuilder: (context, index) {
+              final integration = filteredIntegrations[index];
+              return IntegrationWidget(
+                integration: integration,
+                onTap: () => _showIntegrationDetail(integration),
+              );
+            },
           );
         },
-      ),
-    );
-  }
+      );
 
-  Widget _buildIntegrationsList() {
-    return StreamBuilder<List<Integration>>(
-      stream: _integrationService.getAvailableIntegrations(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (snapshot.hasError) {
-          return Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const Icon(Icons.error, size: 64, color: Colors.red),
-                const SizedBox(height: 16),
-                Text('Ошибка: ${snapshot.error}'),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () => setState(() {}),
-                  child: const Text('Повторить'),
-                ),
-              ],
+  Widget _buildEmptyState() => const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.extension, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text(
+              'Нет интеграций',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-          );
-        }
-
-        final integrations = snapshot.data ?? [];
-        final filteredIntegrations = _filterIntegrations(integrations);
-
-        if (filteredIntegrations.isEmpty) {
-          return _buildEmptyState();
-        }
-
-        return ListView.builder(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          itemCount: filteredIntegrations.length,
-          itemBuilder: (context, index) {
-            final integration = filteredIntegrations[index];
-            return IntegrationWidget(
-              integration: integration,
-              onTap: () => _showIntegrationDetail(integration),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.extension, size: 64, color: Colors.grey),
-          const SizedBox(height: 16),
-          const Text(
-            'Нет интеграций',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Попробуйте изменить фильтры или поисковый запрос',
-            style: TextStyle(color: Colors.grey),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
+            SizedBox(height: 8),
+            Text(
+              'Попробуйте изменить фильтры или поисковый запрос',
+              style: TextStyle(color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+          ],
+        ),
+      );
 
   List<Integration> _filterIntegrations(List<Integration> integrations) {
     var filtered = integrations;
@@ -247,10 +236,13 @@ class _IntegrationsScreenState extends ConsumerState<IntegrationsScreen> {
     // Фильтр по поисковому запросу
     if (_searchQuery.isNotEmpty) {
       final query = _searchQuery.toLowerCase();
-      filtered = filtered.where((integration) {
-        return integration.name.toLowerCase().contains(query) ||
-            integration.description.toLowerCase().contains(query);
-      }).toList();
+      filtered = filtered
+          .where(
+            (integration) =>
+                integration.name.toLowerCase().contains(query) ||
+                integration.description.toLowerCase().contains(query),
+          )
+          .toList();
     }
 
     return filtered;

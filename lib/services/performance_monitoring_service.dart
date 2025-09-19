@@ -1,20 +1,22 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+
 import '../models/performance_metric.dart';
 
 /// Сервис мониторинга производительности
 class PerformanceMonitoringService {
+  factory PerformanceMonitoringService() => _instance;
+  PerformanceMonitoringService._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
   final Uuid _uuid = const Uuid();
 
   static final PerformanceMonitoringService _instance =
       PerformanceMonitoringService._internal();
-  factory PerformanceMonitoringService() => _instance;
-  PerformanceMonitoringService._internal();
 
   Timer? _monitoringTimer;
   String? _currentSessionId;
@@ -298,7 +300,10 @@ class PerformanceMonitoringService {
 
   /// Создать алерт
   Future<void> _createAlert(
-      String metricName, double value, double threshold) async {
+    String metricName,
+    double value,
+    double threshold,
+  ) async {
     try {
       // Проверяем, не создан ли уже алерт для этой метрики
       final existingAlert = _activeAlerts.firstWhere(
@@ -372,7 +377,10 @@ class PerformanceMonitoringService {
 
   /// Получить серьезность алерта
   AlertSeverity _getAlertSeverity(
-      String metricName, double value, double threshold) {
+    String metricName,
+    double value,
+    double threshold,
+  ) {
     final ratio = value / threshold;
 
     if (ratio > 2) return AlertSeverity.critical;
@@ -383,7 +391,10 @@ class PerformanceMonitoringService {
 
   /// Сгенерировать сообщение алерта
   String _generateAlertMessage(
-      String metricName, double value, double threshold) {
+    String metricName,
+    double value,
+    double threshold,
+  ) {
     final metric = PerformanceMetric(
       id: '',
       name: metricName,
@@ -410,8 +421,9 @@ class PerformanceMonitoringService {
   String _getMetricUnit(String metricName) {
     if (metricName.contains('memory')) return 'bytes';
     if (metricName.contains('percentage')) return 'percentage';
-    if (metricName.contains('time') || metricName.contains('latency'))
+    if (metricName.contains('time') || metricName.contains('latency')) {
       return 'ms';
+    }
     return 'count';
   }
 
@@ -465,7 +477,7 @@ class PerformanceMonitoringService {
     int limit = 100,
   }) async {
     try {
-      Query query = _firestore.collection('performanceMetrics');
+      var query = _firestore.collection('performanceMetrics');
 
       if (metricName != null) {
         query = query.where('name', isEqualTo: metricName);
@@ -474,20 +486,22 @@ class PerformanceMonitoringService {
         query = query.where('category', isEqualTo: category);
       }
       if (startDate != null) {
-        query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where(
+          'timestamp',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+        );
       }
       if (endDate != null) {
-        query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where(
+          'timestamp',
+          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
+        );
       }
 
       final snapshot =
           await query.orderBy('timestamp', descending: true).limit(limit).get();
 
-      return snapshot.docs
-          .map((doc) => PerformanceMetric.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(PerformanceMetric.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка получения метрик: $e');
@@ -532,9 +546,7 @@ class PerformanceMonitoringService {
           .orderBy('triggeredAt', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => PerformanceAlert.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(PerformanceAlert.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка получения активных алертов: $e');
@@ -560,9 +572,7 @@ class PerformanceMonitoringService {
   }
 
   /// Получить текущие метрики
-  Map<String, double> getCurrentMetrics() {
-    return Map.from(_currentMetrics);
-  }
+  Map<String, double> getCurrentMetrics() => Map.from(_currentMetrics);
 
   /// Очистить старые метрики
   Future<void> cleanupOldMetrics({int daysToKeep = 30}) async {

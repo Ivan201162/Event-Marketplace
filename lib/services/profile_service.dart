@@ -54,7 +54,8 @@ class ProfileService {
 
   /// Создать или обновить профиль специалиста
   Future<void> createOrUpdateSpecialistProfile(
-      SpecialistProfile profile) async {
+    SpecialistProfile profile,
+  ) async {
     try {
       await _firestore
           .collection('specialist_profiles')
@@ -70,16 +71,16 @@ class ProfileService {
   Future<dynamic> getUserProfile(String userId, UserRole role) async {
     switch (role) {
       case UserRole.customer:
-        return await getCustomerProfile(userId);
+        return getCustomerProfile(userId);
       case UserRole.specialist:
-        return await getSpecialistProfile(userId);
+        return getSpecialistProfile(userId);
       case UserRole.guest:
         return null;
     }
   }
 
   /// Создать или обновить профиль пользователя
-  Future<void> createOrUpdateUserProfile(dynamic profile, UserRole role) async {
+  Future<void> createOrUpdateUserProfile(profile, UserRole role) async {
     switch (role) {
       case UserRole.customer:
         if (profile is CustomerProfile) {
@@ -110,7 +111,10 @@ class ProfileService {
 
   /// Загрузить элемент портфолио
   Future<String?> uploadPortfolioItem(
-      String userId, String filePath, String type) async {
+    String userId,
+    String filePath,
+    String type,
+  ) async {
     try {
       // В реальном приложении здесь была бы загрузка в Firebase Storage
       // Для демонстрации возвращаем фиктивный URL
@@ -123,7 +127,8 @@ class ProfileService {
 
   /// Получить всех специалистов по категории
   Future<List<SpecialistProfile>> getSpecialistsByCategory(
-      SpecialistCategory category) async {
+    SpecialistCategory category,
+  ) async {
     try {
       final querySnapshot = await _firestore
           .collection('specialist_profiles')
@@ -132,9 +137,7 @@ class ProfileService {
           .limit(20)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => SpecialistProfile.fromDocument(doc))
-          .toList();
+      return querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
     } catch (e) {
       print('Ошибка получения специалистов по категории: $e');
       return [];
@@ -150,12 +153,14 @@ class ProfileService {
     String? location,
   }) async {
     try {
-      Query queryRef = _firestore.collection('specialist_profiles');
+      var queryRef = _firestore.collection('specialist_profiles');
 
       // Фильтр по категориям
       if (categories != null && categories.isNotEmpty) {
-        queryRef = queryRef.where('categories',
-            arrayContainsAny: categories.map((e) => e.name).toList());
+        queryRef = queryRef.where(
+          'categories',
+          arrayContainsAny: categories.map((e) => e.name).toList(),
+        );
       }
 
       // Фильтр по рейтингу
@@ -177,20 +182,26 @@ class ProfileService {
       final querySnapshot =
           await queryRef.orderBy('rating', descending: true).limit(50).get();
 
-      List<SpecialistProfile> specialists = querySnapshot.docs
-          .map((doc) => SpecialistProfile.fromDocument(doc))
-          .toList();
+      List<SpecialistProfile> specialists =
+          querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
 
       // Фильтр по текстовому запросу (если указан)
       if (query != null && query.isNotEmpty) {
         final lowerQuery = query.toLowerCase();
-        specialists = specialists.where((specialist) {
-          return specialist.bio?.toLowerCase().contains(lowerQuery) == true ||
-              specialist.services.any(
-                  (service) => service.toLowerCase().contains(lowerQuery)) ||
-              specialist.categoryDisplayNames.any(
-                  (category) => category.toLowerCase().contains(lowerQuery));
-        }).toList();
+        specialists = specialists
+            .where(
+              (specialist) =>
+                  specialist.bio?.toLowerCase().contains(lowerQuery) ??
+                  false ||
+                      specialist.services.any(
+                        (service) => service.toLowerCase().contains(lowerQuery),
+                      ) ||
+                      specialist.categoryDisplayNames.any(
+                        (category) =>
+                            category.toLowerCase().contains(lowerQuery),
+                      ),
+            )
+            .toList();
       }
 
       return specialists;
@@ -211,9 +222,7 @@ class ProfileService {
           .limit(limit)
           .get();
 
-      return querySnapshot.docs
-          .map((doc) => SpecialistProfile.fromDocument(doc))
-          .toList();
+      return querySnapshot.docs.map(SpecialistProfile.fromDocument).toList();
     } catch (e) {
       print('Ошибка получения топ специалистов: $e');
       return [];
@@ -244,9 +253,11 @@ class ProfileService {
 
   /// Получить статистику профиля
   Future<Map<String, dynamic>> getProfileStats(
-      String userId, UserRole role) async {
+    String userId,
+    UserRole role,
+  ) async {
     try {
-      Map<String, dynamic> stats = {};
+      var stats = <String, dynamic>{};
 
       if (role == UserRole.specialist) {
         // Статистика для специалиста

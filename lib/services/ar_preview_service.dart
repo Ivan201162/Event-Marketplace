@@ -1,4 +1,4 @@
-import 'package:event_marketplace_app/core/feature_flags.dart';
+import '../core/feature_flags.dart';
 
 /// Сервис для поддержки AR-превью
 class ArPreviewService {
@@ -281,22 +281,6 @@ class ArPreviewService {
 
 /// AR-превью мероприятия
 class ArPreview {
-  final String id;
-  final String eventId;
-  final String eventTitle;
-  final String eventDescription;
-  final String eventLocation;
-  final DateTime eventDate;
-  final List<String> eventImages;
-  final String? venueLayout;
-  final String? decorationStyle;
-  final String arModelUrl;
-  final String previewImageUrl;
-  final ArPreviewStatus status;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final Map<String, dynamic> metadata;
-
   const ArPreview({
     required this.id,
     required this.eventId,
@@ -314,23 +298,25 @@ class ArPreview {
     required this.updatedAt,
     required this.metadata,
   });
-}
-
-/// AR-превью декорации
-class ArDecorationPreview {
   final String id;
-  final String decorationId;
-  final String decorationName;
-  final String decorationType;
-  final String modelUrl;
-  final List<double> dimensions;
-  final String? color;
-  final String? material;
+  final String eventId;
+  final String eventTitle;
+  final String eventDescription;
+  final String eventLocation;
+  final DateTime eventDate;
+  final List<String> eventImages;
+  final String? venueLayout;
+  final String? decorationStyle;
+  final String arModelUrl;
+  final String previewImageUrl;
   final ArPreviewStatus status;
   final DateTime createdAt;
   final DateTime updatedAt;
   final Map<String, dynamic> metadata;
+}
 
+/// AR-превью декорации
+class ArDecorationPreview {
   const ArDecorationPreview({
     required this.id,
     required this.decorationId,
@@ -345,23 +331,22 @@ class ArDecorationPreview {
     required this.updatedAt,
     required this.metadata,
   });
-}
-
-/// AR-превью оборудования
-class ArEquipmentPreview {
   final String id;
-  final String equipmentId;
-  final String equipmentName;
-  final String equipmentType;
+  final String decorationId;
+  final String decorationName;
+  final String decorationType;
   final String modelUrl;
   final List<double> dimensions;
-  final String? brand;
-  final String? specifications;
+  final String? color;
+  final String? material;
   final ArPreviewStatus status;
   final DateTime createdAt;
   final DateTime updatedAt;
   final Map<String, dynamic> metadata;
+}
 
+/// AR-превью оборудования
+class ArEquipmentPreview {
   const ArEquipmentPreview({
     required this.id,
     required this.equipmentId,
@@ -376,22 +361,22 @@ class ArEquipmentPreview {
     required this.updatedAt,
     required this.metadata,
   });
-}
-
-/// AR-превью помещения
-class ArVenuePreview {
   final String id;
-  final String venueId;
-  final String venueName;
-  final String layoutUrl;
-  final List<double> venueDimensions;
-  final List<ArDecorationPreview> decorations;
-  final List<ArEquipmentPreview> equipment;
+  final String equipmentId;
+  final String equipmentName;
+  final String equipmentType;
+  final String modelUrl;
+  final List<double> dimensions;
+  final String? brand;
+  final String? specifications;
   final ArPreviewStatus status;
   final DateTime createdAt;
   final DateTime updatedAt;
   final Map<String, dynamic> metadata;
+}
 
+/// AR-превью помещения
+class ArVenuePreview {
   const ArVenuePreview({
     required this.id,
     required this.venueId,
@@ -405,19 +390,21 @@ class ArVenuePreview {
     required this.updatedAt,
     required this.metadata,
   });
+  final String id;
+  final String venueId;
+  final String venueName;
+  final String layoutUrl;
+  final List<double> venueDimensions;
+  final List<ArDecorationPreview> decorations;
+  final List<ArEquipmentPreview> equipment;
+  final ArPreviewStatus status;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final Map<String, dynamic> metadata;
 }
 
 /// AR-сцена
 class ArScene {
-  final String id;
-  final String eventId;
-  final String sceneName;
-  final List<ArDecorationPreview> decorations;
-  final List<ArEquipmentPreview> equipment;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final Map<String, dynamic> metadata;
-
   const ArScene({
     required this.id,
     required this.eventId,
@@ -428,6 +415,14 @@ class ArScene {
     required this.updatedAt,
     required this.metadata,
   });
+  final String id;
+  final String eventId;
+  final String sceneName;
+  final List<ArDecorationPreview> decorations;
+  final List<ArEquipmentPreview> equipment;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final Map<String, dynamic> metadata;
 }
 
 /// Статусы AR-превью

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/chat_providers.dart';
+
 import '../models/chat.dart';
 import '../models/chat_message.dart';
+import '../providers/chat_providers.dart';
 
 /// Экран чата
 class ChatScreen extends ConsumerStatefulWidget {
-  final String chatId;
-
   const ChatScreen({
     super.key,
     required this.chatId,
   });
+  final String chatId;
 
   @override
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
@@ -44,7 +44,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.info_outline),
-            onPressed: () => _showChatInfo(),
+            onPressed: _showChatInfo,
           ),
         ],
       ),
@@ -73,8 +73,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.error_outline,
-                        size: 64, color: Colors.red),
+                    const Icon(
+                      Icons.error_outline,
+                      size: 64,
+                      color: Colors.red,
+                    ),
                     const SizedBox(height: 16),
                     Text('Ошибка загрузки: $error'),
                     const SizedBox(height: 16),
@@ -96,26 +99,24 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
   }
 
-  Widget _buildEmptyState() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey),
-          SizedBox(height: 16),
-          Text(
-            'Начните общение',
-            style: TextStyle(fontSize: 18, color: Colors.grey),
-          ),
-          SizedBox(height: 8),
-          Text(
-            'Отправьте первое сообщение',
-            style: TextStyle(color: Colors.grey),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildEmptyState() => const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(Icons.chat_bubble_outline, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
+            Text(
+              'Начните общение',
+              style: TextStyle(fontSize: 18, color: Colors.grey),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Отправьте первое сообщение',
+              style: TextStyle(color: Colors.grey),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildMessageBubble(ChatMessage message) {
     final isMe =
@@ -168,43 +169,41 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
   }
 
-  Widget _buildMessageInput() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
-        border: Border(
-          top: BorderSide(color: Colors.grey[300]!),
+  Widget _buildMessageInput() => Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Theme.of(context).scaffoldBackgroundColor,
+          border: Border(
+            top: BorderSide(color: Colors.grey[300]!),
+          ),
         ),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: TextField(
-              controller: _messageController,
-              decoration: InputDecoration(
-                hintText: 'Введите сообщение...',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(24),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _messageController,
+                decoration: InputDecoration(
+                  hintText: 'Введите сообщение...',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
                 ),
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 12,
-                ),
+                maxLines: null,
+                onSubmitted: (_) => _sendMessage(),
               ),
-              maxLines: null,
-              onSubmitted: (_) => _sendMessage(),
             ),
-          ),
-          const SizedBox(width: 8),
-          FloatingActionButton.small(
-            onPressed: _sendMessage,
-            child: const Icon(Icons.send),
-          ),
-        ],
-      ),
-    );
-  }
+            const SizedBox(width: 8),
+            FloatingActionButton.small(
+              onPressed: _sendMessage,
+              child: const Icon(Icons.send),
+            ),
+          ],
+        ),
+      );
 
   String _formatTime(DateTime dateTime) {
     final now = DateTime.now();

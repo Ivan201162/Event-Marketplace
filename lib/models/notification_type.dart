@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 /// Тип уведомления
 enum NotificationType {
   booking,
@@ -10,6 +8,12 @@ enum NotificationType {
   promotion,
   reminder,
   update,
+  general,
+  newPost,
+  newStory,
+  newEvent,
+  newPortfolio,
+  announcement,
 }
 
 /// Расширение для NotificationType
@@ -32,6 +36,18 @@ extension NotificationTypeExtension on NotificationType {
         return 'Напоминание';
       case NotificationType.update:
         return 'Обновление';
+      case NotificationType.general:
+        return 'Общее';
+      case NotificationType.newPost:
+        return 'Новый пост';
+      case NotificationType.newStory:
+        return 'Новая история';
+      case NotificationType.newEvent:
+        return 'Новое событие';
+      case NotificationType.newPortfolio:
+        return 'Новое портфолио';
+      case NotificationType.announcement:
+        return 'Объявление';
     }
   }
 
@@ -53,6 +69,18 @@ extension NotificationTypeExtension on NotificationType {
         return '⏰';
       case NotificationType.update:
         return '🔄';
+      case NotificationType.general:
+        return '📢';
+      case NotificationType.newPost:
+        return '📝';
+      case NotificationType.newStory:
+        return '📖';
+      case NotificationType.newEvent:
+        return '🎪';
+      case NotificationType.newPortfolio:
+        return '🖼️';
+      case NotificationType.announcement:
+        return '📢';
     }
   }
 }

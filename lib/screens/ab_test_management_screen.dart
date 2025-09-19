@@ -27,46 +27,43 @@ class _ABTestManagementScreenState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ResponsiveScaffold(
-      title: 'Управление A/B тестами',
-      body: Column(
-        children: [
-          // Вкладки
-          _buildTabs(),
+  Widget build(BuildContext context) => ResponsiveScaffold(
+        title: 'Управление A/B тестами',
+        body: Column(
+          children: [
+            // Вкладки
+            _buildTabs(),
 
-          // Контент
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _selectedTab == 'tests'
-                    ? _buildTestsTab()
-                    : _selectedTab == 'create'
-                        ? _buildCreateTab()
-                        : _buildStatisticsTab(),
-          ),
-        ],
-      ),
-    );
-  }
+            // Контент
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _selectedTab == 'tests'
+                      ? _buildTestsTab()
+                      : _selectedTab == 'create'
+                          ? _buildCreateTab()
+                          : _buildStatisticsTab(),
+            ),
+          ],
+        ),
+      );
 
-  Widget _buildTabs() {
-    return ResponsiveCard(
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildTabButton('tests', 'Тесты', Icons.science),
-          ),
-          Expanded(
-            child: _buildTabButton('create', 'Создать', Icons.add),
-          ),
-          Expanded(
-            child: _buildTabButton('statistics', 'Статистика', Icons.analytics),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildTabs() => ResponsiveCard(
+        child: Row(
+          children: [
+            Expanded(
+              child: _buildTabButton('tests', 'Тесты', Icons.science),
+            ),
+            Expanded(
+              child: _buildTabButton('create', 'Создать', Icons.add),
+            ),
+            Expanded(
+              child:
+                  _buildTabButton('statistics', 'Статистика', Icons.analytics),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -112,52 +109,50 @@ class _ABTestManagementScreenState
     );
   }
 
-  Widget _buildTestsTab() {
-    return Column(
-      children: [
-        // Заголовок с кнопками
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'A/B тесты',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _loadTests,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-              const SizedBox(width: 8),
-              ElevatedButton.icon(
-                onPressed: () {
-                  setState(() {
-                    _selectedTab = 'create';
-                  });
-                },
-                icon: const Icon(Icons.add),
-                label: const Text('Создать тест'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список тестов
-        Expanded(
-          child: _tests.isEmpty
-              ? const Center(child: Text('A/B тесты не найдены'))
-              : ListView.builder(
-                  itemCount: _tests.length,
-                  itemBuilder: (context, index) {
-                    final test = _tests[index];
-                    return _buildTestCard(test);
-                  },
+  Widget _buildTestsTab() => Column(
+        children: [
+          // Заголовок с кнопками
+          ResponsiveCard(
+            child: Row(
+              children: [
+                ResponsiveText(
+                  'A/B тесты',
+                  isTitle: true,
                 ),
-        ),
-      ],
-    );
-  }
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadTests,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+                const SizedBox(width: 8),
+                ElevatedButton.icon(
+                  onPressed: () {
+                    setState(() {
+                      _selectedTab = 'create';
+                    });
+                  },
+                  icon: const Icon(Icons.add),
+                  label: const Text('Создать тест'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список тестов
+          Expanded(
+            child: _tests.isEmpty
+                ? const Center(child: Text('A/B тесты не найдены'))
+                : ListView.builder(
+                    itemCount: _tests.length,
+                    itemBuilder: (context, index) {
+                      final test = _tests[index];
+                      return _buildTestCard(test);
+                    },
+                  ),
+          ),
+        ],
+      );
 
   Widget _buildTestCard(ABTest test) {
     final statusColor = _getStatusColor(test.status);
@@ -249,19 +244,22 @@ class _ABTestManagementScreenState
           Wrap(
             spacing: 8,
             runSpacing: 4,
-            children: test.variants.map((variant) {
-              return Chip(
-                label: Text(
-                    '${variant.name} (${variant.trafficPercentage.toStringAsFixed(0)}%)'),
-                backgroundColor: variant.isControl
-                    ? Colors.blue.withValues(alpha: 0.1)
-                    : Colors.green.withValues(alpha: 0.1),
-                labelStyle: TextStyle(
-                  fontSize: 12,
-                  color: variant.isControl ? Colors.blue : Colors.green,
-                ),
-              );
-            }).toList(),
+            children: test.variants
+                .map(
+                  (variant) => Chip(
+                    label: Text(
+                      '${variant.name} (${variant.trafficPercentage.toStringAsFixed(0)}%)',
+                    ),
+                    backgroundColor: variant.isControl
+                        ? Colors.blue.withValues(alpha: 0.1)
+                        : Colors.green.withValues(alpha: 0.1),
+                    labelStyle: TextStyle(
+                      fontSize: 12,
+                      color: variant.isControl ? Colors.blue : Colors.green,
+                    ),
+                  ),
+                )
+                .toList(),
           ),
 
           const SizedBox(height: 12),
@@ -270,12 +268,16 @@ class _ABTestManagementScreenState
           Row(
             children: [
               _buildInfoChip(
-                  'Трафик',
-                  '${test.targeting.trafficPercentage.toStringAsFixed(0)}%',
-                  Colors.blue),
+                'Трафик',
+                '${test.targeting.trafficPercentage.toStringAsFixed(0)}%',
+                Colors.blue,
+              ),
               const SizedBox(width: 8),
               _buildInfoChip(
-                  'Метрика', test.metrics.primaryMetric, Colors.green),
+                'Метрика',
+                test.metrics.primaryMetric,
+                Colors.green,
+              ),
             ],
           ),
 
@@ -319,26 +321,24 @@ class _ABTestManagementScreenState
     );
   }
 
-  Widget _buildCreateTab() {
-    return SingleChildScrollView(
-      child: ResponsiveCard(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ResponsiveText(
-              'Создать A/B тест',
-              isTitle: true,
-            ),
+  Widget _buildCreateTab() => SingleChildScrollView(
+        child: ResponsiveCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ResponsiveText(
+                'Создать A/B тест',
+                isTitle: true,
+              ),
 
-            const SizedBox(height: 16),
+              const SizedBox(height: 16),
 
-            // Форма создания теста
-            _buildCreateTestForm(),
-          ],
+              // Форма создания теста
+              _buildCreateTestForm(),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildCreateTestForm() {
     final nameController = TextEditingController();
@@ -411,202 +411,200 @@ class _ABTestManagementScreenState
     );
   }
 
-  Widget _buildStatisticsTab() {
-    return FutureBuilder<List<ABTestStatistics>>(
-      future: _loadAllStatistics(),
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
-        }
+  Widget _buildStatisticsTab() => FutureBuilder<List<ABTestStatistics>>(
+        future: _loadAllStatistics(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-        final statistics = snapshot.data!;
+          final statistics = snapshot.data!;
 
-        return SingleChildScrollView(
-          child: Column(
-            children:
-                statistics.map((stats) => _buildStatisticsCard(stats)).toList(),
-          ),
-        );
-      },
-    );
-  }
-
-  Widget _buildStatisticsCard(ABTestStatistics stats) {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ResponsiveText(
-            'Статистика: ${stats.testName}',
-            isTitle: true,
-          ),
-
-          const SizedBox(height: 16),
-
-          // Основные метрики
-          Row(
-            children: [
-              Expanded(
-                child: _buildStatCard(
-                  'Участники',
-                  '${stats.totalParticipants}',
-                  Colors.blue,
-                  Icons.people,
-                ),
-              ),
-              Expanded(
-                child: _buildStatCard(
-                  'Конверсии',
-                  '${stats.totalConversions}',
-                  Colors.green,
-                  Icons.trending_up,
-                ),
-              ),
-              Expanded(
-                child: _buildStatCard(
-                  'Конверсия',
-                  '${(stats.overallConversionRate * 100).toStringAsFixed(2)}%',
-                  Colors.orange,
-                  Icons.percent,
-                ),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 16),
-
-          // Статистика по вариантам
-          Text(
-            'Результаты по вариантам:',
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
-              color: Colors.grey[600],
+          return SingleChildScrollView(
+            child: Column(
+              children: statistics.map(_buildStatisticsCard).toList(),
             ),
-          ),
+          );
+        },
+      );
 
-          const SizedBox(height: 8),
-
-          ...stats.variantStatistics.values.map((variantStats) {
-            return Container(
-              margin: const EdgeInsets.only(bottom: 8),
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.grey.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
-              ),
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          variantStats.variantName,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        Text(
-                          '${variantStats.participants} участников, ${variantStats.conversions} конверсий',
-                          style:
-                              const TextStyle(fontSize: 12, color: Colors.grey),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Text(
-                    '${(variantStats.conversionRate * 100).toStringAsFixed(2)}%',
-                    style: const TextStyle(
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.green,
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }).toList(),
-
-          const SizedBox(height: 16),
-
-          // Статистическая значимость
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: stats.isStatisticallySignificant
-                  ? Colors.green.withValues(alpha: 0.1)
-                  : Colors.orange.withValues(alpha: 0.1),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: stats.isStatisticallySignificant
-                    ? Colors.green
-                    : Colors.orange,
-              ),
+  Widget _buildStatisticsCard(ABTestStatistics stats) => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ResponsiveText(
+              'Статистика: ${stats.testName}',
+              isTitle: true,
             ),
-            child: Row(
+
+            const SizedBox(height: 16),
+
+            // Основные метрики
+            Row(
               children: [
-                Icon(
-                  stats.isStatisticallySignificant
-                      ? Icons.check_circle
-                      : Icons.warning,
-                  color: stats.isStatisticallySignificant
-                      ? Colors.green
-                      : Colors.orange,
-                ),
-                const SizedBox(width: 8),
                 Expanded(
-                  child: Text(
-                    stats.isStatisticallySignificant
-                        ? 'Результаты статистически значимы (${(stats.confidenceLevel * 100).toStringAsFixed(0)}% доверия)'
-                        : 'Результаты не статистически значимы',
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      color: stats.isStatisticallySignificant
-                          ? Colors.green
-                          : Colors.orange,
-                    ),
+                  child: _buildStatCard(
+                    'Участники',
+                    '${stats.totalParticipants}',
+                    Colors.blue,
+                    Icons.people,
+                  ),
+                ),
+                Expanded(
+                  child: _buildStatCard(
+                    'Конверсии',
+                    '${stats.totalConversions}',
+                    Colors.green,
+                    Icons.trending_up,
+                  ),
+                ),
+                Expanded(
+                  child: _buildStatCard(
+                    'Конверсия',
+                    '${(stats.overallConversionRate * 100).toStringAsFixed(2)}%',
+                    Colors.orange,
+                    Icons.percent,
                   ),
                 ),
               ],
             ),
-          ),
-        ],
-      ),
-    );
-  }
+
+            const SizedBox(height: 16),
+
+            // Статистика по вариантам
+            Text(
+              'Результаты по вариантам:',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.grey[600],
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            ...stats.variantStatistics.values.map(
+              (variantStats) => Container(
+                margin: const EdgeInsets.only(bottom: 8),
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.grey.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            variantStats.variantName,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                          Text(
+                            '${variantStats.participants} участников, ${variantStats.conversions} конверсий',
+                            style: const TextStyle(
+                                fontSize: 12, color: Colors.grey),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Text(
+                      '${(variantStats.conversionRate * 100).toStringAsFixed(2)}%',
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.green,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 16),
+
+            // Статистическая значимость
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: stats.isStatisticallySignificant
+                    ? Colors.green.withValues(alpha: 0.1)
+                    : Colors.orange.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(
+                  color: stats.isStatisticallySignificant
+                      ? Colors.green
+                      : Colors.orange,
+                ),
+              ),
+              child: Row(
+                children: [
+                  Icon(
+                    stats.isStatisticallySignificant
+                        ? Icons.check_circle
+                        : Icons.warning,
+                    color: stats.isStatisticallySignificant
+                        ? Colors.green
+                        : Colors.orange,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      stats.isStatisticallySignificant
+                          ? 'Результаты статистически значимы (${(stats.confidenceLevel * 100).toStringAsFixed(0)}% доверия)'
+                          : 'Результаты не статистически значимы',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        color: stats.isStatisticallySignificant
+                            ? Colors.green
+                            : Colors.orange,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildStatCard(
-      String title, String value, Color color, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 8),
-          Text(
-            value,
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-              color: color,
+    String title,
+    String value,
+    Color color,
+    IconData icon,
+  ) =>
+      Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: color),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: color, size: 24),
+            const SizedBox(height: 8),
+            Text(
+              value,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: color,
+              ),
             ),
-          ),
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.grey,
+            Text(
+              title,
+              style: const TextStyle(
+                fontSize: 12,
+                color: Colors.grey,
+              ),
+              textAlign: TextAlign.center,
             ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   Widget _buildStatusChip(ABTestStatus status) {
     final color = _getStatusColor(status);
@@ -630,24 +628,22 @@ class _ABTestManagementScreenState
     );
   }
 
-  Widget _buildInfoChip(String label, String value, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color),
-      ),
-      child: Text(
-        '$label: $value',
-        style: TextStyle(
-          fontSize: 12,
-          color: color,
-          fontWeight: FontWeight.w500,
+  Widget _buildInfoChip(String label, String value, Color color) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color),
         ),
-      ),
-    );
-  }
+        child: Text(
+          '$label: $value',
+          style: TextStyle(
+            fontSize: 12,
+            color: color,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
 
   Color _getStatusColor(ABTestStatus status) {
     switch (status) {
@@ -679,9 +675,8 @@ class _ABTestManagementScreenState
     }
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDateTime(DateTime dateTime) =>
+      '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
 
   Future<void> _loadTests() async {
     setState(() {
@@ -858,8 +853,12 @@ class _ABTestManagementScreenState
     );
   }
 
-  Future<void> _createTest(String name, String description,
-      String primaryMetric, double trafficPercentage) async {
+  Future<void> _createTest(
+    String name,
+    String description,
+    String primaryMetric,
+    double trafficPercentage,
+  ) async {
     if (name.isEmpty || description.isEmpty || primaryMetric.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -877,7 +876,7 @@ class _ABTestManagementScreenState
           id: 'control',
           name: 'Контрольная группа',
           description: 'Оригинальная версия',
-          trafficPercentage: 50.0,
+          trafficPercentage: 50,
           isControl: true,
           createdAt: DateTime.now(),
         ),
@@ -885,8 +884,7 @@ class _ABTestManagementScreenState
           id: 'treatment',
           name: 'Тестовая группа',
           description: 'Новая версия',
-          trafficPercentage: 50.0,
-          isControl: false,
+          trafficPercentage: 50,
           createdAt: DateTime.now(),
         ),
       ];
@@ -897,7 +895,6 @@ class _ABTestManagementScreenState
 
       final metrics = ABTestMetrics(
         primaryMetric: primaryMetric,
-        minimumSampleSize: 1000,
       );
 
       await _abTestService.createABTest(

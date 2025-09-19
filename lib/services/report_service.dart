@@ -1,17 +1,19 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
+
 import '../models/report.dart';
 
 /// Сервис отчетов
 class ReportService {
+  factory ReportService() => _instance;
+  ReportService._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
 
   static final ReportService _instance = ReportService._internal();
-  factory ReportService() => _instance;
-  ReportService._internal();
 
   /// Создать отчет
   Future<String> createReport({
@@ -35,7 +37,6 @@ class ReportService {
         parameters: parameters,
         generatedBy: generatedBy,
         createdAt: now,
-        status: ReportStatus.pending,
       );
 
       await _firestore.collection('reports').doc(reportId).set(report.toMap());
@@ -202,22 +203,27 @@ class ReportService {
 
   /// Генерировать отчет по бронированиям
   Future<ReportData> _generateBookingsReport(
-      Map<String, dynamic> parameters) async {
+    Map<String, dynamic> parameters,
+  ) async {
     try {
       final startDate = parameters['startDate'] as DateTime?;
       final endDate = parameters['endDate'] as DateTime?;
       final specialistId = parameters['specialistId'] as String?;
       final status = parameters['status'] as String?;
 
-      Query query = _firestore.collection('bookings');
+      var query = _firestore.collection('bookings');
 
       if (startDate != null) {
-        query = query.where('createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where(
+          'createdAt',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+        );
       }
       if (endDate != null) {
-        query = query.where('createdAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where(
+          'createdAt',
+          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
+        );
       }
       if (specialistId != null) {
         query = query.where('specialistId', isEqualTo: specialistId);
@@ -229,7 +235,7 @@ class ReportService {
       final snapshot = await query.get();
       final rows = <Map<String, dynamic>>[];
       double totalRevenue = 0;
-      int completedBookings = 0;
+      var completedBookings = 0;
 
       for (final doc in snapshot.docs) {
         final data = doc.data() as Map<String, dynamic>;
@@ -267,7 +273,7 @@ class ReportService {
           'totalPrice',
           'createdAt',
           'startTime',
-          'endTime'
+          'endTime',
         ],
         summary: {
           'totalBookings': rows.length,
@@ -289,21 +295,26 @@ class ReportService {
 
   /// Генерировать отчет по платежам
   Future<ReportData> _generatePaymentsReport(
-      Map<String, dynamic> parameters) async {
+    Map<String, dynamic> parameters,
+  ) async {
     try {
       final startDate = parameters['startDate'] as DateTime?;
       final endDate = parameters['endDate'] as DateTime?;
       final paymentMethod = parameters['paymentMethod'] as String?;
 
-      Query query = _firestore.collection('payments');
+      var query = _firestore.collection('payments');
 
       if (startDate != null) {
-        query = query.where('createdAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where(
+          'createdAt',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+        );
       }
       if (endDate != null) {
-        query = query.where('createdAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where(
+          'createdAt',
+          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
+        );
       }
       if (paymentMethod != null) {
         query = query.where('method', isEqualTo: paymentMethod);
@@ -312,7 +323,7 @@ class ReportService {
       final snapshot = await query.get();
       final rows = <Map<String, dynamic>>[];
       double totalAmount = 0;
-      int successfulPayments = 0;
+      var successfulPayments = 0;
 
       for (final doc in snapshot.docs) {
         final data = doc.data() as Map<String, dynamic>;
@@ -357,12 +368,13 @@ class ReportService {
 
   /// Генерировать отчет по пользователям
   Future<ReportData> _generateUsersReport(
-      Map<String, dynamic> parameters) async {
+    Map<String, dynamic> parameters,
+  ) async {
     try {
       final userType = parameters['userType'] as String?;
       final isActive = parameters['isActive'] as bool?;
 
-      Query query = _firestore.collection('users');
+      var query = _firestore.collection('users');
 
       if (userType != null) {
         query = query.where('type', isEqualTo: userType);
@@ -373,7 +385,7 @@ class ReportService {
 
       final snapshot = await query.get();
       final rows = <Map<String, dynamic>>[];
-      int activeUsers = 0;
+      var activeUsers = 0;
 
       for (final doc in snapshot.docs) {
         final data = doc.data() as Map<String, dynamic>;
@@ -406,7 +418,7 @@ class ReportService {
           'type',
           'isActive',
           'createdAt',
-          'lastLoginAt'
+          'lastLoginAt',
         ],
         summary: {
           'totalUsers': rows.length,
@@ -426,12 +438,13 @@ class ReportService {
 
   /// Генерировать отчет по специалистам
   Future<ReportData> _generateSpecialistsReport(
-      Map<String, dynamic> parameters) async {
+    Map<String, dynamic> parameters,
+  ) async {
     try {
       final category = parameters['category'] as String?;
       final isVerified = parameters['isVerified'] as bool?;
 
-      Query query = _firestore.collection('specialists');
+      var query = _firestore.collection('specialists');
 
       if (category != null) {
         query = query.where('category', isEqualTo: category);
@@ -442,7 +455,7 @@ class ReportService {
 
       final snapshot = await query.get();
       final rows = <Map<String, dynamic>>[];
-      int verifiedSpecialists = 0;
+      var verifiedSpecialists = 0;
       double totalRating = 0;
 
       for (final doc in snapshot.docs) {
@@ -477,7 +490,7 @@ class ReportService {
           'rating',
           'reviewCount',
           'isVerified',
-          'createdAt'
+          'createdAt',
         ],
         summary: {
           'totalSpecialists': rows.length,
@@ -497,20 +510,25 @@ class ReportService {
 
   /// Генерировать отчет по аналитике
   Future<ReportData> _generateAnalyticsReport(
-      Map<String, dynamic> parameters) async {
+    Map<String, dynamic> parameters,
+  ) async {
     try {
       final startDate = parameters['startDate'] as DateTime?;
       final endDate = parameters['endDate'] as DateTime?;
 
-      Query query = _firestore.collection('analyticsEvents');
+      var query = _firestore.collection('analyticsEvents');
 
       if (startDate != null) {
-        query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where(
+          'timestamp',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+        );
       }
       if (endDate != null) {
-        query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where(
+          'timestamp',
+          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
+        );
       }
 
       final snapshot = await query.get();
@@ -555,21 +573,26 @@ class ReportService {
 
   /// Генерировать отчет по уведомлениям
   Future<ReportData> _generateNotificationsReport(
-      Map<String, dynamic> parameters) async {
+    Map<String, dynamic> parameters,
+  ) async {
     try {
       final startDate = parameters['startDate'] as DateTime?;
       final endDate = parameters['endDate'] as DateTime?;
       final type = parameters['type'] as String?;
 
-      Query query = _firestore.collection('sentNotifications');
+      var query = _firestore.collection('sentNotifications');
 
       if (startDate != null) {
-        query = query.where('sentAt',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where(
+          'sentAt',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+        );
       }
       if (endDate != null) {
-        query = query.where('sentAt',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where(
+          'sentAt',
+          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
+        );
       }
       if (type != null) {
         query = query.where('type', isEqualTo: type);
@@ -577,8 +600,8 @@ class ReportService {
 
       final snapshot = await query.get();
       final rows = <Map<String, dynamic>>[];
-      int deliveredCount = 0;
-      int readCount = 0;
+      var deliveredCount = 0;
+      var readCount = 0;
 
       for (final doc in snapshot.docs) {
         final data = doc.data() as Map<String, dynamic>;
@@ -617,7 +640,7 @@ class ReportService {
           'status',
           'sentAt',
           'deliveredAt',
-          'readAt'
+          'readAt',
         ],
         summary: {
           'totalSent': rows.length,
@@ -641,21 +664,26 @@ class ReportService {
 
   /// Генерировать отчет по ошибкам
   Future<ReportData> _generateErrorsReport(
-      Map<String, dynamic> parameters) async {
+    Map<String, dynamic> parameters,
+  ) async {
     try {
       final startDate = parameters['startDate'] as DateTime?;
       final endDate = parameters['endDate'] as DateTime?;
       final errorType = parameters['errorType'] as String?;
 
-      Query query = _firestore.collection('appErrors');
+      var query = _firestore.collection('appErrors');
 
       if (startDate != null) {
-        query = query.where('timestamp',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where(
+          'timestamp',
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate),
+        );
       }
       if (endDate != null) {
-        query = query.where('timestamp',
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where(
+          'timestamp',
+          isLessThanOrEqualTo: Timestamp.fromDate(endDate),
+        );
       }
       if (errorType != null) {
         query = query.where('errorType', isEqualTo: errorType);
@@ -663,7 +691,7 @@ class ReportService {
 
       final snapshot = await query.get();
       final rows = <Map<String, dynamic>>[];
-      int resolvedCount = 0;
+      var resolvedCount = 0;
       final errorTypeCounts = <String, int>{};
 
       for (final doc in snapshot.docs) {
@@ -696,7 +724,7 @@ class ReportService {
           'screen',
           'errorMessage',
           'resolved',
-          'timestamp'
+          'timestamp',
         ],
         summary: {
           'totalErrors': rows.length,
@@ -717,7 +745,8 @@ class ReportService {
 
   /// Генерировать отчет по производительности
   Future<ReportData> _generatePerformanceReport(
-      Map<String, dynamic> parameters) async {
+    Map<String, dynamic> parameters,
+  ) async {
     try {
       // TODO: Реализовать сбор метрик производительности
       return ReportData(
@@ -740,7 +769,8 @@ class ReportService {
 
   /// Генерировать пользовательский отчет
   Future<ReportData> _generateCustomReport(
-      Map<String, dynamic> parameters) async {
+    Map<String, dynamic> parameters,
+  ) async {
     try {
       // TODO: Реализовать генерацию пользовательских отчетов
       return ReportData(
@@ -761,7 +791,9 @@ class ReportService {
 
   /// Генерировать файл отчета
   Future<String> _generateReportFile(
-      String reportId, ReportData reportData) async {
+    String reportId,
+    ReportData reportData,
+  ) async {
     try {
       // Генерируем CSV файл
       final csv = StringBuffer();
@@ -827,7 +859,7 @@ class ReportService {
     int limit = 50,
   }) async {
     try {
-      Query query = _firestore.collection('reports');
+      var query = _firestore.collection('reports');
 
       if (generatedBy != null) {
         query = query.where('generatedBy', isEqualTo: generatedBy);
@@ -843,7 +875,7 @@ class ReportService {
       final snapshot =
           await query.orderBy('createdAt', descending: true).limit(limit).get();
 
-      return snapshot.docs.map((doc) => Report.fromDocument(doc)).toList();
+      return snapshot.docs.map(Report.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка получения списка отчетов: $e');
@@ -861,9 +893,7 @@ class ReportService {
           .orderBy('name')
           .get();
 
-      return snapshot.docs
-          .map((doc) => ReportTemplate.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(ReportTemplate.fromDocument).toList();
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка получения шаблонов отчетов: $e');

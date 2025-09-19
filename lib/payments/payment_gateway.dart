@@ -29,12 +29,6 @@ enum PaymentMethod {
 
 /// Результат платежа
 class PaymentResult {
-  final String paymentId;
-  final PaymentStatus status;
-  final String? transactionId;
-  final String? errorMessage;
-  final Map<String, dynamic>? metadata;
-
   const PaymentResult({
     required this.paymentId,
     required this.status,
@@ -42,6 +36,11 @@ class PaymentResult {
     this.errorMessage,
     this.metadata,
   });
+  final String paymentId;
+  final PaymentStatus status;
+  final String? transactionId;
+  final String? errorMessage;
+  final Map<String, dynamic>? metadata;
 
   bool get isSuccess => status == PaymentStatus.completed;
   bool get isFailed => status == PaymentStatus.failed;
@@ -50,18 +49,6 @@ class PaymentResult {
 
 /// Информация о платеже
 class PaymentInfo {
-  final String id;
-  final String bookingId;
-  final double amount;
-  final String currency;
-  final PaymentType type;
-  final PaymentMethod method;
-  final PaymentStatus status;
-  final DateTime createdAt;
-  final DateTime? completedAt;
-  final String? description;
-  final Map<String, dynamic>? metadata;
-
   const PaymentInfo({
     required this.id,
     required this.bookingId,
@@ -75,6 +62,17 @@ class PaymentInfo {
     this.description,
     this.metadata,
   });
+  final String id;
+  final String bookingId;
+  final double amount;
+  final String currency;
+  final PaymentType type;
+  final PaymentMethod method;
+  final PaymentStatus status;
+  final DateTime createdAt;
+  final DateTime? completedAt;
+  final String? description;
+  final Map<String, dynamic>? metadata;
 }
 
 /// Абстрактный шлюз для платежей

@@ -1,23 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../providers/locale_provider.dart';
 
 /// Виджет для выбора языка
 class LanguageSelector extends ConsumerWidget {
-  final bool showLabel;
-  final bool showFlag;
-  final bool showNativeName;
-  final bool showEnglishName;
-  final bool showCode;
-  final bool isExpanded;
-  final EdgeInsetsGeometry? padding;
-  final TextStyle? textStyle;
-  final Color? iconColor;
-  final Color? backgroundColor;
-  final BorderRadius? borderRadius;
-  final VoidCallback? onChanged;
-
   const LanguageSelector({
     super.key,
     this.showLabel = true,
@@ -33,11 +21,23 @@ class LanguageSelector extends ConsumerWidget {
     this.borderRadius,
     this.onChanged,
   });
+  final bool showLabel;
+  final bool showFlag;
+  final bool showNativeName;
+  final bool showEnglishName;
+  final bool showCode;
+  final bool isExpanded;
+  final EdgeInsetsGeometry? padding;
+  final TextStyle? textStyle;
+  final Color? iconColor;
+  final Color? backgroundColor;
+  final BorderRadius? borderRadius;
+  final VoidCallback? onChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentLocale = ref.watch(localeProvider);
-    final l10n = AppLocalizations.of(context)!;
+    final l10n = AppLocalizations.of(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -57,7 +57,6 @@ class LanguageSelector extends ConsumerWidget {
             borderRadius: borderRadius ?? BorderRadius.circular(12),
             border: Border.all(
               color: Theme.of(context).dividerColor,
-              width: 1,
             ),
           ),
           child: isExpanded
@@ -90,8 +89,12 @@ class LanguageSelector extends ConsumerWidget {
                         const SizedBox(width: 8),
                       ],
                       Text(
-                        _getLanguageName(currentLocale, showNativeName,
-                            showEnglishName, showCode),
+                        _getLanguageName(
+                          currentLocale,
+                          showNativeName,
+                          showEnglishName,
+                          showCode,
+                        ),
                         style:
                             textStyle ?? Theme.of(context).textTheme.bodyMedium,
                       ),
@@ -109,33 +112,29 @@ class LanguageSelector extends ConsumerWidget {
     );
   }
 
-  List<DropdownMenuItem<Locale>> _buildLanguageItems(BuildContext context) {
-    return [
-      DropdownMenuItem(
-        value: const Locale('ru', 'RU'),
-        child: _buildLanguageItem(const Locale('ru', 'RU')),
-      ),
-      DropdownMenuItem(
-        value: const Locale('en', 'US'),
-        child: _buildLanguageItem(const Locale('en', 'US')),
-      ),
-    ];
-  }
-
-  Widget _buildLanguageItem(Locale locale) {
-    return Row(
-      children: [
-        if (showFlag) ...[
-          _buildFlag(locale),
-          const SizedBox(width: 12),
-        ],
-        Text(
-          _getLanguageName(locale, showNativeName, showEnglishName, showCode),
-          style: const TextStyle(fontSize: 16),
+  List<DropdownMenuItem<Locale>> _buildLanguageItems(BuildContext context) => [
+        DropdownMenuItem(
+          value: const Locale('ru', 'RU'),
+          child: _buildLanguageItem(const Locale('ru', 'RU')),
         ),
-      ],
-    );
-  }
+        DropdownMenuItem(
+          value: const Locale('en', 'US'),
+          child: _buildLanguageItem(const Locale('en', 'US')),
+        ),
+      ];
+
+  Widget _buildLanguageItem(Locale locale) => Row(
+        children: [
+          if (showFlag) ...[
+            _buildFlag(locale),
+            const SizedBox(width: 12),
+          ],
+          Text(
+            _getLanguageName(locale, showNativeName, showEnglishName, showCode),
+            style: const TextStyle(fontSize: 16),
+          ),
+        ],
+      );
 
   Widget _buildFlag(Locale locale) {
     String flagEmoji;
@@ -157,7 +156,11 @@ class LanguageSelector extends ConsumerWidget {
   }
 
   String _getLanguageName(
-      Locale locale, bool showNative, bool showEnglish, bool showCode) {
+    Locale locale,
+    bool showNative,
+    bool showEnglish,
+    bool showCode,
+  ) {
     if (showCode) {
       return locale.languageCode.toUpperCase();
     }
@@ -241,11 +244,6 @@ class LanguageSelector extends ConsumerWidget {
 
 /// Компактный виджет для выбора языка
 class CompactLanguageSelector extends ConsumerWidget {
-  final bool showFlag;
-  final bool showText;
-  final Color? iconColor;
-  final VoidCallback? onChanged;
-
   const CompactLanguageSelector({
     super.key,
     this.showFlag = true,
@@ -253,6 +251,10 @@ class CompactLanguageSelector extends ConsumerWidget {
     this.iconColor,
     this.onChanged,
   });
+  final bool showFlag;
+  final bool showText;
+  final Color? iconColor;
+  final VoidCallback? onChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -298,9 +300,7 @@ class CompactLanguageSelector extends ConsumerWidget {
     );
   }
 
-  String _getLanguageCode(Locale locale) {
-    return locale.languageCode.toUpperCase();
-  }
+  String _getLanguageCode(Locale locale) => locale.languageCode.toUpperCase();
 
   void _showLanguageDialog(BuildContext context, WidgetRef ref) {
     showDialog(
@@ -363,12 +363,6 @@ class CompactLanguageSelector extends ConsumerWidget {
 
 /// Виджет для отображения текущего языка
 class CurrentLanguageDisplay extends ConsumerWidget {
-  final bool showFlag;
-  final bool showName;
-  final bool showCode;
-  final TextStyle? textStyle;
-  final Color? iconColor;
-
   const CurrentLanguageDisplay({
     super.key,
     this.showFlag = true,
@@ -377,6 +371,11 @@ class CurrentLanguageDisplay extends ConsumerWidget {
     this.textStyle,
     this.iconColor,
   });
+  final bool showFlag;
+  final bool showName;
+  final bool showCode;
+  final TextStyle? textStyle;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

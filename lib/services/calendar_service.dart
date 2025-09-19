@@ -8,9 +8,9 @@ import '../models/specialist_schedule.dart';
 
 /// Сервис для работы с календарем
 class CalendarService {
-  static final CalendarService _instance = CalendarService._internal();
   factory CalendarService() => _instance;
   CalendarService._internal();
+  static final CalendarService _instance = CalendarService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -30,31 +30,41 @@ class CalendarService {
 
   /// Получить события пользователя
   Stream<List<CalendarEvent>> getUserEvents(
-      String userId, CalendarFilter filter) {
-    Query query = _firestore.collection('calendar_events');
+    String userId,
+    CalendarFilter filter,
+  ) {
+    var query = _firestore.collection('calendar_events');
 
     // Фильтр по пользователю
     query = query.where('customerId', isEqualTo: userId);
 
     // Применяем фильтры
     if (filter.startDate != null) {
-      query = query.where('startTime',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!));
+      query = query.where(
+        'startTime',
+        isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!),
+      );
     }
 
     if (filter.endDate != null) {
-      query = query.where('startTime',
-          isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
+      query = query.where(
+        'startTime',
+        isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!),
+      );
     }
 
     if (filter.statuses != null && filter.statuses!.isNotEmpty) {
-      query = query.where('status',
-          whereIn: filter.statuses!.map((s) => s.name).toList());
+      query = query.where(
+        'status',
+        whereIn: filter.statuses!.map((s) => s.name).toList(),
+      );
     }
 
     if (filter.types != null && filter.types!.isNotEmpty) {
-      query = query.where('type',
-          whereIn: filter.types!.map((t) => t.name).toList());
+      query = query.where(
+        'type',
+        whereIn: filter.types!.map((t) => t.name).toList(),
+      );
     }
 
     if (filter.specialistId != null) {
@@ -69,17 +79,18 @@ class CalendarService {
     query = query.orderBy('startTime', descending: false);
 
     return query.snapshots().map((snapshot) {
-      var events =
-          snapshot.docs.map((doc) => CalendarEvent.fromDocument(doc)).toList();
+      var events = snapshot.docs.map(CalendarEvent.fromDocument).toList();
 
       // Применяем фильтры, которые нельзя применить в Firestore
       if (filter.searchQuery != null && filter.searchQuery!.isNotEmpty) {
         final query = filter.searchQuery!.toLowerCase();
         events = events
-            .where((event) =>
-                event.title.toLowerCase().contains(query) ||
-                event.description.toLowerCase().contains(query) ||
-                event.location.toLowerCase().contains(query))
+            .where(
+              (event) =>
+                  event.title.toLowerCase().contains(query) ||
+                  event.description.toLowerCase().contains(query) ||
+                  event.location.toLowerCase().contains(query),
+            )
             .toList();
       }
 
@@ -89,31 +100,41 @@ class CalendarService {
 
   /// Получить события специалиста
   Stream<List<CalendarEvent>> getSpecialistEvents(
-      String specialistId, CalendarFilter filter) {
-    Query query = _firestore.collection('calendar_events');
+    String specialistId,
+    CalendarFilter filter,
+  ) {
+    var query = _firestore.collection('calendar_events');
 
     // Фильтр по специалисту
     query = query.where('specialistId', isEqualTo: specialistId);
 
     // Применяем остальные фильтры аналогично getUserEvents
     if (filter.startDate != null) {
-      query = query.where('startTime',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!));
+      query = query.where(
+        'startTime',
+        isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!),
+      );
     }
 
     if (filter.endDate != null) {
-      query = query.where('startTime',
-          isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!));
+      query = query.where(
+        'startTime',
+        isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!),
+      );
     }
 
     if (filter.statuses != null && filter.statuses!.isNotEmpty) {
-      query = query.where('status',
-          whereIn: filter.statuses!.map((s) => s.name).toList());
+      query = query.where(
+        'status',
+        whereIn: filter.statuses!.map((s) => s.name).toList(),
+      );
     }
 
     if (filter.types != null && filter.types!.isNotEmpty) {
-      query = query.where('type',
-          whereIn: filter.types!.map((t) => t.name).toList());
+      query = query.where(
+        'type',
+        whereIn: filter.types!.map((t) => t.name).toList(),
+      );
     }
 
     if (filter.customerId != null) {
@@ -127,16 +148,17 @@ class CalendarService {
     query = query.orderBy('startTime', descending: false);
 
     return query.snapshots().map((snapshot) {
-      var events =
-          snapshot.docs.map((doc) => CalendarEvent.fromDocument(doc)).toList();
+      var events = snapshot.docs.map(CalendarEvent.fromDocument).toList();
 
       if (filter.searchQuery != null && filter.searchQuery!.isNotEmpty) {
         final query = filter.searchQuery!.toLowerCase();
         events = events
-            .where((event) =>
-                event.title.toLowerCase().contains(query) ||
-                event.description.toLowerCase().contains(query) ||
-                event.location.toLowerCase().contains(query))
+            .where(
+              (event) =>
+                  event.title.toLowerCase().contains(query) ||
+                  event.description.toLowerCase().contains(query) ||
+                  event.location.toLowerCase().contains(query),
+            )
             .toList();
       }
 
@@ -211,8 +233,10 @@ class CalendarService {
         await file.writeAsString(icsContent);
 
         // Делимся файлом
-        await Share.shareXFiles([XFile(file.path)],
-            text: 'Календарные события');
+        await Share.shareXFiles(
+          [XFile(file.path)],
+          text: 'Календарные события',
+        );
       }
     } catch (e) {
       print('Ошибка шаринга событий: $e');
@@ -222,18 +246,10 @@ class CalendarService {
   /// Открыть в Google Calendar
   Future<void> openInGoogleCalendar(CalendarEvent event) async {
     try {
-      final startTime = event.startTime
-              .toUtc()
-              .toIso8601String()
-              .replaceAll(':', '')
-              .split('.')[0] +
-          'Z';
-      final endTime = event.endTime
-              .toUtc()
-              .toIso8601String()
-              .replaceAll(':', '')
-              .split('.')[0] +
-          'Z';
+      final startTime =
+          '${event.startTime.toUtc().toIso8601String().replaceAll(':', '').split('.')[0]}Z';
+      final endTime =
+          '${event.endTime.toUtc().toIso8601String().replaceAll(':', '').split('.')[0]}Z';
 
       final url = Uri.parse(
           'https://calendar.google.com/calendar/render?action=TEMPLATE'
@@ -286,7 +302,9 @@ class CalendarService {
 
   /// Синхронизировать с Outlook Calendar
   Future<bool> syncWithOutlookCalendar(
-      String userId, String accessToken) async {
+    String userId,
+    String accessToken,
+  ) async {
     try {
       // TODO: Реализовать синхронизацию с Outlook Calendar API
       print('Синхронизация с Outlook Calendar для пользователя: $userId');
@@ -305,8 +323,7 @@ class CalendarService {
           .where('customerId', isEqualTo: userId)
           .get();
 
-      final events =
-          snapshot.docs.map((doc) => CalendarEvent.fromDocument(doc)).toList();
+      final events = snapshot.docs.map(CalendarEvent.fromDocument).toList();
 
       return _calculateStats(events);
     } catch (e) {
@@ -414,7 +431,7 @@ class CalendarService {
   /// Получить события на месяц
   Stream<List<CalendarEvent>> getMonthEvents(String userId) {
     final now = DateTime.now();
-    final startOfMonth = DateTime(now.year, now.month, 1);
+    final startOfMonth = DateTime(now.year, now.month);
     final endOfMonth = DateTime(now.year, now.month + 1, 0);
 
     final filter = CalendarFilter(
@@ -460,7 +477,10 @@ class CalendarService {
       eventsByStatus[event.status] = (eventsByStatus[event.status] ?? 0) + 1;
 
       final day = DateTime(
-          event.startTime.year, event.startTime.month, event.startTime.day);
+        event.startTime.year,
+        event.startTime.month,
+        event.startTime.day,
+      );
       dayEventCounts[day] = (dayEventCounts[day] ?? 0) + 1;
     }
 
@@ -492,8 +512,10 @@ class CalendarService {
       final querySnapshot = await _firestore
           .collection('calendar_events')
           .where('specialistId', isEqualTo: specialistId)
-          .where('startTime',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+          .where(
+            'startTime',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
+          )
           .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
           .get();
 
@@ -506,7 +528,9 @@ class CalendarService {
 
   /// Проверить доступность даты и времени
   Future<bool> isDateTimeAvailable(
-      String specialistId, DateTime dateTime) async {
+    String specialistId,
+    DateTime dateTime,
+  ) async {
     try {
       final startOfDay = DateTime(dateTime.year, dateTime.month, dateTime.day);
       final endOfDay = startOfDay.add(const Duration(days: 1));
@@ -514,14 +538,15 @@ class CalendarService {
       final querySnapshot = await _firestore
           .collection('calendar_events')
           .where('specialistId', isEqualTo: specialistId)
-          .where('startTime',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+          .where(
+            'startTime',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
+          )
           .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
           .get();
 
-      final events = querySnapshot.docs
-          .map((doc) => CalendarEvent.fromDocument(doc))
-          .toList();
+      final events =
+          querySnapshot.docs.map(CalendarEvent.fromDocument).toList();
 
       // Проверяем, есть ли конфликтующие события
       for (final event in events) {
@@ -539,7 +564,10 @@ class CalendarService {
 
   /// Получить доступные временные слоты
   Future<List<DateTime>> getAvailableTimeSlots(
-      String specialistId, DateTime date, Duration slotDuration) async {
+    String specialistId,
+    DateTime date,
+    Duration slotDuration,
+  ) async {
     try {
       final startOfDay = DateTime(date.year, date.month, date.day);
       final endOfDay = startOfDay.add(const Duration(days: 1));
@@ -547,28 +575,29 @@ class CalendarService {
       final querySnapshot = await _firestore
           .collection('calendar_events')
           .where('specialistId', isEqualTo: specialistId)
-          .where('startTime',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+          .where(
+            'startTime',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
+          )
           .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
           .get();
 
-      final events = querySnapshot.docs
-          .map((doc) => CalendarEvent.fromDocument(doc))
-          .toList();
+      final events =
+          querySnapshot.docs.map(CalendarEvent.fromDocument).toList();
 
       final availableSlots = <DateTime>[];
 
       // Генерируем слоты с 9:00 до 18:00
-      final startHour = 9;
-      final endHour = 18;
+      const startHour = 9;
+      const endHour = 18;
 
-      for (int hour = startHour; hour < endHour; hour++) {
-        for (int minute = 0; minute < 60; minute += slotDuration.inMinutes) {
+      for (var hour = startHour; hour < endHour; hour++) {
+        for (var minute = 0; minute < 60; minute += slotDuration.inMinutes) {
           final slotTime =
               DateTime(date.year, date.month, date.day, hour, minute);
 
           // Проверяем, не конфликтует ли слот с существующими событиями
-          bool isAvailable = true;
+          var isAvailable = true;
           for (final event in events) {
             if (slotTime.isAfter(event.startTime) &&
                 slotTime.isBefore(event.endTime)) {
@@ -592,12 +621,14 @@ class CalendarService {
 
   /// Получить доступные даты
   Future<List<DateTime>> getAvailableDates(
-      String specialistId, int daysAhead) async {
+    String specialistId,
+    int daysAhead,
+  ) async {
     try {
       final availableDates = <DateTime>[];
       final today = DateTime.now();
 
-      for (int i = 0; i < daysAhead; i++) {
+      for (var i = 0; i < daysAhead; i++) {
         final date = today.add(Duration(days: i));
         final isAvailable = await isDateAvailable(specialistId, date);
         if (isAvailable) {
@@ -624,7 +655,9 @@ class CalendarService {
 
   /// Получить события на дату
   Future<List<CalendarEvent>> getEventsForDate(
-      String specialistId, DateTime date) async {
+    String specialistId,
+    DateTime date,
+  ) async {
     try {
       final startOfDay = DateTime(date.year, date.month, date.day);
       final endOfDay = startOfDay.add(const Duration(days: 1));
@@ -632,12 +665,14 @@ class CalendarService {
       final events = await _firestore
           .collection('calendar_events')
           .where('specialistId', isEqualTo: specialistId)
-          .where('startTime',
-              isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay))
+          .where(
+            'startTime',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
+          )
           .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
           .get();
 
-      return events.docs.map((doc) => CalendarEvent.fromDocument(doc)).toList();
+      return events.docs.map(CalendarEvent.fromDocument).toList();
     } catch (e) {
       print('Ошибка получения событий на дату: $e');
       return [];
@@ -645,9 +680,8 @@ class CalendarService {
   }
 
   /// Создать событие бронирования
-  Future<String?> createBookingEvent(CalendarEvent event) async {
-    return await createEvent(event);
-  }
+  Future<String?> createBookingEvent(CalendarEvent event) async =>
+      createEvent(event);
 
   /// Удалить событие бронирования
   Future<void> removeBookingEvent(String eventId) async {
@@ -655,26 +689,21 @@ class CalendarService {
   }
 
   /// Получить расписание специалиста
-  Stream<SpecialistSchedule?> getSpecialistSchedule(String specialistId) {
-    return _firestore
-        .collection('specialist_schedules')
-        .doc(specialistId)
-        .snapshots()
-        .map((doc) {
-      if (!doc.exists) return null;
-      return SpecialistSchedule.fromMap(doc.data()!);
-    });
-  }
+  Stream<SpecialistSchedule?> getSpecialistSchedule(String specialistId) =>
+      _firestore
+          .collection('specialist_schedules')
+          .doc(specialistId)
+          .snapshots()
+          .map((doc) {
+        if (!doc.exists) return null;
+        return SpecialistSchedule.fromMap(doc.data()!);
+      });
 
   /// Получить все расписания
-  Stream<List<SpecialistSchedule>> getAllSchedules() {
-    return _firestore
-        .collection('specialist_schedules')
-        .snapshots()
-        .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => SpecialistSchedule.fromMap(doc.data()))
-          .toList();
-    });
-  }
+  Stream<List<SpecialistSchedule>> getAllSchedules() =>
+      _firestore.collection('specialist_schedules').snapshots().map(
+            (snapshot) => snapshot.docs
+                .map((doc) => SpecialistSchedule.fromMap(doc.data()))
+                .toList(),
+          );
 }

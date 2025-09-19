@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/firestore_providers.dart';
-import '../providers/calendar_providers.dart';
+
 import '../models/booking.dart';
+import '../providers/calendar_providers.dart';
+import '../providers/firestore_providers.dart';
 
 /// Экран для тестирования интеграции всех компонентов
 class IntegrationTestScreen extends ConsumerStatefulWidget {
@@ -18,143 +19,138 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
   final String testCustomerId = 'test_customer_1';
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Тестирование интеграции'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Заголовок
-            Text(
-              'Тестирование функционала',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 24),
-
-            // Тест занятых дат
-            _buildTestCard(
-              title: 'Тест занятых дат',
-              description: 'Проверка получения занятых дат из Firestore',
-              onTest: _testBusyDates,
-            ),
-
-            const SizedBox(height: 16),
-
-            // Тест календаря
-            _buildTestCard(
-              title: 'Тест календаря',
-              description: 'Проверка интеграции календаря с занятыми датами',
-              onTest: _testCalendarIntegration,
-            ),
-
-            const SizedBox(height: 16),
-
-            // Тест бронирования
-            _buildTestCard(
-              title: 'Тест бронирования',
-              description:
-                  'Проверка создания бронирования с проверкой конфликтов',
-              onTest: _testBookingCreation,
-            ),
-
-            const SizedBox(height: 16),
-
-            // Тест FCM
-            _buildTestCard(
-              title: 'Тест FCM',
-              description: 'Проверка отправки push-уведомлений',
-              onTest: _testFCM,
-            ),
-
-            const SizedBox(height: 16),
-
-            // Тест Cloud Functions
-            _buildTestCard(
-              title: 'Тест Cloud Functions',
-              description: 'Проверка работы Cloud Functions (симуляция)',
-              onTest: _testCloudFunctions,
-            ),
-
-            const SizedBox(height: 24),
-
-            // Результаты тестов
-            _buildTestResults(),
-          ],
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Тестирование интеграции'),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         ),
-      ),
-    );
-  }
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Заголовок
+              Text(
+                'Тестирование функционала',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 24),
+
+              // Тест занятых дат
+              _buildTestCard(
+                title: 'Тест занятых дат',
+                description: 'Проверка получения занятых дат из Firestore',
+                onTest: _testBusyDates,
+              ),
+
+              const SizedBox(height: 16),
+
+              // Тест календаря
+              _buildTestCard(
+                title: 'Тест календаря',
+                description: 'Проверка интеграции календаря с занятыми датами',
+                onTest: _testCalendarIntegration,
+              ),
+
+              const SizedBox(height: 16),
+
+              // Тест бронирования
+              _buildTestCard(
+                title: 'Тест бронирования',
+                description:
+                    'Проверка создания бронирования с проверкой конфликтов',
+                onTest: _testBookingCreation,
+              ),
+
+              const SizedBox(height: 16),
+
+              // Тест FCM
+              _buildTestCard(
+                title: 'Тест FCM',
+                description: 'Проверка отправки push-уведомлений',
+                onTest: _testFCM,
+              ),
+
+              const SizedBox(height: 16),
+
+              // Тест Cloud Functions
+              _buildTestCard(
+                title: 'Тест Cloud Functions',
+                description: 'Проверка работы Cloud Functions (симуляция)',
+                onTest: _testCloudFunctions,
+              ),
+
+              const SizedBox(height: 24),
+
+              // Результаты тестов
+              _buildTestResults(),
+            ],
+          ),
+        ),
+      );
 
   /// Построить карточку теста
   Widget _buildTestCard({
     required String title,
     required String description,
     required VoidCallback onTest,
-  }) {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              title,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              description,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.grey[600],
-                  ),
-            ),
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                onPressed: onTest,
-                child: const Text('Запустить тест'),
+  }) =>
+      Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                title,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
               ),
-            ),
-          ],
+              const SizedBox(height: 8),
+              Text(
+                description,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Colors.grey[600],
+                    ),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: onTest,
+                  child: const Text('Запустить тест'),
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   /// Построить результаты тестов
-  Widget _buildTestResults() {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Результаты тестов',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 16),
-            // Здесь будут отображаться результаты тестов
-            const Text('Запустите тесты для просмотра результатов'),
-          ],
+  Widget _buildTestResults() => Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Результаты тестов',
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+              const SizedBox(height: 16),
+              // Здесь будут отображаться результаты тестов
+              const Text('Запустите тесты для просмотра результатов'),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   /// Тест занятых дат
   Future<void> _testBusyDates() async {
@@ -196,7 +192,8 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                'Календарь работает: дата ${isAvailable ? 'доступна' : 'занята'}'),
+              'Календарь работает: дата ${isAvailable ? 'доступна' : 'занята'}',
+            ),
             backgroundColor: Colors.green,
           ),
         );
@@ -230,7 +227,8 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                'Проверка конфликтов: ${hasConflict ? 'есть конфликт' : 'конфликтов нет'}'),
+              'Проверка конфликтов: ${hasConflict ? 'есть конфликт' : 'конфликтов нет'}',
+            ),
             backgroundColor: hasConflict ? Colors.orange : Colors.green,
           ),
         );
@@ -314,7 +312,8 @@ class _IntegrationTestScreenState extends ConsumerState<IntegrationTestScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text(
-                'Тестовое бронирование создано (Cloud Functions сработают автоматически)'),
+              'Тестовое бронирование создано (Cloud Functions сработают автоматически)',
+            ),
             backgroundColor: Colors.green,
           ),
         );

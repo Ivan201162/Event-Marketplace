@@ -3,22 +3,6 @@ import 'media_type.dart';
 
 /// Модель истории
 class Story {
-  final String id;
-  final String specialistId;
-  final String specialistName;
-  final String? specialistPhotoUrl;
-  final String? content;
-  final String mediaUrl;
-  final MediaType mediaType;
-  final DateTime createdAt;
-  final DateTime expiresAt;
-  final int viewsCount;
-  final List<String> viewedBy;
-  final bool isActive;
-  final String? thumbnailUrl;
-  final int likes;
-  final List<String> likedBy;
-
   const Story({
     required this.id,
     required this.specialistId,
@@ -62,26 +46,39 @@ class Story {
       likedBy: List<String>.from(data['likedBy'] ?? []),
     );
   }
+  final String id;
+  final String specialistId;
+  final String specialistName;
+  final String? specialistPhotoUrl;
+  final String? content;
+  final String mediaUrl;
+  final MediaType mediaType;
+  final DateTime createdAt;
+  final DateTime expiresAt;
+  final int viewsCount;
+  final List<String> viewedBy;
+  final bool isActive;
+  final String? thumbnailUrl;
+  final int likes;
+  final List<String> likedBy;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'specialistId': specialistId,
-      'specialistName': specialistName,
-      'specialistPhotoUrl': specialistPhotoUrl,
-      'content': content,
-      'mediaUrl': mediaUrl,
-      'mediaType': mediaType.name,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'expiresAt': Timestamp.fromDate(expiresAt),
-      'viewsCount': viewsCount,
-      'viewedBy': viewedBy,
-      'isActive': isActive,
-      'thumbnailUrl': thumbnailUrl,
-      'likes': likes,
-      'likedBy': likedBy,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'specialistId': specialistId,
+        'specialistName': specialistName,
+        'specialistPhotoUrl': specialistPhotoUrl,
+        'content': content,
+        'mediaUrl': mediaUrl,
+        'mediaType': mediaType.name,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'expiresAt': Timestamp.fromDate(expiresAt),
+        'viewsCount': viewsCount,
+        'viewedBy': viewedBy,
+        'isActive': isActive,
+        'thumbnailUrl': thumbnailUrl,
+        'likes': likes,
+        'likedBy': likedBy,
+      };
 
   /// Создать копию с обновлёнными полями
   Story copyWith({
@@ -100,25 +97,24 @@ class Story {
     String? thumbnailUrl,
     int? likes,
     List<String>? likedBy,
-  }) {
-    return Story(
-      id: id ?? this.id,
-      specialistId: specialistId ?? this.specialistId,
-      specialistName: specialistName ?? this.specialistName,
-      specialistPhotoUrl: specialistPhotoUrl ?? this.specialistPhotoUrl,
-      content: content ?? this.content,
-      mediaUrl: mediaUrl ?? this.mediaUrl,
-      mediaType: mediaType ?? this.mediaType,
-      createdAt: createdAt ?? this.createdAt,
-      expiresAt: expiresAt ?? this.expiresAt,
-      viewsCount: viewsCount ?? this.viewsCount,
-      viewedBy: viewedBy ?? this.viewedBy,
-      isActive: isActive ?? this.isActive,
-      thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
-      likes: likes ?? this.likes,
-      likedBy: likedBy ?? this.likedBy,
-    );
-  }
+  }) =>
+      Story(
+        id: id ?? this.id,
+        specialistId: specialistId ?? this.specialistId,
+        specialistName: specialistName ?? this.specialistName,
+        specialistPhotoUrl: specialistPhotoUrl ?? this.specialistPhotoUrl,
+        content: content ?? this.content,
+        mediaUrl: mediaUrl ?? this.mediaUrl,
+        mediaType: mediaType ?? this.mediaType,
+        createdAt: createdAt ?? this.createdAt,
+        expiresAt: expiresAt ?? this.expiresAt,
+        viewsCount: viewsCount ?? this.viewsCount,
+        viewedBy: viewedBy ?? this.viewedBy,
+        isActive: isActive ?? this.isActive,
+        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+        likes: likes ?? this.likes,
+        likedBy: likedBy ?? this.likedBy,
+      );
 
   /// Проверить, истекла ли история
   bool get isExpired => DateTime.now().isAfter(expiresAt);
@@ -142,7 +138,6 @@ class Story {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'Story(id: $id, specialistId: $specialistId, mediaType: $mediaType)';
-  }
+  String toString() =>
+      'Story(id: $id, specialistId: $specialistId, mediaType: $mediaType)';
 }

@@ -15,11 +15,13 @@ class PriceReminderService {
       final snapshot = await _firestore
           .collection('specialists')
           .where('isActive', isEqualTo: true)
-          .where('lastPriceUpdateAt',
-              isLessThan: Timestamp.fromDate(thirtyDaysAgo))
+          .where(
+            'lastPriceUpdateAt',
+            isLessThan: Timestamp.fromDate(thirtyDaysAgo),
+          )
           .get();
 
-      return snapshot.docs.map((doc) => Specialist.fromDocument(doc)).toList();
+      return snapshot.docs.map(Specialist.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения специалистов для напоминания: $e');
     }
@@ -34,7 +36,7 @@ class PriceReminderService {
 
       if (!specialistDoc.exists) return;
 
-      final specialistData = specialistDoc.data()!;
+      final specialistData = specialistDoc.data();
       final fcmTokens = List<String>.from(specialistData['fcmTokens'] ?? []);
 
       if (fcmTokens.isEmpty) return;
@@ -98,16 +100,20 @@ class PriceReminderService {
       final needReminderSnapshot = await _firestore
           .collection('specialists')
           .where('isActive', isEqualTo: true)
-          .where('lastPriceUpdateAt',
-              isLessThan: Timestamp.fromDate(thirtyDaysAgo))
+          .where(
+            'lastPriceUpdateAt',
+            isLessThan: Timestamp.fromDate(thirtyDaysAgo),
+          )
           .get();
 
       // Специалисты, которым уже напомнили
       final remindedSnapshot = await _firestore
           .collection('specialists')
           .where('isActive', isEqualTo: true)
-          .where('lastPriceReminderAt',
-              isGreaterThan: Timestamp.fromDate(thirtyDaysAgo))
+          .where(
+            'lastPriceReminderAt',
+            isGreaterThan: Timestamp.fromDate(thirtyDaysAgo),
+          )
           .get();
 
       return {
@@ -130,7 +136,8 @@ class PriceReminderService {
       });
     } catch (e) {
       throw Exception(
-          'Ошибка обновления времени последнего обновления цен: $e');
+        'Ошибка обновления времени последнего обновления цен: $e',
+      );
     }
   }
 
@@ -142,8 +149,10 @@ class PriceReminderService {
       final snapshot = await _firestore
           .collection('specialists')
           .where('isActive', isEqualTo: true)
-          .where('lastPriceUpdateAt',
-              isLessThan: Timestamp.fromDate(thirtyDaysAgo))
+          .where(
+            'lastPriceUpdateAt',
+            isLessThan: Timestamp.fromDate(thirtyDaysAgo),
+          )
           .get();
 
       return snapshot.docs.map((doc) {

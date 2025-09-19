@@ -3,9 +3,7 @@ import '../models/story.dart';
 import '../services/story_service.dart';
 
 /// Провайдер сервиса историй
-final storyServiceProvider = Provider<StoryService>((ref) {
-  return StoryService();
-});
+final storyServiceProvider = Provider<StoryService>((ref) => StoryService());
 
 /// Провайдер для историй специалиста
 final specialistStoriesProvider =
@@ -22,36 +20,34 @@ final allStoriesProvider = StreamProvider<List<Story>>((ref) {
 
 /// Провайдер для состояния историй
 final storyStateProvider = NotifierProvider<StoryStateNotifier, StoryState>(
-  () => StoryStateNotifier(),
+  StoryStateNotifier.new,
 );
 
 /// Состояние историй
 class StoryState {
-  final List<Story> stories;
-  final bool isLoading;
-  final String? error;
-  final Map<String, bool> viewedStories;
-
   const StoryState({
     this.stories = const [],
     this.isLoading = false,
     this.error,
     this.viewedStories = const {},
   });
+  final List<Story> stories;
+  final bool isLoading;
+  final String? error;
+  final Map<String, bool> viewedStories;
 
   StoryState copyWith({
     List<Story>? stories,
     bool? isLoading,
     String? error,
     Map<String, bool>? viewedStories,
-  }) {
-    return StoryState(
-      stories: stories ?? this.stories,
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
-      viewedStories: viewedStories ?? this.viewedStories,
-    );
-  }
+  }) =>
+      StoryState(
+        stories: stories ?? this.stories,
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+        viewedStories: viewedStories ?? this.viewedStories,
+      );
 }
 
 /// Нотификатор для состояния историй

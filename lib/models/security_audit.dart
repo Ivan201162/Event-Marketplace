@@ -2,20 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель аудита безопасности
 class SecurityAudit {
-  final String id;
-  final String eventType;
-  final String description;
-  final SecurityLevel level;
-  final String? userId;
-  final String? sessionId;
-  final String? ipAddress;
-  final String? userAgent;
-  final Map<String, dynamic> metadata;
-  final DateTime timestamp;
-  final String? resolvedBy;
-  final DateTime? resolvedAt;
-  final bool isResolved;
-
   const SecurityAudit({
     required this.id,
     required this.eventType,
@@ -40,8 +26,9 @@ class SecurityAudit {
       eventType: data['eventType'] ?? '',
       description: data['description'] ?? '',
       level: SecurityLevel.values.firstWhere(
-          (e) => e.toString().split('.').last == data['level'],
-          orElse: () => SecurityLevel.info),
+        (e) => e.toString().split('.').last == data['level'],
+        orElse: () => SecurityLevel.info,
+      ),
       userId: data['userId'],
       sessionId: data['sessionId'],
       ipAddress: data['ipAddress'],
@@ -57,45 +44,56 @@ class SecurityAudit {
   }
 
   /// Создать из Map
-  factory SecurityAudit.fromMap(Map<String, dynamic> data) {
-    return SecurityAudit(
-      id: data['id'] ?? '',
-      eventType: data['eventType'] ?? '',
-      description: data['description'] ?? '',
-      level: SecurityLevel.values.firstWhere(
+  factory SecurityAudit.fromMap(Map<String, dynamic> data) => SecurityAudit(
+        id: data['id'] ?? '',
+        eventType: data['eventType'] ?? '',
+        description: data['description'] ?? '',
+        level: SecurityLevel.values.firstWhere(
           (e) => e.toString().split('.').last == data['level'],
-          orElse: () => SecurityLevel.info),
-      userId: data['userId'],
-      sessionId: data['sessionId'],
-      ipAddress: data['ipAddress'],
-      userAgent: data['userAgent'],
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-      timestamp: (data['timestamp'] as Timestamp).toDate(),
-      resolvedBy: data['resolvedBy'],
-      resolvedAt: data['resolvedAt'] != null
-          ? (data['resolvedAt'] as Timestamp).toDate()
-          : null,
-      isResolved: data['isResolved'] ?? false,
-    );
-  }
+          orElse: () => SecurityLevel.info,
+        ),
+        userId: data['userId'],
+        sessionId: data['sessionId'],
+        ipAddress: data['ipAddress'],
+        userAgent: data['userAgent'],
+        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+        timestamp: (data['timestamp'] as Timestamp).toDate(),
+        resolvedBy: data['resolvedBy'],
+        resolvedAt: data['resolvedAt'] != null
+            ? (data['resolvedAt'] as Timestamp).toDate()
+            : null,
+        isResolved: data['isResolved'] ?? false,
+      );
+  final String id;
+  final String eventType;
+  final String description;
+  final SecurityLevel level;
+  final String? userId;
+  final String? sessionId;
+  final String? ipAddress;
+  final String? userAgent;
+  final Map<String, dynamic> metadata;
+  final DateTime timestamp;
+  final String? resolvedBy;
+  final DateTime? resolvedAt;
+  final bool isResolved;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'eventType': eventType,
-      'description': description,
-      'level': level.toString().split('.').last,
-      'userId': userId,
-      'sessionId': sessionId,
-      'ipAddress': ipAddress,
-      'userAgent': userAgent,
-      'metadata': metadata,
-      'timestamp': Timestamp.fromDate(timestamp),
-      'resolvedBy': resolvedBy,
-      'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
-      'isResolved': isResolved,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'eventType': eventType,
+        'description': description,
+        'level': level.toString().split('.').last,
+        'userId': userId,
+        'sessionId': sessionId,
+        'ipAddress': ipAddress,
+        'userAgent': userAgent,
+        'metadata': metadata,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'resolvedBy': resolvedBy,
+        'resolvedAt':
+            resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
+        'isResolved': isResolved,
+      };
 
   /// Создать копию с изменениями
   SecurityAudit copyWith({
@@ -112,23 +110,22 @@ class SecurityAudit {
     String? resolvedBy,
     DateTime? resolvedAt,
     bool? isResolved,
-  }) {
-    return SecurityAudit(
-      id: id ?? this.id,
-      eventType: eventType ?? this.eventType,
-      description: description ?? this.description,
-      level: level ?? this.level,
-      userId: userId ?? this.userId,
-      sessionId: sessionId ?? this.sessionId,
-      ipAddress: ipAddress ?? this.ipAddress,
-      userAgent: userAgent ?? this.userAgent,
-      metadata: metadata ?? this.metadata,
-      timestamp: timestamp ?? this.timestamp,
-      resolvedBy: resolvedBy ?? this.resolvedBy,
-      resolvedAt: resolvedAt ?? this.resolvedAt,
-      isResolved: isResolved ?? this.isResolved,
-    );
-  }
+  }) =>
+      SecurityAudit(
+        id: id ?? this.id,
+        eventType: eventType ?? this.eventType,
+        description: description ?? this.description,
+        level: level ?? this.level,
+        userId: userId ?? this.userId,
+        sessionId: sessionId ?? this.sessionId,
+        ipAddress: ipAddress ?? this.ipAddress,
+        userAgent: userAgent ?? this.userAgent,
+        metadata: metadata ?? this.metadata,
+        timestamp: timestamp ?? this.timestamp,
+        resolvedBy: resolvedBy ?? this.resolvedBy,
+        resolvedAt: resolvedAt ?? this.resolvedAt,
+        isResolved: isResolved ?? this.isResolved,
+      );
 
   /// Проверить, критично ли событие
   bool get isCritical => level == SecurityLevel.critical;
@@ -163,44 +160,29 @@ class SecurityAudit {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      eventType,
-      description,
-      level,
-      userId,
-      sessionId,
-      ipAddress,
-      userAgent,
-      metadata,
-      timestamp,
-      resolvedBy,
-      resolvedAt,
-      isResolved,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        eventType,
+        description,
+        level,
+        userId,
+        sessionId,
+        ipAddress,
+        userAgent,
+        metadata,
+        timestamp,
+        resolvedBy,
+        resolvedAt,
+        isResolved,
+      );
 
   @override
-  String toString() {
-    return 'SecurityAudit(id: $id, eventType: $eventType, level: $level)';
-  }
+  String toString() =>
+      'SecurityAudit(id: $id, eventType: $eventType, level: $level)';
 }
 
 /// Модель политики безопасности
 class SecurityPolicy {
-  final String id;
-  final String name;
-  final String description;
-  final SecurityPolicyType type;
-  final Map<String, dynamic> rules;
-  final bool isEnabled;
-  final SecurityLevel severity;
-  final List<String> affectedRoles;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String? createdBy;
-
   const SecurityPolicy({
     required this.id,
     required this.name,
@@ -223,13 +205,15 @@ class SecurityPolicy {
       name: data['name'] ?? '',
       description: data['description'] ?? '',
       type: SecurityPolicyType.values.firstWhere(
-          (e) => e.toString().split('.').last == data['type'],
-          orElse: () => SecurityPolicyType.authentication),
+        (e) => e.toString().split('.').last == data['type'],
+        orElse: () => SecurityPolicyType.authentication,
+      ),
       rules: Map<String, dynamic>.from(data['rules'] ?? {}),
       isEnabled: data['isEnabled'] ?? true,
       severity: SecurityLevel.values.firstWhere(
-          (e) => e.toString().split('.').last == data['severity'],
-          orElse: () => SecurityLevel.medium),
+        (e) => e.toString().split('.').last == data['severity'],
+        orElse: () => SecurityLevel.medium,
+      ),
       affectedRoles: List<String>.from(data['affectedRoles'] ?? []),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
@@ -238,41 +222,50 @@ class SecurityPolicy {
   }
 
   /// Создать из Map
-  factory SecurityPolicy.fromMap(Map<String, dynamic> data) {
-    return SecurityPolicy(
-      id: data['id'] ?? '',
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
-      type: SecurityPolicyType.values.firstWhere(
+  factory SecurityPolicy.fromMap(Map<String, dynamic> data) => SecurityPolicy(
+        id: data['id'] ?? '',
+        name: data['name'] ?? '',
+        description: data['description'] ?? '',
+        type: SecurityPolicyType.values.firstWhere(
           (e) => e.toString().split('.').last == data['type'],
-          orElse: () => SecurityPolicyType.authentication),
-      rules: Map<String, dynamic>.from(data['rules'] ?? {}),
-      isEnabled: data['isEnabled'] ?? true,
-      severity: SecurityLevel.values.firstWhere(
+          orElse: () => SecurityPolicyType.authentication,
+        ),
+        rules: Map<String, dynamic>.from(data['rules'] ?? {}),
+        isEnabled: data['isEnabled'] ?? true,
+        severity: SecurityLevel.values.firstWhere(
           (e) => e.toString().split('.').last == data['severity'],
-          orElse: () => SecurityLevel.medium),
-      affectedRoles: List<String>.from(data['affectedRoles'] ?? []),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      createdBy: data['createdBy'],
-    );
-  }
+          orElse: () => SecurityLevel.medium,
+        ),
+        affectedRoles: List<String>.from(data['affectedRoles'] ?? []),
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+        createdBy: data['createdBy'],
+      );
+  final String id;
+  final String name;
+  final String description;
+  final SecurityPolicyType type;
+  final Map<String, dynamic> rules;
+  final bool isEnabled;
+  final SecurityLevel severity;
+  final List<String> affectedRoles;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String? createdBy;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'description': description,
-      'type': type.toString().split('.').last,
-      'rules': rules,
-      'isEnabled': isEnabled,
-      'severity': severity.toString().split('.').last,
-      'affectedRoles': affectedRoles,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'createdBy': createdBy,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'description': description,
+        'type': type.toString().split('.').last,
+        'rules': rules,
+        'isEnabled': isEnabled,
+        'severity': severity.toString().split('.').last,
+        'affectedRoles': affectedRoles,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'createdBy': createdBy,
+      };
 
   /// Создать копию с изменениями
   SecurityPolicy copyWith({
@@ -287,21 +280,20 @@ class SecurityPolicy {
     DateTime? createdAt,
     DateTime? updatedAt,
     String? createdBy,
-  }) {
-    return SecurityPolicy(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      type: type ?? this.type,
-      rules: rules ?? this.rules,
-      isEnabled: isEnabled ?? this.isEnabled,
-      severity: severity ?? this.severity,
-      affectedRoles: affectedRoles ?? this.affectedRoles,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      createdBy: createdBy ?? this.createdBy,
-    );
-  }
+  }) =>
+      SecurityPolicy(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        type: type ?? this.type,
+        rules: rules ?? this.rules,
+        isEnabled: isEnabled ?? this.isEnabled,
+        severity: severity ?? this.severity,
+        affectedRoles: affectedRoles ?? this.affectedRoles,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        createdBy: createdBy ?? this.createdBy,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -321,40 +313,26 @@ class SecurityPolicy {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      name,
-      description,
-      type,
-      rules,
-      isEnabled,
-      severity,
-      affectedRoles,
-      createdAt,
-      updatedAt,
-      createdBy,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        name,
+        description,
+        type,
+        rules,
+        isEnabled,
+        severity,
+        affectedRoles,
+        createdAt,
+        updatedAt,
+        createdBy,
+      );
 
   @override
-  String toString() {
-    return 'SecurityPolicy(id: $id, name: $name, type: $type)';
-  }
+  String toString() => 'SecurityPolicy(id: $id, name: $name, type: $type)';
 }
 
 /// Модель шифрования
 class EncryptionKey {
-  final String id;
-  final String name;
-  final String algorithm;
-  final String keyType;
-  final DateTime createdAt;
-  final DateTime? expiresAt;
-  final bool isActive;
-  final String? description;
-  final Map<String, dynamic> metadata;
-
   const EncryptionKey({
     required this.id,
     required this.name,
@@ -386,35 +364,40 @@ class EncryptionKey {
   }
 
   /// Создать из Map
-  factory EncryptionKey.fromMap(Map<String, dynamic> data) {
-    return EncryptionKey(
-      id: data['id'] ?? '',
-      name: data['name'] ?? '',
-      algorithm: data['algorithm'] ?? '',
-      keyType: data['keyType'] ?? '',
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      expiresAt: data['expiresAt'] != null
-          ? (data['expiresAt'] as Timestamp).toDate()
-          : null,
-      isActive: data['isActive'] ?? true,
-      description: data['description'],
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-    );
-  }
+  factory EncryptionKey.fromMap(Map<String, dynamic> data) => EncryptionKey(
+        id: data['id'] ?? '',
+        name: data['name'] ?? '',
+        algorithm: data['algorithm'] ?? '',
+        keyType: data['keyType'] ?? '',
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        expiresAt: data['expiresAt'] != null
+            ? (data['expiresAt'] as Timestamp).toDate()
+            : null,
+        isActive: data['isActive'] ?? true,
+        description: data['description'],
+        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      );
+  final String id;
+  final String name;
+  final String algorithm;
+  final String keyType;
+  final DateTime createdAt;
+  final DateTime? expiresAt;
+  final bool isActive;
+  final String? description;
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'algorithm': algorithm,
-      'keyType': keyType,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
-      'isActive': isActive,
-      'description': description,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'algorithm': algorithm,
+        'keyType': keyType,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
+        'isActive': isActive,
+        'description': description,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   EncryptionKey copyWith({
@@ -427,19 +410,18 @@ class EncryptionKey {
     bool? isActive,
     String? description,
     Map<String, dynamic>? metadata,
-  }) {
-    return EncryptionKey(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      algorithm: algorithm ?? this.algorithm,
-      keyType: keyType ?? this.keyType,
-      createdAt: createdAt ?? this.createdAt,
-      expiresAt: expiresAt ?? this.expiresAt,
-      isActive: isActive ?? this.isActive,
-      description: description ?? this.description,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      EncryptionKey(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        algorithm: algorithm ?? this.algorithm,
+        keyType: keyType ?? this.keyType,
+        createdAt: createdAt ?? this.createdAt,
+        expiresAt: expiresAt ?? this.expiresAt,
+        isActive: isActive ?? this.isActive,
+        description: description ?? this.description,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Проверить, истек ли срок действия
   bool get isExpired => expiresAt != null && DateTime.now().isAfter(expiresAt!);
@@ -472,24 +454,21 @@ class EncryptionKey {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      name,
-      algorithm,
-      keyType,
-      createdAt,
-      expiresAt,
-      isActive,
-      description,
-      metadata,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        name,
+        algorithm,
+        keyType,
+        createdAt,
+        expiresAt,
+        isActive,
+        description,
+        metadata,
+      );
 
   @override
-  String toString() {
-    return 'EncryptionKey(id: $id, name: $name, algorithm: $algorithm)';
-  }
+  String toString() =>
+      'EncryptionKey(id: $id, name: $name, algorithm: $algorithm)';
 }
 
 /// Уровни безопасности
@@ -623,19 +602,6 @@ extension SecurityPolicyTypeExtension on SecurityPolicyType {
 
 /// Статистика безопасности
 class SecurityStatistics {
-  final int totalEvents;
-  final int criticalEvents;
-  final int highEvents;
-  final int mediumEvents;
-  final int lowEvents;
-  final int infoEvents;
-  final int resolvedEvents;
-  final int unresolvedEvents;
-  final DateTime lastEvent;
-  final Map<String, int> eventsByType;
-  final Map<String, int> eventsByLevel;
-  final double resolutionRate;
-
   const SecurityStatistics({
     required this.totalEvents,
     required this.criticalEvents,
@@ -666,21 +632,21 @@ class SecurityStatistics {
         lastEvent: DateTime.now(),
         eventsByType: {},
         eventsByLevel: {},
-        resolutionRate: 0.0,
+        resolutionRate: 0,
       );
     }
 
-    int criticalEvents = 0;
-    int highEvents = 0;
-    int mediumEvents = 0;
-    int lowEvents = 0;
-    int infoEvents = 0;
-    int resolvedEvents = 0;
+    var criticalEvents = 0;
+    var highEvents = 0;
+    var mediumEvents = 0;
+    var lowEvents = 0;
+    var infoEvents = 0;
+    var resolvedEvents = 0;
 
     final eventsByType = <String, int>{};
     final eventsByLevel = <String, int>{};
 
-    DateTime lastEvent = events.first.timestamp;
+    var lastEvent = events.first.timestamp;
 
     for (final event in events) {
       // Подсчет по уровням
@@ -739,6 +705,18 @@ class SecurityStatistics {
       resolutionRate: resolutionRate,
     );
   }
+  final int totalEvents;
+  final int criticalEvents;
+  final int highEvents;
+  final int mediumEvents;
+  final int lowEvents;
+  final int infoEvents;
+  final int resolvedEvents;
+  final int unresolvedEvents;
+  final DateTime lastEvent;
+  final Map<String, int> eventsByType;
+  final Map<String, int> eventsByLevel;
+  final double resolutionRate;
 
   /// Получить общий уровень риска
   SecurityLevel get overallRiskLevel {
@@ -756,7 +734,6 @@ class SecurityStatistics {
   bool get requiresAction => criticalEvents > 0 || highEvents > 3;
 
   @override
-  String toString() {
-    return 'SecurityStatistics(totalEvents: $totalEvents, criticalEvents: $criticalEvents, resolutionRate: ${(resolutionRate * 100).toStringAsFixed(1)}%)';
-  }
+  String toString() =>
+      'SecurityStatistics(totalEvents: $totalEvents, criticalEvents: $criticalEvents, resolutionRate: ${(resolutionRate * 100).toStringAsFixed(1)}%)';
 }

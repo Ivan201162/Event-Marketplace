@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import '../models/payment.dart';
-import '../models/booking.dart';
+
 import '../core/feature_flags.dart';
+import '../models/booking.dart';
+import '../models/payment.dart';
 
 /// Сервис для управления платежами
 class PaymentService {
@@ -36,7 +37,7 @@ class PaymentService {
         metadata: metadata,
         organizationType: organizationType,
         updatedAt: DateTime.now(),
-        dueDate: DateTime.now().add(Duration(days: 7)),
+        dueDate: DateTime.now().add(const Duration(days: 7)),
         isPrepayment: type == PaymentType.advance,
         isFinalPayment: type == PaymentType.finalPayment,
       );
@@ -82,37 +83,39 @@ class PaymentService {
   }
 
   /// Поток платежей по заявке
-  Stream<List<Payment>> getPaymentsByBookingStream(String bookingId) {
-    return _db
-        .collection('payments')
-        .where('bookingId', isEqualTo: bookingId)
-        .orderBy('createdAt', descending: false)
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Payment.fromMap(doc.data())).toList());
-  }
+  Stream<List<Payment>> getPaymentsByBookingStream(String bookingId) => _db
+      .collection('payments')
+      .where('bookingId', isEqualTo: bookingId)
+      .orderBy('createdAt', descending: false)
+      .snapshots()
+      .map(
+        (snapshot) =>
+            snapshot.docs.map((doc) => Payment.fromMap(doc.data())).toList(),
+      );
 
   /// Получить платежи по клиенту
-  Stream<List<Payment>> getPaymentsByCustomerStream(String customerId) {
-    return _db
-        .collection('payments')
-        .where('customerId', isEqualTo: customerId)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Payment.fromMap(doc.data())).toList());
-  }
+  Stream<List<Payment>> getPaymentsByCustomerStream(String customerId) => _db
+      .collection('payments')
+      .where('customerId', isEqualTo: customerId)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) =>
+            snapshot.docs.map((doc) => Payment.fromMap(doc.data())).toList(),
+      );
 
   /// Получить платежи по специалисту
-  Stream<List<Payment>> getPaymentsBySpecialistStream(String specialistId) {
-    return _db
-        .collection('payments')
-        .where('specialistId', isEqualTo: specialistId)
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Payment.fromMap(doc.data())).toList());
-  }
+  Stream<List<Payment>> getPaymentsBySpecialistStream(String specialistId) =>
+      _db
+          .collection('payments')
+          .where('specialistId', isEqualTo: specialistId)
+          .orderBy('createdAt', descending: true)
+          .snapshots()
+          .map(
+            (snapshot) => snapshot.docs
+                .map((doc) => Payment.fromMap(doc.data()))
+                .toList(),
+          );
 
   /// Обновить статус платежа
   Future<void> updatePaymentStatus(
@@ -329,23 +332,24 @@ class PaymentService {
   }
 
   /// Получить статистику платежей
-  Future<PaymentStatistics> getPaymentStatistics(String userId,
-      {bool isSpecialist = false}) async {
+  Future<PaymentStatistics> getPaymentStatistics(
+    String userId, {
+    bool isSpecialist = false,
+  }) async {
     try {
       final query = isSpecialist
           ? _db.collection('payments').where('specialistId', isEqualTo: userId)
           : _db.collection('payments').where('customerId', isEqualTo: userId);
 
       final snapshot = await query.get();
-      final payments =
-          snapshot.docs.map((doc) => Payment.fromDocument(doc)).toList();
+      final payments = snapshot.docs.map(Payment.fromDocument).toList();
 
       double totalAmount = 0;
       double completedAmount = 0;
       double pendingAmount = 0;
-      int completedCount = 0;
-      int pendingCount = 0;
-      int failedCount = 0;
+      var completedCount = 0;
+      var pendingCount = 0;
+      var failedCount = 0;
 
       for (final payment in payments) {
         totalAmount += payment.amount;
@@ -387,35 +391,35 @@ class PaymentService {
   PaymentScheme getPaymentScheme(OrganizationType organizationType) {
     switch (organizationType) {
       case OrganizationType.individual:
-        return PaymentScheme(
-          advancePercentage: 30.0,
+        return const PaymentScheme(
+          advancePercentage: 30,
           requiresAdvance: true,
           allowsPostpayment: true,
-          maxAdvanceAmount: 50000.0,
+          maxAdvanceAmount: 50000,
           description: 'Физическое лицо: 30% аванс, 70% постоплата',
         );
       case OrganizationType.commercial:
-        return PaymentScheme(
-          advancePercentage: 30.0,
+        return const PaymentScheme(
+          advancePercentage: 30,
           requiresAdvance: true,
           allowsPostpayment: true,
-          maxAdvanceAmount: 200000.0,
+          maxAdvanceAmount: 200000,
           description: 'Коммерческая организация: 30% аванс, 70% постоплата',
         );
       case OrganizationType.government:
-        return PaymentScheme(
-          advancePercentage: 0.0,
+        return const PaymentScheme(
+          advancePercentage: 0,
           requiresAdvance: false,
           allowsPostpayment: true,
-          maxAdvanceAmount: 0.0,
+          maxAdvanceAmount: 0,
           description: 'Государственное учреждение: 100% постоплата',
         );
       case OrganizationType.nonprofit:
-        return PaymentScheme(
-          advancePercentage: 20.0,
+        return const PaymentScheme(
+          advancePercentage: 20,
           requiresAdvance: true,
           allowsPostpayment: true,
-          maxAdvanceAmount: 100000.0,
+          maxAdvanceAmount: 100000,
           description: 'Некоммерческая организация: 20% аванс, 80% постоплата',
         );
     }
@@ -428,11 +432,11 @@ class PaymentService {
   }) {
     final scheme = getPaymentScheme(organizationType);
 
-    double advanceAmount = 0.0;
-    double finalAmount = totalAmount;
+    var advanceAmount = 0;
+    var finalAmount = totalAmount;
 
     if (scheme.requiresAdvance) {
-      advanceAmount = (totalAmount * scheme.advancePercentage / 100);
+      advanceAmount = totalAmount * scheme.advancePercentage / 100;
       finalAmount = totalAmount - advanceAmount;
 
       // Ограничиваем максимальный аванс
@@ -466,7 +470,9 @@ class PaymentService {
 
   /// Создать mock платежи для демонстрации
   List<Payment> _createMockPayments(
-      Booking booking, OrganizationType organizationType) {
+    Booking booking,
+    OrganizationType organizationType,
+  ) {
     final calculation = calculatePayments(
       totalAmount: booking.totalPrice,
       organizationType: organizationType,
@@ -475,54 +481,58 @@ class PaymentService {
     final payments = <Payment>[];
 
     if (calculation.advanceAmount > 0) {
-      payments.add(Payment(
-        id: 'mock_advance_${DateTime.now().millisecondsSinceEpoch}',
-        bookingId: booking.id,
-        customerId: booking.userId,
-        specialistId: booking.specialistId ?? '',
-        type: PaymentType.advance,
-        status: PaymentStatus.pending,
-        amount: calculation.advanceAmount,
-        currency: 'RUB',
-        createdAt: DateTime.now(),
-        description:
-            'Авансовый платеж (${calculation.advancePercentage.toInt()}%)',
-        organizationType: organizationType,
-        metadata: {
-          'isMock': true,
-          'advancePercentage': calculation.advancePercentage,
-          'totalAmount': calculation.totalAmount,
-        },
-        updatedAt: DateTime.now(),
-        dueDate: DateTime.now().add(Duration(days: 7)),
-        isPrepayment: true,
-        isFinalPayment: false,
-      ));
+      payments.add(
+        Payment(
+          id: 'mock_advance_${DateTime.now().millisecondsSinceEpoch}',
+          bookingId: booking.id,
+          customerId: booking.userId,
+          specialistId: booking.specialistId ?? '',
+          type: PaymentType.advance,
+          status: PaymentStatus.pending,
+          amount: calculation.advanceAmount,
+          currency: 'RUB',
+          createdAt: DateTime.now(),
+          description:
+              'Авансовый платеж (${calculation.advancePercentage.toInt()}%)',
+          organizationType: organizationType,
+          metadata: {
+            'isMock': true,
+            'advancePercentage': calculation.advancePercentage,
+            'totalAmount': calculation.totalAmount,
+          },
+          updatedAt: DateTime.now(),
+          dueDate: DateTime.now().add(const Duration(days: 7)),
+          isPrepayment: true,
+          isFinalPayment: false,
+        ),
+      );
     }
 
     if (calculation.finalAmount > 0) {
-      payments.add(Payment(
-        id: 'mock_final_${DateTime.now().millisecondsSinceEpoch}',
-        bookingId: booking.id,
-        customerId: booking.userId,
-        specialistId: booking.specialistId ?? '',
-        type: PaymentType.finalPayment,
-        status: PaymentStatus.pending,
-        amount: calculation.finalAmount,
-        currency: 'RUB',
-        createdAt: DateTime.now(),
-        description: 'Финальный платеж после выполнения услуг',
-        organizationType: organizationType,
-        metadata: {
-          'isMock': true,
-          'advanceAmount': calculation.advanceAmount,
-          'totalAmount': calculation.totalAmount,
-        },
-        updatedAt: DateTime.now(),
-        dueDate: DateTime.now().add(Duration(days: 30)),
-        isPrepayment: false,
-        isFinalPayment: true,
-      ));
+      payments.add(
+        Payment(
+          id: 'mock_final_${DateTime.now().millisecondsSinceEpoch}',
+          bookingId: booking.id,
+          customerId: booking.userId,
+          specialistId: booking.specialistId ?? '',
+          type: PaymentType.finalPayment,
+          status: PaymentStatus.pending,
+          amount: calculation.finalAmount,
+          currency: 'RUB',
+          createdAt: DateTime.now(),
+          description: 'Финальный платеж после выполнения услуг',
+          organizationType: organizationType,
+          metadata: {
+            'isMock': true,
+            'advanceAmount': calculation.advanceAmount,
+            'totalAmount': calculation.totalAmount,
+          },
+          updatedAt: DateTime.now(),
+          dueDate: DateTime.now().add(const Duration(days: 30)),
+          isPrepayment: false,
+          isFinalPayment: true,
+        ),
+      );
     }
 
     return payments;
@@ -538,14 +548,6 @@ class PaymentService {
 
 /// Статистика платежей
 class PaymentStatistics {
-  final double totalAmount;
-  final double completedAmount;
-  final double pendingAmount;
-  final int completedCount;
-  final int pendingCount;
-  final int failedCount;
-  final int totalCount;
-
   const PaymentStatistics({
     required this.totalAmount,
     required this.completedAmount,
@@ -556,17 +558,22 @@ class PaymentStatistics {
     required this.totalCount,
   });
 
-  factory PaymentStatistics.empty() {
-    return const PaymentStatistics(
-      totalAmount: 0,
-      completedAmount: 0,
-      pendingAmount: 0,
-      completedCount: 0,
-      pendingCount: 0,
-      failedCount: 0,
-      totalCount: 0,
-    );
-  }
+  factory PaymentStatistics.empty() => const PaymentStatistics(
+        totalAmount: 0,
+        completedAmount: 0,
+        pendingAmount: 0,
+        completedCount: 0,
+        pendingCount: 0,
+        failedCount: 0,
+        totalCount: 0,
+      );
+  final double totalAmount;
+  final double completedAmount;
+  final double pendingAmount;
+  final int completedCount;
+  final int pendingCount;
+  final int failedCount;
+  final int totalCount;
 
   /// Процент завершенных платежей
   double get completionRate {
@@ -583,12 +590,6 @@ class PaymentStatistics {
 
 /// Платежная схема
 class PaymentScheme {
-  final double advancePercentage;
-  final bool requiresAdvance;
-  final bool allowsPostpayment;
-  final double maxAdvanceAmount;
-  final String description;
-
   const PaymentScheme({
     required this.advancePercentage,
     required this.requiresAdvance,
@@ -596,16 +597,15 @@ class PaymentScheme {
     required this.maxAdvanceAmount,
     required this.description,
   });
+  final double advancePercentage;
+  final bool requiresAdvance;
+  final bool allowsPostpayment;
+  final double maxAdvanceAmount;
+  final String description;
 }
 
 /// Расчет платежей
 class PaymentCalculation {
-  final double totalAmount;
-  final double advanceAmount;
-  final double finalAmount;
-  final double advancePercentage;
-  final PaymentScheme scheme;
-
   const PaymentCalculation({
     required this.totalAmount,
     required this.advanceAmount,
@@ -613,6 +613,11 @@ class PaymentCalculation {
     required this.advancePercentage,
     required this.scheme,
   });
+  final double totalAmount;
+  final double advanceAmount;
+  final double finalAmount;
+  final double advancePercentage;
+  final PaymentScheme scheme;
 
   /// Получить описание расчета
   String get description {

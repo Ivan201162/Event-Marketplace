@@ -6,10 +6,10 @@ import '../models/payment_extended.dart';
 
 /// Сервис для работы с расширенными платежами
 class PaymentExtendedService {
-  static final PaymentExtendedService _instance =
-      PaymentExtendedService._internal();
   factory PaymentExtendedService() => _instance;
   PaymentExtendedService._internal();
+  static final PaymentExtendedService _instance =
+      PaymentExtendedService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   // final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -27,9 +27,9 @@ class PaymentExtendedService {
     try {
       final paymentRef = _firestore.collection('payments').doc();
 
-      List<PaymentInstallment> installments = [];
-      double paidAmount = 0.0;
-      double remainingAmount = totalAmount;
+      var installments = <PaymentInstallment>[];
+      const paidAmount = 0;
+      final remainingAmount = totalAmount;
 
       // Создаем рассрочку в зависимости от типа платежа
       switch (type) {
@@ -76,7 +76,7 @@ class PaymentExtendedService {
           final count = installmentsCount ?? 3;
           final installmentAmount = totalAmount / count;
 
-          for (int i = 0; i < count; i++) {
+          for (var i = 0; i < count; i++) {
             installments.add(
               PaymentInstallment(
                 id: '${paymentRef.id}_${i + 1}',
@@ -160,19 +160,20 @@ class PaymentExtendedService {
   }
 
   /// Получить платежи пользователя
-  Stream<List<PaymentExtended>> getUserPayments(String userId,
-      {bool isCustomer = true}) {
+  Stream<List<PaymentExtended>> getUserPayments(
+    String userId, {
+    bool isCustomer = true,
+  }) {
     final field = isCustomer ? 'customerId' : 'specialistId';
     return _firestore
         .collection('payments')
         .where(field, isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) {
-      return snapshot.docs
-          .map((doc) => PaymentExtended.fromDocument(doc))
-          .toList();
-    });
+        .map(
+          (snapshot) =>
+              snapshot.docs.map(PaymentExtended.fromDocument).toList(),
+        );
   }
 
   /// Оплатить взнос
@@ -200,7 +201,7 @@ class PaymentExtendedService {
       // Пересчитываем суммы
       final paidAmount = updatedInstallments
           .where((i) => i.status == PaymentStatus.completed)
-          .fold(0.0, (total, i) => total + i.amount);
+          .fold(0, (total, i) => total + i.amount);
 
       final remainingAmount = payment.totalAmount - paidAmount;
       final status = remainingAmount <= 0
@@ -231,59 +232,59 @@ class PaymentExtendedService {
       pdf.addPage(
         pw.Page(
           pageFormat: PdfPageFormat.a4,
-          build: (pw.Context context) {
-            return pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                // Заголовок
-                pw.Center(
-                  child: pw.Text(
-                    'КВИТАНЦИЯ ОБ ОПЛАТЕ',
-                    style: pw.TextStyle(
-                      fontSize: 20,
-                      fontWeight: pw.FontWeight.bold,
-                    ),
+          build: (pw.Context context) => pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              // Заголовок
+              pw.Center(
+                child: pw.Text(
+                  'КВИТАНЦИЯ ОБ ОПЛАТЕ',
+                  style: pw.TextStyle(
+                    fontSize: 20,
+                    fontWeight: pw.FontWeight.bold,
                   ),
                 ),
-                pw.SizedBox(height: 20),
+              ),
+              pw.SizedBox(height: 20),
 
-                // Информация о платеже
-                pw.Text('Номер платежа: ${payment.id}'),
-                pw.Text('Дата создания: ${_formatDate(payment.createdAt)}'),
-                pw.Text('Статус: ${_getStatusText(payment.status)}'),
-                pw.SizedBox(height: 10),
+              // Информация о платеже
+              pw.Text('Номер платежа: ${payment.id}'),
+              pw.Text('Дата создания: ${_formatDate(payment.createdAt)}'),
+              pw.Text('Статус: ${_getStatusText(payment.status)}'),
+              pw.SizedBox(height: 10),
 
-                // Суммы
-                pw.Text(
-                    'Общая сумма: ${payment.totalAmount.toStringAsFixed(2)} ₽'),
-                pw.Text('Оплачено: ${payment.paidAmount.toStringAsFixed(2)} ₽'),
-                pw.Text(
-                    'Остаток: ${payment.remainingAmount.toStringAsFixed(2)} ₽'),
-                pw.SizedBox(height: 20),
+              // Суммы
+              pw.Text(
+                'Общая сумма: ${payment.totalAmount.toStringAsFixed(2)} ₽',
+              ),
+              pw.Text('Оплачено: ${payment.paidAmount.toStringAsFixed(2)} ₽'),
+              pw.Text(
+                'Остаток: ${payment.remainingAmount.toStringAsFixed(2)} ₽',
+              ),
+              pw.SizedBox(height: 20),
 
-                // Взносы
-                pw.Text(
-                  'Взносы:',
-                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+              // Взносы
+              pw.Text(
+                'Взносы:',
+                style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+              ),
+              pw.SizedBox(height: 10),
+
+              ...payment.installments.map(
+                (installment) => pw.Padding(
+                  padding: const pw.EdgeInsets.only(bottom: 8),
+                  child: pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                    children: [
+                      pw.Text(_formatDate(installment.dueDate)),
+                      pw.Text('${installment.amount.toStringAsFixed(2)} ₽'),
+                      pw.Text(_getStatusText(installment.status)),
+                    ],
+                  ),
                 ),
-                pw.SizedBox(height: 10),
-
-                ...payment.installments.map((installment) {
-                  return pw.Padding(
-                    padding: const pw.EdgeInsets.only(bottom: 8),
-                    child: pw.Row(
-                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                      children: [
-                        pw.Text(_formatDate(installment.dueDate)),
-                        pw.Text('${installment.amount.toStringAsFixed(2)} ₽'),
-                        pw.Text(_getStatusText(installment.status)),
-                      ],
-                    ),
-                  );
-                }),
-              ],
-            );
-          },
+              ),
+            ],
+          ),
         ),
       );
 
@@ -321,62 +322,63 @@ class PaymentExtendedService {
       pdf.addPage(
         pw.Page(
           pageFormat: PdfPageFormat.a4,
-          build: (pw.Context context) {
-            return pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                // Заголовок
-                pw.Center(
+          build: (pw.Context context) => pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              // Заголовок
+              pw.Center(
+                child: pw.Text(
+                  'СЧЁТ НА ОПЛАТУ',
+                  style: pw.TextStyle(
+                    fontSize: 20,
+                    fontWeight: pw.FontWeight.bold,
+                  ),
+                ),
+              ),
+              pw.SizedBox(height: 20),
+
+              // Информация о счёте
+              pw.Text('Номер счёта: ${payment.id}'),
+              pw.Text('Дата создания: ${_formatDate(payment.createdAt)}'),
+              pw.Text(
+                'Срок оплаты: ${_formatDate(DateTime.now().add(const Duration(days: 7)))}',
+              ),
+              pw.SizedBox(height: 10),
+
+              // Сумма к оплате
+              pw.Container(
+                padding: const pw.EdgeInsets.all(16),
+                decoration: pw.BoxDecoration(
+                  border: pw.Border.all(),
+                ),
+                child: pw.Center(
                   child: pw.Text(
-                    'СЧЁТ НА ОПЛАТУ',
+                    'К ОПЛАТЕ: ${payment.remainingAmount.toStringAsFixed(2)} ₽',
                     style: pw.TextStyle(
-                      fontSize: 20,
+                      fontSize: 18,
                       fontWeight: pw.FontWeight.bold,
                     ),
                   ),
                 ),
-                pw.SizedBox(height: 20),
+              ),
+              pw.SizedBox(height: 20),
 
-                // Информация о счёте
-                pw.Text('Номер счёта: ${payment.id}'),
-                pw.Text('Дата создания: ${_formatDate(payment.createdAt)}'),
-                pw.Text(
-                    'Срок оплаты: ${_formatDate(DateTime.now().add(const Duration(days: 7)))}'),
-                pw.SizedBox(height: 10),
+              // Детали платежа
+              pw.Text(
+                'Детали платежа:',
+                style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
+              ),
+              pw.SizedBox(height: 10),
 
-                // Сумма к оплате
-                pw.Container(
-                  padding: const pw.EdgeInsets.all(16),
-                  decoration: pw.BoxDecoration(
-                    border: pw.Border.all(),
-                  ),
-                  child: pw.Center(
-                    child: pw.Text(
-                      'К ОПЛАТЕ: ${payment.remainingAmount.toStringAsFixed(2)} ₽',
-                      style: pw.TextStyle(
-                        fontSize: 18,
-                        fontWeight: pw.FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ),
-                pw.SizedBox(height: 20),
-
-                // Детали платежа
-                pw.Text(
-                  'Детали платежа:',
-                  style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-                ),
-                pw.SizedBox(height: 10),
-
-                pw.Text(
-                    'Общая сумма: ${payment.totalAmount.toStringAsFixed(2)} ₽'),
-                pw.Text('Оплачено: ${payment.paidAmount.toStringAsFixed(2)} ₽'),
-                pw.Text(
-                    'Остаток: ${payment.remainingAmount.toStringAsFixed(2)} ₽'),
-              ],
-            );
-          },
+              pw.Text(
+                'Общая сумма: ${payment.totalAmount.toStringAsFixed(2)} ₽',
+              ),
+              pw.Text('Оплачено: ${payment.paidAmount.toStringAsFixed(2)} ₽'),
+              pw.Text(
+                'Остаток: ${payment.remainingAmount.toStringAsFixed(2)} ₽',
+              ),
+            ],
+          ),
         ),
       );
 
@@ -407,8 +409,10 @@ class PaymentExtendedService {
   }
 
   /// Получить статистику платежей
-  Future<PaymentStats> getPaymentStats(String userId,
-      {bool isCustomer = true}) async {
+  Future<PaymentStats> getPaymentStats(
+    String userId, {
+    bool isCustomer = true,
+  }) async {
     try {
       final field = isCustomer ? 'customerId' : 'specialistId';
       final snapshot = await _firestore
@@ -416,27 +420,25 @@ class PaymentExtendedService {
           .where(field, isEqualTo: userId)
           .get();
 
-      final payments = snapshot.docs
-          .map((doc) => PaymentExtended.fromDocument(doc))
-          .toList();
+      final payments = snapshot.docs.map(PaymentExtended.fromDocument).toList();
 
-      int totalPayments = payments.length;
-      int completedPayments =
+      final int totalPayments = payments.length;
+      final int completedPayments =
           payments.where((p) => p.status == PaymentStatus.completed).length;
-      int pendingPayments =
+      final int pendingPayments =
           payments.where((p) => p.status == PaymentStatus.pending).length;
-      int failedPayments =
+      final int failedPayments =
           payments.where((p) => p.status == PaymentStatus.failed).length;
 
-      double totalAmount =
+      final double totalAmount =
           payments.fold(0.0, (total, p) => total + p.totalAmount);
-      double paidAmount =
+      final double paidAmount =
           payments.fold(0.0, (total, p) => total + p.paidAmount);
-      double pendingAmount =
+      final double pendingAmount =
           payments.fold(0.0, (total, p) => total + p.remainingAmount);
 
-      Map<String, int> paymentsByType = {};
-      Map<String, int> paymentsByStatus = {};
+      final paymentsByType = <String, int>{};
+      final paymentsByStatus = <String, int>{};
 
       for (final payment in payments) {
         paymentsByType[payment.type.name] =
@@ -480,7 +482,8 @@ class PaymentExtendedService {
 
   /// Обновить настройки предоплаты
   Future<bool> updateAdvancePaymentSettings(
-      AdvancePaymentSettings settings) async {
+    AdvancePaymentSettings settings,
+  ) async {
     try {
       await _firestore
           .collection('settings')
@@ -493,9 +496,8 @@ class PaymentExtendedService {
     }
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
-  }
+  String _formatDate(DateTime date) =>
+      '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
 
   String _getStatusText(PaymentStatus status) {
     switch (status) {

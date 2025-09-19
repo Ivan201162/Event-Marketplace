@@ -4,16 +4,15 @@ import '../services/customer_profile_extended_service.dart';
 
 /// Провайдер сервиса расширенного профиля
 final customerProfileExtendedServiceProvider =
-    Provider<CustomerProfileExtendedService>((ref) {
-  return CustomerProfileExtendedService();
-});
+    Provider<CustomerProfileExtendedService>(
+        (ref) => CustomerProfileExtendedService());
 
 /// Провайдер расширенного профиля заказчика
 final customerProfileExtendedProvider =
     FutureProvider.family<CustomerProfileExtended?, String>(
         (ref, userId) async {
   final service = ref.read(customerProfileExtendedServiceProvider);
-  return await service.getExtendedProfile(userId);
+  return service.getExtendedProfile(userId);
 });
 
 /// Провайдер заметок заказчика
@@ -54,7 +53,7 @@ final notesByTagProvider =
         (ref, params) async {
   final (userId, tag) = params;
   final service = ref.read(customerProfileExtendedServiceProvider);
-  return await service.getNotesByTag(userId, tag);
+  return service.getNotesByTag(userId, tag);
 });
 
 /// Провайдер фото по тегу
@@ -63,7 +62,7 @@ final photosByTagProvider =
         (ref, params) async {
   final (userId, tag) = params;
   final service = ref.read(customerProfileExtendedServiceProvider);
-  return await service.getPhotosByTag(userId, tag);
+  return service.getPhotosByTag(userId, tag);
 });
 
 /// Провайдер поиска по заметкам
@@ -72,7 +71,7 @@ final searchNotesProvider =
         (ref, params) async {
   final (userId, query) = params;
   final service = ref.read(customerProfileExtendedServiceProvider);
-  return await service.searchNotes(userId, query);
+  return service.searchNotes(userId, query);
 });
 
 /// Провайдер поиска по фото
@@ -81,14 +80,14 @@ final searchPhotosProvider =
         (ref, params) async {
   final (userId, query) = params;
   final service = ref.read(customerProfileExtendedServiceProvider);
-  return await service.searchPhotos(userId, query);
+  return service.searchPhotos(userId, query);
 });
 
 /// Провайдер статистики профиля
 final customerProfileStatsProvider =
     FutureProvider.family<CustomerProfileStats, String>((ref, userId) async {
   final service = ref.read(customerProfileExtendedServiceProvider);
-  return await service.getProfileStats(userId);
+  return service.getProfileStats(userId);
 });
 
 /// Провайдер всех тегов пользователя
@@ -141,9 +140,8 @@ class PhotoUploadStateNotifier extends Notifier<Map<String, bool>> {
 
 /// Провайдер для управления состоянием загрузки фото
 final photoUploadStateProvider =
-    NotifierProvider<PhotoUploadStateNotifier, Map<String, bool>>(() {
-  return PhotoUploadStateNotifier();
-});
+    NotifierProvider<PhotoUploadStateNotifier, Map<String, bool>>(
+        PhotoUploadStateNotifier.new);
 
 /// Нотификатор для управления состоянием создания заметок
 class NoteCreationStateNotifier extends Notifier<Map<String, bool>> {
@@ -161,9 +159,8 @@ class NoteCreationStateNotifier extends Notifier<Map<String, bool>> {
 
 /// Провайдер для управления состоянием создания заметок
 final noteCreationStateProvider =
-    NotifierProvider<NoteCreationStateNotifier, Map<String, bool>>(() {
-  return NoteCreationStateNotifier();
-});
+    NotifierProvider<NoteCreationStateNotifier, Map<String, bool>>(
+        NoteCreationStateNotifier.new);
 
 /// Нотификатор для управления состоянием поиска
 class SearchStateNotifier extends Notifier<Map<String, String>> {
@@ -181,9 +178,8 @@ class SearchStateNotifier extends Notifier<Map<String, String>> {
 
 /// Провайдер для управления состоянием поиска
 final searchStateProvider =
-    NotifierProvider<SearchStateNotifier, Map<String, String>>(() {
-  return SearchStateNotifier();
-});
+    NotifierProvider<SearchStateNotifier, Map<String, String>>(
+        SearchStateNotifier.new);
 
 /// Нотификатор для управления выбранными тегами
 class SelectedTagsNotifier extends Notifier<Set<String>> {
@@ -205,9 +201,8 @@ class SelectedTagsNotifier extends Notifier<Set<String>> {
 
 /// Провайдер для управления выбранными тегами
 final selectedTagsProvider =
-    NotifierProvider<SelectedTagsNotifier, Set<String>>(() {
-  return SelectedTagsNotifier();
-});
+    NotifierProvider<SelectedTagsNotifier, Set<String>>(
+        SelectedTagsNotifier.new);
 
 /// Нотификатор для управления фильтрами заметок
 class NoteFiltersNotifier extends Notifier<NoteFilters> {
@@ -225,9 +220,7 @@ class NoteFiltersNotifier extends Notifier<NoteFilters> {
 
 /// Провайдер для управления фильтрами заметок
 final noteFiltersProvider =
-    NotifierProvider<NoteFiltersNotifier, NoteFilters>(() {
-  return NoteFiltersNotifier();
-});
+    NotifierProvider<NoteFiltersNotifier, NoteFilters>(NoteFiltersNotifier.new);
 
 /// Нотификатор для управления фильтрами фото
 class PhotoFiltersNotifier extends Notifier<PhotoFilters> {
@@ -245,21 +238,11 @@ class PhotoFiltersNotifier extends Notifier<PhotoFilters> {
 
 /// Провайдер для управления фильтрами фото
 final photoFiltersProvider =
-    NotifierProvider<PhotoFiltersNotifier, PhotoFilters>(() {
-  return PhotoFiltersNotifier();
-});
+    NotifierProvider<PhotoFiltersNotifier, PhotoFilters>(
+        PhotoFiltersNotifier.new);
 
 /// Фильтры для заметок
 class NoteFilters {
-  final String? searchQuery;
-  final List<String> selectedTags;
-  final bool showPinnedOnly;
-  final bool showByDate;
-  final DateTime? fromDate;
-  final DateTime? toDate;
-  final String? eventId;
-  final String? specialistId;
-
   const NoteFilters({
     this.searchQuery,
     this.selectedTags = const [],
@@ -270,6 +253,14 @@ class NoteFilters {
     this.eventId,
     this.specialistId,
   });
+  final String? searchQuery;
+  final List<String> selectedTags;
+  final bool showPinnedOnly;
+  final bool showByDate;
+  final DateTime? fromDate;
+  final DateTime? toDate;
+  final String? eventId;
+  final String? specialistId;
 
   NoteFilters copyWith({
     String? searchQuery,
@@ -280,29 +271,21 @@ class NoteFilters {
     DateTime? toDate,
     String? eventId,
     String? specialistId,
-  }) {
-    return NoteFilters(
-      searchQuery: searchQuery ?? this.searchQuery,
-      selectedTags: selectedTags ?? this.selectedTags,
-      showPinnedOnly: showPinnedOnly ?? this.showPinnedOnly,
-      showByDate: showByDate ?? this.showByDate,
-      fromDate: fromDate ?? this.fromDate,
-      toDate: toDate ?? this.toDate,
-      eventId: eventId ?? this.eventId,
-      specialistId: specialistId ?? this.specialistId,
-    );
-  }
+  }) =>
+      NoteFilters(
+        searchQuery: searchQuery ?? this.searchQuery,
+        selectedTags: selectedTags ?? this.selectedTags,
+        showPinnedOnly: showPinnedOnly ?? this.showPinnedOnly,
+        showByDate: showByDate ?? this.showByDate,
+        fromDate: fromDate ?? this.fromDate,
+        toDate: toDate ?? this.toDate,
+        eventId: eventId ?? this.eventId,
+        specialistId: specialistId ?? this.specialistId,
+      );
 }
 
 /// Фильтры для фото
 class PhotoFilters {
-  final String? searchQuery;
-  final List<String> selectedTags;
-  final bool showPublicOnly;
-  final bool showByDate;
-  final DateTime? fromDate;
-  final DateTime? toDate;
-
   const PhotoFilters({
     this.searchQuery,
     this.selectedTags = const [],
@@ -311,6 +294,12 @@ class PhotoFilters {
     this.fromDate,
     this.toDate,
   });
+  final String? searchQuery;
+  final List<String> selectedTags;
+  final bool showPublicOnly;
+  final bool showByDate;
+  final DateTime? fromDate;
+  final DateTime? toDate;
 
   PhotoFilters copyWith({
     String? searchQuery,
@@ -319,14 +308,13 @@ class PhotoFilters {
     bool? showByDate,
     DateTime? fromDate,
     DateTime? toDate,
-  }) {
-    return PhotoFilters(
-      searchQuery: searchQuery ?? this.searchQuery,
-      selectedTags: selectedTags ?? this.selectedTags,
-      showPublicOnly: showPublicOnly ?? this.showPublicOnly,
-      showByDate: showByDate ?? this.showByDate,
-      fromDate: fromDate ?? this.fromDate,
-      toDate: toDate ?? this.toDate,
-    );
-  }
+  }) =>
+      PhotoFilters(
+        searchQuery: searchQuery ?? this.searchQuery,
+        selectedTags: selectedTags ?? this.selectedTags,
+        showPublicOnly: showPublicOnly ?? this.showPublicOnly,
+        showByDate: showByDate ?? this.showByDate,
+        fromDate: fromDate ?? this.fromDate,
+        toDate: toDate ?? this.toDate,
+      );
 }

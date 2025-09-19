@@ -82,13 +82,6 @@ enum ReviewStatus {
 
 /// Детальный рейтинг
 class DetailedRating {
-  final double professionalism;
-  final double communication;
-  final double punctuality;
-  final double quality;
-  final double creativity;
-  final double value;
-
   const DetailedRating({
     required this.professionalism,
     required this.communication,
@@ -99,71 +92,44 @@ class DetailedRating {
   });
 
   /// Создать из Map
-  factory DetailedRating.fromMap(Map<String, dynamic> data) {
-    return DetailedRating(
-      professionalism: (data['professionalism'] ?? 0.0).toDouble(),
-      communication: (data['communication'] ?? 0.0).toDouble(),
-      punctuality: (data['punctuality'] ?? 0.0).toDouble(),
-      quality: (data['quality'] ?? 0.0).toDouble(),
-      creativity: (data['creativity'] ?? 0.0).toDouble(),
-      value: (data['value'] ?? 0.0).toDouble(),
-    );
-  }
+  factory DetailedRating.fromMap(Map<String, dynamic> data) => DetailedRating(
+        professionalism: (data['professionalism'] ?? 0.0).toDouble(),
+        communication: (data['communication'] ?? 0.0).toDouble(),
+        punctuality: (data['punctuality'] ?? 0.0).toDouble(),
+        quality: (data['quality'] ?? 0.0).toDouble(),
+        creativity: (data['creativity'] ?? 0.0).toDouble(),
+        value: (data['value'] ?? 0.0).toDouble(),
+      );
+  final double professionalism;
+  final double communication;
+  final double punctuality;
+  final double quality;
+  final double creativity;
+  final double value;
 
   /// Преобразовать в Map
-  Map<String, dynamic> toMap() {
-    return {
-      'professionalism': professionalism,
-      'communication': communication,
-      'punctuality': punctuality,
-      'quality': quality,
-      'creativity': creativity,
-      'value': value,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'professionalism': professionalism,
+        'communication': communication,
+        'punctuality': punctuality,
+        'quality': quality,
+        'creativity': creativity,
+        'value': value,
+      };
 
   /// Получить средний рейтинг
-  double get averageRating {
-    return (professionalism +
-            communication +
-            punctuality +
-            quality +
-            creativity +
-            value) /
-        6;
-  }
+  double get averageRating =>
+      (professionalism +
+          communication +
+          punctuality +
+          quality +
+          creativity +
+          value) /
+      6;
 }
 
 /// Модель отзыва
 class Review {
-  final String id;
-  final String bookingId;
-  final String reviewerId;
-  final String reviewerName;
-  final String? reviewerAvatar;
-  final String targetId; // ID события, специалиста или сервиса
-  final ReviewType type;
-  final int rating; // 1-5 звезд
-  final String title;
-  final String content;
-  final List<String> images; // URL изображений
-  final List<String> tags; // Теги отзыва
-  final ReviewStatus status;
-  final DateTime createdAt;
-  final DateTime? updatedAt;
-  final bool isVerified; // Проверенный отзыв
-  final bool isHelpful; // Полезный отзыв
-  final int helpfulCount; // Количество "полезно"
-  final int notHelpfulCount; // Количество "не полезно"
-  final Map<String, bool> helpfulVotes; // Кто проголосовал
-  final String? response; // Ответ на отзыв
-  final String? responseAuthorId; // ID автора ответа
-  final DateTime? responseDate; // Дата ответа
-  final Map<String, dynamic>? metadata; // Дополнительные данные
-  final String? eventId;
-  final String? specialistId;
-  final DetailedRating? detailedRating;
-
   const Review({
     required this.id,
     required this.bookingId,
@@ -240,37 +206,100 @@ class Review {
     );
   }
 
+  /// Создать объект из Map
+  factory Review.fromMap(Map<String, dynamic> map) => Review(
+        id: map['id'] ?? '',
+        bookingId: map['bookingId'] ?? '',
+        customerId: map['customerId'] ?? '',
+        customerName: map['customerName'] ?? '',
+        specialistId: map['specialistId'] ?? '',
+        specialistName: map['specialistName'] ?? '',
+        serviceId: map['serviceId'] ?? '',
+        serviceName: map['serviceName'] ?? '',
+        type: ReviewType.values.firstWhere(
+          (e) => e.name == map['type'],
+          orElse: () => ReviewType.service,
+        ),
+        rating: (map['rating'] ?? 0).toDouble(),
+        title: map['title'] ?? '',
+        comment: map['comment'] ?? '',
+        tags: (map['tags'] as List<dynamic>?)
+                ?.map((tag) => tag.toString())
+                .toList() ??
+            [],
+        isVerified: map['isVerified'] ?? false,
+        isPublic: map['isPublic'] ?? true,
+        response: map['response'],
+        responseDate: map['responseDate'] != null
+            ? (map['responseDate'] as Timestamp).toDate()
+            : null,
+        helpfulCount: map['helpfulCount'] ?? 0,
+        reportCount: map['reportCount'] ?? 0,
+        isReported: map['isReported'] ?? false,
+        createdAt: map['createdAt'] != null
+            ? (map['createdAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        updatedAt: map['updatedAt'] != null
+            ? (map['updatedAt'] as Timestamp).toDate()
+            : DateTime.now(),
+      );
+  final String id;
+  final String bookingId;
+  final String reviewerId;
+  final String reviewerName;
+  final String? reviewerAvatar;
+  final String targetId; // ID события, специалиста или сервиса
+  final ReviewType type;
+  final int rating; // 1-5 звезд
+  final String title;
+  final String content;
+  final List<String> images; // URL изображений
+  final List<String> tags; // Теги отзыва
+  final ReviewStatus status;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
+  final bool isVerified; // Проверенный отзыв
+  final bool isHelpful; // Полезный отзыв
+  final int helpfulCount; // Количество "полезно"
+  final int notHelpfulCount; // Количество "не полезно"
+  final Map<String, bool> helpfulVotes; // Кто проголосовал
+  final String? response; // Ответ на отзыв
+  final String? responseAuthorId; // ID автора ответа
+  final DateTime? responseDate; // Дата ответа
+  final Map<String, dynamic>? metadata; // Дополнительные данные
+  final String? eventId;
+  final String? specialistId;
+  final DetailedRating? detailedRating;
+
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'reviewerId': reviewerId,
-      'reviewerName': reviewerName,
-      'reviewerAvatar': reviewerAvatar,
-      'targetId': targetId,
-      'type': type.name,
-      'rating': rating,
-      'title': title,
-      'content': content,
-      'images': images,
-      'tags': tags,
-      'status': status.name,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-      'isVerified': isVerified,
-      'isHelpful': isHelpful,
-      'helpfulCount': helpfulCount,
-      'notHelpfulCount': notHelpfulCount,
-      'helpfulVotes': helpfulVotes,
-      'response': response,
-      'responseAuthorId': responseAuthorId,
-      'responseDate':
-          responseDate != null ? Timestamp.fromDate(responseDate!) : null,
-      'metadata': metadata,
-      'eventId': eventId,
-      'specialistId': specialistId,
-      'detailedRating': detailedRating?.toMap(),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'reviewerId': reviewerId,
+        'reviewerName': reviewerName,
+        'reviewerAvatar': reviewerAvatar,
+        'targetId': targetId,
+        'type': type.name,
+        'rating': rating,
+        'title': title,
+        'content': content,
+        'images': images,
+        'tags': tags,
+        'status': status.name,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+        'isVerified': isVerified,
+        'isHelpful': isHelpful,
+        'helpfulCount': helpfulCount,
+        'notHelpfulCount': notHelpfulCount,
+        'helpfulVotes': helpfulVotes,
+        'response': response,
+        'responseAuthorId': responseAuthorId,
+        'responseDate':
+            responseDate != null ? Timestamp.fromDate(responseDate!) : null,
+        'metadata': metadata,
+        'eventId': eventId,
+        'specialistId': specialistId,
+        'detailedRating': detailedRating?.toMap(),
+      };
 
   /// Создать копию с изменениями
   Review copyWith({
@@ -300,51 +329,47 @@ class Review {
     String? eventId,
     String? specialistId,
     DetailedRating? detailedRating,
-  }) {
-    return Review(
-      id: id ?? this.id,
-      reviewerId: reviewerId ?? this.reviewerId,
-      reviewerName: reviewerName ?? this.reviewerName,
-      reviewerAvatar: reviewerAvatar ?? this.reviewerAvatar,
-      targetId: targetId ?? this.targetId,
-      type: type ?? this.type,
-      rating: rating ?? this.rating,
-      title: title ?? this.title,
-      content: content ?? this.content,
-      images: images ?? this.images,
-      tags: tags ?? this.tags,
-      status: status ?? this.status,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      isVerified: isVerified ?? this.isVerified,
-      isHelpful: isHelpful ?? this.isHelpful,
-      helpfulCount: helpfulCount ?? this.helpfulCount,
-      notHelpfulCount: notHelpfulCount ?? this.notHelpfulCount,
-      helpfulVotes: helpfulVotes ?? this.helpfulVotes,
-      response: response ?? this.response,
-      responseAuthorId: responseAuthorId ?? this.responseAuthorId,
-      responseDate: responseDate ?? this.responseDate,
-      metadata: metadata ?? this.metadata,
-      eventId: eventId ?? this.eventId,
-      specialistId: specialistId ?? this.specialistId,
-      detailedRating: detailedRating ?? this.detailedRating,
-    );
-  }
+  }) =>
+      Review(
+        id: id ?? this.id,
+        reviewerId: reviewerId ?? this.reviewerId,
+        reviewerName: reviewerName ?? this.reviewerName,
+        reviewerAvatar: reviewerAvatar ?? this.reviewerAvatar,
+        targetId: targetId ?? this.targetId,
+        type: type ?? this.type,
+        rating: rating ?? this.rating,
+        title: title ?? this.title,
+        content: content ?? this.content,
+        images: images ?? this.images,
+        tags: tags ?? this.tags,
+        status: status ?? this.status,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        isVerified: isVerified ?? this.isVerified,
+        isHelpful: isHelpful ?? this.isHelpful,
+        helpfulCount: helpfulCount ?? this.helpfulCount,
+        notHelpfulCount: notHelpfulCount ?? this.notHelpfulCount,
+        helpfulVotes: helpfulVotes ?? this.helpfulVotes,
+        response: response ?? this.response,
+        responseAuthorId: responseAuthorId ?? this.responseAuthorId,
+        responseDate: responseDate ?? this.responseDate,
+        metadata: metadata ?? this.metadata,
+        eventId: eventId ?? this.eventId,
+        specialistId: specialistId ?? this.specialistId,
+        detailedRating: detailedRating ?? this.detailedRating,
+      );
 
   /// Проверить, может ли пользователь голосовать за полезность
-  bool canVoteHelpful(String userId) {
-    return !helpfulVotes.containsKey(userId) && reviewerId != userId;
-  }
+  bool canVoteHelpful(String userId) =>
+      !helpfulVotes.containsKey(userId) && reviewerId != userId;
 
   /// Проверить, проголосовал ли пользователь
-  bool? getUserVote(String userId) {
-    return helpfulVotes[userId];
-  }
+  bool? getUserVote(String userId) => helpfulVotes[userId];
 
   /// Получить процент полезности
   double get helpfulPercentage {
     final total = helpfulCount + notHelpfulCount;
-    if (total == 0) return 0.0;
+    if (total == 0) return 0;
     return (helpfulCount / total) * 100;
   }
 
@@ -438,61 +463,12 @@ class Review {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'Review(id: $id, type: $type, rating: $rating, title: $title)';
-  }
-
-  /// Создать объект из Map
-  factory Review.fromMap(Map<String, dynamic> map) {
-    return Review(
-      id: map['id'] ?? '',
-      bookingId: map['bookingId'] ?? '',
-      customerId: map['customerId'] ?? '',
-      customerName: map['customerName'] ?? '',
-      specialistId: map['specialistId'] ?? '',
-      specialistName: map['specialistName'] ?? '',
-      serviceId: map['serviceId'] ?? '',
-      serviceName: map['serviceName'] ?? '',
-      type: ReviewType.values.firstWhere(
-        (e) => e.name == map['type'],
-        orElse: () => ReviewType.service,
-      ),
-      rating: (map['rating'] ?? 0).toDouble(),
-      title: map['title'] ?? '',
-      comment: map['comment'] ?? '',
-      tags: (map['tags'] as List<dynamic>?)
-              ?.map((tag) => tag.toString())
-              .toList() ??
-          [],
-      isVerified: map['isVerified'] ?? false,
-      isPublic: map['isPublic'] ?? true,
-      response: map['response'],
-      responseDate: map['responseDate'] != null
-          ? (map['responseDate'] as Timestamp).toDate()
-          : null,
-      helpfulCount: map['helpfulCount'] ?? 0,
-      reportCount: map['reportCount'] ?? 0,
-      isReported: map['isReported'] ?? false,
-      createdAt: map['createdAt'] != null
-          ? (map['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      updatedAt: map['updatedAt'] != null
-          ? (map['updatedAt'] as Timestamp).toDate()
-          : DateTime.now(),
-    );
-  }
+  String toString() =>
+      'Review(id: $id, type: $type, rating: $rating, title: $title)';
 }
 
 /// Статистика отзывов
 class ReviewStats {
-  final double averageRating;
-  final int totalReviews;
-  final Map<int, int> ratingDistribution; // рейтинг -> количество
-  final int verifiedReviews;
-  final int helpfulReviews;
-  final double helpfulPercentage;
-  final DateTime lastUpdated;
-
   const ReviewStats({
     required this.averageRating,
     required this.totalReviews,
@@ -517,23 +493,28 @@ class ReviewStats {
       lastUpdated: (data['lastUpdated'] as Timestamp).toDate(),
     );
   }
+  final double averageRating;
+  final int totalReviews;
+  final Map<int, int> ratingDistribution; // рейтинг -> количество
+  final int verifiedReviews;
+  final int helpfulReviews;
+  final double helpfulPercentage;
+  final DateTime lastUpdated;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'averageRating': averageRating,
-      'totalReviews': totalReviews,
-      'ratingDistribution': ratingDistribution,
-      'verifiedReviews': verifiedReviews,
-      'helpfulReviews': helpfulReviews,
-      'helpfulPercentage': helpfulPercentage,
-      'lastUpdated': Timestamp.fromDate(lastUpdated),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'averageRating': averageRating,
+        'totalReviews': totalReviews,
+        'ratingDistribution': ratingDistribution,
+        'verifiedReviews': verifiedReviews,
+        'helpfulReviews': helpfulReviews,
+        'helpfulPercentage': helpfulPercentage,
+        'lastUpdated': Timestamp.fromDate(lastUpdated),
+      };
 
   /// Получить процент для конкретного рейтинга
   double getRatingPercentage(int rating) {
-    if (totalReviews == 0) return 0.0;
+    if (totalReviews == 0) return 0;
     final count = ratingDistribution[rating] ?? 0;
     return (count / totalReviews) * 100;
   }
@@ -545,23 +526,12 @@ class ReviewStats {
   double get roundedAverageRating => (averageRating * 10).round() / 10;
 
   @override
-  String toString() {
-    return 'ReviewStats(average: $averageRating, total: $totalReviews)';
-  }
+  String toString() =>
+      'ReviewStats(average: $averageRating, total: $totalReviews)';
 }
 
 /// Фильтр для отзывов
 class ReviewFilter {
-  final int? minRating;
-  final int? maxRating;
-  final List<String>? tags;
-  final bool? verifiedOnly;
-  final bool? withImages;
-  final bool? withResponse;
-  final DateTime? fromDate;
-  final DateTime? toDate;
-  final String? searchQuery;
-
   const ReviewFilter({
     this.minRating,
     this.maxRating,
@@ -575,95 +545,88 @@ class ReviewFilter {
   });
 
   /// Создать пустой фильтр
-  factory ReviewFilter.empty() {
-    return const ReviewFilter();
-  }
+  factory ReviewFilter.empty() => const ReviewFilter();
 
   /// Создать фильтр по рейтингу
-  factory ReviewFilter.byRating(int rating) {
-    return ReviewFilter(minRating: rating, maxRating: rating);
-  }
+  factory ReviewFilter.byRating(int rating) =>
+      ReviewFilter(minRating: rating, maxRating: rating);
 
   /// Создать фильтр по диапазону рейтингов
-  factory ReviewFilter.byRatingRange(int minRating, int maxRating) {
-    return ReviewFilter(minRating: minRating, maxRating: maxRating);
-  }
+  factory ReviewFilter.byRatingRange(int minRating, int maxRating) =>
+      ReviewFilter(minRating: minRating, maxRating: maxRating);
 
   /// Создать фильтр по тегам
-  factory ReviewFilter.byTags(List<String> tags) {
-    return ReviewFilter(tags: tags);
-  }
+  factory ReviewFilter.byTags(List<String> tags) => ReviewFilter(tags: tags);
 
   /// Создать фильтр по дате
-  factory ReviewFilter.byDateRange(DateTime fromDate, DateTime toDate) {
-    return ReviewFilter(fromDate: fromDate, toDate: toDate);
-  }
+  factory ReviewFilter.byDateRange(DateTime fromDate, DateTime toDate) =>
+      ReviewFilter(fromDate: fromDate, toDate: toDate);
+  final int? minRating;
+  final int? maxRating;
+  final List<String>? tags;
+  final bool? verifiedOnly;
+  final bool? withImages;
+  final bool? withResponse;
+  final DateTime? fromDate;
+  final DateTime? toDate;
+  final String? searchQuery;
 
   /// Проверить, есть ли активные фильтры
-  bool get hasActiveFilters {
-    return minRating != null ||
-        maxRating != null ||
-        (tags != null && tags!.isNotEmpty) ||
-        verifiedOnly == true ||
-        withImages == true ||
-        withResponse == true ||
-        fromDate != null ||
-        toDate != null ||
-        (searchQuery != null && searchQuery!.isNotEmpty);
-  }
+  bool get hasActiveFilters =>
+      minRating != null ||
+          maxRating != null ||
+          (tags != null && tags!.isNotEmpty) ||
+          verifiedOnly ??
+      false || withImages ??
+      false || withResponse ??
+      false ||
+          fromDate != null ||
+          toDate != null ||
+          (searchQuery != null && searchQuery!.isNotEmpty);
 
   /// Сбросить все фильтры
-  ReviewFilter clear() {
-    return const ReviewFilter();
-  }
+  ReviewFilter clear() => const ReviewFilter();
 
   /// Применить фильтр по рейтингу
-  ReviewFilter withRating(int? minRating, int? maxRating) {
-    return ReviewFilter(
-      minRating: minRating ?? this.minRating,
-      maxRating: maxRating ?? this.maxRating,
-      tags: tags,
-      verifiedOnly: verifiedOnly,
-      withImages: withImages,
-      withResponse: withResponse,
-      fromDate: fromDate,
-      toDate: toDate,
-      searchQuery: searchQuery,
-    );
-  }
+  ReviewFilter withRating(int? minRating, int? maxRating) => ReviewFilter(
+        minRating: minRating ?? this.minRating,
+        maxRating: maxRating ?? this.maxRating,
+        tags: tags,
+        verifiedOnly: verifiedOnly,
+        withImages: withImages,
+        withResponse: withResponse,
+        fromDate: fromDate,
+        toDate: toDate,
+        searchQuery: searchQuery,
+      );
 
   /// Применить фильтр по тегам
-  ReviewFilter withTags(List<String>? tags) {
-    return ReviewFilter(
-      minRating: minRating,
-      maxRating: maxRating,
-      tags: tags,
-      verifiedOnly: verifiedOnly,
-      withImages: withImages,
-      withResponse: withResponse,
-      fromDate: fromDate,
-      toDate: toDate,
-      searchQuery: searchQuery,
-    );
-  }
+  ReviewFilter withTags(List<String>? tags) => ReviewFilter(
+        minRating: minRating,
+        maxRating: maxRating,
+        tags: tags,
+        verifiedOnly: verifiedOnly,
+        withImages: withImages,
+        withResponse: withResponse,
+        fromDate: fromDate,
+        toDate: toDate,
+        searchQuery: searchQuery,
+      );
 
   /// Применить поисковый запрос
-  ReviewFilter withSearch(String? query) {
-    return ReviewFilter(
-      minRating: minRating,
-      maxRating: maxRating,
-      tags: tags,
-      verifiedOnly: verifiedOnly,
-      withImages: withImages,
-      withResponse: withResponse,
-      fromDate: fromDate,
-      toDate: toDate,
-      searchQuery: query,
-    );
-  }
+  ReviewFilter withSearch(String? query) => ReviewFilter(
+        minRating: minRating,
+        maxRating: maxRating,
+        tags: tags,
+        verifiedOnly: verifiedOnly,
+        withImages: withImages,
+        withResponse: withResponse,
+        fromDate: fromDate,
+        toDate: toDate,
+        searchQuery: query,
+      );
 
   @override
-  String toString() {
-    return 'ReviewFilter(minRating: $minRating, maxRating: $maxRating, tags: $tags, verifiedOnly: $verifiedOnly, withImages: $withImages, withResponse: $withResponse, fromDate: $fromDate, toDate: $toDate, searchQuery: $searchQuery)';
-  }
+  String toString() =>
+      'ReviewFilter(minRating: $minRating, maxRating: $maxRating, tags: $tags, verifiedOnly: $verifiedOnly, withImages: $withImages, withResponse: $withResponse, fromDate: $fromDate, toDate: $toDate, searchQuery: $searchQuery)';
 }

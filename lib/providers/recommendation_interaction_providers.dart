@@ -3,39 +3,35 @@ import '../models/recommendation_interaction.dart';
 import '../services/recommendation_service.dart';
 
 /// Провайдер сервиса рекомендаций
-final recommendationServiceProvider = Provider<RecommendationService>((ref) {
-  return RecommendationService();
-});
+final recommendationServiceProvider =
+    Provider<RecommendationService>((ref) => RecommendationService());
 
 /// Провайдер для взаимодействий с рекомендациями
 final recommendationInteractionProvider = NotifierProvider<
-    RecommendationInteractionNotifier, RecommendationInteractionState>((ref) {
-  return RecommendationInteractionNotifier();
-});
+        RecommendationInteractionNotifier, RecommendationInteractionState>(
+    (ref) => RecommendationInteractionNotifier());
 
 /// Состояние взаимодействий с рекомендациями
 class RecommendationInteractionState {
-  final Map<String, List<RecommendationInteraction>> interactions;
-  final bool isLoading;
-  final String? error;
-
   const RecommendationInteractionState({
     this.interactions = const {},
     this.isLoading = false,
     this.error,
   });
+  final Map<String, List<RecommendationInteraction>> interactions;
+  final bool isLoading;
+  final String? error;
 
   RecommendationInteractionState copyWith({
     Map<String, List<RecommendationInteraction>>? interactions,
     bool? isLoading,
     String? error,
-  }) {
-    return RecommendationInteractionState(
-      interactions: interactions ?? this.interactions,
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
-    );
-  }
+  }) =>
+      RecommendationInteractionState(
+        interactions: interactions ?? this.interactions,
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+      );
 }
 
 /// Нотификатор для взаимодействий с рекомендациями

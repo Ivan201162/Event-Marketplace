@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import '../models/guest.dart';
-import '../models/event.dart';
+
 import '../core/feature_flags.dart';
+import '../models/event.dart';
+import '../models/guest.dart';
 
 /// Сервис для работы с гостями мероприятий
 class GuestService {
@@ -19,14 +20,16 @@ class GuestService {
         .where('eventId', isEqualTo: eventId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return Guest.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
-    });
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => Guest.fromMap({
+                  'id': doc.id,
+                  ...doc.data(),
+                }),
+              )
+              .toList(),
+        );
   }
 
   /// Добавить гостя к событию
@@ -264,14 +267,16 @@ class GuestService {
         .where('isPublic', isEqualTo: true)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return GuestGreeting.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
-    });
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => GuestGreeting.fromMap({
+                  'id': doc.id,
+                  ...doc.data(),
+                }),
+              )
+              .toList(),
+        );
   }
 
   /// Добавить приветствие от гостя
@@ -403,7 +408,7 @@ class GuestService {
     final random = DateTime.now().millisecondsSinceEpoch;
     final code = StringBuffer();
 
-    for (int i = 0; i < 8; i++) {
+    for (var i = 0; i < 8; i++) {
       code.write(chars[random % chars.length]);
     }
 

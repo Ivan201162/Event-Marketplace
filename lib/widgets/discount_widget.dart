@@ -6,11 +6,6 @@ import 'responsive_layout.dart';
 
 /// Виджет для отображения скидки в карточке заявки
 class DiscountWidget extends ConsumerWidget {
-  final String bookingId;
-  final BookingDiscount? discount;
-  final bool isSpecialist;
-  final VoidCallback? onDiscountChanged;
-
   const DiscountWidget({
     super.key,
     required this.bookingId,
@@ -18,6 +13,10 @@ class DiscountWidget extends ConsumerWidget {
     this.isSpecialist = false,
     this.onDiscountChanged,
   });
+  final String bookingId;
+  final BookingDiscount? discount;
+  final bool isSpecialist;
+  final VoidCallback? onDiscountChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -103,7 +102,7 @@ class DiscountWidget extends ConsumerWidget {
                     ),
                     ResponsiveText(
                       '${discount!.savings?.toStringAsFixed(0)} ₽ (${discount!.discountPercent?.toStringAsFixed(0)}%)',
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.green,
                         fontWeight: FontWeight.bold,
                       ),
@@ -255,13 +254,13 @@ class DiscountWidget extends ConsumerWidget {
     final minutes = timeUntilExpiry.inMinutes % 60;
 
     if (hours > 0) {
-      return 'Осталось: ${hours}ч ${minutes}м';
+      return 'Осталось: $hoursч $minutesм';
     } else {
-      return 'Осталось: ${minutes}м';
+      return 'Осталось: $minutesм';
     }
   }
 
-  void _acceptDiscount(BuildContext context, WidgetRef ref) async {
+  Future<void> _acceptDiscount(BuildContext context, WidgetRef ref) async {
     try {
       final service = ref.read(discountServiceProvider);
       await service.acceptDiscount(
@@ -296,13 +295,12 @@ class DiscountWidget extends ConsumerWidget {
 
 /// Диалог для отклонения скидки
 class _RejectDiscountDialog extends StatefulWidget {
-  final String bookingId;
-  final VoidCallback onRejected;
-
   const _RejectDiscountDialog({
     required this.bookingId,
     required this.onRejected,
   });
+  final String bookingId;
+  final VoidCallback onRejected;
 
   @override
   State<_RejectDiscountDialog> createState() => _RejectDiscountDialogState();
@@ -319,48 +317,46 @@ class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return AlertDialog(
-      title: const Text('Отклонить скидку'),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Text('Вы уверены, что хотите отклонить предложение скидки?'),
-          const SizedBox(height: 16),
-          TextField(
-            controller: _reasonController,
-            decoration: const InputDecoration(
-              labelText: 'Причина отклонения (необязательно)',
-              border: OutlineInputBorder(),
+  Widget build(BuildContext context) => AlertDialog(
+        title: const Text('Отклонить скидку'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text('Вы уверены, что хотите отклонить предложение скидки?'),
+            const SizedBox(height: 16),
+            TextField(
+              controller: _reasonController,
+              decoration: const InputDecoration(
+                labelText: 'Причина отклонения (необязательно)',
+                border: OutlineInputBorder(),
+              ),
+              maxLines: 3,
             ),
-            maxLines: 3,
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: _isLoading ? null : () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          ElevatedButton(
+            onPressed: _isLoading ? null : _rejectDiscount,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              foregroundColor: Colors.white,
+            ),
+            child: _isLoading
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Text('Отклонить'),
           ),
         ],
-      ),
-      actions: [
-        TextButton(
-          onPressed: _isLoading ? null : () => Navigator.pop(context),
-          child: const Text('Отмена'),
-        ),
-        ElevatedButton(
-          onPressed: _isLoading ? null : _rejectDiscount,
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.red,
-            foregroundColor: Colors.white,
-          ),
-          child: _isLoading
-              ? const SizedBox(
-                  width: 16,
-                  height: 16,
-                  child: CircularProgressIndicator(strokeWidth: 2),
-                )
-              : const Text('Отклонить'),
-        ),
-      ],
-    );
-  }
+      );
 
-  void _rejectDiscount() async {
+  Future<void> _rejectDiscount() async {
     setState(() {
       _isLoading = true;
     });
@@ -395,47 +391,44 @@ class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
 
 /// Виджет для предложения скидки (для специалистов)
 class OfferDiscountWidget extends ConsumerWidget {
-  final String bookingId;
-  final double currentPrice;
-  final VoidCallback? onDiscountOffered;
-
   const OfferDiscountWidget({
     super.key,
     required this.bookingId,
     required this.currentPrice,
     this.onDiscountOffered,
   });
+  final String bookingId;
+  final double currentPrice;
+  final VoidCallback? onDiscountOffered;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              const Icon(Icons.local_offer, color: Colors.blue),
-              const SizedBox(width: 8),
-              ResponsiveText(
-                'Предложить скидку',
-                isTitle: true,
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          const Text(
-            'Предложите клиенту скидку для увеличения шансов на бронирование.',
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            onPressed: () => _showOfferDiscountDialog(context, ref),
-            icon: const Icon(Icons.local_offer),
-            label: const Text('Предложить скидку'),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget build(BuildContext context, WidgetRef ref) => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Icon(Icons.local_offer, color: Colors.blue),
+                const SizedBox(width: 8),
+                ResponsiveText(
+                  'Предложить скидку',
+                  isTitle: true,
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            const Text(
+              'Предложите клиенту скидку для увеличения шансов на бронирование.',
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: () => _showOfferDiscountDialog(context, ref),
+              icon: const Icon(Icons.local_offer),
+              label: const Text('Предложить скидку'),
+            ),
+          ],
+        ),
+      );
 
   void _showOfferDiscountDialog(BuildContext context, WidgetRef ref) {
     showDialog(
@@ -453,15 +446,14 @@ class OfferDiscountWidget extends ConsumerWidget {
 
 /// Диалог для предложения скидки
 class _OfferDiscountDialog extends StatefulWidget {
-  final String bookingId;
-  final double currentPrice;
-  final VoidCallback onOffered;
-
   const _OfferDiscountDialog({
     required this.bookingId,
     required this.currentPrice,
     required this.onOffered,
   });
+  final String bookingId;
+  final double currentPrice;
+  final VoidCallback onOffered;
 
   @override
   State<_OfferDiscountDialog> createState() => _OfferDiscountDialogState();
@@ -602,7 +594,7 @@ class _OfferDiscountDialogState extends State<_OfferDiscountDialog> {
     );
   }
 
-  void _offerDiscount() async {
+  Future<void> _offerDiscount() async {
     if (!_formKey.currentState!.validate()) return;
 
     setState(() {
@@ -641,6 +633,5 @@ class _OfferDiscountDialogState extends State<_OfferDiscountDialog> {
 }
 
 /// Провайдер для сервиса скидок
-final discountServiceProvider = Provider<DiscountService>((ref) {
-  return DiscountService();
-});
+final discountServiceProvider =
+    Provider<DiscountService>((ref) => DiscountService());

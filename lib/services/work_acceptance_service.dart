@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:event_marketplace_app/models/booking.dart';
-import 'package:event_marketplace_app/models/contract.dart';
-import 'package:event_marketplace_app/core/feature_flags.dart';
+
+import '../core/feature_flags.dart';
+import '../models/booking.dart';
+import '../models/contract.dart';
 
 /// Сервис для подписания актов выполненных работ
 class WorkAcceptanceService {
@@ -59,9 +60,6 @@ class WorkAcceptanceService {
         finalAmount: booking.totalPrice - (booking.prepayment ?? 0.0),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        signedAt: null,
-        specialistSignedAt: null,
-        customerSignedAt: null,
         metadata: {
           'eventTitle': booking.eventTitle,
           'eventDate': booking.eventDate.toIso8601String(),
@@ -151,9 +149,7 @@ class WorkAcceptanceService {
   }
 
   /// Получить акт по ID
-  Future<WorkAcceptanceAct?> getAct(String actId) async {
-    return await _getAct(actId);
-  }
+  Future<WorkAcceptanceAct?> getAct(String actId) async => _getAct(actId);
 
   /// Получить акты по бронированию
   Future<List<WorkAcceptanceAct>> getActsByBooking(String bookingId) async {
@@ -164,9 +160,7 @@ class WorkAcceptanceService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => WorkAcceptanceAct.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(WorkAcceptanceAct.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения актов: $e');
     }
@@ -181,9 +175,7 @@ class WorkAcceptanceService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => WorkAcceptanceAct.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(WorkAcceptanceAct.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения актов пользователя: $e');
     }
@@ -279,37 +271,15 @@ class WorkAcceptanceService {
     return 'АВР-$year$month$day-$random';
   }
 
-  List<String> _getDefaultServices(Booking booking) {
-    return [
-      'Организация мероприятия: ${booking.eventTitle}',
-      'Проведение мероприятия ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year}',
-      'Обслуживание ${booking.participantsCount} участников',
-    ];
-  }
+  List<String> _getDefaultServices(Booking booking) => [
+        'Организация мероприятия: ${booking.eventTitle}',
+        'Проведение мероприятия ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year}',
+        'Обслуживание ${booking.participantsCount} участников',
+      ];
 }
 
 /// Модель акта выполненных работ
 class WorkAcceptanceAct {
-  final String id;
-  final String actNumber;
-  final String bookingId;
-  final String contractId;
-  final String specialistId;
-  final String customerId;
-  final WorkAcceptanceStatus status;
-  final List<String> completedServices;
-  final String notes;
-  final List<String> attachments;
-  final double totalAmount;
-  final double advanceAmount;
-  final double finalAmount;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final DateTime? signedAt;
-  final DateTime? specialistSignedAt;
-  final DateTime? customerSignedAt;
-  final Map<String, dynamic> metadata;
-
   const WorkAcceptanceAct({
     required this.id,
     required this.actNumber,
@@ -366,34 +336,51 @@ class WorkAcceptanceAct {
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
+  final String id;
+  final String actNumber;
+  final String bookingId;
+  final String contractId;
+  final String specialistId;
+  final String customerId;
+  final WorkAcceptanceStatus status;
+  final List<String> completedServices;
+  final String notes;
+  final List<String> attachments;
+  final double totalAmount;
+  final double advanceAmount;
+  final double finalAmount;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? signedAt;
+  final DateTime? specialistSignedAt;
+  final DateTime? customerSignedAt;
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'actNumber': actNumber,
-      'bookingId': bookingId,
-      'contractId': contractId,
-      'specialistId': specialistId,
-      'customerId': customerId,
-      'status': status.name,
-      'completedServices': completedServices,
-      'notes': notes,
-      'attachments': attachments,
-      'totalAmount': totalAmount,
-      'advanceAmount': advanceAmount,
-      'finalAmount': finalAmount,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'signedAt': signedAt != null ? Timestamp.fromDate(signedAt!) : null,
-      'specialistSignedAt': specialistSignedAt != null
-          ? Timestamp.fromDate(specialistSignedAt!)
-          : null,
-      'customerSignedAt': customerSignedAt != null
-          ? Timestamp.fromDate(customerSignedAt!)
-          : null,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'actNumber': actNumber,
+        'bookingId': bookingId,
+        'contractId': contractId,
+        'specialistId': specialistId,
+        'customerId': customerId,
+        'status': status.name,
+        'completedServices': completedServices,
+        'notes': notes,
+        'attachments': attachments,
+        'totalAmount': totalAmount,
+        'advanceAmount': advanceAmount,
+        'finalAmount': finalAmount,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'signedAt': signedAt != null ? Timestamp.fromDate(signedAt!) : null,
+        'specialistSignedAt': specialistSignedAt != null
+            ? Timestamp.fromDate(specialistSignedAt!)
+            : null,
+        'customerSignedAt': customerSignedAt != null
+            ? Timestamp.fromDate(customerSignedAt!)
+            : null,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   WorkAcceptanceAct copyWith({
@@ -416,29 +403,28 @@ class WorkAcceptanceAct {
     DateTime? specialistSignedAt,
     DateTime? customerSignedAt,
     Map<String, dynamic>? metadata,
-  }) {
-    return WorkAcceptanceAct(
-      id: id ?? this.id,
-      actNumber: actNumber ?? this.actNumber,
-      bookingId: bookingId ?? this.bookingId,
-      contractId: contractId ?? this.contractId,
-      specialistId: specialistId ?? this.specialistId,
-      customerId: customerId ?? this.customerId,
-      status: status ?? this.status,
-      completedServices: completedServices ?? this.completedServices,
-      notes: notes ?? this.notes,
-      attachments: attachments ?? this.attachments,
-      totalAmount: totalAmount ?? this.totalAmount,
-      advanceAmount: advanceAmount ?? this.advanceAmount,
-      finalAmount: finalAmount ?? this.finalAmount,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      signedAt: signedAt ?? this.signedAt,
-      specialistSignedAt: specialistSignedAt ?? this.specialistSignedAt,
-      customerSignedAt: customerSignedAt ?? this.customerSignedAt,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      WorkAcceptanceAct(
+        id: id ?? this.id,
+        actNumber: actNumber ?? this.actNumber,
+        bookingId: bookingId ?? this.bookingId,
+        contractId: contractId ?? this.contractId,
+        specialistId: specialistId ?? this.specialistId,
+        customerId: customerId ?? this.customerId,
+        status: status ?? this.status,
+        completedServices: completedServices ?? this.completedServices,
+        notes: notes ?? this.notes,
+        attachments: attachments ?? this.attachments,
+        totalAmount: totalAmount ?? this.totalAmount,
+        advanceAmount: advanceAmount ?? this.advanceAmount,
+        finalAmount: finalAmount ?? this.finalAmount,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        signedAt: signedAt ?? this.signedAt,
+        specialistSignedAt: specialistSignedAt ?? this.specialistSignedAt,
+        customerSignedAt: customerSignedAt ?? this.customerSignedAt,
+        metadata: metadata ?? this.metadata,
+      );
 }
 
 /// Статусы актов выполненных работ

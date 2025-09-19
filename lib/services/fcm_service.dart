@@ -1,14 +1,15 @@
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
-import 'dart:io';
 
 /// Сервис для работы с Firebase Cloud Messaging
 class FCMService {
-  static final FCMService _instance = FCMService._internal();
   factory FCMService() => _instance;
   FCMService._internal();
+  static final FCMService _instance = FCMService._internal();
 
   final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
   final FlutterLocalNotificationsPlugin _localNotifications =
@@ -43,18 +44,16 @@ class FCMService {
 
   /// Инициализация локальных уведомлений
   Future<void> _initializeLocalNotifications() async {
-    const AndroidInitializationSettings initializationSettingsAndroid =
+    const initializationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    const DarwinInitializationSettings initializationSettingsIOS =
-        DarwinInitializationSettings(
+    const initializationSettingsIOS = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
     );
 
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
+    const initializationSettings = InitializationSettings(
       android: initializationSettingsAndroid,
       iOS: initializationSettingsIOS,
     );
@@ -66,7 +65,7 @@ class FCMService {
 
     // Создание канала для Android
     if (Platform.isAndroid) {
-      const AndroidNotificationChannel channel = AndroidNotificationChannel(
+      const channel = AndroidNotificationChannel(
         'high_importance_channel',
         'High Importance Notifications',
         description: 'This channel is used for important notifications.',
@@ -83,7 +82,7 @@ class FCMService {
   /// Запрос разрешений
   Future<void> _requestPermissions() async {
     // Запрос разрешений для FCM
-    NotificationSettings settings = await _firebaseMessaging.requestPermission(
+    final settings = await _firebaseMessaging.requestPermission(
       alert: true,
       announcement: false,
       badge: true,
@@ -151,8 +150,7 @@ class FCMService {
 
   /// Обработка сообщений при запуске приложения из уведомления
   Future<void> _handleInitialMessage() async {
-    RemoteMessage? initialMessage =
-        await _firebaseMessaging.getInitialMessage();
+    final initialMessage = await _firebaseMessaging.getInitialMessage();
     if (initialMessage != null) {
       print('App launched from notification: ${initialMessage.messageId}');
       _handleNotificationTap(initialMessage);
@@ -369,9 +367,8 @@ class FCMService {
   }
 
   /// Получить настройки уведомлений
-  Future<NotificationSettings> getNotificationSettings() async {
-    return await _firebaseMessaging.getNotificationSettings();
-  }
+  Future<NotificationSettings> getNotificationSettings() async =>
+      await _firebaseMessaging.getNotificationSettings();
 
   /// Проверить, включены ли уведомления
   Future<bool> areNotificationsEnabled() async {

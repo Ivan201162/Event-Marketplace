@@ -2,22 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель поста в ленте
 class FeedPost {
-  final String id;
-  final String specialistId;
-  final String specialistName;
-  final String? specialistPhotoUrl;
-  final String content;
-  final List<String> images;
-  final List<String> videos;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final int likesCount;
-  final int commentsCount;
-  final List<String> likedBy;
-  final bool isPinned;
-  final List<String> tags;
-  final int shares;
-
   const FeedPost({
     required this.id,
     required this.specialistId,
@@ -58,26 +42,39 @@ class FeedPost {
       shares: data['shares'] ?? 0,
     );
   }
+  final String id;
+  final String specialistId;
+  final String specialistName;
+  final String? specialistPhotoUrl;
+  final String content;
+  final List<String> images;
+  final List<String> videos;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final int likesCount;
+  final int commentsCount;
+  final List<String> likedBy;
+  final bool isPinned;
+  final List<String> tags;
+  final int shares;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'specialistId': specialistId,
-      'specialistName': specialistName,
-      'specialistPhotoUrl': specialistPhotoUrl,
-      'content': content,
-      'images': images,
-      'videos': videos,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'likesCount': likesCount,
-      'commentsCount': commentsCount,
-      'likedBy': likedBy,
-      'isPinned': isPinned,
-      'tags': tags,
-      'shares': shares,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'specialistId': specialistId,
+        'specialistName': specialistName,
+        'specialistPhotoUrl': specialistPhotoUrl,
+        'content': content,
+        'images': images,
+        'videos': videos,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'likesCount': likesCount,
+        'commentsCount': commentsCount,
+        'likedBy': likedBy,
+        'isPinned': isPinned,
+        'tags': tags,
+        'shares': shares,
+      };
 
   /// Создать копию с обновлёнными полями
   FeedPost copyWith({
@@ -96,25 +93,24 @@ class FeedPost {
     bool? isPinned,
     List<String>? tags,
     int? shares,
-  }) {
-    return FeedPost(
-      id: id ?? this.id,
-      specialistId: specialistId ?? this.specialistId,
-      specialistName: specialistName ?? this.specialistName,
-      specialistPhotoUrl: specialistPhotoUrl ?? this.specialistPhotoUrl,
-      content: content ?? this.content,
-      images: images ?? this.images,
-      videos: videos ?? this.videos,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      likesCount: likesCount ?? this.likesCount,
-      commentsCount: commentsCount ?? this.commentsCount,
-      likedBy: likedBy ?? this.likedBy,
-      isPinned: isPinned ?? this.isPinned,
-      tags: tags ?? this.tags,
-      shares: shares ?? this.shares,
-    );
-  }
+  }) =>
+      FeedPost(
+        id: id ?? this.id,
+        specialistId: specialistId ?? this.specialistId,
+        specialistName: specialistName ?? this.specialistName,
+        specialistPhotoUrl: specialistPhotoUrl ?? this.specialistPhotoUrl,
+        content: content ?? this.content,
+        images: images ?? this.images,
+        videos: videos ?? this.videos,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        likesCount: likesCount ?? this.likesCount,
+        commentsCount: commentsCount ?? this.commentsCount,
+        likedBy: likedBy ?? this.likedBy,
+        isPinned: isPinned ?? this.isPinned,
+        tags: tags ?? this.tags,
+        shares: shares ?? this.shares,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -138,24 +134,12 @@ class FeedPost {
   int get comments => commentsCount;
 
   @override
-  String toString() {
-    return 'FeedPost(id: $id, specialistId: $specialistId, content: $content)';
-  }
+  String toString() =>
+      'FeedPost(id: $id, specialistId: $specialistId, content: $content)';
 }
 
 /// Модель комментария к посту
 class FeedComment {
-  final String id;
-  final String postId;
-  final String userId;
-  final String userName;
-  final String? userPhotoUrl;
-  final String content;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final int likesCount;
-  final List<String> likedBy;
-
   const FeedComment({
     required this.id,
     required this.postId,
@@ -186,21 +170,29 @@ class FeedComment {
       likedBy: List<String>.from(data['likedBy'] ?? []),
     );
   }
+  final String id;
+  final String postId;
+  final String userId;
+  final String userName;
+  final String? userPhotoUrl;
+  final String content;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final int likesCount;
+  final List<String> likedBy;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'postId': postId,
-      'userId': userId,
-      'userName': userName,
-      'userPhotoUrl': userPhotoUrl,
-      'content': content,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'likesCount': likesCount,
-      'likedBy': likedBy,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'postId': postId,
+        'userId': userId,
+        'userName': userName,
+        'userPhotoUrl': userPhotoUrl,
+        'content': content,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'likesCount': likesCount,
+        'likedBy': likedBy,
+      };
 
   /// Создать копию с обновлёнными полями
   FeedComment copyWith({
@@ -214,20 +206,19 @@ class FeedComment {
     DateTime? updatedAt,
     int? likesCount,
     List<String>? likedBy,
-  }) {
-    return FeedComment(
-      id: id ?? this.id,
-      postId: postId ?? this.postId,
-      userId: userId ?? this.userId,
-      userName: userName ?? this.userName,
-      userPhotoUrl: userPhotoUrl ?? this.userPhotoUrl,
-      content: content ?? this.content,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      likesCount: likesCount ?? this.likesCount,
-      likedBy: likedBy ?? this.likedBy,
-    );
-  }
+  }) =>
+      FeedComment(
+        id: id ?? this.id,
+        postId: postId ?? this.postId,
+        userId: userId ?? this.userId,
+        userName: userName ?? this.userName,
+        userPhotoUrl: userPhotoUrl ?? this.userPhotoUrl,
+        content: content ?? this.content,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        likesCount: likesCount ?? this.likesCount,
+        likedBy: likedBy ?? this.likedBy,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -242,7 +233,5 @@ class FeedComment {
   bool isLikedBy(String userId) => likedBy.contains(userId);
 
   @override
-  String toString() {
-    return 'FeedComment(id: $id, postId: $postId, userId: $userId)';
-  }
+  String toString() => 'FeedComment(id: $id, postId: $postId, userId: $userId)';
 }

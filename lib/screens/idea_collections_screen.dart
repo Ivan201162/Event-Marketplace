@@ -7,12 +7,11 @@ import 'create_idea_collection_screen.dart';
 
 /// Экран коллекций идей
 class IdeaCollectionsScreen extends ConsumerStatefulWidget {
-  final String userId;
-
   const IdeaCollectionsScreen({
     super.key,
     required this.userId,
   });
+  final String userId;
 
   @override
   ConsumerState<IdeaCollectionsScreen> createState() =>
@@ -23,96 +22,93 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
   final IdeaService _ideaService = IdeaService();
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Мои коллекции'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: _createCollection,
-          ),
-        ],
-      ),
-      body: StreamBuilder<List<IdeaCollection>>(
-        stream: _ideaService.getUserCollections(widget.userId),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Мои коллекции'),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.add),
+              onPressed: _createCollection,
+            ),
+          ],
+        ),
+        body: StreamBuilder<List<IdeaCollection>>(
+          stream: _ideaService.getUserCollections(widget.userId),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
 
-          if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text('Ошибка: ${snapshot.error}'),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => setState(() {}),
-                    child: const Text('Повторить'),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          final collections = snapshot.data ?? [];
-          if (collections.isEmpty) {
-            return _buildEmptyState();
-          }
-
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: collections.length,
-            itemBuilder: (context, index) {
-              final collection = collections[index];
-              return IdeaCollectionWidget(
-                collection: collection,
-                onTap: () => _showCollectionDetail(collection),
-                onEdit: () => _editCollection(collection),
-                onDelete: () => _deleteCollection(collection),
+            if (snapshot.hasError) {
+              return Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Icon(Icons.error, size: 64, color: Colors.red),
+                    const SizedBox(height: 16),
+                    Text('Ошибка: ${snapshot.error}'),
+                    const SizedBox(height: 16),
+                    ElevatedButton(
+                      onPressed: () => setState(() {}),
+                      child: const Text('Повторить'),
+                    ),
+                  ],
+                ),
               );
-            },
-          );
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _createCollection,
-        child: const Icon(Icons.add),
-      ),
-    );
-  }
+            }
 
-  Widget _buildEmptyState() {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const Icon(Icons.collections_bookmark, size: 64, color: Colors.grey),
-          const SizedBox(height: 16),
-          const Text(
-            'Нет коллекций',
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 8),
-          const Text(
-            'Создайте коллекцию для организации ваших идей',
-            style: TextStyle(color: Colors.grey),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(height: 16),
-          ElevatedButton.icon(
-            onPressed: _createCollection,
-            icon: const Icon(Icons.add),
-            label: const Text('Создать коллекцию'),
-          ),
-        ],
-      ),
-    );
-  }
+            final collections = snapshot.data ?? [];
+            if (collections.isEmpty) {
+              return _buildEmptyState();
+            }
+
+            return ListView.builder(
+              padding: const EdgeInsets.all(16),
+              itemCount: collections.length,
+              itemBuilder: (context, index) {
+                final collection = collections[index];
+                return IdeaCollectionWidget(
+                  collection: collection,
+                  onTap: () => _showCollectionDetail(collection),
+                  onEdit: () => _editCollection(collection),
+                  onDelete: () => _deleteCollection(collection),
+                );
+              },
+            );
+          },
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _createCollection,
+          child: const Icon(Icons.add),
+        ),
+      );
+
+  Widget _buildEmptyState() => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const Icon(Icons.collections_bookmark,
+                size: 64, color: Colors.grey),
+            const SizedBox(height: 16),
+            const Text(
+              'Нет коллекций',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 8),
+            const Text(
+              'Создайте коллекцию для организации ваших идей',
+              style: TextStyle(color: Colors.grey),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 16),
+            ElevatedButton.icon(
+              onPressed: _createCollection,
+              icon: const Icon(Icons.add),
+              label: const Text('Создать коллекцию'),
+            ),
+          ],
+        ),
+      );
 
   void _createCollection() {
     Navigator.of(context)
@@ -150,7 +146,8 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
       builder: (context) => AlertDialog(
         title: const Text('Удалить коллекцию'),
         content: Text(
-            'Вы уверены, что хотите удалить коллекцию "${collection.name}"?'),
+          'Вы уверены, что хотите удалить коллекцию "${collection.name}"?',
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -162,7 +159,8 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
               // TODO: Реализовать удаление коллекции
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
-                    content: Text('Коллекция "${collection.name}" удалена')),
+                  content: Text('Коллекция "${collection.name}" удалена'),
+                ),
               );
             },
             style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
@@ -176,12 +174,11 @@ class _IdeaCollectionsScreenState extends ConsumerState<IdeaCollectionsScreen> {
 
 /// Экран создания коллекции идей
 class CreateIdeaCollectionScreen extends ConsumerStatefulWidget {
-  final String userId;
-
   const CreateIdeaCollectionScreen({
     super.key,
     required this.userId,
   });
+  final String userId;
 
   @override
   ConsumerState<CreateIdeaCollectionScreen> createState() =>
@@ -207,126 +204,125 @@ class _CreateIdeaCollectionScreenState
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Создать коллекцию'),
-        actions: [
-          TextButton(
-            onPressed: _isLoading ? null : _saveCollection,
-            child: const Text('Сохранить'),
-          ),
-        ],
-      ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Основная информация
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Основная информация',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Создать коллекцию'),
+          actions: [
+            TextButton(
+              onPressed: _isLoading ? null : _saveCollection,
+              child: const Text('Сохранить'),
+            ),
+          ],
+        ),
+        body: Form(
+          key: _formKey,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Основная информация
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Основная информация',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 16),
+                        const SizedBox(height: 16),
 
-                      // Название
-                      TextFormField(
-                        controller: _nameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Название коллекции *',
-                          border: OutlineInputBorder(),
-                          hintText: 'Введите название коллекции',
+                        // Название
+                        TextFormField(
+                          controller: _nameController,
+                          decoration: const InputDecoration(
+                            labelText: 'Название коллекции *',
+                            border: OutlineInputBorder(),
+                            hintText: 'Введите название коллекции',
+                          ),
+                          validator: (value) {
+                            if (value == null || value.trim().isEmpty) {
+                              return 'Пожалуйста, введите название коллекции';
+                            }
+                            return null;
+                          },
                         ),
-                        validator: (value) {
-                          if (value == null || value.trim().isEmpty) {
-                            return 'Пожалуйста, введите название коллекции';
-                          }
-                          return null;
-                        },
-                      ),
 
-                      const SizedBox(height: 16),
+                        const SizedBox(height: 16),
 
-                      // Описание
-                      TextFormField(
-                        controller: _descriptionController,
-                        decoration: const InputDecoration(
-                          labelText: 'Описание',
-                          border: OutlineInputBorder(),
-                          hintText: 'Опишите коллекцию',
+                        // Описание
+                        TextFormField(
+                          controller: _descriptionController,
+                          decoration: const InputDecoration(
+                            labelText: 'Описание',
+                            border: OutlineInputBorder(),
+                            hintText: 'Опишите коллекцию',
+                          ),
+                          maxLines: 3,
                         ),
-                        maxLines: 3,
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 24),
+                const SizedBox(height: 24),
 
-              // Настройки
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Настройки',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                // Настройки
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          'Настройки',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 16),
+                        const SizedBox(height: 16),
 
-                      // Публичная коллекция
-                      SwitchListTile(
-                        title: const Text('Публичная коллекция'),
-                        subtitle: const Text(
-                            'Коллекция будет видна всем пользователям'),
-                        value: _isPublic,
-                        onChanged: (value) {
-                          setState(() {
-                            _isPublic = value;
-                          });
-                        },
-                      ),
-                    ],
+                        // Публичная коллекция
+                        SwitchListTile(
+                          title: const Text('Публичная коллекция'),
+                          subtitle: const Text(
+                            'Коллекция будет видна всем пользователям',
+                          ),
+                          value: _isPublic,
+                          onChanged: (value) {
+                            setState(() {
+                              _isPublic = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
 
-              const SizedBox(height: 24),
+                const SizedBox(height: 24),
 
-              // Кнопка сохранения
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: _isLoading ? null : _saveCollection,
-                  child: _isLoading
-                      ? const CircularProgressIndicator()
-                      : const Text('Создать коллекцию'),
+                // Кнопка сохранения
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: _isLoading ? null : _saveCollection,
+                    child: _isLoading
+                        ? const CircularProgressIndicator()
+                        : const Text('Создать коллекцию'),
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
   Future<void> _saveCollection() async {
     if (!_formKey.currentState!.validate()) return;

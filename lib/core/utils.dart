@@ -6,28 +6,23 @@ import 'package:intl/intl.dart';
 /// Утилиты для приложения
 class AppUtils {
   /// Форматирование даты
-  static String formatDate(DateTime date) {
-    return DateFormat('dd.MM.yyyy').format(date);
-  }
+  static String formatDate(DateTime date) =>
+      DateFormat('dd.MM.yyyy').format(date);
 
   /// Форматирование времени
-  static String formatTime(DateTime time) {
-    return DateFormat('HH:mm').format(time);
-  }
+  static String formatTime(DateTime time) => DateFormat('HH:mm').format(time);
 
   /// Форматирование даты и времени
-  static String formatDateTime(DateTime dateTime) {
-    return DateFormat('dd.MM.yyyy HH:mm').format(dateTime);
-  }
+  static String formatDateTime(DateTime dateTime) =>
+      DateFormat('dd.MM.yyyy HH:mm').format(dateTime);
 
   /// Форматирование валюты
-  static String formatCurrency(double amount, {String currency = '₽'}) {
-    return NumberFormat.currency(
-      locale: 'ru_RU',
-      symbol: currency,
-      decimalDigits: 0,
-    ).format(amount);
-  }
+  static String formatCurrency(double amount, {String currency = '₽'}) =>
+      NumberFormat.currency(
+        locale: 'ru_RU',
+        symbol: currency,
+        decimalDigits: 0,
+      ).format(amount);
 
   /// Форматирование расстояния
   static String formatDistance(double distanceInKm) {
@@ -49,14 +44,12 @@ class AppUtils {
   }
 
   /// Проверка валидности email
-  static bool isValidEmail(String email) {
-    return RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
-  }
+  static bool isValidEmail(String email) =>
+      RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(email);
 
   /// Проверка валидности телефона
-  static bool isValidPhone(String phone) {
-    return RegExp(r'^\+?[1-9]\d{1,14}$').hasMatch(phone.replaceAll(' ', ''));
-  }
+  static bool isValidPhone(String phone) =>
+      RegExp(r'^\+?[1-9]\d{1,14}$').hasMatch(phone.replaceAll(' ', ''));
 
   /// Получение инициалов
   static String getInitials(String name) {
@@ -68,11 +61,11 @@ class AppUtils {
 
   /// Получение цвета по строке
   static Color getColorFromString(String str) {
-    int hash = 0;
-    for (int i = 0; i < str.length; i++) {
+    var hash = 0;
+    for (var i = 0; i < str.length; i++) {
       hash = str.codeUnitAt(i) + ((hash << 5) - hash);
     }
-    return Color(hash & 0x00FFFFFF).withOpacity(1.0);
+    return Color(hash & 0x00FFFFFF).withOpacity(1);
   }
 
   /// Проверка платформы
@@ -81,14 +74,12 @@ class AppUtils {
   static bool get isWeb => !isAndroid && !isIOS;
 
   /// Получение размера экрана
-  static Size getScreenSize(BuildContext context) {
-    return MediaQuery.of(context).size;
-  }
+  static Size getScreenSize(BuildContext context) =>
+      MediaQuery.of(context).size;
 
   /// Проверка мобильного устройства
-  static bool isMobile(BuildContext context) {
-    return getScreenSize(context).width < 600;
-  }
+  static bool isMobile(BuildContext context) =>
+      getScreenSize(context).width < 600;
 
   /// Проверка планшета
   static bool isTablet(BuildContext context) {
@@ -97,14 +88,12 @@ class AppUtils {
   }
 
   /// Проверка десктопа
-  static bool isDesktop(BuildContext context) {
-    return getScreenSize(context).width >= 1200;
-  }
+  static bool isDesktop(BuildContext context) =>
+      getScreenSize(context).width >= 1200;
 
   /// Получение безопасной области
-  static EdgeInsets getSafeArea(BuildContext context) {
-    return MediaQuery.of(context).padding;
-  }
+  static EdgeInsets getSafeArea(BuildContext context) =>
+      MediaQuery.of(context).padding;
 
   /// Скрытие клавиатуры
   static void hideKeyboard(BuildContext context) {
@@ -134,25 +123,24 @@ class AppUtils {
     required String content,
     String confirmText = 'Да',
     String cancelText = 'Отмена',
-  }) {
-    return showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(title),
-        content: Text(content),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(cancelText),
-          ),
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(confirmText),
-          ),
-        ],
-      ),
-    );
-  }
+  }) =>
+      showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text(title),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(cancelText),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(confirmText),
+            ),
+          ],
+        ),
+      );
 
   /// Дебаунс функция
   static void debounce(
@@ -184,9 +172,7 @@ extension StringExtensions on String {
   }
 
   /// Удаление лишних пробелов
-  String trimAll() {
-    return replaceAll(RegExp(r'\s+'), ' ').trim();
-  }
+  String trimAll() => replaceAll(RegExp(r'\s+'), ' ').trim();
 
   /// Проверка на пустоту или null
   bool get isNullOrEmpty => isEmpty;

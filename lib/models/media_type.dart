@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 /// Тип медиа-контента
 enum MediaType {
   image,

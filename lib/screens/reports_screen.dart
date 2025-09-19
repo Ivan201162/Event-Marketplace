@@ -26,44 +26,40 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return ResponsiveScaffold(
-      title: 'Отчеты и аналитика',
-      body: Column(
-        children: [
-          // Вкладки
-          _buildTabs(),
+  Widget build(BuildContext context) => ResponsiveScaffold(
+        title: 'Отчеты и аналитика',
+        body: Column(
+          children: [
+            // Вкладки
+            _buildTabs(),
 
-          // Контент
-          Expanded(
-            child: _isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : _selectedTab == 'reports'
-                    ? _buildReportsTab()
-                    : _buildTemplatesTab(),
-          ),
-        ],
-      ),
-    );
-  }
+            // Контент
+            Expanded(
+              child: _isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : _selectedTab == 'reports'
+                      ? _buildReportsTab()
+                      : _buildTemplatesTab(),
+            ),
+          ],
+        ),
+      );
 
-  Widget _buildTabs() {
-    return ResponsiveCard(
-      child: Row(
-        children: [
-          Expanded(
-            child: _buildTabButton('reports', 'Отчеты', Icons.assessment),
-          ),
-          Expanded(
-            child: _buildTabButton('templates', 'Шаблоны', Icons.template),
-          ),
-          Expanded(
-            child: _buildTabButton('create', 'Создать', Icons.add),
-          ),
-        ],
-      ),
-    );
-  }
+  Widget _buildTabs() => ResponsiveCard(
+        child: Row(
+          children: [
+            Expanded(
+              child: _buildTabButton('reports', 'Отчеты', Icons.assessment),
+            ),
+            Expanded(
+              child: _buildTabButton('templates', 'Шаблоны', Icons.template),
+            ),
+            Expanded(
+              child: _buildTabButton('create', 'Создать', Icons.add),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildTabButton(String tab, String title, IconData icon) {
     final isSelected = _selectedTab == tab;
@@ -109,261 +105,256 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     );
   }
 
-  Widget _buildReportsTab() {
-    return Column(
-      children: [
-        // Заголовок с фильтрами
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Отчеты',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _loadReports,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
-              ),
-            ],
-          ),
-        ),
-
-        // Список отчетов
-        Expanded(
-          child: _reports.isEmpty
-              ? const Center(child: Text('Отчеты не найдены'))
-              : ListView.builder(
-                  itemCount: _reports.length,
-                  itemBuilder: (context, index) {
-                    final report = _reports[index];
-                    return _buildReportCard(report);
-                  },
-                ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildReportCard(Report report) {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildReportsTab() => Column(
         children: [
-          // Заголовок
-          Row(
-            children: [
-              Icon(
-                _getReportIcon(report.type),
-                color: _getReportColor(report.type),
-                size: 24,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: ResponsiveText(
-                  report.name,
+          // Заголовок с фильтрами
+          ResponsiveCard(
+            child: Row(
+              children: [
+                ResponsiveText(
+                  'Отчеты',
                   isTitle: true,
                 ),
-              ),
-              _buildStatusChip(report.status),
-              PopupMenuButton<String>(
-                onSelected: (value) => _handleReportAction(value, report),
-                itemBuilder: (context) => [
-                  if (report.isReady) ...[
-                    const PopupMenuItem(
-                      value: 'view',
-                      child: ListTile(
-                        leading: Icon(Icons.visibility),
-                        title: Text('Просмотреть'),
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadReports,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
+          ),
+
+          // Список отчетов
+          Expanded(
+            child: _reports.isEmpty
+                ? const Center(child: Text('Отчеты не найдены'))
+                : ListView.builder(
+                    itemCount: _reports.length,
+                    itemBuilder: (context, index) {
+                      final report = _reports[index];
+                      return _buildReportCard(report);
+                    },
+                  ),
+          ),
+        ],
+      );
+
+  Widget _buildReportCard(Report report) => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Заголовок
+            Row(
+              children: [
+                Icon(
+                  _getReportIcon(report.type),
+                  color: _getReportColor(report.type),
+                  size: 24,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ResponsiveText(
+                    report.name,
+                    isTitle: true,
+                  ),
+                ),
+                _buildStatusChip(report.status),
+                PopupMenuButton<String>(
+                  onSelected: (value) => _handleReportAction(value, report),
+                  itemBuilder: (context) => [
+                    if (report.isReady) ...[
+                      const PopupMenuItem(
+                        value: 'view',
+                        child: ListTile(
+                          leading: Icon(Icons.visibility),
+                          title: Text('Просмотреть'),
+                        ),
                       ),
-                    ),
+                      const PopupMenuItem(
+                        value: 'download',
+                        child: ListTile(
+                          leading: Icon(Icons.download),
+                          title: Text('Скачать'),
+                        ),
+                      ),
+                    ],
                     const PopupMenuItem(
-                      value: 'download',
+                      value: 'delete',
                       child: ListTile(
-                        leading: Icon(Icons.download),
-                        title: Text('Скачать'),
+                        leading: Icon(Icons.delete),
+                        title: Text('Удалить'),
                       ),
                     ),
                   ],
-                  const PopupMenuItem(
-                    value: 'delete',
-                    child: ListTile(
-                      leading: Icon(Icons.delete),
-                      title: Text('Удалить'),
-                    ),
-                  ),
-                ],
-                child: const Icon(Icons.more_vert),
-              ),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          // Описание
-          Text(report.description),
-
-          const SizedBox(height: 12),
-
-          // Метаданные
-          Row(
-            children: [
-              _buildInfoChip('Тип', report.type.name, Colors.blue),
-              const SizedBox(width: 8),
-              _buildInfoChip('Категория', report.category.name, Colors.green),
-            ],
-          ),
-
-          const SizedBox(height: 12),
-
-          // Время создания
-          Row(
-            children: [
-              const Icon(Icons.access_time, size: 16, color: Colors.grey),
-              const SizedBox(width: 4),
-              Text(
-                'Создан: ${_formatDateTime(report.createdAt)}',
-                style: const TextStyle(color: Colors.grey, fontSize: 12),
-              ),
-              if (report.generatedAt != null) ...[
-                const Spacer(),
-                Text(
-                  'Сгенерирован: ${_formatDateTime(report.generatedAt!)}',
-                  style: const TextStyle(color: Colors.green, fontSize: 12),
+                  child: const Icon(Icons.more_vert),
                 ),
               ],
-            ],
-          ),
-
-          // Ошибка
-          if (report.hasError && report.errorMessage != null) ...[
-            const SizedBox(height: 8),
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: Colors.red.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(4),
-                border: Border.all(color: Colors.red),
-              ),
-              child: Text(
-                'Ошибка: ${report.errorMessage}',
-                style: const TextStyle(color: Colors.red, fontSize: 12),
-              ),
             ),
-          ],
-        ],
-      ),
-    );
-  }
 
-  Widget _buildTemplatesTab() {
-    return Column(
-      children: [
-        // Заголовок
-        ResponsiveCard(
-          child: Row(
-            children: [
-              ResponsiveText(
-                'Шаблоны отчетов',
-                isTitle: true,
-              ),
-              const Spacer(),
-              ElevatedButton.icon(
-                onPressed: _loadTemplates,
-                icon: const Icon(Icons.refresh),
-                label: const Text('Обновить'),
+            const SizedBox(height: 12),
+
+            // Описание
+            Text(report.description),
+
+            const SizedBox(height: 12),
+
+            // Метаданные
+            Row(
+              children: [
+                _buildInfoChip('Тип', report.type.name, Colors.blue),
+                const SizedBox(width: 8),
+                _buildInfoChip('Категория', report.category.name, Colors.green),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            // Время создания
+            Row(
+              children: [
+                const Icon(Icons.access_time, size: 16, color: Colors.grey),
+                const SizedBox(width: 4),
+                Text(
+                  'Создан: ${_formatDateTime(report.createdAt)}',
+                  style: const TextStyle(color: Colors.grey, fontSize: 12),
+                ),
+                if (report.generatedAt != null) ...[
+                  const Spacer(),
+                  Text(
+                    'Сгенерирован: ${_formatDateTime(report.generatedAt!)}',
+                    style: const TextStyle(color: Colors.green, fontSize: 12),
+                  ),
+                ],
+              ],
+            ),
+
+            // Ошибка
+            if (report.hasError && report.errorMessage != null) ...[
+              const SizedBox(height: 8),
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.red.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: Colors.red),
+                ),
+                child: Text(
+                  'Ошибка: ${report.errorMessage}',
+                  style: const TextStyle(color: Colors.red, fontSize: 12),
+                ),
               ),
             ],
-          ),
+          ],
         ),
+      );
 
-        // Список шаблонов
-        Expanded(
-          child: _templates.isEmpty
-              ? const Center(child: Text('Шаблоны не найдены'))
-              : ListView.builder(
-                  itemCount: _templates.length,
-                  itemBuilder: (context, index) {
-                    final template = _templates[index];
-                    return _buildTemplateCard(template);
-                  },
-                ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildTemplateCard(ReportTemplate template) {
-    return ResponsiveCard(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildTemplatesTab() => Column(
         children: [
           // Заголовок
-          Row(
-            children: [
-              Icon(
-                _getReportIcon(template.type),
-                color: _getReportColor(template.type),
-                size: 24,
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: ResponsiveText(
-                  template.name,
+          ResponsiveCard(
+            child: Row(
+              children: [
+                ResponsiveText(
+                  'Шаблоны отчетов',
                   isTitle: true,
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () => _createReportFromTemplate(template),
-                child: const Text('Создать отчет'),
-              ),
-            ],
+                const Spacer(),
+                ElevatedButton.icon(
+                  onPressed: _loadTemplates,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Обновить'),
+                ),
+              ],
+            ),
           ),
 
-          const SizedBox(height: 12),
-
-          // Описание
-          Text(template.description),
-
-          const SizedBox(height: 12),
-
-          // Метаданные
-          Row(
-            children: [
-              _buildInfoChip('Тип', template.type.name, Colors.blue),
-              const SizedBox(width: 8),
-              _buildInfoChip('Категория', template.category.name, Colors.green),
-            ],
+          // Список шаблонов
+          Expanded(
+            child: _templates.isEmpty
+                ? const Center(child: Text('Шаблоны не найдены'))
+                : ListView.builder(
+                    itemCount: _templates.length,
+                    itemBuilder: (context, index) {
+                      final template = _templates[index];
+                      return _buildTemplateCard(template);
+                    },
+                  ),
           ),
-
-          // Обязательные параметры
-          if (template.requiredParameters.isNotEmpty) ...[
-            const SizedBox(height: 12),
-            Text(
-              'Обязательные параметры:',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.grey[600],
-              ),
-            ),
-            const SizedBox(height: 4),
-            Wrap(
-              spacing: 8,
-              runSpacing: 4,
-              children: template.requiredParameters.map((param) {
-                return Chip(
-                  label: Text(param),
-                  backgroundColor: Colors.orange.withValues(alpha: 0.1),
-                  labelStyle: const TextStyle(fontSize: 12),
-                );
-              }).toList(),
-            ),
-          ],
         ],
-      ),
-    );
-  }
+      );
+
+  Widget _buildTemplateCard(ReportTemplate template) => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Заголовок
+            Row(
+              children: [
+                Icon(
+                  _getReportIcon(template.type),
+                  color: _getReportColor(template.type),
+                  size: 24,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: ResponsiveText(
+                    template.name,
+                    isTitle: true,
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () => _createReportFromTemplate(template),
+                  child: const Text('Создать отчет'),
+                ),
+              ],
+            ),
+
+            const SizedBox(height: 12),
+
+            // Описание
+            Text(template.description),
+
+            const SizedBox(height: 12),
+
+            // Метаданные
+            Row(
+              children: [
+                _buildInfoChip('Тип', template.type.name, Colors.blue),
+                const SizedBox(width: 8),
+                _buildInfoChip(
+                    'Категория', template.category.name, Colors.green),
+              ],
+            ),
+
+            // Обязательные параметры
+            if (template.requiredParameters.isNotEmpty) ...[
+              const SizedBox(height: 12),
+              Text(
+                'Обязательные параметры:',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey[600],
+                ),
+              ),
+              const SizedBox(height: 4),
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                children: template.requiredParameters
+                    .map(
+                      (param) => Chip(
+                        label: Text(param),
+                        backgroundColor: Colors.orange.withValues(alpha: 0.1),
+                        labelStyle: const TextStyle(fontSize: 12),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ],
+          ],
+        ),
+      );
 
   Widget _buildStatusChip(ReportStatus status) {
     Color color;
@@ -406,24 +397,22 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     );
   }
 
-  Widget _buildInfoChip(String label, String value, Color color) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color),
-      ),
-      child: Text(
-        '$label: $value',
-        style: TextStyle(
-          fontSize: 12,
-          color: color,
-          fontWeight: FontWeight.w500,
+  Widget _buildInfoChip(String label, String value, Color color) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.1),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: color),
         ),
-      ),
-    );
-  }
+        child: Text(
+          '$label: $value',
+          style: TextStyle(
+            fontSize: 12,
+            color: color,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
 
   IconData _getReportIcon(ReportType type) {
     switch (type) {
@@ -471,9 +460,8 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     }
   }
 
-  String _formatDateTime(DateTime dateTime) {
-    return '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
-  }
+  String _formatDateTime(DateTime dateTime) =>
+      '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour}:${dateTime.minute.toString().padLeft(2, '0')}';
 
   Future<void> _loadData() async {
     setState(() {
@@ -562,7 +550,8 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-            'Создание отчета по шаблону "${template.name}" будет реализовано'),
+          'Создание отчета по шаблону "${template.name}" будет реализовано',
+        ),
       ),
     );
   }

@@ -1,12 +1,14 @@
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../models/event.dart';
-import '../models/user.dart';
-import '../models/booking.dart';
+
 import '../core/feature_flags.dart';
 import '../core/safe_log.dart';
+import '../models/booking.dart';
+import '../models/event.dart';
+import '../models/user.dart';
 
 /// Сервис для шаринга контента
 class ShareService {
@@ -37,8 +39,10 @@ class ShareService {
   }
 
   /// Поделиться профилем пользователя
-  static Future<bool> shareProfile(AppUser user,
-      {String? customMessage}) async {
+  static Future<bool> shareProfile(
+    AppUser user, {
+    String? customMessage,
+  }) async {
     if (!FeatureFlags.shareEnabled) {
       SafeLog.warning('ShareService: Sharing is disabled');
       return false;
@@ -64,8 +68,10 @@ class ShareService {
   }
 
   /// Поделиться бронированием
-  static Future<bool> shareBooking(Booking booking,
-      {String? customMessage}) async {
+  static Future<bool> shareBooking(
+    Booking booking, {
+    String? customMessage,
+  }) async {
     if (!FeatureFlags.shareEnabled) {
       SafeLog.warning('ShareService: Sharing is disabled');
       return false;
@@ -114,8 +120,11 @@ class ShareService {
   }
 
   /// Поделиться файлом
-  static Future<bool> shareFile(String filePath,
-      {String? text, String? subject}) async {
+  static Future<bool> shareFile(
+    String filePath, {
+    String? text,
+    String? subject,
+  }) async {
     if (!FeatureFlags.shareEnabled) {
       SafeLog.warning('ShareService: Sharing is disabled');
       return false;
@@ -141,8 +150,11 @@ class ShareService {
   }
 
   /// Поделиться несколькими файлами
-  static Future<bool> shareFiles(List<String> filePaths,
-      {String? text, String? subject}) async {
+  static Future<bool> shareFiles(
+    List<String> filePaths, {
+    String? text,
+    String? subject,
+  }) async {
     if (!FeatureFlags.shareEnabled) {
       SafeLog.warning('ShareService: Sharing is disabled');
       return false;
@@ -151,7 +163,7 @@ class ShareService {
     try {
       SafeLog.info('ShareService: Sharing ${filePaths.length} files');
 
-      final files = filePaths.map((path) => XFile(path)).toList();
+      final files = filePaths.map(XFile.new).toList();
 
       await Share.shareXFiles(
         files,
@@ -168,8 +180,11 @@ class ShareService {
   }
 
   /// Поделиться ссылкой
-  static Future<bool> shareLink(String url,
-      {String? title, String? description}) async {
+  static Future<bool> shareLink(
+    String url, {
+    String? title,
+    String? description,
+  }) async {
     if (!FeatureFlags.shareEnabled) {
       SafeLog.warning('ShareService: Sharing is disabled');
       return false;
@@ -216,8 +231,11 @@ class ShareService {
   }
 
   /// Открыть email клиент
-  static Future<bool> openEmail(String email,
-      {String? subject, String? body}) async {
+  static Future<bool> openEmail(
+    String email, {
+    String? subject,
+    String? body,
+  }) async {
     try {
       SafeLog.info('ShareService: Opening email: $email');
 
@@ -363,7 +381,10 @@ class ShareService {
 
   /// Построить сообщение для шаринга ссылки
   static String _buildLinkShareMessage(
-      String url, String? title, String? description) {
+    String url,
+    String? title,
+    String? description,
+  ) {
     final buffer = StringBuffer();
 
     if (title != null) {
@@ -397,9 +418,8 @@ class ShareService {
   }
 
   /// Форматировать дату
-  static String _formatDate(DateTime date) {
-    return '${date.day}.${date.month}.${date.year} в ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
-  }
+  static String _formatDate(DateTime date) =>
+      '${date.day}.${date.month}.${date.year} в ${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
 
   /// Проверить, доступен ли шаринг
   static bool get isEnabled => FeatureFlags.shareEnabled;

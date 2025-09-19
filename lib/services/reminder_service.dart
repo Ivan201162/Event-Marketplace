@@ -1,12 +1,13 @@
 import 'package:shared_preferences/shared_preferences.dart';
-import 'fcm_service.dart';
+
 import '../models/booking.dart';
+import 'fcm_service.dart';
 
 /// Сервис для управления напоминаниями
 class ReminderService {
-  static final ReminderService _instance = ReminderService._internal();
   factory ReminderService() => _instance;
   ReminderService._internal();
+  static final ReminderService _instance = ReminderService._internal();
 
   final FCMService _fcmService = FCMService();
   final String _reminderTimeKey = 'reminder_time';
@@ -35,7 +36,8 @@ class ReminderService {
         );
 
         print(
-            'Напоминание создано для заявки ${booking.id} на ${reminderDate}');
+          'Напоминание создано для заявки ${booking.id} на $reminderDate',
+        );
       }
     } catch (e) {
       print('Ошибка создания напоминания: $e');
@@ -91,7 +93,8 @@ class ReminderService {
         );
 
         print(
-            'Напоминание о платеже создано для $paymentId на ${reminderDate}');
+          'Напоминание о платеже создано для $paymentId на $reminderDate',
+        );
       }
     } catch (e) {
       print('Ошибка создания напоминания о платеже: $e');
@@ -124,7 +127,8 @@ class ReminderService {
         );
 
         print(
-            'Напоминание о встрече создано для $meetingId на ${reminderDate}');
+          'Напоминание о встрече создано для $meetingId на $reminderDate',
+        );
       }
     } catch (e) {
       print('Ошибка создания напоминания о встрече: $e');
@@ -168,7 +172,8 @@ class ReminderService {
       );
 
       print(
-          'Ежедневное напоминание создано для $reminderId на ${reminderDate}');
+        'Ежедневное напоминание создано для $reminderId на $reminderDate',
+      );
     } catch (e) {
       print('Ошибка создания ежедневного напоминания: $e');
     }
@@ -208,8 +213,10 @@ class ReminderService {
     try {
       final now = DateTime.now();
       final activeBookings = bookings
-          .where((booking) =>
-              booking.status == 'confirmed' && booking.eventDate.isAfter(now))
+          .where(
+            (booking) =>
+                booking.status == 'confirmed' && booking.eventDate.isAfter(now),
+          )
           .toList();
 
       for (final booking in activeBookings) {
@@ -245,7 +252,7 @@ class ReminderService {
         payload: 'test_reminder',
       );
 
-      print('Тестовое напоминание создано на ${testDate}');
+      print('Тестовое напоминание создано на $testDate');
     } catch (e) {
       print('Ошибка создания тестового напоминания: $e');
     }

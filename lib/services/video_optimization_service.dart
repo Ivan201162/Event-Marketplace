@@ -1,8 +1,9 @@
 import 'dart:io';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 
 /// Сервис для оптимизации видео
 class VideoOptimizationService {
@@ -26,8 +27,7 @@ class VideoOptimizationService {
         path: videoPath,
         fileName: fileName,
         fileSize: fileSize,
-        duration:
-            const Duration(seconds: 0), // TODO: Получить реальную длительность
+        duration: const Duration(), // TODO: Получить реальную длительность
         format: fileExtension,
         resolution:
             const Size(1920, 1080), // TODO: Получить реальное разрешение
@@ -162,7 +162,7 @@ class VideoOptimizationService {
         return 0;
       }
 
-      int totalSize = 0;
+      var totalSize = 0;
       await for (final entity in videosDir.list(recursive: true)) {
         if (entity is File) {
           totalSize += await entity.length();
@@ -187,7 +187,7 @@ class VideoOptimizationService {
   static CompressionSettings getRecommendedSettings(VideoInfo videoInfo) {
     if (videoInfo.fileSize > 50 * 1024 * 1024) {
       // > 50 MB
-      return CompressionSettings(
+      return const CompressionSettings(
         maxWidth: 1280,
         maxHeight: 720,
         bitrate: 2000000, // 2 Mbps
@@ -195,14 +195,14 @@ class VideoOptimizationService {
       );
     } else if (videoInfo.fileSize > 20 * 1024 * 1024) {
       // > 20 MB
-      return CompressionSettings(
+      return const CompressionSettings(
         maxWidth: 1920,
         maxHeight: 1080,
         bitrate: 4000000, // 4 Mbps
         frameRate: 30,
       );
     } else {
-      return CompressionSettings(
+      return const CompressionSettings(
         maxWidth: 1920,
         maxHeight: 1080,
         bitrate: 8000000, // 8 Mbps
@@ -214,13 +214,6 @@ class VideoOptimizationService {
 
 /// Информация о видео
 class VideoInfo {
-  final String path;
-  final String fileName;
-  final int fileSize;
-  final Duration duration;
-  final String format;
-  final Size resolution;
-
   const VideoInfo({
     required this.path,
     required this.fileName,
@@ -229,14 +222,22 @@ class VideoInfo {
     required this.format,
     required this.resolution,
   });
+  final String path;
+  final String fileName;
+  final int fileSize;
+  final Duration duration;
+  final String format;
+  final Size resolution;
 
   /// Получить размер файла в читаемом виде
   String get formattedFileSize {
     if (fileSize < 1024) return '$fileSize B';
-    if (fileSize < 1024 * 1024)
+    if (fileSize < 1024 * 1024) {
       return '${(fileSize / 1024).toStringAsFixed(1)} KB';
-    if (fileSize < 1024 * 1024 * 1024)
+    }
+    if (fileSize < 1024 * 1024 * 1024) {
       return '${(fileSize / (1024 * 1024)).toStringAsFixed(1)} MB';
+    }
     return '${(fileSize / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
   }
 
@@ -254,39 +255,26 @@ class VideoInfo {
   }
 
   /// Получить разрешение в читаемом виде
-  String get formattedResolution {
-    return '${resolution.width.toInt()}x${resolution.height.toInt()}';
-  }
+  String get formattedResolution =>
+      '${resolution.width.toInt()}x${resolution.height.toInt()}';
 }
 
 /// Настройки сжатия видео
 class CompressionSettings {
-  final int? maxWidth;
-  final int? maxHeight;
-  final int? bitrate;
-  final int? frameRate;
-
   const CompressionSettings({
     this.maxWidth,
     this.maxHeight,
     this.bitrate,
     this.frameRate,
   });
+  final int? maxWidth;
+  final int? maxHeight;
+  final int? bitrate;
+  final int? frameRate;
 }
 
 /// Виджет для отображения видео с оптимизацией
 class OptimizedVideoPlayer extends StatefulWidget {
-  final String videoUrl;
-  final double? width;
-  final double? height;
-  final bool autoPlay;
-  final bool showControls;
-  final Widget? placeholder;
-  final Widget? errorWidget;
-  final bool enableCaching;
-  final bool enableCompression;
-  final VoidCallback? onTap;
-
   const OptimizedVideoPlayer({
     super.key,
     required this.videoUrl,
@@ -300,6 +288,16 @@ class OptimizedVideoPlayer extends StatefulWidget {
     this.enableCompression = true,
     this.onTap,
   });
+  final String videoUrl;
+  final double? width;
+  final double? height;
+  final bool autoPlay;
+  final bool showControls;
+  final Widget? placeholder;
+  final Widget? errorWidget;
+  final bool enableCaching;
+  final bool enableCompression;
+  final VoidCallback? onTap;
 
   @override
   State<OptimizedVideoPlayer> createState() => _OptimizedVideoPlayerState();
@@ -542,13 +540,6 @@ class _OptimizedVideoPlayerState extends State<OptimizedVideoPlayer> {
 
 /// Виджет для отображения миниатюр видео
 class VideoThumbnail extends StatelessWidget {
-  final String videoUrl;
-  final double size;
-  final BoxFit fit;
-  final Widget? placeholder;
-  final Widget? errorWidget;
-  final VoidCallback? onTap;
-
   const VideoThumbnail({
     super.key,
     required this.videoUrl,
@@ -558,33 +549,37 @@ class VideoThumbnail extends StatelessWidget {
     this.errorWidget,
     this.onTap,
   });
+  final String videoUrl;
+  final double size;
+  final BoxFit fit;
+  final Widget? placeholder;
+  final Widget? errorWidget;
+  final VoidCallback? onTap;
 
   @override
-  Widget build(BuildContext context) {
-    return OptimizedVideoPlayer(
-      videoUrl: videoUrl,
-      width: size,
-      height: size,
-      fit: fit,
-      placeholder: placeholder ??
-          Container(
-            width: size,
-            height: size,
-            color: Colors.grey[300],
-            child: const Center(
-              child: CircularProgressIndicator(),
+  Widget build(BuildContext context) => OptimizedVideoPlayer(
+        videoUrl: videoUrl,
+        width: size,
+        height: size,
+        fit: fit,
+        placeholder: placeholder ??
+            Container(
+              width: size,
+              height: size,
+              color: Colors.grey[300],
+              child: const Center(
+                child: CircularProgressIndicator(),
+              ),
             ),
-          ),
-      errorWidget: errorWidget ??
-          Container(
-            width: size,
-            height: size,
-            color: Colors.grey[300],
-            child: const Center(
-              child: Icon(Icons.error),
+        errorWidget: errorWidget ??
+            Container(
+              width: size,
+              height: size,
+              color: Colors.grey[300],
+              child: const Center(
+                child: Icon(Icons.error),
+              ),
             ),
-          ),
-      onTap: onTap,
-    );
-  }
+        onTap: onTap,
+      );
 }

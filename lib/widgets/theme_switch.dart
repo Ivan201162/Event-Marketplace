@@ -4,16 +4,6 @@ import '../providers/theme_provider.dart';
 
 /// Виджет для переключения темы
 class ThemeSwitch extends ConsumerWidget {
-  final bool showLabel;
-  final bool showIcon;
-  final bool isExpanded;
-  final EdgeInsetsGeometry? padding;
-  final TextStyle? textStyle;
-  final Color? iconColor;
-  final Color? backgroundColor;
-  final BorderRadius? borderRadius;
-  final VoidCallback? onChanged;
-
   const ThemeSwitch({
     super.key,
     this.showLabel = true,
@@ -26,6 +16,15 @@ class ThemeSwitch extends ConsumerWidget {
     this.borderRadius,
     this.onChanged,
   });
+  final bool showLabel;
+  final bool showIcon;
+  final bool isExpanded;
+  final EdgeInsetsGeometry? padding;
+  final TextStyle? textStyle;
+  final Color? iconColor;
+  final Color? backgroundColor;
+  final BorderRadius? borderRadius;
+  final VoidCallback? onChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -49,7 +48,6 @@ class ThemeSwitch extends ConsumerWidget {
             borderRadius: borderRadius ?? BorderRadius.circular(12),
             border: Border.all(
               color: Theme.of(context).dividerColor,
-              width: 1,
             ),
           ),
           child: isExpanded
@@ -100,35 +98,32 @@ class ThemeSwitch extends ConsumerWidget {
     );
   }
 
-  List<DropdownMenuItem<AppThemeMode>> _buildThemeItems(BuildContext context) {
-    return [
-      DropdownMenuItem(
-        value: AppThemeMode.light,
-        child: _buildThemeItem(AppThemeMode.light),
-      ),
-      DropdownMenuItem(
-        value: AppThemeMode.dark,
-        child: _buildThemeItem(AppThemeMode.dark),
-      ),
-      DropdownMenuItem(
-        value: AppThemeMode.system,
-        child: _buildThemeItem(AppThemeMode.system),
-      ),
-    ];
-  }
-
-  Widget _buildThemeItem(AppThemeMode themeMode) {
-    return Row(
-      children: [
-        _buildThemeIcon(themeMode),
-        const SizedBox(width: 12),
-        Text(
-          _getThemeName(themeMode),
-          style: const TextStyle(fontSize: 16),
+  List<DropdownMenuItem<AppThemeMode>> _buildThemeItems(BuildContext context) =>
+      [
+        DropdownMenuItem(
+          value: AppThemeMode.light,
+          child: _buildThemeItem(AppThemeMode.light),
         ),
-      ],
-    );
-  }
+        DropdownMenuItem(
+          value: AppThemeMode.dark,
+          child: _buildThemeItem(AppThemeMode.dark),
+        ),
+        DropdownMenuItem(
+          value: AppThemeMode.system,
+          child: _buildThemeItem(AppThemeMode.system),
+        ),
+      ];
+
+  Widget _buildThemeItem(AppThemeMode themeMode) => Row(
+        children: [
+          _buildThemeIcon(themeMode),
+          const SizedBox(width: 12),
+          Text(
+            _getThemeName(themeMode),
+            style: const TextStyle(fontSize: 16),
+          ),
+        ],
+      );
 
   Widget _buildThemeIcon(AppThemeMode themeMode) {
     IconData icon;
@@ -179,7 +174,7 @@ class ThemeSwitch extends ConsumerWidget {
   void _showThemeDialog(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
-      builder: (BuildContext dialogContext) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Выберите тему'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -250,11 +245,6 @@ class ThemeSwitch extends ConsumerWidget {
 
 /// Компактный виджет для переключения темы
 class CompactThemeSwitch extends ConsumerWidget {
-  final bool showIcon;
-  final bool showText;
-  final Color? iconColor;
-  final VoidCallback? onChanged;
-
   const CompactThemeSwitch({
     super.key,
     this.showIcon = true,
@@ -262,6 +252,10 @@ class CompactThemeSwitch extends ConsumerWidget {
     this.iconColor,
     this.onChanged,
   });
+  final bool showIcon;
+  final bool showText;
+  final Color? iconColor;
+  final VoidCallback? onChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -323,7 +317,7 @@ class CompactThemeSwitch extends ConsumerWidget {
   void _showThemeDialog(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
-      builder: (BuildContext dialogContext) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Выберите тему'),
         content: Column(
           mainAxisSize: MainAxisSize.min,
@@ -399,12 +393,6 @@ class CompactThemeSwitch extends ConsumerWidget {
 
 /// Виджет для отображения текущей темы
 class CurrentThemeDisplay extends ConsumerWidget {
-  final bool showIcon;
-  final bool showName;
-  final bool showCode;
-  final TextStyle? textStyle;
-  final Color? iconColor;
-
   const CurrentThemeDisplay({
     super.key,
     this.showIcon = true,
@@ -413,6 +401,11 @@ class CurrentThemeDisplay extends ConsumerWidget {
     this.textStyle,
     this.iconColor,
   });
+  final bool showIcon;
+  final bool showName;
+  final bool showCode;
+  final TextStyle? textStyle;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -481,16 +474,15 @@ class CurrentThemeDisplay extends ConsumerWidget {
 
 /// Виджет для быстрого переключения между светлой и темной темой
 class QuickThemeToggle extends ConsumerWidget {
-  final bool showTooltip;
-  final Color? iconColor;
-  final VoidCallback? onChanged;
-
   const QuickThemeToggle({
     super.key,
     this.showTooltip = true,
     this.iconColor,
     this.onChanged,
   });
+  final bool showTooltip;
+  final Color? iconColor;
+  final VoidCallback? onChanged;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -79,4 +79,22 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get retry => 'Қайталау';
+
+  @override
+  String get takePhoto => 'Take Photo';
+
+  @override
+  String get chooseFromGallery => 'Choose from Gallery';
+
+  @override
+  String get takeVideo => 'Take Video';
+
+  @override
+  String get chooseVideoFromGallery => 'Choose Video from Gallery';
+
+  @override
+  String get storyCreatedSuccessfully => 'Story created successfully';
+
+  @override
+  String get errorCreatingStory => 'Error creating story';
 }

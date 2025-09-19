@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/auth_providers.dart';
+
 import '../models/user.dart';
+import '../providers/auth_providers.dart';
 import 'reset_password_screen.dart';
 
 class AuthScreen extends ConsumerWidget {
@@ -15,7 +16,7 @@ class AuthScreen extends ConsumerWidget {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
+          padding: const EdgeInsets.all(24),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
@@ -51,270 +52,276 @@ class AuthScreen extends ConsumerWidget {
   }
 
   /// Построение заголовка
-  Widget _buildHeader(BuildContext context) {
-    return Column(
-      children: [
-        Container(
-          width: 80,
-          height: 80,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
-            borderRadius: BorderRadius.circular(20),
+  Widget _buildHeader(BuildContext context) => Column(
+        children: [
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Icon(
+              Icons.event,
+              size: 40,
+              color: Theme.of(context).colorScheme.onPrimary,
+            ),
           ),
-          child: Icon(
-            Icons.event,
-            size: 40,
-            color: Theme.of(context).colorScheme.onPrimary,
+          const SizedBox(height: 24),
+          Text(
+            'Event Marketplace',
+            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
           ),
-        ),
-        const SizedBox(height: 24),
-        Text(
-          'Event Marketplace',
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                color: Theme.of(context).colorScheme.primary,
-              ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Найдите идеального специалиста для вашего мероприятия',
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-              ),
-          textAlign: TextAlign.center,
-        ),
-      ],
-    );
-  }
+          const SizedBox(height: 8),
+          Text(
+            'Найдите идеального специалиста для вашего мероприятия',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      );
 
   /// Построение формы аутентификации
   Widget _buildAuthForm(
-      BuildContext context, WidgetRef ref, LoginFormState formState) {
-    return Card(
-      elevation: 4,
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            // Заголовок формы
-            Text(
-              formState.isSignUpMode ? 'Регистрация' : 'Вход',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-              textAlign: TextAlign.center,
-            ),
+    BuildContext context,
+    WidgetRef ref,
+    LoginFormState formState,
+  ) =>
+      Card(
+        elevation: 4,
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Заголовок формы
+              Text(
+                formState.isSignUpMode ? 'Регистрация' : 'Вход',
+                style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                textAlign: TextAlign.center,
+              ),
 
-            const SizedBox(height: 24),
+              const SizedBox(height: 24),
 
-            // Поля формы
-            if (formState.isSignUpMode) ...[
-              _buildDisplayNameField(context, ref),
+              // Поля формы
+              if (formState.isSignUpMode) ...[
+                _buildDisplayNameField(context, ref),
+                const SizedBox(height: 16),
+                _buildRoleSelector(context, ref),
+                const SizedBox(height: 16),
+              ],
+
+              _buildEmailField(context, ref, formState),
               const SizedBox(height: 16),
-              _buildRoleSelector(context, ref),
-              const SizedBox(height: 16),
+              _buildPasswordField(context, ref, formState),
+
+              const SizedBox(height: 24),
+
+              // Кнопка отправки
+              _buildSubmitButton(context, ref, formState),
+
+              // Ошибка
+              if (formState.errorMessage != null) ...[
+                const SizedBox(height: 16),
+                _buildErrorMessage(context, formState.errorMessage!),
+              ],
+
+              // Разделитель
+              const SizedBox(height: 24),
+              _buildDivider(context),
+              const SizedBox(height: 24),
+
+              // Кнопки социальных сетей
+              _buildSocialButtons(context, ref, formState),
             ],
-
-            _buildEmailField(context, ref, formState),
-            const SizedBox(height: 16),
-            _buildPasswordField(context, ref, formState),
-
-            const SizedBox(height: 24),
-
-            // Кнопка отправки
-            _buildSubmitButton(context, ref, formState),
-
-            // Ошибка
-            if (formState.errorMessage != null) ...[
-              const SizedBox(height: 16),
-              _buildErrorMessage(context, formState.errorMessage!),
-            ],
-
-            // Разделитель
-            const SizedBox(height: 24),
-            _buildDivider(context),
-            const SizedBox(height: 24),
-
-            // Кнопки социальных сетей
-            _buildSocialButtons(context, ref, formState),
-          ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   /// Поле для имени пользователя
-  Widget _buildDisplayNameField(BuildContext context, WidgetRef ref) {
-    return TextFormField(
-      decoration: const InputDecoration(
-        labelText: 'Имя',
-        hintText: 'Введите ваше имя',
-        prefixIcon: Icon(Icons.person),
-        border: OutlineInputBorder(),
-      ),
-      onChanged: (value) {
-        // Сохраняем имя в локальном состоянии
-        ref.read(loginFormProvider.notifier).updateDisplayName(value);
-      },
-    );
-  }
+  Widget _buildDisplayNameField(BuildContext context, WidgetRef ref) =>
+      TextFormField(
+        decoration: const InputDecoration(
+          labelText: 'Имя',
+          hintText: 'Введите ваше имя',
+          prefixIcon: Icon(Icons.person),
+          border: OutlineInputBorder(),
+        ),
+        onChanged: (value) {
+          // Сохраняем имя в локальном состоянии
+          ref.read(loginFormProvider.notifier).updateDisplayName(value);
+        },
+      );
 
   /// Селектор роли
-  Widget _buildRoleSelector(BuildContext context, WidgetRef ref) {
-    return Consumer(
-      builder: (context, ref, child) {
-        final selectedRole = ref.watch(selectedRoleProvider);
+  Widget _buildRoleSelector(BuildContext context, WidgetRef ref) => Consumer(
+        builder: (context, ref, child) {
+          final selectedRole = ref.watch(selectedRoleProvider);
 
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Роль',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                Expanded(
-                  child: RadioListTile<UserRole>(
-                    title: const Text('Заказчик'),
-                    subtitle: const Text('Ищу специалистов'),
-                    value: UserRole.customer,
-                    groupValue: selectedRole,
-                    onChanged: (value) {
-                      if (value != null) {
-                        ref.read(selectedRoleProvider.notifier).state = value;
-                      }
-                    },
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Роль',
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  Expanded(
+                    child: RadioListTile<UserRole>(
+                      title: const Text('Заказчик'),
+                      subtitle: const Text('Ищу специалистов'),
+                      value: UserRole.customer,
+                      groupValue: selectedRole,
+                      onChanged: (value) {
+                        if (value != null) {
+                          ref.read(selectedRoleProvider.notifier).state = value;
+                        }
+                      },
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: RadioListTile<UserRole>(
-                    title: const Text('Специалист'),
-                    subtitle: const Text('Предоставляю услуги'),
-                    value: UserRole.specialist,
-                    groupValue: selectedRole,
-                    onChanged: (value) {
-                      if (value != null) {
-                        ref.read(selectedRoleProvider.notifier).state = value;
-                      }
-                    },
+                  Expanded(
+                    child: RadioListTile<UserRole>(
+                      title: const Text('Специалист'),
+                      subtitle: const Text('Предоставляю услуги'),
+                      value: UserRole.specialist,
+                      groupValue: selectedRole,
+                      onChanged: (value) {
+                        if (value != null) {
+                          ref.read(selectedRoleProvider.notifier).state = value;
+                        }
+                      },
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
-        );
-      },
-    );
-  }
+                ],
+              ),
+            ],
+          );
+        },
+      );
 
   /// Поле для email
   Widget _buildEmailField(
-      BuildContext context, WidgetRef ref, LoginFormState formState) {
-    return TextFormField(
-      keyboardType: TextInputType.emailAddress,
-      decoration: const InputDecoration(
-        labelText: 'Email',
-        hintText: 'Введите ваш email',
-        prefixIcon: Icon(Icons.email),
-        border: OutlineInputBorder(),
-      ),
-      onChanged: (value) =>
-          ref.read(loginFormProvider.notifier).updateEmail(value),
-    );
-  }
+    BuildContext context,
+    WidgetRef ref,
+    LoginFormState formState,
+  ) =>
+      TextFormField(
+        keyboardType: TextInputType.emailAddress,
+        decoration: const InputDecoration(
+          labelText: 'Email',
+          hintText: 'Введите ваш email',
+          prefixIcon: Icon(Icons.email),
+          border: OutlineInputBorder(),
+        ),
+        onChanged: (value) =>
+            ref.read(loginFormProvider.notifier).updateEmail(value),
+      );
 
   /// Поле для пароля
   Widget _buildPasswordField(
-      BuildContext context, WidgetRef ref, LoginFormState formState) {
-    return TextFormField(
-      obscureText: true,
-      decoration: const InputDecoration(
-        labelText: 'Пароль',
-        hintText: 'Введите пароль',
-        prefixIcon: Icon(Icons.lock),
-        border: OutlineInputBorder(),
-      ),
-      onChanged: (value) =>
-          ref.read(loginFormProvider.notifier).updatePassword(value),
-    );
-  }
+    BuildContext context,
+    WidgetRef ref,
+    LoginFormState formState,
+  ) =>
+      TextFormField(
+        obscureText: true,
+        decoration: const InputDecoration(
+          labelText: 'Пароль',
+          hintText: 'Введите пароль',
+          prefixIcon: Icon(Icons.lock),
+          border: OutlineInputBorder(),
+        ),
+        onChanged: (value) =>
+            ref.read(loginFormProvider.notifier).updatePassword(value),
+      );
 
   /// Кнопка отправки
   Widget _buildSubmitButton(
-      BuildContext context, WidgetRef ref, LoginFormState formState) {
-    return ElevatedButton(
-      onPressed: formState.isLoading
-          ? null
-          : () {
-              if (formState.isSignUpMode) {
-                _handleSignUp(context, ref);
-              } else {
-                ref.read(loginFormProvider.notifier).signIn();
-              }
-            },
-      style: ElevatedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+    BuildContext context,
+    WidgetRef ref,
+    LoginFormState formState,
+  ) =>
+      ElevatedButton(
+        onPressed: formState.isLoading
+            ? null
+            : () {
+                if (formState.isSignUpMode) {
+                  _handleSignUp(context, ref);
+                } else {
+                  ref.read(loginFormProvider.notifier).signIn();
+                }
+              },
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
-      ),
-      child: formState.isLoading
-          ? const SizedBox(
-              height: 20,
-              width: 20,
-              child: CircularProgressIndicator(strokeWidth: 2),
-            )
-          : Text(
-              formState.isSignUpMode ? 'Зарегистрироваться' : 'Войти',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-            ),
-    );
-  }
+        child: formState.isLoading
+            ? const SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(strokeWidth: 2),
+              )
+            : Text(
+                formState.isSignUpMode ? 'Зарегистрироваться' : 'Войти',
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+      );
 
   /// Кнопка входа как гость
-  Widget _buildGuestButton(BuildContext context, WidgetRef ref) {
-    return OutlinedButton.icon(
-      onPressed: () => ref.read(loginFormProvider.notifier).signInAsGuest(),
-      icon: const Icon(Icons.person_outline),
-      label: const Text('Войти как гость'),
-      style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(vertical: 16),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8),
+  Widget _buildGuestButton(BuildContext context, WidgetRef ref) =>
+      OutlinedButton.icon(
+        onPressed: () => ref.read(loginFormProvider.notifier).signInAsGuest(),
+        icon: const Icon(Icons.person_outline),
+        label: const Text('Войти как гость'),
+        style: OutlinedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 16),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   /// Дополнительные действия
   Widget _buildAdditionalActions(
-      BuildContext context, WidgetRef ref, LoginFormState formState) {
-    return Column(
-      children: [
-        // Переключение режима
-        TextButton(
-          onPressed: () =>
-              ref.read(loginFormProvider.notifier).toggleSignUpMode(),
-          child: Text(
-            formState.isSignUpMode
-                ? 'Уже есть аккаунт? Войти'
-                : 'Нет аккаунта? Зарегистрироваться',
-          ),
-        ),
-
-        // Сброс пароля
-        if (!formState.isSignUpMode) ...[
+    BuildContext context,
+    WidgetRef ref,
+    LoginFormState formState,
+  ) =>
+      Column(
+        children: [
+          // Переключение режима
           TextButton(
-            onPressed: () => _showResetPasswordDialog(context, ref),
-            child: const Text('Забыли пароль?'),
+            onPressed: () =>
+                ref.read(loginFormProvider.notifier).toggleSignUpMode(),
+            child: Text(
+              formState.isSignUpMode
+                  ? 'Уже есть аккаунт? Войти'
+                  : 'Нет аккаунта? Зарегистрироваться',
+            ),
           ),
+
+          // Сброс пароля
+          if (!formState.isSignUpMode) ...[
+            TextButton(
+              onPressed: () => _showResetPasswordDialog(context, ref),
+              child: const Text('Забыли пароль?'),
+            ),
+          ],
         ],
-      ],
-    );
-  }
+      );
 
   /// Сообщение об ошибке
   Widget _buildErrorMessage(BuildContext context, String message) {
@@ -329,7 +336,6 @@ class AuthScreen extends ConsumerWidget {
         borderRadius: BorderRadius.circular(8),
         border: Border.all(
           color: isSuccess ? Colors.green : Colors.red,
-          width: 1,
         ),
       ),
       child: Row(
@@ -382,96 +388,99 @@ class AuthScreen extends ConsumerWidget {
   }
 
   /// Разделитель
-  Widget _buildDivider(BuildContext context) {
-    return Row(
-      children: [
-        Expanded(child: Divider(color: Theme.of(context).colorScheme.outline)),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: Text(
-            'или',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+  Widget _buildDivider(BuildContext context) => Row(
+        children: [
+          Expanded(
+              child: Divider(color: Theme.of(context).colorScheme.outline)),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Text(
+              'или',
+              style: TextStyle(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),
+              ),
             ),
           ),
-        ),
-        Expanded(child: Divider(color: Theme.of(context).colorScheme.outline)),
-      ],
-    );
-  }
+          Expanded(
+              child: Divider(color: Theme.of(context).colorScheme.outline)),
+        ],
+      );
 
   /// Кнопки социальных сетей
   Widget _buildSocialButtons(
-      BuildContext context, WidgetRef ref, LoginFormState formState) {
-    return Column(
-      children: [
-        // Кнопка Google
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton.icon(
-            onPressed: formState.isLoading
-                ? null
-                : () => _handleGoogleSignIn(context, ref),
-            icon: Container(
-              width: 20,
-              height: 20,
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: NetworkImage(
-                      'https://developers.google.com/identity/images/g-logo.png'),
-                  fit: BoxFit.contain,
-                ),
-              ),
-            ),
-            label: const Text('Войти через Google'),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
-          ),
-        ),
-
-        const SizedBox(height: 12),
-
-        // Кнопка ВКонтакте
-        SizedBox(
-          width: double.infinity,
-          child: OutlinedButton.icon(
-            onPressed: formState.isLoading
-                ? null
-                : () => _handleVKSignIn(context, ref),
-            icon: Container(
-              width: 20,
-              height: 20,
-              decoration: const BoxDecoration(
-                color: Color(0xFF0077FF),
-                shape: BoxShape.circle,
-              ),
-              child: const Center(
-                child: Text(
-                  'VK',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.bold,
+    BuildContext context,
+    WidgetRef ref,
+    LoginFormState formState,
+  ) =>
+      Column(
+        children: [
+          // Кнопка Google
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: formState.isLoading
+                  ? null
+                  : () => _handleGoogleSignIn(context, ref),
+              icon: Container(
+                width: 20,
+                height: 20,
+                decoration: const BoxDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(
+                      'https://developers.google.com/identity/images/g-logo.png',
+                    ),
+                    fit: BoxFit.contain,
                   ),
                 ),
               ),
-            ),
-            label: const Text('Войти через ВКонтакте'),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+              label: const Text('Войти через Google'),
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
               ),
             ),
           ),
-        ),
-      ],
-    );
-  }
+
+          const SizedBox(height: 12),
+
+          // Кнопка ВКонтакте
+          SizedBox(
+            width: double.infinity,
+            child: OutlinedButton.icon(
+              onPressed: formState.isLoading
+                  ? null
+                  : () => _handleVKSignIn(context, ref),
+              icon: Container(
+                width: 20,
+                height: 20,
+                decoration: const BoxDecoration(
+                  color: Color(0xFF0077FF),
+                  shape: BoxShape.circle,
+                ),
+                child: const Center(
+                  child: Text(
+                    'VK',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ),
+              label: const Text('Войти через ВКонтакте'),
+              style: OutlinedButton.styleFrom(
+                padding: const EdgeInsets.symmetric(vertical: 12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
 
   /// Обработка входа через Google
   Future<void> _handleGoogleSignIn(BuildContext context, WidgetRef ref) async {
@@ -499,19 +508,18 @@ class AuthScreen extends ConsumerWidget {
   }
 
   /// Кнопка входа через Google
-  Widget _buildGoogleSignInButton(BuildContext context, WidgetRef ref) {
-    return SizedBox(
-      width: double.infinity,
-      child: OutlinedButton.icon(
-        onPressed: () => _handleGoogleSignIn(context, ref),
-        icon: const Icon(Icons.login),
-        label: const Text('Войти через Google'),
-        style: OutlinedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 12),
+  Widget _buildGoogleSignInButton(BuildContext context, WidgetRef ref) =>
+      SizedBox(
+        width: double.infinity,
+        child: OutlinedButton.icon(
+          onPressed: () => _handleGoogleSignIn(context, ref),
+          icon: const Icon(Icons.login),
+          label: const Text('Войти через Google'),
+          style: OutlinedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   /// Обработка входа через ВКонтакте
   Future<void> _handleVKSignIn(BuildContext context, WidgetRef ref) async {
@@ -540,14 +548,11 @@ class AuthScreen extends ConsumerWidget {
 }
 
 /// Провайдеры для локального состояния формы
-final displayNameProvider = NotifierProvider<DisplayNameNotifier, String>(() {
-  return DisplayNameNotifier();
-});
+final displayNameProvider =
+    NotifierProvider<DisplayNameNotifier, String>(DisplayNameNotifier.new);
 
 final selectedRoleProvider =
-    NotifierProvider<SelectedRoleNotifier, UserRole>(() {
-  return SelectedRoleNotifier();
-});
+    NotifierProvider<SelectedRoleNotifier, UserRole>(SelectedRoleNotifier.new);
 
 class DisplayNameNotifier extends Notifier<String> {
   @override

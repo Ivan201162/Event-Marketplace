@@ -1,10 +1,12 @@
 import 'dart:io';
 import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:file_picker/file_picker.dart';
 import 'package:path/path.dart' as path;
 import 'package:uuid/uuid.dart';
+
 import '../core/feature_flags.dart';
 import '../core/safe_log.dart';
 
@@ -20,14 +22,6 @@ enum FileType {
 
 /// Результат загрузки файла
 class UploadResult {
-  final String url;
-  final String fileName;
-  final String filePath;
-  final int fileSize;
-  final FileType fileType;
-  final String? thumbnailUrl;
-  final Map<String, dynamic>? metadata;
-
   const UploadResult({
     required this.url,
     required this.fileName,
@@ -37,20 +31,25 @@ class UploadResult {
     this.thumbnailUrl,
     this.metadata,
   });
+  final String url;
+  final String fileName;
+  final String filePath;
+  final int fileSize;
+  final FileType fileType;
+  final String? thumbnailUrl;
+  final Map<String, dynamic>? metadata;
 
   @override
-  String toString() {
-    return 'UploadResult(url: $url, fileName: $fileName, size: $fileSize, type: $fileType)';
-  }
+  String toString() =>
+      'UploadResult(url: $url, fileName: $fileName, size: $fileSize, type: $fileType)';
 }
 
 /// Ошибки загрузки
 class UploadException implements Exception {
+  const UploadException(this.message, {this.code, this.originalError});
   final String message;
   final String? code;
   final dynamic originalError;
-
-  const UploadException(this.message, {this.code, this.originalError});
 
   @override
   String toString() => 'UploadException: $message';
@@ -84,7 +83,7 @@ class UploadService {
     'gif',
     'webp',
     'bmp',
-    'svg'
+    'svg',
   ];
   static const List<String> _allowedVideoExtensions = [
     'mp4',
@@ -93,7 +92,7 @@ class UploadService {
     'wmv',
     'flv',
     'webm',
-    'mkv'
+    'mkv',
   ];
   static const List<String> _allowedAudioExtensions = [
     'mp3',
@@ -101,7 +100,7 @@ class UploadService {
     'aac',
     'flac',
     'ogg',
-    'm4a'
+    'm4a',
   ];
   static const List<String> _allowedDocumentExtensions = [
     'pdf',
@@ -112,14 +111,14 @@ class UploadService {
     'ppt',
     'pptx',
     'txt',
-    'rtf'
+    'rtf',
   ];
   static const List<String> _allowedArchiveExtensions = [
     'zip',
     'rar',
     '7z',
     'tar',
-    'gz'
+    'gz',
   ];
 
   final FirebaseStorage _storage = FirebaseStorage.instance;
@@ -141,7 +140,7 @@ class UploadService {
     try {
       SafeLog.info('UploadService: Picking image from ${source.name}');
 
-      final XFile? image = await _imagePicker.pickImage(
+      final image = await _imagePicker.pickImage(
         source: source,
         maxWidth: maxWidth,
         maxHeight: maxHeight,
@@ -176,7 +175,7 @@ class UploadService {
     try {
       SafeLog.info('UploadService: Picking video from ${source.name}');
 
-      final XFile? video = await _imagePicker.pickVideo(
+      final video = await _imagePicker.pickVideo(
         source: source,
         maxDuration: maxDuration,
       );
@@ -208,9 +207,10 @@ class UploadService {
 
     try {
       SafeLog.info(
-          'UploadService: Picking file with extensions: $allowedExtensions');
+        'UploadService: Picking file with extensions: $allowedExtensions',
+      );
 
-      final FilePickerResult? result = await FilePicker.platform.pickFiles(
+      final result = await FilePicker.platform.pickFiles(
         type: FileType.custom,
         allowedExtensions: allowedExtensions,
         allowMultiple: allowMultiple,
@@ -223,7 +223,7 @@ class UploadService {
 
       final file = result.files.first;
       if (file.path == null) {
-        throw UploadException('Файл не найден');
+        throw const UploadException('Файл не найден');
       }
 
       return await uploadFile(
@@ -244,7 +244,7 @@ class UploadService {
     Map<String, String>? metadata,
   }) async {
     if (!FeatureFlags.fileUploadEnabled) {
-      throw UploadException('Загрузка файлов отключена');
+      throw const UploadException('Загрузка файлов отключена');
     }
 
     try {
@@ -252,7 +252,7 @@ class UploadService {
 
       // Проверяем существование файла
       if (!await file.exists()) {
-        throw UploadException('Файл не существует');
+        throw const UploadException('Файл не существует');
       }
 
       // Получаем информацию о файле
@@ -274,10 +274,10 @@ class UploadService {
       final uploadPath = customPath ?? _getUploadPath(fileType, uniqueFileName);
 
       // Создаем референс в Firebase Storage
-      final Reference ref = _storage.ref().child(uploadPath);
+      final ref = _storage.ref().child(uploadPath);
 
       // Загружаем файл
-      final UploadTask uploadTask = ref.putFile(
+      final uploadTask = ref.putFile(
         file,
         SettableMetadata(
           contentType: _getContentType(fileExtension),
@@ -289,11 +289,12 @@ class UploadService {
       uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
         final progress = snapshot.bytesTransferred / snapshot.totalBytes;
         SafeLog.info(
-            'UploadService: Upload progress: ${(progress * 100).toStringAsFixed(1)}%');
+          'UploadService: Upload progress: ${(progress * 100).toStringAsFixed(1)}%',
+        );
       });
 
       // Ждем завершения загрузки
-      final TaskSnapshot snapshot = await uploadTask;
+      final snapshot = await uploadTask;
       final String downloadUrl = await snapshot.ref.getDownloadURL();
 
       SafeLog.info('UploadService: File uploaded successfully: $downloadUrl');
@@ -339,7 +340,7 @@ class UploadService {
     Map<String, String>? metadata,
   }) async {
     if (!FeatureFlags.fileUploadEnabled) {
-      throw UploadException('Загрузка файлов отключена');
+      throw const UploadException('Загрузка файлов отключена');
     }
 
     try {
@@ -360,10 +361,10 @@ class UploadService {
       final uploadPath = customPath ?? _getUploadPath(fileType, uniqueFileName);
 
       // Создаем референс в Firebase Storage
-      final Reference ref = _storage.ref().child(uploadPath);
+      final ref = _storage.ref().child(uploadPath);
 
       // Загружаем файл
-      final UploadTask uploadTask = ref.putData(
+      final uploadTask = ref.putData(
         bytes,
         SettableMetadata(
           contentType: _getContentType(fileExtension),
@@ -372,11 +373,12 @@ class UploadService {
       );
 
       // Ждем завершения загрузки
-      final TaskSnapshot snapshot = await uploadTask;
+      final snapshot = await uploadTask;
       final String downloadUrl = await snapshot.ref.getDownloadURL();
 
       SafeLog.info(
-          'UploadService: File uploaded successfully from bytes: $downloadUrl');
+        'UploadService: File uploaded successfully from bytes: $downloadUrl',
+      );
 
       // Создаем превью для изображений
       String? thumbnailUrl;
@@ -401,7 +403,10 @@ class UploadService {
       );
     } catch (e, stackTrace) {
       SafeLog.error(
-          'UploadService: Error uploading file from bytes', e, stackTrace);
+        'UploadService: Error uploading file from bytes',
+        e,
+        stackTrace,
+      );
 
       if (e is UploadException) {
         rethrow;
@@ -421,7 +426,7 @@ class UploadService {
     try {
       SafeLog.info('UploadService: Deleting file: $filePath');
 
-      final Reference ref = _storage.ref().child(filePath);
+      final ref = _storage.ref().child(filePath);
       await ref.delete();
 
       SafeLog.info('UploadService: File deleted successfully: $filePath');
@@ -434,7 +439,7 @@ class UploadService {
   /// Получить URL файла
   Future<String> getFileUrl(String filePath) async {
     try {
-      final Reference ref = _storage.ref().child(filePath);
+      final ref = _storage.ref().child(filePath);
       return await ref.getDownloadURL();
     } catch (e, stackTrace) {
       SafeLog.error('UploadService: Error getting file URL', e, stackTrace);
@@ -445,11 +450,14 @@ class UploadService {
   /// Получить метаданные файла
   Future<FullMetadata> getFileMetadata(String filePath) async {
     try {
-      final Reference ref = _storage.ref().child(filePath);
+      final ref = _storage.ref().child(filePath);
       return await ref.getMetadata();
     } catch (e, stackTrace) {
       SafeLog.error(
-          'UploadService: Error getting file metadata', e, stackTrace);
+        'UploadService: Error getting file metadata',
+        e,
+        stackTrace,
+      );
       throw UploadException('Ошибка получения метаданных файла: $e');
     }
   }
@@ -661,8 +669,9 @@ class UploadService {
   String _formatFileSize(int bytes) {
     if (bytes < 1024) return '$bytes B';
     if (bytes < 1024 * 1024) return '${(bytes / 1024).toStringAsFixed(1)} KB';
-    if (bytes < 1024 * 1024 * 1024)
+    if (bytes < 1024 * 1024 * 1024) {
       return '${(bytes / (1024 * 1024)).toStringAsFixed(1)} MB';
+    }
     return '${(bytes / (1024 * 1024 * 1024)).toStringAsFixed(1)} GB';
   }
 

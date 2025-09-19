@@ -2,25 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель для аудита действий пользователей
 class AuditLog {
-  final String id;
-  final String userId;
-  final String userEmail;
-  final String action;
-  final String resource;
-  final String resourceId;
-  final Map<String, dynamic>? oldData;
-  final Map<String, dynamic>? newData;
-  final String? ipAddress;
-  final String? userAgent;
-  final String? sessionId;
-  final AuditLogLevel level;
-  final AuditLogCategory category;
-  final String? description;
-  final Map<String, dynamic>? metadata;
-  final DateTime timestamp;
-  final String? errorMessage;
-  final bool isSuccess;
-
   const AuditLog({
     required this.id,
     required this.userId,
@@ -42,51 +23,65 @@ class AuditLog {
     required this.isSuccess,
   });
 
-  factory AuditLog.fromMap(Map<String, dynamic> map) {
-    return AuditLog(
-      id: map['id'] ?? '',
-      userId: map['userId'] ?? '',
-      userEmail: map['userEmail'] ?? '',
-      action: map['action'] ?? '',
-      resource: map['resource'] ?? '',
-      resourceId: map['resourceId'] ?? '',
-      oldData: map['oldData'],
-      newData: map['newData'],
-      ipAddress: map['ipAddress'],
-      userAgent: map['userAgent'],
-      sessionId: map['sessionId'],
-      level: AuditLogLevel.fromString(map['level'] ?? 'info'),
-      category: AuditLogCategory.fromString(map['category'] ?? 'general'),
-      description: map['description'],
-      metadata: map['metadata'],
-      timestamp: (map['timestamp'] as Timestamp).toDate(),
-      errorMessage: map['errorMessage'],
-      isSuccess: map['isSuccess'] ?? true,
-    );
-  }
+  factory AuditLog.fromMap(Map<String, dynamic> map) => AuditLog(
+        id: map['id'] ?? '',
+        userId: map['userId'] ?? '',
+        userEmail: map['userEmail'] ?? '',
+        action: map['action'] ?? '',
+        resource: map['resource'] ?? '',
+        resourceId: map['resourceId'] ?? '',
+        oldData: map['oldData'],
+        newData: map['newData'],
+        ipAddress: map['ipAddress'],
+        userAgent: map['userAgent'],
+        sessionId: map['sessionId'],
+        level: AuditLogLevel.fromString(map['level'] ?? 'info'),
+        category: AuditLogCategory.fromString(map['category'] ?? 'general'),
+        description: map['description'],
+        metadata: map['metadata'],
+        timestamp: (map['timestamp'] as Timestamp).toDate(),
+        errorMessage: map['errorMessage'],
+        isSuccess: map['isSuccess'] ?? true,
+      );
+  final String id;
+  final String userId;
+  final String userEmail;
+  final String action;
+  final String resource;
+  final String resourceId;
+  final Map<String, dynamic>? oldData;
+  final Map<String, dynamic>? newData;
+  final String? ipAddress;
+  final String? userAgent;
+  final String? sessionId;
+  final AuditLogLevel level;
+  final AuditLogCategory category;
+  final String? description;
+  final Map<String, dynamic>? metadata;
+  final DateTime timestamp;
+  final String? errorMessage;
+  final bool isSuccess;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'userId': userId,
-      'userEmail': userEmail,
-      'action': action,
-      'resource': resource,
-      'resourceId': resourceId,
-      'oldData': oldData,
-      'newData': newData,
-      'ipAddress': ipAddress,
-      'userAgent': userAgent,
-      'sessionId': sessionId,
-      'level': level.value,
-      'category': category.value,
-      'description': description,
-      'metadata': metadata,
-      'timestamp': Timestamp.fromDate(timestamp),
-      'errorMessage': errorMessage,
-      'isSuccess': isSuccess,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'userId': userId,
+        'userEmail': userEmail,
+        'action': action,
+        'resource': resource,
+        'resourceId': resourceId,
+        'oldData': oldData,
+        'newData': newData,
+        'ipAddress': ipAddress,
+        'userAgent': userAgent,
+        'sessionId': sessionId,
+        'level': level.value,
+        'category': category.value,
+        'description': description,
+        'metadata': metadata,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'errorMessage': errorMessage,
+        'isSuccess': isSuccess,
+      };
 
   AuditLog copyWith({
     String? id,
@@ -107,33 +102,31 @@ class AuditLog {
     DateTime? timestamp,
     String? errorMessage,
     bool? isSuccess,
-  }) {
-    return AuditLog(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      userEmail: userEmail ?? this.userEmail,
-      action: action ?? this.action,
-      resource: resource ?? this.resource,
-      resourceId: resourceId ?? this.resourceId,
-      oldData: oldData ?? this.oldData,
-      newData: newData ?? this.newData,
-      ipAddress: ipAddress ?? this.ipAddress,
-      userAgent: userAgent ?? this.userAgent,
-      sessionId: sessionId ?? this.sessionId,
-      level: level ?? this.level,
-      category: category ?? this.category,
-      description: description ?? this.description,
-      metadata: metadata ?? this.metadata,
-      timestamp: timestamp ?? this.timestamp,
-      errorMessage: errorMessage ?? this.errorMessage,
-      isSuccess: isSuccess ?? this.isSuccess,
-    );
-  }
+  }) =>
+      AuditLog(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        userEmail: userEmail ?? this.userEmail,
+        action: action ?? this.action,
+        resource: resource ?? this.resource,
+        resourceId: resourceId ?? this.resourceId,
+        oldData: oldData ?? this.oldData,
+        newData: newData ?? this.newData,
+        ipAddress: ipAddress ?? this.ipAddress,
+        userAgent: userAgent ?? this.userAgent,
+        sessionId: sessionId ?? this.sessionId,
+        level: level ?? this.level,
+        category: category ?? this.category,
+        description: description ?? this.description,
+        metadata: metadata ?? this.metadata,
+        timestamp: timestamp ?? this.timestamp,
+        errorMessage: errorMessage ?? this.errorMessage,
+        isSuccess: isSuccess ?? this.isSuccess,
+      );
 
   @override
-  String toString() {
-    return 'AuditLog(id: $id, userId: $userId, action: $action, resource: $resource, level: $level, timestamp: $timestamp)';
-  }
+  String toString() =>
+      'AuditLog(id: $id, userId: $userId, action: $action, resource: $resource, level: $level, timestamp: $timestamp)';
 
   @override
   bool operator ==(Object other) {
@@ -158,12 +151,11 @@ enum AuditLogLevel {
   final String value;
   final String displayName;
 
-  static AuditLogLevel fromString(String value) {
-    return AuditLogLevel.values.firstWhere(
-      (level) => level.value == value,
-      orElse: () => AuditLogLevel.info,
-    );
-  }
+  static AuditLogLevel fromString(String value) =>
+      AuditLogLevel.values.firstWhere(
+        (level) => level.value == value,
+        orElse: () => AuditLogLevel.info,
+      );
 
   String get icon {
     switch (this) {
@@ -217,12 +209,11 @@ enum AuditLogCategory {
   final String value;
   final String displayName;
 
-  static AuditLogCategory fromString(String value) {
-    return AuditLogCategory.values.firstWhere(
-      (category) => category.value == value,
-      orElse: () => AuditLogCategory.general,
-    );
-  }
+  static AuditLogCategory fromString(String value) =>
+      AuditLogCategory.values.firstWhere(
+        (category) => category.value == value,
+        orElse: () => AuditLogCategory.general,
+      );
 
   String get icon {
     switch (this) {
@@ -258,18 +249,6 @@ enum AuditLogCategory {
 
 /// Модель для системных логов
 class SystemLog {
-  final String id;
-  final String component;
-  final String message;
-  final SystemLogLevel level;
-  final SystemLogCategory category;
-  final Map<String, dynamic>? context;
-  final String? stackTrace;
-  final DateTime timestamp;
-  final String? sessionId;
-  final String? requestId;
-  final Map<String, dynamic>? metadata;
-
   const SystemLog({
     required this.id,
     required this.component,
@@ -284,37 +263,44 @@ class SystemLog {
     this.metadata,
   });
 
-  factory SystemLog.fromMap(Map<String, dynamic> map) {
-    return SystemLog(
-      id: map['id'] ?? '',
-      component: map['component'] ?? '',
-      message: map['message'] ?? '',
-      level: SystemLogLevel.fromString(map['level'] ?? 'info'),
-      category: SystemLogCategory.fromString(map['category'] ?? 'general'),
-      context: map['context'],
-      stackTrace: map['stackTrace'],
-      timestamp: (map['timestamp'] as Timestamp).toDate(),
-      sessionId: map['sessionId'],
-      requestId: map['requestId'],
-      metadata: map['metadata'],
-    );
-  }
+  factory SystemLog.fromMap(Map<String, dynamic> map) => SystemLog(
+        id: map['id'] ?? '',
+        component: map['component'] ?? '',
+        message: map['message'] ?? '',
+        level: SystemLogLevel.fromString(map['level'] ?? 'info'),
+        category: SystemLogCategory.fromString(map['category'] ?? 'general'),
+        context: map['context'],
+        stackTrace: map['stackTrace'],
+        timestamp: (map['timestamp'] as Timestamp).toDate(),
+        sessionId: map['sessionId'],
+        requestId: map['requestId'],
+        metadata: map['metadata'],
+      );
+  final String id;
+  final String component;
+  final String message;
+  final SystemLogLevel level;
+  final SystemLogCategory category;
+  final Map<String, dynamic>? context;
+  final String? stackTrace;
+  final DateTime timestamp;
+  final String? sessionId;
+  final String? requestId;
+  final Map<String, dynamic>? metadata;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'component': component,
-      'message': message,
-      'level': level.value,
-      'category': category.value,
-      'context': context,
-      'stackTrace': stackTrace,
-      'timestamp': Timestamp.fromDate(timestamp),
-      'sessionId': sessionId,
-      'requestId': requestId,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'component': component,
+        'message': message,
+        'level': level.value,
+        'category': category.value,
+        'context': context,
+        'stackTrace': stackTrace,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'sessionId': sessionId,
+        'requestId': requestId,
+        'metadata': metadata,
+      };
 
   SystemLog copyWith({
     String? id,
@@ -328,26 +314,24 @@ class SystemLog {
     String? sessionId,
     String? requestId,
     Map<String, dynamic>? metadata,
-  }) {
-    return SystemLog(
-      id: id ?? this.id,
-      component: component ?? this.component,
-      message: message ?? this.message,
-      level: level ?? this.level,
-      category: category ?? this.category,
-      context: context ?? this.context,
-      stackTrace: stackTrace ?? this.stackTrace,
-      timestamp: timestamp ?? this.timestamp,
-      sessionId: sessionId ?? this.sessionId,
-      requestId: requestId ?? this.requestId,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      SystemLog(
+        id: id ?? this.id,
+        component: component ?? this.component,
+        message: message ?? this.message,
+        level: level ?? this.level,
+        category: category ?? this.category,
+        context: context ?? this.context,
+        stackTrace: stackTrace ?? this.stackTrace,
+        timestamp: timestamp ?? this.timestamp,
+        sessionId: sessionId ?? this.sessionId,
+        requestId: requestId ?? this.requestId,
+        metadata: metadata ?? this.metadata,
+      );
 
   @override
-  String toString() {
-    return 'SystemLog(id: $id, component: $component, message: $message, level: $level, timestamp: $timestamp)';
-  }
+  String toString() =>
+      'SystemLog(id: $id, component: $component, message: $message, level: $level, timestamp: $timestamp)';
 
   @override
   bool operator ==(Object other) {
@@ -373,12 +357,11 @@ enum SystemLogLevel {
   final String value;
   final String displayName;
 
-  static SystemLogLevel fromString(String value) {
-    return SystemLogLevel.values.firstWhere(
-      (level) => level.value == value,
-      orElse: () => SystemLogLevel.info,
-    );
-  }
+  static SystemLogLevel fromString(String value) =>
+      SystemLogLevel.values.firstWhere(
+        (level) => level.value == value,
+        orElse: () => SystemLogLevel.info,
+      );
 
   String get icon {
     switch (this) {
@@ -434,12 +417,11 @@ enum SystemLogCategory {
   final String value;
   final String displayName;
 
-  static SystemLogCategory fromString(String value) {
-    return SystemLogCategory.values.firstWhere(
-      (category) => category.value == value,
-      orElse: () => SystemLogCategory.general,
-    );
-  }
+  static SystemLogCategory fromString(String value) =>
+      SystemLogCategory.values.firstWhere(
+        (category) => category.value == value,
+        orElse: () => SystemLogCategory.general,
+      );
 
   String get icon {
     switch (this) {
@@ -471,23 +453,6 @@ enum SystemLogCategory {
 
 /// Модель для конфигурации логирования
 class LoggingConfig {
-  final String id;
-  final bool enableAuditLogging;
-  final bool enableSystemLogging;
-  final bool enablePerformanceLogging;
-  final bool enableSecurityLogging;
-  final List<AuditLogLevel> auditLogLevels;
-  final List<SystemLogLevel> systemLogLevels;
-  final List<AuditLogCategory> auditLogCategories;
-  final List<SystemLogCategory> systemLogCategories;
-  final int maxLogRetentionDays;
-  final bool enableLogCompression;
-  final bool enableLogEncryption;
-  final String? encryptionKey;
-  final Map<String, dynamic>? filters;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-
   const LoggingConfig({
     required this.id,
     required this.enableAuditLogging,
@@ -507,59 +472,71 @@ class LoggingConfig {
     required this.updatedAt,
   });
 
-  factory LoggingConfig.fromMap(Map<String, dynamic> map) {
-    return LoggingConfig(
-      id: map['id'] ?? '',
-      enableAuditLogging: map['enableAuditLogging'] ?? true,
-      enableSystemLogging: map['enableSystemLogging'] ?? true,
-      enablePerformanceLogging: map['enablePerformanceLogging'] ?? false,
-      enableSecurityLogging: map['enableSecurityLogging'] ?? true,
-      auditLogLevels: (map['auditLogLevels'] as List<dynamic>?)
-              ?.map((e) => AuditLogLevel.fromString(e))
-              .toList() ??
-          AuditLogLevel.values,
-      systemLogLevels: (map['systemLogLevels'] as List<dynamic>?)
-              ?.map((e) => SystemLogLevel.fromString(e))
-              .toList() ??
-          SystemLogLevel.values,
-      auditLogCategories: (map['auditLogCategories'] as List<dynamic>?)
-              ?.map((e) => AuditLogCategory.fromString(e))
-              .toList() ??
-          AuditLogCategory.values,
-      systemLogCategories: (map['systemLogCategories'] as List<dynamic>?)
-              ?.map((e) => SystemLogCategory.fromString(e))
-              .toList() ??
-          SystemLogCategory.values,
-      maxLogRetentionDays: map['maxLogRetentionDays'] ?? 90,
-      enableLogCompression: map['enableLogCompression'] ?? false,
-      enableLogEncryption: map['enableLogEncryption'] ?? false,
-      encryptionKey: map['encryptionKey'],
-      filters: map['filters'],
-      createdAt: (map['createdAt'] as Timestamp).toDate(),
-      updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    );
-  }
+  factory LoggingConfig.fromMap(Map<String, dynamic> map) => LoggingConfig(
+        id: map['id'] ?? '',
+        enableAuditLogging: map['enableAuditLogging'] ?? true,
+        enableSystemLogging: map['enableSystemLogging'] ?? true,
+        enablePerformanceLogging: map['enablePerformanceLogging'] ?? false,
+        enableSecurityLogging: map['enableSecurityLogging'] ?? true,
+        auditLogLevels: (map['auditLogLevels'] as List<dynamic>?)
+                ?.map(AuditLogLevel.fromString)
+                .toList() ??
+            AuditLogLevel.values,
+        systemLogLevels: (map['systemLogLevels'] as List<dynamic>?)
+                ?.map(SystemLogLevel.fromString)
+                .toList() ??
+            SystemLogLevel.values,
+        auditLogCategories: (map['auditLogCategories'] as List<dynamic>?)
+                ?.map(AuditLogCategory.fromString)
+                .toList() ??
+            AuditLogCategory.values,
+        systemLogCategories: (map['systemLogCategories'] as List<dynamic>?)
+                ?.map(SystemLogCategory.fromString)
+                .toList() ??
+            SystemLogCategory.values,
+        maxLogRetentionDays: map['maxLogRetentionDays'] ?? 90,
+        enableLogCompression: map['enableLogCompression'] ?? false,
+        enableLogEncryption: map['enableLogEncryption'] ?? false,
+        encryptionKey: map['encryptionKey'],
+        filters: map['filters'],
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+      );
+  final String id;
+  final bool enableAuditLogging;
+  final bool enableSystemLogging;
+  final bool enablePerformanceLogging;
+  final bool enableSecurityLogging;
+  final List<AuditLogLevel> auditLogLevels;
+  final List<SystemLogLevel> systemLogLevels;
+  final List<AuditLogCategory> auditLogCategories;
+  final List<SystemLogCategory> systemLogCategories;
+  final int maxLogRetentionDays;
+  final bool enableLogCompression;
+  final bool enableLogEncryption;
+  final String? encryptionKey;
+  final Map<String, dynamic>? filters;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'enableAuditLogging': enableAuditLogging,
-      'enableSystemLogging': enableSystemLogging,
-      'enablePerformanceLogging': enablePerformanceLogging,
-      'enableSecurityLogging': enableSecurityLogging,
-      'auditLogLevels': auditLogLevels.map((e) => e.value).toList(),
-      'systemLogLevels': systemLogLevels.map((e) => e.value).toList(),
-      'auditLogCategories': auditLogCategories.map((e) => e.value).toList(),
-      'systemLogCategories': systemLogCategories.map((e) => e.value).toList(),
-      'maxLogRetentionDays': maxLogRetentionDays,
-      'enableLogCompression': enableLogCompression,
-      'enableLogEncryption': enableLogEncryption,
-      'encryptionKey': encryptionKey,
-      'filters': filters,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'enableAuditLogging': enableAuditLogging,
+        'enableSystemLogging': enableSystemLogging,
+        'enablePerformanceLogging': enablePerformanceLogging,
+        'enableSecurityLogging': enableSecurityLogging,
+        'auditLogLevels': auditLogLevels.map((e) => e.value).toList(),
+        'systemLogLevels': systemLogLevels.map((e) => e.value).toList(),
+        'auditLogCategories': auditLogCategories.map((e) => e.value).toList(),
+        'systemLogCategories': systemLogCategories.map((e) => e.value).toList(),
+        'maxLogRetentionDays': maxLogRetentionDays,
+        'enableLogCompression': enableLogCompression,
+        'enableLogEncryption': enableLogEncryption,
+        'encryptionKey': encryptionKey,
+        'filters': filters,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+      };
 
   LoggingConfig copyWith({
     String? id,
@@ -578,33 +555,31 @@ class LoggingConfig {
     Map<String, dynamic>? filters,
     DateTime? createdAt,
     DateTime? updatedAt,
-  }) {
-    return LoggingConfig(
-      id: id ?? this.id,
-      enableAuditLogging: enableAuditLogging ?? this.enableAuditLogging,
-      enableSystemLogging: enableSystemLogging ?? this.enableSystemLogging,
-      enablePerformanceLogging:
-          enablePerformanceLogging ?? this.enablePerformanceLogging,
-      enableSecurityLogging:
-          enableSecurityLogging ?? this.enableSecurityLogging,
-      auditLogLevels: auditLogLevels ?? this.auditLogLevels,
-      systemLogLevels: systemLogLevels ?? this.systemLogLevels,
-      auditLogCategories: auditLogCategories ?? this.auditLogCategories,
-      systemLogCategories: systemLogCategories ?? this.systemLogCategories,
-      maxLogRetentionDays: maxLogRetentionDays ?? this.maxLogRetentionDays,
-      enableLogCompression: enableLogCompression ?? this.enableLogCompression,
-      enableLogEncryption: enableLogEncryption ?? this.enableLogEncryption,
-      encryptionKey: encryptionKey ?? this.encryptionKey,
-      filters: filters ?? this.filters,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-    );
-  }
+  }) =>
+      LoggingConfig(
+        id: id ?? this.id,
+        enableAuditLogging: enableAuditLogging ?? this.enableAuditLogging,
+        enableSystemLogging: enableSystemLogging ?? this.enableSystemLogging,
+        enablePerformanceLogging:
+            enablePerformanceLogging ?? this.enablePerformanceLogging,
+        enableSecurityLogging:
+            enableSecurityLogging ?? this.enableSecurityLogging,
+        auditLogLevels: auditLogLevels ?? this.auditLogLevels,
+        systemLogLevels: systemLogLevels ?? this.systemLogLevels,
+        auditLogCategories: auditLogCategories ?? this.auditLogCategories,
+        systemLogCategories: systemLogCategories ?? this.systemLogCategories,
+        maxLogRetentionDays: maxLogRetentionDays ?? this.maxLogRetentionDays,
+        enableLogCompression: enableLogCompression ?? this.enableLogCompression,
+        enableLogEncryption: enableLogEncryption ?? this.enableLogEncryption,
+        encryptionKey: encryptionKey ?? this.encryptionKey,
+        filters: filters ?? this.filters,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+      );
 
   @override
-  String toString() {
-    return 'LoggingConfig(id: $id, enableAuditLogging: $enableAuditLogging, enableSystemLogging: $enableSystemLogging)';
-  }
+  String toString() =>
+      'LoggingConfig(id: $id, enableAuditLogging: $enableAuditLogging, enableSystemLogging: $enableSystemLogging)';
 
   @override
   bool operator ==(Object other) {

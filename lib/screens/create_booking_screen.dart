@@ -6,12 +6,11 @@ import '../providers/booking_providers.dart';
 
 /// Экран создания бронирования
 class CreateBookingScreen extends ConsumerStatefulWidget {
-  final Event event;
-
   const CreateBookingScreen({
     super.key,
     required this.event,
   });
+  final Event event;
 
   @override
   ConsumerState<CreateBookingScreen> createState() =>
@@ -135,112 +134,114 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
     );
   }
 
-  Widget _buildEventInfo() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Информация о мероприятии',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+  Widget _buildEventInfo() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Информация о мероприятии',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Icon(
-                  widget.event.categoryIcon,
-                  size: 32,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        widget.event.title,
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        widget.event.categoryName,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context).colorScheme.primary,
-                            ),
-                      ),
-                    ],
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Icon(
+                    widget.event.categoryIcon,
+                    size: 32,
+                    color: Theme.of(context).colorScheme.primary,
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Row(
-              children: [
-                const Icon(Icons.calendar_today, size: 16, color: Colors.grey),
-                const SizedBox(width: 8),
-                Text(
-                  widget.event.formattedDate,
-                  style: const TextStyle(color: Colors.grey),
-                ),
-                const SizedBox(width: 16),
-                const Icon(Icons.access_time, size: 16, color: Colors.grey),
-                const SizedBox(width: 8),
-                Text(
-                  widget.event.formattedTime,
-                  style: const TextStyle(color: Colors.grey),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const Icon(Icons.location_on, size: 16, color: Colors.grey),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    widget.event.location,
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          widget.event.title,
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          widget.event.categoryName,
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyMedium
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.primary,
+                              ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                children: [
+                  const Icon(Icons.calendar_today,
+                      size: 16, color: Colors.grey),
+                  const SizedBox(width: 8),
+                  Text(
+                    widget.event.formattedDate,
                     style: const TextStyle(color: Colors.grey),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Row(
-              children: [
-                const Icon(Icons.attach_money, size: 16, color: Colors.green),
-                const SizedBox(width: 8),
-                Text(
-                  widget.event.formattedPrice,
-                  style: const TextStyle(
-                    color: Colors.green,
-                    fontWeight: FontWeight.w500,
+                  const SizedBox(width: 16),
+                  const Icon(Icons.access_time, size: 16, color: Colors.grey),
+                  const SizedBox(width: 8),
+                  Text(
+                    widget.event.formattedTime,
+                    style: const TextStyle(color: Colors.grey),
                   ),
-                ),
-                const Spacer(),
-                const Icon(Icons.people, size: 16, color: Colors.blue),
-                const SizedBox(width: 8),
-                Text(
-                  '${widget.event.currentParticipants}/${widget.event.maxParticipants}',
-                  style: const TextStyle(
-                    color: Colors.blue,
-                    fontWeight: FontWeight.w500,
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const Icon(Icons.location_on, size: 16, color: Colors.grey),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      widget.event.location,
+                      style: const TextStyle(color: Colors.grey),
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+                ],
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: [
+                  const Icon(Icons.attach_money, size: 16, color: Colors.green),
+                  const SizedBox(width: 8),
+                  Text(
+                    widget.event.formattedPrice,
+                    style: const TextStyle(
+                      color: Colors.green,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const Spacer(),
+                  const Icon(Icons.people, size: 16, color: Colors.blue),
+                  const SizedBox(width: 8),
+                  Text(
+                    '${widget.event.currentParticipants}/${widget.event.maxParticipants}',
+                    style: const TextStyle(
+                      color: Colors.blue,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildParticipantsSection() {
     final createBookingState = ref.watch(createBookingProvider);
@@ -267,7 +268,8 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
                           ref
                               .read(createBookingProvider.notifier)
                               .updateParticipantsCount(
-                                  createBookingState.participantsCount - 1);
+                                createBookingState.participantsCount - 1,
+                              );
                         }
                       : null,
                   icon: const Icon(Icons.remove),
@@ -294,7 +296,8 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
                           ref
                               .read(createBookingProvider.notifier)
                               .updateParticipantsCount(
-                                  createBookingState.participantsCount + 1);
+                                createBookingState.participantsCount + 1,
+                              );
                         }
                       : null,
                   icon: const Icon(Icons.add),
@@ -312,94 +315,94 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
     );
   }
 
-  Widget _buildContactInfoSection() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Контактная информация',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+  Widget _buildContactInfoSection() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Контактная информация',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                labelText: 'Email *',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.email),
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _emailController,
+                decoration: const InputDecoration(
+                  labelText: 'Email *',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.email),
+                ),
+                keyboardType: TextInputType.emailAddress,
+                onChanged: (value) {
+                  ref
+                      .read(createBookingProvider.notifier)
+                      .updateUserEmail(value);
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Введите email';
+                  }
+                  if (!value.contains('@')) {
+                    return 'Введите корректный email';
+                  }
+                  return null;
+                },
               ),
-              keyboardType: TextInputType.emailAddress,
-              onChanged: (value) {
-                ref.read(createBookingProvider.notifier).updateUserEmail(value);
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Введите email';
-                }
-                if (!value.contains('@')) {
-                  return 'Введите корректный email';
-                }
-                return null;
-              },
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _phoneController,
-              decoration: const InputDecoration(
-                labelText: 'Телефон',
-                border: OutlineInputBorder(),
-                prefixIcon: Icon(Icons.phone),
-                hintText: '+7 (999) 123-45-67',
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _phoneController,
+                decoration: const InputDecoration(
+                  labelText: 'Телефон',
+                  border: OutlineInputBorder(),
+                  prefixIcon: Icon(Icons.phone),
+                  hintText: '+7 (999) 123-45-67',
+                ),
+                keyboardType: TextInputType.phone,
+                onChanged: (value) {
+                  ref
+                      .read(createBookingProvider.notifier)
+                      .updateUserPhone(value);
+                },
               ),
-              keyboardType: TextInputType.phone,
-              onChanged: (value) {
-                ref.read(createBookingProvider.notifier).updateUserPhone(value);
-              },
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
-  Widget _buildNotesSection() {
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Дополнительные заметки',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
+  Widget _buildNotesSection() => Card(
+        child: Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Дополнительные заметки',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            const SizedBox(height: 16),
-            TextFormField(
-              controller: _notesController,
-              decoration: const InputDecoration(
-                labelText: 'Заметки',
-                border: OutlineInputBorder(),
-                hintText: 'Дополнительная информация для организатора',
+              const SizedBox(height: 16),
+              TextFormField(
+                controller: _notesController,
+                decoration: const InputDecoration(
+                  labelText: 'Заметки',
+                  border: OutlineInputBorder(),
+                  hintText: 'Дополнительная информация для организатора',
+                ),
+                maxLines: 3,
+                onChanged: (value) {
+                  ref.read(createBookingProvider.notifier).updateNotes(value);
+                },
               ),
-              maxLines: 3,
-              onChanged: (value) {
-                ref.read(createBookingProvider.notifier).updateNotes(value);
-              },
-            ),
-          ],
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildTotalPriceSection() {
     final createBookingState = ref.watch(createBookingProvider);
@@ -424,7 +427,8 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                    '${createBookingState.participantsCount} × ${widget.event.formattedPrice}'),
+                  '${createBookingState.participantsCount} × ${widget.event.formattedPrice}',
+                ),
                 Text(
                   totalPrice == 0
                       ? 'Бесплатно'
@@ -443,31 +447,29 @@ class _CreateBookingScreenState extends ConsumerState<CreateBookingScreen> {
     );
   }
 
-  Widget _buildBookingButton(CreateBookingState state) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton(
-        onPressed: state.isLoading ? null : _createBooking,
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 16),
+  Widget _buildBookingButton(CreateBookingState state) => SizedBox(
+        width: double.infinity,
+        child: ElevatedButton(
+          onPressed: state.isLoading ? null : _createBooking,
+          style: ElevatedButton.styleFrom(
+            padding: const EdgeInsets.symmetric(vertical: 16),
+          ),
+          child: state.isLoading
+              ? const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    ),
+                    SizedBox(width: 12),
+                    Text('Создание бронирования...'),
+                  ],
+                )
+              : const Text('Забронировать'),
         ),
-        child: state.isLoading
-            ? const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  ),
-                  SizedBox(width: 12),
-                  Text('Создание бронирования...'),
-                ],
-              )
-            : const Text('Забронировать'),
-      ),
-    );
-  }
+      );
 
   Future<void> _createBooking() async {
     if (!_formKey.currentState!.validate()) return;

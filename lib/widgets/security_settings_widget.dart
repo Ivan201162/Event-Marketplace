@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../core/responsive_utils.dart';
 import '../providers/security_provider.dart';
 import '../widgets/responsive_layout.dart';
-import '../core/responsive_utils.dart';
 
 /// Виджет для отображения настроек безопасности
 class SecuritySettingsWidget extends ConsumerWidget {
@@ -24,7 +25,7 @@ class SecuritySettingsWidget extends ConsumerWidget {
                 color: Color(securityState.statusColor),
               ),
               const SizedBox(width: 12),
-              Expanded(
+              const Expanded(
                 child: ResponsiveText(
                   'Настройки безопасности',
                   isTitle: true,
@@ -135,27 +136,25 @@ class SecuritySettingsWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatusRow(String label, String value, Color color) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          ResponsiveText(
-            label,
-            isSubtitle: true,
-          ),
-          ResponsiveText(
-            value,
-            style: TextStyle(
-              color: color,
-              fontWeight: FontWeight.w500,
+  Widget _buildStatusRow(String label, String value, Color color) => Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ResponsiveText(
+              label,
+              isSubtitle: true,
             ),
-          ),
-        ],
-      ),
-    );
-  }
+            ResponsiveText(
+              value,
+              style: TextStyle(
+                color: color,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ],
+        ),
+      );
 
   String _formatDateTime(DateTime dateTime) {
     final now = DateTime.now();
@@ -244,11 +243,6 @@ class SecuritySettingsWidget extends ConsumerWidget {
 
 /// Виджет для валидации пароля
 class PasswordValidationWidget extends ConsumerWidget {
-  final String? label;
-  final String? hint;
-  final ValueChanged<String>? onChanged;
-  final String? Function(String?)? validator;
-
   const PasswordValidationWidget({
     super.key,
     this.label,
@@ -256,6 +250,10 @@ class PasswordValidationWidget extends ConsumerWidget {
     this.onChanged,
     this.validator,
   });
+  final String? label;
+  final String? hint;
+  final ValueChanged<String>? onChanged;
+  final String? Function(String?)? validator;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -299,69 +297,69 @@ class PasswordValidationWidget extends ConsumerWidget {
         if (passwordState.validation != null &&
             passwordState.validation!.errors.isNotEmpty) ...[
           const SizedBox(height: 8),
-          ...passwordState.validation!.errors.map((error) => Padding(
-                padding: const EdgeInsets.only(bottom: 4),
-                child: Row(
-                  children: [
-                    Icon(
-                      Icons.error_outline,
-                      size: 16,
-                      color: Colors.red,
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        error,
-                        style: const TextStyle(
-                          color: Colors.red,
-                          fontSize: 12,
-                        ),
+          ...passwordState.validation!.errors.map(
+            (error) => Padding(
+              padding: const EdgeInsets.only(bottom: 4),
+              child: Row(
+                children: [
+                  const Icon(
+                    Icons.error_outline,
+                    size: 16,
+                    color: Colors.red,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      error,
+                      style: const TextStyle(
+                        color: Colors.red,
+                        fontSize: 12,
                       ),
                     ),
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ],
     );
   }
 
-  Widget _buildStrengthIndicator(PasswordValidationState state) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Expanded(
-              child: LinearProgressIndicator(
-                value: state.strengthProgress,
-                backgroundColor: Colors.grey[300],
-                valueColor:
-                    AlwaysStoppedAnimation<Color>(Color(state.strengthColor)),
+  Widget _buildStrengthIndicator(PasswordValidationState state) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: LinearProgressIndicator(
+                  value: state.strengthProgress,
+                  backgroundColor: Colors.grey[300],
+                  valueColor:
+                      AlwaysStoppedAnimation<Color>(Color(state.strengthColor)),
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
-            Text(
-              state.strengthDescription,
-              style: TextStyle(
-                color: Color(state.strengthColor),
-                fontWeight: FontWeight.w500,
-                fontSize: 12,
+              const SizedBox(width: 8),
+              Text(
+                state.strengthDescription,
+                style: TextStyle(
+                  color: Color(state.strengthColor),
+                  fontWeight: FontWeight.w500,
+                  fontSize: 12,
+                ),
               ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 4),
-        Text(
-          'Сила пароля: ${state.validation!.strength.score}/5',
-          style: const TextStyle(
-            fontSize: 12,
-            color: Colors.grey,
+            ],
           ),
-        ),
-      ],
-    );
-  }
+          const SizedBox(height: 4),
+          Text(
+            'Сила пароля: ${state.validation!.strength.score}/5',
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.grey,
+            ),
+          ),
+        ],
+      );
 }
 
 /// Виджет для отображения статистики безопасности
@@ -376,10 +374,10 @@ class SecurityStatsWidget extends ConsumerWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
+          const Row(
             children: [
-              const Icon(Icons.analytics),
-              const SizedBox(width: 12),
+              Icon(Icons.analytics),
+              SizedBox(width: 12),
               ResponsiveText(
                 'Статистика безопасности',
                 isTitle: true,
@@ -425,44 +423,43 @@ class SecurityStatsWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildStatRow(String label, String value, IconData icon, Color color) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 12),
-      child: Row(
-        children: [
-          Icon(
-            icon,
-            size: 20,
-            color: color,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: ResponsiveText(
-              label,
-              isSubtitle: true,
-            ),
-          ),
-          ResponsiveText(
-            value,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
+  Widget _buildStatRow(
+          String label, String value, IconData icon, Color color) =>
+      Padding(
+        padding: const EdgeInsets.only(bottom: 12),
+        child: Row(
+          children: [
+            Icon(
+              icon,
+              size: 20,
               color: color,
             ),
-          ),
-        ],
-      ),
-    );
-  }
+            const SizedBox(width: 12),
+            Expanded(
+              child: ResponsiveText(
+                label,
+                isSubtitle: true,
+              ),
+            ),
+            ResponsiveText(
+              value,
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                color: color,
+              ),
+            ),
+          ],
+        ),
+      );
 }
 
 /// Виджет для отображения рекомендаций по безопасности
 class SecurityRecommendationsWidget extends ConsumerWidget {
-  final String dataType;
-
   const SecurityRecommendationsWidget({
     super.key,
     required this.dataType,
   });
+  final String dataType;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -481,7 +478,7 @@ class SecurityRecommendationsWidget extends ConsumerWidget {
                 color: _getSecurityColor(securityLevel),
               ),
               const SizedBox(width: 12),
-              Expanded(
+              const Expanded(
                 child: ResponsiveText(
                   'Рекомендации по безопасности',
                   isTitle: true,
@@ -512,26 +509,28 @@ class SecurityRecommendationsWidget extends ConsumerWidget {
           const SizedBox(height: 16),
 
           // Рекомендации
-          ...recommendations.map((recommendation) => Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Icon(
-                      Icons.check_circle_outline,
-                      size: 16,
-                      color: Colors.green,
+          ...recommendations.map(
+            (recommendation) => Padding(
+              padding: const EdgeInsets.only(bottom: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(
+                    Icons.check_circle_outline,
+                    size: 16,
+                    color: Colors.green,
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ResponsiveText(
+                      recommendation,
+                      isSubtitle: true,
                     ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: ResponsiveText(
-                        recommendation,
-                        isSubtitle: true,
-                      ),
-                    ),
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

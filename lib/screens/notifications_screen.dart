@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/notification_providers.dart';
+
 import '../models/notification.dart';
+import '../providers/notification_providers.dart';
 
 /// Экран уведомлений
 class NotificationsScreen extends ConsumerStatefulWidget {
@@ -24,12 +25,12 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.mark_email_read),
-            onPressed: () => _markAllAsRead(),
+            onPressed: _markAllAsRead,
             tooltip: 'Отметить все как прочитанные',
           ),
           IconButton(
             icon: const Icon(Icons.clear_all),
-            onPressed: () => _clearAllNotifications(),
+            onPressed: _clearAllNotifications,
             tooltip: 'Очистить все уведомления',
           ),
         ],
@@ -74,76 +75,72 @@ class _NotificationsScreenState extends ConsumerState<NotificationsScreen> {
     );
   }
 
-  Widget _buildEmptyState() {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.notifications_none, size: 64, color: Colors.grey),
-          SizedBox(height: 16),
-          Text(
-            'Нет уведомлений',
-            style: TextStyle(fontSize: 18, color: Colors.grey),
-          ),
-          SizedBox(height: 8),
-          Text(
-            'Здесь будут появляться важные уведомления',
-            style: TextStyle(color: Colors.grey),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildNotificationCard(AppNotification notification) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 8),
-      elevation: notification.isRead ? 1 : 3,
-      child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: notification.isRead
-              ? Colors.grey[300]
-              : Theme.of(context).colorScheme.primary,
-          child: Icon(
-            _getNotificationIcon(notification.type),
-            color: notification.isRead ? Colors.grey[600] : Colors.white,
-          ),
-        ),
-        title: Text(
-          notification.title,
-          style: TextStyle(
-            fontWeight:
-                notification.isRead ? FontWeight.normal : FontWeight.bold,
-          ),
-        ),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+  Widget _buildEmptyState() => const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(notification.body),
-            const SizedBox(height: 4),
+            Icon(Icons.notifications_none, size: 64, color: Colors.grey),
+            SizedBox(height: 16),
             Text(
-              _formatDateTime(notification.createdAt),
-              style: TextStyle(
-                fontSize: 12,
-                color: Colors.grey[600],
-              ),
+              'Нет уведомлений',
+              style: TextStyle(fontSize: 18, color: Colors.grey),
+            ),
+            SizedBox(height: 8),
+            Text(
+              'Здесь будут появляться важные уведомления',
+              style: TextStyle(color: Colors.grey),
             ),
           ],
         ),
-        trailing: notification.isRead
-            ? null
-            : Container(
-                width: 8,
-                height: 8,
-                decoration: BoxDecoration(
-                  color: Theme.of(context).colorScheme.primary,
-                  shape: BoxShape.circle,
+      );
+
+  Widget _buildNotificationCard(AppNotification notification) => Card(
+        margin: const EdgeInsets.only(bottom: 8),
+        elevation: notification.isRead ? 1 : 3,
+        child: ListTile(
+          leading: CircleAvatar(
+            backgroundColor: notification.isRead
+                ? Colors.grey[300]
+                : Theme.of(context).colorScheme.primary,
+            child: Icon(
+              _getNotificationIcon(notification.type),
+              color: notification.isRead ? Colors.grey[600] : Colors.white,
+            ),
+          ),
+          title: Text(
+            notification.title,
+            style: TextStyle(
+              fontWeight:
+                  notification.isRead ? FontWeight.normal : FontWeight.bold,
+            ),
+          ),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(notification.body),
+              const SizedBox(height: 4),
+              Text(
+                _formatDateTime(notification.createdAt),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.grey[600],
                 ),
               ),
-        onTap: () => _handleNotificationTap(notification),
-      ),
-    );
-  }
+            ],
+          ),
+          trailing: notification.isRead
+              ? null
+              : Container(
+                  width: 8,
+                  height: 8,
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+          onTap: () => _handleNotificationTap(notification),
+        ),
+      );
 
   IconData _getNotificationIcon(NotificationType type) {
     switch (type) {

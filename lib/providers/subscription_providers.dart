@@ -3,9 +3,8 @@ import '../models/subscription.dart';
 import '../services/subscription_service.dart';
 
 /// Провайдер сервиса подписок
-final subscriptionServiceProvider = Provider<SubscriptionService>((ref) {
-  return SubscriptionService();
-});
+final subscriptionServiceProvider =
+    Provider<SubscriptionService>((ref) => SubscriptionService());
 
 /// Провайдер для подписок пользователя
 final userSubscriptionsProvider =
@@ -23,13 +22,12 @@ final isSubscribedProvider =
 
 /// Параметры для проверки подписки
 class IsSubscribedParams {
-  final String userId;
-  final String specialistId;
-
   const IsSubscribedParams({
     required this.userId,
     required this.specialistId,
   });
+  final String userId;
+  final String specialistId;
 }
 
 /// Провайдер для подписчиков специалиста
@@ -42,36 +40,34 @@ final specialistSubscribersProvider =
 /// Провайдер для состояния подписок
 final subscriptionStateProvider =
     NotifierProvider<SubscriptionStateNotifier, SubscriptionState>(
-  () => SubscriptionStateNotifier(),
+  SubscriptionStateNotifier.new,
 );
 
 /// Состояние подписок
 class SubscriptionState {
-  final List<Subscription> subscriptions;
-  final bool isLoading;
-  final String? error;
-  final Map<String, bool> subscriptionStatus;
-
   const SubscriptionState({
     this.subscriptions = const [],
     this.isLoading = false,
     this.error,
     this.subscriptionStatus = const {},
   });
+  final List<Subscription> subscriptions;
+  final bool isLoading;
+  final String? error;
+  final Map<String, bool> subscriptionStatus;
 
   SubscriptionState copyWith({
     List<Subscription>? subscriptions,
     bool? isLoading,
     String? error,
     Map<String, bool>? subscriptionStatus,
-  }) {
-    return SubscriptionState(
-      subscriptions: subscriptions ?? this.subscriptions,
-      isLoading: isLoading ?? this.isLoading,
-      error: error ?? this.error,
-      subscriptionStatus: subscriptionStatus ?? this.subscriptionStatus,
-    );
-  }
+  }) =>
+      SubscriptionState(
+        subscriptions: subscriptions ?? this.subscriptions,
+        isLoading: isLoading ?? this.isLoading,
+        error: error ?? this.error,
+        subscriptionStatus: subscriptionStatus ?? this.subscriptionStatus,
+      );
 }
 
 /// Нотификатор для состояния подписок
@@ -108,3 +104,19 @@ class SubscriptionStateNotifier extends Notifier<SubscriptionState> {
     state = state.copyWith(error: error);
   }
 }
+
+/// Провайдер для уведомлений подписок
+final userNotificationsProvider =
+    StreamProvider.family<List<SubscriptionNotification>, String>(
+        (ref, userId) {
+  final subscriptionService = ref.read(subscriptionServiceProvider);
+  return subscriptionService.getUserNotifications(userId);
+});
+
+/// Провайдер для похожих специалистов
+final similarSpecialistsRecommendationsProvider =
+    FutureProvider.family<List<SpecialistRecommendation>, String>(
+        (ref, specialistId) async {
+  final subscriptionService = ref.read(subscriptionServiceProvider);
+  return subscriptionService.getSimilarSpecialists(specialistId);
+});

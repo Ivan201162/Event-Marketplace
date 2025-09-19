@@ -1,17 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
-import '../services/upload_service.dart';
+
 import '../core/feature_flags.dart';
+import '../services/upload_service.dart';
 
 /// Провайдер сервиса загрузки файлов
-final uploadServiceProvider = Provider<UploadService>((ref) {
-  return UploadService();
-});
+final uploadServiceProvider = Provider<UploadService>((ref) => UploadService());
 
 /// Провайдер для проверки доступности загрузки файлов
-final fileUploadAvailableProvider = Provider<bool>((ref) {
-  return FeatureFlags.fileUploadEnabled;
-});
+final fileUploadAvailableProvider =
+    Provider<bool>((ref) => FeatureFlags.fileUploadEnabled);
 
 /// Провайдер для загрузки изображения
 final imageUploadProvider =
@@ -19,7 +17,7 @@ final imageUploadProvider =
   final uploadService = ref.read(uploadServiceProvider);
   if (!uploadService.isAvailable) return null;
 
-  return await uploadService.pickAndUploadImage(source: source);
+  return uploadService.pickAndUploadImage(source: source);
 });
 
 /// Провайдер для загрузки видео
@@ -28,7 +26,7 @@ final videoUploadProvider =
   final uploadService = ref.read(uploadServiceProvider);
   if (!uploadService.isAvailable) return null;
 
-  return await uploadService.pickAndUploadVideo(source: source);
+  return uploadService.pickAndUploadVideo(source: source);
 });
 
 /// Провайдер для загрузки файла
@@ -37,8 +35,9 @@ final fileUploadProvider = FutureProvider.family<UploadResult?, List<String>?>(
   final uploadService = ref.read(uploadServiceProvider);
   if (!uploadService.isAvailable) return null;
 
-  return await uploadService.pickAndUploadFile(
-      allowedExtensions: allowedExtensions);
+  return uploadService.pickAndUploadFile(
+    allowedExtensions: allowedExtensions,
+  );
 });
 
 /// Провайдер для получения максимального размера файла

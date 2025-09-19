@@ -2,11 +2,6 @@ import 'package:flutter/material.dart';
 
 /// Адаптивная навигационная панель с Material 3 дизайном
 class AdaptiveNavigationBar extends StatelessWidget {
-  final int currentIndex;
-  final ValueChanged<int>? onTap;
-  final List<NavigationDestination> destinations;
-  final bool showLabels;
-
   const AdaptiveNavigationBar({
     super.key,
     required this.currentIndex,
@@ -14,6 +9,10 @@ class AdaptiveNavigationBar extends StatelessWidget {
     required this.destinations,
     this.showLabels = true,
   });
+  final int currentIndex;
+  final ValueChanged<int>? onTap;
+  final List<NavigationDestination> destinations;
+  final bool showLabels;
 
   @override
   Widget build(BuildContext context) {
@@ -29,11 +28,13 @@ class AdaptiveNavigationBar extends StatelessWidget {
             ? NavigationRailLabelType.all
             : NavigationRailLabelType.none,
         destinations: destinations
-            .map((dest) => NavigationRailDestination(
-                  icon: dest.icon,
-                  selectedIcon: dest.selectedIcon,
-                  label: Text(dest.label),
-                ))
+            .map(
+              (dest) => NavigationRailDestination(
+                icon: dest.icon,
+                selectedIcon: dest.selectedIcon,
+                label: Text(dest.label),
+              ),
+            )
             .toList(),
       );
     } else {
@@ -49,11 +50,6 @@ class AdaptiveNavigationBar extends StatelessWidget {
 
 /// Адаптивный BottomNavigationBar с Material 3 дизайном
 class AdaptiveBottomNavigationBar extends StatelessWidget {
-  final int currentIndex;
-  final ValueChanged<int>? onTap;
-  final List<BottomNavigationBarItem> items;
-  final bool showLabels;
-
   const AdaptiveBottomNavigationBar({
     super.key,
     required this.currentIndex,
@@ -61,6 +57,10 @@ class AdaptiveBottomNavigationBar extends StatelessWidget {
     required this.items,
     this.showLabels = true,
   });
+  final int currentIndex;
+  final ValueChanged<int>? onTap;
+  final List<BottomNavigationBarItem> items;
+  final bool showLabels;
 
   @override
   Widget build(BuildContext context) {
@@ -73,11 +73,13 @@ class AdaptiveBottomNavigationBar extends StatelessWidget {
         selectedIndex: currentIndex,
         onDestinationSelected: onTap,
         destinations: items
-            .map((item) => NavigationDestination(
-                  icon: item.icon,
-                  selectedIcon: item.activeIcon,
-                  label: item.label ?? '',
-                ))
+            .map(
+              (item) => NavigationDestination(
+                icon: item.icon,
+                selectedIcon: item.activeIcon,
+                label: item.label ?? '',
+              ),
+            )
             .toList(),
       );
     } else {
@@ -96,16 +98,15 @@ class AdaptiveBottomNavigationBar extends StatelessWidget {
 
 /// Адаптивный Drawer с Material 3 дизайном
 class AdaptiveDrawer extends StatelessWidget {
-  final Widget? header;
-  final List<Widget> children;
-  final Widget? footer;
-
   const AdaptiveDrawer({
     super.key,
     this.header,
     required this.children,
     this.footer,
   });
+  final Widget? header;
+  final List<Widget> children;
+  final Widget? footer;
 
   @override
   Widget build(BuildContext context) {
@@ -138,14 +139,6 @@ class AdaptiveDrawer extends StatelessWidget {
 
 /// Адаптивный FloatingActionButton с Material 3 дизайном
 class AdaptiveFloatingActionButton extends StatelessWidget {
-  final VoidCallback? onPressed;
-  final Widget child;
-  final String? tooltip;
-  final Color? backgroundColor;
-  final Color? foregroundColor;
-  final double? elevation;
-  final bool mini;
-
   const AdaptiveFloatingActionButton({
     super.key,
     this.onPressed,
@@ -156,6 +149,13 @@ class AdaptiveFloatingActionButton extends StatelessWidget {
     this.elevation,
     this.mini = false,
   });
+  final VoidCallback? onPressed;
+  final Widget child;
+  final String? tooltip;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final double? elevation;
+  final bool mini;
 
   @override
   Widget build(BuildContext context) {
@@ -176,14 +176,6 @@ class AdaptiveFloatingActionButton extends StatelessWidget {
 
 /// Адаптивный SpeedDial с Material 3 дизайном
 class AdaptiveSpeedDial extends StatefulWidget {
-  final List<SpeedDialChild> children;
-  final Widget icon;
-  final Widget? activeIcon;
-  final String? tooltip;
-  final Color? backgroundColor;
-  final Color? foregroundColor;
-  final bool visible;
-
   const AdaptiveSpeedDial({
     super.key,
     required this.children,
@@ -194,6 +186,13 @@ class AdaptiveSpeedDial extends StatefulWidget {
     this.foregroundColor,
     this.visible = true,
   });
+  final List<SpeedDialChild> children;
+  final Widget icon;
+  final Widget? activeIcon;
+  final String? tooltip;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final bool visible;
 
   @override
   State<AdaptiveSpeedDial> createState() => _AdaptiveSpeedDialState();
@@ -243,13 +242,15 @@ class _AdaptiveSpeedDialState extends State<AdaptiveSpeedDial>
       mainAxisSize: MainAxisSize.min,
       children: [
         if (_isOpen) ...[
-          ...widget.children.map((child) => ScaleTransition(
-                scale: _animation,
-                child: FadeTransition(
-                  opacity: _animation,
-                  child: child,
-                ),
-              )),
+          ...widget.children.map(
+            (child) => ScaleTransition(
+              scale: _animation,
+              child: FadeTransition(
+                opacity: _animation,
+                child: child,
+              ),
+            ),
+          ),
           const SizedBox(height: 8),
         ],
         FloatingActionButton(
@@ -270,12 +271,6 @@ class _AdaptiveSpeedDialState extends State<AdaptiveSpeedDial>
 
 /// Элемент SpeedDial
 class SpeedDialChild extends StatelessWidget {
-  final Widget child;
-  final VoidCallback? onPressed;
-  final String? tooltip;
-  final Color? backgroundColor;
-  final Color? foregroundColor;
-
   const SpeedDialChild({
     super.key,
     required this.child,
@@ -284,33 +279,27 @@ class SpeedDialChild extends StatelessWidget {
     this.backgroundColor,
     this.foregroundColor,
   });
+  final Widget child;
+  final VoidCallback? onPressed;
+  final String? tooltip;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
 
   @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: FloatingActionButton.small(
-        onPressed: onPressed,
-        tooltip: tooltip,
-        backgroundColor: backgroundColor,
-        foregroundColor: foregroundColor,
-        child: child,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: FloatingActionButton.small(
+          onPressed: onPressed,
+          tooltip: tooltip,
+          backgroundColor: backgroundColor,
+          foregroundColor: foregroundColor,
+          child: child,
+        ),
+      );
 }
 
 /// Адаптивный TabBar с Material 3 дизайном
 class AdaptiveTabBar extends StatelessWidget implements PreferredSizeWidget {
-  final TabController? controller;
-  final List<Widget> tabs;
-  final bool isScrollable;
-  final TabBarIndicatorSize? indicatorSize;
-  final Color? indicatorColor;
-  final double? indicatorWeight;
-  final EdgeInsets? indicatorPadding;
-  final bool automaticIndicatorColorAdjustment;
-
   const AdaptiveTabBar({
     super.key,
     this.controller,
@@ -322,6 +311,14 @@ class AdaptiveTabBar extends StatelessWidget implements PreferredSizeWidget {
     this.indicatorPadding,
     this.automaticIndicatorColorAdjustment = true,
   });
+  final TabController? controller;
+  final List<Widget> tabs;
+  final bool isScrollable;
+  final TabBarIndicatorSize? indicatorSize;
+  final Color? indicatorColor;
+  final double? indicatorWeight;
+  final EdgeInsets? indicatorPadding;
+  final bool automaticIndicatorColorAdjustment;
 
   @override
   Widget build(BuildContext context) {
@@ -351,17 +348,6 @@ class AdaptiveTabBar extends StatelessWidget implements PreferredSizeWidget {
 /// Адаптивный AppBar с TabBar
 class AdaptiveAppBarWithTabs extends StatelessWidget
     implements PreferredSizeWidget {
-  final String title;
-  final List<Widget>? actions;
-  final Widget? leading;
-  final bool centerTitle;
-  final Color? backgroundColor;
-  final Color? foregroundColor;
-  final double? elevation;
-  final TabController? tabController;
-  final List<Widget> tabs;
-  final bool isScrollable;
-
   const AdaptiveAppBarWithTabs({
     super.key,
     required this.title,
@@ -375,25 +361,33 @@ class AdaptiveAppBarWithTabs extends StatelessWidget
     required this.tabs,
     this.isScrollable = false,
   });
+  final String title;
+  final List<Widget>? actions;
+  final Widget? leading;
+  final bool centerTitle;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
+  final double? elevation;
+  final TabController? tabController;
+  final List<Widget> tabs;
+  final bool isScrollable;
 
   @override
-  Widget build(BuildContext context) {
-    return AppBar(
-      title: Text(title),
-      actions: actions,
-      leading: leading,
-      centerTitle: centerTitle,
-      backgroundColor:
-          backgroundColor ?? Theme.of(context).colorScheme.inversePrimary,
-      foregroundColor: foregroundColor,
-      elevation: elevation,
-      bottom: AdaptiveTabBar(
-        controller: tabController,
-        tabs: tabs,
-        isScrollable: isScrollable,
-      ),
-    );
-  }
+  Widget build(BuildContext context) => AppBar(
+        title: Text(title),
+        actions: actions,
+        leading: leading,
+        centerTitle: centerTitle,
+        backgroundColor:
+            backgroundColor ?? Theme.of(context).colorScheme.inversePrimary,
+        foregroundColor: foregroundColor,
+        elevation: elevation,
+        bottom: AdaptiveTabBar(
+          controller: tabController,
+          tabs: tabs,
+          isScrollable: isScrollable,
+        ),
+      );
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight * 2);
@@ -401,14 +395,6 @@ class AdaptiveAppBarWithTabs extends StatelessWidget
 
 /// Адаптивный SearchBar с Material 3 дизайном
 class AdaptiveSearchBar extends StatefulWidget {
-  final String? hintText;
-  final ValueChanged<String>? onChanged;
-  final ValueChanged<String>? onSubmitted;
-  final VoidCallback? onTap;
-  final bool enabled;
-  final Widget? leading;
-  final List<Widget>? trailing;
-
   const AdaptiveSearchBar({
     super.key,
     this.hintText,
@@ -419,6 +405,13 @@ class AdaptiveSearchBar extends StatefulWidget {
     this.leading,
     this.trailing,
   });
+  final String? hintText;
+  final ValueChanged<String>? onChanged;
+  final ValueChanged<String>? onSubmitted;
+  final VoidCallback? onTap;
+  final bool enabled;
+  final Widget? leading;
+  final List<Widget>? trailing;
 
   @override
   State<AdaptiveSearchBar> createState() => _AdaptiveSearchBarState();

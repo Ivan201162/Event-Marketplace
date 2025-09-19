@@ -1,20 +1,22 @@
 import 'dart:async';
-import 'package:flutter/foundation.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:flutter/foundation.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:uuid/uuid.dart';
+
 import '../models/analytics_event.dart';
 
 /// Сервис аналитики использования приложения
 class AnalyticsService {
+  factory AnalyticsService() => _instance;
+  AnalyticsService._internal();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
   final Uuid _uuid = const Uuid();
 
   static final AnalyticsService _instance = AnalyticsService._internal();
-  factory AnalyticsService() => _instance;
-  AnalyticsService._internal();
 
   String? _currentSessionId;
   String? _currentUserId;
@@ -127,13 +129,11 @@ class AnalyticsService {
           .where('startTime', isLessThanOrEqualTo: Timestamp.fromDate(end))
           .get();
 
-      final events = eventsSnapshot.docs
-          .map((doc) => AnalyticsEvent.fromDocument(doc))
-          .toList();
+      final events =
+          eventsSnapshot.docs.map(AnalyticsEvent.fromDocument).toList();
 
-      final sessions = sessionsSnapshot.docs
-          .map((doc) => UserSession.fromDocument(doc))
-          .toList();
+      final sessions =
+          sessionsSnapshot.docs.map(UserSession.fromDocument).toList();
 
       final totalEvents = events.length;
       final uniqueUsers =

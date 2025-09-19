@@ -2,15 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель подписки
 class Subscription {
-  final String id;
-  final String userId;
-  final String specialistId;
-  final String specialistName;
-  final String? specialistPhotoUrl;
-  final DateTime createdAt;
-  final bool isActive;
-  final bool notificationsEnabled;
-
   const Subscription({
     required this.id,
     required this.userId,
@@ -37,19 +28,25 @@ class Subscription {
       notificationsEnabled: data['notificationsEnabled'] ?? true,
     );
   }
+  final String id;
+  final String userId;
+  final String specialistId;
+  final String specialistName;
+  final String? specialistPhotoUrl;
+  final DateTime createdAt;
+  final bool isActive;
+  final bool notificationsEnabled;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'specialistId': specialistId,
-      'specialistName': specialistName,
-      'specialistPhotoUrl': specialistPhotoUrl,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'isActive': isActive,
-      'notificationsEnabled': notificationsEnabled,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'userId': userId,
+        'specialistId': specialistId,
+        'specialistName': specialistName,
+        'specialistPhotoUrl': specialistPhotoUrl,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'isActive': isActive,
+        'notificationsEnabled': notificationsEnabled,
+      };
 
   /// Создать копию с обновлёнными полями
   Subscription copyWith({
@@ -61,18 +58,17 @@ class Subscription {
     DateTime? createdAt,
     bool? isActive,
     bool? notificationsEnabled,
-  }) {
-    return Subscription(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      specialistId: specialistId ?? this.specialistId,
-      specialistName: specialistName ?? this.specialistName,
-      specialistPhotoUrl: specialistPhotoUrl ?? this.specialistPhotoUrl,
-      createdAt: createdAt ?? this.createdAt,
-      isActive: isActive ?? this.isActive,
-      notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
-    );
-  }
+  }) =>
+      Subscription(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        specialistId: specialistId ?? this.specialistId,
+        specialistName: specialistName ?? this.specialistName,
+        specialistPhotoUrl: specialistPhotoUrl ?? this.specialistPhotoUrl,
+        createdAt: createdAt ?? this.createdAt,
+        isActive: isActive ?? this.isActive,
+        notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -84,7 +80,6 @@ class Subscription {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'Subscription(id: $id, userId: $userId, specialistId: $specialistId)';
-  }
+  String toString() =>
+      'Subscription(id: $id, userId: $userId, specialistId: $specialistId)';
 }

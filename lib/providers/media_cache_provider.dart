@@ -4,15 +4,13 @@ import '../services/video_optimization_service.dart';
 
 /// Провайдер для управления кэшем изображений
 final imageCacheProvider =
-    NotifierProvider<ImageCacheNotifier, ImageCacheState>((ref) {
-  return ImageCacheNotifier();
-});
+    NotifierProvider<ImageCacheNotifier, ImageCacheState>(
+        (ref) => ImageCacheNotifier());
 
 /// Провайдер для управления кэшем видео
 final videoCacheProvider =
-    NotifierProvider<VideoCacheNotifier, VideoCacheState>((ref) {
-  return VideoCacheNotifier();
-});
+    NotifierProvider<VideoCacheNotifier, VideoCacheState>(
+        (ref) => VideoCacheNotifier());
 
 /// Провайдер для общего размера кэша
 final totalCacheSizeProvider = FutureProvider<int>((ref) async {
@@ -25,7 +23,7 @@ final totalCacheSizeProvider = FutureProvider<int>((ref) async {
 final formattedCacheSizeProvider = Provider<String>((ref) {
   final cacheSize = ref.watch(totalCacheSizeProvider);
   return cacheSize.when(
-    data: (size) => ImageOptimizationService.formatBytes(size),
+    data: ImageOptimizationService.formatBytes,
     loading: () => 'Загрузка...',
     error: (_, __) => 'Ошибка',
   );
@@ -33,60 +31,56 @@ final formattedCacheSizeProvider = Provider<String>((ref) {
 
 /// Состояние кэша изображений
 class ImageCacheState {
-  final bool isLoading;
-  final int cacheSize;
-  final String? error;
-  final List<String> cachedImages;
-
   const ImageCacheState({
     this.isLoading = false,
     this.cacheSize = 0,
     this.error,
     this.cachedImages = const [],
   });
+  final bool isLoading;
+  final int cacheSize;
+  final String? error;
+  final List<String> cachedImages;
 
   ImageCacheState copyWith({
     bool? isLoading,
     int? cacheSize,
     String? error,
     List<String>? cachedImages,
-  }) {
-    return ImageCacheState(
-      isLoading: isLoading ?? this.isLoading,
-      cacheSize: cacheSize ?? this.cacheSize,
-      error: error ?? this.error,
-      cachedImages: cachedImages ?? this.cachedImages,
-    );
-  }
+  }) =>
+      ImageCacheState(
+        isLoading: isLoading ?? this.isLoading,
+        cacheSize: cacheSize ?? this.cacheSize,
+        error: error ?? this.error,
+        cachedImages: cachedImages ?? this.cachedImages,
+      );
 }
 
 /// Состояние кэша видео
 class VideoCacheState {
-  final bool isLoading;
-  final int cacheSize;
-  final String? error;
-  final List<String> cachedVideos;
-
   const VideoCacheState({
     this.isLoading = false,
     this.cacheSize = 0,
     this.error,
     this.cachedVideos = const [],
   });
+  final bool isLoading;
+  final int cacheSize;
+  final String? error;
+  final List<String> cachedVideos;
 
   VideoCacheState copyWith({
     bool? isLoading,
     int? cacheSize,
     String? error,
     List<String>? cachedVideos,
-  }) {
-    return VideoCacheState(
-      isLoading: isLoading ?? this.isLoading,
-      cacheSize: cacheSize ?? this.cacheSize,
-      error: error ?? this.error,
-      cachedVideos: cachedVideos ?? this.cachedVideos,
-    );
-  }
+  }) =>
+      VideoCacheState(
+        isLoading: isLoading ?? this.isLoading,
+        cacheSize: cacheSize ?? this.cacheSize,
+        error: error ?? this.error,
+        cachedVideos: cachedVideos ?? this.cachedVideos,
+      );
 }
 
 /// Нотификатор для кэша изображений
@@ -104,7 +98,6 @@ class ImageCacheNotifier extends Notifier<ImageCacheState> {
       state = state.copyWith(
         isLoading: false,
         cacheSize: cacheSize,
-        error: null,
       );
     } catch (e) {
       state = state.copyWith(
@@ -123,7 +116,6 @@ class ImageCacheNotifier extends Notifier<ImageCacheState> {
       state = state.copyWith(
         isLoading: false,
         cacheSize: 0,
-        error: null,
       );
     } catch (e) {
       state = state.copyWith(
@@ -139,9 +131,8 @@ class ImageCacheNotifier extends Notifier<ImageCacheState> {
   }
 
   /// Получить отформатированный размер кэша
-  String getFormattedCacheSize() {
-    return ImageOptimizationService.formatBytes(state.cacheSize);
-  }
+  String getFormattedCacheSize() =>
+      ImageOptimizationService.formatBytes(state.cacheSize);
 }
 
 /// Нотификатор для кэша видео
@@ -159,7 +150,6 @@ class VideoCacheNotifier extends Notifier<VideoCacheState> {
       state = state.copyWith(
         isLoading: false,
         cacheSize: cacheSize,
-        error: null,
       );
     } catch (e) {
       state = state.copyWith(
@@ -178,7 +168,6 @@ class VideoCacheNotifier extends Notifier<VideoCacheState> {
       state = state.copyWith(
         isLoading: false,
         cacheSize: 0,
-        error: null,
       );
     } catch (e) {
       state = state.copyWith(
@@ -194,29 +183,17 @@ class VideoCacheNotifier extends Notifier<VideoCacheState> {
   }
 
   /// Получить отформатированный размер кэша
-  String getFormattedCacheSize() {
-    return ImageOptimizationService.formatBytes(state.cacheSize);
-  }
+  String getFormattedCacheSize() =>
+      ImageOptimizationService.formatBytes(state.cacheSize);
 }
 
 /// Провайдер для настроек оптимизации медиа
 final mediaOptimizationSettingsProvider = NotifierProvider<
-    MediaOptimizationSettingsNotifier, MediaOptimizationSettings>((ref) {
-  return MediaOptimizationSettingsNotifier();
-});
+    MediaOptimizationSettingsNotifier,
+    MediaOptimizationSettings>((ref) => MediaOptimizationSettingsNotifier());
 
 /// Настройки оптимизации медиа
 class MediaOptimizationSettings {
-  final bool enableImageCompression;
-  final bool enableVideoCompression;
-  final bool enableCaching;
-  final int imageQuality;
-  final int maxImageWidth;
-  final int maxImageHeight;
-  final int maxVideoSize;
-  final bool autoClearCache;
-  final int cacheMaxSize;
-
   const MediaOptimizationSettings({
     this.enableImageCompression = true,
     this.enableVideoCompression = true,
@@ -228,6 +205,15 @@ class MediaOptimizationSettings {
     this.autoClearCache = false,
     this.cacheMaxSize = 500 * 1024 * 1024, // 500 MB
   });
+  final bool enableImageCompression;
+  final bool enableVideoCompression;
+  final bool enableCaching;
+  final int imageQuality;
+  final int maxImageWidth;
+  final int maxImageHeight;
+  final int maxVideoSize;
+  final bool autoClearCache;
+  final int cacheMaxSize;
 
   MediaOptimizationSettings copyWith({
     bool? enableImageCompression,
@@ -239,21 +225,20 @@ class MediaOptimizationSettings {
     int? maxVideoSize,
     bool? autoClearCache,
     int? cacheMaxSize,
-  }) {
-    return MediaOptimizationSettings(
-      enableImageCompression:
-          enableImageCompression ?? this.enableImageCompression,
-      enableVideoCompression:
-          enableVideoCompression ?? this.enableVideoCompression,
-      enableCaching: enableCaching ?? this.enableCaching,
-      imageQuality: imageQuality ?? this.imageQuality,
-      maxImageWidth: maxImageWidth ?? this.maxImageWidth,
-      maxImageHeight: maxImageHeight ?? this.maxImageHeight,
-      maxVideoSize: maxVideoSize ?? this.maxVideoSize,
-      autoClearCache: autoClearCache ?? this.autoClearCache,
-      cacheMaxSize: cacheMaxSize ?? this.cacheMaxSize,
-    );
-  }
+  }) =>
+      MediaOptimizationSettings(
+        enableImageCompression:
+            enableImageCompression ?? this.enableImageCompression,
+        enableVideoCompression:
+            enableVideoCompression ?? this.enableVideoCompression,
+        enableCaching: enableCaching ?? this.enableCaching,
+        imageQuality: imageQuality ?? this.imageQuality,
+        maxImageWidth: maxImageWidth ?? this.maxImageWidth,
+        maxImageHeight: maxImageHeight ?? this.maxImageHeight,
+        maxVideoSize: maxVideoSize ?? this.maxVideoSize,
+        autoClearCache: autoClearCache ?? this.autoClearCache,
+        cacheMaxSize: cacheMaxSize ?? this.cacheMaxSize,
+      );
 }
 
 /// Нотификатор для настроек оптимизации медиа
@@ -310,35 +295,18 @@ class MediaOptimizationSettingsNotifier
   MediaOptimizationSettings getRecommendedSettings() {
     // TODO: Определить характеристики устройства и вернуть оптимальные настройки
     return const MediaOptimizationSettings(
-      enableImageCompression: true,
-      enableVideoCompression: true,
-      enableCaching: true,
-      imageQuality: 85,
-      maxImageWidth: 1920,
-      maxImageHeight: 1080,
-      maxVideoSize: 100 * 1024 * 1024,
       autoClearCache: true,
-      cacheMaxSize: 500 * 1024 * 1024,
     );
   }
 }
 
 /// Провайдер для статистики использования медиа
 final mediaUsageStatsProvider =
-    NotifierProvider<MediaUsageStatsNotifier, MediaUsageStats>((ref) {
-  return MediaUsageStatsNotifier();
-});
+    NotifierProvider<MediaUsageStatsNotifier, MediaUsageStats>(
+        (ref) => MediaUsageStatsNotifier());
 
 /// Статистика использования медиа
 class MediaUsageStats {
-  final int totalImagesLoaded;
-  final int totalVideosLoaded;
-  final int totalImagesCompressed;
-  final int totalVideosCompressed;
-  final int totalCacheHits;
-  final int totalCacheMisses;
-  final int totalBytesSaved;
-
   const MediaUsageStats({
     this.totalImagesLoaded = 0,
     this.totalVideosLoaded = 0,
@@ -348,6 +316,13 @@ class MediaUsageStats {
     this.totalCacheMisses = 0,
     this.totalBytesSaved = 0,
   });
+  final int totalImagesLoaded;
+  final int totalVideosLoaded;
+  final int totalImagesCompressed;
+  final int totalVideosCompressed;
+  final int totalCacheHits;
+  final int totalCacheMisses;
+  final int totalBytesSaved;
 
   MediaUsageStats copyWith({
     int? totalImagesLoaded,
@@ -357,31 +332,29 @@ class MediaUsageStats {
     int? totalCacheHits,
     int? totalCacheMisses,
     int? totalBytesSaved,
-  }) {
-    return MediaUsageStats(
-      totalImagesLoaded: totalImagesLoaded ?? this.totalImagesLoaded,
-      totalVideosLoaded: totalVideosLoaded ?? this.totalVideosLoaded,
-      totalImagesCompressed:
-          totalImagesCompressed ?? this.totalImagesCompressed,
-      totalVideosCompressed:
-          totalVideosCompressed ?? this.totalVideosCompressed,
-      totalCacheHits: totalCacheHits ?? this.totalCacheHits,
-      totalCacheMisses: totalCacheMisses ?? this.totalCacheMisses,
-      totalBytesSaved: totalBytesSaved ?? this.totalBytesSaved,
-    );
-  }
+  }) =>
+      MediaUsageStats(
+        totalImagesLoaded: totalImagesLoaded ?? this.totalImagesLoaded,
+        totalVideosLoaded: totalVideosLoaded ?? this.totalVideosLoaded,
+        totalImagesCompressed:
+            totalImagesCompressed ?? this.totalImagesCompressed,
+        totalVideosCompressed:
+            totalVideosCompressed ?? this.totalVideosCompressed,
+        totalCacheHits: totalCacheHits ?? this.totalCacheHits,
+        totalCacheMisses: totalCacheMisses ?? this.totalCacheMisses,
+        totalBytesSaved: totalBytesSaved ?? this.totalBytesSaved,
+      );
 
   /// Получить процент попаданий в кэш
   double get cacheHitRate {
     final total = totalCacheHits + totalCacheMisses;
-    if (total == 0) return 0.0;
+    if (total == 0) return 0;
     return (totalCacheHits / total) * 100;
   }
 
   /// Получить отформатированный размер сэкономленных данных
-  String get formattedBytesSaved {
-    return ImageOptimizationService.formatBytes(totalBytesSaved);
-  }
+  String get formattedBytesSaved =>
+      ImageOptimizationService.formatBytes(totalBytesSaved);
 }
 
 /// Нотификатор для статистики использования медиа

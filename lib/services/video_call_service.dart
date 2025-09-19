@@ -1,4 +1,4 @@
-import 'package:event_marketplace_app/core/feature_flags.dart';
+import '../core/feature_flags.dart';
 
 /// Сервис для видеозвонков и аудиозвонков
 class VideoCallService {
@@ -39,9 +39,6 @@ class VideoCallService {
         type: CallType.video,
         status: CallStatus.initiating,
         createdAt: DateTime.now(),
-        startedAt: null,
-        endedAt: null,
-        duration: null,
         metadata: {},
       );
 
@@ -78,9 +75,6 @@ class VideoCallService {
         type: CallType.audio,
         status: CallStatus.initiating,
         createdAt: DateTime.now(),
-        startedAt: null,
-        endedAt: null,
-        duration: null,
         metadata: {},
       );
 
@@ -151,20 +145,6 @@ class VideoCallService {
 
 /// Модель видеозвонка
 class VideoCall {
-  final String id;
-  final String callerId;
-  final String callerName;
-  final String receiverId;
-  final String receiverName;
-  final String? chatId;
-  final CallType type;
-  final CallStatus status;
-  final DateTime createdAt;
-  final DateTime? startedAt;
-  final DateTime? endedAt;
-  final Duration? duration;
-  final Map<String, dynamic> metadata;
-
   const VideoCall({
     required this.id,
     required this.callerId,
@@ -180,6 +160,19 @@ class VideoCall {
     this.duration,
     required this.metadata,
   });
+  final String id;
+  final String callerId;
+  final String callerName;
+  final String receiverId;
+  final String receiverName;
+  final String? chatId;
+  final CallType type;
+  final CallStatus status;
+  final DateTime createdAt;
+  final DateTime? startedAt;
+  final DateTime? endedAt;
+  final Duration? duration;
+  final Map<String, dynamic> metadata;
 }
 
 /// Типы звонков

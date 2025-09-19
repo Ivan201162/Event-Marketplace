@@ -15,9 +15,7 @@ class ServiceTemplateService {
           .orderBy('serviceName')
           .get();
 
-      return snapshot.docs
-          .map((doc) => ServiceTemplate.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(ServiceTemplate.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения шаблонов услуг: $e');
     }
@@ -25,7 +23,8 @@ class ServiceTemplateService {
 
   /// Получить шаблоны услуг по категории
   Future<List<ServiceTemplate>> getServiceTemplatesByCategory(
-      String categoryId) async {
+    String categoryId,
+  ) async {
     try {
       final snapshot = await _firestore
           .collection('serviceTemplates')
@@ -34,9 +33,7 @@ class ServiceTemplateService {
           .orderBy('serviceName')
           .get();
 
-      return snapshot.docs
-          .map((doc) => ServiceTemplate.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(ServiceTemplate.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения шаблонов услуг по категории: $e');
     }
@@ -69,7 +66,9 @@ class ServiceTemplateService {
 
   /// Обновить шаблон услуги
   Future<void> updateServiceTemplate(
-      String templateId, ServiceTemplate template) async {
+    String templateId,
+    ServiceTemplate template,
+  ) async {
     try {
       await _firestore
           .collection('serviceTemplates')
@@ -99,7 +98,8 @@ class SpecialistServiceService {
 
   /// Получить услуги специалиста
   Future<List<SpecialistService>> getSpecialistServices(
-      String specialistId) async {
+    String specialistId,
+  ) async {
     try {
       final snapshot = await _firestore
           .collection('specialists')
@@ -109,9 +109,7 @@ class SpecialistServiceService {
           .orderBy('serviceName')
           .get();
 
-      return snapshot.docs
-          .map((doc) => SpecialistService.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(SpecialistService.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения услуг специалиста: $e');
     }
@@ -119,7 +117,9 @@ class SpecialistServiceService {
 
   /// Получить услугу специалиста по ID
   Future<SpecialistService?> getSpecialistService(
-      String specialistId, String serviceId) async {
+    String specialistId,
+    String serviceId,
+  ) async {
     try {
       final doc = await _firestore
           .collection('specialists')
@@ -139,7 +139,9 @@ class SpecialistServiceService {
 
   /// Создать услугу специалиста
   Future<String> createSpecialistService(
-      String specialistId, SpecialistService service) async {
+    String specialistId,
+    SpecialistService service,
+  ) async {
     try {
       final docRef = await _firestore
           .collection('specialists')
@@ -185,7 +187,9 @@ class SpecialistServiceService {
 
   /// Удалить услугу специалиста
   Future<void> deleteSpecialistService(
-      String specialistId, String serviceId) async {
+    String specialistId,
+    String serviceId,
+  ) async {
     try {
       await _firestore
           .collection('specialists')
@@ -209,7 +213,8 @@ class SpecialistServiceService {
 
   /// Получить услуги специалистов по категории
   Future<List<SpecialistService>> getServicesByCategory(
-      String categoryId) async {
+    String categoryId,
+  ) async {
     try {
       final snapshot = await _firestore
           .collectionGroup('services')
@@ -218,9 +223,7 @@ class SpecialistServiceService {
           .orderBy('priceMin')
           .get();
 
-      return snapshot.docs
-          .map((doc) => SpecialistService.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(SpecialistService.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка получения услуг по категории: $e');
     }
@@ -232,14 +235,12 @@ class SpecialistServiceService {
       final snapshot = await _firestore
           .collectionGroup('services')
           .where('serviceName', isGreaterThanOrEqualTo: query)
-          .where('serviceName', isLessThan: query + '\uf8ff')
+          .where('serviceName', isLessThan: '$query\uf8ff')
           .where('isActive', isEqualTo: true)
           .limit(20)
           .get();
 
-      return snapshot.docs
-          .map((doc) => SpecialistService.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map(SpecialistService.fromDocument).toList();
     } catch (e) {
       throw Exception('Ошибка поиска услуг: $e');
     }

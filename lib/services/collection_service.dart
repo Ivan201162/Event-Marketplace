@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import '../models/idea.dart';
+
 import '../core/feature_flags.dart';
+import '../models/idea.dart';
 
 /// Сервис для работы с коллекциями идей
 class CollectionService {
@@ -16,7 +17,7 @@ class CollectionService {
       return Stream.value([]);
     }
 
-    Query query = _firestore
+    var query = _firestore
         .collection('idea_collections')
         .where('isPublic', isEqualTo: true)
         .orderBy('createdAt', descending: true);
@@ -27,14 +28,16 @@ class CollectionService {
 
     query = query.limit(limit);
 
-    return query.snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return IdeaCollection.fromMap({
-          'id': doc.id,
-          ...doc.data() as Map<String, dynamic>,
-        });
-      }).toList();
-    });
+    return query.snapshots().map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => IdeaCollection.fromMap({
+                  'id': doc.id,
+                  ...doc.data() as Map<String, dynamic>,
+                }),
+              )
+              .toList(),
+        );
   }
 
   /// Получить коллекции пользователя
@@ -48,14 +51,16 @@ class CollectionService {
         .where('ownerId', isEqualTo: userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return IdeaCollection.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
-    });
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => IdeaCollection.fromMap({
+                  'id': doc.id,
+                  ...doc.data(),
+                }),
+              )
+              .toList(),
+        );
   }
 
   /// Получить коллекции, на которые подписан пользователь
@@ -69,14 +74,16 @@ class CollectionService {
         .where('followers', arrayContains: userId)
         .orderBy('createdAt', descending: true)
         .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return IdeaCollection.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
-    });
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => IdeaCollection.fromMap({
+                  'id': doc.id,
+                  ...doc.data(),
+                }),
+              )
+              .toList(),
+        );
   }
 
   /// Создать новую коллекцию
@@ -98,7 +105,9 @@ class CollectionService {
 
   /// Обновить коллекцию
   Future<void> updateCollection(
-      String collectionId, Map<String, dynamic> updates) async {
+    String collectionId,
+    Map<String, dynamic> updates,
+  ) async {
     if (!FeatureFlags.ideasEnabled) {
       throw Exception('Функция идей отключена');
     }
@@ -239,7 +248,9 @@ class CollectionService {
 
   /// Удалить идею из коллекции
   Future<void> removeIdeaFromCollection(
-      String collectionId, String ideaId) async {
+    String collectionId,
+    String ideaId,
+  ) async {
     if (!FeatureFlags.ideasEnabled) {
       throw Exception('Функция идей отключена');
     }
@@ -348,10 +359,12 @@ class CollectionService {
       for (final ideaId in collection.ideaIds) {
         final ideaDoc = await _firestore.collection('ideas').doc(ideaId).get();
         if (ideaDoc.exists) {
-          ideas.add(Idea.fromMap({
-            'id': ideaDoc.id,
-            ...ideaDoc.data()!,
-          }));
+          ideas.add(
+            Idea.fromMap({
+              'id': ideaDoc.id,
+              ...ideaDoc.data()!,
+            }),
+          );
         }
       }
 
@@ -375,20 +388,23 @@ class CollectionService {
         .limit(limit)
         .snapshots()
         .map((snapshot) {
-      final collections = snapshot.docs.map((doc) {
-        return IdeaCollection.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
+      final collections = snapshot.docs
+          .map(
+            (doc) => IdeaCollection.fromMap({
+              'id': doc.id,
+              ...doc.data(),
+            }),
+          )
+          .toList();
 
       // Фильтруем по тексту поиска
       if (query.isNotEmpty) {
         final lowercaseQuery = query.toLowerCase();
-        collections.removeWhere((collection) {
-          return !collection.name.toLowerCase().contains(lowercaseQuery) &&
-              !collection.description.toLowerCase().contains(lowercaseQuery);
-        });
+        collections.removeWhere(
+          (collection) =>
+              !collection.name.toLowerCase().contains(lowercaseQuery) &&
+              !collection.description.toLowerCase().contains(lowercaseQuery),
+        );
       }
 
       return collections;
@@ -408,13 +424,15 @@ class CollectionService {
         .orderBy('createdAt', descending: true)
         .limit(limit)
         .snapshots()
-        .map((snapshot) {
-      return snapshot.docs.map((doc) {
-        return IdeaCollection.fromMap({
-          'id': doc.id,
-          ...doc.data(),
-        });
-      }).toList();
-    });
+        .map(
+          (snapshot) => snapshot.docs
+              .map(
+                (doc) => IdeaCollection.fromMap({
+                  'id': doc.id,
+                  ...doc.data(),
+                }),
+              )
+              .toList(),
+        );
   }
 }

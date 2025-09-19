@@ -1,7 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../core/feature_flags.dart';
 import '../maps/map_service.dart';
 import '../maps/map_service_mock.dart';
-import '../core/feature_flags.dart';
 
 /// Провайдер сервиса карт
 final mapServiceProvider = Provider<MapService>((ref) {
@@ -10,9 +11,7 @@ final mapServiceProvider = Provider<MapService>((ref) {
 });
 
 /// Провайдер для проверки доступности карт
-final mapsAvailableProvider = Provider<bool>((ref) {
-  return FeatureFlags.mapsEnabled;
-});
+final mapsAvailableProvider = Provider<bool>((ref) => FeatureFlags.mapsEnabled);
 
 /// Провайдер для инициализации карт
 final mapInitializationProvider = FutureProvider<void>((ref) async {
@@ -25,7 +24,7 @@ final currentLocationProvider = FutureProvider<MapCoordinates?>((ref) async {
   final mapService = ref.read(mapServiceProvider);
   if (!mapService.isAvailable) return null;
 
-  return await mapService.getCurrentLocation();
+  return mapService.getCurrentLocation();
 });
 
 /// Провайдер разрешения на местоположение
@@ -33,5 +32,5 @@ final locationPermissionProvider = FutureProvider<bool>((ref) async {
   final mapService = ref.read(mapServiceProvider);
   if (!mapService.isAvailable) return false;
 
-  return await mapService.hasLocationPermission();
+  return mapService.hasLocationPermission();
 });

@@ -2,16 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель истории изменений цены
 class PriceHistory {
-  final String id;
-  final String bookingId;
-  final double oldPrice;
-  final double newPrice;
-  final double? discountPercent;
-  final String reason;
-  final String changedBy; // 'specialist', 'customer', 'system'
-  final DateTime changedAt;
-  final Map<String, dynamic>? metadata;
-
   const PriceHistory({
     required this.id,
     required this.bookingId,
@@ -43,35 +33,40 @@ class PriceHistory {
   }
 
   /// Создать из Map
-  factory PriceHistory.fromMap(Map<String, dynamic> data) {
-    return PriceHistory(
-      id: data['id'] ?? '',
-      bookingId: data['bookingId'] ?? '',
-      oldPrice: (data['oldPrice'] as num).toDouble(),
-      newPrice: (data['newPrice'] as num).toDouble(),
-      discountPercent: data['discountPercent']?.toDouble(),
-      reason: data['reason'] ?? '',
-      changedBy: data['changedBy'] ?? '',
-      changedAt: (data['changedAt'] as Timestamp).toDate(),
-      metadata: data['metadata'] != null
-          ? Map<String, dynamic>.from(data['metadata'])
-          : null,
-    );
-  }
+  factory PriceHistory.fromMap(Map<String, dynamic> data) => PriceHistory(
+        id: data['id'] ?? '',
+        bookingId: data['bookingId'] ?? '',
+        oldPrice: (data['oldPrice'] as num).toDouble(),
+        newPrice: (data['newPrice'] as num).toDouble(),
+        discountPercent: data['discountPercent']?.toDouble(),
+        reason: data['reason'] ?? '',
+        changedBy: data['changedBy'] ?? '',
+        changedAt: (data['changedAt'] as Timestamp).toDate(),
+        metadata: data['metadata'] != null
+            ? Map<String, dynamic>.from(data['metadata'])
+            : null,
+      );
+  final String id;
+  final String bookingId;
+  final double oldPrice;
+  final double newPrice;
+  final double? discountPercent;
+  final String reason;
+  final String changedBy; // 'specialist', 'customer', 'system'
+  final DateTime changedAt;
+  final Map<String, dynamic>? metadata;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'bookingId': bookingId,
-      'oldPrice': oldPrice,
-      'newPrice': newPrice,
-      'discountPercent': discountPercent,
-      'reason': reason,
-      'changedBy': changedBy,
-      'changedAt': Timestamp.fromDate(changedAt),
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'bookingId': bookingId,
+        'oldPrice': oldPrice,
+        'newPrice': newPrice,
+        'discountPercent': discountPercent,
+        'reason': reason,
+        'changedBy': changedBy,
+        'changedAt': Timestamp.fromDate(changedAt),
+        'metadata': metadata,
+      };
 
   /// Получить изменение цены
   double get priceChange => newPrice - oldPrice;
@@ -100,21 +95,18 @@ class PriceHistory {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      bookingId,
-      oldPrice,
-      newPrice,
-      discountPercent,
-      reason,
-      changedBy,
-      changedAt,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        bookingId,
+        oldPrice,
+        newPrice,
+        discountPercent,
+        reason,
+        changedBy,
+        changedAt,
+      );
 
   @override
-  String toString() {
-    return 'PriceHistory(id: $id, bookingId: $bookingId, oldPrice: $oldPrice, newPrice: $newPrice, reason: $reason)';
-  }
+  String toString() =>
+      'PriceHistory(id: $id, bookingId: $bookingId, oldPrice: $oldPrice, newPrice: $newPrice, reason: $reason)';
 }

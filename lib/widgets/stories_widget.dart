@@ -1,22 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../models/story.dart';
+
 import '../models/media_type.dart';
+import '../models/story.dart';
 import '../providers/story_providers.dart';
-import '../core/responsive_utils.dart';
 
 /// Виджет для отображения сторис
 class StoriesWidget extends ConsumerWidget {
-  final String specialistId;
-  final bool showAddStory;
-  final VoidCallback? onAddStory;
-
   const StoriesWidget({
     super.key,
     required this.specialistId,
     this.showAddStory = false,
     this.onAddStory,
   });
+  final String specialistId;
+  final bool showAddStory;
+  final VoidCallback? onAddStory;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -54,43 +53,41 @@ class StoriesWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildAddStoryButton(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(right: 12),
-      child: Column(
-        children: [
-          GestureDetector(
-            onTap: onAddStory,
-            child: Container(
-              width: 70,
-              height: 70,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: Theme.of(context).colorScheme.primary,
-                  width: 2,
+  Widget _buildAddStoryButton(BuildContext context) => Padding(
+        padding: const EdgeInsets.only(right: 12),
+        child: Column(
+          children: [
+            GestureDetector(
+              onTap: onAddStory,
+              child: Container(
+                width: 70,
+                height: 70,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  border: Border.all(
+                    color: Theme.of(context).colorScheme.primary,
+                    width: 2,
+                  ),
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
                 ),
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-              ),
-              child: Icon(
-                Icons.add,
-                color: Theme.of(context).colorScheme.primary,
-                size: 30,
+                child: Icon(
+                  Icons.add,
+                  color: Theme.of(context).colorScheme.primary,
+                  size: 30,
+                ),
               ),
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            'Добавить',
-            style: TextStyle(
-              fontSize: 12,
-              color: Theme.of(context).colorScheme.onSurface,
+            const SizedBox(height: 4),
+            Text(
+              'Добавить',
+              style: TextStyle(
+                fontSize: 12,
+                color: Theme.of(context).colorScheme.onSurface,
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   Widget _buildStoryItem(BuildContext context, Story story) {
     final isViewed = story.isViewedBy('current_user');
@@ -119,17 +116,15 @@ class StoriesWidget extends ConsumerWidget {
                   width: 70,
                   height: 70,
                   fit: BoxFit.cover,
-                  errorBuilder: (context, error, stackTrace) {
-                    return Container(
-                      color: Colors.grey[300],
-                      child: Icon(
-                        story.mediaType == MediaType.video
-                            ? Icons.videocam
-                            : Icons.image,
-                        color: Colors.grey[600],
-                      ),
-                    );
-                  },
+                  errorBuilder: (context, error, stackTrace) => Container(
+                    color: Colors.grey[300],
+                    child: Icon(
+                      story.mediaType == MediaType.video
+                          ? Icons.videocam
+                          : Icons.image,
+                      color: Colors.grey[600],
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -161,12 +156,11 @@ class StoriesWidget extends ConsumerWidget {
 
 /// Экран просмотра сторис
 class StoryViewScreen extends StatefulWidget {
-  final Story story;
-
   const StoryViewScreen({
     super.key,
     required this.story,
   });
+  final Story story;
 
   @override
   State<StoryViewScreen> createState() => _StoryViewScreenState();
@@ -185,8 +179,8 @@ class _StoryViewScreenState extends State<StoryViewScreen>
       vsync: this,
     );
     _progressAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
+      begin: 0,
+      end: 1,
     ).animate(_progressController);
 
     _progressController.forward();
@@ -199,43 +193,41 @@ class _StoryViewScreenState extends State<StoryViewScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      body: Stack(
-        children: [
-          // Медиа контент
-          Positioned.fill(
-            child: GestureDetector(
-              onTap: () => Navigator.pop(context),
-              child: _buildMediaContent(),
+  Widget build(BuildContext context) => Scaffold(
+        backgroundColor: Colors.black,
+        body: Stack(
+          children: [
+            // Медиа контент
+            Positioned.fill(
+              child: GestureDetector(
+                onTap: () => Navigator.pop(context),
+                child: _buildMediaContent(),
+              ),
             ),
-          ),
-          // Прогресс бар
-          Positioned(
-            top: 50,
-            left: 16,
-            right: 16,
-            child: _buildProgressBar(),
-          ),
-          // Заголовок
-          Positioned(
-            top: 80,
-            left: 16,
-            right: 16,
-            child: _buildHeader(),
-          ),
-          // Действия
-          Positioned(
-            bottom: 50,
-            left: 16,
-            right: 16,
-            child: _buildActions(),
-          ),
-        ],
-      ),
-    );
-  }
+            // Прогресс бар
+            Positioned(
+              top: 50,
+              left: 16,
+              right: 16,
+              child: _buildProgressBar(),
+            ),
+            // Заголовок
+            Positioned(
+              top: 80,
+              left: 16,
+              right: 16,
+              child: _buildHeader(),
+            ),
+            // Действия
+            Positioned(
+              bottom: 50,
+              left: 16,
+              right: 16,
+              child: _buildActions(),
+            ),
+          ],
+        ),
+      );
 
   Widget _buildMediaContent() {
     if (widget.story.mediaType == MediaType.video) {
@@ -253,132 +245,123 @@ class _StoryViewScreenState extends State<StoryViewScreen>
       return Image.network(
         widget.story.mediaUrl,
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return Container(
-            color: Colors.grey[800],
-            child: const Center(
-              child: Icon(
-                Icons.image,
-                color: Colors.white,
-                size: 80,
-              ),
+        errorBuilder: (context, error, stackTrace) => Container(
+          color: Colors.grey[800],
+          child: const Center(
+            child: Icon(
+              Icons.image,
+              color: Colors.white,
+              size: 80,
             ),
-          );
-        },
+          ),
+        ),
       );
     }
   }
 
-  Widget _buildProgressBar() {
-    return AnimatedBuilder(
-      animation: _progressAnimation,
-      builder: (context, child) {
-        return LinearProgressIndicator(
+  Widget _buildProgressBar() => AnimatedBuilder(
+        animation: _progressAnimation,
+        builder: (context, child) => LinearProgressIndicator(
           value: _progressAnimation.value,
           backgroundColor: Colors.white.withOpacity(0.3),
           valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
-        );
-      },
-    );
-  }
-
-  Widget _buildHeader() {
-    return Row(
-      children: [
-        CircleAvatar(
-          radius: 20,
-          backgroundImage: NetworkImage(
-            widget.story.specialistPhotoUrl ?? 'https://via.placeholder.com/40',
-          ),
         ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.story.specialistName,
+      );
+
+  Widget _buildHeader() => Row(
+        children: [
+          CircleAvatar(
+            radius: 20,
+            backgroundImage: NetworkImage(
+              widget.story.specialistPhotoUrl ??
+                  'https://via.placeholder.com/40',
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.story.specialistName,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  _formatTime(widget.story.createdAt),
+                  style: const TextStyle(
+                    color: Colors.white70,
+                    fontSize: 12,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.close, color: Colors.white),
+            onPressed: () => Navigator.pop(context),
+          ),
+        ],
+      );
+
+  Widget _buildActions() => Column(
+        children: [
+          if (widget.story.content != null &&
+              widget.story.content!.isNotEmpty) ...[
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.black.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                widget.story.content!,
                 style: const TextStyle(
                   color: Colors.white,
-                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
                 ),
               ),
-              Text(
-                _formatTime(widget.story.createdAt),
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 12,
+            ),
+            const SizedBox(height: 16),
+          ],
+          Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  decoration: InputDecoration(
+                    hintText: 'Отправить сообщение...',
+                    hintStyle: const TextStyle(color: Colors.white70),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      borderSide: const BorderSide(color: Colors.white),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      borderSide: const BorderSide(color: Colors.white),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(25),
+                      borderSide: const BorderSide(color: Colors.white),
+                    ),
+                  ),
+                  style: const TextStyle(color: Colors.white),
                 ),
+              ),
+              const SizedBox(width: 8),
+              IconButton(
+                icon: const Icon(Icons.favorite_border, color: Colors.white),
+                onPressed: _likeStory,
+              ),
+              IconButton(
+                icon: const Icon(Icons.share, color: Colors.white),
+                onPressed: _shareStory,
               ),
             ],
           ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.close, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildActions() {
-    return Column(
-      children: [
-        if (widget.story.content != null &&
-            widget.story.content!.isNotEmpty) ...[
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Colors.black.withOpacity(0.5),
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              widget.story.content!,
-              style: const TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
         ],
-        Row(
-          children: [
-            Expanded(
-              child: TextField(
-                decoration: InputDecoration(
-                  hintText: 'Отправить сообщение...',
-                  hintStyle: const TextStyle(color: Colors.white70),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25),
-                    borderSide: const BorderSide(color: Colors.white),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25),
-                    borderSide: const BorderSide(color: Colors.white),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(25),
-                    borderSide: const BorderSide(color: Colors.white),
-                  ),
-                ),
-                style: const TextStyle(color: Colors.white),
-              ),
-            ),
-            const SizedBox(width: 8),
-            IconButton(
-              icon: const Icon(Icons.favorite_border, color: Colors.white),
-              onPressed: () => _likeStory(),
-            ),
-            IconButton(
-              icon: const Icon(Icons.share, color: Colors.white),
-              onPressed: () => _shareStory(),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+      );
 
   String _formatTime(DateTime date) {
     final now = DateTime.now();
@@ -410,12 +393,11 @@ class _StoryViewScreenState extends State<StoryViewScreen>
 
 /// Виджет для создания новой сторис
 class CreateStoryWidget extends StatefulWidget {
-  final VoidCallback? onStoryCreated;
-
   const CreateStoryWidget({
     super.key,
     this.onStoryCreated,
   });
+  final VoidCallback? onStoryCreated;
 
   @override
   State<CreateStoryWidget> createState() => _CreateStoryWidgetState();
@@ -433,84 +415,80 @@ class _CreateStoryWidgetState extends State<CreateStoryWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Создать сторис'),
-        actions: [
-          TextButton(
-            onPressed: _canPublish() ? _publishStory : null,
-            child: const Text('Опубликовать'),
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Предварительный просмотр
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              color: Colors.black,
-              child: _buildPreview(),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Создать сторис'),
+          actions: [
+            TextButton(
+              onPressed: _canPublish() ? _publishStory : null,
+              child: const Text('Опубликовать'),
             ),
-          ),
-          // Панель инструментов
-          Container(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              children: [
-                // Текстовое поле
-                TextField(
-                  controller: _textController,
-                  decoration: const InputDecoration(
-                    hintText: 'Добавить текст...',
-                    border: OutlineInputBorder(),
+          ],
+        ),
+        body: Column(
+          children: [
+            // Предварительный просмотр
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                color: Colors.black,
+                child: _buildPreview(),
+              ),
+            ),
+            // Панель инструментов
+            Container(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  // Текстовое поле
+                  TextField(
+                    controller: _textController,
+                    decoration: const InputDecoration(
+                      hintText: 'Добавить текст...',
+                      border: OutlineInputBorder(),
+                    ),
+                    maxLines: 3,
                   ),
-                  maxLines: 3,
-                ),
-                const SizedBox(height: 16),
-                // Кнопки действий
-                Row(
-                  children: [
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: _pickImage,
-                        icon: const Icon(Icons.photo),
-                        label: const Text('Фото'),
+                  const SizedBox(height: 16),
+                  // Кнопки действий
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: _pickImage,
+                          icon: const Icon(Icons.photo),
+                          label: const Text('Фото'),
+                        ),
                       ),
-                    ),
-                    const SizedBox(width: 8),
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: _pickVideo,
-                        icon: const Icon(Icons.videocam),
-                        label: const Text('Видео'),
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: ElevatedButton.icon(
+                          onPressed: _pickVideo,
+                          icon: const Icon(Icons.videocam),
+                          label: const Text('Видео'),
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ],
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 
   Widget _buildPreview() {
     if (_selectedImagePath != null) {
       return Image.network(
         _selectedImagePath!,
         fit: BoxFit.cover,
-        errorBuilder: (context, error, stackTrace) {
-          return const Center(
-            child: Icon(
-              Icons.image,
-              color: Colors.white,
-              size: 80,
-            ),
-          );
-        },
+        errorBuilder: (context, error, stackTrace) => const Center(
+          child: Icon(
+            Icons.image,
+            color: Colors.white,
+            size: 80,
+          ),
+        ),
       );
     } else {
       return const Center(
@@ -536,9 +514,8 @@ class _CreateStoryWidgetState extends State<CreateStoryWidget> {
     }
   }
 
-  bool _canPublish() {
-    return _selectedImagePath != null || _textController.text.isNotEmpty;
-  }
+  bool _canPublish() =>
+      _selectedImagePath != null || _textController.text.isNotEmpty;
 
   void _pickImage() {
     setState(() {

@@ -197,11 +197,6 @@ enum ScreenType {
 
 /// Виджет для адаптивного контейнера
 class ResponsiveContainer extends StatelessWidget {
-  final Widget child;
-  final double? maxWidth;
-  final EdgeInsets? padding;
-  final Alignment alignment;
-
   const ResponsiveContainer({
     super.key,
     required this.child,
@@ -209,6 +204,10 @@ class ResponsiveContainer extends StatelessWidget {
     this.padding,
     this.alignment = Alignment.center,
   });
+  final Widget child;
+  final double? maxWidth;
+  final EdgeInsets? padding;
+  final Alignment alignment;
 
   @override
   Widget build(BuildContext context) {
@@ -233,11 +232,6 @@ class ResponsiveContainer extends StatelessWidget {
 
 /// Виджет для адаптивной сетки
 class ResponsiveGrid extends StatelessWidget {
-  final List<Widget> children;
-  final double? crossAxisSpacing;
-  final double? mainAxisSpacing;
-  final double? childAspectRatio;
-
   const ResponsiveGrid({
     super.key,
     required this.children,
@@ -245,6 +239,10 @@ class ResponsiveGrid extends StatelessWidget {
     this.mainAxisSpacing,
     this.childAspectRatio,
   });
+  final List<Widget> children;
+  final double? crossAxisSpacing;
+  final double? mainAxisSpacing;
+  final double? childAspectRatio;
 
   @override
   Widget build(BuildContext context) {
@@ -272,14 +270,6 @@ class ResponsiveGrid extends StatelessWidget {
 
 /// Виджет для адаптивного текста
 class ResponsiveText extends StatelessWidget {
-  final String text;
-  final TextStyle? style;
-  final TextAlign? textAlign;
-  final int? maxLines;
-  final TextOverflow? overflow;
-  final bool isTitle;
-  final bool isSubtitle;
-
   const ResponsiveText(
     this.text, {
     super.key,
@@ -290,6 +280,13 @@ class ResponsiveText extends StatelessWidget {
     this.isTitle = false,
     this.isSubtitle = false,
   });
+  final String text;
+  final TextStyle? style;
+  final TextAlign? textAlign;
+  final int? maxLines;
+  final TextOverflow? overflow;
+  final bool isTitle;
+  final bool isSubtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -317,16 +314,15 @@ class ResponsiveText extends StatelessWidget {
 
 /// Виджет для адаптивной иконки
 class ResponsiveIcon extends StatelessWidget {
-  final IconData icon;
-  final Color? color;
-  final double? size;
-
   const ResponsiveIcon(
     this.icon, {
     super.key,
     this.color,
     this.size,
   });
+  final IconData icon;
+  final Color? color;
+  final double? size;
 
   @override
   Widget build(BuildContext context) {
@@ -343,16 +339,15 @@ class ResponsiveIcon extends StatelessWidget {
 
 /// Виджет для адаптивного отступа
 class ResponsivePadding extends StatelessWidget {
-  final Widget child;
-  final EdgeInsets? padding;
-  final double? multiplier;
-
   const ResponsivePadding({
     super.key,
     required this.child,
     this.padding,
     this.multiplier = 1.0,
   });
+  final Widget child;
+  final EdgeInsets? padding;
+  final double? multiplier;
 
   @override
   Widget build(BuildContext context) {
@@ -369,12 +364,6 @@ class ResponsivePadding extends StatelessWidget {
 
 /// Виджет для адаптивного разделителя
 class ResponsiveDivider extends StatelessWidget {
-  final double? height;
-  final Color? color;
-  final double? thickness;
-  final double? indent;
-  final double? endIndent;
-
   const ResponsiveDivider({
     super.key,
     this.height,
@@ -383,6 +372,11 @@ class ResponsiveDivider extends StatelessWidget {
     this.indent,
     this.endIndent,
   });
+  final double? height;
+  final Color? color;
+  final double? thickness;
+  final double? indent;
+  final double? endIndent;
 
   @override
   Widget build(BuildContext context) {

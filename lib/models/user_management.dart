@@ -2,21 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 /// Модель пользователя с расширенными полями
 class ManagedUser {
-  final String id;
-  final String email;
-  final String? displayName;
-  final String? photoUrl;
-  final UserRole role;
-  final UserStatus status;
-  final Map<String, dynamic> profile;
-  final List<String> permissions;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final DateTime? lastLoginAt;
-  final String? createdBy;
-  final String? lastModifiedBy;
-  final Map<String, dynamic> metadata;
-
   const ManagedUser({
     required this.id,
     required this.email,
@@ -43,11 +28,13 @@ class ManagedUser {
       displayName: data['displayName'],
       photoUrl: data['photoUrl'],
       role: UserRole.values.firstWhere(
-          (e) => e.toString().split('.').last == data['role'],
-          orElse: () => UserRole.customer),
+        (e) => e.toString().split('.').last == data['role'],
+        orElse: () => UserRole.customer,
+      ),
       status: UserStatus.values.firstWhere(
-          (e) => e.toString().split('.').last == data['status'],
-          orElse: () => UserStatus.active),
+        (e) => e.toString().split('.').last == data['status'],
+        orElse: () => UserStatus.active,
+      ),
       profile: Map<String, dynamic>.from(data['profile'] ?? {}),
       permissions: List<String>.from(data['permissions'] ?? []),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
@@ -62,50 +49,62 @@ class ManagedUser {
   }
 
   /// Создать из Map
-  factory ManagedUser.fromMap(Map<String, dynamic> data) {
-    return ManagedUser(
-      id: data['id'] ?? '',
-      email: data['email'] ?? '',
-      displayName: data['displayName'],
-      photoUrl: data['photoUrl'],
-      role: UserRole.values.firstWhere(
+  factory ManagedUser.fromMap(Map<String, dynamic> data) => ManagedUser(
+        id: data['id'] ?? '',
+        email: data['email'] ?? '',
+        displayName: data['displayName'],
+        photoUrl: data['photoUrl'],
+        role: UserRole.values.firstWhere(
           (e) => e.toString().split('.').last == data['role'],
-          orElse: () => UserRole.customer),
-      status: UserStatus.values.firstWhere(
+          orElse: () => UserRole.customer,
+        ),
+        status: UserStatus.values.firstWhere(
           (e) => e.toString().split('.').last == data['status'],
-          orElse: () => UserStatus.active),
-      profile: Map<String, dynamic>.from(data['profile'] ?? {}),
-      permissions: List<String>.from(data['permissions'] ?? []),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      lastLoginAt: data['lastLoginAt'] != null
-          ? (data['lastLoginAt'] as Timestamp).toDate()
-          : null,
-      createdBy: data['createdBy'],
-      lastModifiedBy: data['lastModifiedBy'],
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-    );
-  }
+          orElse: () => UserStatus.active,
+        ),
+        profile: Map<String, dynamic>.from(data['profile'] ?? {}),
+        permissions: List<String>.from(data['permissions'] ?? []),
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+        lastLoginAt: data['lastLoginAt'] != null
+            ? (data['lastLoginAt'] as Timestamp).toDate()
+            : null,
+        createdBy: data['createdBy'],
+        lastModifiedBy: data['lastModifiedBy'],
+        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      );
+  final String id;
+  final String email;
+  final String? displayName;
+  final String? photoUrl;
+  final UserRole role;
+  final UserStatus status;
+  final Map<String, dynamic> profile;
+  final List<String> permissions;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final DateTime? lastLoginAt;
+  final String? createdBy;
+  final String? lastModifiedBy;
+  final Map<String, dynamic> metadata;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'email': email,
-      'displayName': displayName,
-      'photoUrl': photoUrl,
-      'role': role.toString().split('.').last,
-      'status': status.toString().split('.').last,
-      'profile': profile,
-      'permissions': permissions,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'lastLoginAt':
-          lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
-      'createdBy': createdBy,
-      'lastModifiedBy': lastModifiedBy,
-      'metadata': metadata,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'email': email,
+        'displayName': displayName,
+        'photoUrl': photoUrl,
+        'role': role.toString().split('.').last,
+        'status': status.toString().split('.').last,
+        'profile': profile,
+        'permissions': permissions,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'lastLoginAt':
+            lastLoginAt != null ? Timestamp.fromDate(lastLoginAt!) : null,
+        'createdBy': createdBy,
+        'lastModifiedBy': lastModifiedBy,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   ManagedUser copyWith({
@@ -123,24 +122,23 @@ class ManagedUser {
     String? createdBy,
     String? lastModifiedBy,
     Map<String, dynamic>? metadata,
-  }) {
-    return ManagedUser(
-      id: id ?? this.id,
-      email: email ?? this.email,
-      displayName: displayName ?? this.displayName,
-      photoUrl: photoUrl ?? this.photoUrl,
-      role: role ?? this.role,
-      status: status ?? this.status,
-      profile: profile ?? this.profile,
-      permissions: permissions ?? this.permissions,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      lastLoginAt: lastLoginAt ?? this.lastLoginAt,
-      createdBy: createdBy ?? this.createdBy,
-      lastModifiedBy: lastModifiedBy ?? this.lastModifiedBy,
-      metadata: metadata ?? this.metadata,
-    );
-  }
+  }) =>
+      ManagedUser(
+        id: id ?? this.id,
+        email: email ?? this.email,
+        displayName: displayName ?? this.displayName,
+        photoUrl: photoUrl ?? this.photoUrl,
+        role: role ?? this.role,
+        status: status ?? this.status,
+        profile: profile ?? this.profile,
+        permissions: permissions ?? this.permissions,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        lastLoginAt: lastLoginAt ?? this.lastLoginAt,
+        createdBy: createdBy ?? this.createdBy,
+        lastModifiedBy: lastModifiedBy ?? this.lastModifiedBy,
+        metadata: metadata ?? this.metadata,
+      );
 
   /// Проверить, активен ли пользователь
   bool get isActive => status == UserStatus.active;
@@ -149,9 +147,8 @@ class ManagedUser {
   bool get isBlocked => status == UserStatus.blocked;
 
   /// Проверить, имеет ли пользователь разрешение
-  bool hasPermission(String permission) {
-    return permissions.contains(permission) || role.hasPermission(permission);
-  }
+  bool hasPermission(String permission) =>
+      permissions.contains(permission) || role.hasPermission(permission);
 
   /// Проверить, является ли пользователь администратором
   bool get isAdmin => role == UserRole.admin;
@@ -192,42 +189,30 @@ class ManagedUser {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      email,
-      displayName,
-      photoUrl,
-      role,
-      status,
-      profile,
-      permissions,
-      createdAt,
-      updatedAt,
-      lastLoginAt,
-      createdBy,
-      lastModifiedBy,
-      metadata,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        email,
+        displayName,
+        photoUrl,
+        role,
+        status,
+        profile,
+        permissions,
+        createdAt,
+        updatedAt,
+        lastLoginAt,
+        createdBy,
+        lastModifiedBy,
+        metadata,
+      );
 
   @override
-  String toString() {
-    return 'ManagedUser(id: $id, email: $email, role: $role, status: $status)';
-  }
+  String toString() =>
+      'ManagedUser(id: $id, email: $email, role: $role, status: $status)';
 }
 
 /// Модель роли пользователя
 class UserRoleDefinition {
-  final String id;
-  final String name;
-  final String description;
-  final List<String> permissions;
-  final bool isSystemRole;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String? createdBy;
-
   const UserRoleDefinition({
     required this.id,
     required this.name,
@@ -255,31 +240,36 @@ class UserRoleDefinition {
   }
 
   /// Создать из Map
-  factory UserRoleDefinition.fromMap(Map<String, dynamic> data) {
-    return UserRoleDefinition(
-      id: data['id'] ?? '',
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
-      permissions: List<String>.from(data['permissions'] ?? []),
-      isSystemRole: data['isSystemRole'] ?? false,
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      createdBy: data['createdBy'],
-    );
-  }
+  factory UserRoleDefinition.fromMap(Map<String, dynamic> data) =>
+      UserRoleDefinition(
+        id: data['id'] ?? '',
+        name: data['name'] ?? '',
+        description: data['description'] ?? '',
+        permissions: List<String>.from(data['permissions'] ?? []),
+        isSystemRole: data['isSystemRole'] ?? false,
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+        updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+        createdBy: data['createdBy'],
+      );
+  final String id;
+  final String name;
+  final String description;
+  final List<String> permissions;
+  final bool isSystemRole;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final String? createdBy;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'description': description,
-      'permissions': permissions,
-      'isSystemRole': isSystemRole,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
-      'createdBy': createdBy,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'description': description,
+        'permissions': permissions,
+        'isSystemRole': isSystemRole,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': Timestamp.fromDate(updatedAt),
+        'createdBy': createdBy,
+      };
 
   /// Создать копию с изменениями
   UserRoleDefinition copyWith({
@@ -291,23 +281,20 @@ class UserRoleDefinition {
     DateTime? createdAt,
     DateTime? updatedAt,
     String? createdBy,
-  }) {
-    return UserRoleDefinition(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      permissions: permissions ?? this.permissions,
-      isSystemRole: isSystemRole ?? this.isSystemRole,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      createdBy: createdBy ?? this.createdBy,
-    );
-  }
+  }) =>
+      UserRoleDefinition(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        permissions: permissions ?? this.permissions,
+        isSystemRole: isSystemRole ?? this.isSystemRole,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        createdBy: createdBy ?? this.createdBy,
+      );
 
   /// Проверить, имеет ли роль разрешение
-  bool hasPermission(String permission) {
-    return permissions.contains(permission);
-  }
+  bool hasPermission(String permission) => permissions.contains(permission);
 
   @override
   bool operator ==(Object other) {
@@ -324,35 +311,24 @@ class UserRoleDefinition {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      name,
-      description,
-      permissions,
-      isSystemRole,
-      createdAt,
-      updatedAt,
-      createdBy,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        name,
+        description,
+        permissions,
+        isSystemRole,
+        createdAt,
+        updatedAt,
+        createdBy,
+      );
 
   @override
-  String toString() {
-    return 'UserRoleDefinition(id: $id, name: $name, permissions: ${permissions.length})';
-  }
+  String toString() =>
+      'UserRoleDefinition(id: $id, name: $name, permissions: ${permissions.length})';
 }
 
 /// Модель разрешения
 class Permission {
-  final String id;
-  final String name;
-  final String description;
-  final String category;
-  final PermissionType type;
-  final bool isSystemPermission;
-  final DateTime createdAt;
-
   const Permission({
     required this.id,
     required this.name,
@@ -372,39 +348,44 @@ class Permission {
       description: data['description'] ?? '',
       category: data['category'] ?? '',
       type: PermissionType.values.firstWhere(
-          (e) => e.toString().split('.').last == data['type'],
-          orElse: () => PermissionType.read),
+        (e) => e.toString().split('.').last == data['type'],
+        orElse: () => PermissionType.read,
+      ),
       isSystemPermission: data['isSystemPermission'] ?? false,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
     );
   }
 
   /// Создать из Map
-  factory Permission.fromMap(Map<String, dynamic> data) {
-    return Permission(
-      id: data['id'] ?? '',
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
-      category: data['category'] ?? '',
-      type: PermissionType.values.firstWhere(
+  factory Permission.fromMap(Map<String, dynamic> data) => Permission(
+        id: data['id'] ?? '',
+        name: data['name'] ?? '',
+        description: data['description'] ?? '',
+        category: data['category'] ?? '',
+        type: PermissionType.values.firstWhere(
           (e) => e.toString().split('.').last == data['type'],
-          orElse: () => PermissionType.read),
-      isSystemPermission: data['isSystemPermission'] ?? false,
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-    );
-  }
+          orElse: () => PermissionType.read,
+        ),
+        isSystemPermission: data['isSystemPermission'] ?? false,
+        createdAt: (data['createdAt'] as Timestamp).toDate(),
+      );
+  final String id;
+  final String name;
+  final String description;
+  final String category;
+  final PermissionType type;
+  final bool isSystemPermission;
+  final DateTime createdAt;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'name': name,
-      'description': description,
-      'category': category,
-      'type': type.toString().split('.').last,
-      'isSystemPermission': isSystemPermission,
-      'createdAt': Timestamp.fromDate(createdAt),
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'name': name,
+        'description': description,
+        'category': category,
+        'type': type.toString().split('.').last,
+        'isSystemPermission': isSystemPermission,
+        'createdAt': Timestamp.fromDate(createdAt),
+      };
 
   /// Создать копию с изменениями
   Permission copyWith({
@@ -415,17 +396,16 @@ class Permission {
     PermissionType? type,
     bool? isSystemPermission,
     DateTime? createdAt,
-  }) {
-    return Permission(
-      id: id ?? this.id,
-      name: name ?? this.name,
-      description: description ?? this.description,
-      category: category ?? this.category,
-      type: type ?? this.type,
-      isSystemPermission: isSystemPermission ?? this.isSystemPermission,
-      createdAt: createdAt ?? this.createdAt,
-    );
-  }
+  }) =>
+      Permission(
+        id: id ?? this.id,
+        name: name ?? this.name,
+        description: description ?? this.description,
+        category: category ?? this.category,
+        type: type ?? this.type,
+        isSystemPermission: isSystemPermission ?? this.isSystemPermission,
+        createdAt: createdAt ?? this.createdAt,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -441,37 +421,22 @@ class Permission {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      name,
-      description,
-      category,
-      type,
-      isSystemPermission,
-      createdAt,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        name,
+        description,
+        category,
+        type,
+        isSystemPermission,
+        createdAt,
+      );
 
   @override
-  String toString() {
-    return 'Permission(id: $id, name: $name, type: $type)';
-  }
+  String toString() => 'Permission(id: $id, name: $name, type: $type)';
 }
 
 /// Модель действия пользователя
 class UserAction {
-  final String id;
-  final String userId;
-  final String action;
-  final String? targetId;
-  final String? targetType;
-  final Map<String, dynamic> details;
-  final String? ipAddress;
-  final String? userAgent;
-  final DateTime timestamp;
-  final String? sessionId;
-
   const UserAction({
     required this.id,
     required this.userId,
@@ -503,35 +468,41 @@ class UserAction {
   }
 
   /// Создать из Map
-  factory UserAction.fromMap(Map<String, dynamic> data) {
-    return UserAction(
-      id: data['id'] ?? '',
-      userId: data['userId'] ?? '',
-      action: data['action'] ?? '',
-      targetId: data['targetId'],
-      targetType: data['targetType'],
-      details: Map<String, dynamic>.from(data['details'] ?? {}),
-      ipAddress: data['ipAddress'],
-      userAgent: data['userAgent'],
-      timestamp: (data['timestamp'] as Timestamp).toDate(),
-      sessionId: data['sessionId'],
-    );
-  }
+  factory UserAction.fromMap(Map<String, dynamic> data) => UserAction(
+        id: data['id'] ?? '',
+        userId: data['userId'] ?? '',
+        action: data['action'] ?? '',
+        targetId: data['targetId'],
+        targetType: data['targetType'],
+        details: Map<String, dynamic>.from(data['details'] ?? {}),
+        ipAddress: data['ipAddress'],
+        userAgent: data['userAgent'],
+        timestamp: (data['timestamp'] as Timestamp).toDate(),
+        sessionId: data['sessionId'],
+      );
+  final String id;
+  final String userId;
+  final String action;
+  final String? targetId;
+  final String? targetType;
+  final Map<String, dynamic> details;
+  final String? ipAddress;
+  final String? userAgent;
+  final DateTime timestamp;
+  final String? sessionId;
 
   /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() {
-    return {
-      'userId': userId,
-      'action': action,
-      'targetId': targetId,
-      'targetType': targetType,
-      'details': details,
-      'ipAddress': ipAddress,
-      'userAgent': userAgent,
-      'timestamp': Timestamp.fromDate(timestamp),
-      'sessionId': sessionId,
-    };
-  }
+  Map<String, dynamic> toMap() => {
+        'userId': userId,
+        'action': action,
+        'targetId': targetId,
+        'targetType': targetType,
+        'details': details,
+        'ipAddress': ipAddress,
+        'userAgent': userAgent,
+        'timestamp': Timestamp.fromDate(timestamp),
+        'sessionId': sessionId,
+      };
 
   /// Создать копию с изменениями
   UserAction copyWith({
@@ -545,20 +516,19 @@ class UserAction {
     String? userAgent,
     DateTime? timestamp,
     String? sessionId,
-  }) {
-    return UserAction(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      action: action ?? this.action,
-      targetId: targetId ?? this.targetId,
-      targetType: targetType ?? this.targetType,
-      details: details ?? this.details,
-      ipAddress: ipAddress ?? this.ipAddress,
-      userAgent: userAgent ?? this.userAgent,
-      timestamp: timestamp ?? this.timestamp,
-      sessionId: sessionId ?? this.sessionId,
-    );
-  }
+  }) =>
+      UserAction(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        action: action ?? this.action,
+        targetId: targetId ?? this.targetId,
+        targetType: targetType ?? this.targetType,
+        details: details ?? this.details,
+        ipAddress: ipAddress ?? this.ipAddress,
+        userAgent: userAgent ?? this.userAgent,
+        timestamp: timestamp ?? this.timestamp,
+        sessionId: sessionId ?? this.sessionId,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -577,25 +547,21 @@ class UserAction {
   }
 
   @override
-  int get hashCode {
-    return Object.hash(
-      id,
-      userId,
-      action,
-      targetId,
-      targetType,
-      details,
-      ipAddress,
-      userAgent,
-      timestamp,
-      sessionId,
-    );
-  }
+  int get hashCode => Object.hash(
+        id,
+        userId,
+        action,
+        targetId,
+        targetType,
+        details,
+        ipAddress,
+        userAgent,
+        timestamp,
+        sessionId,
+      );
 
   @override
-  String toString() {
-    return 'UserAction(id: $id, userId: $userId, action: $action)';
-  }
+  String toString() => 'UserAction(id: $id, userId: $userId, action: $action)';
 }
 
 /// Роли пользователей
@@ -726,9 +692,8 @@ extension UserRoleExtension on UserRole {
     }
   }
 
-  bool hasPermission(String permission) {
-    return defaultPermissions.contains(permission);
-  }
+  bool hasPermission(String permission) =>
+      defaultPermissions.contains(permission);
 }
 
 /// Статусы пользователей

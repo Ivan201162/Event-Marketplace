@@ -6,32 +6,30 @@ class FeedService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Получить посты ленты
-  Stream<List<FeedPost>> getFeedPosts() {
-    return _firestore
-        .collection('feed_posts')
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => FeedPost.fromDocument(doc)).toList());
-  }
+  Stream<List<FeedPost>> getFeedPosts() => _firestore
+      .collection('feed_posts')
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(FeedPost.fromDocument).toList(),
+      );
 
   /// Получить комментарии поста
-  Stream<List<FeedComment>> getPostComments(String postId) {
-    return _firestore
-        .collection('feed_posts')
-        .doc(postId)
-        .collection('comments')
-        .orderBy('createdAt', descending: true)
-        .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => FeedComment.fromDocument(doc)).toList());
-  }
+  Stream<List<FeedComment>> getPostComments(String postId) => _firestore
+      .collection('feed_posts')
+      .doc(postId)
+      .collection('comments')
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(FeedComment.fromDocument).toList(),
+      );
 
   /// Получить лайки поста
-  Stream<List<String>> getPostLikes(String postId) {
-    return _firestore.collection('feed_posts').doc(postId).snapshots().map(
-        (snapshot) => List<String>.from(snapshot.data()?['likedBy'] ?? []));
-  }
+  Stream<List<String>> getPostLikes(String postId) =>
+      _firestore.collection('feed_posts').doc(postId).snapshots().map(
+            (snapshot) => List<String>.from(snapshot.data()?['likedBy'] ?? []),
+          );
 
   /// Создать пост
   Future<String> createPost(FeedPost post) async {
@@ -75,7 +73,7 @@ class FeedService {
         throw Exception('Пост не найден');
       }
 
-      final postData = postDoc.data()!;
+      final postData = postDoc.data();
       final likedBy = List<String>.from(postData['likedBy'] ?? []);
       final isLiked = likedBy.contains(userId);
 
@@ -138,7 +136,10 @@ class FeedService {
 
   /// Лайкнуть/убрать лайк с комментария
   Future<void> toggleCommentLike(
-      String postId, String commentId, String userId) async {
+    String postId,
+    String commentId,
+    String userId,
+  ) async {
     try {
       final commentRef = _firestore
           .collection('feed_posts')
@@ -152,7 +153,7 @@ class FeedService {
         throw Exception('Комментарий не найден');
       }
 
-      final commentData = commentDoc.data()!;
+      final commentData = commentDoc.data();
       final likedBy = List<String>.from(commentData['likedBy'] ?? []);
       final isLiked = likedBy.contains(userId);
 

@@ -1,12 +1,12 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/localization.dart';
 import '../services/localization_service.dart';
 
 /// Провайдер сервиса локализации
-final localizationServiceProvider = Provider<LocalizationService>((ref) {
-  return LocalizationService();
-});
+final localizationServiceProvider =
+    Provider<LocalizationService>((ref) => LocalizationService());
 
 /// Нотификатор для настроек локализации
 class LocalizationSettingsNotifier extends Notifier<LocalizationSettings?> {
@@ -20,9 +20,8 @@ class LocalizationSettingsNotifier extends Notifier<LocalizationSettings?> {
 
 /// Провайдер настроек локализации
 final localizationSettingsProvider =
-    NotifierProvider<LocalizationSettingsNotifier, LocalizationSettings?>(() {
-  return LocalizationSettingsNotifier();
-});
+    NotifierProvider<LocalizationSettingsNotifier, LocalizationSettings?>(
+        LocalizationSettingsNotifier.new);
 
 /// Нотификатор для текущей локализации
 class CurrentLocalizationNotifier extends Notifier<LocalizationModel?> {
@@ -36,9 +35,8 @@ class CurrentLocalizationNotifier extends Notifier<LocalizationModel?> {
 
 /// Провайдер текущей локализации
 final currentLocalizationProvider =
-    NotifierProvider<CurrentLocalizationNotifier, LocalizationModel?>(() {
-  return CurrentLocalizationNotifier();
-});
+    NotifierProvider<CurrentLocalizationNotifier, LocalizationModel?>(
+        CurrentLocalizationNotifier.new);
 
 /// Нотификатор для текущего языка
 class CurrentLanguageNotifier extends Notifier<String> {
@@ -52,9 +50,8 @@ class CurrentLanguageNotifier extends Notifier<String> {
 
 /// Провайдер текущего языка
 final currentLanguageProvider =
-    NotifierProvider<CurrentLanguageNotifier, String>(() {
-  return CurrentLanguageNotifier();
-});
+    NotifierProvider<CurrentLanguageNotifier, String>(
+        CurrentLanguageNotifier.new);
 
 /// Провайдер текущей локали
 final currentLocaleProvider = Provider<Locale>((ref) {
@@ -87,44 +84,35 @@ class AvailableLocalizationsNotifier extends Notifier<List<LocalizationModel>> {
 /// Провайдер доступных локализаций
 final availableLocalizationsProvider =
     NotifierProvider<AvailableLocalizationsNotifier, List<LocalizationModel>>(
-        () {
-  return AvailableLocalizationsNotifier();
-});
+  AvailableLocalizationsNotifier.new,
+);
 
 /// Провайдер поддерживаемых языков
-final supportedLanguagesProvider = Provider<List<SupportedLanguage>>((ref) {
-  return SupportedLanguage.values;
-});
+final supportedLanguagesProvider =
+    Provider<List<SupportedLanguage>>((ref) => SupportedLanguage.values);
 
 /// Провайдер статистики локализации
 final localizationStatsProvider =
-    FutureProvider.family<LocalizationStats, String>((ref, languageCode) {
-  return ref
-      .watch(localizationServiceProvider)
-      .getLocalizationStats(languageCode);
-});
+    FutureProvider.family<LocalizationStats, String>(
+  (ref, languageCode) =>
+      ref.watch(localizationServiceProvider).getLocalizationStats(languageCode),
+);
 
 /// Провайдер всех статистик локализации
-final allLocalizationStatsProvider =
-    FutureProvider<List<LocalizationStats>>((ref) {
-  return ref.watch(localizationServiceProvider).getAllLocalizationStats();
-});
+final allLocalizationStatsProvider = FutureProvider<List<LocalizationStats>>(
+    (ref) => ref.watch(localizationServiceProvider).getAllLocalizationStats());
 
 /// Провайдер для перевода текста
 final translateProvider =
     Provider<String Function(String, {Map<String, dynamic>? params})>((ref) {
   final service = ref.watch(localizationServiceProvider);
-  return (String key, {Map<String, dynamic>? params}) {
-    return service.translate(key, params: params);
-  };
+  return service.translate;
 });
 
 /// Провайдер для проверки наличия перевода
 final hasTranslationProvider = Provider<bool Function(String)>((ref) {
   final service = ref.watch(localizationServiceProvider);
-  return (String key) {
-    return service.hasTranslation(key);
-  };
+  return service.hasTranslation;
 });
 
 /// Провайдер для инициализации локализации
@@ -169,11 +157,10 @@ final updateLocalizationSettingsProvider =
 
 /// Провайдер для экспорта переводов
 final exportTranslationsProvider =
-    FutureProvider.family<Map<String, dynamic>, String>((ref, languageCode) {
-  return ref
-      .watch(localizationServiceProvider)
-      .exportTranslations(languageCode);
-});
+    FutureProvider.family<Map<String, dynamic>, String>(
+  (ref, languageCode) =>
+      ref.watch(localizationServiceProvider).exportTranslations(languageCode),
+);
 
 /// Провайдер для импорта переводов
 final importTranslationsProvider =
@@ -206,48 +193,44 @@ final clearLocalizationCacheProvider = FutureProvider<void>((ref) async {
 });
 
 /// Провайдер для получения языка по коду
-final getLanguageByCodeProvider =
-    Provider<SupportedLanguage Function(String)>((ref) {
-  return (String languageCode) {
-    return SupportedLanguage.values.firstWhere(
-      (lang) => lang.languageCode == languageCode,
-      orElse: () => SupportedLanguage.russian,
-    );
-  };
-});
+final getLanguageByCodeProvider = Provider<SupportedLanguage Function(String)>(
+  (ref) => (languageCode) => SupportedLanguage.values.firstWhere(
+        (lang) => lang.languageCode == languageCode,
+        orElse: () => SupportedLanguage.russian,
+      ),
+);
 
 /// Провайдер для получения отображаемого имени языка
-final getLanguageDisplayNameProvider =
-    Provider<String Function(String, bool)>((ref) {
-  return (String languageCode, bool showNative) {
+final getLanguageDisplayNameProvider = Provider<String Function(String, bool)>(
+  (ref) => (languageCode, showNative) {
     final language = SupportedLanguage.values.firstWhere(
       (lang) => lang.languageCode == languageCode,
       orElse: () => SupportedLanguage.russian,
     );
     return showNative ? language.nativeName : language.displayName;
-  };
-});
+  },
+);
 
 /// Провайдер для проверки RTL языков
-final isRTLProvider = Provider<bool Function(String)>((ref) {
-  return (String languageCode) {
+final isRTLProvider = Provider<bool Function(String)>(
+  (ref) => (languageCode) {
     // Список RTL языков
     const rtlLanguages = ['ar', 'he', 'fa', 'ur'];
     return rtlLanguages.contains(languageCode);
-  };
-});
+  },
+);
 
 /// Провайдер для получения направления текста
-final textDirectionProvider = Provider<TextDirection Function(String)>((ref) {
-  return (String languageCode) {
+final textDirectionProvider = Provider<TextDirection Function(String)>(
+  (ref) => (languageCode) {
     final isRTL = ref.watch(isRTLProvider)(languageCode);
     return isRTL ? TextDirection.rtl : TextDirection.ltr;
-  };
-});
+  },
+);
 
 /// Провайдер для форматирования даты
-final dateFormatProvider = Provider<String Function(DateTime, String)>((ref) {
-  return (DateTime date, String languageCode) {
+final dateFormatProvider = Provider<String Function(DateTime, String)>(
+  (ref) => (date, languageCode) {
     // Простое форматирование даты в зависимости от языка
     switch (languageCode) {
       case 'ru':
@@ -261,12 +244,12 @@ final dateFormatProvider = Provider<String Function(DateTime, String)>((ref) {
       default:
         return '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
     }
-  };
-});
+  },
+);
 
 /// Провайдер для форматирования времени
-final timeFormatProvider = Provider<String Function(DateTime, String)>((ref) {
-  return (DateTime time, String languageCode) {
+final timeFormatProvider = Provider<String Function(DateTime, String)>(
+  (ref) => (time, languageCode) {
     // Простое форматирование времени в зависимости от языка
     switch (languageCode) {
       case 'ru':
@@ -278,12 +261,12 @@ final timeFormatProvider = Provider<String Function(DateTime, String)>((ref) {
       default:
         return '${time.hour.toString().padLeft(2, '0')}:${time.minute.toString().padLeft(2, '0')}';
     }
-  };
-});
+  },
+);
 
 /// Провайдер для форматирования чисел
-final numberFormatProvider = Provider<String Function(num, String)>((ref) {
-  return (num number, String languageCode) {
+final numberFormatProvider = Provider<String Function(num, String)>(
+  (ref) => (number, languageCode) {
     // Простое форматирование чисел в зависимости от языка
     switch (languageCode) {
       case 'ru':
@@ -296,13 +279,12 @@ final numberFormatProvider = Provider<String Function(num, String)>((ref) {
       default:
         return number.toString();
     }
-  };
-});
+  },
+);
 
 /// Провайдер для форматирования валюты
-final currencyFormatProvider =
-    Provider<String Function(num, String, String)>((ref) {
-  return (num amount, String languageCode, String currencyCode) {
+final currencyFormatProvider = Provider<String Function(num, String, String)>(
+  (ref) => (amount, languageCode, currencyCode) {
     // Простое форматирование валюты в зависимости от языка
     switch (languageCode) {
       case 'ru':
@@ -318,5 +300,5 @@ final currencyFormatProvider =
       default:
         return '${amount.toStringAsFixed(2)} ₽';
     }
-  };
-});
+  },
+);

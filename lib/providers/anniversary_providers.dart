@@ -1,16 +1,15 @@
 import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:event_marketplace_app/models/user.dart';
-import 'package:event_marketplace_app/services/anniversary_service.dart';
-import 'package:event_marketplace_app/providers/firestore_providers.dart';
+import '../models/user.dart';
+import '../services/anniversary_service.dart';
+import 'firestore_providers.dart';
 
 part 'anniversary_providers.g.dart';
 
 /// Провайдер сервиса годовщин
 @riverpod
-AnniversaryService anniversaryService(AnniversaryServiceRef ref) {
-  return AnniversaryService();
-}
+AnniversaryService anniversaryService(AnniversaryServiceRef ref) =>
+    AnniversaryService();
 
 /// Провайдер информации о годовщине пользователя
 @riverpod
@@ -38,9 +37,7 @@ Future<Map<String, dynamic>> userAnniversaryInfo(
 @riverpod
 class AnniversarySettingsNotifier extends _$AnniversarySettingsNotifier {
   @override
-  FutureOr<void> build() {
-    return null;
-  }
+  FutureOr<void> build() => null;
 
   /// Обновить настройки напоминаний о годовщинах
   Future<void> updateSettings({

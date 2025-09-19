@@ -1,20 +1,20 @@
-import 'package:flutter/material.dart' hide ThemeMode;
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../providers/theme_provider.dart';
+
 import '../core/responsive_utils.dart';
+import '../providers/theme_provider.dart';
 
 /// Виджет для переключения тем
 class ThemeSwitchWidget extends ConsumerWidget {
-  final bool showLabel;
-  final bool showDescription;
-  final EdgeInsets? padding;
-
   const ThemeSwitchWidget({
     super.key,
     this.showLabel = true,
     this.showDescription = true,
     this.padding,
   });
+  final bool showLabel;
+  final bool showDescription;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -38,7 +38,7 @@ class ThemeSwitchWidget extends ConsumerWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ResponsiveText(
+                      const ResponsiveText(
                         'Тема приложения',
                         isTitle: true,
                       ),
@@ -51,7 +51,7 @@ class ThemeSwitchWidget extends ConsumerWidget {
                   ),
                 ),
                 Switch(
-                  value: currentTheme == ThemeMode.dark,
+                  value: currentTheme == AppThemeMode.dark,
                   onChanged: (value) {
                     if (value) {
                       themeNotifier.setDarkTheme();
@@ -71,7 +71,7 @@ class ThemeSwitchWidget extends ConsumerWidget {
                   color: Theme.of(context).colorScheme.primary,
                 ),
                 Switch(
-                  value: currentTheme == ThemeMode.dark,
+                  value: currentTheme == AppThemeMode.dark,
                   onChanged: (value) {
                     if (value) {
                       themeNotifier.setDarkTheme();
@@ -91,14 +91,13 @@ class ThemeSwitchWidget extends ConsumerWidget {
 
 /// Виджет для выбора темы из списка
 class ThemeSelectorWidget extends ConsumerWidget {
-  final bool showTitle;
-  final EdgeInsets? padding;
-
   const ThemeSelectorWidget({
     super.key,
     this.showTitle = true,
     this.padding,
   });
+  final bool showTitle;
+  final EdgeInsets? padding;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -112,18 +111,20 @@ class ThemeSelectorWidget extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (showTitle) ...[
-            ResponsiveText(
+            const ResponsiveText(
               'Выберите тему',
               isTitle: true,
             ),
             const SizedBox(height: 16),
           ],
-          ...availableThemes.map((theme) => _buildThemeOption(
-                context,
-                theme,
-                currentTheme,
-                themeNotifier,
-              )),
+          ...availableThemes.map(
+            (theme) => _buildThemeOption(
+              context,
+              theme,
+              currentTheme,
+              themeNotifier,
+            ),
+          ),
         ],
       ),
     );
@@ -131,8 +132,8 @@ class ThemeSelectorWidget extends ConsumerWidget {
 
   Widget _buildThemeOption(
     BuildContext context,
-    ThemeMode theme,
-    ThemeMode currentTheme,
+    AppThemeMode theme,
+    AppThemeMode currentTheme,
     ThemeNotifier themeNotifier,
   ) {
     final isSelected = theme == currentTheme;
@@ -199,15 +200,15 @@ class ThemeSelectorWidget extends ConsumerWidget {
     );
   }
 
-  void _selectTheme(ThemeMode theme, ThemeNotifier themeNotifier) {
+  void _selectTheme(AppThemeMode theme, ThemeNotifier themeNotifier) {
     switch (theme) {
-      case ThemeMode.light:
+      case AppThemeMode.light:
         themeNotifier.setLightTheme();
         break;
-      case ThemeMode.dark:
+      case AppThemeMode.dark:
         themeNotifier.setDarkTheme();
         break;
-      case ThemeMode.system:
+      case AppThemeMode.system:
         themeNotifier.setSystemTheme();
         break;
     }
@@ -216,14 +217,13 @@ class ThemeSelectorWidget extends ConsumerWidget {
 
 /// Виджет для быстрого переключения темы
 class QuickThemeToggle extends ConsumerWidget {
-  final double? size;
-  final Color? iconColor;
-
   const QuickThemeToggle({
     super.key,
     this.size,
     this.iconColor,
   });
+  final double? size;
+  final Color? iconColor;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -232,7 +232,7 @@ class QuickThemeToggle extends ConsumerWidget {
     final isDark = ref.watch(isDarkModeProvider);
 
     return IconButton(
-      onPressed: () => themeNotifier.toggleTheme(),
+      onPressed: themeNotifier.toggleTheme,
       icon: Icon(
         isDark ? Icons.light_mode : Icons.dark_mode,
         size: size ?? 24,
@@ -246,14 +246,13 @@ class QuickThemeToggle extends ConsumerWidget {
 
 /// Виджет для отображения информации о текущей теме
 class ThemeInfoWidget extends ConsumerWidget {
-  final bool showIcon;
-  final bool showDescription;
-
   const ThemeInfoWidget({
     super.key,
     this.showIcon = true,
     this.showDescription = true,
   });
+  final bool showIcon;
+  final bool showDescription;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -300,7 +299,7 @@ class ThemeInfoWidget extends ConsumerWidget {
             ],
           ),
           const SizedBox(height: 16),
-          ResponsiveText(
+          const ResponsiveText(
             'Цветовая схема:',
             isSubtitle: true,
           ),
@@ -319,26 +318,24 @@ class ThemeInfoWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildColorPreview(String label, Color color) {
-    return Column(
-      children: [
-        Container(
-          width: 24,
-          height: 24,
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: BorderRadius.circular(4),
-            border: Border.all(color: Colors.grey.withOpacity(0.3)),
+  Widget _buildColorPreview(String label, Color color) => Column(
+        children: [
+          Container(
+            width: 24,
+            height: 24,
+            decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(4),
+              border: Border.all(color: Colors.grey.withOpacity(0.3)),
+            ),
           ),
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: const TextStyle(fontSize: 10),
-        ),
-      ],
-    );
-  }
+          const SizedBox(height: 4),
+          Text(
+            label,
+            style: const TextStyle(fontSize: 10),
+          ),
+        ],
+      );
 }
 
 /// Виджет для настроек темы
@@ -346,41 +343,41 @@ class ThemeSettingsWidget extends ConsumerWidget {
   const ThemeSettingsWidget({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ResponsiveText(
-          'Настройки темы',
-          isTitle: true,
-        ),
-        const SizedBox(height: 16),
-        const ThemeSelectorWidget(showTitle: false),
-        const SizedBox(height: 24),
-        const ThemeInfoWidget(),
-        const SizedBox(height: 24),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton.icon(
-              onPressed: () => ref.read(themeProvider.notifier).setLightTheme(),
-              icon: const Icon(Icons.light_mode),
-              label: const Text('Светлая'),
-            ),
-            ElevatedButton.icon(
-              onPressed: () => ref.read(themeProvider.notifier).setDarkTheme(),
-              icon: const Icon(Icons.dark_mode),
-              label: const Text('Темная'),
-            ),
-            ElevatedButton.icon(
-              onPressed: () =>
-                  ref.read(themeProvider.notifier).setSystemTheme(),
-              icon: const Icon(Icons.brightness_auto),
-              label: const Text('Системная'),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
+  Widget build(BuildContext context, WidgetRef ref) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const ResponsiveText(
+            'Настройки темы',
+            isTitle: true,
+          ),
+          const SizedBox(height: 16),
+          const ThemeSelectorWidget(showTitle: false),
+          const SizedBox(height: 24),
+          const ThemeInfoWidget(),
+          const SizedBox(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              ElevatedButton.icon(
+                onPressed: () =>
+                    ref.read(themeProvider.notifier).setLightTheme(),
+                icon: const Icon(Icons.light_mode),
+                label: const Text('Светлая'),
+              ),
+              ElevatedButton.icon(
+                onPressed: () =>
+                    ref.read(themeProvider.notifier).setDarkTheme(),
+                icon: const Icon(Icons.dark_mode),
+                label: const Text('Темная'),
+              ),
+              ElevatedButton.icon(
+                onPressed: () =>
+                    ref.read(themeProvider.notifier).setSystemTheme(),
+                icon: const Icon(Icons.brightness_auto),
+                label: const Text('Системная'),
+              ),
+            ],
+          ),
+        ],
+      );
 }

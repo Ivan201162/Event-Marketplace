@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../models/specialist.dart';
-import '../providers/specialist_providers.dart';
 import '../providers/auth_providers.dart';
+import '../providers/specialist_providers.dart';
 
 class SpecialistsScreen extends ConsumerStatefulWidget {
   const SpecialistsScreen({super.key});
@@ -38,83 +39,79 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Специалисты'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Все специалисты'),
-            Tab(text: 'По категориям'),
-            Tab(text: 'Рекомендуемые'),
+  Widget build(BuildContext context) => Scaffold(
+        appBar: AppBar(
+          title: const Text('Специалисты'),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(text: 'Все специалисты'),
+              Tab(text: 'По категориям'),
+              Tab(text: 'Рекомендуемые'),
+            ],
+          ),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFiltersDialog,
+            ),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.filter_list),
-            onPressed: _showFiltersDialog,
-          ),
-        ],
-      ),
-      body: Column(
-        children: [
-          // Поиск
-          _buildSearchBar(),
+        body: Column(
+          children: [
+            // Поиск
+            _buildSearchBar(),
 
-          // Контент
-          Expanded(
-            child: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildAllSpecialistsTab(),
-                _buildCategoriesTab(),
-                _buildRecommendedTab(),
-              ],
+            // Контент
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  _buildAllSpecialistsTab(),
+                  _buildCategoriesTab(),
+                  _buildRecommendedTab(),
+                ],
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildSearchBar() => Container(
+        padding: const EdgeInsets.all(16),
+        child: TextField(
+          controller: _searchController,
+          decoration: InputDecoration(
+            hintText: 'Поиск специалистов...',
+            prefixIcon: const Icon(Icons.search),
+            suffixIcon: _searchQuery.isNotEmpty
+                ? IconButton(
+                    icon: const Icon(Icons.clear),
+                    onPressed: () {
+                      _searchController.clear();
+                      setState(() {
+                        _searchQuery = '';
+                      });
+                    },
+                  )
+                : null,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
             ),
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSearchBar() {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: TextField(
-        controller: _searchController,
-        decoration: InputDecoration(
-          hintText: 'Поиск специалистов...',
-          prefixIcon: const Icon(Icons.search),
-          suffixIcon: _searchQuery.isNotEmpty
-              ? IconButton(
-                  icon: const Icon(Icons.clear),
-                  onPressed: () {
-                    _searchController.clear();
-                    setState(() {
-                      _searchQuery = '';
-                    });
-                  },
-                )
-              : null,
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(12),
-          ),
+          onChanged: (value) {
+            setState(() {
+              _searchQuery = value;
+            });
+          },
+          onSubmitted: (value) {
+            setState(() {
+              _searchQuery = value;
+            });
+          },
         ),
-        onChanged: (value) {
-          setState(() {
-            _searchQuery = value;
-          });
-        },
-        onSubmitted: (value) {
-          setState(() {
-            _searchQuery = value;
-          });
-        },
-      ),
-    );
-  }
+      );
 
   Widget _buildAllSpecialistsTab() {
     final specialistsAsync = ref.watch(allSpecialistsProvider);
@@ -145,22 +142,20 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
     );
   }
 
-  Widget _buildCategoriesTab() {
-    return GridView.builder(
-      padding: const EdgeInsets.all(16),
-      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: 2,
-        childAspectRatio: 1.2,
-        crossAxisSpacing: 16,
-        mainAxisSpacing: 16,
-      ),
-      itemCount: SpecialistCategory.values.length,
-      itemBuilder: (context, index) {
-        final category = SpecialistCategory.values[index];
-        return _buildCategoryCard(category);
-      },
-    );
-  }
+  Widget _buildCategoriesTab() => GridView.builder(
+        padding: const EdgeInsets.all(16),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+          childAspectRatio: 1.2,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+        ),
+        itemCount: SpecialistCategory.values.length,
+        itemBuilder: (context, index) {
+          final category = SpecialistCategory.values[index];
+          return _buildCategoryCard(category);
+        },
+      );
 
   Widget _buildRecommendedTab() {
     final currentUser = ref.watch(currentUserProvider).value;
@@ -191,31 +186,29 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
     );
   }
 
-  Widget _buildCategoryCard(SpecialistCategory category) {
-    return Card(
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: () => _showSpecialistsByCategory(category),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              category.icon,
-              style: const TextStyle(fontSize: 48),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              category.displayName,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+  Widget _buildCategoryCard(SpecialistCategory category) => Card(
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () => _showSpecialistsByCategory(category),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                category.icon,
+                style: const TextStyle(fontSize: 48),
+              ),
+              const SizedBox(height: 8),
+              Text(
+                category.displayName,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
-      ),
-    );
-  }
+      );
 
   Widget _buildSpecialistsList(List<Specialist> specialists) {
     if (specialists.isEmpty) {
@@ -248,117 +241,118 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
     );
   }
 
-  Widget _buildSpecialistCard(Specialist specialist) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: InkWell(
-        onTap: () => _showSpecialistDetails(specialist),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Row(
-            children: [
-              // Аватар
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                child: Text(
-                  specialist.name.isNotEmpty
-                      ? specialist.name[0].toUpperCase()
-                      : '?',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+  Widget _buildSpecialistCard(Specialist specialist) => Card(
+        margin: const EdgeInsets.only(bottom: 16),
+        child: InkWell(
+          onTap: () => _showSpecialistDetails(specialist),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                // Аватар
+                CircleAvatar(
+                  radius: 30,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  child: Text(
+                    specialist.name.isNotEmpty
+                        ? specialist.name[0].toUpperCase()
+                        : '?',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(width: 16),
+                const SizedBox(width: 16),
 
-              // Информация
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Text(
-                          specialist.category.icon,
-                          style: const TextStyle(fontSize: 16),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: Text(
-                            specialist.name,
+                // Информация
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Text(
+                            specialist.category.icon,
+                            style: const TextStyle(fontSize: 16),
+                          ),
+                          const SizedBox(width: 8),
+                          Expanded(
+                            child: Text(
+                              specialist.name,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          ),
+                          if (specialist.isVerified)
+                            const Icon(
+                              Icons.verified,
+                              color: Colors.blue,
+                              size: 16,
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        specialist.category.displayName,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              color: Theme.of(context).colorScheme.primary,
+                              fontWeight: FontWeight.w600,
+                            ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        specialist.experienceLevel.displayName,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Colors.grey[600],
+                            ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(Icons.star, size: 16, color: Colors.amber[600]),
+                          const SizedBox(width: 4),
+                          Text(
+                            specialist.rating.toStringAsFixed(1),
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '(${specialist.reviewCount})',
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Colors.grey[600],
+                                    ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            '${specialist.hourlyRate.toStringAsFixed(0)} ₽/час',
                             style: Theme.of(context)
                                 .textTheme
-                                .titleMedium
+                                .titleSmall
                                 ?.copyWith(
                                   fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.primary,
                                 ),
                           ),
-                        ),
-                        if (specialist.isVerified)
-                          const Icon(Icons.verified,
-                              color: Colors.blue, size: 16),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      specialist.category.displayName,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Theme.of(context).colorScheme.primary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      specialist.experienceLevel.displayName,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Icon(Icons.star, size: 16, color: Colors.amber[600]),
-                        const SizedBox(width: 4),
-                        Text(
-                          specialist.rating.toStringAsFixed(1),
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '(${specialist.reviewCount})',
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          '${specialist.hourlyRate.toStringAsFixed(0)} ₽/час',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                        ),
-                      ],
-                    ),
-                  ],
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    );
-  }
+      );
 
   List<Specialist> _filterSpecialists(List<Specialist> specialists) {
     var filtered = specialists;
@@ -366,16 +360,21 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
     // Поиск по тексту
     if (_searchQuery.isNotEmpty) {
       final searchLower = _searchQuery.toLowerCase();
-      filtered = filtered.where((specialist) {
-        return specialist.name.toLowerCase().contains(searchLower) ||
-            specialist.description?.toLowerCase().contains(searchLower) ==
-                true ||
-            specialist.category.displayName
-                .toLowerCase()
-                .contains(searchLower) ||
-            specialist.subcategories
-                .any((sub) => sub.toLowerCase().contains(searchLower));
-      }).toList();
+      filtered = filtered
+          .where(
+            (specialist) =>
+                specialist.name.toLowerCase().contains(searchLower) ||
+                    specialist.description
+                        ?.toLowerCase()
+                        .contains(searchLower) ??
+                false ||
+                    specialist.category.displayName
+                        .toLowerCase()
+                        .contains(searchLower) ||
+                    specialist.subcategories
+                        .any((sub) => sub.toLowerCase().contains(searchLower)),
+          )
+          .toList();
     }
 
     // Фильтры
@@ -387,13 +386,17 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
     if (_selectedExperience != null) {
       filtered = filtered
           .where(
-              (specialist) => specialist.experienceLevel == _selectedExperience)
+            (specialist) => specialist.experienceLevel == _selectedExperience,
+          )
           .toList();
     }
-    filtered = filtered.where((specialist) {
-      return specialist.hourlyRate >= _minPrice &&
-          specialist.hourlyRate <= _maxPrice;
-    }).toList();
+    filtered = filtered
+        .where(
+          (specialist) =>
+              specialist.hourlyRate >= _minPrice &&
+              specialist.hourlyRate <= _maxPrice,
+        )
+        .toList();
 
     return filtered;
   }
@@ -427,18 +430,20 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
               DropdownButtonFormField<SpecialistCategory>(
                 initialValue: _selectedCategory,
                 decoration: const InputDecoration(labelText: 'Категория'),
-                items: SpecialistCategory.values.map((category) {
-                  return DropdownMenuItem(
-                    value: category,
-                    child: Row(
-                      children: [
-                        Text(category.icon),
-                        const SizedBox(width: 8),
-                        Text(category.displayName),
-                      ],
-                    ),
-                  );
-                }).toList(),
+                items: SpecialistCategory.values
+                    .map(
+                      (category) => DropdownMenuItem(
+                        value: category,
+                        child: Row(
+                          children: [
+                            Text(category.icon),
+                            const SizedBox(width: 8),
+                            Text(category.displayName),
+                          ],
+                        ),
+                      ),
+                    )
+                    .toList(),
                 onChanged: (value) {
                   setState(() {
                     _selectedCategory = value;
@@ -451,12 +456,14 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
               DropdownButtonFormField<ExperienceLevel>(
                 initialValue: _selectedExperience,
                 decoration: const InputDecoration(labelText: 'Уровень опыта'),
-                items: ExperienceLevel.values.map((level) {
-                  return DropdownMenuItem(
-                    value: level,
-                    child: Text(level.displayName),
-                  );
-                }).toList(),
+                items: ExperienceLevel.values
+                    .map(
+                      (level) => DropdownMenuItem(
+                        value: level,
+                        child: Text(level.displayName),
+                      ),
+                    )
+                    .toList(),
                 onChanged: (value) {
                   setState(() {
                     _selectedExperience = value;
@@ -467,10 +474,10 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
 
               // Ценовой диапазон
               Text(
-                  'Цена: ${_minPrice.toStringAsFixed(0)} - ${_maxPrice.toStringAsFixed(0)} ₽/час'),
+                'Цена: ${_minPrice.toStringAsFixed(0)} - ${_maxPrice.toStringAsFixed(0)} ₽/час',
+              ),
               RangeSlider(
                 values: RangeValues(_minPrice, _maxPrice),
-                min: 0,
                 max: 10000,
                 divisions: 100,
                 onChanged: (values) {
@@ -507,12 +514,11 @@ class _SpecialistsScreenState extends ConsumerState<SpecialistsScreen>
 
 /// Экран специалистов по категории
 class SpecialistsByCategoryScreen extends ConsumerWidget {
-  final SpecialistCategory category;
-
   const SpecialistsByCategoryScreen({
     super.key,
     required this.category,
   });
+  final SpecialistCategory category;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -562,331 +568,340 @@ class SpecialistsByCategoryScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildSpecialistCard(BuildContext context, Specialist specialist) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: InkWell(
-        onTap: () {
-          Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) =>
-                  SpecialistDetailsScreen(specialist: specialist),
+  Widget _buildSpecialistCard(BuildContext context, Specialist specialist) =>
+      Card(
+        margin: const EdgeInsets.only(bottom: 16),
+        child: InkWell(
+          onTap: () {
+            Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (context) =>
+                    SpecialistDetailsScreen(specialist: specialist),
+              ),
+            );
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 30,
+                  backgroundColor: Theme.of(context).colorScheme.primary,
+                  child: Text(
+                    specialist.name.isNotEmpty
+                        ? specialist.name[0].toUpperCase()
+                        : '?',
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              specialist.name,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                            ),
+                          ),
+                          if (specialist.isVerified)
+                            const Icon(
+                              Icons.verified,
+                              color: Colors.blue,
+                              size: 16,
+                            ),
+                        ],
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        specialist.experienceLevel.displayName,
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                              color: Colors.grey[600],
+                            ),
+                      ),
+                      const SizedBox(height: 8),
+                      Row(
+                        children: [
+                          Icon(Icons.star, size: 16, color: Colors.amber[600]),
+                          const SizedBox(width: 4),
+                          Text(
+                            specialist.rating.toStringAsFixed(1),
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '(${specialist.reviewCount})',
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Colors.grey[600],
+                                    ),
+                          ),
+                          const Spacer(),
+                          Text(
+                            '${specialist.hourlyRate.toStringAsFixed(0)} ₽/час',
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Theme.of(context).colorScheme.primary,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-          );
-        },
-        child: Padding(
+          ),
+        ),
+      );
+}
+
+/// Экран детальной информации о специалисте
+class SpecialistDetailsScreen extends ConsumerWidget {
+  const SpecialistDetailsScreen({
+    super.key,
+    required this.specialist,
+  });
+  final Specialist specialist;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) => Scaffold(
+        appBar: AppBar(
+          title: Text(specialist.name),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.share),
+              onPressed: () {
+                // TODO: Реализовать шаринг профиля
+              },
+            ),
+          ],
+        ),
+        body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
-          child: Row(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundColor: Theme.of(context).colorScheme.primary,
-                child: Text(
-                  specialist.name.isNotEmpty
-                      ? specialist.name[0].toUpperCase()
-                      : '?',
-                  style: const TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
+              // Основная информация
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 40,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.primary,
+                            child: Text(
+                              specialist.name.isNotEmpty
+                                  ? specialist.name[0].toUpperCase()
+                                  : '?',
+                              style: const TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Row(
+                                  children: [
+                                    Text(
+                                      specialist.name,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .headlineSmall
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                    if (specialist.isVerified) ...[
+                                      const SizedBox(width: 8),
+                                      const Icon(
+                                        Icons.verified,
+                                        color: Colors.blue,
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                                const SizedBox(height: 4),
+                                Text(
+                                  '${specialist.category.icon} ${specialist.category.displayName}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .primary,
+                                      ),
+                                ),
+                                const SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Icon(
+                                      Icons.star,
+                                      size: 20,
+                                      color: Colors.amber[600],
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      specialist.rating.toStringAsFixed(1),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .titleMedium
+                                          ?.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                    ),
+                                    const SizedBox(width: 8),
+                                    Text(
+                                      '(${specialist.reviewCount} отзывов)',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium
+                                          ?.copyWith(
+                                            color: Colors.grey[600],
+                                          ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 16),
+
+                      // Описание
+                      if (specialist.description != null) ...[
+                        Text(
+                          'О себе:',
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          specialist.description!,
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        const SizedBox(height: 16),
+                      ],
+
+                      // Информация о ценах и опыте
+                      Row(
+                        children: [
+                          Expanded(
+                            child: _buildInfoCard(
+                              context,
+                              'Опыт',
+                              '${specialist.yearsOfExperience} лет',
+                              Icons.work,
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: _buildInfoCard(
+                              context,
+                              'Цена',
+                              '${specialist.hourlyRate.toStringAsFixed(0)} ₽/час',
+                              Icons.attach_money,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ),
               ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Expanded(
-                          child: Text(
-                            specialist.name,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
-                                ?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                          ),
-                        ),
-                        if (specialist.isVerified)
-                          const Icon(Icons.verified,
-                              color: Colors.blue, size: 16),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    Text(
-                      specialist.experienceLevel.displayName,
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.grey[600],
-                          ),
-                    ),
-                    const SizedBox(height: 8),
-                    Row(
-                      children: [
-                        Icon(Icons.star, size: 16, color: Colors.amber[600]),
-                        const SizedBox(width: 4),
-                        Text(
-                          specialist.rating.toStringAsFixed(1),
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                        ),
-                        const SizedBox(width: 4),
-                        Text(
-                          '(${specialist.reviewCount})',
-                          style:
-                              Theme.of(context).textTheme.bodySmall?.copyWith(
-                                    color: Colors.grey[600],
-                                  ),
-                        ),
-                        const Spacer(),
-                        Text(
-                          '${specialist.hourlyRate.toStringAsFixed(0)} ₽/час',
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleSmall
-                              ?.copyWith(
-                                fontWeight: FontWeight.bold,
-                                color: Theme.of(context).colorScheme.primary,
-                              ),
-                        ),
-                      ],
-                    ),
-                  ],
+
+              const SizedBox(height: 16),
+
+              // Кнопка бронирования
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    // TODO: Реализовать бронирование
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Бронирование будет реализовано позже'),
+                      ),
+                    );
+                  },
+                  icon: const Icon(Icons.calendar_today),
+                  label: const Text('Забронировать'),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
+                  ),
                 ),
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
+      );
 
-/// Экран детальной информации о специалисте
-class SpecialistDetailsScreen extends ConsumerWidget {
-  final Specialist specialist;
-
-  const SpecialistDetailsScreen({
-    super.key,
-    required this.specialist,
-  });
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(specialist.name),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () {
-              // TODO: Реализовать шаринг профиля
-            },
+  Widget _buildInfoCard(
+    BuildContext context,
+    String title,
+    String value,
+    IconData icon,
+  ) =>
+      Container(
+        padding: const EdgeInsets.all(12),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surface,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
           ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16),
+        ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Основная информация
-            Card(
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        CircleAvatar(
-                          radius: 40,
-                          backgroundColor:
-                              Theme.of(context).colorScheme.primary,
-                          child: Text(
-                            specialist.name.isNotEmpty
-                                ? specialist.name[0].toUpperCase()
-                                : '?',
-                            style: const TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 16),
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    specialist.name,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .headlineSmall
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  ),
-                                  if (specialist.isVerified) ...[
-                                    const SizedBox(width: 8),
-                                    const Icon(Icons.verified,
-                                        color: Colors.blue),
-                                  ],
-                                ],
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                '${specialist.category.icon} ${specialist.category.displayName}',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleMedium
-                                    ?.copyWith(
-                                      color:
-                                          Theme.of(context).colorScheme.primary,
-                                    ),
-                              ),
-                              const SizedBox(height: 8),
-                              Row(
-                                children: [
-                                  Icon(Icons.star,
-                                      size: 20, color: Colors.amber[600]),
-                                  const SizedBox(width: 4),
-                                  Text(
-                                    specialist.rating.toStringAsFixed(1),
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .titleMedium
-                                        ?.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  ),
-                                  const SizedBox(width: 8),
-                                  Text(
-                                    '(${specialist.reviewCount} отзывов)',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                          color: Colors.grey[600],
-                                        ),
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-
-                    // Описание
-                    if (specialist.description != null) ...[
-                      Text(
-                        'О себе:',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        specialist.description!,
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                      const SizedBox(height: 16),
-                    ],
-
-                    // Информация о ценах и опыте
-                    Row(
-                      children: [
-                        Expanded(
-                          child: _buildInfoCard(
-                            context,
-                            'Опыт',
-                            '${specialist.yearsOfExperience} лет',
-                            Icons.work,
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: _buildInfoCard(
-                            context,
-                            'Цена',
-                            '${specialist.hourlyRate.toStringAsFixed(0)} ₽/час',
-                            Icons.attach_money,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
+            Icon(icon, color: Theme.of(context).colorScheme.primary),
+            const SizedBox(height: 8),
+            Text(
+              title,
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Colors.grey[600],
+                  ),
             ),
-
-            const SizedBox(height: 16),
-
-            // Кнопка бронирования
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () {
-                  // TODO: Реализовать бронирование
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                        content: Text('Бронирование будет реализовано позже')),
-                  );
-                },
-                icon: const Icon(Icons.calendar_today),
-                label: const Text('Забронировать'),
-                style: ElevatedButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(vertical: 16),
-                ),
-              ),
+            const SizedBox(height: 4),
+            Text(
+              value,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildInfoCard(
-      BuildContext context, String title, String value, IconData icon) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
-        ),
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: Theme.of(context).colorScheme.primary),
-          const SizedBox(height: 8),
-          Text(
-            title,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey[600],
-                ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
-          ),
-        ],
-      ),
-    );
-  }
+      );
 }
