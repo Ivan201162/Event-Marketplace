@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/customer_profile.dart';
 import '../models/specialist_profile.dart';
 import '../models/user.dart' as user_model;
+import '../models/security.dart';
 import '../services/profile_service.dart';
 
 /// Провайдер сервиса профилей

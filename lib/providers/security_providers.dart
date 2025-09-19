@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/security.dart';
+import '../models/security_settings.dart';
 import '../services/security_service.dart';
 
 /// Провайдер сервиса безопасности

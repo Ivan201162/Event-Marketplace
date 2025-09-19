@@ -24,52 +24,52 @@ class AppSettings {
     final data = doc.data() as Map<String, dynamic>;
     return AppSettings(
       id: doc.id,
-      key: data['key'] ?? '',
+      key: (data['key'] as String?) ?? '',
       value: data['value'],
       type: SettingType.values.firstWhere(
         (e) => e.toString().split('.').last == data['type'],
         orElse: () => SettingType.string,
       ),
-      description: data['description'],
-      category: data['category'],
-      isPublic: data['isPublic'] ?? false,
-      isRequired: data['isRequired'] ?? false,
+      description: data['description'] as String?,
+      category: data['category'] as String?,
+      isPublic: (data['isPublic'] as bool?) ?? false,
+      isRequired: (data['isRequired'] as bool?) ?? false,
       defaultValue: data['defaultValue'],
       allowedValues: data['allowedValues'] != null
-          ? List<String>.from(data['allowedValues'])
+          ? List<String>.from(data['allowedValues'] as Iterable<dynamic>)
           : null,
       validation: data['validation'] != null
-          ? Map<String, dynamic>.from(data['validation'])
+          ? Map<String, dynamic>.from(data['validation'] as Map<dynamic, dynamic>)
           : null,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      updatedBy: data['updatedBy'],
+      updatedBy: data['updatedBy'] as String?,
     );
   }
 
   /// Создать из Map
   factory AppSettings.fromMap(Map<String, dynamic> data) => AppSettings(
-        id: data['id'] ?? '',
-        key: data['key'] ?? '',
+        id: (data['id'] as String?) ?? '',
+        key: (data['key'] as String?) ?? '',
         value: data['value'],
         type: SettingType.values.firstWhere(
           (e) => e.toString().split('.').last == data['type'],
           orElse: () => SettingType.string,
         ),
-        description: data['description'],
-        category: data['category'],
-        isPublic: data['isPublic'] ?? false,
-        isRequired: data['isRequired'] ?? false,
+        description: data['description'] as String?,
+        category: data['category'] as String?,
+        isPublic: (data['isPublic'] as bool?) ?? false,
+        isRequired: (data['isRequired'] as bool?) ?? false,
         defaultValue: data['defaultValue'],
         allowedValues: data['allowedValues'] != null
-            ? List<String>.from(data['allowedValues'])
+            ? List<String>.from(data['allowedValues'] as Iterable<dynamic>)
             : null,
         validation: data['validation'] != null
-            ? Map<String, dynamic>.from(data['validation'])
+            ? Map<String, dynamic>.from(data['validation'] as Map<dynamic, dynamic>)
             : null,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-        updatedBy: data['updatedBy'],
+        updatedBy: data['updatedBy'] as String?,
       );
   final String id;
   final String key;

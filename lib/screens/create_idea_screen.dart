@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/idea.dart';
+import '../models/idea_type.dart';
 import '../services/idea_service.dart';
 
 /// Экран создания идеи
