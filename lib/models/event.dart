@@ -27,6 +27,8 @@ class Event {
     this.contactInfo,
     this.requirements,
     this.participantsCount,
+    this.imageUrl,
+    this.isHidden = false,
   });
 
   /// Создать событие из документа Firestore
@@ -63,6 +65,8 @@ class Event {
       contactInfo: data['contactInfo'],
       requirements: data['requirements'],
       participantsCount: data['participantsCount'],
+      imageUrl: data['imageUrl'],
+      isHidden: data['isHidden'] ?? false,
     );
   }
   final String id;
@@ -88,6 +92,8 @@ class Event {
   final String? contactInfo;
   final String? requirements;
   final int? participantsCount;
+  final String? imageUrl;
+  final bool isHidden;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -113,6 +119,8 @@ class Event {
         'contactInfo': contactInfo,
         'requirements': requirements,
         'participantsCount': participantsCount,
+        'imageUrl': imageUrl,
+        'isHidden': isHidden,
       };
 
   /// Копировать с изменениями

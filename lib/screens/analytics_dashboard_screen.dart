@@ -99,7 +99,7 @@ class _AnalyticsDashboardScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ResponsiveText(
+          Text(
             'Основная статистика',
             isTitle: true,
           ),
@@ -215,7 +215,7 @@ class _AnalyticsDashboardScreenState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ResponsiveText(
+            Text(
               'События по категориям',
               isTitle: true,
             ),
@@ -259,7 +259,7 @@ class _AnalyticsDashboardScreenState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ResponsiveText(
+            Text(
               'События по платформам',
               isTitle: true,
             ),
@@ -306,7 +306,7 @@ class _AnalyticsDashboardScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ResponsiveText(
+          Text(
             'Топ экранов',
             isTitle: true,
           ),
@@ -357,7 +357,7 @@ class _AnalyticsDashboardScreenState
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ResponsiveText(
+                Text(
                   'Топ событий',
                   isTitle: true,
                 ),

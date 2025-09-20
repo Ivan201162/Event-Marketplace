@@ -28,7 +28,7 @@ class _ABTestManagementScreenState
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        title: 'Управление A/B тестами',
+        appBarTitle: 'Управление A/B тестами',
         body: Column(
           children: [
             // Вкладки
@@ -115,9 +115,9 @@ class _ABTestManagementScreenState
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'A/B тесты',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -171,7 +171,7 @@ class _ABTestManagementScreenState
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: ResponsiveText(
+                child: Text(
                   test.name,
                   isTitle: true,
                 ),
@@ -326,7 +326,7 @@ class _ABTestManagementScreenState
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ResponsiveText(
+              Text(
                 'Создать A/B тест',
                 isTitle: true,
               ),
@@ -432,7 +432,7 @@ class _ABTestManagementScreenState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ResponsiveText(
+            Text(
               'Статистика: ${stats.testName}',
               isTitle: true,
             ),

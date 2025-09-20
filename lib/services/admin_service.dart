@@ -302,4 +302,28 @@ class AdminService {
       throw Exception('Ошибка получения настроек: $e');
     }
   }
+
+  /// Верифицировать пользователя
+  Future<void> verifyUser(String userId) async {
+    try {
+      await _firestore.collection('users').doc(userId).update({
+        'isVerified': true,
+        'verifiedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка верификации пользователя: $e');
+    }
+  }
+
+  /// Скрыть событие
+  Future<void> hideEvent(String eventId) async {
+    try {
+      await _firestore.collection('events').doc(eventId).update({
+        'isHidden': true,
+        'hiddenAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка скрытия события: $e');
+    }
+  }
 }
