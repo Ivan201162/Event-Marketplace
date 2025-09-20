@@ -186,8 +186,8 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
       );
 
   Widget _buildDefaultIcon(RecommendationType type) {
-    IconData iconData;
-    Color color;
+    IconData iconData = Icons.help;
+    Color color = Colors.grey;
 
     switch (type) {
       case RecommendationType.specialist:
@@ -212,8 +212,8 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
   }
 
   Widget _buildTypeChip(RecommendationType type) {
-    String label;
-    Color color;
+    String label = 'Неизвестно';
+    Color color = Colors.grey;
 
     switch (type) {
       case RecommendationType.specialist:
@@ -296,8 +296,8 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
       );
 
   Widget _buildEmptyState({RecommendationType? type}) {
-    String message;
-    IconData icon;
+    String message = 'Нет рекомендаций';
+    IconData icon = Icons.recommend_outlined;
 
     if (type != null) {
       switch (type) {
