@@ -115,8 +115,8 @@ class Booking {
           : null,
       isPrepayment: data['isPrepayment'] as bool?,
       isFinalPayment: data['isFinalPayment'] as bool?,
-      prepaymentPaid: data['prepaymentPaid'],
-      vkPlaylistUrl: data['vkPlaylistUrl'],
+      prepaymentPaid: data['prepaymentPaid'] as bool?,
+      vkPlaylistUrl: data['vkPlaylistUrl'] as String?,
     );
   }
 
@@ -132,9 +132,14 @@ class Booking {
         specialistId: map['specialistId'] ?? '',
         specialistName: map['specialistName'] ?? '',
         serviceId: map['serviceId'] ?? '',
+        bookingDate: map['bookingDate'] != null
+            ? (map['bookingDate'] as Timestamp).toDate()
+            : DateTime.now(),
         eventDate: map['eventDate'] != null
             ? (map['eventDate'] as Timestamp).toDate()
             : DateTime.now(),
+        participantsCount: map['participantsCount'] as int? ?? 1,
+        totalPrice: (map['totalPrice'] as num?)?.toDouble() ?? 0.0,
         eventTime: map['eventTime'] ?? '',
         eventDuration: map['eventDuration'] ?? 0,
         eventLocation: map['eventLocation'] ?? '',
