@@ -29,13 +29,13 @@ class ReviewExtended {
 
     return ReviewExtended(
       id: doc.id,
-      specialistId: data['specialistId'] ?? '',
-      customerId: data['customerId'] ?? '',
-      customerName: data['customerName'] ?? '',
-      customerPhotoUrl: data['customerPhotoUrl'] ?? '',
-      bookingId: data['bookingId'] ?? '',
-      rating: data['rating'] ?? 0,
-      comment: data['comment'] ?? '',
+      specialistId: data['specialistId'] as String? ?? '',
+      customerId: data['customerId'] as String? ?? '',
+      customerName: data['customerName'] as String? ?? '',
+      customerPhotoUrl: data['customerPhotoUrl'] as String? ?? '',
+      bookingId: data['bookingId'] as String? ?? '',
+      rating: data['rating'] as int? ?? 0,
+      comment: data['comment'] as String? ?? '',
       media: (data['media'] as List<dynamic>?)
               ?.map((e) => ReviewMedia.fromMap(e))
               .toList() ??
@@ -44,12 +44,12 @@ class ReviewExtended {
               ?.map((e) => ReviewLike.fromMap(e))
               .toList() ??
           [],
-      tags: List<String>.from(data['tags'] ?? []),
-      stats: ReviewStats.fromMap(data['stats'] ?? {}),
-      isVerified: data['isVerified'] ?? false,
-      isModerated: data['isModerated'] ?? false,
-      isApproved: data['isApproved'] ?? true,
-      moderationComment: data['moderationComment'],
+      tags: List<String>.from(data['tags'] as List<dynamic>? ?? []),
+      stats: ReviewStats.fromMap(data['stats'] as Map<String, dynamic>? ?? {}),
+      isVerified: data['isVerified'] as bool? ?? false,
+      isModerated: data['isModerated'] as bool? ?? false,
+      isApproved: data['isApproved'] as bool? ?? true,
+      moderationComment: data['moderationComment'] as String?,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),

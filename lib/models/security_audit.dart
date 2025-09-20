@@ -23,31 +23,31 @@ class SecurityAudit {
     final data = doc.data()! as Map<String, dynamic>;
     return SecurityAudit(
       id: doc.id,
-      eventType: data['eventType'] ?? '',
-      description: data['description'] ?? '',
+      eventType: data['eventType'] as String? ?? '',
+      description: data['description'] as String? ?? '',
       level: SecurityLevel.values.firstWhere(
-        (e) => e.toString().split('.').last == data['level'],
+        (e) => e.toString().split('.').last == (data['level'] as String?),
         orElse: () => SecurityLevel.info,
       ),
-      userId: data['userId'],
-      sessionId: data['sessionId'],
-      ipAddress: data['ipAddress'],
-      userAgent: data['userAgent'],
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      userId: data['userId'] as String?,
+      sessionId: data['sessionId'] as String?,
+      ipAddress: data['ipAddress'] as String?,
+      userAgent: data['userAgent'] as String?,
+      metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
       timestamp: (data['timestamp'] as Timestamp).toDate(),
-      resolvedBy: data['resolvedBy'],
+      resolvedBy: data['resolvedBy'] as String?,
       resolvedAt: data['resolvedAt'] != null
           ? (data['resolvedAt'] as Timestamp).toDate()
           : null,
-      isResolved: data['isResolved'] ?? false,
+      isResolved: data['isResolved'] as bool? ?? false,
     );
   }
 
   /// Создать из Map
   factory SecurityAudit.fromMap(Map<String, dynamic> data) => SecurityAudit(
-        id: data['id'] ?? '',
-        eventType: data['eventType'] ?? '',
-        description: data['description'] ?? '',
+        id: data['id'] as String? ?? '',
+        eventType: data['eventType'] as String? ?? '',
+        description: data['description'] as String? ?? '',
         level: SecurityLevel.values.firstWhere(
           (e) => e.toString().split('.').last == data['level'],
           orElse: () => SecurityLevel.info,
