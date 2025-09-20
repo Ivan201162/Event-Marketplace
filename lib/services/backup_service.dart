@@ -568,14 +568,14 @@ class BackupService {
       if (kDebugMode) {
         print('Ошибка получения статистики бэкапов: $e');
       }
-      return const BackupStatistics(
+      return BackupStatistics(
         totalBackups: 0,
         successfulBackups: 0,
         failedBackups: 0,
         totalSize: 0,
         lastBackup: null,
-        backupsByType: {},
-        backupsByStatus: {},
+        backupsByType: const {},
+        backupsByStatus: const {},
       );
     }
   }

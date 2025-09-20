@@ -341,7 +341,7 @@ class BudgetSuggestionService {
       if (!customerDoc.exists) return;
 
       final customerData = customerDoc.data();
-      final fcmTokens = List<String>.from(customerData['fcmTokens'] ?? []);
+      final fcmTokens = List<String>.from(customerData?['fcmTokens'] ?? []);
 
       if (fcmTokens.isEmpty) return;
 
