@@ -16,6 +16,15 @@ class MonitoringService {
 
   static final MonitoringService _instance = MonitoringService._internal();
 
+  bool _isInitialized = false;
+  bool _isAvailable = true;
+
+  /// Проверить, инициализирован ли сервис
+  bool get isInitialized => _isInitialized;
+
+  /// Проверить, доступен ли сервис
+  bool get isAvailable => _isAvailable;
+
   /// Начать операцию
   void startOperation(String name) {
     // Implementation for starting operation monitoring
@@ -50,6 +59,8 @@ class MonitoringService {
 
       // Запускаем проверку алертов
       _startAlertsMonitoring();
+
+      _isInitialized = true;
 
       if (kDebugMode) {
         print('Monitoring service initialized');

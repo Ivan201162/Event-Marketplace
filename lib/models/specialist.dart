@@ -259,6 +259,12 @@ class Specialist {
     this.responseTime,
     this.completionRate,
     this.cancellationRate,
+    this.averageResponseTime,
+    this.totalBookings,
+    this.totalEarnings,
+    this.isOnline,
+    this.isPremium,
+    this.premiumExpiresAt,
   });
 
   /// Создать из Map
@@ -409,6 +415,12 @@ class Specialist {
   final String? responseTime;
   final double? completionRate;
   final double? cancellationRate;
+  final String? averageResponseTime;
+  final int? totalBookings;
+  final double? totalEarnings;
+  final bool? isOnline;
+  final bool? isPremium;
+  final DateTime? premiumExpiresAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {

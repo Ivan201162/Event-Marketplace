@@ -751,4 +751,105 @@ class IntegrationService {
     _syncTimers.clear();
     _integrations.clear();
   }
+
+  /// Получить доступные интеграции
+  Future<List<ExternalIntegration>> getAvailableIntegrations() async {
+    try {
+      final snapshot = await _firestore
+          .collection('integrations')
+          .where('isActive', isEqualTo: true)
+          .get();
+      return snapshot.docs.map((doc) => ExternalIntegration.fromDocument(doc)).toList();
+    } catch (e) {
+      throw Exception('Ошибка получения доступных интеграций: $e');
+    }
+  }
+
+  /// Получить интеграции пользователя
+  Future<List<ExternalIntegration>> getUserIntegrations(String userId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('user_integrations')
+          .where('userId', isEqualTo: userId)
+          .get();
+      return snapshot.docs.map((doc) => ExternalIntegration.fromDocument(doc)).toList();
+    } catch (e) {
+      throw Exception('Ошибка получения интеграций пользователя: $e');
+    }
+  }
+
+  /// Получить события интеграции пользователя
+  Future<List<Map<String, dynamic>>> getUserIntegrationEvents(String userId, String integrationId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('integration_events')
+          .where('userId', isEqualTo: userId)
+          .where('integrationId', isEqualTo: integrationId)
+          .orderBy('timestamp', descending: true)
+          .get();
+      return snapshot.docs.map((doc) => {
+        'id': doc.id,
+        ...doc.data() as Map<String, dynamic>,
+      }).toList();
+    } catch (e) {
+      throw Exception('Ошибка получения событий интеграции: $e');
+    }
+  }
+
+  /// Получить статистику интеграций
+  Future<Map<String, dynamic>> getIntegrationStats() async {
+    try {
+      final stats = <String, dynamic>{};
+      
+      final totalIntegrations = await _firestore.collection('integrations').count().get();
+      stats['totalIntegrations'] = totalIntegrations.count ?? 0;
+      
+      final activeIntegrations = await _firestore
+          .collection('integrations')
+          .where('isActive', isEqualTo: true)
+          .count()
+          .get();
+      stats['activeIntegrations'] = activeIntegrations.count ?? 0;
+      
+      return stats;
+    } catch (e) {
+      throw Exception('Ошибка получения статистики интеграций: $e');
+    }
+  }
+
+  /// Получить текущее местоположение
+  Future<Map<String, double>?> getCurrentLocation() async {
+    try {
+      // Заглушка для получения местоположения
+      // В реальном приложении здесь будет использоваться geolocator
+      return {
+        'latitude': 55.7558,
+        'longitude': 37.6176,
+      };
+    } catch (e) {
+      throw Exception('Ошибка получения местоположения: $e');
+    }
+  }
+
+  /// Проверить подключение к интернету
+  Future<bool> isConnectedToInternet() async {
+    try {
+      // Заглушка для проверки подключения
+      // В реальном приложении здесь будет использоваться connectivity_plus
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Получить тип подключения
+  Future<String> getConnectionType() async {
+    try {
+      // Заглушка для получения типа подключения
+      // В реальном приложении здесь будет использоваться connectivity_plus
+      return 'wifi';
+    } catch (e) {
+      return 'unknown';
+    }
+  }
 }

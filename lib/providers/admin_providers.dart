@@ -41,8 +41,6 @@ final filteredUsersProvider = StreamProvider.family<
     })>((ref, params) {
   final adminService = ref.read(adminServiceProvider);
   return adminService.getUsersWithFilter(
-    isBanned: params.isBanned,
-    isVerified: params.isVerified,
     searchQuery: params.searchQuery,
   );
 });
@@ -56,7 +54,6 @@ final filteredEventsProvider = StreamProvider.family<
     })>((ref, params) {
   final adminService = ref.read(adminServiceProvider);
   return adminService.getEventsWithFilter(
-    isHidden: params.isHidden,
     searchQuery: params.searchQuery,
   );
 });
