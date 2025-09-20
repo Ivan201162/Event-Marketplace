@@ -41,18 +41,18 @@ class Backup {
       completedAt: data['completedAt'] != null
           ? (data['completedAt'] as Timestamp).toDate()
           : null,
-      fileUrl: data['fileUrl'],
-      fileSize: data['fileSize'],
-      errorMessage: data['errorMessage'],
+      fileUrl: data['fileUrl'] as String?,
+      fileSize: data['fileSize'] as int?,
+      errorMessage: data['errorMessage'] as String?,
       metadata: data['metadata'] != null
-          ? Map<String, dynamic>.from(data['metadata'])
+          ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
           : null,
     );
   }
 
   /// Создать из Map
   factory Backup.fromMap(Map<String, dynamic> data) => Backup(
-        id: data['id'] ?? '',
+        id: data['id'] as String? ?? '',
         name: data['name'] ?? '',
         description: data['description'] ?? '',
         type: BackupType.values.firstWhere(
