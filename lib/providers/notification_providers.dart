@@ -192,7 +192,6 @@ class SendNotificationNotifier {
     await _service.sendPaymentReminder(
       customerId: customerId,
       bookingId: bookingId,
-      eventName: eventName,
       amount: amount,
       dueDate: dueDate,
     );

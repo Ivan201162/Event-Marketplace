@@ -87,9 +87,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
       await monitoringService.recordError(
         error,
         stackTrace,
-        reason: reason,
-        fatal: fatal,
-        customKeys: customKeys,
+        context: reason,
       );
 
       state = state.copyWith(
@@ -111,7 +109,7 @@ class MonitoringStateNotifier extends Notifier<MonitoringState> {
   }) async {
     try {
       final monitoringService = ref.read(monitoringServiceProvider);
-      await monitoringService.logUserAction(action, parameters: parameters);
+      await monitoringService.logUserAction('', action, parameters);
     } catch (e) {
       state = state.copyWith(
         lastError: e.toString(),

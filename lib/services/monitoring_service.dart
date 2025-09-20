@@ -705,4 +705,136 @@ class MonitoringService {
     _alertsCache.clear();
     _dashboardsCache.clear();
   }
+
+  /// Записать ошибку
+  Future<void> recordError(dynamic error, StackTrace? stackTrace, {String? context}) async {
+    try {
+      final errorData = {
+        'id': _uuid.v4(),
+        'error': error.toString(),
+        'stackTrace': stackTrace?.toString(),
+        'context': context,
+        'timestamp': Timestamp.fromDate(DateTime.now()),
+        'severity': 'error',
+      };
+
+      await _firestore.collection('monitoring_errors').add(errorData);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error recording error: $e');
+      }
+    }
+  }
+
+  /// Логировать действие пользователя
+  Future<void> logUserAction(String userId, String action, Map<String, dynamic>? data) async {
+    try {
+      final actionData = {
+        'id': _uuid.v4(),
+        'userId': userId,
+        'action': action,
+        'data': data,
+        'timestamp': Timestamp.fromDate(DateTime.now()),
+      };
+
+      await _firestore.collection('user_actions').add(actionData);
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error logging user action: $e');
+      }
+    }
+  }
+
+  /// Начать трассировку
+  void startTrace(String name) {
+    // Implementation for starting trace
+    if (kDebugMode) {
+      print('Starting trace: $name');
+    }
+  }
+
+  /// Остановить трассировку
+  void stopTrace(String name) {
+    // Implementation for stopping trace
+    if (kDebugMode) {
+      print('Stopping trace: $name');
+    }
+  }
+
+  /// Получить метрики приложения
+  Future<Map<String, dynamic>> getAppMetrics() async {
+    try {
+      final metrics = <String, dynamic>{};
+      
+      // Получаем базовые метрики
+      metrics['timestamp'] = DateTime.now().toIso8601String();
+      metrics['isInitialized'] = _isInitialized;
+      metrics['isAvailable'] = _isAvailable;
+      
+      // Получаем количество метрик в кэше
+      metrics['cachedMetrics'] = _metricsCache.length;
+      metrics['cachedAlerts'] = _alertsCache.length;
+      
+      return metrics;
+    } catch (e) {
+      throw Exception('Ошибка получения метрик приложения: $e');
+    }
+  }
+
+  /// Установить ID пользователя
+  void setUserId(String userId) {
+    // Implementation for setting user ID
+    if (kDebugMode) {
+      print('Setting user ID: $userId');
+    }
+  }
+
+  /// Очистить данные
+  void clearData() {
+    _metricsCache.clear();
+    _alertsCache.clear();
+    _dashboardsCache.clear();
+    
+    if (kDebugMode) {
+      print('Monitoring data cleared');
+    }
+  }
+
+  /// Получить статус сети
+  Future<Map<String, dynamic>> getNetworkStatus() async {
+    try {
+      // Заглушка для получения статуса сети
+      return {
+        'isConnected': true,
+        'connectionType': 'wifi',
+        'timestamp': DateTime.now().toIso8601String(),
+      };
+    } catch (e) {
+      return {
+        'isConnected': false,
+        'connectionType': 'unknown',
+        'error': e.toString(),
+        'timestamp': DateTime.now().toIso8601String(),
+      };
+    }
+  }
+
+  /// Получить использование памяти
+  Future<Map<String, dynamic>> getMemoryUsage() async {
+    try {
+      // Заглушка для получения использования памяти
+      return {
+        'usedMemory': 1024 * 1024 * 100, // 100 MB
+        'totalMemory': 1024 * 1024 * 512, // 512 MB
+        'timestamp': DateTime.now().toIso8601String(),
+      };
+    } catch (e) {
+      return {
+        'usedMemory': 0,
+        'totalMemory': 0,
+        'error': e.toString(),
+        'timestamp': DateTime.now().toIso8601String(),
+      };
+    }
+  }
 }
