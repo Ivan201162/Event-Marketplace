@@ -426,10 +426,7 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen>
       });
 
       try {
-        await _contractService.signContract(
-          contract.id,
-          'current_user_id', // TODO: Получить реальный ID
-        );
+        await _contractService.signContract();
 
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(

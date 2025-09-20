@@ -121,21 +121,21 @@ final updateSecuritySettingsProvider =
 final blockDeviceProvider =
     FutureProvider.family<bool, Map<String, String>>((ref, data) {
   final service = ref.watch(securityServiceProvider);
-  return service.blockDevice(data['deviceId']!, data['userId']!);
+  return service.blockDevice(data['deviceId']!);
 });
 
 /// Провайдер для разблокировки устройства
 final unblockDeviceProvider =
     FutureProvider.family<bool, Map<String, String>>((ref, data) {
   final service = ref.watch(securityServiceProvider);
-  return service.unblockDevice(data['deviceId']!, data['userId']!);
+  return service.unblockDevice(data['deviceId']!);
 });
 
 /// Провайдер для доверия устройству
 final trustDeviceProvider =
     FutureProvider.family<bool, Map<String, String>>((ref, data) {
   final service = ref.watch(securityServiceProvider);
-  return service.trustDevice(data['deviceId']!, data['userId']!);
+  return service.trustDevice(data['deviceId']!);
 });
 
 /// Провайдер для проверки силы пароля
