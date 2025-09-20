@@ -29,6 +29,9 @@ class MonitoringService {
   /// Проверить, включен ли мониторинг
   bool get isMonitoring => _isMonitoring;
 
+  /// Геттер для _isMonitoring (для совместимости)
+  bool get _isMonitoring => isMonitoring;
+
   /// Начать операцию
   void startOperation(String name) {
     // Implementation for starting operation monitoring
@@ -711,7 +714,8 @@ class MonitoringService {
   }
 
   /// Записать ошибку
-  Future<void> recordError(dynamic error, StackTrace? stackTrace, {String? context}) async {
+  Future<void> recordError(dynamic error, StackTrace? stackTrace,
+      {String? context}) async {
     try {
       final errorData = {
         'id': _uuid.v4(),
@@ -731,7 +735,8 @@ class MonitoringService {
   }
 
   /// Логировать действие пользователя
-  Future<void> logUserAction(String userId, String action, Map<String, dynamic>? data) async {
+  Future<void> logUserAction(
+      String userId, String action, Map<String, dynamic>? data) async {
     try {
       final actionData = {
         'id': _uuid.v4(),
@@ -769,16 +774,16 @@ class MonitoringService {
   Future<Map<String, dynamic>> getAppMetrics() async {
     try {
       final metrics = <String, dynamic>{};
-      
+
       // Получаем базовые метрики
       metrics['timestamp'] = DateTime.now().toIso8601String();
       metrics['isInitialized'] = _isInitialized;
       metrics['isAvailable'] = _isAvailable;
-      
+
       // Получаем количество метрик в кэше
       metrics['cachedMetrics'] = _metricsCache.length;
       metrics['cachedAlerts'] = _alertsCache.length;
-      
+
       return metrics;
     } catch (e) {
       throw Exception('Ошибка получения метрик приложения: $e');
@@ -798,7 +803,7 @@ class MonitoringService {
     _metricsCache.clear();
     _alertsCache.clear();
     _dashboardsCache.clear();
-    
+
     if (kDebugMode) {
       print('Monitoring data cleared');
     }
@@ -867,7 +872,9 @@ class MonitoringService {
         'totalErrors': Random().nextInt(100),
         'criticalErrors': Random().nextInt(10),
         'warnings': Random().nextInt(50),
-        'lastError': DateTime.now().subtract(Duration(minutes: Random().nextInt(60))).toIso8601String(),
+        'lastError': DateTime.now()
+            .subtract(Duration(minutes: Random().nextInt(60)))
+            .toIso8601String(),
         'timestamp': DateTime.now().toIso8601String(),
       };
     } catch (e) {
@@ -921,7 +928,9 @@ class MonitoringService {
         'totalErrors': Random().nextInt(100),
         'criticalErrors': Random().nextInt(10),
         'warnings': Random().nextInt(50),
-        'lastError': DateTime.now().subtract(Duration(minutes: Random().nextInt(60))).toIso8601String(),
+        'lastError': DateTime.now()
+            .subtract(Duration(minutes: Random().nextInt(60)))
+            .toIso8601String(),
         'timestamp': DateTime.now().toIso8601String(),
       };
     } catch (e) {

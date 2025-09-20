@@ -667,7 +667,6 @@ class UserAction {
 
   bool hasPermission(String permission) =>
       defaultPermissions.contains(permission);
-}
 
 /// Статусы пользователей
 enum UserStatus {

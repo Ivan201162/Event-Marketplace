@@ -55,9 +55,7 @@ final hasPinCodeProvider = FutureProvider<bool>(
 
 /// Провайдер для аутентификации по биометрии
 final biometricAuthProvider = FutureProvider<bool>(
-  (ref) => ref
-      .watch(securityServiceProvider)
-      .authenticateWithBiometrics(),
+  (ref) => ref.watch(securityServiceProvider).authenticateWithBiometrics(),
 );
 
 /// Провайдер для проверки PIN-кода

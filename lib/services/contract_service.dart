@@ -309,10 +309,8 @@ Email: ${customer.email ?? 'Не указан'}
           .where('customerId', isEqualTo: userId)
           .orderBy('createdAt', descending: true)
           .get();
-      
-      return snapshot.docs
-          .map((doc) => Contract.fromDocument(doc))
-          .toList();
+
+      return snapshot.docs.map((doc) => Contract.fromDocument(doc)).toList();
     } catch (e) {
       throw Exception('Ошибка получения договоров пользователя: $e');
     }
@@ -322,17 +320,15 @@ Email: ${customer.email ?? 'Не указан'}
   Future<String> generateContractPDF(String contractId) async {
     try {
       // Получаем договор
-      final contractDoc = await _firestore
-          .collection('contracts')
-          .doc(contractId)
-          .get();
-      
+      final contractDoc =
+          await _firestore.collection('contracts').doc(contractId).get();
+
       if (!contractDoc.exists) {
         throw Exception('Договор не найден');
       }
-      
+
       final contract = Contract.fromDocument(contractDoc);
-      
+
       // Здесь должна быть логика генерации PDF
       // Пока возвращаем заглушку
       return 'contract_${contractId}.pdf';

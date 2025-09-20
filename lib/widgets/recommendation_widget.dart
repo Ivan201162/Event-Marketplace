@@ -35,6 +35,8 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
         // Записываем взаимодействие
         ref.read(recommendationInteractionProvider.notifier).recordInteraction(
               RecommendationInteraction(
+                id: '${recommendation.id}_${DateTime.now().millisecondsSinceEpoch}',
+                userId: 'current_user', // TODO: Получить реальный ID пользователя
                 recommendationId: recommendation.id,
                 specialistId: specialist.id,
                 type: RecommendationInteractionType.viewed,

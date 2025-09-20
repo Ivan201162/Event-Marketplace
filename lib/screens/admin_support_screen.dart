@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'support_ticket_detail_screen.dart';
 import '../models/support_ticket.dart';
 import '../services/support_service.dart';
 import '../widgets/support_ticket_widget.dart';
-import 'support_ticket_detail_screen.dart';
 
 /// Экран админ-панели поддержки
 class AdminSupportScreen extends ConsumerStatefulWidget {
@@ -240,7 +240,7 @@ class _AdminSupportScreenState extends ConsumerState<AdminSupportScreen> {
                       value: category,
                       child: Row(
                         children: [
-                          Icon(category.categoryIcon, size: 16),
+                          Icon(category.icon, size: 16),
                           const SizedBox(width: 8),
                           Text(category.categoryText),
                         ],

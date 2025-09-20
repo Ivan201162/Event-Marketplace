@@ -153,14 +153,16 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                 }
                 final data = snapshot.data!;
                 return Column(
-                  children: data.entries.map(
-                (entry) => _buildStatItem(
-                  entry.key,
-                  '${entry.value['count']} операций',
-                  'Среднее время: ${entry.value['averageTime']?.toStringAsFixed(1)}ms',
-                  Icons.speed,
-                ),
-              ).toList(),
+                  children: data.entries
+                      .map(
+                        (entry) => _buildStatItem(
+                          entry.key,
+                          '${entry.value['count']} операций',
+                          'Среднее время: ${entry.value['averageTime']?.toStringAsFixed(1)}ms',
+                          Icons.speed,
+                        ),
+                      )
+                      .toList(),
                 );
               },
             ),
@@ -252,9 +254,9 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                     _buildStatItem(
                       'Текущее использование',
                       '${(data['current'] / 1024 / 1024).toStringAsFixed(1)}MB',
-                    '',
-                    Icons.memory,
-                  ),
+                      '',
+                      Icons.memory,
+                    ),
                     _buildStatItem(
                       'Максимальное использование',
                       '${(data['max'] / 1024 / 1024).toStringAsFixed(1)}MB',

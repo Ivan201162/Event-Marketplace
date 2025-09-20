@@ -714,15 +714,19 @@ class SecurityService {
           .limit(limit);
 
       if (fromDate != null) {
-        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate));
+        query = query.where('timestamp',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate));
       }
 
       if (toDate != null) {
-        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(toDate));
+        query = query.where('timestamp',
+            isLessThanOrEqualTo: Timestamp.fromDate(toDate));
       }
 
       final snapshot = await query.get();
-      return snapshot.docs.map((doc) => SecurityAudit.fromDocument(doc)).toList();
+      return snapshot.docs
+          .map((doc) => SecurityAudit.fromDocument(doc))
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения логов аудита безопасности: $e');
     }
@@ -736,11 +740,13 @@ class SecurityService {
           .where('userId', isEqualTo: userId)
           .orderBy('lastSeen', descending: true)
           .get();
-      
-      return snapshot.docs.map((doc) => {
-        'id': doc.id,
-        ...doc.data() as Map<String, dynamic>,
-      }).toList();
+
+      return snapshot.docs
+          .map((doc) => {
+                'id': doc.id,
+                ...doc.data() as Map<String, dynamic>,
+              })
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения устройств пользователя: $e');
     }
@@ -938,10 +944,15 @@ class SecurityService {
   Future<Map<String, dynamic>> checkPasswordStrength(String password) async {
     try {
       // Заглушка для проверки силы пароля
-      final score = password.length >= 8 ? 100 : (password.length * 12.5).round();
+      final score =
+          password.length >= 8 ? 100 : (password.length * 12.5).round();
       return {
         'score': score,
-        'strength': score >= 80 ? 'strong' : score >= 60 ? 'medium' : 'weak',
+        'strength': score >= 80
+            ? 'strong'
+            : score >= 60
+                ? 'medium'
+                : 'weak',
         'suggestions': password.length < 8 ? ['Use at least 8 characters'] : [],
       };
     } catch (e) {

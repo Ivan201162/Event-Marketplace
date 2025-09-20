@@ -185,7 +185,7 @@ class ReviewFormNotifier extends Notifier<ReviewFormState> {
   }) async {
     try {
       state = state.copyWith(error: null);
-      
+
       final reviewService = ref.read(reviewServiceProvider);
       await reviewService.createReview(
         targetId: targetId,
@@ -196,7 +196,7 @@ class ReviewFormNotifier extends Notifier<ReviewFormState> {
         tags: state.selectedTags,
         images: state.images,
       );
-      
+
       state = state.copyWith();
     } catch (e) {
       state = state.copyWith(error: e.toString());

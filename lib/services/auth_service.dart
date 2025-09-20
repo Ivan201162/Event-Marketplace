@@ -21,6 +21,9 @@ class AuthService {
   /// Текущий пользователь Firebase
   User? get currentFirebaseUser => _auth.currentUser;
 
+  /// Текущий пользователь (алиас для совместимости)
+  User? get currentUser => _auth.currentUser;
+
   /// Поток изменений состояния аутентификации
   Stream<User?> get authStateChanges => _auth.authStateChanges();
 

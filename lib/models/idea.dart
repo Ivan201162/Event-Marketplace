@@ -402,4 +402,10 @@ enum IdeaCategory {
         return 'Другое';
     }
   }
+
+  /// Проверить, лайкнул ли пользователь
+  bool isLikedBy(String userId) => likedBy.contains(userId);
+
+  /// Проверить, сохранил ли пользователь
+  bool isSavedBy(String userId) => savedBy.contains(userId);
 }

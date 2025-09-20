@@ -849,7 +849,9 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
         specialistName: specialistName,
         eventType: 'Свадьба',
         startTime: DateTime.now().add(Duration(days: int.parse(id))),
-        eventTime: DateTime.now().add(Duration(days: int.parse(id), hours: 4)).toIso8601String(),
+        eventTime: DateTime.now()
+            .add(Duration(days: int.parse(id), hours: 4))
+            .toIso8601String(),
         duration: const Duration(hours: 4),
         totalPrice: 15000,
         status: status,

@@ -106,7 +106,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
           itemBuilder: (context, index) {
             final image = _idea.images[index];
             return CachedNetworkImage(
-              imageUrl: image.url,
+              imageUrl: image,
               fit: BoxFit.cover,
               placeholder: (context, url) => Container(
                 color: Colors.grey[200],
@@ -145,10 +145,10 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: _idea.categoryColor.withOpacity(0.1),
+                    color: Colors.blue.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(16),
                     border: Border.all(
-                      color: _idea.categoryColor.withOpacity(0.3),
+                      color: Colors.blue.withValues(alpha: 0.3),
                     ),
                   ),
                   child: Row(

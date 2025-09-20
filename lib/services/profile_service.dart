@@ -75,7 +75,8 @@ class ProfileService {
       case UserRole.specialist:
         return getSpecialistProfile(userId);
       case UserRole.organizer:
-        return getCustomerProfile(userId); // Используем customer profile для organizer
+        return getCustomerProfile(
+            userId); // Используем customer profile для organizer
       case UserRole.moderator:
         return null;
       case UserRole.guest:

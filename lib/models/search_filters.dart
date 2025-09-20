@@ -34,16 +34,22 @@ class SpecialistSearchFilters {
   final String searchQuery;
   final SearchSortBy sortBy;
 
-  factory SpecialistSearchFilters.fromJson(Map<String, dynamic> json) => SpecialistSearchFilters(
-        categories: (json['categories'] as List<dynamic>?)?.cast<String>() ?? [],
+  factory SpecialistSearchFilters.fromJson(Map<String, dynamic> json) =>
+      SpecialistSearchFilters(
+        categories:
+            (json['categories'] as List<dynamic>?)?.cast<String>() ?? [],
         services: (json['services'] as List<dynamic>?)?.cast<String>() ?? [],
         locations: (json['locations'] as List<dynamic>?)?.cast<String>() ?? [],
         minRating: (json['minRating'] as num?)?.toDouble() ?? 0.0,
         maxRating: (json['maxRating'] as num?)?.toDouble() ?? 5.0,
         minPrice: json['minPrice'] as int? ?? 0,
         maxPrice: json['maxPrice'] as int? ?? 100000,
-        availableFrom: json['availableFrom'] != null ? DateTime.parse(json['availableFrom'] as String) : null,
-        availableTo: json['availableTo'] != null ? DateTime.parse(json['availableTo'] as String) : null,
+        availableFrom: json['availableFrom'] != null
+            ? DateTime.parse(json['availableFrom'] as String)
+            : null,
+        availableTo: json['availableTo'] != null
+            ? DateTime.parse(json['availableTo'] as String)
+            : null,
         isAvailableNow: json['isAvailableNow'] as bool? ?? false,
         hasPortfolio: json['hasPortfolio'] as bool? ?? false,
         isVerified: json['isVerified'] as bool? ?? false,
@@ -119,7 +125,8 @@ class SpecialistSearchResult {
   final DateTime? nextAvailableDate;
   final double? distance;
 
-  factory SpecialistSearchResult.fromJson(Map<String, dynamic> json) => SpecialistSearchResult(
+  factory SpecialistSearchResult.fromJson(Map<String, dynamic> json) =>
+      SpecialistSearchResult(
         specialistId: json['specialistId'] as String,
         name: json['name'] as String,
         avatar: json['avatar'] as String,
@@ -132,7 +139,9 @@ class SpecialistSearchResult {
         isAvailable: json['isAvailable'] as bool,
         isVerified: json['isVerified'] as bool,
         hasPortfolio: json['hasPortfolio'] as bool,
-        nextAvailableDate: json['nextAvailableDate'] != null ? DateTime.parse(json['nextAvailableDate'] as String) : null,
+        nextAvailableDate: json['nextAvailableDate'] != null
+            ? DateTime.parse(json['nextAvailableDate'] as String)
+            : null,
         distance: (json['distance'] as num?)?.toDouble(),
       );
 
@@ -174,14 +183,16 @@ class SearchState {
 
   factory SearchState.fromJson(Map<String, dynamic> json) => SearchState(
         results: (json['results'] as List<dynamic>?)
-                ?.map((e) => SpecialistSearchResult.fromJson(e as Map<String, dynamic>))
+                ?.map((e) =>
+                    SpecialistSearchResult.fromJson(e as Map<String, dynamic>))
                 .toList() ??
             [],
         isLoading: json['isLoading'] as bool? ?? false,
         hasMore: json['hasMore'] as bool? ?? false,
         error: json['error'] as String? ?? '',
         filters: json['filters'] != null
-            ? SpecialistSearchFilters.fromJson(json['filters'] as Map<String, dynamic>)
+            ? SpecialistSearchFilters.fromJson(
+                json['filters'] as Map<String, dynamic>)
             : const SpecialistSearchFilters(),
         totalCount: json['totalCount'] as int? ?? 0,
       );

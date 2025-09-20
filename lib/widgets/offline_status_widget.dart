@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'responsive_card.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/responsive_utils.dart';

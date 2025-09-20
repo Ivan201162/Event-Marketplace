@@ -272,7 +272,7 @@ class FAQDetailScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Icon(
-                      faqItem.category.categoryIcon,
+                      faqItem.category.icon,
                       size: 16,
                       color: Colors.blue,
                     ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'responsive_text.dart';
 import '../models/security.dart';
-import '../models/security_password_level.dart';
+import '../models/security_password_strength.dart';
 import '../services/security_service.dart';
 
 /// Виджет для отображения силы пароля
@@ -188,28 +189,28 @@ class _PasswordStrengthWidgetState extends State<PasswordStrengthWidget> {
         ),
       );
 
-  Color _getStrengthColor(SecurityPasswordLevel level) {
+  Color _getStrengthColor(PasswordStrength level) {
     switch (level) {
-      case SecurityPasswordLevel.weak:
+      case PasswordStrength.weak:
         return Colors.red;
-      case SecurityPasswordLevel.medium:
+      case PasswordStrength.medium:
         return Colors.orange;
-      case SecurityPasswordLevel.strong:
+      case PasswordStrength.strong:
         return Colors.blue;
-      case SecurityPasswordLevel.veryStrong:
+      case PasswordStrength.veryStrong:
         return Colors.green;
     }
   }
 
-  String _getStrengthText(SecurityPasswordLevel level) {
+  String _getStrengthText(PasswordStrength level) {
     switch (level) {
-      case SecurityPasswordLevel.weak:
+      case PasswordStrength.weak:
         return 'Слабый';
-      case SecurityPasswordLevel.medium:
+      case PasswordStrength.medium:
         return 'Средний';
-      case SecurityPasswordLevel.strong:
+      case PasswordStrength.strong:
         return 'Сильный';
-      case SecurityPasswordLevel.veryStrong:
+      case PasswordStrength.veryStrong:
         return 'Очень сильный';
     }
   }
@@ -258,7 +259,7 @@ class _PasswordGeneratorWidgetState extends State<PasswordGeneratorWidget> {
         includeUppercase: _includeUppercase,
         includeLowercase: _includeLowercase,
         includeNumbers: _includeNumbers,
-        includeSymbols: _includeSymbols,
+        includeSpecialChars: _includeSymbols,
       );
     });
     widget.onPasswordGenerated(_generatedPassword);

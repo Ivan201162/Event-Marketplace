@@ -339,7 +339,6 @@ class _CreateIdeaCollectionScreenState
         name: _nameController.text.trim(),
         description: _descriptionController.text.trim(),
         userId: widget.userId,
-        isPublic: _isPublic,
       );
 
       if (collectionId != null) {

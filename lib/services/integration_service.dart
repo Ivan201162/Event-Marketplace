@@ -759,7 +759,9 @@ class IntegrationService {
           .collection('integrations')
           .where('isActive', isEqualTo: true)
           .get();
-      return snapshot.docs.map((doc) => ExternalIntegration.fromDocument(doc)).toList();
+      return snapshot.docs
+          .map((doc) => ExternalIntegration.fromDocument(doc))
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения доступных интеграций: $e');
     }
@@ -772,14 +774,17 @@ class IntegrationService {
           .collection('user_integrations')
           .where('userId', isEqualTo: userId)
           .get();
-      return snapshot.docs.map((doc) => ExternalIntegration.fromDocument(doc)).toList();
+      return snapshot.docs
+          .map((doc) => ExternalIntegration.fromDocument(doc))
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения интеграций пользователя: $e');
     }
   }
 
   /// Получить события интеграции пользователя
-  Future<List<Map<String, dynamic>>> getUserIntegrationEvents(String userId, String integrationId) async {
+  Future<List<Map<String, dynamic>>> getUserIntegrationEvents(
+      String userId, String integrationId) async {
     try {
       final snapshot = await _firestore
           .collection('integration_events')
@@ -787,10 +792,12 @@ class IntegrationService {
           .where('integrationId', isEqualTo: integrationId)
           .orderBy('timestamp', descending: true)
           .get();
-      return snapshot.docs.map((doc) => {
-        'id': doc.id,
-        ...doc.data() as Map<String, dynamic>,
-      }).toList();
+      return snapshot.docs
+          .map((doc) => {
+                'id': doc.id,
+                ...doc.data() as Map<String, dynamic>,
+              })
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения событий интеграции: $e');
     }
@@ -800,17 +807,18 @@ class IntegrationService {
   Future<Map<String, dynamic>> getIntegrationStats() async {
     try {
       final stats = <String, dynamic>{};
-      
-      final totalIntegrations = await _firestore.collection('integrations').count().get();
+
+      final totalIntegrations =
+          await _firestore.collection('integrations').count().get();
       stats['totalIntegrations'] = totalIntegrations.count ?? 0;
-      
+
       final activeIntegrations = await _firestore
           .collection('integrations')
           .where('isActive', isEqualTo: true)
           .count()
           .get();
       stats['activeIntegrations'] = activeIntegrations.count ?? 0;
-      
+
       return stats;
     } catch (e) {
       throw Exception('Ошибка получения статистики интеграций: $e');

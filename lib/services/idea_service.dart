@@ -562,4 +562,40 @@ class IdeaService {
     // Пока возвращаем заглушку
     return 'photo_${DateTime.now().millisecondsSinceEpoch}.jpg';
   }
+
+  /// Создать коллекцию идей
+  Future<String> createIdeaCollection({
+    required String name,
+    required String description,
+    required String userId,
+    List<String>? ideaIds,
+  }) async {
+    try {
+      final collectionData = {
+        'name': name,
+        'description': description,
+        'userId': userId,
+        'ideaIds': ideaIds ?? [],
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+
+      final docRef = await _firestore.collection('idea_collections').add(collectionData);
+      return docRef.id;
+    } catch (e) {
+      throw Exception('Ошибка создания коллекции идей: $e');
+    }
+  }
+
+  /// Увеличить счетчик просмотров
+  Future<void> incrementViewsCount(String ideaId) async {
+    try {
+      await _firestore.collection('ideas').doc(ideaId).update({
+        'viewsCount': FieldValue.increment(1),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка увеличения счетчика просмотров: $e');
+    }
+  }
 }

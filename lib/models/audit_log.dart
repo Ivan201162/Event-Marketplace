@@ -271,7 +271,8 @@ class SystemLog {
         component: (map['component'] as String?) ?? '',
         message: (map['message'] as String?) ?? '',
         level: SystemLogLevel.fromString((map['level'] as String?) ?? 'info'),
-        category: SystemLogCategory.fromString((map['category'] as String?) ?? 'general'),
+        category: SystemLogCategory.fromString(
+            (map['category'] as String?) ?? 'general'),
         context: map['context'] as Map<String, dynamic>?,
         stackTrace: map['stackTrace'] as String?,
         timestamp: (map['timestamp'] as Timestamp).toDate(),

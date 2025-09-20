@@ -295,18 +295,22 @@ class AnalyticsService {
           .limit(limit);
 
       if (fromDate != null) {
-        query = query.where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate));
+        query = query.where('date',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate));
       }
 
       if (toDate != null) {
-        query = query.where('date', isLessThanOrEqualTo: Timestamp.fromDate(toDate));
+        query = query.where('date',
+            isLessThanOrEqualTo: Timestamp.fromDate(toDate));
       }
 
       final snapshot = await query.get();
-      return snapshot.docs.map((doc) => {
-        'id': doc.id,
-        ...doc.data() as Map<String, dynamic>,
-      }).toList();
+      return snapshot.docs
+          .map((doc) => {
+                'id': doc.id,
+                ...doc.data() as Map<String, dynamic>,
+              })
+          .toList();
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка получения топ событий: $e');

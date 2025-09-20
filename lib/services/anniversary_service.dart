@@ -234,18 +234,21 @@ class AnniversaryService {
   }
 
   /// Получить годовщины клиентов
-  Future<List<Map<String, dynamic>>> getCustomerAnniversaries(String customerId) async {
+  Future<List<Map<String, dynamic>>> getCustomerAnniversaries(
+      String customerId) async {
     try {
       final snapshot = await _firestore
           .collection('anniversaries')
           .where('customerId', isEqualTo: customerId)
           .orderBy('date', descending: true)
           .get();
-      
-      return snapshot.docs.map((doc) => {
-        'id': doc.id,
-        ...doc.data() as Map<String, dynamic>,
-      }).toList();
+
+      return snapshot.docs
+          .map((doc) => {
+                'id': doc.id,
+                ...doc.data() as Map<String, dynamic>,
+              })
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения годовщин клиента: $e');
     }
@@ -258,18 +261,20 @@ class AnniversaryService {
     try {
       final now = DateTime.now();
       final futureDate = now.add(Duration(days: daysAhead));
-      
+
       final snapshot = await _firestore
           .collection('anniversaries')
           .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(now))
           .where('date', isLessThanOrEqualTo: Timestamp.fromDate(futureDate))
           .orderBy('date')
           .get();
-      
-      return snapshot.docs.map((doc) => {
-        'id': doc.id,
-        ...doc.data() as Map<String, dynamic>,
-      }).toList();
+
+      return snapshot.docs
+          .map((doc) => {
+                'id': doc.id,
+                ...doc.data() as Map<String, dynamic>,
+              })
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения предстоящих годовщин: $e');
     }

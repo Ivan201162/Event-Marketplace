@@ -97,10 +97,12 @@ class AdminService {
           .collection('events')
           .orderBy('createdAt', descending: true)
           .get();
-      return snapshot.docs.map((doc) => {
-        'id': doc.id,
-        ...doc.data() as Map<String, dynamic>,
-      }).toList();
+      return snapshot.docs
+          .map((doc) => {
+                'id': doc.id,
+                ...doc.data() as Map<String, dynamic>,
+              })
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения событий: $e');
     }
@@ -113,10 +115,12 @@ class AdminService {
           .collection('bookings')
           .orderBy('createdAt', descending: true)
           .get();
-      return snapshot.docs.map((doc) => {
-        'id': doc.id,
-        ...doc.data() as Map<String, dynamic>,
-      }).toList();
+      return snapshot.docs
+          .map((doc) => {
+                'id': doc.id,
+                ...doc.data() as Map<String, dynamic>,
+              })
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения бронирований: $e');
     }
@@ -142,10 +146,11 @@ class AdminService {
       var users = snapshot.docs.map(ManagedUser.fromDocument).toList();
 
       if (searchQuery != null && searchQuery.isNotEmpty) {
-        users = users.where((user) =>
-            user.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
-            user.email.toLowerCase().contains(searchQuery.toLowerCase())
-        ).toList();
+        users = users
+            .where((user) =>
+                user.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
+                user.email.toLowerCase().contains(searchQuery.toLowerCase()))
+            .toList();
       }
 
       return users;
@@ -171,16 +176,27 @@ class AdminService {
       }
 
       final snapshot = await query.get();
-      var events = snapshot.docs.map((doc) => {
-        'id': doc.id,
-        ...doc.data() as Map<String, dynamic>,
-      }).toList();
+      var events = snapshot.docs
+          .map((doc) => {
+                'id': doc.id,
+                ...doc.data() as Map<String, dynamic>,
+              })
+          .toList();
 
       if (searchQuery != null && searchQuery.isNotEmpty) {
-        events = events.where((event) =>
-            event['title']?.toString().toLowerCase().contains(searchQuery.toLowerCase()) == true ||
-            event['description']?.toString().toLowerCase().contains(searchQuery.toLowerCase()) == true
-        ).toList();
+        events = events
+            .where((event) =>
+                event['title']
+                        ?.toString()
+                        .toLowerCase()
+                        .contains(searchQuery.toLowerCase()) ==
+                    true ||
+                event['description']
+                        ?.toString()
+                        .toLowerCase()
+                        .contains(searchQuery.toLowerCase()) ==
+                    true)
+            .toList();
       }
 
       return events;
@@ -203,7 +219,8 @@ class AdminService {
       stats['totalEvents'] = eventCount.count ?? 0;
 
       // Статистика бронирований
-      final bookingCount = await _firestore.collection('bookings').count().get();
+      final bookingCount =
+          await _firestore.collection('bookings').count().get();
       stats['totalBookings'] = bookingCount.count ?? 0;
 
       return stats;
@@ -222,10 +239,12 @@ class AdminService {
           .orderBy('timestamp', descending: true)
           .limit(limit)
           .get();
-      return snapshot.docs.map((doc) => {
-        'id': doc.id,
-        ...doc.data() as Map<String, dynamic>,
-      }).toList();
+      return snapshot.docs
+          .map((doc) => {
+                'id': doc.id,
+                ...doc.data() as Map<String, dynamic>,
+              })
+          .toList();
     } catch (e) {
       throw Exception('Ошибка получения логов: $e');
     }
@@ -293,7 +312,8 @@ class AdminService {
   /// Получить настройки админ-панели
   Future<Map<String, dynamic>> getAdminSettings() async {
     try {
-      final doc = await _firestore.collection('admin_settings').doc('main').get();
+      final doc =
+          await _firestore.collection('admin_settings').doc('main').get();
       if (doc.exists) {
         return doc.data() as Map<String, dynamic>;
       }
