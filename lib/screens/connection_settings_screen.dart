@@ -192,10 +192,10 @@ class _ConnectionSettingsScreenState
       );
 
   Widget _buildConnectionTypeInfo(ConnectivityResult connectionType) {
-    IconData icon;
-    String title;
-    String description;
-    Color color;
+    IconData icon = Icons.help;
+    String title = 'Неизвестно';
+    String description = 'Неизвестный тип подключения';
+    Color color = Colors.grey;
 
     switch (connectionType) {
       case ConnectivityResult.wifi:

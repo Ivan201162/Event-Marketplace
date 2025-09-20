@@ -503,9 +503,9 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
         children: [
           _buildDetailRow('Дата', _formatDate(booking.startTime)),
           _buildDetailRow('Время', _formatTime(booking.startTime)),
-          _buildDetailRow('Длительность', '${booking.duration.inHours} ч'),
+          _buildDetailRow('Длительность', '${booking.duration?.inHours ?? 0} ч'),
           _buildDetailRow('Стоимость', '${booking.totalPrice} ₽'),
-          if (booking.location.isNotEmpty)
+          if (booking.location?.isNotEmpty ?? false)
             _buildDetailRow('Место', booking.location),
         ],
       );

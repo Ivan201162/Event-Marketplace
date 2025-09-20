@@ -121,8 +121,8 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
                   items: events
                       .map(
                         (event) => DropdownMenuItem(
-                          value: event.id,
-                          child: Text(event.title),
+                          value: event.id ?? '',
+                          child: Text(event.title ?? 'Без названия'),
                         ),
                       )
                       .toList(),
@@ -365,8 +365,8 @@ class _GuestManagementScreenState extends ConsumerState<GuestManagementScreen> {
     return guests
         .where(
           (guest) =>
-              guest.guestName.toLowerCase().contains(query) ||
-              guest.guestEmail.toLowerCase().contains(query),
+              (guest.guestName?.toLowerCase() ?? '').contains(query) ||
+              (guest.guestEmail?.toLowerCase() ?? '').contains(query),
         )
         .toList();
   }

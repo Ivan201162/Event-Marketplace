@@ -582,6 +582,8 @@ class UserAction {
         return 'Заказ услуг и участие в событиях';
       case UserRole.guest:
         return 'Просмотр публичного контента';
+      default:
+        return 'Неизвестная роль';
     }
   }
 
@@ -599,6 +601,8 @@ class UserAction {
         return '👤';
       case UserRole.guest:
         return '👥';
+      default:
+        return '❓';
     }
   }
 
@@ -615,6 +619,8 @@ class UserAction {
       case UserRole.customer:
         return 20;
       case UserRole.guest:
+        return 0;
+      default:
         return 0;
     }
   }
@@ -664,6 +670,8 @@ class UserAction {
         return [
           'content.view',
         ];
+      default:
+        return [];
     }
   }
 
