@@ -326,4 +326,25 @@ class AdminService {
       throw Exception('Ошибка скрытия события: $e');
     }
   }
+
+  /// Показать событие
+  Future<void> showEvent(String eventId) async {
+    try {
+      await _firestore.collection('events').doc(eventId).update({
+        'isHidden': false,
+        'shownAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка показа события: $e');
+    }
+  }
+
+  /// Удалить событие
+  Future<void> deleteEvent(String eventId) async {
+    try {
+      await _firestore.collection('events').doc(eventId).delete();
+    } catch (e) {
+      throw Exception('Ошибка удаления события: $e');
+    }
+  }
 }

@@ -306,6 +306,34 @@ enum SupportPriority {
   critical,
 }
 
+extension SupportPriorityExtension on SupportPriority {
+  Color get priorityColor {
+    switch (this) {
+      case SupportPriority.low:
+        return Colors.green;
+      case SupportPriority.medium:
+        return Colors.blue;
+      case SupportPriority.high:
+        return Colors.orange;
+      case SupportPriority.critical:
+        return Colors.red;
+    }
+  }
+
+  String get priorityText {
+    switch (this) {
+      case SupportPriority.low:
+        return 'Низкий';
+      case SupportPriority.medium:
+        return 'Средний';
+      case SupportPriority.high:
+        return 'Высокий';
+      case SupportPriority.critical:
+        return 'Критический';
+    }
+  }
+}
+
 /// Статусы поддержки
 enum SupportStatus {
   open,
@@ -313,6 +341,38 @@ enum SupportStatus {
   pending,
   resolved,
   closed,
+}
+
+extension SupportStatusExtension on SupportStatus {
+  Color get statusColor {
+    switch (this) {
+      case SupportStatus.open:
+        return Colors.blue;
+      case SupportStatus.inProgress:
+        return Colors.orange;
+      case SupportStatus.pending:
+        return Colors.yellow;
+      case SupportStatus.resolved:
+        return Colors.green;
+      case SupportStatus.closed:
+        return Colors.grey;
+    }
+  }
+
+  String get statusText {
+    switch (this) {
+      case SupportStatus.open:
+        return 'Открыт';
+      case SupportStatus.inProgress:
+        return 'В работе';
+      case SupportStatus.pending:
+        return 'Ожидает';
+      case SupportStatus.resolved:
+        return 'Решен';
+      case SupportStatus.closed:
+        return 'Закрыт';
+    }
+  }
 }
 
 /// Сообщение в тикете поддержки

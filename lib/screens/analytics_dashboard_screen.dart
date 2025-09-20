@@ -30,7 +30,7 @@ class _AnalyticsDashboardScreenState
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        title: 'Аналитика приложения',
+        appBarTitle: 'Аналитика приложения',
         body: Column(
           children: [
             // Фильтры по дате
@@ -101,7 +101,7 @@ class _AnalyticsDashboardScreenState
         children: [
           Text(
             'Основная статистика',
-            isTitle: true,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 16),
           Row(
@@ -127,7 +127,7 @@ class _AnalyticsDashboardScreenState
                   'Активных сессий',
                   '${_statistics!.activeSessions}',
                   Colors.orange,
-                  Icons.sessions,
+                  Icons.timeline,
                 ),
               ),
             ],
@@ -217,7 +217,7 @@ class _AnalyticsDashboardScreenState
           children: [
             Text(
               'События по категориям',
-              isTitle: true,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
             ..._statistics!.eventsByCategory.entries.map((entry) {
@@ -261,7 +261,7 @@ class _AnalyticsDashboardScreenState
           children: [
             Text(
               'События по платформам',
-              isTitle: true,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
             ..._statistics!.eventsByPlatform.entries.map((entry) {
@@ -308,7 +308,7 @@ class _AnalyticsDashboardScreenState
         children: [
           Text(
             'Топ экранов',
-            isTitle: true,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 16),
           ..._statistics!.eventsByScreen.entries.toList()
@@ -359,7 +359,7 @@ class _AnalyticsDashboardScreenState
               children: [
                 Text(
                   'Топ событий',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 16),
                 ...topEvents.map(

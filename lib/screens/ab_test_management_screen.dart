@@ -173,7 +173,7 @@ class _ABTestManagementScreenState
               Expanded(
                 child: Text(
                   test.name,
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
               _buildStatusChip(test.status),
@@ -328,7 +328,7 @@ class _ABTestManagementScreenState
             children: [
               Text(
                 'Создать A/B тест',
-                isTitle: true,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
 
               const SizedBox(height: 16),
@@ -434,7 +434,7 @@ class _ABTestManagementScreenState
           children: [
             Text(
               'Статистика: ${stats.testName}',
-              isTitle: true,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
 
             const SizedBox(height: 16),
