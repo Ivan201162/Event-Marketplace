@@ -281,4 +281,24 @@ class SubscriptionService {
       throw Exception('Ошибка подписки на специалиста: $e');
     }
   }
+
+  /// Получить подписку пользователя на специалиста
+  Future<Subscription?> getUserSubscription(String userId, String specialistId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('subscriptions')
+          .where('userId', isEqualTo: userId)
+          .where('specialistId', isEqualTo: specialistId)
+          .where('isActive', isEqualTo: true)
+          .limit(1)
+          .get();
+
+      if (snapshot.docs.isNotEmpty) {
+        return Subscription.fromDocument(snapshot.docs.first);
+      }
+      return null;
+    } catch (e) {
+      throw Exception('Ошибка получения подписки пользователя: $e');
+    }
+  }
 }

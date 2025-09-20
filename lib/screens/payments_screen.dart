@@ -176,7 +176,7 @@ class _PaymentsScreenState extends ConsumerState<PaymentsScreen>
 
     return paymentsAsync.when(
       data: (payments) {
-        final pendingPayments = payments.where((p) => p.isPending).toList();
+        final pendingPayments = payments.where((p) => p.status == 'pending').toList();
 
         if (pendingPayments.isEmpty) {
           return const Center(

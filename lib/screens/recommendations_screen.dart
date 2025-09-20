@@ -311,7 +311,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
           break;
         case RecommendationType.idea:
           message = 'Нет рекомендаций идей';
-          icon = Icons.lightbulb_off;
+          icon = Icons.lightbulb_outline;
           break;
         case RecommendationType.category:
           message = 'Нет рекомендаций категорий';
@@ -320,7 +320,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
       }
     } else {
       message = 'Нет рекомендаций';
-      icon = Icons.recommend_off;
+      icon = Icons.recommend_outlined;
     }
 
     return Center(
@@ -495,10 +495,10 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
     });
 
     try {
-      final params = RecommendationParams(
-        userId: _currentUserId!,
-        limit: 50,
-      );
+      final params = {
+        'userId': _currentUserId!,
+        'limit': 50,
+      };
       final recommendations =
           await _recommendationEngine.getRecommendations(params);
 

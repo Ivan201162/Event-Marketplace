@@ -32,7 +32,7 @@ class _PerformanceMonitoringScreenState
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        title: 'Мониторинг производительности',
+        appBar: AppBar(title: const Text('Мониторинг производительности')),
         body: Column(
           children: [
             // Вкладки
@@ -126,9 +126,9 @@ class _PerformanceMonitoringScreenState
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ResponsiveText(
+                  Text(
                     'Текущие метрики',
-                    isTitle: true,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 16),
                   if (_currentMetrics.isEmpty)
@@ -159,9 +159,9 @@ class _PerformanceMonitoringScreenState
                 children: [
                   Row(
                     children: [
-                      ResponsiveText(
+                      Text(
                         'Активные алерты',
-                        isTitle: true,
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const Spacer(),
                       ElevatedButton.icon(
@@ -285,9 +285,9 @@ class _PerformanceMonitoringScreenState
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Метрики производительности',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -331,9 +331,9 @@ class _PerformanceMonitoringScreenState
               ),
               const SizedBox(width: 8),
               Expanded(
-                child: ResponsiveText(
+                child: Text(
                   metric.name,
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
               Container(
@@ -396,9 +396,9 @@ class _PerformanceMonitoringScreenState
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Алерты производительности',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -446,9 +446,9 @@ class _PerformanceMonitoringScreenState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ResponsiveText(
+            Text(
               'Статистика: ${stats.metricName}',
-              isTitle: true,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
             Row(

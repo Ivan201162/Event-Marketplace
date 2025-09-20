@@ -148,7 +148,7 @@ class AdminService {
       if (searchQuery != null && searchQuery.isNotEmpty) {
         users = users
             .where((user) =>
-                user.name.toLowerCase().contains(searchQuery.toLowerCase()) ||
+                user.displayName.toLowerCase().contains(searchQuery.toLowerCase()) ||
                 user.email.toLowerCase().contains(searchQuery.toLowerCase()))
             .toList();
       }

@@ -5,6 +5,7 @@ import '../core/safe_log.dart';
 import '../models/review.dart';
 import '../providers/auth_providers.dart';
 import '../services/review_service.dart';
+import 'review_form_screen.dart';
 
 /// Экран отзывов
 class ReviewsScreen extends ConsumerStatefulWidget {
@@ -827,10 +828,18 @@ class _ReviewsScreenState extends ConsumerState<ReviewsScreen>
   }
 
   Future<void> _voteHelpful(Review review, bool isHelpful) async {
-    final currentUser = ref.read(currentUserProvider);
+    final currentUserAsync = ref.read(currentUserProvider);
+    final currentUser = currentUserAsync.value;
+
+    if (currentUser == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Пользователь не найден')),
+      );
+      return;
+    }
 
     try {
-      await _reviewService.voteHelpful(review.id, currentUser.id, isHelpful);
+      await _reviewService.voteHelpful(review.id, currentUser.uid, isHelpful);
     } catch (e, stackTrace) {
       SafeLog.error('ReviewsScreen: Error voting helpful', e, stackTrace);
 

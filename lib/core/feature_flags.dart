@@ -7,6 +7,8 @@ class FeatureFlags {
   // Платежи
   static const bool paymentsEnabled = false;
   static const bool subscriptionPaymentsEnabled = false;
+  static const bool advancePayment = false;
+  static const bool finalPaymentEnabled = false;
 
   // Продвинутые функции
   static const bool analyticsEnabled = true;

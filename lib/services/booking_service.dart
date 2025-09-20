@@ -381,4 +381,23 @@ class BookingService {
       throw Exception('Ошибка получения статистики бронирований события: $e');
     }
   }
+
+  /// Получить бронирования для специалиста
+  Stream<List<Booking>> getBookingsForSpecialist(String specialistId) => _firestore
+      .collection('bookings')
+      .where('specialistId', isEqualTo: specialistId)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(Booking.fromDocument).toList(),
+      );
+
+  /// Добавить или обновить бронирование
+  Future<void> addBooking(Booking booking) async {
+    try {
+      await _firestore.collection('bookings').doc(booking.id).set(booking.toMap());
+    } catch (e) {
+      throw Exception('Ошибка добавления бронирования: $e');
+    }
+  }
 }

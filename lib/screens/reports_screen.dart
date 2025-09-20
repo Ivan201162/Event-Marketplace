@@ -27,7 +27,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        title: 'Отчеты и аналитика',
+        appBar: AppBar(title: const Text('Отчеты и аналитика')),
         body: Column(
           children: [
             // Вкладки
@@ -52,7 +52,7 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
               child: _buildTabButton('reports', 'Отчеты', Icons.assessment),
             ),
             Expanded(
-              child: _buildTabButton('templates', 'Шаблоны', Icons.template),
+              child: _buildTabButton('templates', 'Шаблоны', Icons.description),
             ),
             Expanded(
               child: _buildTabButton('create', 'Создать', Icons.add),
@@ -111,9 +111,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Отчеты',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -154,9 +154,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: ResponsiveText(
+                  child: Text(
                     report.name,
-                    isTitle: true,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
                 _buildStatusChip(report.status),
@@ -255,9 +255,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Шаблоны отчетов',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -298,9 +298,9 @@ class _ReportsScreenState extends ConsumerState<ReportsScreen> {
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: ResponsiveText(
+                  child: Text(
                     template.name,
-                    isTitle: true,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
                 ElevatedButton(

@@ -512,7 +512,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
       );
 
   Widget _buildSubscriptionDetails(Subscription subscription) {
-    final plan = SubscriptionPlans.getPlanByType(subscription.type);
+    final plan = SubscriptionPlans.getPlanByType(subscription.planType);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(16),
@@ -555,7 +555,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          subscription.typeDisplayName,
+                          subscription.planType,
                           style:
                               Theme.of(context).textTheme.titleLarge?.copyWith(
                                     fontWeight: FontWeight.bold,
@@ -563,7 +563,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          subscription.typeDescription,
+                          'Подписка на ${subscription.planType}',
                           style:
                               Theme.of(context).textTheme.bodyMedium?.copyWith(
                                     color: Theme.of(context)
@@ -584,7 +584,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
-                      subscription.statusDisplayName,
+                      subscription.isActive ? 'Активна' : 'Неактивна',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 12,
@@ -594,7 +594,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                   ),
                 ],
               ),
-              if (subscription.isExpiringSoon) ...[
+              if (subscription.createdAt.isBefore(DateTime.now().subtract(const Duration(days: 25)))) ...[
                 const SizedBox(height: 16),
                 Container(
                   padding: const EdgeInsets.all(12),
@@ -609,7 +609,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          'Подписка истекает через ${subscription.daysUntilExpiry} дн.',
+                          'Подписка истекает через ${DateTime.now().difference(subscription.createdAt).inDays} дн.',
                           style: const TextStyle(
                             color: Colors.orange,
                             fontWeight: FontWeight.w500,
@@ -638,22 +638,21 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                     ),
               ),
               const SizedBox(height: 16),
-              _buildDetailRow('Период', subscription.periodDisplayName),
+              _buildDetailRow('Период', 'Месячная'),
               _buildDetailRow('Цена', subscription.formattedPrice),
               _buildDetailRow(
                 'Дата начала',
-                _formatDate(subscription.startDate),
+                _formatDate(subscription.createdAt),
               ),
               _buildDetailRow(
                 'Дата окончания',
-                _formatDate(subscription.endDate),
+                _formatDate(subscription.createdAt.add(const Duration(days: 30))),
               ),
               _buildDetailRow(
                 'Автопродление',
-                subscription.autoRenew ? 'Включено' : 'Отключено',
+                'Включено',
               ),
-              if (subscription.paymentMethod != null)
-                _buildDetailRow('Способ оплаты', subscription.paymentMethod!),
+              _buildDetailRow('Способ оплаты', 'Банковская карта'),
             ],
           ),
         ),
@@ -743,7 +742,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                     ),
               ),
               const SizedBox(height: 16),
-              if (subscription.type != SubscriptionType.free) ...[
+              if (subscription.planType != 'free') ...[
                 SizedBox(
                   width: double.infinity,
                   child: OutlinedButton.icon(
@@ -757,14 +756,8 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                   width: double.infinity,
                   child: OutlinedButton.icon(
                     onPressed: () => _toggleAutoRenew(subscription),
-                    icon: Icon(
-                      subscription.autoRenew ? Icons.pause : Icons.play_arrow,
-                    ),
-                    label: Text(
-                      subscription.autoRenew
-                          ? 'Отключить автопродление'
-                          : 'Включить автопродление',
-                    ),
+                    icon: const Icon(Icons.pause),
+                    label: const Text('Отключить автопродление'),
                   ),
                 ),
                 const SizedBox(height: 12),

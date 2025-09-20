@@ -930,4 +930,58 @@ class IntegrationService {
       throw Exception('Ошибка открытия URL: $e');
     }
   }
+
+  /// Получить адрес по координатам
+  Future<String> getAddressFromCoordinates(double latitude, double longitude) async {
+    try {
+      // Заглушка для получения адреса по координатам
+      // В реальном приложении здесь будет использоваться geocoding
+      return 'Адрес по координатам: $latitude, $longitude';
+    } catch (e) {
+      throw Exception('Ошибка получения адреса по координатам: $e');
+    }
+  }
+
+  /// Поделиться контентом
+  Future<void> shareContent({
+    required String content,
+    String? subject,
+    String? title,
+  }) async {
+    try {
+      // Заглушка для шаринга контента
+      // В реальном приложении здесь будет использоваться share_plus
+      if (kDebugMode) {
+        print('Sharing content: $content');
+        if (subject != null) print('Subject: $subject');
+        if (title != null) print('Title: $title');
+      }
+    } catch (e) {
+      throw Exception('Ошибка шаринга контента: $e');
+    }
+  }
+
+  /// Проверить валидность VK URL
+  bool isValidVKUrl(String url) {
+    try {
+      final uri = Uri.parse(url);
+      return uri.host.contains('vk.com') || uri.host.contains('vkontakte.ru');
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Создать мок VK профиль
+  Map<String, dynamic> createMockVKProfile(String url) {
+    return {
+      'id': '123456789',
+      'firstName': 'Иван',
+      'lastName': 'Петров',
+      'photoUrl': 'https://via.placeholder.com/100',
+      'url': url,
+      'followersCount': 150,
+      'postsCount': 25,
+      'isVerified': false,
+    };
+  }
 }

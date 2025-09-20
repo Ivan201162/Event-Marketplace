@@ -35,7 +35,7 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        title: 'KPI метрики и аналитика',
+        appBar: AppBar(title: const Text('KPI метрики и аналитика')),
         body: Column(
           children: [
             // Вкладки
@@ -122,9 +122,9 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ResponsiveText(
+            Text(
               'Фильтры',
-              isTitle: true,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
             Wrap(
@@ -216,9 +216,9 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ResponsiveText(
+          Text(
             'Анализ KPI',
-            isTitle: true,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 16),
           Row(
@@ -306,9 +306,9 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'KPI метрики',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -554,9 +554,9 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'KPI дашборды',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -740,9 +740,9 @@ class _KPIMetricsScreenState extends ConsumerState<KPIMetricsScreen> {
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'KPI отчеты',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(

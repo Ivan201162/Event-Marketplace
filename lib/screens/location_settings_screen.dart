@@ -447,19 +447,13 @@ class _LocationSettingsScreenState
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (address.street != null) Text('Улица: ${address.street}'),
-                if (address.city != null) Text('Город: ${address.city}'),
-                if (address.state != null) Text('Регион: ${address.state}'),
-                if (address.country != null) Text('Страна: ${address.country}'),
-                if (address.postalCode != null)
-                  Text('Почтовый индекс: ${address.postalCode}'),
-                if (address.formattedAddress != null) ...[
-                  const SizedBox(height: 8),
-                  const Text(
-                    'Полный адрес:',
+                Text('Адрес: $address'),
+                const SizedBox(height: 8),
+                const Text(
+                  'Полный адрес:',
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
-                  Text(address.formattedAddress!),
+                  Text(address),
                 ],
               ],
             ),

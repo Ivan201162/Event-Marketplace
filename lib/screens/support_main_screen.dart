@@ -182,7 +182,7 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
                                   Row(
                                     children: [
                                       Icon(
-                                        faqItem.category.categoryIcon,
+                                        faqItem.category.icon,
                                         size: 16,
                                         color: Colors.blue,
                                       ),
@@ -354,7 +354,7 @@ class _SupportMainScreenState extends ConsumerState<SupportMainScreen> {
         .push(
       MaterialPageRoute(
         builder: (context) => SupportTicketDetailScreen(
-          ticket: ticket,
+          ticketId: ticket.id,
         ),
       ),
     )

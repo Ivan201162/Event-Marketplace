@@ -29,7 +29,7 @@ class _NotificationManagementScreenState
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        title: 'Управление уведомлениями',
+        appBar: AppBar(title: const Text('Управление уведомлениями')),
         body: Column(
           children: [
             // Вкладки
@@ -51,7 +51,7 @@ class _NotificationManagementScreenState
         child: Row(
           children: [
             Expanded(
-              child: _buildTabButton('templates', 'Шаблоны', Icons.template),
+              child: _buildTabButton('templates', 'Шаблоны', Icons.description),
             ),
             Expanded(
               child: _buildTabButton(
@@ -118,9 +118,9 @@ class _NotificationManagementScreenState
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Шаблоны уведомлений',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -161,9 +161,9 @@ class _NotificationManagementScreenState
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: ResponsiveText(
+                  child: Text(
                     template.name,
-                    isTitle: true,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
                 _buildStatusChip(template.isActive),
@@ -293,9 +293,9 @@ class _NotificationManagementScreenState
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Отправленные уведомления',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -337,9 +337,9 @@ class _NotificationManagementScreenState
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: ResponsiveText(
+                  child: Text(
                     notification.title,
-                    isTitle: true,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
                 _buildStatusChip(notification.status.name),

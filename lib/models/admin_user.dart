@@ -236,6 +236,9 @@ class ManagedUser {
   final DateTime? bannedUntil;
   final String? notes;
 
+  /// Получить отображаемое имя
+  String get displayName => '$firstName $lastName'.trim();
+
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
         'email': email,

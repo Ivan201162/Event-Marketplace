@@ -11,6 +11,7 @@ class Subscription {
     required this.createdAt,
     this.isActive = true,
     this.notificationsEnabled = true,
+    this.planType = 'basic',
   });
 
   /// Создать из документа Firestore
@@ -26,6 +27,7 @@ class Subscription {
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       isActive: data['isActive'] ?? true,
       notificationsEnabled: data['notificationsEnabled'] ?? true,
+      planType: data['planType'] ?? 'basic',
     );
   }
   final String id;
@@ -36,6 +38,7 @@ class Subscription {
   final DateTime createdAt;
   final bool isActive;
   final bool notificationsEnabled;
+  final String planType;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -46,6 +49,7 @@ class Subscription {
         'createdAt': Timestamp.fromDate(createdAt),
         'isActive': isActive,
         'notificationsEnabled': notificationsEnabled,
+        'planType': planType,
       };
 
   /// Создать копию с обновлёнными полями
@@ -58,6 +62,7 @@ class Subscription {
     DateTime? createdAt,
     bool? isActive,
     bool? notificationsEnabled,
+    String? planType,
   }) =>
       Subscription(
         id: id ?? this.id,
@@ -68,6 +73,7 @@ class Subscription {
         createdAt: createdAt ?? this.createdAt,
         isActive: isActive ?? this.isActive,
         notificationsEnabled: notificationsEnabled ?? this.notificationsEnabled,
+        planType: planType ?? this.planType,
       );
 
   @override

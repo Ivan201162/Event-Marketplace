@@ -180,7 +180,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
             isSelected ? const Icon(Icons.check, color: Colors.green) : null,
         selected: isSelected,
         onTap: () {
-          ref.read(themeProvider.notifier).setTheme(mode);
+          ref.read(themeProvider.notifier).update((state) => mode);
         },
       );
 
@@ -428,7 +428,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              ref.read(themeProvider.notifier).setTheme(ThemeMode.system);
+              ref.read(themeProvider.notifier).update((state) => ThemeMode.system);
               ref
                   .read(themeSettingsProvider.notifier)
                   .setPrimaryColor(Colors.deepPurple);

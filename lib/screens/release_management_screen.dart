@@ -37,7 +37,7 @@ class _ReleaseManagementScreenState
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        title: 'Управление релизами',
+        appBar: AppBar(title: const Text('Управление релизами')),
         body: Column(
           children: [
             // Вкладки
@@ -125,9 +125,9 @@ class _ReleaseManagementScreenState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ResponsiveText(
+            Text(
               'Поиск и фильтры',
-              isTitle: true,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
 
@@ -215,9 +215,9 @@ class _ReleaseManagementScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ResponsiveText(
+          Text(
             'Анализ релизов',
-            isTitle: true,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 16),
           Row(
@@ -305,9 +305,9 @@ class _ReleaseManagementScreenState
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Релизы',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -543,9 +543,9 @@ class _ReleaseManagementScreenState
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Планы релизов',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -729,9 +729,9 @@ class _ReleaseManagementScreenState
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Деплои',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(

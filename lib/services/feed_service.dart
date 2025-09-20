@@ -206,4 +206,14 @@ class FeedService {
       throw Exception('Ошибка шаринга поста: $e');
     }
   }
+
+  /// Получить ленту специалиста
+  Stream<List<FeedPost>> getSpecialistFeed(String specialistId) => _firestore
+      .collection('feed_posts')
+      .where('authorId', isEqualTo: specialistId)
+      .orderBy('createdAt', descending: true)
+      .snapshots()
+      .map(
+        (snapshot) => snapshot.docs.map(FeedPost.fromDocument).toList(),
+      );
 }

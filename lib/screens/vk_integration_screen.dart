@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/feature_flags.dart';
 import '../models/user.dart';
+import '../services/integration_service.dart';
 import '../services/vk_integration_service.dart';
 
 /// Экран интеграции с VK для специалистов
@@ -22,7 +23,7 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
     with TickerProviderStateMixin {
   late TabController _tabController;
   final TextEditingController _vkUrlController = TextEditingController();
-  final VKIntegrationService _vkService = VKIntegrationService();
+  final IntegrationService _vkService = IntegrationService();
   VKProfile? _vkProfile;
   bool _isLoading = false;
   String? _errorMessage;
@@ -639,7 +640,7 @@ class _VKIntegrationScreenState extends ConsumerState<VKIntegrationScreen>
                       ],
                     ),
                   ),
-                  Icon(Icons.vk, color: Colors.blue[600]),
+                  Icon(Icons.public, color: Colors.blue[600]),
                 ],
               ),
               const SizedBox(height: 12),

@@ -23,14 +23,18 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen> {
   }
 
   Future<void> _loadPendingBookings() async {
-    final bookings =
-        await bookingService.getBookingsForSpecialist(widget.specialistId);
-    setState(() {
-      pendingBookings = bookings.where((b) => b.status == 'pending').toList();
-    });
+    final bookingsStream = bookingService.getBookingsForSpecialist(widget.specialistId);
+    await for (final bookings in bookingsStream) {
+      if (mounted) {
+        setState(() {
+          pendingBookings = bookings.where((b) => b.status == BookingStatus.pending).toList();
+        });
+      }
+      break; // Получаем только первое значение
+    }
   }
 
-  Future<void> _updateStatus(Booking booking, String status) async {
+  Future<void> _updateStatus(Booking booking, BookingStatus status) async {
     booking.status = status;
     await bookingService.addBooking(booking);
     _loadPendingBookings();

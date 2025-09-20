@@ -134,6 +134,12 @@ class Idea {
     }
   }
 
+  /// Проверить, лайкнул ли пользователь
+  bool isLikedBy(String userId) => likedBy.contains(userId);
+
+  /// Проверить, сохранил ли пользователь
+  bool isSavedBy(String userId) => savedBy.contains(userId);
+
   /// Копировать с изменениями
   Idea copyWith({
     String? id,
@@ -403,9 +409,4 @@ enum IdeaCategory {
     }
   }
 
-  /// Проверить, лайкнул ли пользователь
-  bool isLikedBy(String userId) => likedBy.contains(userId);
-
-  /// Проверить, сохранил ли пользователь
-  bool isSavedBy(String userId) => savedBy.contains(userId);
 }

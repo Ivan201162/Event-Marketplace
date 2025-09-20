@@ -30,7 +30,7 @@ class _VersionManagementScreenState
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        title: 'Управление версиями',
+        appBar: AppBar(title: const Text('Управление версиями')),
         body: Column(
           children: [
             // Вкладки
@@ -115,9 +115,9 @@ class _VersionManagementScreenState
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Версии приложения',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 DropdownButton<String?>(
@@ -367,9 +367,9 @@ class _VersionManagementScreenState
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Обновления приложения',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -528,9 +528,9 @@ class _VersionManagementScreenState
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Статистика версий',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -645,7 +645,7 @@ class _VersionManagementScreenState
                     'Всего сессий',
                     '${stats.totalSessions}',
                     Colors.cyan,
-                    Icons.sessions,
+                    Icons.timeline,
                   ),
                 ),
               ],

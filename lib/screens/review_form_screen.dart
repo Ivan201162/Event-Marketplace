@@ -148,7 +148,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    'Отзыв о ${widget.typeDisplayName.toLowerCase()}',
+                    'Отзыв о ${widget.type.name.toLowerCase()}',
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                           color: Theme.of(context).colorScheme.primary,
                         ),
@@ -505,7 +505,15 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
   Future<void> _submitReview() async {
     if (!_formKey.currentState!.validate()) return;
 
-    final currentUser = ref.read(currentUserProvider);
+    final currentUserAsync = ref.read(currentUserProvider);
+    final currentUser = currentUserAsync.value;
+
+    if (currentUser == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Пользователь не найден')),
+      );
+      return;
+    }
 
     setState(() => _isSubmitting = true);
 
@@ -523,7 +531,7 @@ class _ReviewFormScreenState extends ConsumerState<ReviewFormScreen> {
       } else {
         // Создаем новый отзыв
         await _reviewService.createReview(
-          reviewerId: currentUser.id,
+          reviewerId: currentUser.uid,
           reviewerName: currentUser.name,
           reviewerAvatar: currentUser.photoUrl,
           targetId: widget.targetId,

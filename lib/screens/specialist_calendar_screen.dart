@@ -403,12 +403,11 @@ class _SpecialistCalendarScreenState
                       .read(calendarServiceProvider)
                       .createUnavailableEvent(
                         specialistId: specialistId,
-                        title: titleController.text,
-                        startTime: startDate!,
-                        endTime: endDate!,
-                        description: descriptionController.text.isEmpty
+                        startDate: startDate!,
+                        endDate: endDate!,
+                        reason: titleController.text.isEmpty
                             ? null
-                            : descriptionController.text,
+                            : titleController.text,
                       );
 
                   if (context.mounted) {
@@ -527,12 +526,11 @@ class _SpecialistCalendarScreenState
                 try {
                   await ref.read(calendarServiceProvider).createVacationEvent(
                         specialistId: specialistId,
-                        title: titleController.text,
-                        startTime: startDate!,
-                        endTime: endDate!,
-                        description: descriptionController.text.isEmpty
+                        startDate: startDate!,
+                        endDate: endDate!,
+                        reason: titleController.text.isEmpty
                             ? null
-                            : descriptionController.text,
+                            : titleController.text,
                       );
 
                   if (context.mounted) {
@@ -597,4 +595,21 @@ class _SpecialistCalendarScreenState
 
   /// Форматировать дату
   String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
+
+  /// Показать диалог аналитики
+  void _showAnalyticsDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Аналитика календаря'),
+        content: const Text('Здесь будет отображаться аналитика календаря специалиста'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Закрыть'),
+          ),
+        ],
+      ),
+    );
+  }
 }

@@ -11,6 +11,7 @@ class SpecialistSchedule {
     required this.workingHours,
     required this.exceptions,
     required this.availability,
+    required this.events,
   });
 
   /// Создать из Map
@@ -54,6 +55,10 @@ class SpecialistSchedule {
                 )
                 .cast<DateTime, AvailabilityStatus>() ??
             {},
+        events: (data['events'] as List<dynamic>?)
+                ?.map((e) => ScheduleEvent.fromMap(e as Map<String, dynamic>))
+                .toList() ??
+            [],
       );
   final String specialistId;
   final DateTime startDate;
@@ -62,6 +67,7 @@ class SpecialistSchedule {
   final Map<int, WorkingHours> workingHours;
   final List<ScheduleException> exceptions;
   final Map<DateTime, AvailabilityStatus> availability;
+  final List<ScheduleEvent> events;
 
   /// Получить события для конкретной даты
   List<ScheduleEvent> getEventsForDate(DateTime date) => bookings

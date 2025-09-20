@@ -711,4 +711,90 @@ class CalendarService {
                 .map((doc) => SpecialistSchedule.fromMap(doc.data()))
                 .toList(),
           );
+
+  /// Создать событие недоступности
+  Future<String?> createUnavailableEvent({
+    required String specialistId,
+    required DateTime startDate,
+    required DateTime endDate,
+    String? reason,
+  }) async {
+    try {
+      final eventRef = _firestore.collection('unavailable_events').doc();
+      final eventData = {
+        'id': eventRef.id,
+        'specialistId': specialistId,
+        'startDate': Timestamp.fromDate(startDate),
+        'endDate': Timestamp.fromDate(endDate),
+        'reason': reason ?? 'Недоступен',
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+
+      await eventRef.set(eventData);
+      return eventRef.id;
+    } catch (e) {
+      print('Ошибка создания события недоступности: $e');
+      return null;
+    }
+  }
+
+  /// Создать событие отпуска
+  Future<String?> createVacationEvent({
+    required String specialistId,
+    required DateTime startDate,
+    required DateTime endDate,
+    String? reason,
+  }) async {
+    try {
+      final eventRef = _firestore.collection('vacation_events').doc();
+      final eventData = {
+        'id': eventRef.id,
+        'specialistId': specialistId,
+        'startDate': Timestamp.fromDate(startDate),
+        'endDate': Timestamp.fromDate(endDate),
+        'reason': reason ?? 'Отпуск',
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+
+      await eventRef.set(eventData);
+      return eventRef.id;
+    } catch (e) {
+      print('Ошибка создания события отпуска: $e');
+      return null;
+    }
+  }
+
+  /// Добавить тестовые данные
+  Future<void> addTestData(String specialistId) async {
+    try {
+      // Добавляем тестовые события
+      final now = DateTime.now();
+      final testEvents = [
+        {
+          'specialistId': specialistId,
+          'title': 'Тестовое событие 1',
+          'startDate': Timestamp.fromDate(now.add(const Duration(days: 1))),
+          'endDate': Timestamp.fromDate(now.add(const Duration(days: 1, hours: 2))),
+          'type': 'booking',
+          'createdAt': FieldValue.serverTimestamp(),
+        },
+        {
+          'specialistId': specialistId,
+          'title': 'Тестовое событие 2',
+          'startDate': Timestamp.fromDate(now.add(const Duration(days: 2))),
+          'endDate': Timestamp.fromDate(now.add(const Duration(days: 2, hours: 1))),
+          'type': 'unavailable',
+          'createdAt': FieldValue.serverTimestamp(),
+        },
+      ];
+
+      for (final eventData in testEvents) {
+        await _firestore.collection('calendar_events').add(eventData);
+      }
+    } catch (e) {
+      print('Ошибка добавления тестовых данных: $e');
+    }
+  }
 }

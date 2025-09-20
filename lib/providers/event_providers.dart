@@ -68,3 +68,15 @@ final eventProvider =
   final eventService = ref.read(eventServiceProvider);
   return eventService.getEvent(eventId);
 });
+
+/// Провайдер для статистики событий пользователя
+final userEventStatsProvider = FutureProvider.family<Map<String, dynamic>, String>((ref, userId) async {
+  final eventService = ref.read(eventServiceProvider);
+  // Заглушка для статистики событий пользователя
+  return {
+    'totalEvents': 0,
+    'upcomingEvents': 0,
+    'pastEvents': 0,
+    'cancelledEvents': 0,
+  };
+});

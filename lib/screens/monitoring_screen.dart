@@ -29,7 +29,7 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        title: 'Мониторинг и алерты',
+        appBar: AppBar(title: const Text('Мониторинг и алерты')),
         body: Column(
           children: [
             // Вкладки
@@ -112,9 +112,9 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Метрики системы',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 DropdownButton<String?>(
@@ -282,9 +282,9 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Алерты мониторинга',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -488,9 +488,9 @@ class _MonitoringScreenState extends ConsumerState<MonitoringScreen> {
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Дашборды мониторинга',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(

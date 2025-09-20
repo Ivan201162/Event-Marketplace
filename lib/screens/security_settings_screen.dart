@@ -40,14 +40,14 @@ class _SecuritySettingsScreenState
             await _securityService.getSecuritySettings(currentUser.id);
         if (settings != null) {
           setState(() {
-            _biometricAuth = settings.biometricAuth;
-            _pinAuth = settings.pinAuth;
-            _twoFactorAuth = settings.twoFactorAuth;
-            _autoLock = settings.autoLock;
-            _autoLockTimeout = settings.autoLockTimeout;
-            _secureStorage = settings.secureStorage;
-            _dataEncryption = settings.dataEncryption;
-            _auditLogging = settings.auditLogging;
+            _biometricAuth = settings['biometricAuth'] ?? false;
+            _pinAuth = settings['pinAuth'] ?? false;
+            _twoFactorAuth = settings['twoFactorAuth'] ?? false;
+            _autoLock = settings['autoLock'] ?? false;
+            _autoLockTimeout = settings['autoLockTimeout'] ?? 5;
+            _secureStorage = settings['secureStorage'] ?? false;
+            _dataEncryption = settings['dataEncryption'] ?? false;
+            _auditLogging = settings['auditLogging'] ?? false;
           });
         }
       }
@@ -136,10 +136,7 @@ class _SecuritySettingsScreenState
                         ? (value) async {
                             if (value) {
                               final success = await _securityService
-                                  .authenticateWithBiometrics(
-                                reason:
-                                    'Включить биометрическую аутентификацию',
-                              );
+                                  .authenticateWithBiometrics();
                               if (success) {
                                 setState(() {
                                   _biometricAuth = true;
@@ -417,20 +414,20 @@ class _SecuritySettingsScreenState
     try {
       final currentUser = await ref.read(authServiceProvider).getCurrentUser();
       if (currentUser != null) {
-        final settings = SecuritySettings(
-          userId: currentUser.id,
-          biometricAuth: _biometricAuth,
-          pinAuth: _pinAuth,
-          twoFactorAuth: _twoFactorAuth,
-          autoLock: _autoLock,
-          autoLockTimeout: _autoLockTimeout,
-          secureStorage: _secureStorage,
-          dataEncryption: _dataEncryption,
-          auditLogging: _auditLogging,
-          lastPasswordChange: DateTime.now(),
-          lastSecurityUpdate: DateTime.now(),
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
+        final settings = {
+          'userId': currentUser.uid,
+          'biometricAuth': _biometricAuth,
+          'pinAuth': _pinAuth,
+          'twoFactorAuth': _twoFactorAuth,
+          'autoLock': _autoLock,
+          'autoLockTimeout': _autoLockTimeout,
+          'secureStorage': _secureStorage,
+          'dataEncryption': _dataEncryption,
+          'auditLogging': _auditLogging,
+          'lastPasswordChange': DateTime.now(),
+          'lastSecurityUpdate': DateTime.now(),
+          'createdAt': DateTime.now(),
+          'updatedAt': DateTime.now(),
         );
 
         await _securityService.updateSecuritySettings(settings);
