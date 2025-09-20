@@ -21,7 +21,7 @@ class CacheItem<T> {
   ) =>
       CacheItem<T>(
         key: data['key'] ?? '',
-        data: fromJson(data['data']),
+        data: fromJson(),
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         expiresAt: (data['expiresAt'] as Timestamp).toDate(),
         type: CacheType.values.firstWhere(
