@@ -70,11 +70,11 @@ class Backup {
         completedAt: data['completedAt'] != null
             ? (data['completedAt'] as Timestamp).toDate()
             : null,
-        fileUrl: data['fileUrl'],
-        fileSize: data['fileSize'],
-        errorMessage: data['errorMessage'],
+        fileUrl: data['fileUrl'] as String?,
+        fileSize: data['fileSize'] as int?,
+        errorMessage: data['errorMessage'] as String?,
         metadata: data['metadata'] != null
-            ? Map<String, dynamic>.from(data['metadata'])
+            ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
             : null,
       );
   final String id;
@@ -257,7 +257,7 @@ class Restore {
     final data = doc.data()! as Map<String, dynamic>;
     return Restore(
       id: doc.id,
-      backupId: data['backupId'] ?? '',
+      backupId: data['backupId'] as String? ?? '',
       name: data['name'] ?? '',
       description: data['description'] ?? '',
       type: RestoreType.values.firstWhere(
