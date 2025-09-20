@@ -598,4 +598,56 @@ class IdeaService {
       throw Exception('Ошибка увеличения счетчика просмотров: $e');
     }
   }
+
+  /// Лайкнуть идею
+  Future<void> likeIdea(String ideaId, String userId) async {
+    try {
+      await _firestore.collection('ideas').doc(ideaId).update({
+        'likedBy': FieldValue.arrayUnion([userId]),
+        'likesCount': FieldValue.increment(1),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка лайка идеи: $e');
+    }
+  }
+
+  /// Убрать лайк с идеи
+  Future<void> unlikeIdea(String ideaId, String userId) async {
+    try {
+      await _firestore.collection('ideas').doc(ideaId).update({
+        'likedBy': FieldValue.arrayRemove([userId]),
+        'likesCount': FieldValue.increment(-1),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка удаления лайка идеи: $e');
+    }
+  }
+
+  /// Сохранить идею
+  Future<void> saveIdea(String ideaId, String userId) async {
+    try {
+      await _firestore.collection('ideas').doc(ideaId).update({
+        'savedBy': FieldValue.arrayUnion([userId]),
+        'savesCount': FieldValue.increment(1),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка сохранения идеи: $e');
+    }
+  }
+
+  /// Убрать из сохраненных
+  Future<void> unsaveIdea(String ideaId, String userId) async {
+    try {
+      await _firestore.collection('ideas').doc(ideaId).update({
+        'savedBy': FieldValue.arrayRemove([userId]),
+        'savesCount': FieldValue.increment(-1),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка удаления из сохраненных: $e');
+    }
+  }
 }

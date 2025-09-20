@@ -860,4 +860,74 @@ class IntegrationService {
       return 'unknown';
     }
   }
+
+  /// Отключить интеграцию
+  Future<void> disconnectIntegration(String integrationId) async {
+    try {
+      await _firestore.collection('integrations').doc(integrationId).update({
+        'isActive': false,
+        'disconnectedAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      // Остановить таймер синхронизации
+      _syncTimers[integrationId]?.cancel();
+      _syncTimers.remove(integrationId);
+
+      // Удалить из кэша
+      _integrations.remove(integrationId);
+    } catch (e) {
+      throw Exception('Ошибка отключения интеграции: $e');
+    }
+  }
+
+  /// Подключить интеграцию
+  Future<void> connectIntegration(String integrationId) async {
+    try {
+      await _firestore.collection('integrations').doc(integrationId).update({
+        'isActive': true,
+        'connectedAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+
+      // Запустить синхронизацию
+      await _startIntegrationSync(integrationId);
+    } catch (e) {
+      throw Exception('Ошибка подключения интеграции: $e');
+    }
+  }
+
+  /// Синхронизировать данные интеграции
+  Future<void> syncIntegrationData(String integrationId) async {
+    try {
+      final integration = _integrations[integrationId];
+      if (integration == null) {
+        throw Exception('Интеграция не найдена');
+      }
+
+      // Заглушка для синхронизации данных
+      // В реальном приложении здесь будет логика синхронизации с внешним API
+      await Future.delayed(const Duration(seconds: 1));
+
+      await _firestore.collection('integrations').doc(integrationId).update({
+        'lastSyncAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка синхронизации данных интеграции: $e');
+    }
+  }
+
+  /// Открыть URL интеграции
+  Future<void> openUrl(String url) async {
+    try {
+      // Заглушка для открытия URL
+      // В реальном приложении здесь будет использоваться url_launcher
+      if (kDebugMode) {
+        print('Opening URL: $url');
+      }
+    } catch (e) {
+      throw Exception('Ошибка открытия URL: $e');
+    }
+  }
 }

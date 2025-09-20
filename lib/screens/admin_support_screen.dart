@@ -388,7 +388,7 @@ class _AdminSupportScreenState extends ConsumerState<AdminSupportScreen> {
         .push(
       MaterialPageRoute(
         builder: (context) => SupportTicketDetailScreen(
-          ticket: ticket,
+          ticketId: ticket.id,
         ),
       ),
     )

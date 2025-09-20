@@ -558,7 +558,7 @@ class _IdeaDetailScreenState extends ConsumerState<IdeaDetailScreen> {
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
           likesCount: 0,
-          isEdited: false,
+          // isEdited: false, // Параметр не существует
         ),
       );
 
