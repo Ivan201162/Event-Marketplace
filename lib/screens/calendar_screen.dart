@@ -283,11 +283,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     Navigator.of(context)
         .push(
       MaterialPageRoute(
-        builder: (context) => CreateEventScreen(
-          userId: widget.userId,
-          specialistId: widget.specialistId,
-          selectedDate: _selectedDay,
-        ),
+        builder: (context) => CreateEventScreen(),
       ),
     )
         .then((result) {
@@ -302,8 +298,6 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         .push(
       MaterialPageRoute(
         builder: (context) => CreateEventScreen(
-          userId: widget.userId,
-          specialistId: widget.specialistId,
           event: event,
         ),
       ),

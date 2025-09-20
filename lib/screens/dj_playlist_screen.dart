@@ -666,7 +666,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
                 'Мы импортируем только публично доступные треки. Приватные плейлисты импортировать нельзя.',
               ),
               _buildHelpItem(
-                Icons.limit,
+                Icons.lock,
                 'Ограничения',
                 'Максимальное количество треков в одном плейлисте: 100. Поддерживаются только аудиофайлы.',
               ),
@@ -741,7 +741,7 @@ class _DJPlaylistScreenState extends ConsumerState<DJPlaylistScreen>
       );
 
       if (result != null && result.files.isNotEmpty) {
-        final file = File(result.files.first.path!);
+        final file = result.files.first.path!;
         final fileName = result.files.first.name;
 
         // Показываем диалог загрузки

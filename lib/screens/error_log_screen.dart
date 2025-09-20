@@ -28,7 +28,7 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        title: 'Журнал ошибок',
+        appBar: AppBar(title: const Text('Журнал ошибок')),
         body: Column(
           children: [
             // Фильтры и сортировка
@@ -150,7 +150,7 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
                 const SizedBox(width: 8),
                 ElevatedButton.icon(
                   onPressed: _cleanupOldErrors,
-                  icon: const Icon(Icons.cleanup),
+                  icon: const Icon(Icons.cleaning_services),
                   label: const Text('Очистить старые'),
                 ),
               ],
@@ -172,9 +172,9 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ResponsiveText(
+                Text(
                   'Статистика ошибок',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const SizedBox(height: 16),
                 Row(
@@ -277,9 +277,9 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: ResponsiveText(
+                  child: Text(
                     error.errorType,
-                    isTitle: true,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
                 _buildSeverityChip(error.severity),
@@ -318,9 +318,9 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ResponsiveText(
+                  Text(
                     error.shortDescription,
-                    isSubtitle: true,
+                    style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   if (error.stackTrace != null) ...[
                     const SizedBox(height: 8),
@@ -387,9 +387,9 @@ class _ErrorLogScreenState extends ConsumerState<ErrorLogScreen> {
               children: [
                 const Icon(Icons.access_time, size: 16, color: Colors.grey),
                 const SizedBox(width: 4),
-                ResponsiveText(
+                Text(
                   '${error.timestamp.day}.${error.timestamp.month}.${error.timestamp.year} ${error.timestamp.hour}:${error.timestamp.minute.toString().padLeft(2, '0')}',
-                  isSubtitle: true,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const Spacer(),
                 if (!error.resolved) ...[

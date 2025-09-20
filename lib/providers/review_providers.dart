@@ -79,6 +79,7 @@ class ReviewFormState {
     this.isPublic = true,
     this.error,
     this.errorMessage,
+    this.isLoading = false,
   });
   final String title;
   final String content;
@@ -91,6 +92,7 @@ class ReviewFormState {
   final bool isPublic;
   final String? error;
   final String? errorMessage;
+  final bool isLoading;
 
   ReviewFormState copyWith({
     String? title,
@@ -117,6 +119,7 @@ class ReviewFormState {
         isPublic: isPublic ?? this.isPublic,
         error: error ?? this.error,
         errorMessage: errorMessage ?? this.errorMessage,
+        isLoading: isLoading ?? this.isLoading,
       );
 }
 
@@ -173,6 +176,31 @@ class ReviewFormNotifier extends Notifier<ReviewFormState> {
 
   void updateIsPublic(bool isPublic) {
     state = state.copyWith(isPublic: isPublic);
+  }
+
+  /// Создать отзыв
+  Future<void> createReview({
+    required String targetId,
+    required ReviewType type,
+  }) async {
+    try {
+      state = state.copyWith(error: null);
+      
+      final reviewService = ref.read(reviewServiceProvider);
+      await reviewService.createReview(
+        targetId: targetId,
+        type: type,
+        title: state.title,
+        content: state.content,
+        rating: state.rating,
+        tags: state.selectedTags,
+        images: state.images,
+      );
+      
+      state = state.copyWith();
+    } catch (e) {
+      state = state.copyWith(error: e.toString());
+    }
   }
 
   void setErrorMessage(String? errorMessage) {

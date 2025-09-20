@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 /// Типы договоров
 enum ContractType {
@@ -36,6 +37,11 @@ class Contract {
     this.signedAt,
     required this.expiresAt,
     required this.metadata,
+    this.specialistName,
+    this.startDate,
+    this.endDate,
+    this.totalAmount,
+    this.currency,
   });
 
   /// Создать из документа Firestore
@@ -65,6 +71,15 @@ class Contract {
           : null,
       expiresAt: (data['expiresAt'] as Timestamp).toDate(),
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      specialistName: data['specialistName'],
+      startDate: data['startDate'] != null
+          ? (data['startDate'] as Timestamp).toDate()
+          : null,
+      endDate: data['endDate'] != null
+          ? (data['endDate'] as Timestamp).toDate()
+          : null,
+      totalAmount: data['totalAmount']?.toDouble(),
+      currency: data['currency'],
     );
   }
   final String id;
@@ -82,6 +97,11 @@ class Contract {
   final DateTime? signedAt;
   final DateTime expiresAt;
   final Map<String, dynamic> metadata;
+  final String? specialistName;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final double? totalAmount;
+  final String? currency;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -99,6 +119,11 @@ class Contract {
         'signedAt': signedAt != null ? Timestamp.fromDate(signedAt!) : null,
         'expiresAt': Timestamp.fromDate(expiresAt),
         'metadata': metadata,
+        'specialistName': specialistName,
+        'startDate': startDate != null ? Timestamp.fromDate(startDate!) : null,
+        'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
+        'totalAmount': totalAmount,
+        'currency': currency,
       };
 
   /// Создать копию с изменениями
@@ -135,5 +160,51 @@ class Contract {
         signedAt: signedAt ?? this.signedAt,
         expiresAt: expiresAt ?? this.expiresAt,
         metadata: metadata ?? this.metadata,
+        specialistName: specialistName ?? this.specialistName,
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
+        totalAmount: totalAmount ?? this.totalAmount,
+        currency: currency ?? this.currency,
       );
+}
+
+/// Расширение для ContractStatus
+extension ContractStatusExtension on ContractStatus {
+  Color get statusColor {
+    switch (this) {
+      case ContractStatus.draft:
+        return Colors.grey;
+      case ContractStatus.pending:
+        return Colors.orange;
+      case ContractStatus.signed:
+        return Colors.blue;
+      case ContractStatus.active:
+        return Colors.green;
+      case ContractStatus.completed:
+        return Colors.purple;
+      case ContractStatus.cancelled:
+        return Colors.red;
+      case ContractStatus.expired:
+        return Colors.brown;
+    }
+  }
+
+  String get statusText {
+    switch (this) {
+      case ContractStatus.draft:
+        return 'Черновик';
+      case ContractStatus.pending:
+        return 'Ожидает подписания';
+      case ContractStatus.signed:
+        return 'Подписан';
+      case ContractStatus.active:
+        return 'Действующий';
+      case ContractStatus.completed:
+        return 'Завершен';
+      case ContractStatus.cancelled:
+        return 'Отменен';
+      case ContractStatus.expired:
+        return 'Истек';
+    }
+  }
 }

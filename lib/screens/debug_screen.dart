@@ -105,7 +105,7 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
               Row(
                 children: [
                   Icon(
-                    _isMonitoring ? Icons.monitor : Icons.monitor_off,
+                    _isMonitoring ? Icons.monitor : Icons.monitor_outlined,
                     color: _isMonitoring ? Colors.green : Colors.red,
                   ),
                   const SizedBox(width: 8),
@@ -142,17 +142,28 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
-            if (stats.isEmpty)
-              const Text('Нет данных о производительности')
-            else
-              ...stats.entries.map(
+            FutureBuilder<Map<String, dynamic>>(
+              future: stats,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                }
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Text('Нет данных о производительности');
+                }
+                final data = snapshot.data!;
+                return Column(
+                  children: data.entries.map(
                 (entry) => _buildStatItem(
                   entry.key,
                   '${entry.value['count']} операций',
                   'Среднее время: ${entry.value['averageTime']?.toStringAsFixed(1)}ms',
                   Icons.speed,
                 ),
-              ),
+              ).toList(),
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -173,23 +184,39 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
-            _buildStatItem(
-              'Всего ошибок',
-              '${stats['totalErrors'] ?? 0}',
-              'За последние 5 минут: ${stats['recentErrors'] ?? 0}',
-              Icons.error,
-              color: Colors.red,
-            ),
-            if (stats['errorTypes'] != null)
-              ...(stats['errorTypes'] as Map<String, int>).entries.map(
-                    (entry) => _buildStatItem(
-                      entry.key,
-                      '${entry.value}',
-                      '',
-                      Icons.warning,
-                      color: Colors.orange,
+            FutureBuilder<Map<String, dynamic>>(
+              future: stats,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                }
+                if (!snapshot.hasData) {
+                  return const Text('Нет данных об ошибках');
+                }
+                final data = snapshot.data!;
+                return Column(
+                  children: [
+                    _buildStatItem(
+                      'Всего ошибок',
+                      '${data['totalErrors'] ?? 0}',
+                      'За последние 5 минут: ${data['recentErrors'] ?? 0}',
+                      Icons.error,
+                      color: Colors.red,
                     ),
-                  ),
+                    if (data['errorTypes'] != null)
+                      ...(data['errorTypes'] as Map<String, int>).entries.map(
+                            (entry) => _buildStatItem(
+                              entry.key,
+                              '${entry.value}',
+                              '',
+                              Icons.warning,
+                              color: Colors.orange,
+                            ),
+                          ),
+                  ],
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -210,31 +237,40 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
               style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
-            if (stats.isEmpty)
-              const Text('Нет данных о памяти')
-            else
-              Column(
-                children: [
-                  _buildStatItem(
-                    'Текущее использование',
-                    '${(stats['current'] / 1024 / 1024).toStringAsFixed(1)}MB',
+            FutureBuilder<Map<String, dynamic>>(
+              future: stats,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
+                }
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Text('Нет данных о памяти');
+                }
+                final data = snapshot.data!;
+                return Column(
+                  children: [
+                    _buildStatItem(
+                      'Текущее использование',
+                      '${(data['current'] / 1024 / 1024).toStringAsFixed(1)}MB',
                     '',
                     Icons.memory,
                   ),
-                  _buildStatItem(
-                    'Максимальное использование',
-                    '${(stats['max'] / 1024 / 1024).toStringAsFixed(1)}MB',
-                    '',
-                    Icons.trending_up,
-                  ),
-                  _buildStatItem(
-                    'Среднее использование',
-                    '${(stats['average'] / 1024 / 1024).toStringAsFixed(1)}MB',
-                    'Образцов: ${stats['samples']}',
-                    Icons.trending_flat,
-                  ),
-                ],
-              ),
+                    _buildStatItem(
+                      'Максимальное использование',
+                      '${(data['max'] / 1024 / 1024).toStringAsFixed(1)}MB',
+                      '',
+                      Icons.trending_up,
+                    ),
+                    _buildStatItem(
+                      'Среднее использование',
+                      '${(data['average'] / 1024 / 1024).toStringAsFixed(1)}MB',
+                      'Образцов: ${data['samples']}',
+                      Icons.trending_flat,
+                    ),
+                  ],
+                );
+              },
+            ),
           ],
         ),
       ),
@@ -512,17 +548,32 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
                       'Статус',
                       _isMonitoring ? 'Активен' : 'Остановлен',
                     ),
-                    _buildInfoItem(
-                      'Метрики производительности',
-                      '${_monitoring.getPerformanceMetrics().length}',
+                    FutureBuilder<Map<String, dynamic>>(
+                      future: _monitoring.getPerformanceMetrics(),
+                      builder: (context, snapshot) {
+                        return _buildInfoItem(
+                          'Метрики производительности',
+                          snapshot.hasData ? '${snapshot.data!.length}' : '0',
+                        );
+                      },
                     ),
-                    _buildInfoItem(
-                      'Метрики ошибок',
-                      '${_monitoring.getErrorMetrics().length}',
+                    FutureBuilder<Map<String, dynamic>>(
+                      future: _monitoring.getErrorMetrics(),
+                      builder: (context, snapshot) {
+                        return _buildInfoItem(
+                          'Метрики ошибок',
+                          snapshot.hasData ? '${snapshot.data!.length}' : '0',
+                        );
+                      },
                     ),
-                    _buildInfoItem(
-                      'Метрики памяти',
-                      '${_monitoring.getMemoryMetrics().length}',
+                    FutureBuilder<Map<String, dynamic>>(
+                      future: _monitoring.getMemoryMetrics(),
+                      builder: (context, snapshot) {
+                        return _buildInfoItem(
+                          'Метрики памяти',
+                          snapshot.hasData ? '${snapshot.data!.length}' : '0',
+                        );
+                      },
                     ),
                   ],
                 ),
@@ -597,10 +648,6 @@ class _DebugScreenState extends ConsumerState<DebugScreen>
     Future.delayed(const Duration(milliseconds: 500), () {
       _monitoring.endOperation(
         'test_operation',
-        metadata: {
-          'test': true,
-          'duration': 500,
-        },
       );
 
       ScaffoldMessenger.of(context).showSnackBar(

@@ -28,7 +28,7 @@ class _ABTestManagementScreenState
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        appBarTitle: 'Управление A/B тестами',
+        appBar: AppBar(title: const Text('Управление A/B тестами')),
         body: Column(
           children: [
             // Вкладки

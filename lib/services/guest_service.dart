@@ -420,4 +420,137 @@ class GuestService {
     // В реальном приложении здесь будет генерация QR кода
     return 'QR_${eventId}_$accessCode';
   }
+
+  /// Создать событие для гостя
+  Future<String> createGuestEvent({
+    required String title,
+    required String description,
+    required DateTime startDate,
+    required DateTime endDate,
+    required String location,
+    String? organizerName,
+    String? organizerEmail,
+    Map<String, dynamic>? metadata,
+  }) async {
+    try {
+      final eventData = {
+        'title': title,
+        'description': description,
+        'startDate': Timestamp.fromDate(startDate),
+        'endDate': Timestamp.fromDate(endDate),
+        'location': location,
+        'organizerName': organizerName,
+        'organizerEmail': organizerEmail,
+        'metadata': metadata ?? {},
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+        'isGuestEvent': true,
+      };
+
+      final docRef = await _firestore.collection('events').add(eventData);
+      return docRef.id;
+    } catch (e) {
+      throw Exception('Ошибка создания события для гостя: $e');
+    }
+  }
+
+  /// Получить события организатора
+  Future<List<Map<String, dynamic>>> getOrganizerEvents(String organizerId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('events')
+          .where('organizerId', isEqualTo: organizerId)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      return snapshot.docs.map((doc) => {
+        'id': doc.id,
+        ...doc.data(),
+      }).toList();
+    } catch (e) {
+      throw Exception('Ошибка получения событий организатора: $e');
+    }
+  }
+
+  /// Зарегистрировать гостя
+  Future<void> checkInGuest(String guestId) async {
+    try {
+      await _firestore.collection('guests').doc(guestId).update({
+        'status': 'checked_in',
+        'checkedInAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка регистрации гостя: $e');
+    }
+  }
+
+  /// Отменить регистрацию гостя
+  Future<void> checkOutGuest(String guestId) async {
+    try {
+      await _firestore.collection('guests').doc(guestId).update({
+        'status': 'checked_out',
+        'checkedOutAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка отмены регистрации гостя: $e');
+    }
+  }
+
+  /// Отменить гостя
+  Future<void> cancelGuest(String guestId) async {
+    try {
+      await _firestore.collection('guests').doc(guestId).update({
+        'status': 'cancelled',
+        'cancelledAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка отмены гостя: $e');
+    }
+  }
+
+  /// Получить событие гостя
+  Future<Map<String, dynamic>?> getGuestEvent(String eventId) async {
+    try {
+      final doc = await _firestore.collection('events').doc(eventId).get();
+      if (doc.exists) {
+        return {
+          'id': doc.id,
+          ...doc.data()!,
+        };
+      }
+      return null;
+    } catch (e) {
+      throw Exception('Ошибка получения события гостя: $e');
+    }
+  }
+
+  /// Зарегистрировать гостя на событие
+  Future<String> registerGuest({
+    required String eventId,
+    required String guestName,
+    required String guestEmail,
+    String? guestPhone,
+    String? notes,
+  }) async {
+    try {
+      final guestData = {
+        'eventId': eventId,
+        'guestName': guestName,
+        'guestEmail': guestEmail,
+        'guestPhone': guestPhone,
+        'notes': notes,
+        'status': 'registered',
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      };
+
+      final docRef = await _firestore.collection('guests').add(guestData);
+      return docRef.id;
+    } catch (e) {
+      throw Exception('Ошибка регистрации гостя: $e');
+    }
+  }
 }

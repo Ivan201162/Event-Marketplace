@@ -29,7 +29,7 @@ class _BackupManagementScreenState
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        title: 'Управление бэкапами',
+        appBar: AppBar(title: const Text('Управление бэкапами')),
         body: Column(
           children: [
             // Вкладки

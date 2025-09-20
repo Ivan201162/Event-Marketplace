@@ -300,4 +300,44 @@ Email: ${customer.email ?? 'Не указан'}
 
     return defaultTerms;
   }
+
+  /// Получить договоры пользователя
+  Future<List<Contract>> getUserContracts(String userId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('contracts')
+          .where('customerId', isEqualTo: userId)
+          .orderBy('createdAt', descending: true)
+          .get();
+      
+      return snapshot.docs
+          .map((doc) => Contract.fromDocument(doc))
+          .toList();
+    } catch (e) {
+      throw Exception('Ошибка получения договоров пользователя: $e');
+    }
+  }
+
+  /// Сгенерировать PDF договора
+  Future<String> generateContractPDF(String contractId) async {
+    try {
+      // Получаем договор
+      final contractDoc = await _firestore
+          .collection('contracts')
+          .doc(contractId)
+          .get();
+      
+      if (!contractDoc.exists) {
+        throw Exception('Договор не найден');
+      }
+      
+      final contract = Contract.fromDocument(contractDoc);
+      
+      // Здесь должна быть логика генерации PDF
+      // Пока возвращаем заглушку
+      return 'contract_${contractId}.pdf';
+    } catch (e) {
+      throw Exception('Ошибка генерации PDF договора: $e');
+    }
+  }
 }

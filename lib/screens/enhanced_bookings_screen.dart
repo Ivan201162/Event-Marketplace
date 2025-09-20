@@ -680,7 +680,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
       context: context,
       builder: (context) => ResponsiveDialog(
         title: 'Подтвердить бронирование',
-        content: Text(
+        child: Text(
           'Вы уверены, что хотите подтвердить бронирование "${booking.specialistName}"?',
         ),
         actions: [
@@ -707,7 +707,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
       context: context,
       builder: (context) => ResponsiveDialog(
         title: 'Отклонить бронирование',
-        content: Text(
+        child: Text(
           'Вы уверены, что хотите отклонить бронирование "${booking.specialistName}"?',
         ),
         actions: [
@@ -735,7 +735,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
       context: context,
       builder: (context) => ResponsiveDialog(
         title: 'Отменить бронирование',
-        content: Text(
+        child: Text(
           'Вы уверены, что хотите отменить бронирование "${booking.specialistName}"?',
         ),
         actions: [
@@ -763,7 +763,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
       context: context,
       builder: (context) => ResponsiveDialog(
         title: 'Завершить бронирование',
-        content: Text(
+        child: Text(
           'Вы уверены, что хотите завершить бронирование "${booking.specialistName}"?',
         ),
         actions: [
@@ -791,7 +791,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
       context: context,
       builder: (context) => ResponsiveDialog(
         title: 'Удалить бронирование',
-        content: Text(
+        child: Text(
           'Вы уверены, что хотите удалить бронирование "${booking.specialistName}"? Это действие нельзя отменить.',
         ),
         actions: [
@@ -849,7 +849,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
         specialistName: specialistName,
         eventType: 'Свадьба',
         startTime: DateTime.now().add(Duration(days: int.parse(id))),
-        endTime: DateTime.now().add(Duration(days: int.parse(id), hours: 4)),
+        eventTime: DateTime.now().add(Duration(days: int.parse(id), hours: 4)).toIso8601String(),
         duration: const Duration(hours: 4),
         totalPrice: 15000,
         status: status,

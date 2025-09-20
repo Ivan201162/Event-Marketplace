@@ -38,7 +38,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        title: 'Аудит и логирование',
+        appBar: AppBar(title: const Text('Аудит и логирование')),
         body: Column(
           children: [
             // Вкладки

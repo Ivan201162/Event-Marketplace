@@ -150,10 +150,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
   Future<void> _likePost(String postId) async {
     try {
       final service = ref.read(feedServiceProvider);
-      await service.likePost(
-        postId: postId,
-        userId: 'current_user', // TODO: Получить реальный ID пользователя
-      );
+      await service.likePost(postId, 'current_user'); // TODO: Получить реальный ID пользователя
 
       // Обновляем данные
       ref.invalidate(feedPostsProvider);
@@ -180,10 +177,7 @@ class _FeedScreenState extends ConsumerState<FeedScreen> {
   Future<void> _sharePost(String postId) async {
     try {
       final service = ref.read(feedServiceProvider);
-      await service.sharePost(
-        postId: postId,
-        userId: 'current_user', // TODO: Получить реальный ID пользователя
-      );
+      await service.sharePost(postId, 'current_user'); // TODO: Получить реальный ID пользователя
 
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(

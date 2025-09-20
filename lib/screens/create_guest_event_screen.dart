@@ -364,14 +364,10 @@ class _CreateGuestEventScreenState
       final eventId = await _guestService.createGuestEvent(
         title: _titleController.text.trim(),
         description: _descriptionController.text.trim(),
-        startTime: _startTime,
-        endTime: _endTime,
+        startDate: _startTime,
+        endDate: _endTime,
         location: _locationController.text.trim(),
-        organizerId: widget.organizerId,
         organizerName: 'Демо Организатор', // TODO: Получить из контекста
-        maxGuests: int.parse(_maxGuestsController.text.trim()),
-        isPublic: _isPublic,
-        allowGreetings: _allowGreetings,
       );
 
       if (eventId != null) {

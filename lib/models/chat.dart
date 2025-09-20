@@ -33,6 +33,7 @@ class ChatMessage {
     this.metadata,
     this.replyToMessageId,
     this.attachments = const [],
+    this.senderName,
   });
 
   /// Создать из документа Firestore
@@ -55,6 +56,7 @@ class ChatMessage {
       metadata: data['metadata'],
       replyToMessageId: data['replyToMessageId'],
       attachments: List<String>.from(data['attachments'] ?? []),
+      senderName: data['senderName'],
     );
   }
   final String id;
@@ -69,6 +71,7 @@ class ChatMessage {
   final Map<String, dynamic>? metadata;
   final String? replyToMessageId;
   final List<String> attachments;
+  final String? senderName;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -83,6 +86,7 @@ class ChatMessage {
         'metadata': metadata,
         'replyToMessageId': replyToMessageId,
         'attachments': attachments,
+        'senderName': senderName,
       };
 
   /// Копировать с изменениями
@@ -212,6 +216,7 @@ class Chat {
     this.unreadCount = 0,
     this.isActive = true,
     this.metadata,
+    this.title,
   });
 
   /// Создать из документа Firestore
@@ -234,6 +239,7 @@ class Chat {
       unreadCount: data['unreadCount'] ?? 0,
       isActive: data['isActive'] ?? true,
       metadata: data['metadata'],
+      title: data['title'],
     );
   }
   final String id;
@@ -246,6 +252,7 @@ class Chat {
   final int unreadCount;
   final bool isActive;
   final Map<String, dynamic>? metadata;
+  final String? title;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -258,6 +265,7 @@ class Chat {
         'unreadCount': unreadCount,
         'isActive': isActive,
         'metadata': metadata,
+        'title': title,
       };
 
   /// Копировать с изменениями

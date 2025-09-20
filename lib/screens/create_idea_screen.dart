@@ -525,14 +525,12 @@ class _CreateIdeaScreenState extends ConsumerState<CreateIdeaScreen> {
           authorId: widget.userId,
           authorName: 'Демо Пользователь', // TODO: Получить из контекста
           tags: _tags,
-          type: _selectedType,
           images: _images,
           isPublic: _isPublic,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
           likesCount: 0,
           savesCount: 0,
-          viewsCount: 0,
           commentsCount: 0,
         ),
       );

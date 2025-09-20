@@ -49,6 +49,9 @@ class Booking {
     this.eventTime,
     this.eventDuration,
     this.eventAddress,
+    this.eventType,
+    this.startTime,
+    this.location,
     this.duration,
     this.specialRequests,
     this.currency,
@@ -100,6 +103,9 @@ class Booking {
       eventName: data['eventName'],
       eventDescription: data['eventDescription'],
       eventLocation: data['eventLocation'],
+      eventType: data['eventType'],
+      startTime: data['startTime'],
+      location: data['location'],
       duration:
           data['duration'] != null ? Duration(seconds: data['duration']) : null,
       specialRequests: data['specialRequests'],
@@ -183,6 +189,9 @@ class Booking {
   final String? eventTime;
   final int? eventDuration;
   final String? eventAddress;
+  final String? eventType;
+  final String? startTime;
+  final String? location;
   final Duration? duration;
   final String? specialRequests;
   final String? currency;
@@ -223,6 +232,9 @@ class Booking {
         'eventName': eventName,
         'eventDescription': eventDescription,
         'eventLocation': eventLocation,
+        'eventType': eventType,
+        'startTime': startTime,
+        'location': location,
         'duration': duration?.inSeconds,
         'specialRequests': specialRequests,
         'currency': currency,

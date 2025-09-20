@@ -541,4 +541,25 @@ class IdeaService {
       throw Exception('Ошибка получения статистики идеи: $e');
     }
   }
+
+  /// Выбрать изображения (заглушка)
+  Future<List<String>> pickImages({int? maxImages}) async {
+    // В реальном приложении здесь будет логика выбора изображений
+    // Пока возвращаем пустой список
+    return [];
+  }
+
+  /// Загрузить изображение идеи (заглушка)
+  Future<String> uploadIdeaImage(String imagePath) async {
+    // В реальном приложении здесь будет логика загрузки изображения
+    // Пока возвращаем заглушку
+    return 'uploaded_image_${DateTime.now().millisecondsSinceEpoch}.jpg';
+  }
+
+  /// Сделать фото (заглушка)
+  Future<String> takePhoto() async {
+    // В реальном приложении здесь будет логика съемки фото
+    // Пока возвращаем заглушку
+    return 'photo_${DateTime.now().millisecondsSinceEpoch}.jpg';
+  }
 }

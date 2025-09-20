@@ -172,4 +172,38 @@ class FeedService {
       throw Exception('Ошибка изменения лайка комментария: $e');
     }
   }
+
+  /// Лайкнуть пост
+  Future<void> likePost(String postId, String userId) async {
+    try {
+      await _firestore
+          .collection('feed_posts')
+          .doc(postId)
+          .collection('likes')
+          .doc(userId)
+          .set({
+        'userId': userId,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка лайка поста: $e');
+    }
+  }
+
+  /// Поделиться постом
+  Future<void> sharePost(String postId, String userId) async {
+    try {
+      await _firestore
+          .collection('feed_posts')
+          .doc(postId)
+          .collection('shares')
+          .doc(userId)
+          .set({
+        'userId': userId,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка шаринга поста: $e');
+    }
+  }
 }

@@ -105,6 +105,11 @@ class SecurityDevice {
     required this.lastSeen,
     required this.createdAt,
     this.metadata,
+    this.osVersion,
+    this.appVersion,
+    this.firstSeen,
+    this.lastIpAddress,
+    this.isBlocked = false,
   });
 
   factory SecurityDevice.fromDocument(DocumentSnapshot doc) {
@@ -120,6 +125,13 @@ class SecurityDevice {
       lastSeen: (data['lastSeen'] as Timestamp).toDate(),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      osVersion: data['osVersion'],
+      appVersion: data['appVersion'],
+      firstSeen: data['firstSeen'] != null
+          ? (data['firstSeen'] as Timestamp).toDate()
+          : null,
+      lastIpAddress: data['lastIpAddress'],
+      isBlocked: data['isBlocked'] ?? false,
     );
   }
 
@@ -133,6 +145,11 @@ class SecurityDevice {
   final DateTime lastSeen;
   final DateTime createdAt;
   final Map<String, dynamic>? metadata;
+  final String? osVersion;
+  final String? appVersion;
+  final DateTime? firstSeen;
+  final String? lastIpAddress;
+  final bool isBlocked;
 
   Map<String, dynamic> toMap() => {
         'userId': userId,
@@ -144,6 +161,11 @@ class SecurityDevice {
         'lastSeen': Timestamp.fromDate(lastSeen),
         'createdAt': Timestamp.fromDate(createdAt),
         'metadata': metadata,
+        'osVersion': osVersion,
+        'appVersion': appVersion,
+        'firstSeen': firstSeen != null ? Timestamp.fromDate(firstSeen!) : null,
+        'lastIpAddress': lastIpAddress,
+        'isBlocked': isBlocked,
       };
 
   SecurityDevice copyWith({

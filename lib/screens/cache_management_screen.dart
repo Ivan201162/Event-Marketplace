@@ -28,7 +28,7 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        title: 'Управление кэшем',
+        appBar: AppBar(title: const Text('Управление кэшем')),
         body: Column(
           children: [
             // Вкладки

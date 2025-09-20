@@ -30,7 +30,7 @@ class _AnalyticsDashboardScreenState
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        appBarTitle: 'Аналитика приложения',
+        appBar: AppBar(title: const Text('Аналитика приложения')),
         body: Column(
           children: [
             // Фильтры по дате

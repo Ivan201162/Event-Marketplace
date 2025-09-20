@@ -32,7 +32,7 @@ class _EnvironmentConfigScreenState
 
   @override
   Widget build(BuildContext context) => ResponsiveScaffold(
-        title: 'Управление конфигурацией окружения',
+        appBar: AppBar(title: const Text('Управление конфигурацией окружения')),
         body: Column(
           children: [
             // Вкладки
@@ -123,9 +123,9 @@ class _EnvironmentConfigScreenState
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ResponsiveText(
+          Text(
             'Статистика конфигураций',
-            isTitle: true,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 16),
           Row(
@@ -204,9 +204,9 @@ class _EnvironmentConfigScreenState
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Конфигурации окружений',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -429,9 +429,9 @@ class _EnvironmentConfigScreenState
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Переменные окружения',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -640,9 +640,9 @@ class _EnvironmentConfigScreenState
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Конфигурации развертывания',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(

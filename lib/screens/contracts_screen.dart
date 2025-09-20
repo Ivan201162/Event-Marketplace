@@ -257,14 +257,14 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen>
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: contract.statusColor.withOpacity(0.1),
+                      color: contract.status.statusColor.withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: contract.statusColor),
+                      border: Border.all(color: contract.status.statusColor),
                     ),
                     child: Text(
-                      contract.statusText,
+                      contract.status.statusText,
                       style: TextStyle(
-                        color: contract.statusColor,
+                        color: contract.status.statusColor,
                         fontSize: 12,
                         fontWeight: FontWeight.w500,
                       ),
@@ -374,9 +374,9 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen>
               ),
               const SizedBox(height: 8),
               Text(
-                'Статус: ${contract.statusText}',
+                'Статус: ${contract.status.statusText}',
                 style: TextStyle(
-                  color: contract.statusColor,
+                  color: contract.status.statusColor,
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
                 ),

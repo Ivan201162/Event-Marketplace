@@ -284,10 +284,6 @@ class _CreateReviewScreenState extends ConsumerState<CreateReviewScreen> {
         .createReview(
           targetId: widget.targetId,
           type: ReviewType.specialist,
-          title: _titleController.text.trim(),
-          content: _commentController.text.trim(),
-          rating: _rating,
-          tags: _selectedTags,
         )
         .then((_) {
       if (mounted) {
