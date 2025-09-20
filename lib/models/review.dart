@@ -93,12 +93,12 @@ class DetailedRating {
 
   /// Создать из Map
   factory DetailedRating.fromMap(Map<String, dynamic> data) => DetailedRating(
-        professionalism: (data['professionalism'] ?? 0.0).toDouble(),
-        communication: (data['communication'] ?? 0.0).toDouble(),
-        punctuality: (data['punctuality'] ?? 0.0).toDouble(),
-        quality: (data['quality'] ?? 0.0).toDouble(),
-        creativity: (data['creativity'] ?? 0.0).toDouble(),
-        value: (data['value'] ?? 0.0).toDouble(),
+        professionalism: (data['professionalism'] as num? ?? 0.0).toDouble(),
+        communication: (data['communication'] as num? ?? 0.0).toDouble(),
+        punctuality: (data['punctuality'] as num? ?? 0.0).toDouble(),
+        quality: (data['quality'] as num? ?? 0.0).toDouble(),
+        creativity: (data['creativity'] as num? ?? 0.0).toDouble(),
+        value: (data['value'] as num? ?? 0.0).toDouble(),
       );
   final double professionalism;
   final double communication;
@@ -168,11 +168,11 @@ class Review {
 
     return Review(
       id: doc.id,
-      reviewerId: data['reviewerId'] ?? '',
-      reviewerName: data['reviewerName'] ?? '',
-      reviewerAvatar: data['reviewerAvatar'],
-      targetId: data['targetId'] ?? '',
-      bookingId: data['bookingId'] ?? '',
+      reviewerId: data['reviewerId'] as String? ?? '',
+      reviewerName: data['reviewerName'] as String? ?? '',
+      reviewerAvatar: data['reviewerAvatar'] as String?,
+      targetId: data['targetId'] as String? ?? '',
+      bookingId: data['bookingId'] as String? ?? '',
       type: ReviewType.values.firstWhere(
         (e) => e.name == data['type'],
         orElse: () => ReviewType.event,
