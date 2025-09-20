@@ -46,6 +46,9 @@ class Booking {
     this.eventName,
     this.eventDescription,
     this.eventLocation,
+    this.eventTime,
+    this.eventDuration,
+    this.eventAddress,
     this.duration,
     this.specialRequests,
     this.currency,
@@ -177,6 +180,9 @@ class Booking {
   final String? eventName;
   final String? eventDescription;
   final String? eventLocation;
+  final String? eventTime;
+  final int? eventDuration;
+  final String? eventAddress;
   final Duration? duration;
   final String? specialRequests;
   final String? currency;

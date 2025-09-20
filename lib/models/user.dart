@@ -31,6 +31,8 @@ extension MaritalStatusExtension on MaritalStatus {
 enum UserRole {
   customer, // Заказчик
   specialist, // Исполнитель/специалист
+  organizer, // Организатор
+  moderator, // Модератор
   guest, // Гость
   admin, // Администратор
 }
@@ -44,6 +46,10 @@ extension UserRoleExtension on UserRole {
         return 'Клиент';
       case UserRole.specialist:
         return 'Специалист';
+      case UserRole.organizer:
+        return 'Организатор';
+      case UserRole.moderator:
+        return 'Модератор';
       case UserRole.guest:
         return 'Гость';
       case UserRole.admin:

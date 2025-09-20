@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 /// Модель ошибки приложения
+@immutable
 class AppError {
   const AppError({
     required this.id,
@@ -137,7 +138,9 @@ class AppError {
 
   @override
   bool operator ==(Object other) {
-    if (identical(this, other)) return true;
+    if (identical(this, other)) {
+      return true;
+    }
     return other is AppError &&
         other.id == id &&
         other.userId == userId &&
@@ -243,25 +246,33 @@ class ErrorStatistics {
 
   /// Процент решенных ошибок
   double get resolutionRate {
-    if (totalErrors == 0) return 0;
+    if (totalErrors == 0) {
+      return 0;
+    }
     return (resolvedErrors / totalErrors) * 100;
   }
 
   /// Процент критических ошибок
   double get criticalErrorRate {
-    if (totalErrors == 0) return 0;
+    if (totalErrors == 0) {
+      return 0;
+    }
     return (criticalErrors / totalErrors) * 100;
   }
 
   /// Процент недавних ошибок
   double get recentErrorRate {
-    if (totalErrors == 0) return 0;
+    if (totalErrors == 0) {
+      return 0;
+    }
     return (recentErrors / totalErrors) * 100;
   }
 
   /// Получить самый проблемный экран
   String? get mostProblematicScreen {
-    if (errorsByScreen.isEmpty) return null;
+    if (errorsByScreen.isEmpty) {
+      return null;
+    }
     return errorsByScreen.entries
         .reduce((a, b) => a.value > b.value ? a : b)
         .key;
@@ -269,7 +280,9 @@ class ErrorStatistics {
 
   /// Получить самый проблемный тип ошибки
   String? get mostCommonErrorType {
-    if (errorsByType.isEmpty) return null;
+    if (errorsByType.isEmpty) {
+      return null;
+    }
     return errorsByType.entries.reduce((a, b) => a.value > b.value ? a : b).key;
   }
 

@@ -267,16 +267,16 @@ class SystemLog {
   });
 
   factory SystemLog.fromMap(Map<String, dynamic> map) => SystemLog(
-        id: map['id'] ?? '',
-        component: map['component'] ?? '',
-        message: map['message'] ?? '',
-        level: SystemLogLevel.fromString(map['level'] ?? 'info'),
-        category: SystemLogCategory.fromString(map['category'] ?? 'general'),
-        context: map['context'],
-        stackTrace: map['stackTrace'],
+        id: (map['id'] as String?) ?? '',
+        component: (map['component'] as String?) ?? '',
+        message: (map['message'] as String?) ?? '',
+        level: SystemLogLevel.fromString((map['level'] as String?) ?? 'info'),
+        category: SystemLogCategory.fromString((map['category'] as String?) ?? 'general'),
+        context: map['context'] as Map<String, dynamic>?,
+        stackTrace: map['stackTrace'] as String?,
         timestamp: (map['timestamp'] as Timestamp).toDate(),
-        sessionId: map['sessionId'],
-        requestId: map['requestId'],
+        sessionId: map['sessionId'] as String?,
+        requestId: map['requestId'] as String?,
         metadata: map['metadata'],
       );
   final String id;

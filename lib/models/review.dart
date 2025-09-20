@@ -150,6 +150,7 @@ class Review {
     this.reportCount = 0,
     this.isHelpful = false,
     this.helpfulCount = 0,
+    this.isReported = false,
     this.notHelpfulCount = 0,
     this.helpfulVotes = const {},
     this.response,
@@ -258,6 +259,7 @@ class Review {
   final int reportCount; // Количество жалоб
   final bool isHelpful; // Полезный отзыв
   final int helpfulCount; // Количество "полезно"
+  final bool isReported; // Отмечен как жалоба
   final int notHelpfulCount; // Количество "не полезно"
   final Map<String, bool> helpfulVotes; // Кто проголосовал
   final String? response; // Ответ на отзыв

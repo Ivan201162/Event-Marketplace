@@ -231,6 +231,10 @@ class Specialist {
     this.equipment = const [],
     this.services = const [],
     this.portfolio = const [],
+    this.portfolioImages = const [],
+    this.portfolioVideos = const [],
+    this.workingHours = const {},
+    this.location,
     this.contactInfo,
     this.businessInfo,
     this.isAvailable = true,
@@ -239,11 +243,22 @@ class Specialist {
     this.reviewCount = 0,
     required this.createdAt,
     required this.updatedAt,
+    this.lastActiveAt,
     this.metadata,
     this.avatarUrl,
     this.avatar,
     this.specialization,
     this.phone,
+    this.profileImageUrl,
+    this.coverImageUrl,
+    this.socialLinks = const {},
+    this.certifications = const [],
+    this.awards = const [],
+    this.insurance,
+    this.travelRadius,
+    this.responseTime,
+    this.completionRate,
+    this.cancellationRate,
   });
 
   /// Создать из Map
@@ -366,6 +381,10 @@ class Specialist {
   final List<String> equipment; // Оборудование
   final List<String> services; // Услуги
   final List<String> portfolio; // Ссылки на портфолио
+  final List<String> portfolioImages; // Изображения портфолио
+  final List<String> portfolioVideos; // Видео портфолио
+  final Map<String, String> workingHours; // Рабочие часы
+  final String? location; // Местоположение
   final Map<String, dynamic>? contactInfo;
   final Map<String, dynamic>? businessInfo;
   final bool isAvailable;
@@ -374,11 +393,22 @@ class Specialist {
   final int reviewCount;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final DateTime? lastActiveAt;
   final Map<String, dynamic>? metadata;
   final String? avatarUrl;
   final String? avatar;
   final String? specialization;
   final String? phone;
+  final String? profileImageUrl;
+  final String? coverImageUrl;
+  final Map<String, String> socialLinks;
+  final List<String> certifications;
+  final List<String> awards;
+  final String? insurance;
+  final int? travelRadius;
+  final String? responseTime;
+  final double? completionRate;
+  final double? cancellationRate;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {

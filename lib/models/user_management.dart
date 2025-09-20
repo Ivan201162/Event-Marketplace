@@ -564,34 +564,7 @@ class UserAction {
   String toString() => 'UserAction(id: $id, userId: $userId, action: $action)';
 }
 
-/// Роли пользователей
-enum UserRole {
-  admin,
-  moderator,
-  specialist,
-  organizer,
-  customer,
-  guest,
-}
-
-/// Расширение для ролей пользователей
-extension UserRoleExtension on UserRole {
-  String get displayName {
-    switch (this) {
-      case UserRole.admin:
-        return 'Администратор';
-      case UserRole.moderator:
-        return 'Модератор';
-      case UserRole.specialist:
-        return 'Специалист';
-      case UserRole.organizer:
-        return 'Организатор';
-      case UserRole.customer:
-        return 'Клиент';
-      case UserRole.guest:
-        return 'Гость';
-    }
-  }
+// UserRole enum moved to user.dart to avoid conflicts
 
   String get description {
     switch (this) {

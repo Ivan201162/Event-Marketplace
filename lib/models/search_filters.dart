@@ -1,32 +1,77 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-import '../core/stubs/stubs.dart';
-
-part 'search_filters.freezed.dart';
-part 'search_filters.g.dart';
-
 /// Фильтры для поиска специалистов
-@freezed
-class SpecialistSearchFilters with _$SpecialistSearchFilters {
-  const factory SpecialistSearchFilters({
-    @Default([]) List<String> categories,
-    @Default([]) List<String> services,
-    @Default([]) List<String> locations,
-    @Default(0.0) double minRating,
-    @Default(5.0) double maxRating,
-    @Default(0) int minPrice,
-    @Default(100000) int maxPrice,
-    DateTime? availableFrom,
-    DateTime? availableTo,
-    @Default(false) bool isAvailableNow,
-    @Default(false) bool hasPortfolio,
-    @Default(false) bool isVerified,
-    @Default(false) bool hasReviews,
-    @Default('') String searchQuery,
-    @Default(SearchSortBy.relevance) SearchSortBy sortBy,
-  }) = _SpecialistSearchFilters;
+class SpecialistSearchFilters {
+  const SpecialistSearchFilters({
+    this.categories = const [],
+    this.services = const [],
+    this.locations = const [],
+    this.minRating = 0.0,
+    this.maxRating = 5.0,
+    this.minPrice = 0,
+    this.maxPrice = 100000,
+    this.availableFrom,
+    this.availableTo,
+    this.isAvailableNow = false,
+    this.hasPortfolio = false,
+    this.isVerified = false,
+    this.hasReviews = false,
+    this.searchQuery = '',
+    this.sortBy = SearchSortBy.relevance,
+  });
 
-  factory SpecialistSearchFilters.fromJson(Map<String, dynamic> json) =>
-      _$SpecialistSearchFiltersFromJson(json);
+  final List<String> categories;
+  final List<String> services;
+  final List<String> locations;
+  final double minRating;
+  final double maxRating;
+  final int minPrice;
+  final int maxPrice;
+  final DateTime? availableFrom;
+  final DateTime? availableTo;
+  final bool isAvailableNow;
+  final bool hasPortfolio;
+  final bool isVerified;
+  final bool hasReviews;
+  final String searchQuery;
+  final SearchSortBy sortBy;
+
+  factory SpecialistSearchFilters.fromJson(Map<String, dynamic> json) => SpecialistSearchFilters(
+        categories: (json['categories'] as List<dynamic>?)?.cast<String>() ?? [],
+        services: (json['services'] as List<dynamic>?)?.cast<String>() ?? [],
+        locations: (json['locations'] as List<dynamic>?)?.cast<String>() ?? [],
+        minRating: (json['minRating'] as num?)?.toDouble() ?? 0.0,
+        maxRating: (json['maxRating'] as num?)?.toDouble() ?? 5.0,
+        minPrice: json['minPrice'] as int? ?? 0,
+        maxPrice: json['maxPrice'] as int? ?? 100000,
+        availableFrom: json['availableFrom'] != null ? DateTime.parse(json['availableFrom'] as String) : null,
+        availableTo: json['availableTo'] != null ? DateTime.parse(json['availableTo'] as String) : null,
+        isAvailableNow: json['isAvailableNow'] as bool? ?? false,
+        hasPortfolio: json['hasPortfolio'] as bool? ?? false,
+        isVerified: json['isVerified'] as bool? ?? false,
+        hasReviews: json['hasReviews'] as bool? ?? false,
+        searchQuery: json['searchQuery'] as String? ?? '',
+        sortBy: SearchSortBy.values.firstWhere(
+          (e) => e.name == json['sortBy'],
+          orElse: () => SearchSortBy.relevance,
+        ),
+      );
+
+  Map<String, dynamic> toJson() => {
+        'categories': categories,
+        'services': services,
+        'locations': locations,
+        'minRating': minRating,
+        'maxRating': maxRating,
+        'minPrice': minPrice,
+        'maxPrice': maxPrice,
+        'availableFrom': availableFrom?.toIso8601String(),
+        'availableTo': availableTo?.toIso8601String(),
+        'isAvailableNow': isAvailableNow,
+        'hasPortfolio': hasPortfolio,
+        'isVerified': isVerified,
+        'hasReviews': hasReviews,
+        'searchQuery': searchQuery,
+        'sortBy': sortBy.name,
+      };
 }
 
 /// Варианты сортировки
@@ -41,41 +86,112 @@ enum SearchSortBy {
 }
 
 /// Результат поиска специалистов
-@freezed
-class SpecialistSearchResult with _$SpecialistSearchResult {
-  const factory SpecialistSearchResult({
-    required String specialistId,
-    required String name,
-    required String avatar,
-    required double rating,
-    required int reviewCount,
-    required int priceFrom,
-    required List<String> categories,
-    required List<String> services,
-    required String location,
-    required bool isAvailable,
-    required bool isVerified,
-    required bool hasPortfolio,
-    DateTime? nextAvailableDate,
-    double? distance,
-  }) = _SpecialistSearchResult;
+class SpecialistSearchResult {
+  const SpecialistSearchResult({
+    required this.specialistId,
+    required this.name,
+    required this.avatar,
+    required this.rating,
+    required this.reviewCount,
+    required this.priceFrom,
+    required this.categories,
+    required this.services,
+    required this.location,
+    required this.isAvailable,
+    required this.isVerified,
+    required this.hasPortfolio,
+    this.nextAvailableDate,
+    this.distance,
+  });
 
-  factory SpecialistSearchResult.fromJson(Map<String, dynamic> json) =>
-      _$SpecialistSearchResultFromJson(json);
+  final String specialistId;
+  final String name;
+  final String avatar;
+  final double rating;
+  final int reviewCount;
+  final int priceFrom;
+  final List<String> categories;
+  final List<String> services;
+  final String location;
+  final bool isAvailable;
+  final bool isVerified;
+  final bool hasPortfolio;
+  final DateTime? nextAvailableDate;
+  final double? distance;
+
+  factory SpecialistSearchResult.fromJson(Map<String, dynamic> json) => SpecialistSearchResult(
+        specialistId: json['specialistId'] as String,
+        name: json['name'] as String,
+        avatar: json['avatar'] as String,
+        rating: (json['rating'] as num).toDouble(),
+        reviewCount: json['reviewCount'] as int,
+        priceFrom: json['priceFrom'] as int,
+        categories: (json['categories'] as List<dynamic>).cast<String>(),
+        services: (json['services'] as List<dynamic>).cast<String>(),
+        location: json['location'] as String,
+        isAvailable: json['isAvailable'] as bool,
+        isVerified: json['isVerified'] as bool,
+        hasPortfolio: json['hasPortfolio'] as bool,
+        nextAvailableDate: json['nextAvailableDate'] != null ? DateTime.parse(json['nextAvailableDate'] as String) : null,
+        distance: (json['distance'] as num?)?.toDouble(),
+      );
+
+  Map<String, dynamic> toJson() => {
+        'specialistId': specialistId,
+        'name': name,
+        'avatar': avatar,
+        'rating': rating,
+        'reviewCount': reviewCount,
+        'priceFrom': priceFrom,
+        'categories': categories,
+        'services': services,
+        'location': location,
+        'isAvailable': isAvailable,
+        'isVerified': isVerified,
+        'hasPortfolio': hasPortfolio,
+        'nextAvailableDate': nextAvailableDate?.toIso8601String(),
+        'distance': distance,
+      };
 }
 
 /// Состояние поиска
-@freezed
-class SearchState with _$SearchState {
-  const factory SearchState({
-    @Default([]) List<SpecialistSearchResult> results,
-    @Default(false) bool isLoading,
-    @Default(false) bool hasMore,
-    @Default('') String error,
-    @Default(SpecialistSearchFilters()) SpecialistSearchFilters filters,
-    @Default(0) int totalCount,
-  }) = _SearchState;
+class SearchState {
+  const SearchState({
+    this.results = const [],
+    this.isLoading = false,
+    this.hasMore = false,
+    this.error = '',
+    this.filters = const SpecialistSearchFilters(),
+    this.totalCount = 0,
+  });
 
-  factory SearchState.fromJson(Map<String, dynamic> json) =>
-      _$SearchStateFromJson(json);
+  final List<SpecialistSearchResult> results;
+  final bool isLoading;
+  final bool hasMore;
+  final String error;
+  final SpecialistSearchFilters filters;
+  final int totalCount;
+
+  factory SearchState.fromJson(Map<String, dynamic> json) => SearchState(
+        results: (json['results'] as List<dynamic>?)
+                ?.map((e) => SpecialistSearchResult.fromJson(e as Map<String, dynamic>))
+                .toList() ??
+            [],
+        isLoading: json['isLoading'] as bool? ?? false,
+        hasMore: json['hasMore'] as bool? ?? false,
+        error: json['error'] as String? ?? '',
+        filters: json['filters'] != null
+            ? SpecialistSearchFilters.fromJson(json['filters'] as Map<String, dynamic>)
+            : const SpecialistSearchFilters(),
+        totalCount: json['totalCount'] as int? ?? 0,
+      );
+
+  Map<String, dynamic> toJson() => {
+        'results': results.map((e) => e.toJson()).toList(),
+        'isLoading': isLoading,
+        'hasMore': hasMore,
+        'error': error,
+        'filters': filters.toJson(),
+        'totalCount': totalCount,
+      };
 }
