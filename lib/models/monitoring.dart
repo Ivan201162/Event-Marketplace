@@ -21,28 +21,28 @@ class MonitoringMetric {
     final data = doc.data()! as Map<String, dynamic>;
     return MonitoringMetric(
       id: doc.id,
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
+      name: data['name'] as String? ?? '',
+      description: data['description'] as String? ?? '',
       type: MetricType.values.firstWhere(
-        (e) => e.toString().split('.').last == data['type'],
+        (e) => e.toString().split('.').last == (data['type'] as String?),
         orElse: () => MetricType.gauge,
       ),
-      category: data['category'] ?? '',
+      category: data['category'] as String? ?? '',
       value: (data['value'] as num?)?.toDouble() ?? 0.0,
-      unit: data['unit'] ?? '',
-      tags: Map<String, dynamic>.from(data['tags'] ?? {}),
+      unit: data['unit'] as String? ?? '',
+      tags: Map<String, dynamic>.from(data['tags'] as Map<dynamic, dynamic>? ?? {}),
       timestamp: (data['timestamp'] as Timestamp).toDate(),
-      source: data['source'],
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      source: data['source'] as String?,
+      metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
     );
   }
 
   /// Создать из Map
   factory MonitoringMetric.fromMap(Map<String, dynamic> data) =>
       MonitoringMetric(
-        id: data['id'] ?? '',
-        name: data['name'] ?? '',
-        description: data['description'] ?? '',
+        id: data['id'] as String? ?? '',
+        name: data['name'] as String? ?? '',
+        description: data['description'] as String? ?? '',
         type: MetricType.values.firstWhere(
           (e) => e.toString().split('.').last == data['type'],
           orElse: () => MetricType.gauge,

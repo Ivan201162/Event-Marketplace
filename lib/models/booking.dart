@@ -67,30 +67,30 @@ class Booking {
     final data = doc.data()! as Map<String, dynamic>;
     return Booking(
       id: doc.id,
-      eventId: data['eventId'] ?? '',
-      eventTitle: data['eventTitle'] ?? '',
-      userId: data['userId'] ?? '',
-      userName: data['userName'] ?? '',
-      userEmail: data['userEmail'],
-      userPhone: data['userPhone'],
+      eventId: data['eventId'] as String? ?? '',
+      eventTitle: data['eventTitle'] as String? ?? '',
+      userId: data['userId'] as String? ?? '',
+      userName: data['userName'] as String? ?? '',
+      userEmail: data['userEmail'] as String?,
+      userPhone: data['userPhone'] as String?,
       status: BookingStatus.values.firstWhere(
-        (e) => e.name == data['status'],
+        (e) => e.name == (data['status'] as String?),
         orElse: () => BookingStatus.pending,
       ),
       bookingDate: (data['bookingDate'] as Timestamp).toDate(),
       eventDate: (data['eventDate'] as Timestamp).toDate(),
-      participantsCount: data['participantsCount'] ?? 1,
+      participantsCount: data['participantsCount'] as int? ?? 1,
       totalPrice: (data['totalPrice'] as num?)?.toDouble() ?? 0.0,
-      notes: data['notes'],
+      notes: data['notes'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      organizerId: data['organizerId'],
-      organizerName: data['organizerName'],
+      organizerId: data['organizerId'] as String?,
+      organizerName: data['organizerName'] as String?,
       expiresAt: data['expiresAt'] != null
           ? (data['expiresAt'] as Timestamp).toDate()
           : null,
-      customerId: data['customerId'],
-      specialistId: data['specialistId'],
+      customerId: data['customerId'] as String?,
+      specialistId: data['specialistId'] as String?,
       endDate: data['endDate'] != null
           ? (data['endDate'] as Timestamp).toDate()
           : null,
