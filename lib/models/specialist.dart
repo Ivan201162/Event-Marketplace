@@ -265,6 +265,8 @@ class Specialist {
     this.isOnline,
     this.isPremium,
     this.premiumExpiresAt,
+    this.email,
+    this.lastPriceUpdateAt,
   });
 
   /// Создать из Map
@@ -421,6 +423,8 @@ class Specialist {
   final bool? isOnline;
   final bool? isPremium;
   final DateTime? premiumExpiresAt;
+  final String? email;
+  final DateTime? lastPriceUpdateAt;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {

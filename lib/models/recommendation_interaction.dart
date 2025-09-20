@@ -12,14 +12,25 @@ enum RecommendationInteractionType {
 @immutable
 class RecommendationInteraction {
   const RecommendationInteraction({
+    required this.id,
+    required this.userId,
     required this.recommendationId,
     required this.specialistId,
     required this.type,
     required this.timestamp,
   });
 
+  final String id;
+  final String userId;
+  final String recommendationId;
+  final String specialistId;
+  final RecommendationInteractionType type;
+  final DateTime timestamp;
+
   factory RecommendationInteraction.fromMap(Map<String, dynamic> map) =>
       RecommendationInteraction(
+        id: map['id'] as String,
+        userId: map['userId'] as String,
         recommendationId: map['recommendationId'] as String,
         specialistId: map['specialistId'] as String,
         type: RecommendationInteractionType.values.firstWhere(
@@ -29,12 +40,9 @@ class RecommendationInteraction {
         timestamp: DateTime.parse(map['timestamp'] as String),
       );
 
-  final String recommendationId;
-  final String specialistId;
-  final RecommendationInteractionType type;
-  final DateTime timestamp;
-
   Map<String, dynamic> toMap() => {
+        'id': id,
+        'userId': userId,
         'recommendationId': recommendationId,
         'specialistId': specialistId,
         'type': type.name,

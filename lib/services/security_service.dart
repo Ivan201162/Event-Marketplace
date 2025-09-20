@@ -701,6 +701,166 @@ class SecurityService {
     }
   }
 
+  /// Получить логи аудита безопасности
+  Future<List<SecurityAudit>> getSecurityAuditLogs({
+    int limit = 50,
+    DateTime? fromDate,
+    DateTime? toDate,
+  }) async {
+    try {
+      var query = _firestore
+          .collection('security_audits')
+          .orderBy('timestamp', descending: true)
+          .limit(limit);
+
+      if (fromDate != null) {
+        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate));
+      }
+
+      if (toDate != null) {
+        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(toDate));
+      }
+
+      final snapshot = await query.get();
+      return snapshot.docs.map((doc) => SecurityAudit.fromDocument(doc)).toList();
+    } catch (e) {
+      throw Exception('Ошибка получения логов аудита безопасности: $e');
+    }
+  }
+
+  /// Получить устройства пользователя
+  Future<List<Map<String, dynamic>>> getUserDevices(String userId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('user_devices')
+          .where('userId', isEqualTo: userId)
+          .orderBy('lastSeen', descending: true)
+          .get();
+      
+      return snapshot.docs.map((doc) => {
+        'id': doc.id,
+        ...doc.data() as Map<String, dynamic>,
+      }).toList();
+    } catch (e) {
+      throw Exception('Ошибка получения устройств пользователя: $e');
+    }
+  }
+
+  /// Проверить доступность биометрии
+  Future<bool> isBiometricAvailable() async {
+    try {
+      // Заглушка для проверки биометрии
+      // В реальном приложении здесь будет использоваться local_auth
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Получить доступные биометрические методы
+  Future<List<String>> getAvailableBiometrics() async {
+    try {
+      // Заглушка для получения биометрических методов
+      return ['fingerprint', 'face'];
+    } catch (e) {
+      return [];
+    }
+  }
+
+  /// Проверить наличие PIN-кода
+  Future<bool> hasPinCode() async {
+    try {
+      // Заглушка для проверки PIN-кода
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Аутентификация с биометрией
+  Future<bool> authenticateWithBiometrics() async {
+    try {
+      // Заглушка для биометрической аутентификации
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Проверить PIN-код
+  Future<bool> verifyPinCode(String pinCode) async {
+    try {
+      // Заглушка для проверки PIN-кода
+      return pinCode.length >= 4;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  /// Установить PIN-код
+  Future<void> setPinCode(String pinCode) async {
+    try {
+      // Заглушка для установки PIN-кода
+      if (kDebugMode) {
+        print('PIN code set: ${pinCode.length} digits');
+      }
+    } catch (e) {
+      throw Exception('Ошибка установки PIN-кода: $e');
+    }
+  }
+
+  /// Удалить PIN-код
+  Future<void> removePinCode() async {
+    try {
+      // Заглушка для удаления PIN-кода
+      if (kDebugMode) {
+        print('PIN code removed');
+      }
+    } catch (e) {
+      throw Exception('Ошибка удаления PIN-кода: $e');
+    }
+  }
+
+  /// Зашифровать данные
+  Future<String> encryptData(String data) async {
+    try {
+      // Заглушка для шифрования данных
+      return base64Encode(utf8.encode(data));
+    } catch (e) {
+      throw Exception('Ошибка шифрования данных: $e');
+    }
+  }
+
+  /// Расшифровать данные
+  Future<String> decryptData(String encryptedData) async {
+    try {
+      // Заглушка для расшифровки данных
+      return utf8.decode(base64Decode(encryptedData));
+    } catch (e) {
+      throw Exception('Ошибка расшифровки данных: $e');
+    }
+  }
+
+  /// Безопасное хранение данных
+  Future<void> secureStore(String key, String value) async {
+    try {
+      // Заглушка для безопасного хранения
+      _encryptionKeys[key] = value;
+    } catch (e) {
+      throw Exception('Ошибка безопасного хранения: $e');
+    }
+  }
+
+  /// Безопасное чтение данных
+  Future<String?> secureRead(String key) async {
+    try {
+      // Заглушка для безопасного чтения
+      return _encryptionKeys[key];
+    } catch (e) {
+      return null;
+    }
+  }
+
   /// Закрыть сервис
   void dispose() {
     _encryptionKeys.clear();

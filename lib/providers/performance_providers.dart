@@ -68,7 +68,6 @@ class PerformanceNotifier extends Notifier<PerformanceState> {
   @override
   void dispose() {
     _monitoringTimer?.cancel();
-    super.dispose();
   }
 }
 
