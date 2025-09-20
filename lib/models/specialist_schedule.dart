@@ -254,6 +254,9 @@ class ScheduleEvent {
   final String? bookingId;
   final String? description;
 
+  /// Проверить доступность события
+  bool get isAvailable => type == ScheduleEventType.available;
+
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
         'id': id,

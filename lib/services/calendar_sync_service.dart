@@ -61,7 +61,7 @@ class CalendarSyncService {
         id: booking.id,
         title: booking.eventTitle,
         description: booking.notes ?? 'Бронирование мероприятия',
-        startDate: booking.eventDate,
+        date: booking.eventDate,
         endDate:
             booking.endDate ?? booking.eventDate.add(const Duration(hours: 2)),
         location: 'Место проведения мероприятия',
@@ -71,8 +71,8 @@ class CalendarSyncService {
         organizerId: booking.organizerId ?? '',
         organizerName: booking.organizerName ?? 'Организатор',
         category: 'Бронирование',
+        status: EventStatus.active,
         tags: const ['booking'],
-        isActive: true,
         createdAt: booking.createdAt,
         updatedAt: booking.updatedAt,
       );

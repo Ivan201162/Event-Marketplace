@@ -115,7 +115,7 @@ class AdvancedSearchService {
           final matchesDescription =
               specialist.description?.toLowerCase().contains(query) ?? false;
           final matchesCategories = specialist.categories.any(
-            (category) => category.toLowerCase().contains(query),
+            (category) => category.name.toLowerCase().contains(query),
           );
 
           if (!matchesName && !matchesDescription && !matchesCategories) {
@@ -136,14 +136,14 @@ class AdvancedSearchService {
             avatar: specialist.avatar ?? '',
             rating: specialist.rating,
             reviewCount: specialist.reviewCount,
-            priceFrom: specialist.priceFrom,
+            priceFrom: specialist.hourlyRate ?? specialist.pricePerHour ?? 0.0,
             categories: specialist.categories,
             services: specialist.services,
             location: specialist.location,
             isAvailable: specialist.isAvailable,
             isVerified: specialist.isVerified,
             hasPortfolio: specialist.portfolio.isNotEmpty,
-            nextAvailableDate: specialist.nextAvailableDate,
+            nextAvailableDate: specialist.lastActiveAt,
           ),
         );
       }

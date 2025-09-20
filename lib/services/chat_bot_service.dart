@@ -209,15 +209,13 @@ class ChatBotService {
       final ticket = SupportTicket(
         id: '',
         userId: userId,
-        title: _generateTicketTitle(description),
+        subject: _generateTicketTitle(description),
         description: description,
         category: _determineCategory(keywords),
         priority: _determinePriority(description),
         status: SupportTicketStatus.open,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
-        chatId: chatId,
-        tags: keywords,
       );
 
       final docRef =

@@ -220,7 +220,7 @@ class CrossSellService {
 
       // Определяем рекомендуемые категории на основе текущего бронирования
       final recommendedCategories =
-          _getRecommendedCategories(booking.categoryId);
+          _getRecommendedCategories(booking.serviceId);
 
       // Получаем специалистов по рекомендуемым категориям
       final specialists = <CrossSellItem>[];
@@ -356,7 +356,11 @@ class CrossSellService {
         try {
           await _messaging.sendMessage(
             to: token,
-            notification: notification,
+            data: {
+              'title': notification['title'],
+              'body': notification['body'],
+              'type': 'cross_sell',
+            },
           );
         } catch (e) {
           print('Ошибка отправки уведомления на токен $token: $e');
@@ -398,7 +402,11 @@ class CrossSellService {
         try {
           await _messaging.sendMessage(
             to: token,
-            notification: notification,
+            data: {
+              'title': notification['title'],
+              'body': notification['body'],
+              'type': 'cross_sell',
+            },
           );
         } catch (e) {
           print('Ошибка отправки уведомления на токен $token: $e');
@@ -442,7 +450,11 @@ class CrossSellService {
         try {
           await _messaging.sendMessage(
             to: token,
-            notification: notification,
+            data: {
+              'title': notification['title'],
+              'body': notification['body'],
+              'type': 'cross_sell',
+            },
           );
         } catch (e) {
           print('Ошибка отправки уведомления на токен $token: $e');
@@ -526,7 +538,7 @@ class CrossSellService {
             categoryId: categoryId,
             categoryName: categoryName,
             description: specialist.description,
-            estimatedPrice: specialist.priceRange.min,
+            estimatedPrice: specialist.hourlyRate ?? specialist.pricePerHour ?? 0.0,
             imageUrl: specialist.avatarUrl,
           ),
         );

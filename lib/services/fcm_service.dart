@@ -343,8 +343,6 @@ class FCMService {
         ),
       ),
       payload: payload,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
     );
   }
 

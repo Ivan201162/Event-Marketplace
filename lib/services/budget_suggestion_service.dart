@@ -361,7 +361,11 @@ class BudgetSuggestionService {
         try {
           await _messaging.sendMessage(
             to: token,
-            notification: notification,
+            data: {
+              'title': notification['title'],
+              'body': notification['body'],
+              'type': 'budget_suggestion',
+            },
           );
         } catch (e) {
           print('Ошибка отправки уведомления на токен $token: $e');
@@ -403,7 +407,11 @@ class BudgetSuggestionService {
         try {
           await _messaging.sendMessage(
             to: token,
-            notification: notification,
+            data: {
+              'title': notification['title'],
+              'body': notification['body'],
+              'type': 'budget_suggestion',
+            },
           );
         } catch (e) {
           print('Ошибка отправки уведомления на токен $token: $e');
@@ -447,7 +455,11 @@ class BudgetSuggestionService {
         try {
           await _messaging.sendMessage(
             to: token,
-            notification: notification,
+            data: {
+              'title': notification['title'],
+              'body': notification['body'],
+              'type': 'budget_suggestion',
+            },
           );
         } catch (e) {
           print('Ошибка отправки уведомления на токен $token: $e');
@@ -489,8 +501,8 @@ class BudgetSuggestionService {
       final reasons = <String, String>{};
 
       // Анализируем текущий бюджет
-      final currentBudget = booking.totalBudget ?? 0;
-      final currentCategory = booking.categoryId;
+      final currentBudget = booking.totalPrice;
+      final currentCategory = booking.serviceId;
 
       // Определяем рекомендуемые категории
       final recommendedCategories = _getRecommendedCategories(currentCategory);
@@ -601,7 +613,7 @@ class BudgetSuggestionService {
         specialistId: specialist?.id,
         specialistName: specialist?.name,
         description: reason,
-        estimatedPrice: specialist?.priceRange.min,
+        estimatedPrice: specialist?.hourlyRate ?? specialist?.pricePerHour ?? 0.0,
         reason: reason,
       );
     } catch (e) {

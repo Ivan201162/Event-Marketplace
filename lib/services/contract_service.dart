@@ -212,7 +212,7 @@ class ContractService {
 г. Москва                                    ${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year} г.
 
 ИСПОЛНИТЕЛЬ: ${specialist.name}
-Адрес: ${specialist.address ?? 'Не указан'}
+Адрес: ${specialist.location ?? 'Не указан'}
 Телефон: ${specialist.phone ?? 'Не указан'}
 Email: ${specialist.email ?? 'Не указан'}
 

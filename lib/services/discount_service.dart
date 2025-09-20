@@ -265,7 +265,11 @@ class DiscountService {
         try {
           await _messaging.sendMessage(
             to: token,
-            notification: notification,
+            data: {
+              'title': notification['title'],
+              'body': notification['body'],
+              'type': 'discount',
+            },
           );
         } catch (e) {
           print('Ошибка отправки уведомления на токен $token: $e');
@@ -306,7 +310,11 @@ class DiscountService {
         try {
           await _messaging.sendMessage(
             to: token,
-            notification: notification,
+            data: {
+              'title': notification['title'],
+              'body': notification['body'],
+              'type': 'discount',
+            },
           );
         } catch (e) {
           print('Ошибка отправки уведомления на токен $token: $e');
@@ -346,7 +354,11 @@ class DiscountService {
         try {
           await _messaging.sendMessage(
             to: token,
-            notification: notification,
+            data: {
+              'title': notification['title'],
+              'body': notification['body'],
+              'type': 'discount',
+            },
           );
         } catch (e) {
           print('Ошибка отправки уведомления на токен $token: $e');

@@ -9,6 +9,7 @@ class FeatureFlags {
   static const bool subscriptionPaymentsEnabled = false;
   static const bool advancePayment = false;
   static const bool finalPaymentEnabled = false;
+  static const bool bankIntegrationEnabled = false;
 
   // Продвинутые функции
   static const bool analyticsEnabled = true;
@@ -34,6 +35,9 @@ class FeatureFlags {
   // Отзывы
   static const bool reviewsEnabled = true;
 
+  // Поиск
+  static const bool searchEnabled = true;
+
   // Идеи и коллекции
   static const bool ideasEnabled = false;
 
@@ -45,6 +49,7 @@ class FeatureFlags {
 
   // Отслеживание годовщин
   static const bool anniversaryTrackingEnabled = false;
+  static const bool anniversaryRemindersEnabled = false;
 
   // Плейлисты диджеев
   static const bool djPlaylistsEnabled = false;
@@ -66,10 +71,32 @@ class FeatureFlags {
   static const bool audioMessagesEnabled = true;
   static const bool callsEnabled = false; // включим позже (WebRTC)
   static const bool arPreviewsEnabled = false; // включим позже
+  static const bool arPreviewEnabled = false; // включим позже
 
   // Отладка
   static const bool debugMode = true;
   static const bool verboseLogging = false;
+  static const bool auditLoggingEnabled = true;
+  static const bool systemLoggingEnabled = true;
+
+  // Чат-бот
+  static const bool chatBotEnabled = true;
+  static const bool chatFileUploadEnabled = true;
+
+  // Договоры
+  static const bool contractGenerationEnabled = false;
+
+  // Управление зависимостями
+  static const bool dependencyManagementEnabled = true;
+
+  // Управление документацией
+  static const bool documentationManagementEnabled = true;
+
+  // Управление окружением
+  static const bool environmentManagementEnabled = true;
+
+  // Идеи для событий
+  static const bool eventIdeasEnabled = true;
 
   /// Проверить, включена ли функция
   static bool isEnabled(String feature) {

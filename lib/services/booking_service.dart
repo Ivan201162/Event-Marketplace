@@ -90,10 +90,11 @@ class BookingService {
 
       // Отправляем уведомление организатору
       await _notificationService.sendBookingNotification(
-        organizerId: booking.organizerId!,
+        userId: booking.organizerId ?? booking.specialistId ?? '',
         eventTitle: booking.eventTitle,
-        userName: booking.userName,
-        participantsCount: booking.participantsCount,
+        specialistName: booking.specialistName ?? booking.organizerName ?? '',
+        bookingDate: booking.bookingDate,
+        channel: NotificationChannel.push,
       );
 
       return docRef.id;
@@ -164,9 +165,11 @@ class BookingService {
 
         // Отправляем уведомление об отмене
         await _notificationService.sendCancellationNotification(
-          organizerId: booking.organizerId!,
+          userId: booking.organizerId ?? booking.specialistId ?? '',
           eventTitle: booking.eventTitle,
-          userName: booking.userName,
+          specialistName: booking.specialistName ?? booking.organizerName ?? '',
+          bookingDate: booking.bookingDate,
+          channel: NotificationChannel.push,
         );
       }
 
