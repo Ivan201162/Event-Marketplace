@@ -122,9 +122,9 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ResponsiveText(
+                  Text(
                     'Обзор кэша',
-                    isTitle: true,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 16),
                   if (_statistics == null)
@@ -169,9 +169,9 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ResponsiveText(
+                  Text(
                     'Действия',
-                    isTitle: true,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 16),
                   Row(
@@ -230,9 +230,9 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Элементы кэша',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -354,9 +354,9 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ResponsiveText(
+              Text(
                 'Настройки кэша',
-                isTitle: true,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 16),
               if (_config == null)
@@ -511,9 +511,9 @@ class _CacheManagementScreenState extends ConsumerState<CacheManagementScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  ResponsiveText(
+                  Text(
                     'Статистика кэша',
-                    isTitle: true,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const SizedBox(height: 16),
                   if (_statistics == null)
