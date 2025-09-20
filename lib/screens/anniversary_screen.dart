@@ -593,7 +593,7 @@ class _AnniversaryScreenState extends ConsumerState<AnniversaryScreen>
     try {
       await _anniversaryService.addWeddingAnniversary(
         customerId: 'current_user_id', // TODO: Получить реальный ID
-        customerName: 'Текущий пользователь', // TODO: Получить реальное имя
+        spouseName: 'Текущий пользователь', // TODO: Получить реальное имя
         weddingDate: _selectedWeddingDate!,
       );
 

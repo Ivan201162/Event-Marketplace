@@ -232,4 +232,77 @@ class AnniversaryService {
       throw Exception('Ошибка получения пользователей с годовщинами: $e');
     }
   }
+
+  /// Получить годовщины клиентов
+  Future<List<Map<String, dynamic>>> getCustomerAnniversaries(String customerId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('anniversaries')
+          .where('customerId', isEqualTo: customerId)
+          .orderBy('date', descending: true)
+          .get();
+      
+      return snapshot.docs.map((doc) => {
+        'id': doc.id,
+        ...doc.data() as Map<String, dynamic>,
+      }).toList();
+    } catch (e) {
+      throw Exception('Ошибка получения годовщин клиента: $e');
+    }
+  }
+
+  /// Получить предстоящие годовщины
+  Future<List<Map<String, dynamic>>> getUpcomingAnniversaries({
+    int daysAhead = 30,
+  }) async {
+    try {
+      final now = DateTime.now();
+      final futureDate = now.add(Duration(days: daysAhead));
+      
+      final snapshot = await _firestore
+          .collection('anniversaries')
+          .where('date', isGreaterThanOrEqualTo: Timestamp.fromDate(now))
+          .where('date', isLessThanOrEqualTo: Timestamp.fromDate(futureDate))
+          .orderBy('date')
+          .get();
+      
+      return snapshot.docs.map((doc) => {
+        'id': doc.id,
+        ...doc.data() as Map<String, dynamic>,
+      }).toList();
+    } catch (e) {
+      throw Exception('Ошибка получения предстоящих годовщин: $e');
+    }
+  }
+
+  /// Добавить годовщину свадьбы
+  Future<void> addWeddingAnniversary({
+    required String customerId,
+    required DateTime weddingDate,
+    required String spouseName,
+    String? notes,
+  }) async {
+    try {
+      await _firestore.collection('anniversaries').add({
+        'customerId': customerId,
+        'type': 'wedding',
+        'date': Timestamp.fromDate(weddingDate),
+        'spouseName': spouseName,
+        'notes': notes,
+        'createdAt': FieldValue.serverTimestamp(),
+        'updatedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка добавления годовщины свадьбы: $e');
+    }
+  }
+
+  /// Удалить годовщину
+  Future<void> deleteAnniversary(String anniversaryId) async {
+    try {
+      await _firestore.collection('anniversaries').doc(anniversaryId).delete();
+    } catch (e) {
+      throw Exception('Ошибка удаления годовщины: $e');
+    }
+  }
 }

@@ -66,7 +66,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
         child: Row(
           children: [
             Expanded(
-              child: _buildTabButton('audit', 'Аудит действий', Icons.audit),
+              child: _buildTabButton('audit', 'Аудит действий', Icons.security),
             ),
             Expanded(
               child:
@@ -122,9 +122,9 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ResponsiveText(
+            Text(
               'Фильтры',
-              isTitle: true,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
             const SizedBox(height: 16),
             Wrap(
@@ -291,9 +291,9 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ResponsiveText(
+          Text(
             'Статистика',
-            isTitle: true,
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 16),
           Row(
@@ -302,7 +302,7 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
                 child: _buildStatCard(
                   'Всего аудита логов',
                   '${_statistics['auditLogs']?['total'] ?? 0}',
-                  Icons.audit,
+                  Icons.security,
                   Colors.blue,
                 ),
               ),
@@ -372,9 +372,9 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Аудит действий пользователей',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -553,9 +553,9 @@ class _AuditLogScreenState extends ConsumerState<AuditLogScreen> {
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Системные логи',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(

@@ -122,9 +122,9 @@ class _BackupManagementScreenState
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Бэкапы',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -171,9 +171,9 @@ class _BackupManagementScreenState
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: ResponsiveText(
+                  child: Text(
                     backup.name,
-                    isTitle: true,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
                 _buildStatusChip(backup.status),
@@ -304,9 +304,9 @@ class _BackupManagementScreenState
           ResponsiveCard(
             child: Row(
               children: [
-                ResponsiveText(
+                Text(
                   'Восстановления',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
                 const Spacer(),
                 ElevatedButton.icon(
@@ -347,9 +347,9 @@ class _BackupManagementScreenState
                 ),
                 const SizedBox(width: 8),
                 Expanded(
-                  child: ResponsiveText(
+                  child: Text(
                     restore.name,
-                    isTitle: true,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
                 _buildStatusChip(restore.status),
@@ -461,9 +461,9 @@ class _BackupManagementScreenState
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ResponsiveText(
+                      Text(
                         'Статистика бэкапов',
-                        isTitle: true,
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 16),
                       Row(
@@ -524,9 +524,9 @@ class _BackupManagementScreenState
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ResponsiveText(
+                      Text(
                         'Бэкапы по типам',
-                        isTitle: true,
+                        style: Theme.of(context).textTheme.titleMedium,
                       ),
                       const SizedBox(height: 16),
                       ...stats.backupsByType.entries.map((entry) {
