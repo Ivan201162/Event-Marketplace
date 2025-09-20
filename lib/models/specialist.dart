@@ -299,14 +299,14 @@ class Specialist {
         reviewCount: data['reviewCount'] as int? ?? 0,
         pricePerHour: (data['pricePerHour'] as num?)?.toDouble(),
         location: data['location'] as String?,
-        isAvailable: data['isAvailable'] ?? true,
-        isVerified: data['isVerified'] ?? false,
-        portfolioImages: List<String>.from(data['portfolioImages'] ?? []),
-        portfolioVideos: List<String>.from(data['portfolioVideos'] ?? []),
-        services: List<String>.from(data['services'] ?? []),
-        equipment: List<String>.from(data['equipment'] ?? []),
-        languages: List<String>.from(data['languages'] ?? []),
-        workingHours: Map<String, String>.from(data['workingHours'] ?? {}),
+        isAvailable: data['isAvailable'] as bool? ?? true,
+        isVerified: data['isVerified'] as bool? ?? false,
+        portfolioImages: List<String>.from(data['portfolioImages'] as List<dynamic>? ?? []),
+        portfolioVideos: List<String>.from(data['portfolioVideos'] as List<dynamic>? ?? []),
+        services: List<String>.from(data['services'] as List<dynamic>? ?? []),
+        equipment: List<String>.from(data['equipment'] as List<dynamic>? ?? []),
+        languages: List<String>.from(data['languages'] as List<dynamic>? ?? []),
+        workingHours: Map<String, String>.from(data['workingHours'] as Map<dynamic, dynamic>? ?? {}),
         createdAt: data['createdAt'] != null
             ? (data['createdAt'] as Timestamp).toDate()
             : DateTime.now(),
@@ -316,8 +316,8 @@ class Specialist {
         lastActiveAt: data['lastActiveAt'] != null
             ? (data['lastActiveAt'] as Timestamp).toDate()
             : null,
-        profileImageUrl: data['profileImageUrl'],
-        coverImageUrl: data['coverImageUrl'],
+        profileImageUrl: data['profileImageUrl'] as String?,
+        coverImageUrl: data['coverImageUrl'] as String?,
         socialLinks: Map<String, String>.from(data['socialLinks'] ?? {}),
         certifications: List<String>.from(data['certifications'] ?? []),
         awards: List<String>.from(data['awards'] ?? []),

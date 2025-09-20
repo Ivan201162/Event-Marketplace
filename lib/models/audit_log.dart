@@ -278,7 +278,7 @@ class SystemLog {
         timestamp: (map['timestamp'] as Timestamp).toDate(),
         sessionId: map['sessionId'] as String?,
         requestId: map['requestId'] as String?,
-        metadata: map['metadata'],
+        metadata: map['metadata'] as Map<String, dynamic>?,
       );
   final String id;
   final String component;
@@ -477,11 +477,11 @@ class LoggingConfig {
   });
 
   factory LoggingConfig.fromMap(Map<String, dynamic> map) => LoggingConfig(
-        id: map['id'] ?? '',
-        enableAuditLogging: map['enableAuditLogging'] ?? true,
-        enableSystemLogging: map['enableSystemLogging'] ?? true,
-        enablePerformanceLogging: map['enablePerformanceLogging'] ?? false,
-        enableSecurityLogging: map['enableSecurityLogging'] ?? true,
+        id: map['id'] as String? ?? '',
+        enableAuditLogging: map['enableAuditLogging'] as bool? ?? true,
+        enableSystemLogging: map['enableSystemLogging'] as bool? ?? true,
+        enablePerformanceLogging: map['enablePerformanceLogging'] as bool? ?? false,
+        enableSecurityLogging: map['enableSecurityLogging'] as bool? ?? true,
         auditLogLevels: (map['auditLogLevels'] as List<dynamic>?)
                 ?.map((e) => AuditLogLevel.fromString(e as String))
                 .toList() ??
@@ -498,11 +498,11 @@ class LoggingConfig {
                 ?.map((e) => SystemLogCategory.fromString(e as String))
                 .toList() ??
             SystemLogCategory.values,
-        maxLogRetentionDays: map['maxLogRetentionDays'] ?? 90,
-        enableLogCompression: map['enableLogCompression'] ?? false,
-        enableLogEncryption: map['enableLogEncryption'] ?? false,
-        encryptionKey: map['encryptionKey'],
-        filters: map['filters'],
+        maxLogRetentionDays: map['maxLogRetentionDays'] as int? ?? 90,
+        enableLogCompression: map['enableLogCompression'] as bool? ?? false,
+        enableLogEncryption: map['enableLogEncryption'] as bool? ?? false,
+        encryptionKey: map['encryptionKey'] as String?,
+        filters: map['filters'] as Map<String, dynamic>?,
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
       );
