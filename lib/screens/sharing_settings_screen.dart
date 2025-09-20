@@ -299,7 +299,7 @@ https://eventmarketplace.com
 #EventMarketplace #События #Организация
 ''';
 
-    final success = await _integrationService.shareContent(content);
+    final success = await _integrationService.shareContent();
     if (!success) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -324,7 +324,7 @@ https://eventmarketplace.com
 #EventMarketplace #Профиль
 ''';
 
-    final success = await _integrationService.shareContent(content);
+    final success = await _integrationService.shareContent();
     if (!success) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -351,7 +351,7 @@ https://eventmarketplace.com
 #EventMarketplace #Событие
 ''';
 
-    final success = await _integrationService.shareContent(content);
+    final success = await _integrationService.shareContent();
     if (!success) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -375,7 +375,7 @@ https://eventmarketplace.com
 #EventMarketplace #Отзыв
 ''';
 
-    final success = await _integrationService.shareContent(content);
+    final success = await _integrationService.shareContent();
     if (!success) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
