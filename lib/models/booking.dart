@@ -107,14 +107,14 @@ class Booking {
       startTime: data['startTime'] as String?,
       location: data['location'] as String?,
       duration:
-          data['duration'] != null ? Duration(seconds: data['duration']) : null,
-      specialRequests: data['specialRequests'],
-      currency: data['currency'],
+          data['duration'] != null ? Duration(seconds: data['duration'] as int) : null,
+      specialRequests: data['specialRequests'] as String?,
+      currency: data['currency'] as String?,
       dueDate: data['dueDate'] != null
           ? (data['dueDate'] as Timestamp).toDate()
           : null,
-      isPrepayment: data['isPrepayment'],
-      isFinalPayment: data['isFinalPayment'],
+      isPrepayment: data['isPrepayment'] as bool?,
+      isFinalPayment: data['isFinalPayment'] as bool?,
       prepaymentPaid: data['prepaymentPaid'],
       vkPlaylistUrl: data['vkPlaylistUrl'],
     );
