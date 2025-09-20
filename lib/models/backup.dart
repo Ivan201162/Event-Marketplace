@@ -53,8 +53,8 @@ class Backup {
   /// Создать из Map
   factory Backup.fromMap(Map<String, dynamic> data) => Backup(
         id: data['id'] as String? ?? '',
-        name: data['name'] ?? '',
-        description: data['description'] ?? '',
+        name: data['name'] as String? ?? '',
+        description: data['description'] as String? ?? '',
         type: BackupType.values.firstWhere(
           (e) => e.toString().split('.').last == data['type'],
           orElse: () => BackupType.full,
@@ -63,9 +63,9 @@ class Backup {
           (e) => e.toString().split('.').last == data['status'],
           orElse: () => BackupStatus.pending,
         ),
-        collections: List<String>.from(data['collections'] ?? []),
-        filters: Map<String, dynamic>.from(data['filters'] ?? {}),
-        createdBy: data['createdBy'],
+        collections: List<String>.from(data['collections'] as List<dynamic>? ?? []),
+        filters: Map<String, dynamic>.from(data['filters'] as Map<dynamic, dynamic>? ?? {}),
+        createdBy: data['createdBy'] as String?,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         completedAt: data['completedAt'] != null
             ? (data['completedAt'] as Timestamp).toDate()
