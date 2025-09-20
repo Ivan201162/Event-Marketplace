@@ -27,21 +27,21 @@ class AppVersion {
     final data = doc.data()! as Map<String, dynamic>;
     return AppVersion(
       id: doc.id,
-      version: data['version'] ?? '',
-      buildNumber: data['buildNumber'] ?? '',
-      platform: data['platform'] ?? '',
+      version: data['version'] as String? ?? '',
+      buildNumber: data['buildNumber'] as String? ?? '',
+      platform: data['platform'] as String? ?? '',
       type: VersionType.values.firstWhere(
-        (e) => e.toString().split('.').last == data['type'],
+        (e) => e.toString().split('.').last == (data['type'] as String?),
         orElse: () => VersionType.release,
       ),
-      description: data['description'],
-      features: List<String>.from(data['features'] ?? []),
-      bugFixes: List<String>.from(data['bugFixes'] ?? []),
-      breakingChanges: List<String>.from(data['breakingChanges'] ?? []),
-      isForced: data['isForced'] ?? false,
-      isAvailable: data['isAvailable'] ?? true,
-      downloadUrl: data['downloadUrl'],
-      releaseNotes: data['releaseNotes'],
+      description: data['description'] as String?,
+      features: List<String>.from(data['features'] as List<dynamic>? ?? []),
+      bugFixes: List<String>.from(data['bugFixes'] as List<dynamic>? ?? []),
+      breakingChanges: List<String>.from(data['breakingChanges'] as List<dynamic>? ?? []),
+      isForced: data['isForced'] as bool? ?? false,
+      isAvailable: data['isAvailable'] as bool? ?? true,
+      downloadUrl: data['downloadUrl'] as String?,
+      releaseNotes: data['releaseNotes'] as String?,
       releaseDate: (data['releaseDate'] as Timestamp).toDate(),
       expirationDate: data['expirationDate'] != null
           ? (data['expirationDate'] as Timestamp).toDate()

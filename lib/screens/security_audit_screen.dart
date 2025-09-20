@@ -5,6 +5,31 @@ import '../models/security.dart';
 import '../providers/auth_providers.dart';
 import '../services/security_service.dart';
 
+/// Типы событий безопасности
+enum SecurityEventType {
+  login,
+  logout,
+  passwordChange,
+  biometricAuth,
+  pinAuth,
+  twoFactorAuth,
+  deviceRegistration,
+  deviceBlocked,
+  suspiciousActivity,
+  dataAccess,
+  dataModification,
+  securitySettingsChange,
+  other,
+}
+
+/// Уровни серьезности событий безопасности
+enum SecurityEventSeverity {
+  low,
+  medium,
+  high,
+  critical,
+}
+
 /// Экран аудита безопасности
 class SecurityAuditScreen extends ConsumerStatefulWidget {
   const SecurityAuditScreen({super.key});

@@ -5,6 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../core/safe_log.dart';
 import '../models/app_notification.dart';
 import '../models/booking.dart';
+import '../models/calendar_event.dart';
 import '../models/notification.dart';
 import '../models/specialist_schedule.dart';
 import 'calendar_service.dart';
@@ -156,21 +157,37 @@ class FirestoreService {
     final now = DateTime.now();
     final b1 = Booking(
       id: 'b_test_1',
+      eventId: 'e_test_1',
+      eventTitle: 'Тестовое мероприятие 1',
+      userId: 'u_customer1',
+      userName: 'Тестовый клиент 1',
+      status: BookingStatus.pending,
+      bookingDate: now,
+      eventDate: now.add(const Duration(days: 7)),
+      participantsCount: 10,
+      totalPrice: 10000,
+      createdAt: now,
+      updatedAt: now,
       customerId: 'u_customer1',
       specialistId: 's1',
-      eventDate: now.add(const Duration(days: 7)),
-      status: 'pending',
       prepayment: 3000,
-      totalPrice: 10000,
     );
     final b2 = Booking(
       id: 'b_test_2',
+      eventId: 'e_test_2',
+      eventTitle: 'Тестовое мероприятие 2',
+      userId: 'u_customer2',
+      userName: 'Тестовый клиент 2',
+      status: BookingStatus.confirmed,
+      bookingDate: now,
+      eventDate: now.add(const Duration(days: 14)),
+      participantsCount: 15,
+      totalPrice: 15000,
+      createdAt: now,
+      updatedAt: now,
       customerId: 'u_customer2',
       specialistId: 's1',
-      eventDate: now.add(const Duration(days: 14)),
-      status: 'confirmed',
       prepayment: 4500,
-      totalPrice: 15000,
     );
 
     await _db.collection('bookings').doc(b1.id).set(b1.toMap());
@@ -184,7 +201,17 @@ class FirestoreService {
         description: 'Тестовое бронирование 1',
         startTime: b1.eventDate,
         endTime: b1.eventDate.add(const Duration(hours: 2)),
+        location: 'Тестовое место',
+        specialistId: b1.specialistId ?? '',
+        specialistName: b1.specialistName ?? '',
+        customerId: b1.customerId ?? '',
+        customerName: b1.customerName ?? '',
+        bookingId: b1.id,
+        status: CalendarEventStatus.confirmed,
+        type: CalendarEventType.booking,
         isAllDay: false,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       ),
     );
 
@@ -195,7 +222,17 @@ class FirestoreService {
         description: 'Тестовое бронирование 2',
         startTime: b2.eventDate,
         endTime: b2.eventDate.add(const Duration(hours: 3)),
+        location: 'Тестовое место',
+        specialistId: b2.specialistId ?? '',
+        specialistName: b2.specialistName ?? '',
+        customerId: b2.customerId ?? '',
+        customerName: b2.customerName ?? '',
+        bookingId: b2.id,
+        status: CalendarEventStatus.confirmed,
+        type: CalendarEventType.booking,
         isAllDay: false,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       ),
     );
   }
@@ -244,7 +281,17 @@ class FirestoreService {
             description: 'Бронирование мероприятия',
             startTime: booking.eventDate,
             endTime: endTime,
+            location: 'Место проведения мероприятия',
+            specialistId: booking.specialistId ?? '',
+            specialistName: booking.specialistName ?? '',
+            customerId: booking.customerId ?? '',
+            customerName: booking.customerName ?? '',
+            bookingId: booking.id,
+            status: CalendarEventStatus.confirmed,
+            type: CalendarEventType.booking,
             isAllDay: false,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
           ),
         );
       }
@@ -281,7 +328,17 @@ class FirestoreService {
             description: 'Подтвержденное бронирование',
             startTime: booking.eventDate,
             endTime: booking.eventDate.add(const Duration(hours: 2)),
+            location: 'Место проведения мероприятия',
+            specialistId: booking.specialistId ?? '',
+            specialistName: booking.specialistName ?? '',
+            customerId: booking.customerId ?? '',
+            customerName: booking.customerName ?? '',
+            bookingId: booking.id,
+            status: CalendarEventStatus.confirmed,
+            type: CalendarEventType.booking,
             isAllDay: false,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
           ),
         );
       } else if (status == 'rejected' || status == 'cancelled') {
@@ -357,14 +414,12 @@ class FirestoreService {
       }
 
       // Отправляем уведомление клиенту
-      await _notificationService.createBookingNotification(
+      await _notificationService.sendNotification(
         userId: booking.customerId!,
         title: title,
-        content: body,
-        bookingId: booking.id,
-        specialistName: 'Специалист ${booking.specialistId}',
-        customerName: 'Клиент ${booking.customerId}',
-        eventDate: booking.eventDate,
+        body: body,
+        type: NotificationType.booking,
+        channel: NotificationChannel.push,
       );
 
       // Отправляем push-уведомление клиенту
@@ -380,14 +435,12 @@ class FirestoreService {
 
       // Отправляем уведомление специалисту (если статус изменил клиент)
       if (status == 'cancelled') {
-        await _notificationService.createBookingNotification(
+        await _notificationService.sendNotification(
           userId: booking.specialistId!,
           title: title,
-          content: body,
-          bookingId: booking.id,
-          specialistName: 'Специалист ${booking.specialistId}',
-          customerName: 'Клиент ${booking.customerId}',
-          eventDate: booking.eventDate,
+          body: body,
+          type: NotificationType.booking,
+          channel: NotificationChannel.push,
         );
 
         // Отправляем push-уведомление специалисту
@@ -429,27 +482,25 @@ class FirestoreService {
       }
 
       // Отправляем уведомление клиенту
-      await _notificationService.createPaymentNotification(
+      await _notificationService.sendNotification(
         userId: customerId,
         title: status == 'completed' ? 'Платеж завершен' : 'Ошибка платежа',
-        content: status == 'completed'
+        body: status == 'completed'
             ? 'Ваш платеж успешно обработан'
             : 'Произошла ошибка при обработке платежа',
-        paymentId: paymentId,
-        amount: 0, // TODO: Получить сумму из платежа
-        currency: 'RUB',
+        type: NotificationType.payment,
+        channel: NotificationChannel.push,
       );
 
       // Отправляем уведомление специалисту
-      await _notificationService.createPaymentNotification(
+      await _notificationService.sendNotification(
         userId: specialistId,
         title: status == 'completed' ? 'Платеж получен' : 'Ошибка платежа',
-        content: status == 'completed'
+        body: status == 'completed'
             ? 'Платеж от клиента успешно обработан'
             : 'Произошла ошибка при обработке платежа',
-        paymentId: paymentId,
-        amount: 0, // TODO: Получить сумму из платежа
-        currency: 'RUB',
+        type: NotificationType.payment,
+        channel: NotificationChannel.push,
       );
     } catch (e) {
       print('Ошибка отправки уведомлений о платеже: $e');

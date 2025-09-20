@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'user.dart';
+
 /// Модель пользователя с расширенными полями
 class ManagedUser {
   const ManagedUser({
@@ -24,15 +26,15 @@ class ManagedUser {
     final data = doc.data()! as Map<String, dynamic>;
     return ManagedUser(
       id: doc.id,
-      email: data['email'] ?? '',
-      displayName: data['displayName'],
-      photoUrl: data['photoUrl'],
+      email: data['email'] as String? ?? '',
+      displayName: data['displayName'] as String?,
+      photoUrl: data['photoUrl'] as String?,
       role: UserRole.values.firstWhere(
-        (e) => e.toString().split('.').last == data['role'],
+        (e) => e.toString().split('.').last == (data['role'] as String?),
         orElse: () => UserRole.customer,
       ),
       status: UserStatus.values.firstWhere(
-        (e) => e.toString().split('.').last == data['status'],
+        (e) => e.toString().split('.').last == (data['status'] as String?),
         orElse: () => UserStatus.active,
       ),
       profile: Map<String, dynamic>.from(data['profile'] ?? {}),
@@ -42,24 +44,24 @@ class ManagedUser {
       lastLoginAt: data['lastLoginAt'] != null
           ? (data['lastLoginAt'] as Timestamp).toDate()
           : null,
-      createdBy: data['createdBy'],
-      lastModifiedBy: data['lastModifiedBy'],
+      createdBy: data['createdBy'] as String?,
+      lastModifiedBy: data['lastModifiedBy'] as String?,
       metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
     );
   }
 
   /// Создать из Map
   factory ManagedUser.fromMap(Map<String, dynamic> data) => ManagedUser(
-        id: data['id'] ?? '',
-        email: data['email'] ?? '',
-        displayName: data['displayName'],
-        photoUrl: data['photoUrl'],
+        id: data['id'] as String? ?? '',
+        email: data['email'] as String? ?? '',
+        displayName: data['displayName'] as String?,
+        photoUrl: data['photoUrl'] as String?,
         role: UserRole.values.firstWhere(
-          (e) => e.toString().split('.').last == data['role'],
+          (e) => e.toString().split('.').last == (data['role'] as String?),
           orElse: () => UserRole.customer,
         ),
         status: UserStatus.values.firstWhere(
-          (e) => e.toString().split('.').last == data['status'],
+          (e) => e.toString().split('.').last == (data['status'] as String?),
           orElse: () => UserStatus.active,
         ),
         profile: Map<String, dynamic>.from(data['profile'] ?? {}),
@@ -69,8 +71,8 @@ class ManagedUser {
         lastLoginAt: data['lastLoginAt'] != null
             ? (data['lastLoginAt'] as Timestamp).toDate()
             : null,
-        createdBy: data['createdBy'],
-        lastModifiedBy: data['lastModifiedBy'],
+        createdBy: data['createdBy'] as String?,
+        lastModifiedBy: data['lastModifiedBy'] as String?,
         metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
       );
   final String id;

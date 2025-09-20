@@ -271,11 +271,17 @@ class Specialist {
 
   /// Создать из Map
   factory Specialist.fromMap(Map<String, dynamic> data) => Specialist(
-        id: data['id'] ?? '',
-        name: data['name'] ?? '',
-        // email: data['email'] ?? '', // Удалено, так как нет в конструкторе
-        phone: data['phone'] ?? '',
-        description: data['description'] ?? '',
+        id: data['id'] as String? ?? '',
+        userId: data['userId'] as String? ?? '',
+        name: data['name'] as String? ?? '',
+        phone: data['phone'] as String?,
+        description: data['description'] as String?,
+        category: SpecialistCategory.values.firstWhere(
+          (e) => e.name == (data['category'] as String?),
+          orElse: () => SpecialistCategory.other,
+        ),
+        hourlyRate: (data['hourlyRate'] as num?)?.toDouble() ?? 0.0,
+        yearsOfExperience: data['yearsOfExperience'] as int? ?? 0,
         categories: (data['categories'] as List<dynamic>?)
                 ?.map(
                   (e) => SpecialistCategory.values.firstWhere(
@@ -290,9 +296,9 @@ class Specialist {
           orElse: () => ExperienceLevel.beginner,
         ),
         rating: (data['rating'] as num?)?.toDouble() ?? 0.0,
-        reviewCount: data['reviewCount'] ?? 0,
+        reviewCount: data['reviewCount'] as int? ?? 0,
         pricePerHour: (data['pricePerHour'] as num?)?.toDouble(),
-        location: data['location'] ?? '',
+        location: data['location'] as String?,
         isAvailable: data['isAvailable'] ?? true,
         isVerified: data['isVerified'] ?? false,
         portfolioImages: List<String>.from(data['portfolioImages'] ?? []),
