@@ -122,11 +122,11 @@ class Booking {
 
   /// Создать объект из Map
   factory Booking.fromMap(Map<String, dynamic> map) => Booking(
-        id: map['id'] ?? '',
-        eventId: map['eventId'] ?? '',
-        eventTitle: map['eventTitle'] ?? '',
-        userId: map['userId'] ?? '',
-        userName: map['userName'] ?? '',
+        id: map['id'] as String? ?? '',
+        eventId: map['eventId'] as String? ?? '',
+        eventTitle: map['eventTitle'] as String? ?? '',
+        userId: map['userId'] as String? ?? '',
+        userName: map['userName'] as String? ?? '',
         userEmail: map['userEmail'],
         userPhone: map['userPhone'],
         specialistId: map['specialistId'] ?? '',
