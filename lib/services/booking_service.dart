@@ -251,7 +251,6 @@ class BookingService {
         await updateBookingStatus(
           booking.id,
           BookingStatus.cancelled,
-          'Время подтверждения истекло',
         );
 
         // Отправляем уведомление пользователю
