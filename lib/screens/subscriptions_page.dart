@@ -817,6 +817,8 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
         return 'в год';
       case SubscriptionPeriod.lifetime:
         return 'навсегда';
+      default:
+        return 'неизвестно';
     }
   }
 

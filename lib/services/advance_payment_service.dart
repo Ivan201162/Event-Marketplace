@@ -199,7 +199,7 @@ class AdvancePaymentService {
             await _firestore.collection('payments').doc(paymentId).get();
         if (paymentDoc.exists) {
           final paymentData = paymentDoc.data();
-          final bookingId = paymentData['bookingId'] as String;
+          final bookingId = paymentData?['bookingId'] as String? ?? '';
           await _updateBookingStatus(bookingId);
         }
       }

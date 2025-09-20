@@ -409,7 +409,7 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
     if (_searchQuery.isNotEmpty) {
       final query = _searchQuery.toLowerCase();
       filtered = filtered
-          .where((event) => event.description.toLowerCase().contains(query))
+          .where((event) => (event.description ?? '').toLowerCase().contains(query))
           .toList();
     }
 
