@@ -861,6 +861,107 @@ class SecurityService {
     }
   }
 
+  /// Безопасное удаление данных
+  Future<void> secureDelete(String key) async {
+    try {
+      // Заглушка для безопасного удаления
+      _encryptionKeys.remove(key);
+    } catch (e) {
+      throw Exception('Ошибка безопасного удаления: $e');
+    }
+  }
+
+  /// Получить настройки безопасности
+  Future<Map<String, dynamic>> getSecuritySettings() async {
+    try {
+      // Заглушка для получения настроек безопасности
+      return {
+        'biometricEnabled': true,
+        'pinCodeEnabled': false,
+        'autoLock': 5,
+        'sessionTimeout': 30,
+      };
+    } catch (e) {
+      throw Exception('Ошибка получения настроек безопасности: $e');
+    }
+  }
+
+  /// Обновить настройки безопасности
+  Future<void> updateSecuritySettings(Map<String, dynamic> settings) async {
+    try {
+      // Заглушка для обновления настроек безопасности
+      if (kDebugMode) {
+        print('Security settings updated: $settings');
+      }
+    } catch (e) {
+      throw Exception('Ошибка обновления настроек безопасности: $e');
+    }
+  }
+
+  /// Заблокировать устройство
+  Future<void> blockDevice(String deviceId) async {
+    try {
+      // Заглушка для блокировки устройства
+      if (kDebugMode) {
+        print('Device blocked: $deviceId');
+      }
+    } catch (e) {
+      throw Exception('Ошибка блокировки устройства: $e');
+    }
+  }
+
+  /// Разблокировать устройство
+  Future<void> unblockDevice(String deviceId) async {
+    try {
+      // Заглушка для разблокировки устройства
+      if (kDebugMode) {
+        print('Device unblocked: $deviceId');
+      }
+    } catch (e) {
+      throw Exception('Ошибка разблокировки устройства: $e');
+    }
+  }
+
+  /// Доверенное устройство
+  Future<void> trustDevice(String deviceId) async {
+    try {
+      // Заглушка для доверенного устройства
+      if (kDebugMode) {
+        print('Device trusted: $deviceId');
+      }
+    } catch (e) {
+      throw Exception('Ошибка доверенного устройства: $e');
+    }
+  }
+
+  /// Проверка силы пароля
+  Future<Map<String, dynamic>> checkPasswordStrength(String password) async {
+    try {
+      // Заглушка для проверки силы пароля
+      final score = password.length >= 8 ? 100 : (password.length * 12.5).round();
+      return {
+        'score': score,
+        'strength': score >= 80 ? 'strong' : score >= 60 ? 'medium' : 'weak',
+        'suggestions': password.length < 8 ? ['Use at least 8 characters'] : [],
+      };
+    } catch (e) {
+      throw Exception('Ошибка проверки силы пароля: $e');
+    }
+  }
+
+  /// Очистить все безопасные данные
+  Future<void> clearAllSecureData() async {
+    try {
+      // Заглушка для очистки всех безопасных данных
+      _encryptionKeys.clear();
+      if (kDebugMode) {
+        print('All secure data cleared');
+      }
+    } catch (e) {
+      throw Exception('Ошибка очистки безопасных данных: $e');
+    }
+  }
+
   /// Закрыть сервис
   void dispose() {
     _encryptionKeys.clear();

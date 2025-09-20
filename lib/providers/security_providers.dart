@@ -54,10 +54,10 @@ final hasPinCodeProvider = FutureProvider<bool>(
 );
 
 /// Провайдер для аутентификации по биометрии
-final biometricAuthProvider = FutureProvider.family<bool, String>(
-  (ref, reason) => ref
+final biometricAuthProvider = FutureProvider<bool>(
+  (ref) => ref
       .watch(securityServiceProvider)
-      .authenticateWithBiometrics(reason: reason),
+      .authenticateWithBiometrics(),
 );
 
 /// Провайдер для проверки PIN-кода
@@ -142,9 +142,9 @@ final trustDeviceProvider =
 
 /// Провайдер для проверки силы пароля
 final passwordStrengthProvider =
-    Provider<SecurityPasswordStrength Function(String)>((ref) {
+    FutureProvider.family<Map<String, dynamic>, String>((ref, password) {
   final service = ref.watch(securityServiceProvider);
-  return service.checkPasswordStrength;
+  return service.checkPasswordStrength(password);
 });
 
 /// Провайдер для генерации безопасного пароля
