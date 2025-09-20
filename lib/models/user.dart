@@ -266,6 +266,10 @@ class AppUser {
         return 'Заказчик';
       case UserRole.specialist:
         return 'Специалист';
+      case UserRole.organizer:
+        return 'Организатор';
+      case UserRole.moderator:
+        return 'Модератор';
       case UserRole.guest:
         return 'Гость';
       case UserRole.admin:

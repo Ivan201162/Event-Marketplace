@@ -254,10 +254,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         return Colors.blue;
       case UserRole.specialist:
         return Colors.green;
-      case UserRole.guest:
+      case UserRole.organizer:
         return Colors.orange;
-      case UserRole.admin:
+      case UserRole.moderator:
         return Colors.purple;
+      case UserRole.guest:
+        return Colors.grey;
+      case UserRole.admin:
+        return Colors.red;
     }
   }
 
@@ -267,6 +271,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         return 'Заказчик';
       case UserRole.specialist:
         return 'Специалист';
+      case UserRole.organizer:
+        return 'Организатор';
+      case UserRole.moderator:
+        return 'Модератор';
       case UserRole.guest:
         return 'Гость';
       case UserRole.admin:

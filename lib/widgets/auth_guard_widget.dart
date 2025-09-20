@@ -245,6 +245,10 @@ class RoleBasedWidget extends ConsumerWidget {
             return customerWidget;
           case UserRole.specialist:
             return specialistWidget;
+          case UserRole.organizer:
+            return customerWidget; // Используем customer widget для organizer
+          case UserRole.moderator:
+            return adminWidget ?? fallbackWidget ?? const SizedBox.shrink();
           case UserRole.guest:
             return guestWidget ?? fallbackWidget ?? const SizedBox.shrink();
           case UserRole.admin:

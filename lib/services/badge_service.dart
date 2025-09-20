@@ -284,8 +284,8 @@ class BadgeService {
                 userName: userData?['name'] as String? ?? 'Пользователь',
                 userAvatar: userData?['avatarUrl'] as String?,
                 badgeCount: entry.value,
-                // rank: leaderboard.length + 1,
-                // recentBadges: [],
+                rank: leaderboard.length + 1,
+                recentBadges: [],
               ),
             );
           }
@@ -313,40 +313,4 @@ class BadgeService {
   }
 }
 
-/// Статистика бейджей
-class BadgeStats {
-  const BadgeStats({
-    required this.totalBadges,
-    required this.specialistBadges,
-    required this.customerBadges,
-    required this.generalBadges,
-    required this.recentBadges,
-  });
 
-  factory BadgeStats.empty() => const BadgeStats(
-        totalBadges: 0,
-        specialistBadges: 0,
-        customerBadges: 0,
-        generalBadges: 0,
-        recentBadges: [],
-      );
-  final int totalBadges;
-  final int specialistBadges;
-  final int customerBadges;
-  final int generalBadges;
-  final List<Badge> recentBadges;
-}
-
-/// Запись в таблице лидеров по бейджам
-class BadgeLeaderboardEntry {
-  const BadgeLeaderboardEntry({
-    required this.userId,
-    required this.userName,
-    this.userAvatar,
-    required this.badgeCount,
-  });
-  final String userId;
-  final String userName;
-  final String? userAvatar;
-  final int badgeCount;
-}

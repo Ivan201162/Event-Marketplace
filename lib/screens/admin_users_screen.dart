@@ -312,6 +312,14 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
         color = Colors.green;
         text = 'Специалист';
         break;
+      case UserRole.organizer:
+        color = Colors.orange;
+        text = 'Организатор';
+        break;
+      case UserRole.moderator:
+        color = Colors.purple;
+        text = 'Модератор';
+        break;
       case UserRole.guest:
         color = Colors.orange;
         text = 'Гость';
@@ -524,6 +532,10 @@ class _AdminUsersScreenState extends ConsumerState<AdminUsersScreen> {
         return 'Заказчик';
       case UserRole.specialist:
         return 'Специалист';
+      case UserRole.organizer:
+        return 'Организатор';
+      case UserRole.moderator:
+        return 'Модератор';
     }
   }
 

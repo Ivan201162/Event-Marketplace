@@ -74,6 +74,10 @@ class ProfileService {
         return getCustomerProfile(userId);
       case UserRole.specialist:
         return getSpecialistProfile(userId);
+      case UserRole.organizer:
+        return getCustomerProfile(userId); // Используем customer profile для organizer
+      case UserRole.moderator:
+        return null;
       case UserRole.guest:
         return null;
       case UserRole.admin:
@@ -93,6 +97,14 @@ class ProfileService {
         if (profile is SpecialistProfile) {
           await createOrUpdateSpecialistProfile(profile);
         }
+        break;
+      case UserRole.organizer:
+        if (profile is CustomerProfile) {
+          await createOrUpdateCustomerProfile(profile);
+        }
+        break;
+      case UserRole.moderator:
+        // Модераторы не имеют специального профиля
         break;
       case UserRole.guest:
         throw Exception('Гости не могут иметь профили');
@@ -247,6 +259,11 @@ class ProfileService {
               .doc(userId)
               .delete();
           break;
+        case UserRole.organizer:
+          await _firestore.collection('customer_profiles').doc(userId).delete();
+          break;
+        case UserRole.moderator:
+          throw Exception('Модераторы не могут иметь профили');
         case UserRole.guest:
           throw Exception('Гости не могут иметь профили');
         case UserRole.admin:
