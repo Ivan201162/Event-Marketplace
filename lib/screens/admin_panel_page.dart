@@ -640,7 +640,7 @@ class _AdminPanelPageState extends ConsumerState<AdminPanelPage>
           // TODO: Navigate to event details
           break;
         case 'hide':
-          await _adminService.hideEvent(event.id, 'Нарушение правил');
+          await _adminService.hideEvent(event.id);
           _showSuccessMessage('Событие скрыто');
           break;
         case 'show':
