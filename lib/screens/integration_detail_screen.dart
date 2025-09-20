@@ -426,13 +426,10 @@ class _IntegrationDetailScreenState
       if (widget.integration.status == IntegrationStatus.connected) {
         success = await _integrationService.disconnectIntegration(
           widget.integration.id,
-          currentUser.uid,
         );
       } else {
         success = await _integrationService.connectIntegration(
           widget.integration.id,
-          currentUser.uid,
-          {},
         );
       }
 
@@ -478,7 +475,6 @@ class _IntegrationDetailScreenState
     try {
       final success = await _integrationService.syncIntegrationData(
         widget.integration.id,
-        currentUser.uid,
       );
 
       if (success) {

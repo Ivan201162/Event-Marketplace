@@ -500,7 +500,7 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
         'limit': 50,
       };
       final recommendations =
-          await _recommendationEngine.getRecommendations(params);
+          await _recommendationEngine.getRecommendations();
 
       setState(() {
         _recommendations = recommendations;

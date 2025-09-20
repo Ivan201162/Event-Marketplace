@@ -170,7 +170,7 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
           }
 
           return StreamBuilder<List<SecurityAuditLog>>(
-            stream: _securityService.getSecurityAuditLogs(currentUser.uid),
+            stream: _securityService.getSecurityAuditLogs(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
