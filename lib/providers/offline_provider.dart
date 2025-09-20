@@ -160,7 +160,7 @@ class SyncState {
 
 /// Нотификатор для офлайн-режима
 class OfflineModeNotifier extends Notifier<OfflineModeState> {
-  OfflineModeNotifier() : super(const OfflineModeState()) {
+  OfflineModeNotifier() : super() {
     _initialize();
   }
 
@@ -261,7 +261,7 @@ class OfflineModeNotifier extends Notifier<OfflineModeState> {
 
 /// Нотификатор для информации о кэше
 class CacheInfoNotifier extends Notifier<CacheInfoState> {
-  CacheInfoNotifier() : super(const CacheInfoState()) {
+  CacheInfoNotifier() : super() {
     _loadCacheInfo();
   }
 
@@ -320,7 +320,7 @@ class CacheInfoNotifier extends Notifier<CacheInfoState> {
 
 /// Нотификатор для синхронизации
 class SyncNotifier extends Notifier<SyncState> {
-  SyncNotifier() : super(const SyncState()) {
+  SyncNotifier() : super() {
     _loadLastSyncTime();
   }
 

@@ -35,7 +35,7 @@ class PerformanceState {
 
 /// Провайдер производительности
 class PerformanceNotifier extends Notifier<PerformanceState> {
-  PerformanceNotifier() : super(const PerformanceState()) {
+  PerformanceNotifier() : super() {
     _startMonitoring();
   }
 

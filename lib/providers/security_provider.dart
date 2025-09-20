@@ -111,7 +111,7 @@ class PasswordValidationState {
 
 /// Нотификатор для управления безопасностью
 class SecurityNotifier extends Notifier<SecurityState> {
-  SecurityNotifier() : super(const SecurityState()) {
+  SecurityNotifier() : super() {
     _initialize();
   }
 
@@ -212,7 +212,7 @@ class SecurityNotifier extends Notifier<SecurityState> {
 
 /// Нотификатор для валидации пароля
 class PasswordValidationNotifier extends Notifier<PasswordValidationState> {
-  PasswordValidationNotifier() : super(const PasswordValidationState());
+  PasswordValidationNotifier() : super();
 
   /// Обновить пароль
   void updatePassword(String password) {

@@ -251,7 +251,7 @@ class MediaOptimizationSettings {
 class MediaOptimizationSettingsNotifier
     extends Notifier<MediaOptimizationSettings> {
   MediaOptimizationSettingsNotifier()
-      : super(const MediaOptimizationSettings());
+      : super();
 
   /// Обновить настройки сжатия изображений
   void updateImageCompressionSettings({

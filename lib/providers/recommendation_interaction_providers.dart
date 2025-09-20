@@ -39,7 +39,7 @@ class RecommendationInteractionState {
 class RecommendationInteractionNotifier
     extends Notifier<RecommendationInteractionState> {
   RecommendationInteractionNotifier()
-      : super(const RecommendationInteractionState());
+      : super();
 
   void addInteraction(RecommendationInteraction interaction) {
     final updatedInteractions =

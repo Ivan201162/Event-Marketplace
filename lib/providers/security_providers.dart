@@ -30,7 +30,7 @@ final securitySettingsProvider =
 final securityAuditLogsProvider =
     StreamProvider.family<List<SecurityAuditLog>, String>(
   (ref, userId) =>
-      ref.watch(securityServiceProvider).getSecurityAuditLogs(userId),
+      ref.watch(securityServiceProvider).getSecurityAuditLogs(),
 );
 
 /// Провайдер устройств пользователя
@@ -107,7 +107,7 @@ final secureDeleteProvider = FutureProvider.family<void, String>(
 final getSecuritySettingsProvider =
     FutureProvider.family<SecuritySettings?, String>(
   (ref, userId) =>
-      ref.watch(securityServiceProvider).getSecuritySettings(userId),
+      ref.watch(securityServiceProvider).getSecuritySettings(),
 );
 
 /// Провайдер для обновления настроек безопасности
