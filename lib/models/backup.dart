@@ -258,8 +258,8 @@ class Restore {
     return Restore(
       id: doc.id,
       backupId: data['backupId'] as String? ?? '',
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
+      name: data['name'] as String? ?? '',
+      description: data['description'] as String? ?? '',
       type: RestoreType.values.firstWhere(
         (e) => e.toString().split('.').last == data['type'],
         orElse: () => RestoreType.full,
@@ -268,25 +268,25 @@ class Restore {
         (e) => e.toString().split('.').last == data['status'],
         orElse: () => RestoreStatus.pending,
       ),
-      collections: List<String>.from(data['collections'] ?? []),
-      options: Map<String, dynamic>.from(data['options'] ?? {}),
-      createdBy: data['createdBy'],
+      collections: List<String>.from(data['collections'] as List<dynamic>? ?? []),
+      options: Map<String, dynamic>.from(data['options'] as Map<dynamic, dynamic>? ?? {}),
+      createdBy: data['createdBy'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       completedAt: data['completedAt'] != null
           ? (data['completedAt'] as Timestamp).toDate()
           : null,
-      errorMessage: data['errorMessage'],
+      errorMessage: data['errorMessage'] as String?,
       metadata: data['metadata'] != null
-          ? Map<String, dynamic>.from(data['metadata'])
+          ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
           : null,
     );
   }
 
   /// Создать из Map
   factory Restore.fromMap(Map<String, dynamic> data) => Restore(
-        id: data['id'] ?? '',
-        backupId: data['backupId'] ?? '',
-        name: data['name'] ?? '',
+        id: data['id'] as String? ?? '',
+        backupId: data['backupId'] as String? ?? '',
+        name: data['name'] as String? ?? '',
         description: data['description'] ?? '',
         type: RestoreType.values.firstWhere(
           (e) => e.toString().split('.').last == data['type'],
