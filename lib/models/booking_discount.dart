@@ -43,17 +43,17 @@ class BookingDiscount {
   /// Создать из Map
   factory BookingDiscount.fromMap(Map<String, dynamic> data) => BookingDiscount(
         isOffered: data['isOffered'] as bool? ?? false,
-        percent: data['percent']?.toDouble(),
-        oldPrice: data['oldPrice']?.toDouble(),
-        newPrice: data['newPrice']?.toDouble(),
+        percent: (data['percent'] as num?)?.toDouble(),
+        oldPrice: (data['oldPrice'] as num?)?.toDouble(),
+        newPrice: (data['newPrice'] as num?)?.toDouble(),
         offeredAt: data['offeredAt'] != null
             ? (data['offeredAt'] as Timestamp).toDate()
             : null,
         expiresAt: data['expiresAt'] != null
             ? (data['expiresAt'] as Timestamp).toDate()
             : null,
-        offeredBy: data['offeredBy'] ?? 'specialist',
-        reason: data['reason'],
+        offeredBy: data['offeredBy'] as String? ?? 'specialist',
+        reason: data['reason'] as String?,
         isAccepted: data['isAccepted'] ?? false,
         acceptedAt: data['acceptedAt'] != null
             ? (data['acceptedAt'] as Timestamp).toDate()
