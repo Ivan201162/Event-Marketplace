@@ -401,11 +401,11 @@ class CacheConfig {
         maxSize: data['maxSize'] as int? ?? 100 * 1024 * 1024,
         maxItems: data['maxItems'] as int? ?? 1000,
         enableCompression: data['enableCompression'] as bool? ?? false,
-        enableEncryption: data['enableEncryption'] ?? false,
-        excludedKeys: List<String>.from(data['excludedKeys'] ?? []),
+        enableEncryption: data['enableEncryption'] as bool? ?? false,
+        excludedKeys: List<String>.from(data['excludedKeys'] as List<dynamic>? ?? []),
         customTTL: Map<String, Duration>.from(
           (data['customTTL'] as Map<String, dynamic>?)?.map(
-                (key, value) => MapEntry(key, Duration(seconds: value)),
+                (key, value) => MapEntry(key, Duration(seconds: value as int)),
               ) ??
               {},
         ),
@@ -413,8 +413,8 @@ class CacheConfig {
           (e) => e.toString().split('.').last == data['evictionPolicy'],
           orElse: () => CacheEvictionPolicy.lru,
         ),
-        enableStatistics: data['enableStatistics'] ?? true,
-        enableLogging: data['enableLogging'] ?? false,
+        enableStatistics: data['enableStatistics'] as bool? ?? true,
+        enableLogging: data['enableLogging'] as bool? ?? false,
       );
   final bool enabled;
   final Duration defaultTTL;
