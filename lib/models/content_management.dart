@@ -273,11 +273,11 @@ class ContentGallery {
     final data = doc.data()! as Map<String, dynamic>;
     return ContentGallery(
       id: doc.id,
-      name: data['name'] ?? '',
-      description: data['description'],
-      specialistId: data['specialistId'],
-      eventId: data['eventId'],
-      mediaIds: List<String>.from(data['mediaIds'] ?? []),
+      name: data['name'] as String? ?? '',
+      description: data['description'] as String?,
+      specialistId: data['specialistId'] as String?,
+      eventId: data['eventId'] as String?,
+      mediaIds: List<String>.from(data['mediaIds'] as List<dynamic>? ?? []),
       type: GalleryType.values.firstWhere(
         (e) => e.toString().split('.').last == data['type'],
         orElse: () => GalleryType.portfolio,
