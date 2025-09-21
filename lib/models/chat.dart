@@ -45,7 +45,7 @@ class ChatMessage {
       senderId: data['senderId'] as String? ?? '',
       receiverId: data['receiverId'] as String?,
       type: _parseMessageType(data['type']),
-      content: data['content'] ?? '',
+      content: data['content'] as String? ?? '',
       status: _parseMessageStatus(data['status']),
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] as Timestamp).toDate()
@@ -53,10 +53,10 @@ class ChatMessage {
       readAt: data['readAt'] != null
           ? (data['readAt'] as Timestamp).toDate()
           : null,
-      metadata: data['metadata'],
-      replyToMessageId: data['replyToMessageId'],
-      attachments: List<String>.from(data['attachments'] ?? []),
-      senderName: data['senderName'],
+      metadata: data['metadata'] as Map<String, dynamic>?,
+      replyToMessageId: data['replyToMessageId'] as String?,
+      attachments: List<String>.from(data['attachments'] as List<dynamic>? ?? []),
+      senderName: data['senderName'] as String?,
     );
   }
   final String id;
