@@ -281,11 +281,11 @@ class Chat {
       avatar: data['avatar'] as String?,
       participants: List<String>.from(data['participants'] as List<dynamic>? ?? []),
       participantNames:
-          Map<String, String>.from(data['participantNames'] ?? {}),
+          Map<String, String>.from(data['participantNames'] as Map<dynamic, dynamic>? ?? {}),
       participantAvatars:
-          Map<String, String>.from(data['participantAvatars'] ?? {}),
-      lastMessageId: data['lastMessageId'],
-      lastMessageContent: data['lastMessageContent'],
+          Map<String, String>.from(data['participantAvatars'] as Map<dynamic, dynamic>? ?? {}),
+      lastMessageId: data['lastMessageId'] as String?,
+      lastMessageContent: data['lastMessageContent'] as String?,
       lastMessageType: data['lastMessageType'] != null
           ? MessageType.values.firstWhere(
               (e) => e.name == data['lastMessageType'],
@@ -295,7 +295,7 @@ class Chat {
       lastMessageTime: data['lastMessageTime'] != null
           ? (data['lastMessageTime'] as Timestamp).toDate()
           : null,
-      lastMessageSenderId: data['lastMessageSenderId'],
+      lastMessageSenderId: data['lastMessageSenderId'] as String?,
       unreadCount: data['unreadCount'] ?? 0,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
