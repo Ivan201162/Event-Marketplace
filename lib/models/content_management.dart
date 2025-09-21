@@ -72,9 +72,9 @@ class MediaContent {
         fileSize: data['fileSize'] as int? ?? 0,
         mimeType: data['mimeType'] as String? ?? '',
         metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
-        uploadedBy: data['uploadedBy'],
-        specialistId: data['specialistId'],
-        eventId: data['eventId'],
+        uploadedBy: data['uploadedBy'] as String?,
+        specialistId: data['specialistId'] as String?,
+        eventId: data['eventId'] as String?,
         status: ContentStatus.values.firstWhere(
           (e) => e.toString().split('.').last == data['status'],
           orElse: () => ContentStatus.uploaded,
@@ -86,8 +86,8 @@ class MediaContent {
         publishedAt: data['publishedAt'] != null
             ? (data['publishedAt'] as Timestamp).toDate()
             : null,
-        tags: List<String>.from(data['tags'] ?? []),
-        processingInfo: Map<String, dynamic>.from(data['processingInfo'] ?? {}),
+        tags: List<String>.from(data['tags'] as List<dynamic>? ?? []),
+        processingInfo: Map<String, dynamic>.from(data['processingInfo'] as Map<dynamic, dynamic>? ?? {}),
       );
   final String id;
   final String title;
