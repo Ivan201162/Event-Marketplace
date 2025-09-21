@@ -358,11 +358,11 @@ class CalendarSync {
 
   factory CalendarSync.fromMap(Map<String, dynamic> map) => CalendarSync(
         id: map['id'] as String? ?? '',
-        userId: map['userId'] ?? '',
-        provider: map['provider'] ?? '',
-        providerId: map['providerId'] ?? '',
-        accessToken: map['accessToken'] ?? '',
-        refreshToken: map['refreshToken'] ?? '',
+        userId: map['userId'] as String? ?? '',
+        provider: map['provider'] as String? ?? '',
+        providerId: map['providerId'] as String? ?? '',
+        accessToken: map['accessToken'] as String? ?? '',
+        refreshToken: map['refreshToken'] as String? ?? '',
         tokenExpiry:
             (map['tokenExpiry'] as Timestamp?)?.toDate() ?? DateTime.now(),
         isActive: map['isActive'] ?? false,
