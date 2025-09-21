@@ -25,11 +25,11 @@ class Dependency {
 
   factory Dependency.fromMap(Map<String, dynamic> map) => Dependency(
         id: map['id'] as String? ?? '',
-        name: map['name'] ?? '',
-        version: map['version'] ?? '',
-        latestVersion: map['latestVersion'],
-        type: DependencyType.fromString(map['type'] ?? 'package'),
-        status: DependencyStatus.fromString(map['status'] ?? 'active'),
+        name: map['name'] as String? ?? '',
+        version: map['version'] as String? ?? '',
+        latestVersion: map['latestVersion'] as String?,
+        type: DependencyType.fromString(map['type'] as String? ?? 'package'),
+        status: DependencyStatus.fromString(map['status'] as String? ?? 'active'),
         description: map['description'],
         repositoryUrl: map['repositoryUrl'],
         documentationUrl: map['documentationUrl'],
