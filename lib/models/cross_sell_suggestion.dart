@@ -204,11 +204,11 @@ class CrossSellItem {
   factory CrossSellItem.fromMap(Map<String, dynamic> data) => CrossSellItem(
         id: data['id'] as String? ?? '',
         specialistId: data['specialistId'] as String? ?? '',
-        specialistName: data['specialistName'] ?? '',
-        categoryId: data['categoryId'] ?? '',
-        categoryName: data['categoryName'] ?? '',
-        description: data['description'],
-        estimatedPrice: data['estimatedPrice']?.toDouble(),
+        specialistName: data['specialistName'] as String? ?? '',
+        categoryId: data['categoryId'] as String? ?? '',
+        categoryName: data['categoryName'] as String? ?? '',
+        description: data['description'] as String?,
+        estimatedPrice: data['estimatedPrice'] as double?,
         imageUrl: data['imageUrl'],
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(data['metadata'])
