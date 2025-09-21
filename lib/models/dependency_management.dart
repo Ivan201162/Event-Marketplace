@@ -35,13 +35,13 @@ class Dependency {
         documentationUrl: map['documentationUrl'] as String?,
         licenses: List<String>.from(map['licenses'] as List<dynamic>? ?? []),
         authors: List<String>.from(map['authors'] as List<dynamic>? ?? []),
-        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
-        dependencies: List<String>.from(map['dependencies'] ?? []),
-        dependents: List<String>.from(map['dependents'] ?? []),
+        metadata: Map<String, dynamic>.from(map['metadata'] as Map<dynamic, dynamic>? ?? {}),
+        dependencies: List<String>.from(map['dependencies'] as List<dynamic>? ?? []),
+        dependents: List<String>.from(map['dependents'] as List<dynamic>? ?? []),
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-        createdBy: map['createdBy'] ?? '',
-        updatedBy: map['updatedBy'] ?? '',
+        createdBy: map['createdBy'] as String? ?? '',
+        updatedBy: map['updatedBy'] as String? ?? '',
       );
   final String id;
   final String name;
