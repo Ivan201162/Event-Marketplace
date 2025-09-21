@@ -61,17 +61,17 @@ class Contract {
         (e) => e.name == data['status'],
         orElse: () => ContractStatus.draft,
       ),
-      title: data['title'] ?? '',
-      content: data['content'] ?? '',
-      terms: Map<String, dynamic>.from(data['terms'] ?? {}),
+      title: data['title'] as String? ?? '',
+      content: data['content'] as String? ?? '',
+      terms: Map<String, dynamic>.from(data['terms'] as Map<dynamic, dynamic>? ?? {}),
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       signedAt: data['signedAt'] != null
           ? (data['signedAt'] as Timestamp).toDate()
           : null,
       expiresAt: (data['expiresAt'] as Timestamp).toDate(),
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-      specialistName: data['specialistName'],
+      metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+      specialistName: data['specialistName'] as String?,
       startDate: data['startDate'] != null
           ? (data['startDate'] as Timestamp).toDate()
           : null,
