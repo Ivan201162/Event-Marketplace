@@ -41,9 +41,9 @@ class ChatMessage {
     final data = doc.data()! as Map<String, dynamic>;
     return ChatMessage(
       id: doc.id,
-      chatId: data['chatId'] ?? '',
-      senderId: data['senderId'] ?? '',
-      receiverId: data['receiverId'],
+      chatId: data['chatId'] as String? ?? '',
+      senderId: data['senderId'] as String? ?? '',
+      receiverId: data['receiverId'] as String?,
       type: _parseMessageType(data['type']),
       content: data['content'] ?? '',
       status: _parseMessageStatus(data['status']),

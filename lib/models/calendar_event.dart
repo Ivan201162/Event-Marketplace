@@ -365,9 +365,9 @@ class CalendarSync {
         refreshToken: map['refreshToken'] as String? ?? '',
         tokenExpiry:
             (map['tokenExpiry'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        isActive: map['isActive'] ?? false,
+        isActive: map['isActive'] as bool? ?? false,
         lastSync: (map['lastSync'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        settings: Map<String, dynamic>.from(map['settings'] ?? {}),
+        settings: Map<String, dynamic>.from(map['settings'] as Map<dynamic, dynamic>? ?? {}),
       );
   final String id;
   final String userId;
