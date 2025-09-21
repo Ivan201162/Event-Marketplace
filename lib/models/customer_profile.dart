@@ -32,8 +32,8 @@ class CustomerProfile {
     final data = doc.data()! as Map<String, dynamic>;
     return CustomerProfile(
       userId: doc.id,
-      photoURL: data['photoURL'],
-      bio: data['bio'],
+      photoURL: data['photoURL'] as String?,
+      bio: data['bio'] as String?,
       maritalStatus: _parseMaritalStatus(data['maritalStatus']),
       weddingDate: data['weddingDate'] != null
           ? (data['weddingDate'] as Timestamp).toDate()
@@ -41,7 +41,7 @@ class CustomerProfile {
       anniversaryDate: data['anniversaryDate'] != null
           ? (data['anniversaryDate'] as Timestamp).toDate()
           : null,
-      phoneNumber: data['phoneNumber'],
+      phoneNumber: data['phoneNumber'] as String?,
       location: data['location'],
       interests: List<String>.from(data['interests'] ?? []),
       eventTypes: List<String>.from(data['eventTypes'] ?? []),

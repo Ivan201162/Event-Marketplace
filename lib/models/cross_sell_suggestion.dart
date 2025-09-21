@@ -209,9 +209,9 @@ class CrossSellItem {
         categoryName: data['categoryName'] as String? ?? '',
         description: data['description'] as String?,
         estimatedPrice: data['estimatedPrice'] as double?,
-        imageUrl: data['imageUrl'],
+        imageUrl: data['imageUrl'] as String?,
         metadata: data['metadata'] != null
-            ? Map<String, dynamic>.from(data['metadata'])
+            ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
             : null,
       );
   final String id;
