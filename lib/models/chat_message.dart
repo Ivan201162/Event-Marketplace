@@ -49,8 +49,8 @@ class ChatMessage {
 
     return ChatMessage(
       id: doc.id,
-      chatId: data['chatId'] ?? '',
-      senderId: data['senderId'] ?? '',
+      chatId: data['chatId'] as String? ?? '',
+      senderId: data['senderId'] as String? ?? '',
       senderName: data['senderName'] ?? '',
       senderAvatar: data['senderAvatar'],
       type: MessageType.values.firstWhere(

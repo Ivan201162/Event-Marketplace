@@ -237,9 +237,9 @@ class Chat {
           ? ChatMessage.fromDocument(data['lastMessage'] as DocumentSnapshot)
           : null,
       unreadCount: data['unreadCount'] as int? ?? 0,
-      isActive: data['isActive'] ?? true,
-      metadata: data['metadata'],
-      title: data['title'],
+      isActive: data['isActive'] as bool? ?? true,
+      metadata: data['metadata'] as Map<String, dynamic>?,
+      title: data['title'] as String?,
     );
   }
   final String id;
