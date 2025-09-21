@@ -305,8 +305,8 @@ class ContentGallery {
         isPublic: data['isPublic'] as bool? ?? false,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-        createdBy: data['createdBy'],
-        settings: Map<String, dynamic>.from(data['settings'] ?? {}),
+        createdBy: data['createdBy'] as String?,
+        settings: Map<String, dynamic>.from(data['settings'] as Map<dynamic, dynamic>? ?? {}),
       );
   final String id;
   final String name;
@@ -431,7 +431,7 @@ class MediaProcessing {
     final data = doc.data()! as Map<String, dynamic>;
     return MediaProcessing(
       id: doc.id,
-      mediaId: data['mediaId'] ?? '',
+      mediaId: data['mediaId'] as String? ?? '',
       type: ProcessingType.values.firstWhere(
         (e) => e.toString().split('.').last == data['type'],
         orElse: () => ProcessingType.thumbnail,
@@ -440,9 +440,9 @@ class MediaProcessing {
         (e) => e.toString().split('.').last == data['status'],
         orElse: () => ProcessingStatus.pending,
       ),
-      parameters: Map<String, dynamic>.from(data['parameters'] ?? {}),
-      resultUrl: data['resultUrl'],
-      errorMessage: data['errorMessage'],
+      parameters: Map<String, dynamic>.from(data['parameters'] as Map<dynamic, dynamic>? ?? {}),
+      resultUrl: data['resultUrl'] as String?,
+      errorMessage: data['errorMessage'] as String?,
       startedAt: (data['startedAt'] as Timestamp).toDate(),
       completedAt: data['completedAt'] != null
           ? (data['completedAt'] as Timestamp).toDate()
