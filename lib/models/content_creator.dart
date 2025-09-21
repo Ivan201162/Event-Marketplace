@@ -40,7 +40,7 @@ class ContentCreator {
       location: data['location'] as String?,
       rating: data['rating'] as double?,
       reviewCount: data['reviewCount'] as int?,
-      isActive: data['isActive'] ?? true,
+      isActive: data['isActive'] as bool? ?? true,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
     );
@@ -48,10 +48,10 @@ class ContentCreator {
 
   /// Создать из Map
   factory ContentCreator.fromMap(Map<String, dynamic> data) => ContentCreator(
-        id: data['id'] ?? '',
-        name: data['name'] ?? '',
-        description: data['description'] ?? '',
-        categories: List<String>.from(data['categories'] ?? []),
+        id: data['id'] as String? ?? '',
+        name: data['name'] as String? ?? '',
+        description: data['description'] as String? ?? '',
+        categories: List<String>.from(data['categories'] as List<dynamic>? ?? []),
         formats: (data['formats'] as List<dynamic>?)
                 ?.map((f) => ContentFormat.fromMap(f as Map<String, dynamic>))
                 .toList() ??
