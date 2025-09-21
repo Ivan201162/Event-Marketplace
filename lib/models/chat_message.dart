@@ -60,9 +60,9 @@ class ChatMessage {
       content: data['content'] as String? ?? '',
       fileUrl: data['fileUrl'] as String?,
       fileName: data['fileName'] as String?,
-      fileSize: data['fileSize'],
-      thumbnailUrl: data['thumbnailUrl'],
-      metadata: data['metadata'],
+      fileSize: data['fileSize'] as int?,
+      thumbnailUrl: data['thumbnailUrl'] as String?,
+      metadata: data['metadata'] as Map<String, dynamic>?,
       status: MessageStatus.values.firstWhere(
         (e) => e.name == data['status'],
         orElse: () => MessageStatus.sent,
@@ -71,8 +71,8 @@ class ChatMessage {
       editedAt: data['editedAt'] != null
           ? (data['editedAt'] as Timestamp).toDate()
           : null,
-      replyToMessageId: data['replyToMessageId'],
-      readBy: List<String>.from(data['readBy'] ?? []),
+      replyToMessageId: data['replyToMessageId'] as String?,
+      readBy: List<String>.from(data['readBy'] as List<dynamic>? ?? []),
       isDeleted: data['isDeleted'] ?? false,
     );
   }
