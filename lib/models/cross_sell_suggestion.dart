@@ -35,7 +35,7 @@ class CrossSellSuggestion {
         (e) => e.name == data['status'],
         orElse: () => CrossSellStatus.pending,
       ),
-      message: data['message'],
+      message: data['message'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       viewedAt: data['viewedAt'] != null
           ? (data['viewedAt'] as Timestamp).toDate()
@@ -44,7 +44,7 @@ class CrossSellSuggestion {
           ? (data['respondedAt'] as Timestamp).toDate()
           : null,
       metadata: data['metadata'] != null
-          ? Map<String, dynamic>.from(data['metadata'])
+          ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
           : null,
     );
   }
@@ -52,9 +52,9 @@ class CrossSellSuggestion {
   /// Создать из Map
   factory CrossSellSuggestion.fromMap(Map<String, dynamic> data) =>
       CrossSellSuggestion(
-        id: data['id'] ?? '',
-        bookingId: data['bookingId'] ?? '',
-        customerId: data['customerId'] ?? '',
+        id: data['id'] as String? ?? '',
+        bookingId: data['bookingId'] as String? ?? '',
+        customerId: data['customerId'] as String? ?? '',
         specialistId: data['specialistId'] ?? '',
         suggestedItems: (data['suggestedItems'] as List<dynamic>?)
                 ?.map(
