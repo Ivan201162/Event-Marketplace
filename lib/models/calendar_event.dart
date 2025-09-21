@@ -52,10 +52,10 @@ class CalendarEvent {
       ),
       attendees: List<String>.from(data['attendees'] as List<dynamic>? ?? []),
       metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
-      isAllDay: data['isAllDay'] ?? false,
-      recurrenceRule: data['recurrenceRule'],
-      reminderTime: data['reminderTime'],
-      color: data['color'],
+      isAllDay: data['isAllDay'] as bool? ?? false,
+      recurrenceRule: data['recurrenceRule'] as String?,
+      reminderTime: data['reminderTime'] as String?,
+      color: data['color'] as String?,
       createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
       updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
     );
@@ -357,7 +357,7 @@ class CalendarSync {
   });
 
   factory CalendarSync.fromMap(Map<String, dynamic> map) => CalendarSync(
-        id: map['id'] ?? '',
+        id: map['id'] as String? ?? '',
         userId: map['userId'] ?? '',
         provider: map['provider'] ?? '',
         providerId: map['providerId'] ?? '',
