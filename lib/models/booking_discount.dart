@@ -54,11 +54,11 @@ class BookingDiscount {
             : null,
         offeredBy: data['offeredBy'] as String? ?? 'specialist',
         reason: data['reason'] as String?,
-        isAccepted: data['isAccepted'] ?? false,
+        isAccepted: data['isAccepted'] as bool? ?? false,
         acceptedAt: data['acceptedAt'] != null
             ? (data['acceptedAt'] as Timestamp).toDate()
             : null,
-        acceptedBy: data['acceptedBy'],
+        acceptedBy: data['acceptedBy'] as String?,
       );
   final bool isOffered;
   final double? percent;
