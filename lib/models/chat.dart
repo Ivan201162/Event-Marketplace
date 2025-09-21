@@ -224,9 +224,9 @@ class Chat {
     final data = doc.data()! as Map<String, dynamic>;
     return Chat(
       id: doc.id,
-      customerId: data['customerId'] ?? '',
-      specialistId: data['specialistId'] ?? '',
-      bookingId: data['bookingId'],
+      customerId: data['customerId'] as String? ?? '',
+      specialistId: data['specialistId'] as String? ?? '',
+      bookingId: data['bookingId'] as String?,
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
@@ -234,9 +234,9 @@ class Chat {
           ? (data['updatedAt'] as Timestamp).toDate()
           : DateTime.now(),
       lastMessage: data['lastMessage'] != null
-          ? ChatMessage.fromDocument(data['lastMessage'])
+          ? ChatMessage.fromDocument(data['lastMessage'] as DocumentSnapshot)
           : null,
-      unreadCount: data['unreadCount'] ?? 0,
+      unreadCount: data['unreadCount'] as int? ?? 0,
       isActive: data['isActive'] ?? true,
       metadata: data['metadata'],
       title: data['title'],
