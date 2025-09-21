@@ -297,11 +297,11 @@ class DependencyUpdate {
 
   factory DependencyUpdate.fromMap(Map<String, dynamic> map) =>
       DependencyUpdate(
-        id: map['id'] ?? '',
-        dependencyId: map['dependencyId'] ?? '',
-        currentVersion: map['currentVersion'] ?? '',
-        newVersion: map['newVersion'] ?? '',
-        type: UpdateType.fromString(map['type'] ?? 'minor'),
+        id: map['id'] as String? ?? '',
+        dependencyId: map['dependencyId'] as String? ?? '',
+        currentVersion: map['currentVersion'] as String? ?? '',
+        newVersion: map['newVersion'] as String? ?? '',
+        type: UpdateType.fromString(map['type'] as String? ?? 'minor'),
         priority: UpdatePriority.fromString(map['priority'] ?? 'medium'),
         changelog: map['changelog'],
         breakingChanges: List<String>.from(map['breakingChanges'] ?? []),
