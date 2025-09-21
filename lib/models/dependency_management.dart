@@ -24,7 +24,7 @@ class Dependency {
   });
 
   factory Dependency.fromMap(Map<String, dynamic> map) => Dependency(
-        id: map['id'] ?? '',
+        id: map['id'] as String? ?? '',
         name: map['name'] ?? '',
         version: map['version'] ?? '',
         latestVersion: map['latestVersion'],

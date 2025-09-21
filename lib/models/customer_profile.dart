@@ -42,10 +42,10 @@ class CustomerProfile {
           ? (data['anniversaryDate'] as Timestamp).toDate()
           : null,
       phoneNumber: data['phoneNumber'] as String?,
-      location: data['location'],
-      interests: List<String>.from(data['interests'] ?? []),
-      eventTypes: List<String>.from(data['eventTypes'] ?? []),
-      preferences: data['preferences'],
+      location: data['location'] as String?,
+      interests: List<String>.from(data['interests'] as List<dynamic>? ?? []),
+      eventTypes: List<String>.from(data['eventTypes'] as List<dynamic>? ?? []),
+      preferences: data['preferences'] as Map<String, dynamic>?,
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
