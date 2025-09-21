@@ -73,7 +73,7 @@ class ChatMessage {
           : null,
       replyToMessageId: data['replyToMessageId'] as String?,
       readBy: List<String>.from(data['readBy'] as List<dynamic>? ?? []),
-      isDeleted: data['isDeleted'] ?? false,
+      isDeleted: data['isDeleted'] as bool? ?? false,
     );
   }
   final String id;
@@ -276,10 +276,10 @@ class Chat {
 
     return Chat(
       id: doc.id,
-      name: data['name'] ?? '',
-      description: data['description'],
-      avatar: data['avatar'],
-      participants: List<String>.from(data['participants'] ?? []),
+      name: data['name'] as String? ?? '',
+      description: data['description'] as String?,
+      avatar: data['avatar'] as String?,
+      participants: List<String>.from(data['participants'] as List<dynamic>? ?? []),
       participantNames:
           Map<String, String>.from(data['participantNames'] ?? {}),
       participantAvatars:
