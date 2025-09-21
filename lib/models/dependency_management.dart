@@ -307,13 +307,13 @@ class DependencyUpdate {
         breakingChanges: List<String>.from(map['breakingChanges'] as List<dynamic>? ?? []),
         securityFixes: List<String>.from(map['securityFixes'] as List<dynamic>? ?? []),
         bugFixes: List<String>.from(map['bugFixes'] as List<dynamic>? ?? []),
-        newFeatures: List<String>.from(map['newFeatures'] ?? []),
-        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
+        newFeatures: List<String>.from(map['newFeatures'] as List<dynamic>? ?? []),
+        metadata: Map<String, dynamic>.from(map['metadata'] as Map<dynamic, dynamic>? ?? {}),
         releaseDate: (map['releaseDate'] as Timestamp).toDate(),
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-        createdBy: map['createdBy'] ?? '',
-        updatedBy: map['updatedBy'] ?? '',
+        createdBy: map['createdBy'] as String? ?? '',
+        updatedBy: map['updatedBy'] as String? ?? '',
       );
   final String id;
   final String dependencyId;
