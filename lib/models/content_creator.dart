@@ -25,7 +25,7 @@ class ContentCreator {
       id: doc.id,
       name: data['name'] as String? ?? '',
       description: data['description'] as String? ?? '',
-      categories: List<String>.from(data['categories'] ?? []),
+      categories: List<String>.from(data['categories'] as List<dynamic>? ?? []),
       formats: (data['formats'] as List<dynamic>?)
               ?.map((f) => ContentFormat.fromMap(f as Map<String, dynamic>))
               .toList() ??
@@ -35,11 +35,11 @@ class ContentCreator {
               .toList() ??
           [],
       pricing: data['pricing'] != null
-          ? Map<String, dynamic>.from(data['pricing'])
+          ? Map<String, dynamic>.from(data['pricing'] as Map<dynamic, dynamic>)
           : null,
-      location: data['location'],
-      rating: data['rating']?.toDouble(),
-      reviewCount: data['reviewCount'],
+      location: data['location'] as String?,
+      rating: data['rating'] as double?,
+      reviewCount: data['reviewCount'] as int?,
       isActive: data['isActive'] ?? true,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
