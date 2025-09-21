@@ -231,7 +231,7 @@ class BudgetSuggestionItem {
         estimatedPrice: (data['estimatedPrice'] as num?)?.toDouble(),
         reason: data['reason'] as String?,
         metadata: data['metadata'] != null
-            ? Map<String, dynamic>.from(data['metadata'])
+            ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
             : null,
       );
   final String id;

@@ -20,7 +20,7 @@ class CacheItem<T> {
     T Function() fromJson,
   ) =>
       CacheItem<T>(
-        key: data['key'] ?? '',
+        key: data['key'] as String? ?? '',
         data: fromJson(),
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         expiresAt: (data['expiresAt'] as Timestamp).toDate(),
@@ -28,9 +28,9 @@ class CacheItem<T> {
           (e) => e.toString().split('.').last == data['type'],
           orElse: () => CacheType.memory,
         ),
-        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-        size: data['size'],
-        etag: data['etag'],
+        metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+        size: data['size'] as int?,
+        etag: data['etag'] as String?,
         lastAccessed: data['lastAccessed'] != null
             ? (data['lastAccessed'] as Timestamp).toDate()
             : null,
