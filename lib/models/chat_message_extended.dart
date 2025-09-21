@@ -43,12 +43,12 @@ class ChatMessageExtended {
     return ChatMessageExtended(
       id: doc.id,
       chatId: data['chatId'] as String? ?? '',
-      senderId: data['senderId'] ?? '',
-      senderName: data['senderName'] ?? '',
-      senderAvatar: data['senderAvatar'],
-      content: data['content'] ?? '',
+      senderId: data['senderId'] as String? ?? '',
+      senderName: data['senderName'] as String? ?? '',
+      senderAvatar: data['senderAvatar'] as String?,
+      content: data['content'] as String? ?? '',
       timestamp: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      isRead: data['isRead'] ?? false,
+      isRead: data['isRead'] as bool? ?? false,
       readBy: List<String>.from(data['readBy'] ?? []),
       type: MessageType.values.firstWhere(
         (t) => t.name == data['type'],
