@@ -78,8 +78,8 @@ class Contract {
       endDate: data['endDate'] != null
           ? (data['endDate'] as Timestamp).toDate()
           : null,
-      totalAmount: data['totalAmount']?.toDouble(),
-      currency: data['currency'],
+      totalAmount: data['totalAmount'] as double?,
+      currency: data['currency'] as String?,
     );
   }
   final String id;

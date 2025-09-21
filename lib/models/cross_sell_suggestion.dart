@@ -22,9 +22,9 @@ class CrossSellSuggestion {
     final data = doc.data()! as Map<String, dynamic>;
     return CrossSellSuggestion(
       id: doc.id,
-      bookingId: data['bookingId'] ?? '',
-      customerId: data['customerId'] ?? '',
-      specialistId: data['specialistId'] ?? '',
+      bookingId: data['bookingId'] as String? ?? '',
+      customerId: data['customerId'] as String? ?? '',
+      specialistId: data['specialistId'] as String? ?? '',
       suggestedItems: (data['suggestedItems'] as List<dynamic>?)
               ?.map(
                 (item) => CrossSellItem.fromMap(item as Map<String, dynamic>),
