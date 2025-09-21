@@ -49,16 +49,16 @@ class ChatMessageExtended {
       content: data['content'] as String? ?? '',
       timestamp: (data['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
       isRead: data['isRead'] as bool? ?? false,
-      readBy: List<String>.from(data['readBy'] ?? []),
+      readBy: List<String>.from(data['readBy'] as List<dynamic>? ?? []),
       type: MessageType.values.firstWhere(
         (t) => t.name == data['type'],
         orElse: () => MessageType.text,
       ),
-      audioUrl: data['audioUrl'],
-      audioDuration: data['audioDuration'],
-      audioWaveform: data['audioWaveform'],
+      audioUrl: data['audioUrl'] as String?,
+      audioDuration: data['audioDuration'] as int?,
+      audioWaveform: data['audioWaveform'] as String?,
       reactions: (data['reactions'] as List<dynamic>?)
-              ?.map((e) => MessageReaction.fromMap(e))
+              ?.map((e) => MessageReaction.fromMap(e as Map<String, dynamic>))
               .toList() ??
           [],
       isEdited: data['isEdited'] ?? false,
