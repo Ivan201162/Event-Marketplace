@@ -396,11 +396,11 @@ class CacheConfig {
 
   /// Создать из Map
   factory CacheConfig.fromMap(Map<String, dynamic> data) => CacheConfig(
-        enabled: data['enabled'] ?? true,
-        defaultTTL: Duration(seconds: data['defaultTTL'] ?? 3600),
-        maxSize: data['maxSize'] ?? 100 * 1024 * 1024,
-        maxItems: data['maxItems'] ?? 1000,
-        enableCompression: data['enableCompression'] ?? false,
+        enabled: data['enabled'] as bool? ?? true,
+        defaultTTL: Duration(seconds: data['defaultTTL'] as int? ?? 3600),
+        maxSize: data['maxSize'] as int? ?? 100 * 1024 * 1024,
+        maxItems: data['maxItems'] as int? ?? 1000,
+        enableCompression: data['enableCompression'] as bool? ?? false,
         enableEncryption: data['enableEncryption'] ?? false,
         excludedKeys: List<String>.from(data['excludedKeys'] ?? []),
         customTTL: Map<String, Duration>.from(
