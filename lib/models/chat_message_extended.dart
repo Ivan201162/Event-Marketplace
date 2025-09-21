@@ -42,7 +42,7 @@ class ChatMessageExtended {
 
     return ChatMessageExtended(
       id: doc.id,
-      chatId: data['chatId'] ?? '',
+      chatId: data['chatId'] as String? ?? '',
       senderId: data['senderId'] ?? '',
       senderName: data['senderName'] ?? '',
       senderAvatar: data['senderAvatar'],

@@ -296,12 +296,12 @@ class Chat {
           ? (data['lastMessageTime'] as Timestamp).toDate()
           : null,
       lastMessageSenderId: data['lastMessageSenderId'] as String?,
-      unreadCount: data['unreadCount'] ?? 0,
+      unreadCount: data['unreadCount'] as int? ?? 0,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      isGroup: data['isGroup'] ?? false,
-      createdBy: data['createdBy'],
-      settings: data['settings'],
+      isGroup: data['isGroup'] as bool? ?? false,
+      createdBy: data['createdBy'] as String?,
+      settings: data['settings'] as Map<String, dynamic>?,
     );
   }
   final String id;
