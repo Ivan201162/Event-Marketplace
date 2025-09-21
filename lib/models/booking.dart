@@ -127,11 +127,11 @@ class Booking {
         eventTitle: map['eventTitle'] as String? ?? '',
         userId: map['userId'] as String? ?? '',
         userName: map['userName'] as String? ?? '',
-        userEmail: map['userEmail'],
-        userPhone: map['userPhone'],
-        specialistId: map['specialistId'] ?? '',
-        specialistName: map['specialistName'] ?? '',
-        serviceId: map['serviceId'] ?? '',
+        userEmail: map['userEmail'] as String?,
+        userPhone: map['userPhone'] as String?,
+        specialistId: map['specialistId'] as String? ?? '',
+        specialistName: map['specialistName'] as String? ?? '',
+        serviceId: map['serviceId'] as String? ?? '',
         bookingDate: map['bookingDate'] != null
             ? (map['bookingDate'] as Timestamp).toDate()
             : DateTime.now(),
