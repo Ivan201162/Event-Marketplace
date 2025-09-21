@@ -258,6 +258,8 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                     .read(recommendationInteractionProvider.notifier)
                     .recordInteraction(
                       RecommendationInteraction(
+                        id: '${recommendation.id}_clicked_${DateTime.now().millisecondsSinceEpoch}',
+                        userId: 'current_user_id', // TODO: Get actual user ID
                         recommendationId: recommendation.id,
                         specialistId: recommendation.specialist!.id,
                         type: RecommendationInteractionType.clicked,
@@ -290,6 +292,8 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                   .read(recommendationInteractionProvider.notifier)
                   .recordInteraction(
                     RecommendationInteraction(
+                      id: '${recommendation.id}_saved_${DateTime.now().millisecondsSinceEpoch}',
+                      userId: 'current_user_id', // TODO: Get actual user ID
                       recommendationId: recommendation.id,
                       specialistId: recommendation.specialist!.id,
                       type: RecommendationInteractionType.saved,
@@ -307,6 +311,8 @@ class SpecialistRecommendationWidget extends ConsumerWidget {
                   .read(recommendationInteractionProvider.notifier)
                   .recordInteraction(
                     RecommendationInteraction(
+                      id: '${recommendation.id}_dismissed_${DateTime.now().millisecondsSinceEpoch}',
+                      userId: 'current_user_id', // TODO: Get actual user ID
                       recommendationId: recommendation.id,
                       specialistId: recommendation.specialist!.id,
                       type: RecommendationInteractionType.dismissed,

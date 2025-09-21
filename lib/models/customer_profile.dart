@@ -1,13 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Семейное положение
-enum MaritalStatus {
-  single, // Холост/не замужем
-  married, // Женат/замужем
-  divorced, // Разведен/разведена
-  widowed, // Вдовец/вдова
-  inRelationship, // В отношениях
-}
+import 'user.dart';
 
 /// Профиль заказчика
 class CustomerProfile {

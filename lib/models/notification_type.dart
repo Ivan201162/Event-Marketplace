@@ -14,6 +14,7 @@ enum NotificationType {
   newEvent,
   newPortfolio,
   announcement,
+  cancellation,
 }
 
 /// Расширение для NotificationType
@@ -48,6 +49,8 @@ extension NotificationTypeExtension on NotificationType {
         return 'Новое портфолио';
       case NotificationType.announcement:
         return 'Объявление';
+      case NotificationType.cancellation:
+        return 'Отмена';
     }
   }
 
@@ -81,6 +84,8 @@ extension NotificationTypeExtension on NotificationType {
         return '🖼️';
       case NotificationType.announcement:
         return '📢';
+      case NotificationType.cancellation:
+        return '❌';
     }
   }
 }

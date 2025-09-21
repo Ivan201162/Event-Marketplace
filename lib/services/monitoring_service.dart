@@ -29,9 +29,6 @@ class MonitoringService {
   /// Проверить, включен ли мониторинг
   bool get isMonitoring => _isMonitoring;
 
-  /// Геттер для _isMonitoring (для совместимости)
-  bool get _isMonitoring => isMonitoring;
-
   /// Начать операцию
   void startOperation(String name) {
     // Implementation for starting operation monitoring

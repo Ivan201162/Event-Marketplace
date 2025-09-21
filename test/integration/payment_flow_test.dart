@@ -2,15 +2,19 @@ import 'package:event_marketplace_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   group('Payment Flow Integration Tests', () {
     testWidgets('should complete full payment flow from booking to completion',
         (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -52,9 +56,12 @@ void main() {
 
     testWidgets('should handle payment failure flow', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -93,9 +100,12 @@ void main() {
 
     testWidgets('should handle payment refund flow', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -126,9 +136,12 @@ void main() {
 
     testWidgets('should handle payment statistics flow', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -151,9 +164,12 @@ void main() {
 
     testWidgets('should handle payment history flow', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -173,9 +189,12 @@ void main() {
 
     testWidgets('should handle payment filters flow', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -199,9 +218,12 @@ void main() {
 
     testWidgets('should handle payment search flow', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -221,9 +243,12 @@ void main() {
 
     testWidgets('should handle payment export flow', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -243,9 +268,12 @@ void main() {
 
     testWidgets('should handle payment notification flow', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -268,9 +296,12 @@ void main() {
 
     testWidgets('should handle payment settings flow', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 

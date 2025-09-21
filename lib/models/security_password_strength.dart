@@ -30,6 +30,18 @@ class SecurityPasswordStrength {
   final bool hasSpecialChars;
   final bool hasNoCommonPatterns;
 
+  /// Получить список проблем
+  List<String> get issues => suggestions;
+
+  /// Получить процент силы пароля
+  double get percentage => (score / 100.0).clamp(0.0, 1.0);
+
+  /// Получить уровень силы
+  PasswordStrength get level => strength;
+
+  /// Максимальный балл
+  int get maxScore => 100;
+
   factory SecurityPasswordStrength.fromJson(Map<String, dynamic> json) =>
       SecurityPasswordStrength(
         strength: PasswordStrength.values.firstWhere(
@@ -46,6 +58,9 @@ class SecurityPasswordStrength {
         hasSpecialChars: json['hasSpecialChars'] as bool? ?? false,
         hasNoCommonPatterns: json['hasNoCommonPatterns'] as bool? ?? false,
       );
+
+  factory SecurityPasswordStrength.fromMap(Map<String, dynamic> map) =>
+      SecurityPasswordStrength.fromJson(map);
 
   Map<String, dynamic> toJson() => {
         'strength': strength.name,

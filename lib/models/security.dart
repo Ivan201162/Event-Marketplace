@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Роль пользователя
-class UserRole {
-  const UserRole({
+/// Назначение роли пользователю
+class UserRoleAssignment {
+  const UserRoleAssignment({
     required this.id,
     required this.userId,
     required this.roleName,
@@ -11,9 +11,9 @@ class UserRole {
     required this.updatedAt,
   });
 
-  factory UserRole.fromDocument(DocumentSnapshot doc) {
+  factory UserRoleAssignment.fromDocument(DocumentSnapshot doc) {
     final data = doc.data()! as Map<String, dynamic>;
-    return UserRole(
+    return UserRoleAssignment(
       id: doc.id,
       userId: data['userId'] ?? '',
       roleName: data['roleName'] ?? '',

@@ -389,6 +389,9 @@ class SubscriptionNotificationsWidget extends ConsumerWidget {
         case NotificationType.review:
           // Перейти к отзыву
           break;
+        case NotificationType.cancellation:
+          // Перейти к отмененному событию
+          break;
         case NotificationType.message:
           // Перейти к сообщению
           break;

@@ -215,16 +215,25 @@ class Review {
         bookingId: map['bookingId'] ?? '',
         reviewerId: map['customerId'] ?? map['reviewerId'] ?? '',
         reviewerName: map['customerName'] ?? map['reviewerName'] ?? '',
+        targetId: map['targetId'] ?? map['specialistId'] ?? '',
         type: ReviewType.values.firstWhere(
           (e) => e.name == map['type'],
           orElse: () => ReviewType.service,
         ),
         rating: (map['rating'] ?? 0).toDouble(),
         title: map['title'] ?? '',
+        content: map['content'] ?? '',
         tags: (map['tags'] as List<dynamic>?)
                 ?.map((tag) => tag.toString())
                 .toList() ??
             [],
+        status: ReviewStatus.values.firstWhere(
+          (e) => e.name == map['status'],
+          orElse: () => ReviewStatus.pending,
+        ),
+        createdAt: map['createdAt'] != null
+            ? DateTime.parse(map['createdAt'])
+            : DateTime.now(),
         isVerified: map['isVerified'] ?? false,
         response: map['response'],
         responseDate: map['responseDate'] != null

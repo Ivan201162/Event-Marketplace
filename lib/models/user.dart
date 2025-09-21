@@ -56,6 +56,116 @@ extension UserRoleExtension on UserRole {
         return 'Администратор';
     }
   }
+
+  /// Получить описание роли
+  String get description {
+    switch (this) {
+      case UserRole.admin:
+        return 'Полный доступ ко всем функциям системы';
+      case UserRole.moderator:
+        return 'Модерация контента и управление пользователями';
+      case UserRole.specialist:
+        return 'Предоставление услуг и управление профилем';
+      case UserRole.organizer:
+        return 'Организация событий и предложение специалистов';
+      case UserRole.customer:
+        return 'Заказ услуг и участие в событиях';
+      case UserRole.guest:
+        return 'Просмотр публичного контента';
+    }
+  }
+
+  /// Получить иконку роли
+  String get icon {
+    switch (this) {
+      case UserRole.admin:
+        return '👑';
+      case UserRole.moderator:
+        return '🛡️';
+      case UserRole.specialist:
+        return '🎨';
+      case UserRole.organizer:
+        return '🎉';
+      case UserRole.customer:
+        return '👤';
+      case UserRole.guest:
+        return '👥';
+    }
+  }
+
+  /// Получить приоритет роли
+  int get priority {
+    switch (this) {
+      case UserRole.admin:
+        return 100;
+      case UserRole.moderator:
+        return 80;
+      case UserRole.specialist:
+        return 60;
+      case UserRole.organizer:
+        return 40;
+      case UserRole.customer:
+        return 20;
+      case UserRole.guest:
+        return 0;
+    }
+  }
+
+  /// Получить права по умолчанию для роли
+  List<String> get defaultPermissions {
+    switch (this) {
+      case UserRole.admin:
+        return [
+          'users.manage',
+          'roles.manage',
+          'permissions.manage',
+          'content.moderate',
+          'analytics.view',
+          'settings.manage',
+          'system.manage',
+        ];
+      case UserRole.moderator:
+        return [
+          'users.moderate',
+          'content.moderate',
+          'reports.view',
+          'analytics.view',
+        ];
+      case UserRole.specialist:
+        return [
+          'profile.manage',
+          'services.manage',
+          'bookings.manage',
+          'content.upload',
+          'analytics.view',
+        ];
+      case UserRole.organizer:
+        return [
+          'profile.manage',
+          'events.manage',
+          'proposals.create',
+          'analytics.view',
+        ];
+      case UserRole.customer:
+        return [
+          'profile.manage',
+          'bookings.create',
+          'reviews.create',
+          'content.view',
+        ];
+      case UserRole.guest:
+        return [
+          'content.view',
+        ];
+    }
+  }
+
+  /// Проверить, есть ли у роли определенное право
+  bool hasPermission(String permission) =>
+      defaultPermissions.contains(permission);
+
+  /// Получить отображаемое имя для совместимости
+  String get displayName => roleDisplayName;
 }
 
 /// Модель пользователя

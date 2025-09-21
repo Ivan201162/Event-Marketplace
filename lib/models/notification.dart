@@ -1,14 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Типы уведомлений
-enum NotificationType {
-  booking,
-  message,
-  payment,
-  review,
-  system,
-  promotion,
-}
+import 'notification_type.dart';
 
 /// Приоритеты уведомлений
 enum NotificationPriority {

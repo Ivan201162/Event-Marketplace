@@ -169,14 +169,18 @@ class SendNotificationNotifier {
   /// Отправить уведомление о новом отзыве
   Future<void> sendReviewNotification({
     required String specialistId,
+    required String customerId,
     required String customerName,
+    required String reviewId,
     required int rating,
     required String reviewText,
   }) async {
     await _service.sendReviewNotification(
       specialistId: specialistId,
+      customerId: customerId,
       customerName: customerName,
-      rating: rating,
+      reviewId: reviewId,
+      rating: rating.toDouble(),
       reviewText: reviewText,
     );
   }

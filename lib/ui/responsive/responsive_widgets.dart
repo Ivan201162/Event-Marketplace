@@ -1,6 +1,31 @@
 import 'package:flutter/material.dart';
 import '../../core/extensions/context_extensions.dart';
 
+/// Адаптивный виджет для разных размеров экрана
+class ResponsiveWidget extends StatelessWidget {
+  const ResponsiveWidget({
+    super.key,
+    required this.mobile,
+    this.tablet,
+    this.desktop,
+  });
+  
+  final Widget mobile;
+  final Widget? tablet;
+  final Widget? desktop;
+
+  @override
+  Widget build(BuildContext context) {
+    if (context.isDesktop && desktop != null) {
+      return desktop!;
+    } else if (context.isTablet && tablet != null) {
+      return tablet!;
+    } else {
+      return mobile;
+    }
+  }
+}
+
 /// Адаптивный текстовый виджет
 class ResponsiveText extends StatelessWidget {
   const ResponsiveText(
@@ -207,6 +232,42 @@ class ResponsiveGrid extends StatelessWidget {
       ),
       itemCount: children.length,
       itemBuilder: (context, index) => children[index],
+    );
+  }
+}
+
+/// Адаптивный список
+class ResponsiveList extends StatelessWidget {
+  const ResponsiveList({
+    super.key,
+    required this.children,
+    this.padding,
+    this.spacing,
+  });
+  
+  final List<Widget> children;
+  final EdgeInsetsGeometry? padding;
+  final double? spacing;
+
+  @override
+  Widget build(BuildContext context) {
+    final responsivePadding = padding ??
+        context.responsive(
+          const EdgeInsets.all(16),
+          const EdgeInsets.all(20),
+          const EdgeInsets.all(24),
+        );
+    
+    final responsiveSpacing = spacing ?? context.responsive(8, 12, 16);
+
+    return Padding(
+      padding: responsivePadding!,
+      child: Column(
+        children: children
+            .expand((child) => [child, SizedBox(height: responsiveSpacing!)])
+            .take(children.length * 2 - 1)
+            .toList(),
+      ),
     );
   }
 }

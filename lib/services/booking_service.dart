@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../models/booking.dart';
 import '../models/event.dart';
+import '../models/notification_template.dart';
 import 'notification_service.dart';
 
 /// Сервис для работы с бронированиями
@@ -31,6 +32,7 @@ class BookingService {
       title: 'Статус заявки изменен',
       body: message,
       type: 'booking_status_changed',
+      channel: NotificationChannel.push,
       data: {
         'bookingId': booking.id,
         'eventId': booking.eventId,
@@ -45,6 +47,7 @@ class BookingService {
         title: 'Статус заявки изменен',
         body: 'Заявка "${booking.eventTitle}" - ${message.toLowerCase()}',
         type: 'booking_status_changed',
+        channel: NotificationChannel.push,
         data: {
           'bookingId': booking.id,
           'eventId': booking.eventId,
@@ -260,6 +263,7 @@ class BookingService {
           body:
               'Время подтверждения бронирования "${booking.eventTitle}" истекло',
           type: 'booking_expired',
+          channel: NotificationChannel.push,
           data: {
             'bookingId': booking.id,
             'eventId': booking.eventId,

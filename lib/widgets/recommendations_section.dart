@@ -9,7 +9,7 @@ class RecommendationsSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recommendationsAsync = ref.watch(userRecommendationsProvider);
+    final recommendationsAsync = ref.watch(userRecommendationsProvider('current_user_id')); // TODO: Get actual user ID
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -48,12 +48,12 @@ class RecommendationsSection extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 itemCount: recommendations.length,
                 itemBuilder: (context, index) {
-                  final specialist = recommendations[index];
+                  final recommendation = recommendations[index];
                   return Container(
                     width: 280,
                     margin: const EdgeInsets.only(right: 12),
                     child: SpecialistCard(
-                      specialist: specialist,
+                      specialist: recommendation.specialist,
                       onTap: () {
                         // TODO: Переход к профилю специалиста
                       },

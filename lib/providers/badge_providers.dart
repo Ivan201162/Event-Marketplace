@@ -197,7 +197,13 @@ final userAchievementsProvider =
 
   return UserAchievements(
     badges: badgesAsync.value ?? [],
-    stats: statsAsync.value ?? const badge_model.BadgeStats(totalBadges: 0),
+    stats: statsAsync.value ?? const badge_model.BadgeStats(
+      totalBadges: 0,
+      earnedBadges: 0,
+      availableBadges: 0,
+      recentBadges: [],
+      badgesByCategory: {},
+    ),
     isLoading: badgesAsync.isLoading || statsAsync.isLoading,
   );
 });

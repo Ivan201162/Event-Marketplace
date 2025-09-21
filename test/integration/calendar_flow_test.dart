@@ -2,15 +2,19 @@ import 'package:event_marketplace_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   group('Calendar Flow Integration Tests', () {
     testWidgets('should complete full calendar management flow',
         (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -28,9 +32,12 @@ void main() {
 
     testWidgets('should handle adding unavailable period', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -65,9 +72,12 @@ void main() {
 
     testWidgets('should handle adding vacation period', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -105,9 +115,12 @@ void main() {
 
     testWidgets('should handle viewing calendar statistics', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -131,9 +144,12 @@ void main() {
 
     testWidgets('should handle viewing calendar analytics', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -156,9 +172,12 @@ void main() {
 
     testWidgets('should handle viewing test data', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -179,9 +198,12 @@ void main() {
 
     testWidgets('should handle calendar navigation', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -205,9 +227,12 @@ void main() {
 
     testWidgets('should handle calendar date selection', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -230,9 +255,12 @@ void main() {
 
     testWidgets('should handle calendar event viewing', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -255,9 +283,12 @@ void main() {
 
     testWidgets('should handle calendar event editing', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
@@ -290,9 +321,12 @@ void main() {
 
     testWidgets('should handle calendar event deletion', (tester) async {
       // Arrange
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      
       await tester.pumpWidget(
-        const ProviderScope(
-          child: EventMarketplaceApp(),
+        ProviderScope(
+          child: EventMarketplaceApp(prefs: prefs),
         ),
       );
 
