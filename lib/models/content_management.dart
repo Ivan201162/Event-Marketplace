@@ -447,14 +447,14 @@ class MediaProcessing {
       completedAt: data['completedAt'] != null
           ? (data['completedAt'] as Timestamp).toDate()
           : null,
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
     );
   }
 
   /// Создать из Map
   factory MediaProcessing.fromMap(Map<String, dynamic> data) => MediaProcessing(
-        id: data['id'] ?? '',
-        mediaId: data['mediaId'] ?? '',
+        id: data['id'] as String? ?? '',
+        mediaId: data['mediaId'] as String? ?? '',
         type: ProcessingType.values.firstWhere(
           (e) => e.toString().split('.').last == data['type'],
           orElse: () => ProcessingType.thumbnail,
@@ -463,9 +463,9 @@ class MediaProcessing {
           (e) => e.toString().split('.').last == data['status'],
           orElse: () => ProcessingStatus.pending,
         ),
-        parameters: Map<String, dynamic>.from(data['parameters'] ?? {}),
-        resultUrl: data['resultUrl'],
-        errorMessage: data['errorMessage'],
+        parameters: Map<String, dynamic>.from(data['parameters'] as Map<dynamic, dynamic>? ?? {}),
+        resultUrl: data['resultUrl'] as String?,
+        errorMessage: data['errorMessage'] as String?,
         startedAt: (data['startedAt'] as Timestamp).toDate(),
         completedAt: data['completedAt'] != null
             ? (data['completedAt'] as Timestamp).toDate()
