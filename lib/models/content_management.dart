@@ -470,7 +470,7 @@ class MediaProcessing {
         completedAt: data['completedAt'] != null
             ? (data['completedAt'] as Timestamp).toDate()
             : null,
-        metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+        metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
       );
   final String id;
   final String mediaId;

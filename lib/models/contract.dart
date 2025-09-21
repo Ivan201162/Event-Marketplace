@@ -49,10 +49,10 @@ class Contract {
     final data = doc.data()! as Map<String, dynamic>;
     return Contract(
       id: doc.id,
-      contractNumber: data['contractNumber'] ?? '',
-      bookingId: data['bookingId'] ?? '',
-      customerId: data['customerId'] ?? '',
-      specialistId: data['specialistId'] ?? '',
+      contractNumber: data['contractNumber'] as String? ?? '',
+      bookingId: data['bookingId'] as String? ?? '',
+      customerId: data['customerId'] as String? ?? '',
+      specialistId: data['specialistId'] as String? ?? '',
       type: ContractType.values.firstWhere(
         (e) => e.name == data['type'],
         orElse: () => ContractType.service,
