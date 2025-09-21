@@ -145,7 +145,7 @@ class Booking {
         eventLocation: map['eventLocation'] as String? ?? '',
         eventAddress: map['eventAddress'] as String? ?? '',
         eventDescription: map['eventDescription'] as String? ?? '',
-        specialRequests: map['specialRequests'] ?? '',
+        specialRequests: map['specialRequests'] as String? ?? '',
         status: BookingStatus.values.firstWhere(
           (e) => e.name == map['status'],
           orElse: () => BookingStatus.pending,

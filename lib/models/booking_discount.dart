@@ -20,10 +20,10 @@ class BookingDiscount {
   factory BookingDiscount.fromDocument(DocumentSnapshot doc) {
     final data = doc.data()! as Map<String, dynamic>;
     return BookingDiscount(
-      isOffered: data['isOffered'] ?? false,
-      percent: data['percent']?.toDouble(),
-      oldPrice: data['oldPrice']?.toDouble(),
-      newPrice: data['newPrice']?.toDouble(),
+      isOffered: data['isOffered'] as bool? ?? false,
+      percent: (data['percent'] as num?)?.toDouble(),
+      oldPrice: (data['oldPrice'] as num?)?.toDouble(),
+      newPrice: (data['newPrice'] as num?)?.toDouble(),
       offeredAt: data['offeredAt'] != null
           ? (data['offeredAt'] as Timestamp).toDate()
           : null,
