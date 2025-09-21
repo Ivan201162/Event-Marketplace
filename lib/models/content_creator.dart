@@ -262,12 +262,12 @@ class MediaShowcase {
           (e) => e.name == data['type'],
           orElse: () => MediaType.image,
         ),
-        url: data['url'] ?? '',
-        coverUrl: data['coverUrl'],
-        title: data['title'],
-        description: data['description'],
+        url: data['url'] as String? ?? '',
+        coverUrl: data['coverUrl'] as String?,
+        title: data['title'] as String?,
+        description: data['description'] as String?,
         metadata: data['metadata'] != null
-            ? Map<String, dynamic>.from(data['metadata'])
+            ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
             : null,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
       );
