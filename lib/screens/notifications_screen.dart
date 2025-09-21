@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/notification.dart';
+import '../models/notification_template.dart';
 import '../providers/notification_providers.dart';
 
 /// Экран уведомлений

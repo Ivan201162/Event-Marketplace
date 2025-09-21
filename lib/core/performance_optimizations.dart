@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 /// Оптимизации производительности для Event Marketplace App
 class PerformanceOptimizations {
@@ -37,17 +38,15 @@ class PerformanceOptimizations {
     double? height,
     BoxFit fit = BoxFit.cover,
   }) =>
-      Image.network(
-        imageUrl,
+      CachedNetworkImage(
+        imageUrl: imageUrl,
         width: width,
         height: height,
         fit: fit,
-        loadingBuilder: (context, child, loadingProgress) {
-          if (loadingProgress == null) return child;
-          return Container(
-            width: width,
-            height: height,
-            color: Colors.grey[300],
+        placeholder: (context, url) => Container(
+          width: width,
+          height: height,
+          color: Colors.grey[300],
             child: const Center(
               child: CircularProgressIndicator(),
             ),
@@ -231,17 +230,15 @@ class PerformanceOptimizations {
     double? height,
     BoxFit fit = BoxFit.cover,
   }) =>
-      Image.network(
-        imageUrl,
+      CachedNetworkImage(
+        imageUrl: imageUrl,
         width: width,
         height: height,
         fit: fit,
-        // Оптимизации для памяти
-        cacheWidth: width?.toInt(),
-        cacheHeight: height?.toInt(),
-        filterQuality: FilterQuality.low,
+        memCacheWidth: width?.toInt(),
+        memCacheHeight: height?.toInt(),
         // Очистка кэша при нехватке памяти
-        errorBuilder: (context, error, stackTrace) {
+        errorWidget: (context, url, error) {
           // Очищаем кэш изображения
           imageCache.clear();
           return Container(

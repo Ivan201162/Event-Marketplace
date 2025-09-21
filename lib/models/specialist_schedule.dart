@@ -211,6 +211,7 @@ enum AvailabilityStatus {
 
 /// Типы событий в расписании
 enum ScheduleEventType {
+  available, // Доступен
   booking, // Бронирование
   unavailable, // Недоступен
   vacation, // Отпуск

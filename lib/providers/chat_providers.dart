@@ -164,7 +164,15 @@ class ChatStateNotifier extends Notifier<ChatState> {
     try {
       setLoading(true);
       final chatService = ref.read(chatServiceProvider);
-      await chatService.sendMessage(chatId, text);
+      await chatService.sendMessage(chatId, ChatMessage(
+        id: '',
+        chatId: chatId,
+        senderId: currentUser.id,
+        type: MessageType.text,
+        content: text,
+        status: MessageStatus.sent,
+        createdAt: DateTime.now(),
+      ));
       setLoading(false);
     } catch (e) {
       setError(e.toString());

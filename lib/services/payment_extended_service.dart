@@ -201,7 +201,7 @@ class PaymentExtendedService {
       // Пересчитываем суммы
       final paidAmount = updatedInstallments
           .where((i) => i.status == PaymentStatus.completed)
-          .fold(0, (total, i) => total + i.amount);
+          .fold(0.0, (total, i) => total + i.amount);
 
       final remainingAmount = payment.totalAmount - paidAmount;
       final status = remainingAmount <= 0
@@ -211,7 +211,7 @@ class PaymentExtendedService {
       // Обновляем платеж
       final updatedPayment = payment.copyWith(
         installments: updatedInstallments,
-        paidAmount: paidAmount,
+        paidAmount: paidAmount.toDouble(),
         remainingAmount: remainingAmount,
         status: status,
         updatedAt: DateTime.now(),
@@ -430,10 +430,10 @@ class PaymentExtendedService {
       final failedPayments =
           payments.where((p) => p.status == PaymentStatus.failed).length;
 
-      final totalAmount = payments.fold(0, (total, p) => total + p.totalAmount);
-      final paidAmount = payments.fold(0, (total, p) => total + p.paidAmount);
+      final totalAmount = payments.fold(0.0, (total, p) => total + p.totalAmount);
+      final paidAmount = payments.fold(0.0, (total, p) => total + p.paidAmount);
       final pendingAmount =
-          payments.fold(0, (total, p) => total + p.remainingAmount);
+          payments.fold(0.0, (total, p) => total + p.remainingAmount);
 
       final paymentsByType = <String, int>{};
       final paymentsByStatus = <String, int>{};
@@ -450,9 +450,9 @@ class PaymentExtendedService {
         completedPayments: completedPayments,
         pendingPayments: pendingPayments,
         failedPayments: failedPayments,
-        totalAmount: totalAmount,
-        paidAmount: paidAmount,
-        pendingAmount: pendingAmount,
+        totalAmount: totalAmount.toDouble(),
+        paidAmount: paidAmount.toDouble(),
+        pendingAmount: pendingAmount.toDouble(),
         paymentsByType: paymentsByType,
         paymentsByStatus: paymentsByStatus,
         lastUpdated: DateTime.now(),

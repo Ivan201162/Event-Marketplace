@@ -268,7 +268,7 @@ class SpecialistAnalyticsService {
     // Общие показатели
     final totalIncome = payments
         .where((p) => p.status == PaymentStatus.completed)
-        .fold(0, (sum, p) => sum + p.amount);
+        .fold(0.0, (sum, p) => sum + p.amount);
 
     final monthlyIncome = payments
         .where(
@@ -276,7 +276,7 @@ class SpecialistAnalyticsService {
               p.status == PaymentStatus.completed &&
               p.createdAt.isAfter(thisMonth),
         )
-        .fold(0, (sum, p) => sum + p.amount);
+        .fold(0.0, (sum, p) => sum + p.amount);
 
     final weeklyIncome = payments
         .where(
@@ -284,7 +284,7 @@ class SpecialistAnalyticsService {
               p.status == PaymentStatus.completed &&
               p.createdAt.isAfter(lastWeek),
         )
-        .fold(0, (sum, p) => sum + p.amount);
+        .fold(0.0, (sum, p) => sum + p.amount);
 
     final completedBookings =
         bookings.where((b) => b.status == BookingStatus.completed).length;
@@ -315,7 +315,7 @@ class SpecialistAnalyticsService {
                 p.createdAt.year == month.year &&
                 p.createdAt.month == month.month,
           )
-          .fold(0, (sum, p) => sum + p.amount);
+          .fold(0.0, (sum, p) => sum + p.amount);
 
       final monthBookings = bookings
           .where(
@@ -325,14 +325,14 @@ class SpecialistAnalyticsService {
           )
           .length;
 
-      incomeByMonth[monthKey] = monthIncome;
+      incomeByMonth[monthKey] = monthIncome.toDouble();
       bookingsByMonth[monthKey] = monthBookings;
     }
 
     return SpecialistIncomeStats(
-      totalIncome: totalIncome,
-      monthlyIncome: monthlyIncome,
-      weeklyIncome: weeklyIncome,
+      totalIncome: totalIncome.toDouble(),
+      monthlyIncome: monthlyIncome.toDouble(),
+      weeklyIncome: weeklyIncome.toDouble(),
       averageBookingValue: averageBookingValue,
       totalBookings: totalBookings,
       completedBookings: completedBookings,

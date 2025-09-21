@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/notification.dart';
+import '../models/notification_template.dart';
 import '../models/specialist_recommendation.dart';
 import '../models/subscription.dart';
 import '../models/subscription_notification.dart';

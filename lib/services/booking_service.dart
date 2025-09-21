@@ -31,7 +31,7 @@ class BookingService {
       userId: booking.userId,
       title: 'Статус заявки изменен',
       body: message,
-      type: 'booking_status_changed',
+      type: NotificationType.booking,
       channel: NotificationChannel.push,
       data: {
         'bookingId': booking.id,
@@ -46,7 +46,7 @@ class BookingService {
         userId: booking.specialistId!,
         title: 'Статус заявки изменен',
         body: 'Заявка "${booking.eventTitle}" - ${message.toLowerCase()}',
-        type: 'booking_status_changed',
+        type: NotificationType.booking,
         channel: NotificationChannel.push,
         data: {
           'bookingId': booking.id,
@@ -262,7 +262,7 @@ class BookingService {
           title: 'Бронирование отменено',
           body:
               'Время подтверждения бронирования "${booking.eventTitle}" истекло',
-          type: 'booking_expired',
+          type: NotificationType.booking,
           channel: NotificationChannel.push,
           data: {
             'bookingId': booking.id,

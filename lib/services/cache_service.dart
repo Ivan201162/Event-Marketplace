@@ -288,7 +288,7 @@ class CacheService {
       final content = await file.readAsString();
       final data = json.decode(content);
 
-      return CacheItem.fromMap(data, fromJson ?? (data) => data as T);
+      return CacheItem.fromMap(data, fromJson ?? () => data as T);
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка чтения с диска: $e');
@@ -385,7 +385,7 @@ class CacheService {
           try {
             final content = await file.readAsString();
             final data = json.decode(content);
-            final item = CacheItem.fromMap(data, (data) => data);
+            final item = CacheItem.fromMap(data, () => data);
             items.add(item);
           } catch (e) {
             // Пропускаем поврежденные файлы

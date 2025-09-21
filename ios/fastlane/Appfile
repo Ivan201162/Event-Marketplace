@@ -1,0 +1,52 @@
+# Appfile for Event Marketplace App iOS
+
+# The bundle identifier of your app
+app_identifier("com.eventmarketplace.app")
+
+# Your Apple ID
+apple_id("your-apple-id@example.com")
+
+# Your Apple Developer Portal team ID
+team_id("YOUR_TEAM_ID")
+
+# Your Apple Developer Portal team name
+team_name("Your Team Name")
+
+# The name of your app
+app_name("Event Marketplace")
+
+# The version of your app
+app_version("1.0.0")
+
+# The build number of your app
+build_number("1")
+
+# The platform of your app
+platform("ios")
+
+# The language of your app
+language("en")
+
+# The country code of your app
+country_code("US")
+
+# The category of your app
+category("Lifestyle")
+
+# The description of your app
+description("Event Marketplace - Find and book events and services in your area")
+
+# The keywords of your app
+keywords("events, marketplace, booking, services, local")
+
+# The support URL of your app
+support_url("https://eventmarketplace.app/support")
+
+# The marketing URL of your app
+marketing_url("https://eventmarketplace.app")
+
+# The privacy policy URL of your app
+privacy_url("https://eventmarketplace.app/privacy")
+
+# The terms of service URL of your app
+terms_url("https://eventmarketplace.app/terms")

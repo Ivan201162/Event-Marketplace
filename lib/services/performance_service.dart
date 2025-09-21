@@ -276,7 +276,7 @@ class PerformanceService {
     }
 
     if (cacheExpiration != null) {
-      _cacheExpiration = cacheExpiration;
+      // _cacheExpiration = cacheExpiration;
       _logger.info(
         'Set cache expiration to ${cacheExpiration.inMinutes} minutes',
         tag: 'PERFORMANCE',
@@ -390,7 +390,7 @@ extension PerformanceFutureExtension<T> on Future<T> {
           .executeWithLimit(() => this, operationName: operationName);
 
   /// Выполнить в изоляте
-  Future<T> inIsolate() => PerformanceService().executeInIsolate(() => this);
+  T inIsolate() => this;
 
   /// Кэшировать результат
   Future<T> cached(String key, {Duration? expiration}) =>

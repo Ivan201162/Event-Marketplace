@@ -769,7 +769,11 @@ class EventDetailScreen extends ConsumerWidget {
 
             // Средний рейтинг
             FutureBuilder<Map<String, dynamic>>(
-              future: reviewService.getEventReviewStats(event.id),
+              future: reviewService.getEventReviewStats(event.id).then((stats) => {
+                'averageRating': stats.averageRating,
+                'totalReviews': stats.totalReviews,
+                'ratingDistribution': stats.ratingDistribution,
+              }),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());

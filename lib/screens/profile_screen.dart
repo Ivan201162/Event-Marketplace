@@ -6,6 +6,7 @@ import '../providers/auth_providers.dart';
 import '../providers/profile_providers.dart';
 import '../widgets/animated_page_transition.dart';
 import '../widgets/theme_switch.dart';
+import '../widgets/optimized_image.dart';
 import 'analytics_screen.dart';
 import 'badges_screen.dart';
 import 'customer_notes_screen.dart';
@@ -305,14 +306,16 @@ class ProfileScreen extends ConsumerWidget {
             children: [
               Row(
                 children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Theme.of(context).colorScheme.primary,
-                    backgroundImage: user.photoURL != null
-                        ? NetworkImage(user.photoURL!)
-                        : null,
-                    child: user.photoURL == null
-                        ? Text(
+                  user.photoURL != null
+                      ? OptimizedAvatar(
+                          imageUrl: user.photoURL!,
+                          radius: 30,
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                        )
+                      : CircleAvatar(
+                          radius: 30,
+                          backgroundColor: Theme.of(context).colorScheme.primary,
+                          child: Text(
                             user.displayNameOrEmail
                                 .substring(0, 1)
                                 .toUpperCase(),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/customer_profile.dart';
+import '../models/user.dart';
 import '../providers/auth_providers.dart';
 import '../providers/profile_providers.dart';
 

@@ -40,7 +40,7 @@ class ABTestService {
       }
 
       final totalTraffic =
-          variants.fold(0, (sum, variant) => sum + variant.trafficPercentage);
+          variants.fold(0.0, (sum, variant) => sum + variant.trafficPercentage);
       if (totalTraffic > 100.0) {
         throw Exception('Общий трафик вариантов не может превышать 100%');
       }
@@ -264,7 +264,7 @@ class ABTestService {
 
     var cumulativePercentage = 0;
     for (final variant in test.variants) {
-      cumulativePercentage += variant.trafficPercentage / 100.0;
+      cumulativePercentage += (variant.trafficPercentage / 100.0).toInt();
       if (randomValue <= cumulativePercentage) {
         return variant;
       }

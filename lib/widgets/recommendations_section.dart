@@ -53,7 +53,7 @@ class RecommendationsSection extends ConsumerWidget {
                     width: 280,
                     margin: const EdgeInsets.only(right: 12),
                     child: SpecialistCard(
-                      specialist: recommendation.specialist,
+                      specialist: recommendation.specialist!,
                       onTap: () {
                         // TODO: Переход к профилю специалиста
                       },

@@ -275,7 +275,7 @@ class AnalyticsService {
         return 'macos';
       case TargetPlatform.linux:
         return 'linux';
-      case TargetPlatform.web:
+      case TargetPlatform.linux:
         return 'web';
       default:
         return 'unknown';

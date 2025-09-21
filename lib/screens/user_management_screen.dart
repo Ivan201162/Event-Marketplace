@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/user_management.dart';
+import '../models/user.dart';
 import '../services/user_management_service.dart';
 import '../ui/ui.dart' hide ResponsiveCard;
 import '../widgets/responsive_layout.dart';
@@ -274,7 +275,7 @@ class _UserManagementScreenState extends ConsumerState<UserManagementScreen> {
           // Метаданные
           Row(
             children: [
-              _buildInfoChip('Роль', user.role.displayName, Colors.blue),
+              _buildInfoChip('Роль', user.role.roleDisplayName, Colors.blue),
               const SizedBox(width: 8),
               _buildInfoChip(
                 'Разрешения',

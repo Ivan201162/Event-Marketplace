@@ -123,14 +123,14 @@ class NotificationService {
     });
 
     // Обработчик уведомления при закрытом приложении
-    FirebaseMessaging.getInitialMessage().then((message) {
-      if (message != null) {
-        if (kDebugMode) {
-          print('Уведомление при запуске: ${message.notification?.title}');
-        }
-        _handleNotificationTap(message);
-      }
-    });
+    // FirebaseMessaging.getInitialMessage().then((message) {
+    //   if (message != null) {
+    //     if (kDebugMode) {
+    //       print('Уведомление при запуске: ${message.notification?.title}');
+    //     }
+    //     _handleNotificationTap(message);
+    //   }
+    // });
   }
 
   /// Обработать уведомление в foreground
@@ -360,13 +360,13 @@ class NotificationService {
       }
 
       // Обновляем статус на "ошибка"
-      if (notificationId != null) {
-        await _updateNotificationStatus(
-          notificationId,
-          NotificationStatus.failed,
-          e.toString(),
-        );
-      }
+      // if (notificationId != null) {
+      //   await _updateNotificationStatus(
+      //     notificationId,
+      //     NotificationStatus.failed,
+      //     e.toString(),
+      //   );
+      // }
 
       rethrow;
     }
@@ -385,7 +385,7 @@ class NotificationService {
       if (!userDoc.exists) return;
 
       final userData = userDoc.data();
-      final fcmTokens = List<String>.from(userData['fcmTokens'] ?? []);
+      final fcmTokens = List<String>.from(userData?['fcmTokens'] ?? []);
 
       if (fcmTokens.isEmpty) return;
 

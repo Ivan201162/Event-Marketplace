@@ -563,7 +563,7 @@ class _SpecialistProfileScreenState
       );
 
   Widget _buildPostCard(FeedPost post) => AnimatedContent(
-        delay: Duration(milliseconds: posts.indexOf(post) * 100),
+        delay: Duration(milliseconds: 100),
         type: AnimationType.slideUp,
         child: ResponsiveCard(
           child: Column(
@@ -677,7 +677,7 @@ class _SpecialistProfileScreenState
 
   Widget _buildAlbumCard(String title, String count, String coverImage) =>
       AnimatedContent(
-        delay: Duration(milliseconds: albums.indexOf(title) * 100),
+        delay: Duration(milliseconds: 100),
         type: AnimationType.scale,
         child: ResponsiveCard(
           child: Column(

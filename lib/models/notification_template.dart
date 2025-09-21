@@ -172,6 +172,7 @@ enum NotificationType {
   promotion,
   system,
   security,
+  cancellation,
 }
 
 /// Каналы уведомлений

@@ -240,6 +240,13 @@ class BadgeService {
 
       return BadgeStats(
         totalBadges: badges.length,
+        earnedBadges: badges.length,
+        availableBadges: await getAvailableBadges().then((available) => available.length),
+        badgesByCategory: {
+          'specialist': badges.byCategory(BadgeCategory.specialist).length,
+          'customer': badges.byCategory(BadgeCategory.customer).length,
+          'general': badges.byCategory(BadgeCategory.general).length,
+        },
         specialistBadges: badges.byCategory(BadgeCategory.specialist).length,
         customerBadges: badges.byCategory(BadgeCategory.customer).length,
         generalBadges: badges.byCategory(BadgeCategory.general).length,
@@ -247,7 +254,7 @@ class BadgeService {
       );
     } catch (e) {
       print('Error getting badge stats: $e');
-      return BadgeStats.empty();
+      return BadgeStats.empty;
     }
   }
 

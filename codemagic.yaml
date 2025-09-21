@@ -1,0 +1,263 @@
+# Codemagic CI/CD configuration for Event Marketplace App
+# Supports Android, iOS, Web, and Windows builds
+
+workflows:
+  # iOS Release Workflow
+  ios-release:
+    name: iOS Release
+    max_build_duration: 60
+    environment:
+      vars:
+        # App Store Connect API Key (encrypted)
+        APP_STORE_CONNECT_API_KEY: Encrypted(...)
+        # Apple Developer Portal API Key (encrypted)
+        APPLE_DEVELOPER_PORTAL_API_KEY: Encrypted(...)
+        # Team ID
+        APPLE_TEAM_ID: "YOUR_TEAM_ID"
+        # Bundle ID
+        BUNDLE_ID: "com.eventmarketplace.app"
+        # App Store Connect API Key ID
+        API_KEY_ID: "YOUR_API_KEY_ID"
+        # App Store Connect API Issuer ID
+        API_ISSUER_ID: "YOUR_ISSUER_ID"
+        # Flutter version
+        FLUTTER_VERSION: "3.35.3"
+        # Xcode version
+        XCODE_VERSION: "15.0"
+      xcode: "15.0"
+      cocoapods: "1.15.2"
+      node: "20.11.0"
+    scripts:
+      - name: Set up keychain to be used for codesigning
+        script: |
+          keychain initialize
+      - name: Fetch signing files
+        script: |
+          # Fetch the signing files from Codemagic
+          app-store-connect fetch-signing-files $BUNDLE_ID --type IOS_APP_STORE --create
+      - name: Set up signing certificate
+        script: |
+          keychain add-certificates
+      - name: Set up provisioning profile
+        script: |
+          keychain add-provisioning-profile
+      - name: Set up local.properties
+        script: |
+          echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/android/local.properties"
+      - name: Get Flutter packages
+        script: |
+          flutter packages pub get
+      - name: Install CocoaPods dependencies
+        script: |
+          find . -name "Podfile" -execdir pod install \;
+      - name: Flutter analyze
+        script: |
+          flutter analyze
+      - name: Flutter unit tests
+        script: |
+          flutter test
+      - name: Build iOS app
+        script: |
+          flutter build ios --release --no-tree-shake-icons
+      - name: Build iOS archive
+        script: |
+          xcode-project build-ipa \
+            --workspace "$CM_BUILD_DIR/ios/Runner.xcworkspace" \
+            --scheme "Runner"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        beta_groups:
+          - "Beta Testers"
+      email:
+        recipients:
+          - "your-email@example.com"
+        notify:
+          success: true
+          failure: false
+
+  # iOS TestFlight Workflow
+  ios-testflight:
+    name: iOS TestFlight
+    max_build_duration: 60
+    environment:
+      vars:
+        APP_STORE_CONNECT_API_KEY: Encrypted(...)
+        APPLE_DEVELOPER_PORTAL_API_KEY: Encrypted(...)
+        APPLE_TEAM_ID: "YOUR_TEAM_ID"
+        BUNDLE_ID: "com.eventmarketplace.app"
+        API_KEY_ID: "YOUR_API_KEY_ID"
+        API_ISSUER_ID: "YOUR_ISSUER_ID"
+        FLUTTER_VERSION: "3.35.3"
+        XCODE_VERSION: "15.0"
+      xcode: "15.0"
+      cocoapods: "1.15.2"
+      node: "20.11.0"
+    scripts:
+      - name: Set up keychain to be used for codesigning
+        script: |
+          keychain initialize
+      - name: Fetch signing files
+        script: |
+          app-store-connect fetch-signing-files $BUNDLE_ID --type IOS_APP_STORE --create
+      - name: Set up signing certificate
+        script: |
+          keychain add-certificates
+      - name: Set up provisioning profile
+        script: |
+          keychain add-provisioning-profile
+      - name: Get Flutter packages
+        script: |
+          flutter packages pub get
+      - name: Install CocoaPods dependencies
+        script: |
+          find . -name "Podfile" -execdir pod install \;
+      - name: Flutter analyze
+        script: |
+          flutter analyze
+      - name: Flutter unit tests
+        script: |
+          flutter test
+      - name: Build iOS app
+        script: |
+          flutter build ios --release --no-tree-shake-icons
+      - name: Build iOS archive
+        script: |
+          xcode-project build-ipa \
+            --workspace "$CM_BUILD_DIR/ios/Runner.xcworkspace" \
+            --scheme "Runner"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+      - flutter_drive.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        beta_groups:
+          - "Beta Testers"
+      email:
+        recipients:
+          - "your-email@example.com"
+        notify:
+          success: true
+          failure: false
+
+  # Android Release Workflow
+  android-release:
+    name: Android Release
+    max_build_duration: 60
+    environment:
+      vars:
+        # Google Play Console API Key (encrypted)
+        GOOGLE_PLAY_API_KEY: Encrypted(...)
+        # Google Play Console Service Account (encrypted)
+        GOOGLE_PLAY_SERVICE_ACCOUNT: Encrypted(...)
+        # Package name
+        PACKAGE_NAME: "com.eventmarketplace.app"
+        # Flutter version
+        FLUTTER_VERSION: "3.35.3"
+      android_signing:
+        - keystore_reference
+    scripts:
+      - name: Set up local.properties
+        script: |
+          echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/android/local.properties"
+      - name: Get Flutter packages
+        script: |
+          flutter packages pub get
+      - name: Flutter analyze
+        script: |
+          flutter analyze
+      - name: Flutter unit tests
+        script: |
+          flutter test
+      - name: Build Android APK
+        script: |
+          flutter build apk --release
+      - name: Build Android App Bundle
+        script: |
+          flutter build appbundle --release
+    artifacts:
+      - build/app/outputs/**/*.apk
+      - build/app/outputs/**/*.aab
+      - flutter_drive.log
+    publishing:
+      google_play:
+        credentials: $GOOGLE_PLAY_SERVICE_ACCOUNT
+        track: internal
+      email:
+        recipients:
+          - "your-email@example.com"
+        notify:
+          success: true
+          failure: false
+
+  # Web Release Workflow
+  web-release:
+    name: Web Release
+    max_build_duration: 30
+    environment:
+      vars:
+        FLUTTER_VERSION: "3.35.3"
+        NODE_VERSION: "20.11.0"
+      node: "20.11.0"
+    scripts:
+      - name: Get Flutter packages
+        script: |
+          flutter packages pub get
+      - name: Flutter analyze
+        script: |
+          flutter analyze
+      - name: Flutter unit tests
+        script: |
+          flutter test
+      - name: Build Web app
+        script: |
+          flutter build web --release
+    artifacts:
+      - build/web/**
+      - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - "your-email@example.com"
+        notify:
+          success: true
+          failure: false
+
+  # Windows Release Workflow
+  windows-release:
+    name: Windows Release
+    max_build_duration: 30
+    environment:
+      vars:
+        FLUTTER_VERSION: "3.35.3"
+    scripts:
+      - name: Get Flutter packages
+        script: |
+          flutter packages pub get
+      - name: Flutter analyze
+        script: |
+          flutter analyze
+      - name: Flutter unit tests
+        script: |
+          flutter test
+      - name: Build Windows app
+        script: |
+          flutter build windows --release
+    artifacts:
+      - build/windows/x64/runner/Release/**
+      - flutter_drive.log
+    publishing:
+      email:
+        recipients:
+          - "your-email@example.com"
+        notify:
+          success: true
+          failure: false

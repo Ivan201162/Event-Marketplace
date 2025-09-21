@@ -260,11 +260,15 @@ class SettingsPage extends ConsumerWidget {
               const Divider(),
               ListTile(
                 leading: const Icon(Icons.language),
-                title: Text(l10n.english),
+                title: const Text('English'),
                 subtitle: const Text('Язык'),
-                trailing: ref.watch(localeProvider).languageCode == 'en'
-                    ? const Icon(Icons.check, color: Colors.green)
-                    : null,
+                trailing: Consumer(
+                  builder: (context, ref, child) {
+                    return ref.watch(localeProvider).languageCode == 'en'
+                        ? const Icon(Icons.check, color: Colors.green)
+                        : null;
+                  },
+                ),
                 onTap: () {
                   // TODO: Implement locale change
                   // ref

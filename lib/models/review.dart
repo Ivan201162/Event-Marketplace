@@ -242,9 +242,6 @@ class Review {
         helpfulCount: map['helpfulCount'] ?? 0,
         reportCount: map['reportCount'] ?? 0,
         isReported: map['isReported'] ?? false,
-        createdAt: map['createdAt'] != null
-            ? (map['createdAt'] as Timestamp).toDate()
-            : DateTime.now(),
         updatedAt: map['updatedAt'] != null
             ? (map['updatedAt'] as Timestamp).toDate()
             : DateTime.now(),

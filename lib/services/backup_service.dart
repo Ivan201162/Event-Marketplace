@@ -573,7 +573,7 @@ class BackupService {
         successfulBackups: 0,
         failedBackups: 0,
         totalSize: 0,
-        lastBackup: null,
+        lastBackup: DateTime.now(),
         backupsByType: const {},
         backupsByStatus: const {},
       );

@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/user_management.dart';
+import '../models/user.dart';
 
 /// Сервис управления пользователями и ролями
 class UserManagementService {

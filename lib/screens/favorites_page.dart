@@ -24,7 +24,7 @@ class FavoritesPage extends ConsumerWidget {
                 if (user == null) return const SizedBox.shrink();
 
                 return StreamBuilder<int>(
-                  stream: ref.watch(favoritesCountProvider(user.id)),
+                  stream: ref.watch(favoritesCountProvider(user.id).stream),
                   builder: (context, snapshot) {
                     final count = snapshot.data ?? 0;
                     if (count == 0) return const SizedBox.shrink();

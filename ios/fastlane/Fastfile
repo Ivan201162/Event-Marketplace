@@ -1,0 +1,136 @@
+# Fastfile for Event Marketplace App iOS
+# This file contains the fastlane.tools configuration
+
+default_platform(:ios)
+
+platform :ios do
+  desc "Build and upload to App Store"
+  lane :release do
+    # Clean and get dependencies
+    sh("cd .. && flutter clean")
+    sh("cd .. && flutter pub get")
+    
+    # Install CocoaPods
+    cocoapods(
+      repo_update: true
+    )
+    
+    # Build Flutter app
+    sh("cd .. && flutter build ios --release --no-tree-shake-icons")
+    
+    # Build and upload to App Store
+    build_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      configuration: "Release",
+      export_method: "app-store",
+      export_options: {
+        method: "app-store",
+        uploadBitcode: false,
+        uploadSymbols: true,
+        compileBitcode: false
+      }
+    )
+    
+    upload_to_app_store(
+      force: true,
+      skip_binary_upload: false,
+      skip_screenshots: true,
+      skip_metadata: false
+    )
+    
+    # Send notification
+    slack(
+      message: "🚀 Event Marketplace App successfully uploaded to App Store!",
+      success: true
+    )
+  end
+
+  desc "Build for TestFlight"
+  lane :beta do
+    # Clean and get dependencies
+    sh("cd .. && flutter clean")
+    sh("cd .. && flutter pub get")
+    
+    # Install CocoaPods
+    cocoapods(
+      repo_update: true
+    )
+    
+    # Build Flutter app
+    sh("cd .. && flutter build ios --release --no-tree-shake-icons")
+    
+    # Build and upload to TestFlight
+    build_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      configuration: "Release",
+      export_method: "app-store",
+      export_options: {
+        method: "app-store",
+        uploadBitcode: false,
+        uploadSymbols: true,
+        compileBitcode: false
+      }
+    )
+    
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true
+    )
+    
+    # Send notification
+    slack(
+      message: "🧪 Event Marketplace App uploaded to TestFlight!",
+      success: true
+    )
+  end
+
+  desc "Build for development"
+  lane :development do
+    # Clean and get dependencies
+    sh("cd .. && flutter clean")
+    sh("cd .. && flutter pub get")
+    
+    # Install CocoaPods
+    cocoapods(
+      repo_update: true
+    )
+    
+    # Build Flutter app
+    sh("cd .. && flutter build ios --debug")
+    
+    # Build for development
+    build_app(
+      workspace: "Runner.xcworkspace",
+      scheme: "Runner",
+      configuration: "Debug",
+      export_method: "development",
+      export_options: {
+        method: "development",
+        uploadBitcode: false,
+        uploadSymbols: false,
+        compileBitcode: false
+      }
+    )
+    
+    # Send notification
+    slack(
+      message: "🔧 Event Marketplace App built for development!",
+      success: true
+    )
+  end
+
+  desc "Increment build number"
+  lane :increment_build do
+    increment_build_number(
+      xcodeproj: "Runner.xcodeproj"
+    )
+  end
+
+  desc "Increment version number"
+  lane :increment_version do
+    increment_version_number(
+      xcodeproj: "Runner.xcodeproj"
+    )
+  end
+end
