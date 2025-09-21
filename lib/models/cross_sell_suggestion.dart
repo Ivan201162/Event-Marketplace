@@ -55,7 +55,7 @@ class CrossSellSuggestion {
         id: data['id'] as String? ?? '',
         bookingId: data['bookingId'] as String? ?? '',
         customerId: data['customerId'] as String? ?? '',
-        specialistId: data['specialistId'] ?? '',
+        specialistId: data['specialistId'] as String? ?? '',
         suggestedItems: (data['suggestedItems'] as List<dynamic>?)
                 ?.map(
                   (item) => CrossSellItem.fromMap(item as Map<String, dynamic>),
@@ -66,7 +66,7 @@ class CrossSellSuggestion {
           (e) => e.name == data['status'],
           orElse: () => CrossSellStatus.pending,
         ),
-        message: data['message'],
+        message: data['message'] as String?,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         viewedAt: data['viewedAt'] != null
             ? (data['viewedAt'] as Timestamp).toDate()
@@ -75,7 +75,7 @@ class CrossSellSuggestion {
             ? (data['respondedAt'] as Timestamp).toDate()
             : null,
         metadata: data['metadata'] != null
-            ? Map<String, dynamic>.from(data['metadata'])
+            ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
             : null,
       );
   final String id;
@@ -202,8 +202,8 @@ class CrossSellItem {
 
   /// Создать из Map
   factory CrossSellItem.fromMap(Map<String, dynamic> data) => CrossSellItem(
-        id: data['id'] ?? '',
-        specialistId: data['specialistId'] ?? '',
+        id: data['id'] as String? ?? '',
+        specialistId: data['specialistId'] as String? ?? '',
         specialistName: data['specialistName'] ?? '',
         categoryId: data['categoryId'] ?? '',
         categoryName: data['categoryName'] ?? '',
