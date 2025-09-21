@@ -53,16 +53,16 @@ class MediaContent {
       publishedAt: data['publishedAt'] != null
           ? (data['publishedAt'] as Timestamp).toDate()
           : null,
-      tags: List<String>.from(data['tags'] ?? []),
-      processingInfo: Map<String, dynamic>.from(data['processingInfo'] ?? {}),
+      tags: List<String>.from(data['tags'] as List<dynamic>? ?? []),
+      processingInfo: Map<String, dynamic>.from(data['processingInfo'] as Map<dynamic, dynamic>? ?? {}),
     );
   }
 
   /// Создать из Map
   factory MediaContent.fromMap(Map<String, dynamic> data) => MediaContent(
-        id: data['id'] ?? '',
-        title: data['title'] ?? '',
-        description: data['description'],
+        id: data['id'] as String? ?? '',
+        title: data['title'] as String? ?? '',
+        description: data['description'] as String?,
         type: MediaType.values.firstWhere(
           (e) => e.toString().split('.').last == data['type'],
           orElse: () => MediaType.image,
