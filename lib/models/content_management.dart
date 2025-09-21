@@ -282,18 +282,18 @@ class ContentGallery {
         (e) => e.toString().split('.').last == data['type'],
         orElse: () => GalleryType.portfolio,
       ),
-      isPublic: data['isPublic'] ?? false,
+      isPublic: data['isPublic'] as bool? ?? false,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
-      createdBy: data['createdBy'],
-      settings: Map<String, dynamic>.from(data['settings'] ?? {}),
+      createdBy: data['createdBy'] as String?,
+      settings: Map<String, dynamic>.from(data['settings'] as Map<dynamic, dynamic>? ?? {}),
     );
   }
 
   /// Создать из Map
   factory ContentGallery.fromMap(Map<String, dynamic> data) => ContentGallery(
-        id: data['id'] ?? '',
-        name: data['name'] ?? '',
+        id: data['id'] as String? ?? '',
+        name: data['name'] as String? ?? '',
         description: data['description'],
         specialistId: data['specialistId'],
         eventId: data['eventId'],
