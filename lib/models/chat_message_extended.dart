@@ -200,9 +200,9 @@ class MessageReaction {
 
   factory MessageReaction.fromMap(Map<String, dynamic> map) => MessageReaction(
         id: map['id'] as String? ?? '',
-        userId: map['userId'] ?? '',
-        userName: map['userName'] ?? '',
-        emoji: map['emoji'] ?? '',
+        userId: map['userId'] as String? ?? '',
+        userName: map['userName'] as String? ?? '',
+        emoji: map['emoji'] as String? ?? '',
         timestamp: (map['timestamp'] as Timestamp?)?.toDate() ?? DateTime.now(),
       );
   final String id;

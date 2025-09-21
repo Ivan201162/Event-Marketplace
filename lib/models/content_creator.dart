@@ -23,8 +23,8 @@ class ContentCreator {
     final data = doc.data()! as Map<String, dynamic>;
     return ContentCreator(
       id: doc.id,
-      name: data['name'] ?? '',
-      description: data['description'] ?? '',
+      name: data['name'] as String? ?? '',
+      description: data['description'] as String? ?? '',
       categories: List<String>.from(data['categories'] ?? []),
       formats: (data['formats'] as List<dynamic>?)
               ?.map((f) => ContentFormat.fromMap(f as Map<String, dynamic>))
