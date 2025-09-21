@@ -69,7 +69,7 @@ class BudgetSuggestion {
           (e) => e.name == data['status'],
           orElse: () => BudgetSuggestionStatus.pending,
         ),
-        message: data['message'],
+        message: data['message'] as String?,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         viewedAt: data['viewedAt'] != null
             ? (data['viewedAt'] as Timestamp).toDate()
@@ -78,7 +78,7 @@ class BudgetSuggestion {
             ? (data['respondedAt'] as Timestamp).toDate()
             : null,
         metadata: data['metadata'] != null
-            ? Map<String, dynamic>.from(data['metadata'])
+            ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
             : null,
       );
   final String id;
@@ -222,9 +222,9 @@ class BudgetSuggestionItem {
   /// Создать из Map
   factory BudgetSuggestionItem.fromMap(Map<String, dynamic> data) =>
       BudgetSuggestionItem(
-        id: data['id'] ?? '',
-        categoryId: data['categoryId'] ?? '',
-        categoryName: data['categoryName'] ?? '',
+        id: data['id'] as String? ?? '',
+        categoryId: data['categoryId'] as String? ?? '',
+        categoryName: data['categoryName'] as String? ?? '',
         specialistId: data['specialistId'],
         specialistName: data['specialistName'],
         description: data['description'] ?? '',
