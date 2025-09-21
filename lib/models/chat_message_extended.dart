@@ -61,11 +61,11 @@ class ChatMessageExtended {
               ?.map((e) => MessageReaction.fromMap(e as Map<String, dynamic>))
               .toList() ??
           [],
-      isEdited: data['isEdited'] ?? false,
+      isEdited: data['isEdited'] as bool? ?? false,
       editedAt: (data['editedAt'] as Timestamp?)?.toDate(),
-      replyToMessageId: data['replyToMessageId'],
-      attachments: List<String>.from(data['attachments'] ?? []),
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
+      replyToMessageId: data['replyToMessageId'] as String?,
+      attachments: List<String>.from(data['attachments'] as List<dynamic>? ?? []),
+      metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
     );
   }
   final String id;
@@ -199,7 +199,7 @@ class MessageReaction {
   });
 
   factory MessageReaction.fromMap(Map<String, dynamic> map) => MessageReaction(
-        id: map['id'] ?? '',
+        id: map['id'] as String? ?? '',
         userId: map['userId'] ?? '',
         userName: map['userName'] ?? '',
         emoji: map['emoji'] ?? '',
