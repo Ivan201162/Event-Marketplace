@@ -205,11 +205,11 @@ class ContentFormat {
 
   /// Создать из Map
   factory ContentFormat.fromMap(Map<String, dynamic> data) => ContentFormat(
-        name: data['name'] ?? '',
-        description: data['description'] ?? '',
-        platforms: List<String>.from(data['platforms'] ?? []),
+        name: data['name'] as String? ?? '',
+        description: data['description'] as String? ?? '',
+        platforms: List<String>.from(data['platforms'] as List<dynamic>? ?? []),
         specifications: data['specifications'] != null
-            ? Map<String, dynamic>.from(data['specifications'])
+            ? Map<String, dynamic>.from(data['specifications'] as Map<dynamic, dynamic>)
             : null,
       );
   final String name;
@@ -257,7 +257,7 @@ class MediaShowcase {
 
   /// Создать из Map
   factory MediaShowcase.fromMap(Map<String, dynamic> data) => MediaShowcase(
-        id: data['id'] ?? '',
+        id: data['id'] as String? ?? '',
         type: MediaType.values.firstWhere(
           (e) => e.name == data['type'],
           orElse: () => MediaType.image,
