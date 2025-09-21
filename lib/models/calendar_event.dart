@@ -32,13 +32,13 @@ class CalendarEvent {
 
     return CalendarEvent(
       id: doc.id,
-      title: data['title'] ?? '',
-      description: data['description'] ?? '',
+      title: data['title'] as String? ?? '',
+      description: data['description'] as String? ?? '',
       startTime: (data['startTime'] as Timestamp?)?.toDate() ?? DateTime.now(),
       endTime: (data['endTime'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      location: data['location'] ?? '',
-      specialistId: data['specialistId'] ?? '',
-      specialistName: data['specialistName'] ?? '',
+      location: data['location'] as String? ?? '',
+      specialistId: data['specialistId'] as String? ?? '',
+      specialistName: data['specialistName'] as String? ?? '',
       customerId: data['customerId'] ?? '',
       customerName: data['customerName'] ?? '',
       bookingId: data['bookingId'] ?? '',
