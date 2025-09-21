@@ -225,11 +225,11 @@ class BudgetSuggestionItem {
         id: data['id'] as String? ?? '',
         categoryId: data['categoryId'] as String? ?? '',
         categoryName: data['categoryName'] as String? ?? '',
-        specialistId: data['specialistId'],
-        specialistName: data['specialistName'],
-        description: data['description'] ?? '',
-        estimatedPrice: data['estimatedPrice']?.toDouble(),
-        reason: data['reason'],
+        specialistId: data['specialistId'] as String?,
+        specialistName: data['specialistName'] as String?,
+        description: data['description'] as String? ?? '',
+        estimatedPrice: (data['estimatedPrice'] as num?)?.toDouble(),
+        reason: data['reason'] as String?,
         metadata: data['metadata'] != null
             ? Map<String, dynamic>.from(data['metadata'])
             : null,
