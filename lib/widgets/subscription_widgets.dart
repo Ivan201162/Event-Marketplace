@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../models/notification_template.dart';
 import '../models/subscription.dart';
@@ -250,7 +251,7 @@ class SubscriptionTile extends StatelessWidget {
   Widget build(BuildContext context) => ListTile(
         leading: CircleAvatar(
           backgroundImage: subscription.specialistPhotoUrl != null
-              ? NetworkImage(subscription.specialistPhotoUrl!)
+              ? CachedNetworkImageProvider(subscription.specialistPhotoUrl!)
               : null,
           child: subscription.specialistPhotoUrl == null
               ? const Icon(Icons.person)
@@ -416,7 +417,7 @@ class NotificationTile extends StatelessWidget {
   Widget build(BuildContext context) => ListTile(
         leading: CircleAvatar(
           backgroundImage: notification.specialistPhotoUrl != null
-              ? NetworkImage(notification.specialistPhotoUrl!)
+              ? CachedNetworkImageProvider(notification.specialistPhotoUrl!)
               : null,
           child: notification.specialistPhotoUrl == null
               ? const Icon(Icons.person)

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 import '../models/feed_post.dart';
 import '../providers/feed_providers.dart';
@@ -32,7 +33,7 @@ class FeedPostWidget extends ConsumerWidget {
                 children: [
                   CircleAvatar(
                     backgroundImage: post.specialistPhotoUrl != null
-                        ? NetworkImage(post.specialistPhotoUrl!)
+                        ? CachedNetworkImageProvider(post.specialistPhotoUrl!)
                         : null,
                     child: post.specialistPhotoUrl == null
                         ? const Icon(Icons.person)
@@ -170,12 +171,19 @@ class FeedPostWidget extends ConsumerWidget {
     if (post.mediaUrls.length == 1) {
       return ClipRRect(
         borderRadius: BorderRadius.circular(8),
-        child: Image.network(
-          post.mediaUrls.first,
+        child: CachedNetworkImage(
+          imageUrl: post.mediaUrls.first,
           fit: BoxFit.cover,
           width: double.infinity,
           height: 200,
-          errorBuilder: (context, error, stackTrace) => Container(
+          placeholder: (context, url) => Container(
+            height: 200,
+            color: Colors.grey[300],
+            child: const Center(
+              child: CircularProgressIndicator(),
+            ),
+          ),
+          errorWidget: (context, url, error) => Container(
             height: 200,
             color: Colors.grey[300],
             child: const Center(
@@ -196,12 +204,22 @@ class FeedPostWidget extends ConsumerWidget {
             ),
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8),
-              child: Image.network(
-                post.mediaUrls[index],
+              child: CachedNetworkImage(
+                imageUrl: post.mediaUrls[index],
                 fit: BoxFit.cover,
                 width: 200,
-                errorBuilder: (context, error, stackTrace) => Container(
+                height: 200,
+                placeholder: (context, url) => Container(
                   width: 200,
+                  height: 200,
+                  color: Colors.grey[300],
+                  child: const Center(
+                    child: CircularProgressIndicator(),
+                  ),
+                ),
+                errorWidget: (context, url, error) => Container(
+                  width: 200,
+                  height: 200,
                   color: Colors.grey[300],
                   child: const Center(
                     child: Icon(Icons.error, color: Colors.grey),
@@ -475,7 +493,7 @@ class CommentWidget extends ConsumerWidget {
         children: [
           CircleAvatar(
             backgroundImage: comment.userPhotoUrl != null
-                ? NetworkImage(comment.userPhotoUrl!)
+                ? CachedNetworkImageProvider(comment.userPhotoUrl!)
                 : null,
             radius: 16,
             child: comment.userPhotoUrl == null
