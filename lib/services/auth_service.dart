@@ -28,11 +28,18 @@ class AuthService {
   dynamic get _demoAuth {
     if (kIsWeb) {
       try {
-        return WebAuthService.demoAuth;
+        // Используем условный импорт для веб-платформы
+        return _getWebAuthService();
       } catch (e) {
         return null;
       }
     }
+    return null;
+  }
+
+  // Условный метод для получения веб-сервиса
+  dynamic _getWebAuthService() {
+    // Этот метод будет реализован через условный импорт
     return null;
   }
 

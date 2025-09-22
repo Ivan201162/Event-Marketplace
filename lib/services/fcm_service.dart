@@ -193,16 +193,16 @@ class FCMService {
     if (data.containsKey('type')) {
       switch (data['type']) {
         case 'booking_confirmed':
-          _navigateToBooking(data['bookingId']);
+          _navigateToBooking(data['bookingId'] as String?);
           break;
         case 'booking_rejected':
-          _navigateToBooking(data['bookingId']);
+          _navigateToBooking(data['bookingId'] as String?);
           break;
         case 'payment_completed':
-          _navigateToPayment(data['paymentId']);
+          _navigateToPayment(data['paymentId'] as String?);
           break;
         case 'chat_message':
-          _navigateToChat(data['chatId']);
+          _navigateToChat(data['chatId'] as String?);
           break;
         default:
           _navigateToHome();
@@ -485,8 +485,7 @@ class FCMService {
         if (daysSinceUpdate < 7) return;
       }
       
-      await showLocalNotification(
-        id: DateTime.now().millisecondsSinceEpoch,
+      await sendLocalNotification(
         title: 'Обновите ваши цены',
         body: 'Прошло ${lastPriceUpdate != null ? now.difference(lastPriceUpdate.toDate()).inDays : 7}+ дней с последнего обновления цен. Обновите их для привлечения новых клиентов!',
         payload: 'price_update_reminder',
@@ -632,12 +631,11 @@ class FCMService {
       final isWorkingHours = await isSpecialistWorkingHours(specialistId);
       
       if (isWorkingHours) {
-        await showLocalNotification(
-          id: DateTime.now().millisecondsSinceEpoch,
-          title: title,
-          body: body,
-          payload: payload,
-        );
+      await sendLocalNotification(
+        title: title,
+        body: body,
+        payload: payload,
+      );
       } else {
         // Планируем уведомление на утро
         final tomorrow = DateTime.now().add(const Duration(days: 1));

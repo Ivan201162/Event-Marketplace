@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../core/logger.dart';
-import '../models/contract.dart';
-import '../models/work_act.dart';
+import '../models/contract.dart' as contract_model;
+import '../models/work_act.dart' as work_act_model;
 import '../models/booking.dart';
-import '../models/user.dart';
+import '../models/app_user.dart';
 
 /// Сервис для работы с договорами и актами
 class ContractService {
@@ -15,11 +15,11 @@ class ContractService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Создать договор при подтверждении бронирования
-  Future<Contract?> createContractFromBooking({
+  Future<contract_model.Contract?> createContractFromBooking({
     required Booking booking,
-    required User customer,
-    required User specialist,
-    required List<ContractService> services,
+    required AppUser customer,
+    required AppUser specialist,
+    required List<contract_model.ContractService> services,
     required double totalAmount,
     required double advanceAmount,
     required double finalAmount,
@@ -30,7 +30,7 @@ class ContractService {
 
       final contractId = 'contract_${booking.id}_${DateTime.now().millisecondsSinceEpoch}';
       
-      final contract = Contract(
+      final contract = contract_model.Contract(
         id: contractId,
         bookingId: booking.id,
         customerId: customer.id,
@@ -65,8 +65,8 @@ class ContractService {
   }
 
   /// Создать акт выполненных работ
-  Future<WorkAct?> createWorkActFromContract({
-    required Contract contract,
+  Future<work_act_model.WorkAct?> createWorkActFromContract({
+    required contract_model.Contract contract,
     required String description,
     List<String>? photos,
   }) async {
@@ -75,7 +75,7 @@ class ContractService {
 
       final workActId = 'workact_${contract.id}_${DateTime.now().millisecondsSinceEpoch}';
       
-      final workAct = WorkAct(
+      final workAct = work_act_model.WorkAct(
         id: workActId,
         contractId: contract.id,
         bookingId: contract.bookingId,
@@ -203,7 +203,7 @@ class ContractService {
   }
 
   /// Получить договоры пользователя
-  Future<List<Contract>> getUserContracts(String userId) async {
+  Future<List<contract_model.Contract>> getUserContracts(String userId) async {
     try {
       final querySnapshot = await _firestore
           .collection('contracts')
@@ -221,7 +221,7 @@ class ContractService {
   }
 
   /// Получить акты пользователя
-  Future<List<WorkAct>> getUserWorkActs(String userId) async {
+  Future<List<work_act_model.WorkAct>> getUserWorkActs(String userId) async {
     try {
       final querySnapshot = await _firestore
           .collection('work_acts')
@@ -239,20 +239,20 @@ class ContractService {
   }
 
   /// Определить тип организации пользователя
-  OrganizationType _getOrganizationType(User user) {
+  contract_model.OrganizationType _getOrganizationType(AppUser user) {
     // Здесь можно добавить логику определения типа организации
     // на основе данных пользователя
-    return OrganizationType.individual;
+    return contract_model.OrganizationType.individual;
   }
 
   /// Получить реквизиты заказчика
-  String _getCustomerDetails(User customer) {
+  String _getCustomerDetails(AppUser customer) {
     // Здесь можно добавить логику получения реквизитов
     return 'Email: ${customer.email}';
   }
 
   /// Получить реквизиты исполнителя
-  String _getSpecialistDetails(User specialist) {
+  String _getSpecialistDetails(AppUser specialist) {
     // Здесь можно добавить логику получения реквизитов
     return 'Email: ${specialist.email}';
   }

@@ -187,8 +187,7 @@ class SmartRecommendationsService {
       
       // Отправляем персонализированные рекомендации
       if (totalSpent > 100000) {
-        await _fcmService.showLocalNotification(
-          id: DateTime.now().millisecondsSinceEpoch,
+        await _fcmService.sendLocalNotification(
           title: 'VIP статус',
           body: 'Вы потратили ${totalSpent.toStringAsFixed(0)} ₽ на мероприятия! Получите скидку 10% на следующее бронирование.',
           payload: 'vip_discount',

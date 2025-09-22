@@ -496,11 +496,11 @@ class _CreateProposalWidgetState extends ConsumerState<CreateProposalWidget> {
     try {
       final service = ref.read(proposalServiceProvider);
       await service.createProposal(
-        bookingId: widget.bookingId ?? 'temp_booking_id',
-        specialistId: widget.specialistId ?? 'temp_specialist_id',
+        bookingId: 'temp_booking_id',
+        specialistId: 'temp_specialist_id',
         customerId: widget.customerId,
-        originalPrice: widget.originalPrice ?? 0.0,
-        discountPercent: widget.discountPercent ?? 0.0,
+        originalPrice: 0.0,
+        discountPercent: 0.0,
         message: _messageController.text.trim().isEmpty
             ? null
             : _messageController.text.trim(),

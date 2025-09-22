@@ -25,36 +25,32 @@ class PaymentService {
   static const String _cloudpaymentsBaseUrl = 'https://api.cloudpayments.ru';
 
   /// Типы платежей
-  enum PaymentType {
-    advance, // Аванс (30% или 70%)
-    finalPayment, // Окончательная оплата
-    full, // Полная предоплата
-    refund, // Возврат
-  }
+  static const String paymentTypeAdvance = 'advance'; // Аванс (30% или 70%)
+  static const String paymentTypeFinal = 'final'; // Окончательная оплата
+  static const String paymentTypeFull = 'full'; // Полная предоплата
+  static const String paymentTypeRefund = 'refund'; // Возврат
 
   /// Статусы платежей
-  enum PaymentStatus {
-    pending, // В ожидании
-    processing, // Обрабатывается
-    succeeded, // Успешно
-    failed, // Неудачно
-    canceled, // Отменен
-    refunded, // Возвращен
-  }
+  static const String paymentStatusPending = 'pending'; // В ожидании
+  static const String paymentStatusProcessing = 'processing'; // Обрабатывается
+  static const String paymentStatusSucceeded = 'succeeded'; // Успешно
+  static const String paymentStatusFailed = 'failed'; // Неудачно
+  static const String paymentStatusCanceled = 'canceled'; // Отменен
+  static const String paymentStatusRefunded = 'refunded'; // Возвращен
 
   /// Заморозить аванс
   Future<PaymentResult> holdAdvancePayment({
     required String bookingId,
     required double totalAmount,
     required String currency,
-    required User customer,
+    required AppUser customer,
     bool isGovernmentOrganization = false,
   }) async {
     // 30% для обычных организаций, 70% для госорганизаций
     final advancePercentage = isGovernmentOrganization ? 0.7 : 0.3;
     final advanceAmount = totalAmount * advancePercentage;
     
-    final paymentType = isGovernmentOrganization ? PaymentType.advance : PaymentType.advance;
+    final paymentType = isGovernmentOrganization ? paymentTypeAdvance : paymentTypeAdvance;
     
     return await createYookassaPayment(
       bookingId: bookingId,
@@ -71,7 +67,7 @@ class PaymentService {
     required String bookingId,
     required double remainingAmount,
     required String currency,
-    required User customer,
+    required AppUser customer,
   }) async {
     return await createYookassaPayment(
       bookingId: bookingId,
@@ -88,8 +84,8 @@ class PaymentService {
     required String bookingId,
     required double amount,
     required String currency,
-    required PaymentType paymentType,
-    required User customer,
+    required String paymentType,
+    required AppUser customer,
     String? description,
   }) async {
     try {
@@ -159,8 +155,8 @@ class PaymentService {
     required String bookingId,
     required double amount,
     required String currency,
-    required PaymentType paymentType,
-    required PaymentStatus status,
+    required String paymentType,
+    required String status,
     required String provider,
     required String? externalId,
     required String? confirmationUrl,

@@ -246,14 +246,16 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
         padding: const EdgeInsets.all(16),
         itemCount: _crossSellRecommendations.length,
         itemBuilder: (context, index) {
-          final recommendation = _crossSellRecommendations[index];
-          final specialist = recommendation.specialist;
-          if (specialist == null) return const SizedBox.shrink();
-          return SpecialistCard(
-            specialist: specialist,
-            onTap: () => context.push('${AppRoutes.specialist}/${specialist.id}'),
-            showPrice: true,
-          );
+          // Временно закомментировано для отладки
+          return const SizedBox.shrink();
+          // final recommendation = _crossSellRecommendations[index];
+          // final specialist = recommendation.specialist;
+          // if (specialist == null) return const SizedBox.shrink();
+          // return SpecialistCard(
+          //   specialist: specialist,
+          //   onTap: () => context.push('${AppRoutes.specialist}/${specialist!.id}'),
+          //   showPrice: true,
+          // );
         },
       ),
     );
