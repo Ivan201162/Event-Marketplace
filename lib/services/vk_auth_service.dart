@@ -132,8 +132,8 @@ class VKAuthService {
           photoURL: 'https://via.placeholder.com/200',
           role: UserRole.customer,
           createdAt: DateTime.now(),
-          vkId: '123456789',
-          vkAccessToken: 'demo_token_123',
+          socialProvider: 'vk',
+          socialId: '123456789',
         );
         
         AppLogger.logI('VK демо-пользователь создан: ${demoUser.displayName}', 'vk_auth_service');

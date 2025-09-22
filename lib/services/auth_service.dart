@@ -25,7 +25,16 @@ class AuthService {
   final StorageService _storageService = StorageService();
   final VKAuthService _vkAuthService = VKAuthService();
   // Демо-сервис для веб-платформы
-  dynamic get _demoAuth => kIsWeb ? WebAuthService.demoAuth : null;
+  dynamic get _demoAuth {
+    if (kIsWeb) {
+      try {
+        return WebAuthService.demoAuth;
+      } catch (e) {
+        return null;
+      }
+    }
+    return null;
+  }
 
   /// Проверка, используется ли демо-режим
   bool get _isDemoMode => kIsWeb && _auth.currentUser == null;
