@@ -5,8 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../core/safe_log.dart';
 import '../models/app_notification.dart';
 import '../models/booking.dart';
-import '../models/calendar_event.dart';
-import '../models/notification.dart';
+import '../models/calendar_event.dart' as calendar;
+import '../models/notification.dart' as app_notification;
 import '../models/specialist_schedule.dart';
 import 'calendar_service.dart';
 import 'fcm_service.dart';
@@ -195,7 +195,7 @@ class FirestoreService {
 
     // Добавляем события в календарь
     await _calendarService.createBookingEvent(
-      CalendarEvent(
+      calendar.CalendarEvent(
         id: 'test_event_1',
         title: 'Тестовое бронирование 1',
         description: 'Тестовое бронирование 1',
@@ -207,8 +207,8 @@ class FirestoreService {
         customerId: b1.customerId ?? '',
         customerName: b1.customerName ?? '',
         bookingId: b1.id,
-        status: CalendarEventStatus.confirmed,
-        type: CalendarEventType.booking,
+        status: calendar.EventStatus.confirmed,
+        type: calendar.EventType.booking,
         isAllDay: false,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -216,7 +216,7 @@ class FirestoreService {
     );
 
     await _calendarService.createBookingEvent(
-      CalendarEvent(
+      calendar.CalendarEvent(
         id: 'test_event_2',
         title: 'Тестовое бронирование 2',
         description: 'Тестовое бронирование 2',
@@ -228,8 +228,8 @@ class FirestoreService {
         customerId: b2.customerId ?? '',
         customerName: b2.customerName ?? '',
         bookingId: b2.id,
-        status: CalendarEventStatus.confirmed,
-        type: CalendarEventType.booking,
+        status: calendar.EventStatus.confirmed,
+        type: calendar.EventType.booking,
         isAllDay: false,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -275,7 +275,7 @@ class FirestoreService {
       // Если заявка подтверждена, добавляем событие в календарь
       if (booking.status == 'confirmed') {
         await _calendarService.createBookingEvent(
-          CalendarEvent(
+          calendar.CalendarEvent(
             id: 'booking_${booking.id}',
             title: 'Бронирование мероприятия',
             description: 'Бронирование мероприятия',
@@ -287,8 +287,8 @@ class FirestoreService {
             customerId: booking.customerId ?? '',
             customerName: booking.customerName ?? '',
             bookingId: booking.id,
-            status: CalendarEventStatus.confirmed,
-            type: CalendarEventType.booking,
+            status: calendar.EventStatus.confirmed,
+            type: calendar.EventType.booking,
             isAllDay: false,
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
@@ -322,7 +322,7 @@ class FirestoreService {
       if (status == 'confirmed') {
         // Добавляем событие в календарь
         await _calendarService.createBookingEvent(
-          CalendarEvent(
+          calendar.CalendarEvent(
             id: 'booking_${booking.id}',
             title: 'Подтвержденное бронирование',
             description: 'Подтвержденное бронирование',
@@ -334,8 +334,8 @@ class FirestoreService {
             customerId: booking.customerId ?? '',
             customerName: booking.customerName ?? '',
             bookingId: booking.id,
-            status: CalendarEventStatus.confirmed,
-            type: CalendarEventType.booking,
+            status: calendar.EventStatus.confirmed,
+            type: calendar.EventType.booking,
             isAllDay: false,
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
@@ -377,8 +377,16 @@ class FirestoreService {
   Future<List<ScheduleEvent>> getSpecialistEventsForDate(
     String specialistId,
     DateTime date,
-  ) async =>
-      await _calendarService.getEventsForDate(specialistId, date);
+  ) async {
+    final calendarEvents = await _calendarService.getEventsForDate(specialistId, date);
+    return calendarEvents.map((event) => ScheduleEvent(
+      id: event.id,
+      title: event.title,
+      startTime: event.startTime,
+      endTime: event.endTime,
+      type: event.type.name,
+    )).toList();
+  }
 
   // Отправить уведомления о статусе заявки
   Future<void> _sendBookingStatusNotifications(
@@ -392,19 +400,19 @@ class FirestoreService {
 
       switch (status) {
         case 'confirmed':
-          notificationType = NotificationType.booking_confirmed;
+          notificationType = app_notification.NotificationType.booking;
           title = 'Заявка подтверждена!';
           body =
               'Ваша заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} подтверждена';
           break;
         case 'rejected':
-          notificationType = NotificationType.booking_rejected;
+          notificationType = app_notification.NotificationType.booking;
           title = 'Заявка отклонена';
           body =
               'К сожалению, ваша заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} отклонена';
           break;
         case 'cancelled':
-          notificationType = NotificationType.booking_cancelled;
+          notificationType = app_notification.NotificationType.booking;
           title = 'Заявка отменена';
           body =
               'Заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} была отменена';
@@ -415,11 +423,11 @@ class FirestoreService {
 
       // Отправляем уведомление клиенту
       await _notificationService.sendNotification(
-        userId: booking.customerId!,
+        userId: booking.customerId ?? '',
         title: title,
         body: body,
-        type: NotificationType.booking,
-        channel: NotificationChannel.push,
+        type: app_notification.NotificationType.booking,
+        channel: app_notification.NotificationChannel.push,
       );
 
       // Отправляем push-уведомление клиенту
@@ -436,16 +444,16 @@ class FirestoreService {
       // Отправляем уведомление специалисту (если статус изменил клиент)
       if (status == 'cancelled') {
         await _notificationService.sendNotification(
-          userId: booking.specialistId!,
+          userId: booking.specialistId ?? '',
           title: title,
           body: body,
-          type: NotificationType.booking,
-          channel: NotificationChannel.push,
+          type: app_notification.NotificationType.booking,
+          channel: app_notification.NotificationChannel.push,
         );
 
         // Отправляем push-уведомление специалисту
         await _sendPushNotification(
-          userId: booking.specialistId!,
+          userId: booking.specialistId ?? '',
           title: 'Заявка отменена клиентом',
           body:
               'Клиент отменил заявку на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year}',
@@ -472,10 +480,10 @@ class FirestoreService {
 
       switch (status) {
         case 'completed':
-          notificationType = NotificationType.payment_completed;
+          notificationType = app_notification.NotificationType.payment;
           break;
         case 'failed':
-          notificationType = NotificationType.payment_failed;
+          notificationType = app_notification.NotificationType.payment;
           break;
         default:
           return; // Не отправляем уведомления для других статусов
@@ -488,8 +496,8 @@ class FirestoreService {
         body: status == 'completed'
             ? 'Ваш платеж успешно обработан'
             : 'Произошла ошибка при обработке платежа',
-        type: NotificationType.payment,
-        channel: NotificationChannel.push,
+        type: app_notification.NotificationType.payment,
+        channel: app_notification.NotificationChannel.push,
       );
 
       // Отправляем уведомление специалисту
@@ -499,8 +507,8 @@ class FirestoreService {
         body: status == 'completed'
             ? 'Платеж от клиента успешно обработан'
             : 'Произошла ошибка при обработке платежа',
-        type: NotificationType.payment,
-        channel: NotificationChannel.push,
+        type: app_notification.NotificationType.payment,
+        channel: app_notification.NotificationChannel.push,
       );
     } catch (e) {
       print('Ошибка отправки уведомлений о платеже: $e');
@@ -540,7 +548,7 @@ class FirestoreService {
     bool descending = false,
   }) async {
     try {
-      var query = _db.collection('bookings');
+      Query query = _db.collection('bookings');
 
       // Добавляем фильтры
       if (customerId != null) {
@@ -595,7 +603,7 @@ class FirestoreService {
       debounceTimer?.cancel();
       debounceTimer = Timer(debounceDelay, () async {
         try {
-          var query = _db.collection('bookings');
+          Query query = _db.collection('bookings');
 
           if (customerId != null) {
             query = query.where('customerId', isEqualTo: customerId);
@@ -643,7 +651,7 @@ class FirestoreService {
     DocumentSnapshot? startAfter,
   }) async {
     try {
-      var query = _db
+      Query query = _db
           .collection('notifications')
           .where('userId', isEqualTo: userId)
           .orderBy('timestamp', descending: true)
@@ -655,7 +663,7 @@ class FirestoreService {
 
       final snapshot = await query.get();
       final notifications =
-          snapshot.docs.map(AppNotification.fromDocument).toList();
+          snapshot.docs.map((doc) => AppNotification.fromDocument(doc)).toList();
 
       SafeLog.debug(
         'Получено ${notifications.length} уведомлений с пагинацией',
@@ -685,7 +693,7 @@ class FirestoreService {
       debounceTimer?.cancel();
       debounceTimer = Timer(debounceDelay, () async {
         try {
-          var query = _db.collection('specialists');
+          Query query = _db.collection('specialists');
 
           if (category != null && category.isNotEmpty) {
             query = query.where('category', isEqualTo: category);

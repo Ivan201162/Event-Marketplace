@@ -508,7 +508,7 @@ export const sendAnniversaryReminders = functions.pubsub
     try {
       const today = new Date();
       const todayString = `${today.getMonth() + 1}-${today.getDate()}`;
-
+      
       // Находим пользователей с годовщинами сегодня
       const usersSnapshot = await db
         .collection('users')
@@ -520,10 +520,10 @@ export const sendAnniversaryReminders = functions.pubsub
         const user = doc.data();
         const weddingDate = user.weddingDate.toDate();
         const weddingString = `${weddingDate.getMonth() + 1}-${weddingDate.getDate()}`;
-
+        
         if (weddingString === todayString && user.fcmToken) {
           const years = today.getFullYear() - weddingDate.getFullYear();
-
+          
           await messaging.send({
             token: user.fcmToken,
             notification: {
@@ -541,6 +541,138 @@ export const sendAnniversaryReminders = functions.pubsub
       console.log('Anniversary reminders sent');
     } catch (error) {
       console.error('Anniversary reminders error:', error);
+    }
+  });
+
+/**
+ * Cloud Function для расчета средних цен специалистов
+ */
+export const calculateAveragePrices = functions.pubsub
+  .schedule('0 2 * * *') // Каждый день в 2:00
+  .timeZone('Europe/Moscow')
+  .onRun(async (context) => {
+    try {
+      console.log('Starting average prices calculation...');
+      
+      // Получаем всех специалистов
+      const specialistsSnapshot = await db.collection('specialists').get();
+      
+      const batch = db.batch();
+      let updatedCount = 0;
+
+      for (const specialistDoc of specialistsSnapshot.docs) {
+        const specialistId = specialistDoc.id;
+        
+        // Получаем завершенные бронирования специалиста
+        const bookingsSnapshot = await db
+          .collection('bookings')
+          .where('specialistId', '==', specialistId)
+          .where('status', '==', 'completed')
+          .get();
+
+        if (bookingsSnapshot.docs.length === 0) continue;
+
+        // Группируем по категориям услуг
+        const pricesByCategory: { [key: string]: number[] } = {};
+        
+        for (const bookingDoc of bookingsSnapshot.docs) {
+          const booking = bookingDoc.data();
+          const category = booking.eventType || 'other';
+          
+          if (!pricesByCategory[category]) {
+            pricesByCategory[category] = [];
+          }
+          pricesByCategory[category].push(booking.totalPrice);
+        }
+
+        // Рассчитываем средние цены
+        const averagePrices: { [key: string]: number } = {};
+        Object.keys(pricesByCategory).forEach(category => {
+          const prices = pricesByCategory[category];
+          if (prices.length > 0) {
+            const sum = prices.reduce((a, b) => a + b, 0);
+            averagePrices[category] = sum / prices.length;
+          }
+        });
+
+        if (Object.keys(averagePrices).length > 0) {
+          batch.update(specialistDoc.ref, {
+            'avgPriceByService': averagePrices,
+            'lastPriceUpdateAt': admin.firestore.FieldValue.serverTimestamp(),
+            'updatedAt': admin.firestore.FieldValue.serverTimestamp(),
+          });
+          updatedCount++;
+        }
+      }
+
+      await batch.commit();
+      console.log(`Average prices calculated for ${updatedCount} specialists`);
+    } catch (error) {
+      console.error('Average prices calculation error:', error);
+    }
+  });
+
+/**
+ * Cloud Function для обновления средних цен при завершении бронирования
+ */
+export const updateSpecialistAveragePrice = functions.firestore
+  .document('bookings/{bookingId}')
+  .onUpdate(async (change, context) => {
+    const before = change.before.data();
+    const after = change.after.data();
+    const bookingId = context.params.bookingId;
+
+    // Проверяем, изменился ли статус на completed
+    if (before.status !== 'completed' && after.status === 'completed') {
+      try {
+        const specialistId = after.specialistId;
+        if (!specialistId) return;
+
+        console.log(`Updating average price for specialist ${specialistId} after booking ${bookingId} completion`);
+
+        // Получаем все завершенные бронирования специалиста
+        const bookingsSnapshot = await db
+          .collection('bookings')
+          .where('specialistId', '==', specialistId)
+          .where('status', '==', 'completed')
+          .get();
+
+        if (bookingsSnapshot.docs.length === 0) return;
+
+        // Группируем по категориям услуг
+        const pricesByCategory: { [key: string]: number[] } = {};
+        
+        for (const bookingDoc of bookingsSnapshot.docs) {
+          const booking = bookingDoc.data();
+          const category = booking.eventType || 'other';
+          
+          if (!pricesByCategory[category]) {
+            pricesByCategory[category] = [];
+          }
+          pricesByCategory[category].push(booking.totalPrice);
+        }
+
+        // Рассчитываем средние цены
+        const averagePrices: { [key: string]: number } = {};
+        Object.keys(pricesByCategory).forEach(category => {
+          const prices = pricesByCategory[category];
+          if (prices.length > 0) {
+            const sum = prices.reduce((a, b) => a + b, 0);
+            averagePrices[category] = sum / prices.length;
+          }
+        });
+
+        // Обновляем специалиста
+        await db.collection('specialists').doc(specialistId).update({
+          'avgPriceByService': averagePrices,
+          'lastPriceUpdateAt': admin.firestore.FieldValue.serverTimestamp(),
+          'updatedAt': admin.firestore.FieldValue.serverTimestamp(),
+        });
+
+        console.log(`Average prices updated for specialist ${specialistId}`);
+      } catch (error) {
+        console.error('Error updating specialist average price:', error);
+      }
     }
   });
 
