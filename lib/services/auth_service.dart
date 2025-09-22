@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../core/safe_log.dart';
 import '../core/logger.dart';
 import '../models/user.dart';
+import 'demo_auth_service.dart';
 import 'storage_service.dart';
 import 'vk_auth_service.dart';
 
@@ -20,15 +22,19 @@ class AuthService {
   // );
   final StorageService _storageService = StorageService();
   final VKAuthService _vkAuthService = VKAuthService();
+  final DemoAuthService _demoAuth = DemoAuthService();
+
+  /// Проверка, используется ли демо-режим
+  bool get _isDemoMode => kIsWeb && _auth.currentUser == null;
 
   /// Текущий пользователь Firebase
-  User? get currentFirebaseUser => _auth.currentUser;
+  User? get currentFirebaseUser => _isDemoMode ? _demoAuth.currentUser : _auth.currentUser;
 
   /// Текущий пользователь (алиас для совместимости)
-  User? get currentUser => _auth.currentUser;
+  User? get currentUser => _isDemoMode ? _demoAuth.currentUser : _auth.currentUser;
 
   /// Поток изменений состояния аутентификации
-  Stream<User?> get authStateChanges => _auth.authStateChanges();
+  Stream<User?> get authStateChanges => _isDemoMode ? _demoAuth.authStateChanges : _auth.authStateChanges();
 
   /// Получить текущего пользователя из Firestore
   Future<AppUser?> getCurrentUser() async {
@@ -225,6 +231,26 @@ class AuthService {
     required String password,
   }) async {
     try {
+      // Используем демо-режим для веб-версии
+      if (_isDemoMode) {
+        AppLogger.logI('Начало входа как демо-пользователь...', 'auth_service');
+        final credential = await _demoAuth.signInWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+        
+        // Создаем демо-пользователя AppUser
+        final demoUser = credential.user;
+        if (demoUser == null) return null;
+        
+        return AppUser.fromFirebaseUser(
+          demoUser.uid,
+          demoUser.email ?? email,
+          displayName: demoUser.displayName ?? 'Demo User',
+          role: UserRole.customer,
+        );
+      }
+
       final credential = await _auth.signInWithEmailAndPassword(
         email: email,
         password: password,
@@ -249,6 +275,21 @@ class AuthService {
   Future<AppUser?> signInAsGuest() async {
     try {
       AppLogger.logI('Начало входа как гость...', 'auth_service');
+      
+      // Используем демо-режим для веб-версии
+      if (_isDemoMode) {
+        final credential = await _demoAuth.signInAnonymously();
+        final demoUser = credential.user;
+        
+        if (demoUser == null) return null;
+        
+        return AppUser.fromFirebaseUser(
+          demoUser.uid,
+          'guest@demo.com',
+          displayName: 'Гость',
+          role: UserRole.guest,
+        );
+      }
       
       // Создаем анонимного пользователя
       final credential = await _auth.signInAnonymously();
@@ -286,6 +327,21 @@ class AuthService {
   Future<AppUser?> signInWithGoogle() async {
     try {
       AppLogger.logI('Начало входа через Google...', 'auth_service');
+      
+      // Используем демо-режим для веб-версии
+      if (_isDemoMode) {
+        final credential = await _demoAuth.signInWithGoogle();
+        final demoUser = credential.user;
+        
+        if (demoUser == null) return null;
+        
+        return AppUser.fromFirebaseUser(
+          demoUser.uid,
+          demoUser.email ?? 'demo@gmail.com',
+          displayName: demoUser.displayName ?? 'Demo User',
+          role: UserRole.customer,
+        );
+      }
       
       // Для web-версии используем Firebase Auth с Google провайдером
       final googleProvider = GoogleAuthProvider();
