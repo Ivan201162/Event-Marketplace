@@ -8,9 +8,11 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../core/safe_log.dart';
 import '../core/logger.dart';
 import '../models/user.dart';
-import 'demo_auth_service.dart';
 import 'storage_service.dart';
 import 'vk_auth_service.dart';
+
+// Условные импорты для веб и мобильных платформ
+import 'auth_service_web.dart' if (dart.library.io) 'auth_service_mobile.dart';
 
 /// Сервис для управления аутентификацией пользователей
 class AuthService {
@@ -22,19 +24,20 @@ class AuthService {
   // );
   final StorageService _storageService = StorageService();
   final VKAuthService _vkAuthService = VKAuthService();
-  final DemoAuthService _demoAuth = DemoAuthService();
+  // Демо-сервис для веб-платформы
+  dynamic get _demoAuth => kIsWeb ? WebAuthService.demoAuth : null;
 
   /// Проверка, используется ли демо-режим
   bool get _isDemoMode => kIsWeb && _auth.currentUser == null;
 
   /// Текущий пользователь Firebase
-  User? get currentFirebaseUser => _isDemoMode ? _demoAuth.currentUser : _auth.currentUser;
+  User? get currentFirebaseUser => _isDemoMode ? _demoAuth?.currentUser : _auth.currentUser;
 
   /// Текущий пользователь (алиас для совместимости)
-  User? get currentUser => _isDemoMode ? _demoAuth.currentUser : _auth.currentUser;
+  User? get currentUser => _isDemoMode ? _demoAuth?.currentUser : _auth.currentUser;
 
   /// Поток изменений состояния аутентификации
-  Stream<User?> get authStateChanges => _isDemoMode ? _demoAuth.authStateChanges : _auth.authStateChanges();
+  Stream<User?> get authStateChanges => _isDemoMode ? _demoAuth?.authStateChanges : _auth.authStateChanges();
 
   /// Получить текущего пользователя из Firestore
   Future<AppUser?> getCurrentUser() async {
@@ -234,10 +237,12 @@ class AuthService {
       // Используем демо-режим для веб-версии
       if (_isDemoMode) {
         AppLogger.logI('Начало входа как демо-пользователь...', 'auth_service');
-        final credential = await _demoAuth.signInWithEmailAndPassword(
+        final credential = await _demoAuth?.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
+        
+        if (credential == null) return null;
         
         // Создаем демо-пользователя AppUser
         final demoUser = credential.user;
@@ -278,7 +283,9 @@ class AuthService {
       
       // Используем демо-режим для веб-версии
       if (_isDemoMode) {
-        final credential = await _demoAuth.signInAnonymously();
+        final credential = await _demoAuth?.signInAnonymously();
+        if (credential == null) return null;
+        
         final demoUser = credential.user;
         
         if (demoUser == null) return null;
@@ -330,7 +337,9 @@ class AuthService {
       
       // Используем демо-режим для веб-версии
       if (_isDemoMode) {
-        final credential = await _demoAuth.signInWithGoogle();
+        final credential = await _demoAuth?.signInWithGoogle();
+        if (credential == null) return null;
+        
         final demoUser = credential.user;
         
         if (demoUser == null) return null;
