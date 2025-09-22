@@ -123,6 +123,23 @@ class VKAuthService {
     try {
       AppLogger.logI('Создание VK пользователя для тестирования...', 'vk_auth_service');
       
+      // Для веб-платформы возвращаем демо-пользователя без Firebase
+      if (kIsWeb) {
+        final demoUser = AppUser(
+          id: 'demo_vk_user_${DateTime.now().millisecondsSinceEpoch}',
+          email: 'demo@vk.com',
+          displayName: 'Демо VK Пользователь',
+          photoURL: 'https://via.placeholder.com/200',
+          role: UserRole.customer,
+          createdAt: DateTime.now(),
+          vkId: '123456789',
+          vkAccessToken: 'demo_token_123',
+        );
+        
+        AppLogger.logI('VK демо-пользователь создан: ${demoUser.displayName}', 'vk_auth_service');
+        return demoUser;
+      }
+      
       // Создаем тестового пользователя
       final vkUserId = 'vk_${DateTime.now().millisecondsSinceEpoch}';
       final vkEmail = 'vk_user_${DateTime.now().millisecondsSinceEpoch}@vk.com';

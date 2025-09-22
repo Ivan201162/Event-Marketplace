@@ -216,10 +216,13 @@ class AppTheme {
         fontFamily: 'Roboto',
         primary: BrandColors.primary,
         primaryContainer: BrandColors.primaryVariant,
+        primaryLightRef: BrandColors.primary,
         secondary: BrandColors.secondary,
         secondaryContainer: BrandColors.secondaryVariant,
+        secondaryLightRef: BrandColors.secondary,
         tertiary: BrandColors.accent,
         tertiaryContainer: BrandColors.accentVariant,
+        tertiaryLightRef: BrandColors.accent,
         error: BrandColors.error,
       ).copyWith(
         // Кастомные настройки для темной темы

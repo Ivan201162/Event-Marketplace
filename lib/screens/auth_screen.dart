@@ -432,12 +432,19 @@ class AuthScreen extends ConsumerWidget {
               icon: Container(
                 width: 20,
                 height: 20,
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(
-                      'https://developers.google.com/identity/images/g-logo.png',
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(4),
+                  border: Border.all(color: Colors.grey[300]!),
+                ),
+                child: const Center(
+                  child: Text(
+                    'G',
+                    style: TextStyle(
+                      color: Color(0xFF4285F4),
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
                     ),
-                    fit: BoxFit.contain,
                   ),
                 ),
               ),
