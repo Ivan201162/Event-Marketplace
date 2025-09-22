@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/contract.dart' as contract_model;
+import '../models/work_act.dart' as work_act_model;
 import '../services/contract_service.dart';
 
 /// Экран для просмотра договоров и актов
@@ -209,7 +210,7 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen>
                   ),
                 ),
                 const SizedBox(width: 8),
-                if (contract.status == ContractStatus.pending)
+                if (contract.status == contract_model.ContractStatus.pending)
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () => _signContract(contract),
@@ -224,7 +225,7 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen>
     );
   }
 
-  Widget _buildWorkActCard(contract_model.WorkAct workAct) {
+  Widget _buildWorkActCard(work_act_model.WorkAct workAct) {
     return Card(
       margin: const EdgeInsets.only(bottom: 16),
       child: Padding(
@@ -327,24 +328,24 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen>
     );
   }
 
-  Widget _buildWorkActStatusChip(contract_model.WorkActStatus status) {
+  Widget _buildWorkActStatusChip(work_act_model.WorkActStatus status) {
     Color color;
     String text;
 
     switch (status) {
-      case contract_model.WorkActStatus.draft:
+      case work_act_model.WorkActStatus.draft:
         color = Colors.grey;
         text = 'Черновик';
         break;
-      case contract_model.WorkActStatus.pending:
+      case work_act_model.WorkActStatus.pending:
         color = Colors.orange;
         text = 'Ожидает подписания';
         break;
-      case contract_model.WorkActStatus.signed:
+      case work_act_model.WorkActStatus.signed:
         color = Colors.green;
         text = 'Подписан';
         break;
-      case contract_model.WorkActStatus.completed:
+      case work_act_model.WorkActStatus.completed:
         color = Colors.purple;
         text = 'Завершен';
         break;
@@ -370,14 +371,14 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen>
     );
   }
 
-  void _viewWorkAct(contract_model.WorkAct workAct) {
+  void _viewWorkAct(work_act_model.WorkAct workAct) {
     // TODO: Реализовать просмотр акта
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Просмотр акта ${workAct.id}')),
     );
   }
 
-  void _signWorkAct(contract_model.WorkAct workAct) {
+  void _signWorkAct(work_act_model.WorkAct workAct) {
     // TODO: Реализовать подписание акта
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text('Подписание акта ${workAct.id}')),

@@ -191,7 +191,7 @@ class PaymentInfoWidget extends ConsumerWidget {
 /// Виджет для отображения статуса платежа
 class PaymentStatusWidget extends ConsumerWidget {
   final String paymentId;
-  final PaymentService.PaymentStatus status;
+  final String status;
   final String? confirmationUrl;
 
   const PaymentStatusWidget({
@@ -251,53 +251,53 @@ class PaymentStatusWidget extends ConsumerWidget {
     );
   }
 
-  Color _getStatusColor(PaymentService.PaymentStatus status) {
+  Color _getStatusColor(String status) {
     switch (status) {
-      case PaymentService.PaymentStatus.pending:
+      case PaymentService.paymentStatusPending:
         return Colors.orange;
-      case PaymentService.PaymentStatus.processing:
+      case PaymentService.paymentStatusProcessing:
         return Colors.blue;
-      case PaymentService.PaymentStatus.succeeded:
+      case PaymentService.paymentStatusSucceeded:
         return Colors.green;
-      case PaymentService.PaymentStatus.failed:
+      case PaymentService.paymentStatusFailed:
         return Colors.red;
-      case PaymentService.PaymentStatus.canceled:
+      case PaymentService.paymentStatusCanceled:
         return Colors.grey;
-      case PaymentService.PaymentStatus.refunded:
+      case PaymentService.paymentStatusRefunded:
         return Colors.purple;
     }
   }
 
-  IconData _getStatusIcon(PaymentService.PaymentStatus status) {
+  IconData _getStatusIcon(String status) {
     switch (status) {
-      case PaymentService.PaymentStatus.pending:
+      case PaymentService.paymentStatusPending:
         return Icons.pending;
-      case PaymentService.PaymentStatus.processing:
+      case PaymentService.paymentStatusProcessing:
         return Icons.hourglass_empty;
-      case PaymentService.PaymentStatus.succeeded:
+      case PaymentService.paymentStatusSucceeded:
         return Icons.check_circle;
-      case PaymentService.PaymentStatus.failed:
+      case PaymentService.paymentStatusFailed:
         return Icons.error;
-      case PaymentService.PaymentStatus.canceled:
+      case PaymentService.paymentStatusCanceled:
         return Icons.cancel;
-      case PaymentService.PaymentStatus.refunded:
+      case PaymentService.paymentStatusRefunded:
         return Icons.refresh;
     }
   }
 
-  String _getStatusText(PaymentService.PaymentStatus status) {
+  String _getStatusText(String status) {
     switch (status) {
-      case PaymentService.PaymentStatus.pending:
+      case PaymentService.paymentStatusPending:
         return 'Ожидает оплаты';
-      case PaymentService.PaymentStatus.processing:
+      case PaymentService.paymentStatusProcessing:
         return 'Обрабатывается';
-      case PaymentService.PaymentStatus.succeeded:
+      case PaymentService.paymentStatusSucceeded:
         return 'Оплачено';
-      case PaymentService.PaymentStatus.failed:
+      case PaymentService.paymentStatusFailed:
         return 'Ошибка оплаты';
-      case PaymentService.PaymentStatus.canceled:
+      case PaymentService.paymentStatusCanceled:
         return 'Отменено';
-      case PaymentService.PaymentStatus.refunded:
+      case PaymentService.paymentStatusRefunded:
         return 'Возвращено';
     }
   }
