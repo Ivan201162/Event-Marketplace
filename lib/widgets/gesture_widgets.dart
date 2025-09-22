@@ -426,15 +426,14 @@ class DismissibleWidget extends StatelessWidget {
   const DismissibleWidget({
     super.key,
     required this.child,
-    required this.key,
+    required this.dismissKey,
     this.onDismissed,
     this.background,
     this.secondaryBackground,
     this.direction = DismissDirection.horizontal,
   });
   final Widget child;
-  @override
-  final String key;
+  final String dismissKey;
   final VoidCallback? onDismissed;
   final Widget? background;
   final Widget? secondaryBackground;
@@ -442,7 +441,7 @@ class DismissibleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Dismissible(
-        key: Key(key),
+        key: Key(dismissKey),
         direction: direction,
         background: background ??
             Container(

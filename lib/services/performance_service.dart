@@ -166,7 +166,8 @@ class PerformanceService {
     _monitoring.startOperation(name);
 
     try {
-      final result = await compute(computation, null);
+      // final result = await compute(computation, null);
+      final result = computation();
       _monitoring.endOperation(name);
       return result;
     } catch (e) {
@@ -390,7 +391,7 @@ extension PerformanceFutureExtension<T> on Future<T> {
           .executeWithLimit(() => this, operationName: operationName);
 
   /// Выполнить в изоляте
-  T inIsolate() => this;
+  Future<T> inIsolate() async => this;
 
   /// Кэшировать результат
   Future<T> cached(String key, {Duration? expiration}) =>

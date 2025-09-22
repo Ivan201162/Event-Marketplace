@@ -33,3 +33,6 @@ xcodebuild -workspace Runner.xcworkspace \
 
 echo "✅ Archive created successfully at: ios/build/Runner.xcarchive"
 echo "📱 Ready for App Store submission!"
+
+
+

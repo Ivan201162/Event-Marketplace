@@ -89,7 +89,7 @@ class IdeaCommentWidget extends StatelessWidget {
                             Icon(
                               Icons.favorite,
                               size: 16,
-                              color: comment.isLikedBy(userId)
+                              color: comment.likedBy.contains(userId)
                                   ? Colors.red
                                   : Colors.grey[600],
                             ),
@@ -167,10 +167,10 @@ class IdeaCommentListTile extends StatelessWidget {
   Widget build(BuildContext context) => ListTile(
         leading: CircleAvatar(
           radius: 20,
-          backgroundImage: comment.authorPhotoUrl != null
-              ? CachedNetworkImageProvider(comment.authorPhotoUrl!)
+          backgroundImage: comment.authorAvatar != null
+              ? CachedNetworkImageProvider(comment.authorAvatar!)
               : null,
-          child: comment.authorPhotoUrl == null
+          child: comment.authorAvatar == null
               ? Text(
                   comment.authorName.isNotEmpty
                       ? comment.authorName[0].toUpperCase()
@@ -215,7 +215,7 @@ class IdeaCommentListTile extends StatelessWidget {
                       Icon(
                         Icons.favorite,
                         size: 16,
-                        color: comment.isLikedBy(userId)
+                        color: comment.likedBy.contains(userId)
                             ? Colors.red
                             : Colors.grey[600],
                       ),
@@ -356,7 +356,7 @@ class IdeaCommentCard extends StatelessWidget {
                         Icon(
                           Icons.favorite,
                           size: 16,
-                          color: comment.isLikedBy(userId)
+                          color: comment.likedBy.contains(userId)
                               ? Colors.red
                               : Colors.grey[600],
                         ),

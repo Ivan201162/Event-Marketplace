@@ -52,3 +52,6 @@ xcodebuild -exportArchive \
 echo "✅ IPA exported successfully!"
 echo "📱 IPA location: ios/build/ipa/Runner.ipa"
 echo "🚀 Ready for App Store Connect upload!"
+
+
+

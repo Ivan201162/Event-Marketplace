@@ -392,14 +392,14 @@ class NotificationService {
       // Отправляем на каждый токен
       for (final token in fcmTokens) {
         try {
-          await _messaging.sendMessage(
-            to: token,
-            data: {
-              'title': title,
-              'body': body,
-              ...data.map((key, value) => MapEntry(key, value.toString())),
-            },
-          );
+          // await _messaging.sendMessage(
+          //   to: token,
+          //   data: {
+          //     'title': title,
+          //     'body': body,
+          //     ...data.map((key, value) => MapEntry(key, value.toString())),
+          //   },
+          // );
         } catch (e) {
           if (kDebugMode) {
             print('Ошибка отправки push на токен $token: $e');

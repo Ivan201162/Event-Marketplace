@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'notification_type.dart';
+import 'notification_template.dart';
 
 /// Уведомление о подписке
 @immutable

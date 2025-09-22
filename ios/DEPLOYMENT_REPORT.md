@@ -225,3 +225,6 @@ cd .. && flutter build ios --release --no-tree-shake-icons
 **All iOS configuration files are created and ready. The project can now be built on macOS with Xcode and submitted to the App Store.**
 
 **Next Step**: Transfer project to macOS machine and run `./ios/build_archive.sh`
+
+
+

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/event.dart';
+import '../models/calendar_event.dart' as calendar;
 import '../providers/auth_providers.dart';
 import '../providers/event_providers.dart';
 
@@ -12,8 +13,10 @@ class CreateEventScreen extends ConsumerStatefulWidget {
   const CreateEventScreen({
     super.key,
     this.event,
+    this.calendarEvent,
   });
   final Event? event;
+  final calendar.CalendarEvent? calendarEvent;
 
   @override
   ConsumerState<CreateEventScreen> createState() => _CreateEventScreenState();

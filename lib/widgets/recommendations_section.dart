@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../core/constants/app_routes.dart';
 import '../providers/recommendation_providers.dart';
 import 'specialist_card.dart';
 
@@ -28,7 +30,7 @@ class RecommendationsSection extends ConsumerWidget {
               ),
               TextButton(
                 onPressed: () {
-                  // TODO: Переход к полному списку рекомендаций
+                  context.push(AppRoutes.recommendations);
                 },
                 child: const Text('Все рекомендации'),
               ),

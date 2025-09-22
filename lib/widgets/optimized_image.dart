@@ -39,8 +39,8 @@ class OptimizedImage extends StatelessWidget {
       memCacheHeight: memCacheHeight,
       fadeInDuration: fadeInDuration,
       fadeOutDuration: fadeOutDuration,
-      placeholder: placeholder ?? (context, url) => _buildPlaceholder(),
-      errorWidget: errorWidget ?? (context, url, error) => _buildErrorWidget(),
+      placeholder: placeholder as Widget Function(BuildContext, String)? ?? (context, url) => _buildPlaceholder(),
+      errorWidget: errorWidget as Widget Function(BuildContext, String, Object)? ?? (context, url, error) => _buildErrorWidget(),
       // Оптимизации для производительности
       maxWidthDiskCache: 1000,
       maxHeightDiskCache: 1000,

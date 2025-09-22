@@ -26,7 +26,7 @@ final specialistProfileProvider =
 
 /// Провайдер профиля текущего пользователя
 final currentUserProfileProvider =
-    FutureProvider.family<dynamic, (String, UserRole)>((ref, params) {
+    FutureProvider.family<dynamic, (String, user_model.UserRole)>((ref, params) {
   final profileService = ref.watch(profileServiceProvider);
   return profileService.getUserProfile(params.$1, params.$2);
 });
@@ -62,7 +62,7 @@ final searchSpecialistsProvider =
 
 /// Провайдер статистики профиля
 final profileStatsProvider =
-    FutureProvider.family<Map<String, dynamic>, (String, UserRole)>(
+    FutureProvider.family<Map<String, dynamic>, (String, user_model.UserRole)>(
         (ref, params) {
   final profileService = ref.watch(profileServiceProvider);
   return profileService.getProfileStats(params.$1, params.$2);

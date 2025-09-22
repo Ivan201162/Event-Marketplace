@@ -171,6 +171,11 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
         email: state.email,
         password: state.password,
       );
+      // Сброс состояния после успешного входа
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: null,
+      );
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -198,6 +203,11 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
         displayName: displayName,
         role: role,
       );
+      // Сброс состояния после успешной регистрации
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: null,
+      );
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -212,6 +222,11 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
 
     try {
       await _authService.signInAsGuest();
+      // Сброс состояния после успешного входа как гость
+      state = state.copyWith(
+        isLoading: false,
+        errorMessage: null,
+      );
     } catch (e) {
       state = state.copyWith(
         isLoading: false,
@@ -247,4 +262,12 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
   void clearError() {
     state = state.copyWith();
   }
+
+  /// Обновить имя пользователя
+  void updateDisplayName(String displayName) {
+    _displayName = displayName;
+  }
+
+  String _displayName = '';
+  String get displayName => _displayName;
 }

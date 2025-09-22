@@ -20,6 +20,11 @@ class AppRoutes {
   // Поиск и избранное
   static const String search = '/search';
   static const String favorites = '/favorites';
+  
+  // Заявки и календарь
+  static const String myBookings = '/my-bookings';
+  static const String calendar = '/calendar';
+  static const String recommendations = '/recommendations';
 
   // Уведомления и настройки
   static const String notifications = '/notifications';

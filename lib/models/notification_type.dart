@@ -1,44 +1,37 @@
-/// Тип уведомления
 enum NotificationType {
   booking,
-  payment,
-  review,
   message,
+  review,
+  reminder,
   system,
   promotion,
-  reminder,
-  update,
-  general,
+  cancellation,
   newPost,
   newStory,
   newEvent,
   newPortfolio,
   announcement,
-  cancellation,
+  update,
+  security,
 }
 
-/// Расширение для NotificationType
 extension NotificationTypeExtension on NotificationType {
   String get displayName {
     switch (this) {
       case NotificationType.booking:
         return 'Бронирование';
-      case NotificationType.payment:
-        return 'Платеж';
-      case NotificationType.review:
-        return 'Отзыв';
       case NotificationType.message:
         return 'Сообщение';
-      case NotificationType.system:
-        return 'Система';
-      case NotificationType.promotion:
-        return 'Акция';
+      case NotificationType.review:
+        return 'Отзыв';
       case NotificationType.reminder:
         return 'Напоминание';
-      case NotificationType.update:
-        return 'Обновление';
-      case NotificationType.general:
-        return 'Общее';
+      case NotificationType.system:
+        return 'Системное';
+      case NotificationType.promotion:
+        return 'Промо';
+      case NotificationType.cancellation:
+        return 'Отмена';
       case NotificationType.newPost:
         return 'Новый пост';
       case NotificationType.newStory:
@@ -49,8 +42,10 @@ extension NotificationTypeExtension on NotificationType {
         return 'Новое портфолио';
       case NotificationType.announcement:
         return 'Объявление';
-      case NotificationType.cancellation:
-        return 'Отмена';
+      case NotificationType.update:
+        return 'Обновление';
+      case NotificationType.security:
+        return 'Безопасность';
     }
   }
 
@@ -58,34 +53,32 @@ extension NotificationTypeExtension on NotificationType {
     switch (this) {
       case NotificationType.booking:
         return '📅';
-      case NotificationType.payment:
-        return '💳';
-      case NotificationType.review:
-        return '⭐';
       case NotificationType.message:
         return '💬';
+      case NotificationType.review:
+        return '⭐';
+      case NotificationType.reminder:
+        return '⏰';
       case NotificationType.system:
         return '⚙️';
       case NotificationType.promotion:
         return '🎉';
-      case NotificationType.reminder:
-        return '⏰';
-      case NotificationType.update:
-        return '🔄';
-      case NotificationType.general:
-        return '📢';
+      case NotificationType.cancellation:
+        return '❌';
       case NotificationType.newPost:
         return '📝';
       case NotificationType.newStory:
         return '📖';
       case NotificationType.newEvent:
-        return '🎪';
+        return '🎊';
       case NotificationType.newPortfolio:
         return '🖼️';
       case NotificationType.announcement:
         return '📢';
-      case NotificationType.cancellation:
-        return '❌';
+      case NotificationType.update:
+        return '🔄';
+      case NotificationType.security:
+        return '🔒';
     }
   }
 }

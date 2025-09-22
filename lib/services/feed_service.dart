@@ -190,6 +190,23 @@ class FeedService {
     }
   }
 
+  /// Лайкнуть комментарий
+  Future<void> likeComment(String commentId, String userId) async {
+    try {
+      await _firestore
+          .collection('feed_comments')
+          .doc(commentId)
+          .collection('likes')
+          .doc(userId)
+          .set({
+        'userId': userId,
+        'createdAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка лайка комментария: $e');
+    }
+  }
+
   /// Поделиться постом
   Future<void> sharePost(String postId, String userId) async {
     try {

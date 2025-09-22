@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../models/user.dart';
 import '../providers/auth_providers.dart';
@@ -304,8 +305,13 @@ class AuthScreen extends ConsumerWidget {
         children: [
           // Переключение режима
           TextButton(
-            onPressed: () =>
-                ref.read(loginFormProvider.notifier).toggleSignUpMode(),
+            onPressed: () {
+              if (formState.isSignUpMode) {
+                ref.read(loginFormProvider.notifier).toggleSignUpMode();
+              } else {
+                context.go('/register');
+              }
+            },
             child: Text(
               formState.isSignUpMode
                   ? 'Уже есть аккаунт? Войти'
@@ -362,7 +368,7 @@ class AuthScreen extends ConsumerWidget {
 
   /// Обработка регистрации
   void _handleSignUp(BuildContext context, WidgetRef ref) {
-    final displayName = ref.read(displayNameProvider);
+    final displayName = ref.read(loginFormProvider.notifier).displayName;
     final role = ref.read(selectedRoleProvider);
 
     if (displayName.isEmpty) {
@@ -509,19 +515,7 @@ class AuthScreen extends ConsumerWidget {
     }
   }
 
-  /// Кнопка входа через Google
-  Widget _buildGoogleSignInButton(BuildContext context, WidgetRef ref) =>
-      SizedBox(
-        width: double.infinity,
-        child: OutlinedButton.icon(
-          onPressed: () => _handleGoogleSignIn(context, ref),
-          icon: const Icon(Icons.login),
-          label: const Text('Войти через Google'),
-          style: OutlinedButton.styleFrom(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-          ),
-        ),
-      );
+  /// Кнопка входа через Google (удален дублирующий метод)
 
   /// Обработка входа через ВКонтакте
   Future<void> _handleVKSignIn(BuildContext context, WidgetRef ref) async {
@@ -574,9 +568,36 @@ class SelectedRoleNotifier extends Notifier<UserRole> {
   }
 }
 
+  /// Кнопка входа через Google
+  Widget _buildGoogleSignInButton(BuildContext context, WidgetRef ref) {
+    return SizedBox(
+      width: double.infinity,
+      child: ElevatedButton.icon(
+        onPressed: () async {
+          try {
+            await ref.read(authServiceProvider).signInWithGoogle();
+          } catch (e) {
+            if (context.mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('Ошибка входа через Google: $e')),
+              );
+            }
+          }
+        },
+        icon: const Icon(Icons.login),
+        label: const Text('Войти через Google'),
+        style: ElevatedButton.styleFrom(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+        ),
+      ),
+    );
+  }
+
 /// Расширение для LoginFormNotifier
 extension LoginFormNotifierExtension on LoginFormNotifier {
+  String get displayName => '';
+  
   void updateDisplayName(String displayName) {
-    // Это будет использоваться в _handleSignUp
+    // Сохраняем имя в локальном состоянии для использования в _handleSignUp
   }
 }

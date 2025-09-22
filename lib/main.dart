@@ -1,6 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_performance/firebase_performance.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -14,9 +15,11 @@ import 'core/feature_flags.dart';
 import 'core/i18n/app_localizations.dart';
 import 'firebase_options.dart';
 import 'providers/theme_provider.dart';
+import 'providers/auth_providers.dart';
 import 'screens/admin_panel_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/booking_form_screen.dart';
+import 'screens/register_screen.dart';
 import 'screens/chat_screen.dart';
 import 'screens/content_management_screen.dart';
 import 'screens/favorites_page.dart';
@@ -30,6 +33,9 @@ import 'screens/settings_management_screen.dart';
 import 'screens/settings_page.dart';
 import 'screens/specialist_profile_screen.dart';
 import 'screens/user_management_screen.dart';
+import 'screens/my_bookings_screen.dart';
+import 'screens/calendar_screen.dart';
+import 'screens/recommendations_screen.dart';
 import 'services/ab_test_service.dart';
 import 'services/analytics_service.dart';
 import 'services/auth_service.dart';
@@ -52,8 +58,10 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  // Инициализация Crashlytics
-  FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  // Инициализация Crashlytics (только для мобильных платформ)
+  if (!kIsWeb) {
+    FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
+  }
 
   // Инициализация Performance Monitoring
   await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
@@ -150,19 +158,26 @@ class EventMarketplaceApp extends ConsumerWidget {
 
 /// Провайдер роутера
 final routerProvider = Provider<GoRouter>((ref) {
-  final authService = ref.watch(authServiceProvider);
-
   return GoRouter(
-    initialLocation: AppRoutes.home,
+    initialLocation: AppRoutes.login,
     redirect: (context, state) {
+      final authService = ref.read(authServiceProvider);
       final isLoggedIn = authService.currentFirebaseUser != null;
       final isAuthRoute = state.matchedLocation.startsWith('/auth');
+      final isRegisterRoute = state.matchedLocation.startsWith('/register');
+      
+      // Разрешенные маршруты для неавторизованных пользователей
+      final publicRoutes = ['/search', '/specialist', '/event'];
+      final isPublicRoute = publicRoutes.any((route) => 
+          state.matchedLocation.startsWith(route));
 
-      if (!isLoggedIn && !isAuthRoute) {
+      // Если пользователь не авторизован и пытается попасть на защищенную страницу
+      if (!isLoggedIn && !isAuthRoute && !isRegisterRoute && !isPublicRoute) {
         return AppRoutes.login;
       }
 
-      if (isLoggedIn && isAuthRoute) {
+      // Если пользователь авторизован и находится на странице входа/регистрации
+      if (isLoggedIn && (isAuthRoute || isRegisterRoute)) {
         return AppRoutes.home;
       }
 
@@ -185,7 +200,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: AppRoutes.register,
         name: 'register',
-        builder: (context, state) => const AuthScreen(),
+        builder: (context, state) => const RegisterScreen(),
       ),
 
       // Профили
@@ -233,6 +248,26 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.favorites,
         name: 'favorites',
         builder: (context, state) => const FavoritesPage(),
+      ),
+      
+      // Заявки и календарь
+      GoRoute(
+        path: AppRoutes.myBookings,
+        name: 'my-bookings',
+        builder: (context, state) => const MyBookingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.calendar,
+        name: 'calendar',
+        builder: (context, state) {
+          final userId = state.uri.queryParameters['userId'] ?? '';
+          return CalendarScreen(userId: userId);
+        },
+      ),
+      GoRoute(
+        path: AppRoutes.recommendations,
+        name: 'recommendations',
+        builder: (context, state) => const RecommendationsScreen(),
       ),
 
       // Уведомления и настройки

@@ -13,11 +13,12 @@ dependencies:
     sdk: flutter
   intl: ^0.20.2
 
-  flutter_riverpod: ^2.5.1
+  flutter_riverpod: ^2.6.1
   state_notifier: ^1.0.0
 
   # Firebase
   cloud_firestore: ^6.0.1
+  cloud_functions: ^6.0.1
   firebase_core: ^4.1.0
   firebase_auth: ^6.0.2
   firebase_storage: ^13.0.1
@@ -51,23 +52,23 @@ dependencies:
   firebase_messaging: ^16.0.1
   collection: ^1.18.0
 
-  freezed_annotation: any
-  riverpod_annotation: any
-  package_info_plus: any
-  in_app_review: any
-  http: any
-  crypto: any
-  flutter_local_notifications: any
-  timezone: any
-  image: any
-  path: any
-  video_thumbnail: any
-  flutter_secure_storage: any
-  audioplayers: any
-  permission_handler: any
-  record: any
-  fl_chart: any
-  photo_view: any
+  freezed_annotation: ^2.4.4
+  riverpod_annotation: ^2.6.1
+  package_info_plus: ^8.0.2
+  in_app_review: ^2.0.9
+  http: ^1.2.2
+  crypto: ^3.0.6
+  flutter_local_notifications: ^18.0.1
+  timezone: ^0.10.0
+  image: ^4.2.0
+  path: ^1.9.0
+  video_thumbnail: ^0.5.3
+  flutter_secure_storage: ^9.2.2
+  audioplayers: ^6.1.0
+  permission_handler: ^11.3.1
+  # record: ^5.0.4  # Temporarily disabled due to compatibility issues
+  fl_chart: ^0.69.0
+  photo_view: ^0.15.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

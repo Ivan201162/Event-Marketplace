@@ -266,7 +266,7 @@ class SettingsPage extends ConsumerWidget {
                   builder: (context, ref, child) {
                     return ref.watch(localeProvider).languageCode == 'en'
                         ? const Icon(Icons.check, color: Colors.green)
-                        : null;
+                        : const SizedBox.shrink();
                   },
                 ),
                 onTap: () {

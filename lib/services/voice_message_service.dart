@@ -5,18 +5,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 // import 'dart:typed_data';
-import 'package:record/record.dart';
+// import 'package:record/record.dart';  // Temporarily disabled
 
 // import 'package:firebase_storage/firebase_storage.dart';
 import '../models/chat_message_extended.dart';
 
 /// Сервис для работы с голосовыми сообщениями
+// Temporarily disabled due to record package compatibility issues
 class VoiceMessageService {
   factory VoiceMessageService() => _instance;
   VoiceMessageService._internal();
   static final VoiceMessageService _instance = VoiceMessageService._internal();
 
-  final AudioRecorder _recorder = AudioRecorder();
+  // final AudioRecorder _recorder = AudioRecorder();  // Temporarily disabled
   final AudioPlayer _player = AudioPlayer();
   // final FirebaseStorage _storage = FirebaseStorage.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;

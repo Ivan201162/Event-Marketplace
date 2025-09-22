@@ -303,7 +303,14 @@ class _SearchScreenState extends State<SearchScreen> {
                           content: Text('Выбран специалист ${index + 1}'),
                           action: SnackBarAction(
                             label: 'Забронировать',
-                            onPressed: () {},
+                            onPressed: () {
+                              // TODO: Реализовать навигацию к форме бронирования
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Функция бронирования в разработке'),
+                                ),
+                              );
+                            },
                           ),
                         ),
                       );

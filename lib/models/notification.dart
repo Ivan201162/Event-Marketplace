@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'notification_type.dart';
+import 'notification_template.dart';
 
 /// Приоритеты уведомлений
 enum NotificationPriority {

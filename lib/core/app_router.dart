@@ -7,6 +7,7 @@ import '../screens/about_screen.dart';
 import '../screens/admin_panel_screen.dart';
 import '../screens/analytics_screen.dart';
 import '../screens/auth_screen.dart';
+import '../screens/register_screen.dart';
 import '../screens/booking_form_screen.dart';
 import '../screens/booking_requests_screen.dart';
 import '../screens/chat_screen.dart';
@@ -67,6 +68,7 @@ class AppRouter {
   static const String myBookings = '/my-bookings';
   static const String bookingRequests = '/booking-requests';
   static const String auth = '/auth';
+  static const String register = '/register';
   static const String debug = '/debug';
   static const String recommendations = '/recommendations';
   static const String chats = '/chats';
@@ -136,6 +138,13 @@ class AppRouter {
             path: auth,
             name: 'auth',
             builder: (context, state) => const AuthScreen(),
+          ),
+
+          // Регистрация
+          GoRoute(
+            path: register,
+            name: 'register',
+            builder: (context, state) => const RegisterScreen(),
           ),
 
           // Отладка (только в debug режиме)

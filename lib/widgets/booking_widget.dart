@@ -540,7 +540,9 @@ class _BookingWidgetState extends ConsumerState<BookingWidget> {
           backgroundColor: Colors.green,
           action: SnackBarAction(
             label: 'OK',
-            onPressed: () {},
+            onPressed: () {
+              // Закрываем SnackBar
+            },
           ),
         ),
       );

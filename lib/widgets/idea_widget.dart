@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../models/idea.dart';
+import '../utils/color_utils.dart';
 
 /// Виджет идеи
 class IdeaWidget extends StatelessWidget {
@@ -58,26 +59,26 @@ class IdeaWidget extends StatelessWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: idea.categoryColor.withOpacity(0.1),
+                            color: ColorUtils.getCategoryColor(idea.categoryColor).withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: idea.categoryColor.withOpacity(0.3),
+                              color: ColorUtils.getCategoryColor(idea.categoryColor).withValues(alpha: 0.3),
                             ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(
-                                idea.categoryIcon,
+                                ColorUtils.getCategoryIcon(idea.category),
                                 size: 14,
-                                color: idea.categoryColor,
+                                color: ColorUtils.getCategoryColor(idea.categoryColor),
                               ),
                               const SizedBox(width: 4),
                               Text(
                                 idea.category,
                                 style: TextStyle(
                                   fontSize: 12,
-                                  color: idea.categoryColor,
+                                  color: ColorUtils.getCategoryColor(idea.categoryColor),
                                   fontWeight: FontWeight.w500,
                                 ),
                               ),
@@ -192,7 +193,7 @@ class IdeaWidget extends StatelessWidget {
         itemBuilder: (context, index) {
           final image = idea.images[index];
           return CachedNetworkImage(
-            imageUrl: image.url,
+            imageUrl: image,
             fit: BoxFit.cover,
             placeholder: (context, url) => Container(
               color: Colors.grey[200],
@@ -352,7 +353,7 @@ class IdeaListTile extends StatelessWidget {
             ? ClipRRect(
                 borderRadius: BorderRadius.circular(8),
                 child: CachedNetworkImage(
-                  imageUrl: idea.images.first.url,
+                  imageUrl: idea.images.first,
                   width: 60,
                   height: 60,
                   fit: BoxFit.cover,
@@ -376,12 +377,12 @@ class IdeaListTile extends StatelessWidget {
                 width: 60,
                 height: 60,
                 decoration: BoxDecoration(
-                  color: idea.categoryColor.withOpacity(0.1),
+                  color: ColorUtils.getCategoryColor(idea.categoryColor).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
-                  idea.categoryIcon,
-                  color: idea.categoryColor,
+                  ColorUtils.getCategoryIcon(idea.category),
+                                  color: ColorUtils.getCategoryColor(idea.categoryColor),
                   size: 24,
                 ),
               ),
@@ -406,14 +407,14 @@ class IdeaListTile extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: idea.categoryColor.withOpacity(0.1),
+                    color: ColorUtils.getCategoryColor(idea.categoryColor).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
                     idea.category,
                     style: TextStyle(
                       fontSize: 10,
-                      color: idea.categoryColor,
+                                  color: ColorUtils.getCategoryColor(idea.categoryColor),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -520,7 +521,7 @@ class IdeaGridTile extends StatelessWidget {
                 flex: 3,
                 child: idea.images.isNotEmpty
                     ? CachedNetworkImage(
-                        imageUrl: idea.images.first.url,
+                        imageUrl: idea.images.first,
                         fit: BoxFit.cover,
                         placeholder: (context, url) => Container(
                           color: Colors.grey[200],
@@ -534,12 +535,14 @@ class IdeaGridTile extends StatelessWidget {
                         ),
                       )
                     : Container(
-                        color: idea.categoryColor.withOpacity(0.1),
+                        color: ColorUtils.getCategoryColor(idea.categoryColor).withValues(alpha: 0.1),
                         child: Center(
-                          child: Icon(
+                          child: Text(
                             idea.categoryIcon,
-                            color: idea.categoryColor,
-                            size: 32,
+                            style: TextStyle(
+                              fontSize: 32,
+                                  color: ColorUtils.getCategoryColor(idea.categoryColor),
+                            ),
                           ),
                         ),
                       ),
@@ -573,14 +576,14 @@ class IdeaGridTile extends StatelessWidget {
                           vertical: 2,
                         ),
                         decoration: BoxDecoration(
-                          color: idea.categoryColor.withOpacity(0.1),
+                          color: ColorUtils.getCategoryColor(idea.categoryColor).withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: Text(
                           idea.category,
                           style: TextStyle(
                             fontSize: 10,
-                            color: idea.categoryColor,
+                                  color: ColorUtils.getCategoryColor(idea.categoryColor),
                             fontWeight: FontWeight.w500,
                           ),
                         ),
@@ -632,4 +635,5 @@ class IdeaGridTile extends StatelessWidget {
           ),
         ),
       );
+
 }

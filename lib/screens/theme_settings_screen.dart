@@ -377,7 +377,13 @@ class ThemeSettingsScreen extends ConsumerWidget {
 
               // Пример кнопки
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Пример кнопки - функция в разработке'),
+                    ),
+                  );
+                },
                 child: const Text('Кнопка'),
               ),
             ],

@@ -435,12 +435,16 @@ class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
 
     try {
       final service = ref.read(feedServiceProvider);
-      await service.addComment(
+      final comment = FeedComment(
+        id: '', // Будет сгенерирован Firestore
         postId: widget.postId,
         userId: 'current_user', // TODO: Получить реальный ID пользователя
         userName: 'Пользователь', // TODO: Получить реальное имя пользователя
         content: _commentController.text.trim(),
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
       );
+      await service.addComment(comment);
 
       _commentController.clear();
       ref.invalidate(postCommentsProvider(widget.postId));
@@ -463,7 +467,7 @@ class CommentWidget extends ConsumerWidget {
     super.key,
     required this.comment,
   });
-  final PostComment comment;
+  final FeedComment comment;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Row(
@@ -532,10 +536,10 @@ class CommentWidget extends ConsumerWidget {
                                 ? Colors.red
                                 : Colors.grey[600],
                           ),
-                          if (comment.likes > 0) ...[
+                          if (comment.likesCount > 0) ...[
                             const SizedBox(width: 4),
                             Text(
-                              comment.likes.toString(),
+                              comment.likesCount.toString(),
                               style: TextStyle(
                                 color: Colors.grey[600],
                                 fontSize: 12,
@@ -557,8 +561,8 @@ class CommentWidget extends ConsumerWidget {
     try {
       final service = ref.read(feedServiceProvider);
       await service.likeComment(
-        commentId: comment.id,
-        userId: 'current_user', // TODO: Получить реальный ID пользователя
+        comment.id,
+        'current_user', // TODO: Получить реальный ID пользователя
       );
     } catch (e) {
       // Игнорируем ошибки

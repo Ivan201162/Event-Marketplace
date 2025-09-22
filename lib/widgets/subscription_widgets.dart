@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../models/notification_type.dart';
+import '../models/notification_template.dart';
 import '../models/subscription.dart';
 import '../models/subscription_notification.dart';
 import '../providers/subscription_providers.dart';
@@ -365,26 +365,20 @@ class SubscriptionNotificationsWidget extends ConsumerWidget {
 
       // TODO: Перейти к соответствующему экрану
       switch (notification.type) {
-        case NotificationType.newPost:
-          // Перейти к посту
+        case NotificationType.system:
+          // Перейти к системному уведомлению
           break;
-        case NotificationType.newStory:
-          // Перейти к сторису
-          break;
-        case NotificationType.newEvent:
-          // Перейти к событию
-          break;
-        case NotificationType.newPortfolio:
-          // Перейти к портфолио
-          break;
-        case NotificationType.announcement:
-          // Показать объявление
+        case NotificationType.promotion:
+          // Перейти к промо
           break;
         case NotificationType.booking:
           // Перейти к бронированию
           break;
         case NotificationType.payment:
           // Перейти к платежу
+          break;
+        case NotificationType.security:
+          // Перейти к настройкам безопасности
           break;
         case NotificationType.review:
           // Перейти к отзыву
@@ -395,17 +389,8 @@ class SubscriptionNotificationsWidget extends ConsumerWidget {
         case NotificationType.message:
           // Перейти к сообщению
           break;
-        case NotificationType.system:
-          // Показать системное уведомление
-          break;
-        case NotificationType.promotion:
-          // Перейти к акции
-          break;
         case NotificationType.reminder:
           // Показать напоминание
-          break;
-        case NotificationType.update:
-          // Показать информацию об обновлении
           break;
         case NotificationType.general:
           // Показать общее уведомление

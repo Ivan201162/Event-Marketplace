@@ -10,6 +10,9 @@ const db = admin.firestore();
 // Получение экземпляра FCM
 const messaging = admin.messaging();
 
+// Получение экземпляра Auth
+const auth = admin.auth();
+
 /**
  * Cloud Function для отправки уведомлений при создании бронирования
  */
@@ -193,7 +196,7 @@ export const sendBookingReminders = functions.pubsub
 
       for (const doc of bookingsSnapshot.docs) {
         const booking = doc.data();
-        
+
         // Получаем данные клиента
         const customerDoc = await db.collection('users').doc(booking.customerId).get();
         const customer = customerDoc.data();
@@ -267,4 +270,277 @@ function formatTime(timestamp: any): string {
     minute: '2-digit',
   });
 }
+
+/**
+ * Cloud Function для обработки VK OAuth и создания custom token
+ */
+export const vkCustomToken = functions.https.onCall(async (data, context) => {
+  try {
+    const { code } = data;
+
+    if (!code) {
+      throw new functions.https.HttpsError('invalid-argument', 'VK code is required');
+    }
+
+    // Обмениваем код на access token
+    const tokenResponse = await fetch('https://oauth.vk.com/access_token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams({
+        client_id: functions.config().vk.client_id,
+        client_secret: functions.config().vk.client_secret,
+        redirect_uri: functions.config().vk.redirect_uri,
+        code: code,
+      }),
+    });
+
+    const tokenData = await tokenResponse.json();
+
+    if (tokenData.error) {
+      throw new functions.https.HttpsError('internal', `VK token error: ${tokenData.error_description}`);
+    }
+
+    // Получаем данные пользователя из VK
+    const userResponse = await fetch(
+      `https://api.vk.com/method/users.get?user_ids=${tokenData.user_id}&fields=photo_200,domain&access_token=${tokenData.access_token}&v=5.199`
+    );
+
+    const userData = await userResponse.json();
+
+    if (userData.error) {
+      throw new functions.https.HttpsError('internal', `VK user data error: ${userData.error.error_msg}`);
+    }
+
+    const vkUser = userData.response[0];
+
+    // Создаем или находим пользователя в Firebase
+    let firebaseUser;
+    try {
+      firebaseUser = await auth.getUserByEmail(`${vkUser.id}@vk.com`);
+    } catch (error) {
+      // Пользователь не существует, создаем нового
+      firebaseUser = await auth.createUser({
+        uid: `vk_${vkUser.id}`,
+        email: `${vkUser.id}@vk.com`,
+        displayName: `${vkUser.first_name} ${vkUser.last_name}`,
+        photoURL: vkUser.photo_200,
+      });
+    }
+
+    // Создаем custom token
+    const customToken = await auth.createCustomToken(firebaseUser.uid, {
+      provider: 'vk',
+      vk_id: vkUser.id,
+      vk_domain: vkUser.domain,
+    });
+
+    // Сохраняем данные пользователя в Firestore
+    await db.collection('users').doc(firebaseUser.uid).set({
+      email: `${vkUser.id}@vk.com`,
+      displayName: `${vkUser.first_name} ${vkUser.last_name}`,
+      photoURL: vkUser.photo_200,
+      role: 'customer',
+      socialProvider: 'vk',
+      socialId: vkUser.id.toString(),
+      vkDomain: vkUser.domain,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    }, { merge: true });
+
+    return { firebaseCustomToken: customToken };
+  } catch (error) {
+    console.error('VK Custom Token Error:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to create VK custom token');
+  }
+});
+
+/**
+ * Cloud Function для расчета комиссий
+ */
+export const calculateCommission = functions.https.onCall(async (data, context) => {
+  try {
+    const { amount, organizationType = 'individual' } = data;
+
+    if (!amount || amount <= 0) {
+      throw new functions.https.HttpsError('invalid-argument', 'Valid amount is required');
+    }
+
+    // Комиссия платформы (5% для всех)
+    const platformCommission = amount * 0.05;
+
+    // НДС (20% для коммерческих организаций)
+    let vat = 0;
+    if (organizationType === 'commercial') {
+      vat = amount * 0.20;
+    }
+
+    // Итоговая сумма к выплате специалисту
+    const specialistAmount = amount - platformCommission - vat;
+
+    return {
+      totalAmount: amount,
+      platformCommission,
+      vat,
+      specialistAmount,
+      breakdown: {
+        originalAmount: amount,
+        platformFee: platformCommission,
+        vatFee: vat,
+        netAmount: specialistAmount,
+      }
+    };
+  } catch (error) {
+    console.error('Commission Calculation Error:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to calculate commission');
+  }
+});
+
+/**
+ * Cloud Function для обработки платежей
+ */
+export const processPayment = functions.firestore
+  .document('payments/{paymentId}')
+  .onCreate(async (snap, context) => {
+    const payment = snap.data();
+    const paymentId = context.params.paymentId;
+
+    try {
+      // Здесь должна быть интеграция с платежной системой
+      // Пока просто обновляем статус
+      await snap.ref.update({
+        status: 'processing',
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+      // Симулируем обработку платежа
+      setTimeout(async () => {
+        try {
+          await snap.ref.update({
+            status: 'completed',
+            completedAt: admin.firestore.FieldValue.serverTimestamp(),
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          });
+
+          // Отправляем уведомление о завершении платежа
+          const userDoc = await db.collection('users').doc(payment.userId).get();
+          const user = userDoc.data();
+
+          if (user && user.fcmToken) {
+            await messaging.send({
+              token: user.fcmToken,
+              notification: {
+                title: 'Платеж завершен',
+                body: `Ваш платеж на сумму ${payment.amount} ${payment.currency} успешно обработан`,
+              },
+              data: {
+                type: 'payment_completed',
+                paymentId: paymentId,
+                amount: payment.amount.toString(),
+                currency: payment.currency,
+              },
+            });
+          }
+        } catch (error) {
+          console.error('Payment completion error:', error);
+          await snap.ref.update({
+            status: 'failed',
+            failedAt: admin.firestore.FieldValue.serverTimestamp(),
+            updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          });
+        }
+      }, 5000); // 5 секунд задержки для симуляции
+
+      console.log(`Payment ${paymentId} processing started`);
+    } catch (error) {
+      console.error('Payment processing error:', error);
+      await snap.ref.update({
+        status: 'failed',
+        failedAt: admin.firestore.FieldValue.serverTimestamp(),
+        updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+      });
+    }
+  });
+
+/**
+ * Cloud Function для очистки истекших бронирований
+ */
+export const cleanupExpiredBookings = functions.pubsub
+  .schedule('0 2 * * *') // Каждый день в 2:00
+  .timeZone('Europe/Moscow')
+  .onRun(async (context) => {
+    try {
+      const now = admin.firestore.Timestamp.now();
+
+      // Находим истекшие бронирования
+      const expiredBookings = await db
+        .collection('bookings')
+        .where('expiresAt', '<=', now)
+        .where('status', '==', 'pending')
+        .get();
+
+      const batch = db.batch();
+
+      expiredBookings.docs.forEach((doc) => {
+        batch.update(doc.ref, {
+          status: 'cancelled',
+          updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+          cancellationReason: 'expired',
+        });
+      });
+
+      await batch.commit();
+
+      console.log(`Cleaned up ${expiredBookings.size} expired bookings`);
+    } catch (error) {
+      console.error('Cleanup expired bookings error:', error);
+    }
+  });
+
+/**
+ * Cloud Function для отправки уведомлений о годовщинах
+ */
+export const sendAnniversaryReminders = functions.pubsub
+  .schedule('0 9 * * *') // Каждый день в 9:00
+  .timeZone('Europe/Moscow')
+  .onRun(async (context) => {
+    try {
+      const today = new Date();
+      const todayString = `${today.getMonth() + 1}-${today.getDate()}`;
+
+      // Находим пользователей с годовщинами сегодня
+      const usersSnapshot = await db
+        .collection('users')
+        .where('anniversaryRemindersEnabled', '==', true)
+        .where('weddingDate', '!=', null)
+        .get();
+
+      for (const doc of usersSnapshot.docs) {
+        const user = doc.data();
+        const weddingDate = user.weddingDate.toDate();
+        const weddingString = `${weddingDate.getMonth() + 1}-${weddingDate.getDate()}`;
+
+        if (weddingString === todayString && user.fcmToken) {
+          const years = today.getFullYear() - weddingDate.getFullYear();
+
+          await messaging.send({
+            token: user.fcmToken,
+            notification: {
+              title: 'Поздравляем с годовщиной!',
+              body: `Сегодня ${years} лет вашей свадьбы! 🎉`,
+            },
+            data: {
+              type: 'anniversary_reminder',
+              years: years.toString(),
+            },
+          });
+        }
+      }
+
+      console.log('Anniversary reminders sent');
+    } catch (error) {
+      console.error('Anniversary reminders error:', error);
+    }
+  });
 

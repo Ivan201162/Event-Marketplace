@@ -333,6 +333,12 @@ class IdeaComment {
   final int likesCount;
   final String? parentCommentId;
 
+  /// Геттеры для совместимости с виджетами
+  String? get authorPhotoUrl => authorAvatar;
+
+  /// Проверить, лайкнул ли пользователь
+  bool isLikedBy(String userId) => likedBy.contains(userId);
+
   /// Преобразовать в Map
   Map<String, dynamic> toMap() => {
         'id': id,

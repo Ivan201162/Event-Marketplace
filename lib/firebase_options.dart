@@ -47,6 +47,7 @@ class DefaultFirebaseOptions {
     projectId: 'event-marketplace-app',
     authDomain: 'event-marketplace-app.firebaseapp.com',
     storageBucket: 'event-marketplace-app.appspot.com',
+    measurementId: 'G-XXXXXXXXXX',
   );
 
   static const FirebaseOptions android = FirebaseOptions(

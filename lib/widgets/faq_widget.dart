@@ -41,7 +41,7 @@ class FAQWidget extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           Icon(
-                            faqItem.category.categoryIcon,
+                            faqItem.category.icon,
                             size: 14,
                             color: Colors.blue,
                           ),
@@ -187,7 +187,7 @@ class FAQListTile extends StatelessWidget {
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
-            faqItem.category.categoryIcon,
+            faqItem.category.icon,
             color: Colors.blue,
             size: 24,
           ),
@@ -276,7 +276,7 @@ class FAQGridTile extends StatelessWidget {
                 Row(
                   children: [
                     Icon(
-                      faqItem.category.categoryIcon,
+                      faqItem.category.icon,
                       size: 20,
                       color: Colors.blue,
                     ),

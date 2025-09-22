@@ -298,7 +298,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
         .push(
       MaterialPageRoute(
         builder: (context) => CreateEventScreen(
-          event: event,
+          calendarEvent: event,
         ),
       ),
     )

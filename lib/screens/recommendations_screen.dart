@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/user.dart';
+import '../models/recommendation.dart';
+import '../models/specialist_recommendation.dart';
 import '../services/recommendation_engine.dart';
 
 /// Экран рекомендаций
@@ -64,9 +66,9 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
                 controller: _tabController,
                 children: [
                   _buildAllRecommendations(),
-                  _buildRecommendationsByType(RecommendationType.specialist),
-                  _buildRecommendationsByType(RecommendationType.event),
-                  _buildRecommendationsByType(RecommendationType.idea),
+                  _buildRecommendationsByType(RecommendationType.similarSpecialists),
+                  _buildRecommendationsByType(RecommendationType.trending),
+                  _buildRecommendationsByType(RecommendationType.popularInCategory),
                 ],
               ),
       );
@@ -190,21 +192,37 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
     Color color = Colors.grey;
 
     switch (type) {
-      case RecommendationType.specialist:
+      case RecommendationType.similarSpecialists:
         iconData = Icons.person;
         color = Colors.blue;
         break;
-      case RecommendationType.event:
-        iconData = Icons.event;
+      case RecommendationType.trending:
+        iconData = Icons.trending_up;
         color = Colors.green;
         break;
-      case RecommendationType.idea:
+      case RecommendationType.popularInCategory:
         iconData = Icons.lightbulb;
         color = Colors.orange;
         break;
-      case RecommendationType.category:
-        iconData = Icons.category;
+      case RecommendationType.nearby:
+        iconData = Icons.location_on;
         color = Colors.purple;
+        break;
+      case RecommendationType.recentlyViewed:
+        iconData = Icons.visibility;
+        color = Colors.indigo;
+        break;
+      case RecommendationType.basedOnHistory:
+        iconData = Icons.history;
+        color = Colors.teal;
+        break;
+      case RecommendationType.priceRange:
+        iconData = Icons.attach_money;
+        color = Colors.green;
+        break;
+      case RecommendationType.availability:
+        iconData = Icons.check_circle;
+        color = Colors.green;
         break;
     }
 
@@ -216,21 +234,37 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
     Color color = Colors.grey;
 
     switch (type) {
-      case RecommendationType.specialist:
+      case RecommendationType.similarSpecialists:
         label = 'Специалист';
         color = Colors.blue;
         break;
-      case RecommendationType.event:
-        label = 'Событие';
+      case RecommendationType.trending:
+        label = 'Тренды';
         color = Colors.green;
         break;
-      case RecommendationType.idea:
-        label = 'Идея';
+      case RecommendationType.popularInCategory:
+        label = 'Популярное';
         color = Colors.orange;
         break;
-      case RecommendationType.category:
-        label = 'Категория';
+      case RecommendationType.nearby:
+        label = 'Рядом';
         color = Colors.purple;
+        break;
+      case RecommendationType.basedOnHistory:
+        label = 'На основе истории';
+        color = Colors.teal;
+        break;
+      case RecommendationType.priceRange:
+        label = 'В вашем ценовом диапазоне';
+        color = Colors.green;
+        break;
+      case RecommendationType.availability:
+        label = 'Доступные сейчас';
+        color = Colors.green;
+        break;
+      case RecommendationType.recentlyViewed:
+        label = 'Недавно просмотренные';
+        color = Colors.indigo;
         break;
     }
 
@@ -301,21 +335,37 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
 
     if (type != null) {
       switch (type) {
-        case RecommendationType.specialist:
+        case RecommendationType.similarSpecialists:
           message = 'Нет рекомендаций специалистов';
           icon = Icons.person_off;
           break;
-        case RecommendationType.event:
-          message = 'Нет рекомендаций событий';
-          icon = Icons.event_busy;
+        case RecommendationType.trending:
+          message = 'Нет трендовых рекомендаций';
+          icon = Icons.trending_flat;
           break;
-        case RecommendationType.idea:
-          message = 'Нет рекомендаций идей';
+        case RecommendationType.popularInCategory:
+          message = 'Нет популярных рекомендаций';
           icon = Icons.lightbulb_outline;
           break;
-        case RecommendationType.category:
-          message = 'Нет рекомендаций категорий';
-          icon = Icons.category;
+        case RecommendationType.nearby:
+          message = 'Нет рекомендаций рядом';
+          icon = Icons.location_off;
+          break;
+      case RecommendationType.basedOnHistory:
+        message = 'Нет рекомендаций на основе истории';
+        icon = Icons.history_edu;
+        break;
+      case RecommendationType.priceRange:
+        message = 'Нет рекомендаций в вашем ценовом диапазоне';
+        icon = Icons.attach_money;
+        break;
+      case RecommendationType.availability:
+        message = 'Нет доступных сейчас специалистов';
+        icon = Icons.check_circle_outline;
+        break;
+        case RecommendationType.recentlyViewed:
+          message = 'Нет недавно просмотренных';
+          icon = Icons.visibility_off;
           break;
       }
     } else {
@@ -345,17 +395,29 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
 
   void _handleRecommendationTap(Recommendation recommendation) {
     switch (recommendation.type) {
-      case RecommendationType.specialist:
+      case RecommendationType.similarSpecialists:
         _showSpecialistDetails(recommendation);
         break;
-      case RecommendationType.event:
+      case RecommendationType.trending:
         _showEventDetails(recommendation);
         break;
-      case RecommendationType.idea:
+      case RecommendationType.popularInCategory:
         _showIdeaDetails(recommendation);
         break;
-      case RecommendationType.category:
+      case RecommendationType.nearby:
         _showCategoryDetails(recommendation);
+        break;
+      case RecommendationType.recentlyViewed:
+        _showRecentlyViewedDetails(recommendation);
+        break;
+      case RecommendationType.basedOnHistory:
+        _showHistoryBasedDetails(recommendation);
+        break;
+      case RecommendationType.priceRange:
+        _showPriceRangeDetails(recommendation);
+        break;
+      case RecommendationType.availability:
+        _showAvailabilityDetails(recommendation);
         break;
     }
   }
@@ -500,10 +562,10 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
         'limit': 50,
       };
       final recommendations =
-          await _recommendationEngine.getRecommendations();
+          await _recommendationEngine.getRecommendations(userId: _currentUserId!);
 
       setState(() {
-        _recommendations = recommendations;
+        _recommendations = recommendations.map((rec) => rec.recommendation).toList();
         _isLoading = false;
       });
     } catch (e) {
@@ -517,6 +579,116 @@ class _RecommendationsScreenState extends ConsumerState<RecommendationsScreen>
         );
       }
     }
+  }
+
+  void _showRecentlyViewedDetails(Recommendation recommendation) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(recommendation.title),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(recommendation.description),
+            const SizedBox(height: 8),
+            if (recommendation.metadata['viewedAt'] != null)
+              Text('Просмотрено: ${recommendation.metadata['viewedAt']}'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Закрыть'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showHistoryBasedDetails(Recommendation recommendation) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(recommendation.title),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(recommendation.description),
+            const SizedBox(height: 8),
+            if (recommendation.metadata['historyType'] != null)
+              Text('Тип истории: ${recommendation.metadata['historyType']}'),
+            if (recommendation.metadata['confidence'] != null)
+              Text('Уверенность: ${recommendation.metadata['confidence']}%'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Закрыть'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showPriceRangeDetails(Recommendation recommendation) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(recommendation.title),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(recommendation.description),
+            const SizedBox(height: 8),
+            if (recommendation.metadata['minPrice'] != null)
+              Text('Мин. цена: ${recommendation.metadata['minPrice']} ₽'),
+            if (recommendation.metadata['maxPrice'] != null)
+              Text('Макс. цена: ${recommendation.metadata['maxPrice']} ₽'),
+            if (recommendation.metadata['averagePrice'] != null)
+              Text('Средняя цена: ${recommendation.metadata['averagePrice']} ₽'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Закрыть'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showAvailabilityDetails(Recommendation recommendation) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(recommendation.title),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(recommendation.description),
+            const SizedBox(height: 8),
+            if (recommendation.metadata['availableUntil'] != null)
+              Text('Доступен до: ${recommendation.metadata['availableUntil']}'),
+            if (recommendation.metadata['responseTime'] != null)
+              Text('Время ответа: ${recommendation.metadata['responseTime']}'),
+            if (recommendation.metadata['isOnline'] != null)
+              Text('Статус: ${recommendation.metadata['isOnline'] ? 'Онлайн' : 'Офлайн'}'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Закрыть'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _refreshRecommendations() async {

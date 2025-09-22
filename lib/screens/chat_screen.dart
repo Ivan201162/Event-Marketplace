@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/chat.dart';
 import '../models/chat_message.dart' as chat_message;
+import '../providers/auth_providers.dart';
 import '../providers/chat_providers.dart';
 
 /// Экран чата
@@ -118,9 +119,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         ),
       );
 
-  Widget _buildMessageBubble(ChatMessage message) {
-    final isMe =
-        message.senderId == 'current_user_id'; // TODO: Получить реальный ID
+  Widget _buildMessageBubble(chat_message.ChatMessage message) {
+    // Получаем ID текущего пользователя из провайдера
+    final currentUserId = ref.read(currentUserProvider).value?.id ?? '';
+    final isMe = message.senderId == currentUserId;
 
     return Align(
       alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
@@ -128,7 +130,8 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
         constraints: BoxConstraints(
-          maxWidth: MediaQuery.of(context).size.width * 0.7,
+          maxWidth: MediaQuery.of(context).size.width * 0.75,
+          minWidth: 100,
         ),
         decoration: BoxDecoration(
           color:
@@ -140,7 +143,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           children: [
             if (!isMe) ...[
               Text(
-                message.senderName,
+                message.senderName ?? 'Неизвестный',
                 style: TextStyle(
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
@@ -157,7 +160,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             ),
             const SizedBox(height: 4),
             Text(
-              _formatTime(message.createdAt),
+              _formatTime(message.timestamp),
               style: TextStyle(
                 fontSize: 10,
                 color: isMe ? Colors.white70 : Colors.grey[600],
@@ -220,15 +223,24 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     final content = _messageController.text.trim();
     if (content.isEmpty) return;
 
-    // Отправка сообщения
-    // TODO: Implement message sending
-    // ref.read(chatStateProvider.notifier).sendMessage(
-    //   chatId: widget.chatId,
-    //   content: content,
-    // );
-
-    _messageController.clear();
-    _scrollToBottom();
+    // Отправка сообщения через провайдер
+    try {
+      ref.read(chatStateProvider.notifier).sendMessage(
+        widget.chatId,
+        content,
+      );
+      
+      _messageController.clear();
+      _scrollToBottom();
+    } catch (e) {
+      // Показываем ошибку пользователю
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Ошибка отправки сообщения: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 
   void _scrollToBottom() {

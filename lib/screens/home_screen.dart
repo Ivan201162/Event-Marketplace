@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../core/app_theme.dart';
+import '../core/constants/app_routes.dart';
 import '../core/responsive_utils.dart';
 import '../models/user.dart';
 import '../providers/user_role_provider.dart';
@@ -195,7 +197,9 @@ class HomeScreen extends ConsumerWidget {
                               ),
                         ),
                         TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            context.push(AppRoutes.search);
+                          },
                           child: const Text('Все'),
                         ),
                       ],
@@ -216,11 +220,7 @@ class HomeScreen extends ConsumerWidget {
                       children: [
                         AnimatedButton(
                           onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Поиск специалистов'),
-                              ),
-                            );
+                            context.push(AppRoutes.search);
                           },
                           child: _buildModernQuickActionCard(
                             context,
@@ -230,20 +230,14 @@ class HomeScreen extends ConsumerWidget {
                             gradient: const LinearGradient(
                               colors: [Color(0xFF3B82F6), Color(0xFF1D4ED8)],
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              context.push(AppRoutes.search);
+                            },
                           ),
                         ),
                         AnimatedButton(
                           onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  userRole == UserRole.customer
-                                      ? 'Мои заявки'
-                                      : 'Заявки клиентов',
-                                ),
-                              ),
-                            );
+                            context.push(AppRoutes.myBookings);
                           },
                           child: _buildModernQuickActionCard(
                             context,
@@ -259,16 +253,14 @@ class HomeScreen extends ConsumerWidget {
                             gradient: const LinearGradient(
                               colors: [Color(0xFF10B981), Color(0xFF059669)],
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              context.push(AppRoutes.myBookings);
+                            },
                           ),
                         ),
                         AnimatedButton(
                           onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Календарь событий'),
-                              ),
-                            );
+                            context.push(AppRoutes.calendar);
                           },
                           child: _buildModernQuickActionCard(
                             context,
@@ -278,14 +270,14 @@ class HomeScreen extends ConsumerWidget {
                             gradient: const LinearGradient(
                               colors: [Color(0xFFF59E0B), Color(0xFFD97706)],
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              context.push(AppRoutes.calendar);
+                            },
                           ),
                         ),
                         AnimatedButton(
                           onPressed: () {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Сообщения')),
-                            );
+                            context.push(AppRoutes.chat);
                           },
                           child: _buildModernQuickActionCard(
                             context,
@@ -295,7 +287,9 @@ class HomeScreen extends ConsumerWidget {
                             gradient: const LinearGradient(
                               colors: [Color(0xFF8B5CF6), Color(0xFF7C3AED)],
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              context.push(AppRoutes.chat);
+                            },
                           ),
                         ),
                       ],
@@ -737,9 +731,26 @@ class HomeScreen extends ConsumerWidget {
         padding: const EdgeInsets.only(bottom: 12),
         child: AnimatedButton(
           onPressed: () {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(title)),
-            );
+            // Навигация в зависимости от типа действия
+            switch (title) {
+              case 'Найти специалиста':
+                context.push(AppRoutes.search);
+                break;
+              case 'Мои заявки':
+              case 'Заявки клиентов':
+                context.push(AppRoutes.myBookings);
+                break;
+              case 'Календарь':
+                context.push(AppRoutes.calendar);
+                break;
+              case 'Сообщения':
+                context.push(AppRoutes.chat);
+                break;
+              default:
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('$title - функция в разработке')),
+                );
+            }
           },
           child: Container(
             padding: const EdgeInsets.all(16),
@@ -845,9 +856,26 @@ class HomeScreen extends ConsumerWidget {
   ) =>
       AnimatedButton(
         onPressed: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(title)),
-          );
+          // Навигация в зависимости от типа действия
+          switch (title) {
+            case 'Найти специалиста':
+              context.push(AppRoutes.search);
+              break;
+            case 'Мои заявки':
+            case 'Заявки клиентов':
+              context.push(AppRoutes.myBookings);
+              break;
+            case 'Календарь':
+              context.push(AppRoutes.calendar);
+              break;
+            case 'Сообщения':
+              context.push(AppRoutes.chat);
+              break;
+            default:
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text('$title - функция в разработке')),
+              );
+          }
         },
         child: Container(
           decoration: BoxDecoration(

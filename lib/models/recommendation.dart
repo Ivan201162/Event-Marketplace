@@ -90,6 +90,10 @@ class Recommendation {
     required this.score,
     required this.reason,
     required this.createdAt,
+    this.title = '',
+    this.description = '',
+    this.imageUrl,
+    this.metadata = const {},
   });
 
   factory Recommendation.fromMap(Map<String, dynamic> map) => Recommendation(
@@ -101,6 +105,10 @@ class Recommendation {
         score: (map['score'] as num).toDouble(),
         reason: map['reason'] as String,
         createdAt: DateTime.parse(map['createdAt'] as String),
+        title: map['title'] as String? ?? '',
+        description: map['description'] as String? ?? '',
+        imageUrl: map['imageUrl'] as String?,
+        metadata: Map<String, dynamic>.from(map['metadata'] ?? {}),
       );
 
   final String id;
@@ -108,6 +116,10 @@ class Recommendation {
   final double score;
   final String reason;
   final DateTime createdAt;
+  final String title;
+  final String description;
+  final String? imageUrl;
+  final Map<String, dynamic> metadata;
 
   Map<String, dynamic> toMap() => {
         'id': id,
@@ -115,6 +127,10 @@ class Recommendation {
         'score': score,
         'reason': reason,
         'createdAt': createdAt.toIso8601String(),
+        'title': title,
+        'description': description,
+        'imageUrl': imageUrl,
+        'metadata': metadata,
       };
 
   @override

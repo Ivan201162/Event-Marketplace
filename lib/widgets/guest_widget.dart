@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/guest.dart';
+import '../utils/color_utils.dart';
 
 /// Виджет гостя
 class GuestWidget extends StatelessWidget {
@@ -65,7 +66,7 @@ class GuestWidget extends StatelessWidget {
 
                       // Email
                       Text(
-                        guest.guestEmail,
+                        guest.guestEmail ?? '',
                         style: TextStyle(
                           fontSize: 14,
                           color: Colors.grey[600],
@@ -96,17 +97,17 @@ class GuestWidget extends StatelessWidget {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: guest.statusColor.withOpacity(0.1),
+                              color: ColorUtils.getStatusColor(guest.statusColor).withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: guest.statusColor.withOpacity(0.3),
+                                color: ColorUtils.getStatusColor(guest.statusColor).withValues(alpha: 0.3),
                               ),
                             ),
                             child: Text(
                               guest.statusText,
                               style: TextStyle(
                                 fontSize: 12,
-                                color: guest.statusColor,
+                                color: ColorUtils.getStatusColor(guest.statusColor),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -262,7 +263,7 @@ class GuestListTile extends StatelessWidget {
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(guest.guestEmail),
+            Text(guest.guestEmail ?? ''),
             if (guest.guestPhone != null) Text(guest.guestPhone!),
             const SizedBox(height: 4),
             Row(
@@ -271,17 +272,17 @@ class GuestListTile extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: guest.statusColor.withOpacity(0.1),
+                    color: ColorUtils.getStatusColor(guest.statusColor).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: guest.statusColor.withOpacity(0.3),
+                      color: ColorUtils.getStatusColor(guest.statusColor).withValues(alpha: 0.3),
                     ),
                   ),
                   child: Text(
                     guest.statusText,
                     style: TextStyle(
                       fontSize: 12,
-                      color: guest.statusColor,
+                      color: ColorUtils.getStatusColor(guest.statusColor),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -409,17 +410,17 @@ class GuestGridTile extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: guest.statusColor.withOpacity(0.1),
+                    color: ColorUtils.getStatusColor(guest.statusColor).withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: guest.statusColor.withOpacity(0.3),
+                      color: ColorUtils.getStatusColor(guest.statusColor).withValues(alpha: 0.3),
                     ),
                   ),
                   child: Text(
                     guest.statusText,
                     style: TextStyle(
                       fontSize: 10,
-                      color: guest.statusColor,
+                      color: ColorUtils.getStatusColor(guest.statusColor),
                       fontWeight: FontWeight.w500,
                     ),
                   ),
@@ -482,7 +483,7 @@ class GuestStatsWidget extends StatelessWidget {
 
               // Основная информация
               _buildInfoRow('Имя', guest.guestName),
-              _buildInfoRow('Email', guest.guestEmail),
+              _buildInfoRow('Email', guest.guestEmail ?? ''),
               if (guest.guestPhone != null)
                 _buildInfoRow('Телефон', guest.guestPhone!),
               _buildInfoRow('Статус', guest.statusText),
@@ -542,4 +543,5 @@ class GuestStatsWidget extends StatelessWidget {
 
   String _formatDateTime(DateTime dateTime) =>
       '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+
 }
