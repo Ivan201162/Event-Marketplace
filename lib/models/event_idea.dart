@@ -1,144 +1,351 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Модель идеи для мероприятия
-class EventIdea {
-  // помещение, улица, смешанный
+/// Тип идеи мероприятия
+enum EventIdeaType {
+  wedding, // Свадьба
+  birthday, // День рождения
+  corporate, // Корпоратив
+  anniversary, // Годовщина
+  graduation, // Выпускной
+  holiday, // Праздник
+  private, // Частное мероприятие
+  other, // Другое
+}
 
-  EventIdea({
+/// Категория идеи
+enum EventIdeaCategory {
+  decoration, // Оформление
+  entertainment, // Развлечения
+  catering, // Кейтеринг
+  photography, // Фотография
+  music, // Музыка
+  venue, // Площадка
+  planning, // Планирование
+  other, // Другое
+}
+
+/// Модель идеи мероприятия
+class EventIdea {
+  const EventIdea({
     required this.id,
     required this.title,
     required this.description,
+    required this.type,
     required this.category,
-    required this.imageUrls,
-    required this.videoUrls,
+    required this.imageUrl,
+    required this.createdAt,
+    this.updatedAt,
     this.authorId,
     this.authorName,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    required this.tags,
+    this.tags = const [],
+    this.budgetRange,
+    this.duration,
+    this.guestCount,
+    this.location,
+    this.season,
+    this.style,
+    this.colorScheme,
+    this.isPublic = true,
     this.likesCount = 0,
     this.savesCount = 0,
-    this.isPublic = true,
-    this.eventType,
-    this.budget,
-    this.season,
-    this.venue,
-  })  : createdAt = createdAt ?? DateTime.now(),
-        updatedAt = updatedAt ?? DateTime.now();
+    this.viewsCount = 0,
+    this.isFeatured = false,
+    this.relatedServices = const [],
+    this.estimatedCost,
+    this.difficultyLevel,
+    this.timeToPrepare,
+  });
 
-  /// Создание из документа Firestore
+  /// Создать из документа Firestore
   factory EventIdea.fromDocument(DocumentSnapshot doc) {
     final data = doc.data()! as Map<String, dynamic>;
     return EventIdea(
       id: doc.id,
       title: data['title'] ?? '',
       description: data['description'] ?? '',
-      category: data['category'] ?? '',
-      imageUrls: List<String>.from(data['imageUrls'] ?? []),
-      videoUrls: List<String>.from(data['videoUrls'] ?? []),
-      authorId: data['authorId'],
-      authorName: data['authorName'],
+      type: EventIdeaType.values.firstWhere(
+        (e) => e.name == (data['type'] as String?),
+        orElse: () => EventIdeaType.other,
+      ),
+      category: EventIdeaCategory.values.firstWhere(
+        (e) => e.name == (data['category'] as String?),
+        orElse: () => EventIdeaCategory.other,
+      ),
+      imageUrl: data['imageUrl'] ?? '',
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] as Timestamp).toDate()
           : DateTime.now(),
       updatedAt: data['updatedAt'] != null
           ? (data['updatedAt'] as Timestamp).toDate()
-          : DateTime.now(),
+          : null,
+      authorId: data['authorId'] as String?,
+      authorName: data['authorName'] as String?,
       tags: List<String>.from(data['tags'] ?? []),
+      budgetRange: data['budgetRange'] as String?,
+      duration: data['duration'] as String?,
+      guestCount: data['guestCount'] as String?,
+      location: data['location'] as String?,
+      season: data['season'] as String?,
+      style: data['style'] as String?,
+      colorScheme: data['colorScheme'] as String?,
+      isPublic: data['isPublic'] ?? true,
       likesCount: data['likesCount'] ?? 0,
       savesCount: data['savesCount'] ?? 0,
-      isPublic: data['isPublic'] ?? true,
-      eventType: data['eventType'],
-      budget: data['budget'],
-      season: data['season'],
-      venue: data['venue'],
+      viewsCount: data['viewsCount'] ?? 0,
+      isFeatured: data['isFeatured'] ?? false,
+      relatedServices: List<String>.from(data['relatedServices'] ?? []),
+      estimatedCost: (data['estimatedCost'] as num?)?.toDouble(),
+      difficultyLevel: data['difficultyLevel'] as String?,
+      timeToPrepare: data['timeToPrepare'] as String?,
     );
   }
+
+  /// Создать из Map
+  factory EventIdea.fromMap(Map<String, dynamic> map) => EventIdea(
+        id: map['id'] ?? '',
+        title: map['title'] ?? '',
+        description: map['description'] ?? '',
+        type: EventIdeaType.values.firstWhere(
+          (e) => e.name == map['type'],
+          orElse: () => EventIdeaType.other,
+        ),
+        category: EventIdeaCategory.values.firstWhere(
+          (e) => e.name == map['category'],
+          orElse: () => EventIdeaCategory.other,
+        ),
+        imageUrl: map['imageUrl'] ?? '',
+        createdAt: map['createdAt'] != null
+            ? (map['createdAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        updatedAt: map['updatedAt'] != null
+            ? (map['updatedAt'] as Timestamp).toDate()
+            : null,
+        authorId: map['authorId'] as String?,
+        authorName: map['authorName'] as String?,
+        tags: List<String>.from(map['tags'] ?? []),
+        budgetRange: map['budgetRange'] as String?,
+        duration: map['duration'] as String?,
+        guestCount: map['guestCount'] as String?,
+        location: map['location'] as String?,
+        season: map['season'] as String?,
+        style: map['style'] as String?,
+        colorScheme: map['colorScheme'] as String?,
+        isPublic: map['isPublic'] ?? true,
+        likesCount: map['likesCount'] ?? 0,
+        savesCount: map['savesCount'] ?? 0,
+        viewsCount: map['viewsCount'] ?? 0,
+        isFeatured: map['isFeatured'] ?? false,
+        relatedServices: List<String>.from(map['relatedServices'] ?? []),
+        estimatedCost: (map['estimatedCost'] as num?)?.toDouble(),
+        difficultyLevel: map['difficultyLevel'] as String?,
+        timeToPrepare: map['timeToPrepare'] as String?,
+      );
+
   final String id;
   final String title;
   final String description;
-  final String category;
-  final List<String> imageUrls;
-  final List<String> videoUrls;
+  final EventIdeaType type;
+  final EventIdeaCategory category;
+  final String imageUrl;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
   final String? authorId;
   final String? authorName;
-  final DateTime createdAt;
-  final DateTime updatedAt;
   final List<String> tags;
+  final String? budgetRange;
+  final String? duration;
+  final String? guestCount;
+  final String? location;
+  final String? season;
+  final String? style;
+  final String? colorScheme;
+  final bool isPublic;
   final int likesCount;
   final int savesCount;
-  final bool isPublic;
-  final String? eventType; // свадьба, день рождения, корпоратив и т.д.
-  final String? budget; // бюджетный, средний, премиум
-  final String? season; // весна, лето, осень, зима
-  final String? venue;
+  final int viewsCount;
+  final bool isFeatured;
+  final List<String> relatedServices;
+  final double? estimatedCost;
+  final String? difficultyLevel;
+  final String? timeToPrepare;
 
-  /// Преобразование в Map для Firestore
+  /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
         'title': title,
         'description': description,
-        'category': category,
-        'imageUrls': imageUrls,
-        'videoUrls': videoUrls,
+        'type': type.name,
+        'category': category.name,
+        'imageUrl': imageUrl,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
         'authorId': authorId,
         'authorName': authorName,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
         'tags': tags,
+        'budgetRange': budgetRange,
+        'duration': duration,
+        'guestCount': guestCount,
+        'location': location,
+        'season': season,
+        'style': style,
+        'colorScheme': colorScheme,
+        'isPublic': isPublic,
         'likesCount': likesCount,
         'savesCount': savesCount,
-        'isPublic': isPublic,
-        'eventType': eventType,
-        'budget': budget,
-        'season': season,
-        'venue': venue,
+        'viewsCount': viewsCount,
+        'isFeatured': isFeatured,
+        'relatedServices': relatedServices,
+        'estimatedCost': estimatedCost,
+        'difficultyLevel': difficultyLevel,
+        'timeToPrepare': timeToPrepare,
       };
 
-  /// Копирование с изменениями
+  /// Копировать с изменениями
   EventIdea copyWith({
     String? id,
     String? title,
     String? description,
-    String? category,
-    List<String>? imageUrls,
-    List<String>? videoUrls,
-    String? authorId,
-    String? authorName,
+    EventIdeaType? type,
+    EventIdeaCategory? category,
+    String? imageUrl,
     DateTime? createdAt,
     DateTime? updatedAt,
+    String? authorId,
+    String? authorName,
     List<String>? tags,
+    String? budgetRange,
+    String? duration,
+    String? guestCount,
+    String? location,
+    String? season,
+    String? style,
+    String? colorScheme,
+    bool? isPublic,
     int? likesCount,
     int? savesCount,
-    bool? isPublic,
-    String? eventType,
-    String? budget,
-    String? season,
-    String? venue,
+    int? viewsCount,
+    bool? isFeatured,
+    List<String>? relatedServices,
+    double? estimatedCost,
+    String? difficultyLevel,
+    String? timeToPrepare,
   }) =>
       EventIdea(
         id: id ?? this.id,
         title: title ?? this.title,
         description: description ?? this.description,
+        type: type ?? this.type,
         category: category ?? this.category,
-        imageUrls: imageUrls ?? this.imageUrls,
-        videoUrls: videoUrls ?? this.videoUrls,
-        authorId: authorId ?? this.authorId,
-        authorName: authorName ?? this.authorName,
+        imageUrl: imageUrl ?? this.imageUrl,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
+        authorId: authorId ?? this.authorId,
+        authorName: authorName ?? this.authorName,
         tags: tags ?? this.tags,
+        budgetRange: budgetRange ?? this.budgetRange,
+        duration: duration ?? this.duration,
+        guestCount: guestCount ?? this.guestCount,
+        location: location ?? this.location,
+        season: season ?? this.season,
+        style: style ?? this.style,
+        colorScheme: colorScheme ?? this.colorScheme,
+        isPublic: isPublic ?? this.isPublic,
         likesCount: likesCount ?? this.likesCount,
         savesCount: savesCount ?? this.savesCount,
-        isPublic: isPublic ?? this.isPublic,
-        eventType: eventType ?? this.eventType,
-        budget: budget ?? this.budget,
-        season: season ?? this.season,
-        venue: venue ?? this.venue,
+        viewsCount: viewsCount ?? this.viewsCount,
+        isFeatured: isFeatured ?? this.isFeatured,
+        relatedServices: relatedServices ?? this.relatedServices,
+        estimatedCost: estimatedCost ?? this.estimatedCost,
+        difficultyLevel: difficultyLevel ?? this.difficultyLevel,
+        timeToPrepare: timeToPrepare ?? this.timeToPrepare,
       );
 
-  @override
-  String toString() =>
-      'EventIdea(id: $id, title: $title, category: $category, authorId: $authorId)';
+  /// Получить отображаемое название типа
+  String get typeDisplayName {
+    switch (type) {
+      case EventIdeaType.wedding:
+        return 'Свадьба';
+      case EventIdeaType.birthday:
+        return 'День рождения';
+      case EventIdeaType.corporate:
+        return 'Корпоратив';
+      case EventIdeaType.anniversary:
+        return 'Годовщина';
+      case EventIdeaType.graduation:
+        return 'Выпускной';
+      case EventIdeaType.holiday:
+        return 'Праздник';
+      case EventIdeaType.private:
+        return 'Частное мероприятие';
+      case EventIdeaType.other:
+        return 'Другое';
+    }
+  }
+
+  /// Получить отображаемое название категории
+  String get categoryDisplayName {
+    switch (category) {
+      case EventIdeaCategory.decoration:
+        return 'Оформление';
+      case EventIdeaCategory.entertainment:
+        return 'Развлечения';
+      case EventIdeaCategory.catering:
+        return 'Кейтеринг';
+      case EventIdeaCategory.photography:
+        return 'Фотография';
+      case EventIdeaCategory.music:
+        return 'Музыка';
+      case EventIdeaCategory.venue:
+        return 'Площадка';
+      case EventIdeaCategory.planning:
+        return 'Планирование';
+      case EventIdeaCategory.other:
+        return 'Другое';
+    }
+  }
+
+  /// Получить иконку типа
+  String get typeIcon {
+    switch (type) {
+      case EventIdeaType.wedding:
+        return '💒';
+      case EventIdeaType.birthday:
+        return '🎂';
+      case EventIdeaType.corporate:
+        return '🏢';
+      case EventIdeaType.anniversary:
+        return '💍';
+      case EventIdeaType.graduation:
+        return '🎓';
+      case EventIdeaType.holiday:
+        return '🎉';
+      case EventIdeaType.private:
+        return '🏠';
+      case EventIdeaType.other:
+        return '⭐';
+    }
+  }
+
+  /// Получить цвет категории
+  String get categoryColor {
+    switch (category) {
+      case EventIdeaCategory.decoration:
+        return 'pink';
+      case EventIdeaCategory.entertainment:
+        return 'purple';
+      case EventIdeaCategory.catering:
+        return 'orange';
+      case EventIdeaCategory.photography:
+        return 'blue';
+      case EventIdeaCategory.music:
+        return 'green';
+      case EventIdeaCategory.venue:
+        return 'brown';
+      case EventIdeaCategory.planning:
+        return 'teal';
+      case EventIdeaCategory.other:
+        return 'grey';
+    }
+  }
 
   @override
   bool operator ==(Object other) {
@@ -148,68 +355,8 @@ class EventIdea {
 
   @override
   int get hashCode => id.hashCode;
-}
 
-/// Категории идей для мероприятий
-class EventIdeaCategories {
-  static const List<String> categories = [
-    'Свадьба',
-    'День рождения',
-    'Корпоратив',
-    'Выпускной',
-    'Новый год',
-    '8 марта',
-    '23 февраля',
-    'День матери',
-    'День отца',
-    'Детский праздник',
-    'Тимбилдинг',
-    'Конференция',
-    'Семинар',
-    'Презентация',
-    'Фестиваль',
-    'Концерт',
-    'Выставка',
-    'Другое',
-  ];
-
-  static const List<String> eventTypes = [
-    'Свадьба',
-    'День рождения',
-    'Корпоратив',
-    'Выпускной',
-    'Новый год',
-    'Праздник',
-    'Мероприятие',
-    'Встреча',
-    'Конференция',
-    'Семинар',
-    'Презентация',
-    'Фестиваль',
-    'Концерт',
-    'Выставка',
-    'Другое',
-  ];
-
-  static const List<String> budgets = [
-    'Бюджетный',
-    'Средний',
-    'Премиум',
-    'Люкс',
-  ];
-
-  static const List<String> seasons = [
-    'Весна',
-    'Лето',
-    'Осень',
-    'Зима',
-    'Круглый год',
-  ];
-
-  static const List<String> venues = [
-    'Помещение',
-    'Улица',
-    'Смешанный',
-    'Любой',
-  ];
+  @override
+  String toString() =>
+      'EventIdea(id: $id, title: $title, type: $type, category: $category)';
 }

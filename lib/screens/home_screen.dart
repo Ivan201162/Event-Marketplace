@@ -237,7 +237,11 @@ class HomeScreen extends ConsumerWidget {
                         ),
                         AnimatedButton(
                           onPressed: () {
-                            context.push(AppRoutes.myBookings);
+                            if (userRole == UserRole.customer) {
+                              context.push(AppRoutes.myBookings);
+                            } else {
+                              context.push(AppRoutes.bookingRequests);
+                            }
                           },
                           child: _buildModernQuickActionCard(
                             context,
@@ -254,7 +258,11 @@ class HomeScreen extends ConsumerWidget {
                               colors: [Color(0xFF10B981), Color(0xFF059669)],
                             ),
                             onTap: () {
-                              context.push(AppRoutes.myBookings);
+                              if (userRole == UserRole.customer) {
+                                context.push(AppRoutes.myBookings);
+                              } else {
+                                context.push(AppRoutes.bookingRequests);
+                              }
                             },
                           ),
                         ),
@@ -737,8 +745,10 @@ class HomeScreen extends ConsumerWidget {
                 context.push(AppRoutes.search);
                 break;
               case 'Мои заявки':
-              case 'Заявки клиентов':
                 context.push(AppRoutes.myBookings);
+                break;
+              case 'Заявки клиентов':
+                context.push(AppRoutes.bookingRequests);
                 break;
               case 'Календарь':
                 context.push(AppRoutes.calendar);
@@ -862,8 +872,10 @@ class HomeScreen extends ConsumerWidget {
               context.push(AppRoutes.search);
               break;
             case 'Мои заявки':
-            case 'Заявки клиентов':
               context.push(AppRoutes.myBookings);
+              break;
+            case 'Заявки клиентов':
+              context.push(AppRoutes.bookingRequests);
               break;
             case 'Календарь':
               context.push(AppRoutes.calendar);

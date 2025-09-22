@@ -218,6 +218,17 @@ service cloud.firestore {
       allow create: if request.auth != null;
     }
     
+    // Правила для логов ошибок
+    match /errors_log/{errorId} {
+      // Только администраторы могут читать логи ошибок
+      allow read: if request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
+      
+      // Система может создавать логи ошибок
+      allow create: if request.auth != null;
+    }
+    
     // Правила для настроек приложения
     match /app_settings/{settingId} {
       // Все аутентифицированные пользователи могут читать настройки

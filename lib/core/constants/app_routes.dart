@@ -23,6 +23,7 @@ class AppRoutes {
   
   // Заявки и календарь
   static const String myBookings = '/my-bookings';
+  static const String bookingRequests = '/booking-requests';
   static const String calendar = '/calendar';
   static const String recommendations = '/recommendations';
 

@@ -1,20 +1,55 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-/// Модель предложения специалистов в чат
+/// Статус предложения
+enum ProposalStatus {
+  pending, // Ожидает ответа
+  accepted, // Принято
+  rejected, // Отклонено
+  expired, // Истекло
+}
+
+/// Специалист в предложении
+class ProposalSpecialist {
+  const ProposalSpecialist({
+    required this.id,
+    required this.name,
+    required this.price,
+    this.specialistId,
+    this.specialistName,
+    this.categoryId,
+    this.categoryName,
+    this.description,
+    this.estimatedPrice,
+  });
+
+  final String id;
+  final String name;
+  final double price;
+  final String? specialistId;
+  final String? specialistName;
+  final String? categoryId;
+  final String? categoryName;
+  final String? description;
+  final double? estimatedPrice;
+}
+
+/// Модель предложения специалиста
 class Proposal {
   const Proposal({
     required this.id,
-    required this.chatId,
-    required this.organizerId,
+    required this.bookingId,
+    required this.specialistId,
     required this.customerId,
-    required this.specialists,
+    required this.originalPrice,
+    required this.discountPercent,
+    required this.finalPrice,
     required this.status,
-    this.message,
     required this.createdAt,
-    this.respondedAt,
-    this.respondedBy,
-    this.metadata,
+    this.updatedAt,
+    this.expiresAt,
+    this.message,
+    this.notes,
   });
 
   /// Создать из документа Firestore
@@ -22,248 +57,121 @@ class Proposal {
     final data = doc.data()! as Map<String, dynamic>;
     return Proposal(
       id: doc.id,
-      chatId: data['chatId'] ?? '',
-      organizerId: data['organizerId'] ?? '',
+      bookingId: data['bookingId'] ?? '',
+      specialistId: data['specialistId'] ?? '',
       customerId: data['customerId'] ?? '',
-      specialists: (data['specialists'] as List<dynamic>?)
-              ?.map(
-                (s) => ProposalSpecialist.fromMap(s as Map<String, dynamic>),
-              )
-              .toList() ??
-          [],
+      originalPrice: (data['originalPrice'] as num?)?.toDouble() ?? 0.0,
+      discountPercent: (data['discountPercent'] as num?)?.toDouble() ?? 0.0,
+      finalPrice: (data['finalPrice'] as num?)?.toDouble() ?? 0.0,
       status: ProposalStatus.values.firstWhere(
-        (e) => e.name == data['status'],
+        (e) => e.name == (data['status'] as String?),
         orElse: () => ProposalStatus.pending,
       ),
-      message: data['message'],
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      respondedAt: data['respondedAt'] != null
-          ? (data['respondedAt'] as Timestamp).toDate()
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
+          : DateTime.now(),
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] as Timestamp).toDate()
           : null,
-      respondedBy: data['respondedBy'],
-      metadata: data['metadata'] != null
-          ? Map<String, dynamic>.from(data['metadata'])
+      expiresAt: data['expiresAt'] != null
+          ? (data['expiresAt'] as Timestamp).toDate()
           : null,
+      message: data['message'] as String?,
+      notes: data['notes'] as String?,
     );
   }
 
   /// Создать из Map
-  factory Proposal.fromMap(Map<String, dynamic> data) => Proposal(
-        id: data['id'] ?? '',
-        chatId: data['chatId'] ?? '',
-        organizerId: data['organizerId'] ?? '',
-        customerId: data['customerId'] ?? '',
-        specialists: (data['specialists'] as List<dynamic>?)
-                ?.map(
-                  (s) => ProposalSpecialist.fromMap(s as Map<String, dynamic>),
-                )
-                .toList() ??
-            [],
+  factory Proposal.fromMap(Map<String, dynamic> map) => Proposal(
+        id: map['id'] ?? '',
+        bookingId: map['bookingId'] ?? '',
+        specialistId: map['specialistId'] ?? '',
+        customerId: map['customerId'] ?? '',
+        originalPrice: (map['originalPrice'] ?? 0).toDouble(),
+        discountPercent: (map['discountPercent'] ?? 0).toDouble(),
+        finalPrice: (map['finalPrice'] ?? 0).toDouble(),
         status: ProposalStatus.values.firstWhere(
-          (e) => e.name == data['status'],
+          (e) => e.name == map['status'],
           orElse: () => ProposalStatus.pending,
         ),
-        message: data['message'],
-        createdAt: (data['createdAt'] as Timestamp).toDate(),
-        respondedAt: data['respondedAt'] != null
-            ? (data['respondedAt'] as Timestamp).toDate()
+        createdAt: map['createdAt'] != null
+            ? (map['createdAt'] as Timestamp).toDate()
+            : DateTime.now(),
+        updatedAt: map['updatedAt'] != null
+            ? (map['updatedAt'] as Timestamp).toDate()
             : null,
-        respondedBy: data['respondedBy'],
-        metadata: data['metadata'] != null
-            ? Map<String, dynamic>.from(data['metadata'])
+        expiresAt: map['expiresAt'] != null
+            ? (map['expiresAt'] as Timestamp).toDate()
             : null,
+        message: map['message'] as String?,
+        notes: map['notes'] as String?,
       );
+
   final String id;
-  final String chatId;
-  final String organizerId;
+  final String bookingId;
+  final String specialistId;
   final String customerId;
-  final List<ProposalSpecialist> specialists;
+  final double originalPrice;
+  final double discountPercent;
+  final double finalPrice;
   final ProposalStatus status;
-  final String? message;
   final DateTime createdAt;
-  final DateTime? respondedAt;
-  final String? respondedBy;
-  final Map<String, dynamic>? metadata;
+  final DateTime? updatedAt;
+  final DateTime? expiresAt;
+  final String? message;
+  final String? notes;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'chatId': chatId,
-        'organizerId': organizerId,
+        'bookingId': bookingId,
+        'specialistId': specialistId,
         'customerId': customerId,
-        'specialists': specialists.map((s) => s.toMap()).toList(),
+        'originalPrice': originalPrice,
+        'discountPercent': discountPercent,
+        'finalPrice': finalPrice,
         'status': status.name,
-        'message': message,
         'createdAt': Timestamp.fromDate(createdAt),
-        'respondedAt':
-            respondedAt != null ? Timestamp.fromDate(respondedAt!) : null,
-        'respondedBy': respondedBy,
-        'metadata': metadata,
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+        'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
+        'message': message,
+        'notes': notes,
       };
 
-  /// Создать копию с изменениями
+  /// Копировать с изменениями
   Proposal copyWith({
     String? id,
-    String? chatId,
-    String? organizerId,
+    String? bookingId,
+    String? specialistId,
     String? customerId,
-    List<ProposalSpecialist>? specialists,
+    double? originalPrice,
+    double? discountPercent,
+    double? finalPrice,
     ProposalStatus? status,
-    String? message,
     DateTime? createdAt,
-    DateTime? respondedAt,
-    String? respondedBy,
-    Map<String, dynamic>? metadata,
+    DateTime? updatedAt,
+    DateTime? expiresAt,
+    String? message,
+    String? notes,
   }) =>
       Proposal(
         id: id ?? this.id,
-        chatId: chatId ?? this.chatId,
-        organizerId: organizerId ?? this.organizerId,
+        bookingId: bookingId ?? this.bookingId,
+        specialistId: specialistId ?? this.specialistId,
         customerId: customerId ?? this.customerId,
-        specialists: specialists ?? this.specialists,
+        originalPrice: originalPrice ?? this.originalPrice,
+        discountPercent: discountPercent ?? this.discountPercent,
+        finalPrice: finalPrice ?? this.finalPrice,
         status: status ?? this.status,
-        message: message ?? this.message,
         createdAt: createdAt ?? this.createdAt,
-        respondedAt: respondedAt ?? this.respondedAt,
-        respondedBy: respondedBy ?? this.respondedBy,
-        metadata: metadata ?? this.metadata,
+        updatedAt: updatedAt ?? this.updatedAt,
+        expiresAt: expiresAt ?? this.expiresAt,
+        message: message ?? this.message,
+        notes: notes ?? this.notes,
       );
 
-  /// Проверить, можно ли ответить на предложение
-  bool get canRespond => status == ProposalStatus.pending;
-
-  /// Проверить, принято ли предложение
-  bool get isAccepted => status == ProposalStatus.accepted;
-
-  /// Проверить, отклонено ли предложение
-  bool get isRejected => status == ProposalStatus.rejected;
-
-  /// Получить количество специалистов
-  int get specialistCount => specialists.length;
-
-  /// Получить общую стоимость предложения
-  double get totalCost => specialists.fold(
-        0,
-        (sum, specialist) => sum + (specialist.estimatedPrice ?? 0),
-      );
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Proposal &&
-        other.id == id &&
-        other.chatId == chatId &&
-        other.organizerId == organizerId &&
-        other.customerId == customerId &&
-        other.specialists == specialists &&
-        other.status == status &&
-        other.message == message &&
-        other.createdAt == createdAt &&
-        other.respondedAt == respondedAt &&
-        other.respondedBy == respondedBy;
-  }
-
-  @override
-  int get hashCode => Object.hash(
-        id,
-        chatId,
-        organizerId,
-        customerId,
-        specialists,
-        status,
-        message,
-        createdAt,
-        respondedAt,
-        respondedBy,
-      );
-
-  @override
-  String toString() =>
-      'Proposal(id: $id, chatId: $chatId, status: $status, specialistCount: $specialistCount)';
-}
-
-/// Специалист в предложении
-class ProposalSpecialist {
-  const ProposalSpecialist({
-    required this.specialistId,
-    required this.specialistName,
-    required this.categoryId,
-    required this.categoryName,
-    this.estimatedPrice,
-    this.description,
-    this.metadata,
-  });
-
-  /// Создать из Map
-  factory ProposalSpecialist.fromMap(Map<String, dynamic> data) =>
-      ProposalSpecialist(
-        specialistId: data['specialistId'] ?? '',
-        specialistName: data['specialistName'] ?? '',
-        categoryId: data['categoryId'] ?? '',
-        categoryName: data['categoryName'] ?? '',
-        estimatedPrice: data['estimatedPrice']?.toDouble(),
-        description: data['description'],
-        metadata: data['metadata'] != null
-            ? Map<String, dynamic>.from(data['metadata'])
-            : null,
-      );
-  final String specialistId;
-  final String specialistName;
-  final String categoryId;
-  final String categoryName;
-  final double? estimatedPrice;
-  final String? description;
-  final Map<String, dynamic>? metadata;
-
-  /// Преобразовать в Map
-  Map<String, dynamic> toMap() => {
-        'specialistId': specialistId,
-        'specialistName': specialistName,
-        'categoryId': categoryId,
-        'categoryName': categoryName,
-        'estimatedPrice': estimatedPrice,
-        'description': description,
-        'metadata': metadata,
-      };
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is ProposalSpecialist &&
-        other.specialistId == specialistId &&
-        other.specialistName == specialistName &&
-        other.categoryId == categoryId &&
-        other.categoryName == categoryName &&
-        other.estimatedPrice == estimatedPrice &&
-        other.description == description;
-  }
-
-  @override
-  int get hashCode => Object.hash(
-        specialistId,
-        specialistName,
-        categoryId,
-        categoryName,
-        estimatedPrice,
-        description,
-      );
-
-  @override
-  String toString() =>
-      'ProposalSpecialist(specialistId: $specialistId, specialistName: $specialistName, categoryName: $categoryName)';
-}
-
-/// Статус предложения
-enum ProposalStatus {
-  pending,
-  accepted,
-  rejected,
-  expired,
-}
-
-/// Расширение для статуса предложения
-extension ProposalStatusExtension on ProposalStatus {
-  String get displayName {
-    switch (this) {
+  /// Получить отображаемое название статуса
+  String get statusDisplayName {
+    switch (status) {
       case ProposalStatus.pending:
         return 'Ожидает ответа';
       case ProposalStatus.accepted:
@@ -275,21 +183,23 @@ extension ProposalStatusExtension on ProposalStatus {
     }
   }
 
-  String get description {
-    switch (this) {
+  /// Получить цвет статуса
+  String get statusColor {
+    switch (status) {
       case ProposalStatus.pending:
-        return 'Предложение ожидает вашего ответа';
+        return 'orange';
       case ProposalStatus.accepted:
-        return 'Предложение было принято';
+        return 'green';
       case ProposalStatus.rejected:
-        return 'Предложение было отклонено';
+        return 'red';
       case ProposalStatus.expired:
-        return 'Время действия предложения истекло';
+        return 'grey';
     }
   }
 
+  /// Получить цвет статуса как Color
   Color get color {
-    switch (this) {
+    switch (status) {
       case ProposalStatus.pending:
         return Colors.orange;
       case ProposalStatus.accepted:
@@ -300,4 +210,60 @@ extension ProposalStatusExtension on ProposalStatus {
         return Colors.grey;
     }
   }
+
+  /// Получить отображаемое название статуса
+  String get displayName => statusDisplayName;
+
+  /// Количество специалистов (для совместимости с UI)
+  int get specialistCount => 1;
+
+  /// Общая стоимость (для совместимости с UI)
+  double get totalCost => finalPrice;
+
+  /// Список специалистов (для совместимости с UI)
+  List<ProposalSpecialist> get specialists => [
+    ProposalSpecialist(
+      id: specialistId,
+      name: 'Специалист',
+      price: finalPrice,
+      specialistId: specialistId,
+      specialistName: 'Специалист',
+      categoryName: 'Услуга',
+      description: message ?? 'Предложение специалиста',
+      estimatedPrice: finalPrice,
+    ),
+  ];
+
+  /// Можно ли ответить на предложение
+  bool get canRespond => status == ProposalStatus.pending;
+
+  /// Проверить, можно ли принять предложение
+  bool get canBeAccepted => status == ProposalStatus.pending;
+
+  /// Проверить, можно ли отклонить предложение
+  bool get canBeRejected => status == ProposalStatus.pending;
+
+  /// Проверить, истекло ли предложение
+  bool get isExpired => 
+      expiresAt != null && DateTime.now().isAfter(expiresAt!);
+
+  /// Получить экономию от скидки
+  double get savings => originalPrice - finalPrice;
+
+  /// Получить текст скидки
+  String get discountText => 
+      discountPercent > 0 ? 'Скидка ${discountPercent.toInt()}%' : 'Без скидки';
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+    return other is Proposal && other.id == id;
+  }
+
+  @override
+  int get hashCode => id.hashCode;
+
+  @override
+  String toString() =>
+      'Proposal(id: $id, discountPercent: $discountPercent%, finalPrice: $finalPrice)';
 }

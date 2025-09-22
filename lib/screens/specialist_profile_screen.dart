@@ -10,6 +10,8 @@ import '../providers/story_providers.dart';
 import '../providers/subscription_providers.dart';
 import '../widgets/enhanced_page_transition.dart';
 import '../widgets/responsive_layout.dart';
+import 'booking_form_screen.dart';
+import 'chat_screen.dart';
 
 /// Экран профиля специалиста с функциями соцсети
 class SpecialistProfileScreen extends ConsumerStatefulWidget {
@@ -334,9 +336,9 @@ class _SpecialistProfileScreenState
                 children: [
                   Expanded(
                     child: ElevatedButton.icon(
-                      onPressed: _toggleSubscription,
-                      icon: const Icon(Icons.person_add),
-                      label: const Text('Подписаться'),
+                      onPressed: _navigateToBooking,
+                      icon: const Icon(Icons.book_online),
+                      label: const Text('Забронировать'),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: const Color(0xFF6200EE),
@@ -346,10 +348,10 @@ class _SpecialistProfileScreenState
                   const SizedBox(width: 8),
                   Expanded(
                     child: OutlinedButton.icon(
-                      onPressed: _sendMessage,
+                      onPressed: _navigateToChat,
                       icon: const Icon(Icons.message, color: Colors.white),
                       label: const Text(
-                        'Сообщение',
+                        'Написать',
                         style: TextStyle(color: Colors.white),
                       ),
                       style: OutlinedButton.styleFrom(
@@ -1039,6 +1041,31 @@ class _SpecialistProfileScreenState
   void _sharePost(FeedPost post) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Пост скопирован в буфер обмена')),
+    );
+  }
+
+  /// Навигация к экрану бронирования
+  void _navigateToBooking() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => BookingFormScreen(
+          specialistId: widget.specialistId,
+        ),
+      ),
+    );
+  }
+
+  /// Навигация к чату
+  void _navigateToChat() {
+    // Создаем или находим чат с специалистом
+    final chatId = 'chat_${widget.specialistId}_${DateTime.now().millisecondsSinceEpoch}';
+    
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ChatScreen(
+          chatId: chatId,
+        ),
+      ),
     );
   }
 }

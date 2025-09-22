@@ -14,12 +14,14 @@ import 'core/constants/app_routes.dart';
 import 'core/feature_flags.dart';
 import 'core/i18n/app_localizations.dart';
 import 'firebase_options.dart';
-import 'providers/theme_provider.dart';
 import 'providers/auth_providers.dart';
+import 'providers/theme_provider.dart';
 import 'screens/admin_panel_screen.dart';
 import 'screens/auth_screen.dart';
 import 'screens/booking_form_screen.dart';
+import 'screens/booking_requests_screen.dart';
 import 'screens/register_screen.dart';
+import 'widgets/auth_gate.dart';
 import 'screens/chat_screen.dart';
 import 'screens/content_management_screen.dart';
 import 'screens/favorites_page.dart';
@@ -159,7 +161,7 @@ class EventMarketplaceApp extends ConsumerWidget {
 /// Провайдер роутера
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
-    initialLocation: AppRoutes.login,
+    initialLocation: '/auth',
     redirect: (context, state) {
       final authService = ref.read(authServiceProvider);
       final isLoggedIn = authService.currentFirebaseUser != null;
@@ -173,7 +175,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       // Если пользователь не авторизован и пытается попасть на защищенную страницу
       if (!isLoggedIn && !isAuthRoute && !isRegisterRoute && !isPublicRoute) {
-        return AppRoutes.login;
+        return '/auth';
       }
 
       // Если пользователь авторизован и находится на странице входа/регистрации
@@ -192,6 +194,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
 
       // Аутентификация
+      GoRoute(
+        path: '/auth',
+        name: 'auth',
+        builder: (context, state) => const AuthGate(),
+      ),
       GoRoute(
         path: AppRoutes.login,
         name: 'login',
@@ -255,6 +262,11 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.myBookings,
         name: 'my-bookings',
         builder: (context, state) => const MyBookingsScreen(),
+      ),
+      GoRoute(
+        path: AppRoutes.bookingRequests,
+        name: 'booking-requests',
+        builder: (context, state) => const BookingRequestsScreen(),
       ),
       GoRoute(
         path: AppRoutes.calendar,

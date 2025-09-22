@@ -28,7 +28,7 @@ class ProposalWidget extends ConsumerWidget {
               children: [
                 Icon(
                   _getProposalIcon(),
-                  color: proposal.status.color,
+                  color: proposal.color,
                   size: 24,
                 ),
                 const SizedBox(width: 8),
@@ -48,9 +48,9 @@ class ProposalWidget extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: proposal.status.color.withValues(alpha: 0.1),
+                color: proposal.color.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: proposal.status.color),
+                border: Border.all(color: proposal.color),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,7 +65,7 @@ class ProposalWidget extends ConsumerWidget {
                       Text(
                         '${proposal.specialistCount}',
                         style: TextStyle(
-                          color: proposal.status.color,
+                          color: proposal.color,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -82,7 +82,7 @@ class ProposalWidget extends ConsumerWidget {
                       Text(
                         '${proposal.totalCost.toStringAsFixed(0)} ₽',
                         style: TextStyle(
-                          color: proposal.status.color,
+                          color: proposal.color,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -179,14 +179,14 @@ class ProposalWidget extends ConsumerWidget {
   Widget _buildStatusChip() => Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
         decoration: BoxDecoration(
-          color: proposal.status.color.withValues(alpha: 0.2),
+          color: proposal.color.withValues(alpha: 0.2),
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: proposal.status.color),
+          border: Border.all(color: proposal.color),
         ),
         child: Text(
-          proposal.status.displayName,
+          proposal.displayName,
           style: TextStyle(
-            color: proposal.status.color,
+            color: proposal.color,
             fontSize: 12,
             fontWeight: FontWeight.bold,
           ),
@@ -212,11 +212,11 @@ class ProposalWidget extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    specialist.specialistName,
+                    specialist.specialistName ?? specialist.name,
                     style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    specialist.categoryName,
+                    specialist.categoryName ?? 'Услуга',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                   if (specialist.description != null) ...[
@@ -451,11 +451,11 @@ class _CreateProposalWidgetState extends ConsumerState<CreateProposalWidget> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    specialist.specialistName,
+                    specialist.specialistName ?? specialist.name,
                     style: const TextStyle(fontWeight: FontWeight.w500),
                   ),
                   Text(
-                    specialist.categoryName,
+                    specialist.categoryName ?? 'Услуга',
                     style: Theme.of(context).textTheme.bodyMedium,
                   ),
                 ],
@@ -718,6 +718,9 @@ class _SelectSpecialistsDialogState
       } else {
         _selectedSpecialists.add(
           ProposalSpecialist(
+            id: specialist.id,
+            name: specialist.name,
+            price: specialist.min,
             specialistId: specialist.id,
             specialistName: specialist.name,
             categoryId: specialist.categories.first.name,

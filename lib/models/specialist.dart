@@ -222,6 +222,7 @@ class Specialist {
     required this.experienceLevel,
     required this.yearsOfExperience,
     required this.hourlyRate,
+    required this.price, // Обязательное поле цены
     this.pricePerHour,
     this.minBookingHours,
     this.maxBookingHours,
@@ -267,6 +268,7 @@ class Specialist {
     this.premiumExpiresAt,
     this.email,
     this.lastPriceUpdateAt,
+    this.avgPriceByService, // Средняя цена по услугам
   });
 
   /// Создать из Map
@@ -281,6 +283,7 @@ class Specialist {
           orElse: () => SpecialistCategory.other,
         ),
         hourlyRate: (data['hourlyRate'] as num?)?.toDouble() ?? 0.0,
+        price: (data['price'] as num?)?.toDouble() ?? 0.0, // Обязательная цена
         yearsOfExperience: data['yearsOfExperience'] as int? ?? 0,
         categories: (data['categories'] as List<dynamic>?)
                 ?.map(
@@ -337,6 +340,9 @@ class Specialist {
         metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
         avatar: data['avatar'],
         specialization: data['specialization'],
+        avgPriceByService: data['avgPriceByService'] != null 
+            ? Map<String, double>.from(data['avgPriceByService'])
+            : null,
       );
 
   /// Создать из документа Firestore
@@ -352,6 +358,7 @@ class Specialist {
       experienceLevel: _parseExperienceLevel(data['experienceLevel']),
       yearsOfExperience: data['yearsOfExperience'] ?? 0,
       hourlyRate: (data['hourlyRate'] ?? 0.0).toDouble(),
+      price: (data['price'] ?? 0.0).toDouble(), // Обязательная цена
       minBookingHours: data['minBookingHours']?.toDouble(),
       maxBookingHours: data['maxBookingHours']?.toDouble(),
       serviceAreas: List<String>.from(data['serviceAreas'] ?? []),
@@ -374,6 +381,9 @@ class Specialist {
       avatarUrl: data['avatarUrl'],
       avatar: data['avatar'],
       specialization: data['specialization'],
+      avgPriceByService: data['avgPriceByService'] != null 
+          ? Map<String, double>.from(data['avgPriceByService'])
+          : null,
     );
   }
   final String id;
@@ -386,6 +396,7 @@ class Specialist {
   final ExperienceLevel experienceLevel;
   final int yearsOfExperience;
   final double hourlyRate;
+  final double price; // Обязательная цена услуги
   final double? pricePerHour;
   final double? minBookingHours;
   final double? maxBookingHours;
@@ -431,6 +442,7 @@ class Specialist {
   final DateTime? premiumExpiresAt;
   final String? email;
   final DateTime? lastPriceUpdateAt;
+  final Map<String, double>? avgPriceByService; // Средняя цена по услугам
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -442,6 +454,7 @@ class Specialist {
         'experienceLevel': experienceLevel.name,
         'yearsOfExperience': yearsOfExperience,
         'hourlyRate': hourlyRate,
+        'price': price, // Обязательная цена
         'minBookingHours': minBookingHours,
         'maxBookingHours': maxBookingHours,
         'serviceAreas': serviceAreas,
@@ -460,6 +473,7 @@ class Specialist {
         'avatarUrl': avatarUrl,
         'avatar': avatar,
         'specialization': specialization,
+        'avgPriceByService': avgPriceByService,
       };
 
   /// Копировать с изменениями
@@ -473,6 +487,7 @@ class Specialist {
     ExperienceLevel? experienceLevel,
     int? yearsOfExperience,
     double? hourlyRate,
+    double? price,
     double? minBookingHours,
     double? maxBookingHours,
     List<String>? serviceAreas,
@@ -491,6 +506,7 @@ class Specialist {
     String? avatarUrl,
     String? avatar,
     String? specialization,
+    Map<String, double>? avgPriceByService,
   }) =>
       Specialist(
         id: id ?? this.id,
@@ -502,6 +518,7 @@ class Specialist {
         experienceLevel: experienceLevel ?? this.experienceLevel,
         yearsOfExperience: yearsOfExperience ?? this.yearsOfExperience,
         hourlyRate: hourlyRate ?? this.hourlyRate,
+        price: price ?? this.price,
         minBookingHours: minBookingHours ?? this.minBookingHours,
         maxBookingHours: maxBookingHours ?? this.maxBookingHours,
         serviceAreas: serviceAreas ?? this.serviceAreas,
@@ -520,6 +537,7 @@ class Specialist {
         avatarUrl: avatarUrl ?? this.avatarUrl,
         avatar: avatar ?? this.avatar,
         specialization: specialization ?? this.specialization,
+        avgPriceByService: avgPriceByService ?? this.avgPriceByService,
       );
 
   /// Получить отображаемое название категории
