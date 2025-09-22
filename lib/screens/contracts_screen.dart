@@ -106,7 +106,7 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen>
   }
 
   Widget _buildWorkActsTab() {
-    return FutureBuilder<List<contract_model.WorkAct>>(
+    return FutureBuilder<List<work_act_model.WorkAct>>(
       future: _contractService.getUserWorkActs('current_user_id'), // TODO: Получить реальный ID
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
