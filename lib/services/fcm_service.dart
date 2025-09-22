@@ -454,7 +454,7 @@ class FCMService {
             importance: Importance.high,
             priority: Priority.high,
           ),
-          iOS: DarwinNotificationDetails(),
+          iOS: const DarwinNotificationDetails(),
         ),
         payload: payload,
       );
@@ -485,7 +485,8 @@ class FCMService {
         if (daysSinceUpdate < 7) return;
       }
       
-      await sendLocalNotification(
+      await showLocalNotification(
+        id: DateTime.now().millisecondsSinceEpoch,
         title: 'Обновите ваши цены',
         body: 'Прошло ${lastPriceUpdate != null ? now.difference(lastPriceUpdate.toDate()).inDays : 7}+ дней с последнего обновления цен. Обновите их для привлечения новых клиентов!',
         payload: 'price_update_reminder',
@@ -631,7 +632,8 @@ class FCMService {
       final isWorkingHours = await isSpecialistWorkingHours(specialistId);
       
       if (isWorkingHours) {
-        await sendLocalNotification(
+        await showLocalNotification(
+          id: DateTime.now().millisecondsSinceEpoch,
           title: title,
           body: body,
           payload: payload,

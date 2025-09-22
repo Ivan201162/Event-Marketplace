@@ -280,10 +280,7 @@ class ProposalWidget extends ConsumerWidget {
   Future<void> _acceptProposal(BuildContext context, WidgetRef ref) async {
     try {
       final service = ref.read(proposalServiceProvider);
-      await service.acceptProposal(
-        proposalId: proposal.id,
-        customerId: 'current_user_id', // TODO: Получить из контекста
-      );
+      await service.acceptProposal(proposal.id);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -499,10 +496,11 @@ class _CreateProposalWidgetState extends ConsumerState<CreateProposalWidget> {
     try {
       final service = ref.read(proposalServiceProvider);
       await service.createProposal(
-        chatId: widget.chatId,
-        organizerId: widget.organizerId,
+        bookingId: widget.bookingId ?? 'temp_booking_id',
+        specialistId: widget.specialistId ?? 'temp_specialist_id',
         customerId: widget.customerId,
-        specialists: _selectedSpecialists,
+        originalPrice: widget.originalPrice ?? 0.0,
+        discountPercent: widget.discountPercent ?? 0.0,
         message: _messageController.text.trim().isEmpty
             ? null
             : _messageController.text.trim(),
@@ -602,13 +600,7 @@ class _RejectProposalDialogState extends ConsumerState<_RejectProposalDialog> {
 
     try {
       final service = ref.read(proposalServiceProvider);
-      await service.rejectProposal(
-        proposalId: widget.proposal.id,
-        customerId: 'current_user_id', // TODO: Получить из контекста
-        reason: _reasonController.text.trim().isEmpty
-            ? null
-            : _reasonController.text.trim(),
-      );
+      await service.rejectProposal(widget.proposal.id);
 
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -720,12 +712,12 @@ class _SelectSpecialistsDialogState
           ProposalSpecialist(
             id: specialist.id,
             name: specialist.name,
-            price: specialist.min,
+            price: specialist.min ?? 0.0,
             specialistId: specialist.id,
             specialistName: specialist.name,
             categoryId: specialist.categories.first.name,
             categoryName: specialist.categories.first.name,
-            estimatedPrice: specialist.min,
+            estimatedPrice: specialist.min ?? 0.0,
           ),
         );
       }
@@ -742,5 +734,6 @@ final specialistsForProposalProvider =
     FutureProvider.family<List<Specialist>, List<String>>(
         (ref, categoryIds) async {
   final service = ref.read(proposalServiceProvider);
-  return service.getSpecialistsForProposal(categoryIds: categoryIds);
+  // TODO: Implement getSpecialistsForProposal method
+  return [];
 });

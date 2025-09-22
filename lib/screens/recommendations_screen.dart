@@ -79,18 +79,18 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Рекомендации'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
+        appBar: AppBar(
+          title: const Text('Рекомендации'),
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
             Tab(text: 'Идеи', icon: Icon(Icons.lightbulb_outline)),
             Tab(text: 'Мои идеи', icon: Icon(Icons.bookmark_outline)),
             Tab(text: 'Доп. услуги', icon: Icon(Icons.add_circle_outline)),
-          ],
-        ),
-        actions: [
-          IconButton(
+            ],
+          ),
+          actions: [
+            IconButton(
             icon: const Icon(Icons.search),
             onPressed: _showSearchDialog,
           ),
@@ -132,8 +132,8 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
               'Попробуйте изменить фильтры или поисковый запрос',
               style: TextStyle(color: Colors.grey),
             ),
-          ],
-        ),
+                ],
+              ),
       );
     }
 
@@ -246,7 +246,9 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
         padding: const EdgeInsets.all(16),
         itemCount: _crossSellRecommendations.length,
         itemBuilder: (context, index) {
-          final specialist = _crossSellRecommendations[index];
+          final recommendation = _crossSellRecommendations[index];
+          final specialist = recommendation.specialist;
+          if (specialist == null) return const SizedBox.shrink();
           return SpecialistCard(
             specialist: specialist,
             onTap: () => context.push('${AppRoutes.specialist}/${specialist.id}'),
@@ -292,9 +294,9 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
       builder: (context) => StatefulBuilder(
         builder: (context, setState) => AlertDialog(
           title: const Text('Фильтры'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
               DropdownButtonFormField<EventIdeaType?>(
                 value: _selectedType,
                 decoration: const InputDecoration(
@@ -313,7 +315,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
                 ],
                 onChanged: (value) => setState(() => _selectedType = value),
               ),
-              const SizedBox(height: 16),
+            const SizedBox(height: 16),
               DropdownButtonFormField<EventIdeaCategory?>(
                 value: _selectedCategory,
                 decoration: const InputDecoration(
@@ -332,10 +334,10 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
                 ],
                 onChanged: (value) => setState(() => _selectedCategory = value),
               ),
-            ],
-          ),
-          actions: [
-            TextButton(
+          ],
+        ),
+        actions: [
+          TextButton(
               onPressed: () {
                 setState(() {
                   _selectedType = null;
@@ -345,15 +347,15 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
                 _loadData();
               },
               child: const Text('Сбросить'),
-            ),
-            ElevatedButton(
-              onPressed: () {
+          ),
+          ElevatedButton(
+            onPressed: () {
                 Navigator.pop(context);
                 _loadData();
-              },
+            },
               child: const Text('Применить'),
-            ),
-          ],
+          ),
+        ],
         ),
       ),
     );
@@ -370,8 +372,8 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
         builder: (context, scrollController) => Container(
           padding: const EdgeInsets.all(16),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
               Row(
                 children: [
                   Text(
@@ -430,9 +432,9 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
                       icon: const Icon(Icons.favorite_outline),
                       label: const Text('Нравится'),
                     ),
-                  ),
-                ],
-              ),
+          ),
+        ],
+      ),
             ],
           ),
         ),
