@@ -278,7 +278,7 @@ class RecommendationService {
     }
     
     if (selectedCategories.contains(SpecialistCategory.caterer)) {
-      recommended.addAll([SpecialistCategory.waiter, SpecialistCategory.chef, SpecialistCategory.decorator]);
+      recommended.addAll([SpecialistCategory.decorator, SpecialistCategory.photographer]);
     }
 
     // Убираем уже выбранные категории

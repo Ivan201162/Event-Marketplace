@@ -18,6 +18,7 @@ void main() {
         subcategories: ['свадебная фотография'],
         experienceLevel: ExperienceLevel.advanced,
         yearsOfExperience: 5,
+        price: 5000.0, // Добавляем обязательное поле price
         hourlyRate: 3000,
         minBookingHours: 2,
         maxBookingHours: 12,

@@ -308,7 +308,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
                   ),
                   ...EventIdeaType.values.map((type) => DropdownMenuItem(
                     value: type,
-                    child: Text(type.displayName),
+                    child: Text(_getTypeDisplayName(type)),
                   )),
                 ],
                 onChanged: (value) => setState(() => _selectedType = value),
@@ -327,7 +327,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
                   ),
                   ...EventIdeaCategory.values.map((category) => DropdownMenuItem(
                     value: category,
-                    child: Text(category.displayName),
+                    child: Text(_getCategoryDisplayName(category)),
                   )),
                 ],
                 onChanged: (value) => setState(() => _selectedCategory = value),
@@ -482,6 +482,48 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Функция лайков будет добавлена')),
       );
+    }
+  }
+
+  String _getTypeDisplayName(EventIdeaType type) {
+    switch (type) {
+      case EventIdeaType.wedding:
+        return 'Свадьба';
+      case EventIdeaType.birthday:
+        return 'День рождения';
+      case EventIdeaType.corporate:
+        return 'Корпоратив';
+      case EventIdeaType.anniversary:
+        return 'Годовщина';
+      case EventIdeaType.graduation:
+        return 'Выпускной';
+      case EventIdeaType.holiday:
+        return 'Праздник';
+      case EventIdeaType.private:
+        return 'Частное мероприятие';
+      case EventIdeaType.other:
+        return 'Другое';
+    }
+  }
+
+  String _getCategoryDisplayName(EventIdeaCategory category) {
+    switch (category) {
+      case EventIdeaCategory.decoration:
+        return 'Оформление';
+      case EventIdeaCategory.entertainment:
+        return 'Развлечения';
+      case EventIdeaCategory.catering:
+        return 'Кейтеринг';
+      case EventIdeaCategory.photography:
+        return 'Фотография';
+      case EventIdeaCategory.music:
+        return 'Музыка';
+      case EventIdeaCategory.venue:
+        return 'Площадка';
+      case EventIdeaCategory.planning:
+        return 'Планирование';
+      case EventIdeaCategory.other:
+        return 'Другое';
     }
   }
 }

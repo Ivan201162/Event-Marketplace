@@ -1,43 +1,30 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Типы организаций
-enum OrganizationType {
-  individual, // Физическое лицо
-  entrepreneur, // ИП
-  selfEmployed, // Самозанятый
-  legalEntity, // Юридическое лицо
-}
-
-/// Статусы договора
-enum ContractStatus {
+/// Статусы акта выполненных работ
+enum WorkActStatus {
   draft, // Черновик
   pending, // Ожидает подписания
   signed, // Подписан
-  active, // Активен
   completed, // Завершен
-  canceled, // Отменен
 }
 
-/// Модель договора
-class Contract {
+/// Модель акта выполненных работ
+class WorkAct {
   final String id;
+  final String contractId;
   final String bookingId;
   final String customerId;
   final String specialistId;
   final String customerName;
   final String specialistName;
-  final OrganizationType customerType;
-  final OrganizationType specialistType;
-  final String customerDetails; // Реквизиты заказчика
-  final String specialistDetails; // Реквизиты исполнителя
-  final List<ContractService> services;
+  final List<WorkActService> services;
   final double totalAmount;
-  final double advanceAmount;
-  final double finalAmount;
   final String currency;
   final DateTime eventDate;
   final String eventLocation;
-  final ContractStatus status;
+  final String? description; // Описание выполненных работ
+  final List<String>? photos; // Фото выполненных работ
+  final WorkActStatus status;
   final DateTime? signedAt;
   final String? customerSignature;
   final String? specialistSignature;
@@ -45,24 +32,21 @@ class Contract {
   final DateTime createdAt;
   final DateTime updatedAt;
 
-  Contract({
+  WorkAct({
     required this.id,
+    required this.contractId,
     required this.bookingId,
     required this.customerId,
     required this.specialistId,
     required this.customerName,
     required this.specialistName,
-    required this.customerType,
-    required this.specialistType,
-    required this.customerDetails,
-    required this.specialistDetails,
     required this.services,
     required this.totalAmount,
-    required this.advanceAmount,
-    required this.finalAmount,
     required this.currency,
     required this.eventDate,
     required this.eventLocation,
+    this.description,
+    this.photos,
     required this.status,
     this.signedAt,
     this.customerSignature,
@@ -72,36 +56,27 @@ class Contract {
     required this.updatedAt,
   });
 
-  factory Contract.fromMap(Map<String, dynamic> map, String id) {
-    return Contract(
+  factory WorkAct.fromMap(Map<String, dynamic> map, String id) {
+    return WorkAct(
       id: id,
+      contractId: map['contractId'] as String,
       bookingId: map['bookingId'] as String,
       customerId: map['customerId'] as String,
       specialistId: map['specialistId'] as String,
       customerName: map['customerName'] as String,
       specialistName: map['specialistName'] as String,
-      customerType: OrganizationType.values.firstWhere(
-        (type) => type.name == map['customerType'],
-        orElse: () => OrganizationType.individual,
-      ),
-      specialistType: OrganizationType.values.firstWhere(
-        (type) => type.name == map['specialistType'],
-        orElse: () => OrganizationType.individual,
-      ),
-      customerDetails: map['customerDetails'] as String,
-      specialistDetails: map['specialistDetails'] as String,
       services: (map['services'] as List<dynamic>)
-          .map((service) => ContractService.fromMap(service as Map<String, dynamic>))
+          .map((service) => WorkActService.fromMap(service as Map<String, dynamic>))
           .toList(),
       totalAmount: (map['totalAmount'] as num).toDouble(),
-      advanceAmount: (map['advanceAmount'] as num).toDouble(),
-      finalAmount: (map['finalAmount'] as num).toDouble(),
       currency: map['currency'] as String,
       eventDate: (map['eventDate'] as Timestamp).toDate(),
       eventLocation: map['eventLocation'] as String,
-      status: ContractStatus.values.firstWhere(
+      description: map['description'] as String?,
+      photos: (map['photos'] as List<dynamic>?)?.cast<String>(),
+      status: WorkActStatus.values.firstWhere(
         (status) => status.name == map['status'],
-        orElse: () => ContractStatus.draft,
+        orElse: () => WorkActStatus.draft,
       ),
       signedAt: (map['signedAt'] as Timestamp?)?.toDate(),
       customerSignature: map['customerSignature'] as String?,
@@ -114,22 +89,19 @@ class Contract {
 
   Map<String, dynamic> toMap() {
     return {
+      'contractId': contractId,
       'bookingId': bookingId,
       'customerId': customerId,
       'specialistId': specialistId,
       'customerName': customerName,
       'specialistName': specialistName,
-      'customerType': customerType.name,
-      'specialistType': specialistType.name,
-      'customerDetails': customerDetails,
-      'specialistDetails': specialistDetails,
       'services': services.map((service) => service.toMap()).toList(),
       'totalAmount': totalAmount,
-      'advanceAmount': advanceAmount,
-      'finalAmount': finalAmount,
       'currency': currency,
       'eventDate': Timestamp.fromDate(eventDate),
       'eventLocation': eventLocation,
+      'description': description,
+      'photos': photos,
       'status': status.name,
       'signedAt': signedAt != null ? Timestamp.fromDate(signedAt!) : null,
       'customerSignature': customerSignature,
@@ -141,25 +113,22 @@ class Contract {
   }
 
   /// Создать копию с обновленными полями
-  Contract copyWith({
+  WorkAct copyWith({
     String? id,
+    String? contractId,
     String? bookingId,
     String? customerId,
     String? specialistId,
     String? customerName,
     String? specialistName,
-    OrganizationType? customerType,
-    OrganizationType? specialistType,
-    String? customerDetails,
-    String? specialistDetails,
-    List<ContractService>? services,
+    List<WorkActService>? services,
     double? totalAmount,
-    double? advanceAmount,
-    double? finalAmount,
     String? currency,
     DateTime? eventDate,
     String? eventLocation,
-    ContractStatus? status,
+    String? description,
+    List<String>? photos,
+    WorkActStatus? status,
     DateTime? signedAt,
     String? customerSignature,
     String? specialistSignature,
@@ -167,24 +136,21 @@ class Contract {
     DateTime? createdAt,
     DateTime? updatedAt,
   }) {
-    return Contract(
+    return WorkAct(
       id: id ?? this.id,
+      contractId: contractId ?? this.contractId,
       bookingId: bookingId ?? this.bookingId,
       customerId: customerId ?? this.customerId,
       specialistId: specialistId ?? this.specialistId,
       customerName: customerName ?? this.customerName,
       specialistName: specialistName ?? this.specialistName,
-      customerType: customerType ?? this.customerType,
-      specialistType: specialistType ?? this.specialistType,
-      customerDetails: customerDetails ?? this.customerDetails,
-      specialistDetails: specialistDetails ?? this.specialistDetails,
       services: services ?? this.services,
       totalAmount: totalAmount ?? this.totalAmount,
-      advanceAmount: advanceAmount ?? this.advanceAmount,
-      finalAmount: finalAmount ?? this.finalAmount,
       currency: currency ?? this.currency,
       eventDate: eventDate ?? this.eventDate,
       eventLocation: eventLocation ?? this.eventLocation,
+      description: description ?? this.description,
+      photos: photos ?? this.photos,
       status: status ?? this.status,
       signedAt: signedAt ?? this.signedAt,
       customerSignature: customerSignature ?? this.customerSignature,
@@ -196,32 +162,38 @@ class Contract {
   }
 }
 
-/// Услуга в договоре
-class ContractService {
+/// Услуга в акте выполненных работ
+class WorkActService {
   final String name;
   final String description;
   final double price;
   final String currency;
   final int quantity;
-  final String unit; // шт, час, день и т.д.
+  final String unit;
+  final bool isCompleted; // Выполнена ли услуга
+  final String? notes; // Примечания
 
-  ContractService({
+  WorkActService({
     required this.name,
     required this.description,
     required this.price,
     required this.currency,
     required this.quantity,
     required this.unit,
+    required this.isCompleted,
+    this.notes,
   });
 
-  factory ContractService.fromMap(Map<String, dynamic> map) {
-    return ContractService(
+  factory WorkActService.fromMap(Map<String, dynamic> map) {
+    return WorkActService(
       name: map['name'] as String,
       description: map['description'] as String,
       price: (map['price'] as num).toDouble(),
       currency: map['currency'] as String,
       quantity: map['quantity'] as int,
       unit: map['unit'] as String,
+      isCompleted: map['isCompleted'] as bool? ?? true,
+      notes: map['notes'] as String?,
     );
   }
 
@@ -233,6 +205,8 @@ class ContractService {
       'currency': currency,
       'quantity': quantity,
       'unit': unit,
+      'isCompleted': isCompleted,
+      'notes': notes,
     };
   }
 

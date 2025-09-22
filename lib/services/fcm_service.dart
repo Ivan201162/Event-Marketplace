@@ -4,6 +4,11 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../models/booking.dart';
+import '../models/specialist.dart';
+import '../models/app_user.dart';
 
 /// Сервис для работы с Firebase Cloud Messaging
 class FCMService {
@@ -155,28 +160,28 @@ class FCMService {
     // final android = message.notification?.android;
 
     if (notification != null) {
-      await _localNotifications.show(
-        message.hashCode,
-        notification.title,
-        notification.body,
-        NotificationDetails(
-          android: AndroidNotificationDetails(
-            'high_importance_channel',
-            'High Importance Notifications',
-            channelDescription:
-                'This channel is used for important notifications.',
-            importance: Importance.high,
-            priority: Priority.high,
-            icon: '@mipmap/ic_launcher',
-          ),
-          iOS: const DarwinNotificationDetails(
-            presentAlert: true,
-            presentBadge: true,
-            presentSound: true,
-          ),
-        ),
-        payload: message.data.toString(),
-      );
+      // await _localNotifications.show(
+      //   message.hashCode,
+      //   notification.title,
+      //   notification.body,
+      //   NotificationDetails(
+      //     android: AndroidNotificationDetails(
+      //       'high_importance_channel',
+      //       'High Importance Notifications',
+      //       channelDescription:
+      //           'This channel is used for important notifications.',
+      //       importance: Importance.high,
+      //       priority: Priority.high,
+      //       icon: '@mipmap/ic_launcher',
+      //     ),
+      //     iOS: const DarwinNotificationDetails(
+      //       presentAlert: true,
+      //       presentBadge: true,
+      //       presentSound: true,
+      //     ),
+      //   ),
+      //   payload: message.data.toString(),
+      // );
     }
   }
 
@@ -289,28 +294,28 @@ class FCMService {
     String? payload,
     Map<String, dynamic>? data,
   }) async {
-    await _localNotifications.show(
-      id,
-      title,
-      body,
-      NotificationDetails(
-        android: AndroidNotificationDetails(
-          'high_importance_channel',
-          'High Importance Notifications',
-          channelDescription:
-              'This channel is used for important notifications.',
-          importance: Importance.high,
-          priority: Priority.high,
-          icon: '@mipmap/ic_launcher',
-        ),
-        iOS: const DarwinNotificationDetails(
-          presentAlert: true,
-          presentBadge: true,
-          presentSound: true,
-        ),
-      ),
-      payload: payload ?? data?.toString(),
-    );
+    // await _localNotifications.show(
+    //   id,
+    //   title,
+    //   body,
+    //   NotificationDetails(
+    //     android: AndroidNotificationDetails(
+    //       'high_importance_channel',
+    //       'High Importance Notifications',
+    //       channelDescription:
+    //           'This channel is used for important notifications.',
+    //       importance: Importance.high,
+    //       priority: Priority.high,
+    //       icon: '@mipmap/ic_launcher',
+    //     ),
+    //     iOS: const DarwinNotificationDetails(
+    //       presentAlert: true,
+    //       presentBadge: true,
+    //       presentSound: true,
+    //     ),
+    //   ),
+    //   payload: payload ?? data?.toString(),
+    // );
   }
 
   /// Планировать локальное уведомление
@@ -326,22 +331,18 @@ class FCMService {
       title,
       body,
       tz.TZDateTime.from(scheduledDate, tz.local),
-      NotificationDetails(
+      const NotificationDetails(
         android: AndroidNotificationDetails(
-          'scheduled_channel',
-          'Scheduled Notifications',
-          channelDescription:
-              'This channel is used for scheduled notifications.',
+          'event_marketplace',
+          'Event Marketplace Notifications',
+          channelDescription: 'Уведомления о событиях',
           importance: Importance.high,
           priority: Priority.high,
-          icon: '@mipmap/ic_launcher',
         ),
-        iOS: const DarwinNotificationDetails(
-          presentAlert: true,
-          presentBadge: true,
-          presentSound: true,
-        ),
+        iOS: const DarwinNotificationDetails(),
       ),
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       payload: payload,
     );
   }
@@ -377,11 +378,10 @@ class FCMService {
   /// Сохранить FCM токен пользователя в Firestore
   Future<void> saveUserFCMToken(String userId, String token) async {
     try {
-      // TODO: Реализовать сохранение токена в Firestore
-      // await FirebaseFirestore.instance
-      //     .collection('users')
-      //     .doc(userId)
-      //     .update({'fcmToken': token});
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userId)
+          .update({'fcmToken': token});
       print('FCM token saved for user: $userId');
     } catch (e) {
       print('Error saving FCM token: $e');
@@ -432,6 +432,258 @@ class FCMService {
       await unsubscribeFromTopic('bookings_all');
     } catch (e) {
       print('Error unsubscribing from booking notifications: $e');
+    }
+  }
+
+  /// Отправить локальное уведомление
+  Future<void> sendLocalNotification({
+    required String title,
+    required String body,
+    String? payload,
+  }) async {
+    try {
+      await _localNotifications.show(
+        DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        title,
+        body,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'event_marketplace',
+            'Event Marketplace Notifications',
+            channelDescription: 'Уведомления о событиях',
+            importance: Importance.high,
+            priority: Priority.high,
+          ),
+          iOS: DarwinNotificationDetails(),
+        ),
+        payload: payload,
+      );
+    } catch (e) {
+      print('Error sending local notification: $e');
+    }
+  }
+
+  // ========== УМНЫЕ УВЕДОМЛЕНИЯ И РЕКОМЕНДАЦИИ ==========
+
+  /// Отправить напоминание специалисту об обновлении цен
+  Future<void> sendPriceUpdateReminder(String specialistId) async {
+    try {
+      final specialistDoc = await FirebaseFirestore.instance
+          .collection('specialists')
+          .doc(specialistId)
+          .get();
+      
+      if (!specialistDoc.exists) return;
+      
+      final specialist = specialistDoc.data()!;
+      final lastPriceUpdate = specialist['lastPriceUpdate'] as Timestamp?;
+      final now = DateTime.now();
+      
+      // Проверяем, прошло ли 7 дней с последнего обновления цен
+      if (lastPriceUpdate != null) {
+        final daysSinceUpdate = now.difference(lastPriceUpdate.toDate()).inDays;
+        if (daysSinceUpdate < 7) return;
+      }
+      
+      await sendLocalNotification(
+        title: 'Обновите ваши цены',
+        body: 'Прошло ${lastPriceUpdate != null ? now.difference(lastPriceUpdate.toDate()).inDays : 7}+ дней с последнего обновления цен. Обновите их для привлечения новых клиентов!',
+        payload: 'price_update_reminder',
+      );
+      
+      // Обновляем время последнего напоминания
+      await FirebaseFirestore.instance
+          .collection('specialists')
+          .doc(specialistId)
+          .update({'lastPriceReminder': Timestamp.now()});
+          
+    } catch (e) {
+      print('Error sending price update reminder: $e');
+    }
+  }
+
+  /// Отправить напоминание заказчику об оплате
+  Future<void> sendPaymentReminder(String customerId, String bookingId) async {
+    try {
+      final bookingDoc = await FirebaseFirestore.instance
+          .collection('bookings')
+          .doc(bookingId)
+          .get();
+      
+      if (!bookingDoc.exists) return;
+      
+      final booking = bookingDoc.data()!;
+      final eventDate = (booking['eventDate'] as Timestamp).toDate();
+      final now = DateTime.now();
+      
+      // Напоминаем за 3 дня до события
+      if (eventDate.difference(now).inDays == 3) {
+        // await _localNotifications.show(
+        //   title: 'Напоминание об оплате',
+        //   body: 'До вашего события осталось 3 дня. Не забудьте произвести оплату!',
+        //   payload: 'payment_reminder_$bookingId',
+        // );
+      }
+      
+    } catch (e) {
+      print('Error sending payment reminder: $e');
+    }
+  }
+
+  /// Отправить cross-sell рекомендацию
+  Future<void> sendCrossSellRecommendation(String customerId, List<String> selectedCategories) async {
+    try {
+      // Определяем недостающие категории для полного пакета
+      final allCategories = ['ведущий', 'диджей', 'фотограф', 'видеограф', 'декоратор', 'контент-мейкер'];
+      final missingCategories = allCategories.where((cat) => !selectedCategories.contains(cat)).toList();
+      
+      if (missingCategories.isEmpty) return;
+      
+      String recommendation = '';
+      if (missingCategories.contains('фотограф')) {
+        recommendation = 'Добавьте фотографа к вашему мероприятию! Запечатлейте лучшие моменты на память.';
+      } else if (missingCategories.contains('видеограф')) {
+        recommendation = 'Добавьте видеографа для создания фильма о вашем мероприятии!';
+      } else if (missingCategories.contains('декоратор')) {
+        recommendation = 'Добавьте декоратора для создания неповторимой атмосферы!';
+      }
+      
+      if (recommendation.isNotEmpty) {
+        // await _localNotifications.show(
+        //   title: 'Дополните ваш пакет услуг',
+        //   body: recommendation,
+        //   payload: 'cross_sell_recommendation',
+        // );
+      }
+      
+    } catch (e) {
+      print('Error sending cross-sell recommendation: $e');
+    }
+  }
+
+  /// Отправить рекомендацию по увеличению бюджета
+  Future<void> sendBudgetRecommendation(String customerId, double currentBudget, List<String> selectedCategories) async {
+    try {
+      // Если бюджет меньше 50000 и выбрано мало категорий
+      if (currentBudget < 50000 && selectedCategories.length < 3) {
+        final additionalCost = 15000; // Примерная стоимость фотографа
+        // await _localNotifications.show(
+        //   title: 'Увеличьте бюджет для лучшего результата',
+        //   body: 'Добавьте ${additionalCost.toStringAsFixed(0)} ₽ к бюджету, чтобы включить фотографа и создать незабываемые воспоминания!',
+        //   payload: 'budget_recommendation',
+        // );
+      }
+      
+    } catch (e) {
+      print('Error sending budget recommendation: $e');
+    }
+  }
+
+  /// Отправить уведомление о новой публикации от избранного специалиста
+  Future<void> sendFavoriteSpecialistUpdate(String customerId, String specialistId, String specialistName) async {
+    try {
+      // await _localNotifications.show(
+      //   title: 'Новая публикация от $specialistName',
+      //   body: 'Ваш избранный специалист опубликовал новый контент. Посмотрите!',
+      //   payload: 'favorite_specialist_update_$specialistId',
+      // );
+      
+    } catch (e) {
+      print('Error sending favorite specialist update: $e');
+    }
+  }
+
+  /// Проверить рабочее время специалиста перед отправкой уведомления
+  Future<bool> isSpecialistWorkingHours(String specialistId) async {
+    try {
+      final specialistDoc = await FirebaseFirestore.instance
+          .collection('specialists')
+          .doc(specialistId)
+          .get();
+      
+      if (!specialistDoc.exists) return true; // Если нет настроек, отправляем всегда
+      
+      final specialist = specialistDoc.data()!;
+      final workingHours = specialist['workingHours'] as Map<String, dynamic>?;
+      
+      if (workingHours == null) return true;
+      
+      final startHour = workingHours['startHour'] as int? ?? 9;
+      final endHour = workingHours['endHour'] as int? ?? 18;
+      final currentHour = DateTime.now().hour;
+      
+      return currentHour >= startHour && currentHour <= endHour;
+      
+    } catch (e) {
+      print('Error checking specialist working hours: $e');
+      return true; // В случае ошибки отправляем уведомление
+    }
+  }
+
+  /// Отправить уведомление с учетом рабочего времени специалиста
+  Future<void> sendNotificationRespectingWorkingHours({
+    required String specialistId,
+    required String title,
+    required String body,
+    String? payload,
+  }) async {
+    try {
+      final isWorkingHours = await isSpecialistWorkingHours(specialistId);
+      
+      if (isWorkingHours) {
+        await sendLocalNotification(
+          title: title,
+          body: body,
+          payload: payload,
+        );
+      } else {
+        // Планируем уведомление на утро
+        final tomorrow = DateTime.now().add(const Duration(days: 1));
+        final scheduledTime = DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 9);
+        
+        await scheduleNotification(
+          title: title,
+          body: body,
+          scheduledTime: scheduledTime,
+          payload: payload,
+        );
+      }
+      
+    } catch (e) {
+      print('Error sending notification respecting working hours: $e');
+    }
+  }
+
+  /// Запланировать уведомление на определенное время
+  Future<void> scheduleNotification({
+    required String title,
+    required String body,
+    required DateTime scheduledTime,
+    String? payload,
+  }) async {
+    try {
+      await _localNotifications.zonedSchedule(
+        DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        title,
+        body,
+        tz.TZDateTime.from(scheduledTime, tz.local),
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'scheduled_notifications',
+            'Запланированные уведомления',
+            channelDescription: 'Уведомления, запланированные на определенное время',
+            importance: Importance.high,
+            priority: Priority.high,
+          ),
+          iOS: const DarwinNotificationDetails(),
+        ),
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        payload: payload,
+      );
+      
+    } catch (e) {
+      print('Error scheduling notification: $e');
     }
   }
 }

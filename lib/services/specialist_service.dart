@@ -397,6 +397,7 @@ class SpecialistService {
         category: category,
         subcategories: subcategories,
         experienceLevel: experienceLevel,
+        price: hourlyRate, // Добавляем обязательное поле price
         yearsOfExperience: yearsOfExperience,
         hourlyRate: hourlyRate,
         minBookingHours: minBookingHours,
@@ -646,6 +647,7 @@ class SpecialistService {
           userId: specialistData['userId']! as String,
           name: specialistData['name']! as String,
           description: specialistData['description'] as String?,
+          price: (specialistData['hourlyRate'] as num).toDouble(), // Добавляем обязательное поле price
           category: SpecialistCategory.values
               .firstWhere((e) => e.name == specialistData['category']),
           subcategories:

@@ -38,6 +38,7 @@ import 'screens/user_management_screen.dart';
 import 'screens/my_bookings_screen.dart';
 import 'screens/calendar_screen.dart';
 import 'screens/recommendations_screen.dart';
+import 'screens/working_hours_settings_screen.dart';
 import 'services/ab_test_service.dart';
 import 'services/analytics_service.dart';
 import 'services/auth_service.dart';
@@ -324,6 +325,12 @@ final routerProvider = Provider<GoRouter>((ref) {
         path: AppRoutes.settingsManagement,
         name: 'settings-management',
         builder: (context, state) => const SettingsManagementScreen(),
+      ),
+
+      GoRoute(
+        path: AppRoutes.workingHoursSettings,
+        name: 'working-hours-settings',
+        builder: (context, state) => const WorkingHoursSettingsScreen(),
       ),
     ],
     errorBuilder: (context, state) => Scaffold(

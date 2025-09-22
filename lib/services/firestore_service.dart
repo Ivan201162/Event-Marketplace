@@ -7,7 +7,9 @@ import '../models/app_notification.dart';
 import '../models/booking.dart';
 import '../models/calendar_event.dart' as calendar;
 import '../models/notification.dart' as app_notification;
+import '../models/notification_template.dart' as template;
 import '../models/specialist_schedule.dart';
+import '../models/paginated_result.dart';
 import 'calendar_service.dart';
 import 'fcm_service.dart';
 import 'notification_service.dart';
@@ -246,7 +248,7 @@ class FirestoreService {
 
       // Проверяем конфликты бронирования
       final hasConflict = await hasBookingConflict(
-        booking.specialistId,
+        booking.specialistId ?? '',
         booking.eventDate,
         endTime,
         excludeBookingId:
@@ -259,7 +261,7 @@ class FirestoreService {
 
       // Проверяем доступность через календарный сервис
       final isAvailable = await _calendarService.isDateTimeAvailable(
-        booking.specialistId,
+        booking.specialistId ?? '',
         booking.eventDate,
       );
 
@@ -384,7 +386,7 @@ class FirestoreService {
       title: event.title,
       startTime: event.startTime,
       endTime: event.endTime,
-      type: event.type.name,
+      type: ScheduleEventType.booking,
     )).toList();
   }
 
@@ -394,25 +396,25 @@ class FirestoreService {
     String status,
   ) async {
     try {
-      NotificationType notificationType;
+      template.NotificationType notificationType;
       String title;
       String body;
 
       switch (status) {
         case 'confirmed':
-          notificationType = app_notification.NotificationType.booking;
+          notificationType = template.NotificationType.booking;
           title = 'Заявка подтверждена!';
           body =
               'Ваша заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} подтверждена';
           break;
         case 'rejected':
-          notificationType = app_notification.NotificationType.booking;
+          notificationType = template.NotificationType.booking;
           title = 'Заявка отклонена';
           body =
               'К сожалению, ваша заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} отклонена';
           break;
         case 'cancelled':
-          notificationType = app_notification.NotificationType.booking;
+          notificationType = template.NotificationType.booking;
           title = 'Заявка отменена';
           body =
               'Заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} была отменена';
@@ -426,13 +428,13 @@ class FirestoreService {
         userId: booking.customerId ?? '',
         title: title,
         body: body,
-        type: app_notification.NotificationType.booking,
-        channel: app_notification.NotificationChannel.push,
+        type: template.NotificationType.booking,
+        channel: template.NotificationChannel.push,
       );
 
       // Отправляем push-уведомление клиенту
       await _sendPushNotification(
-        userId: booking.customerId,
+        userId: booking.customerId ?? '',
         title: title,
         body: body,
         data: {
@@ -447,8 +449,8 @@ class FirestoreService {
           userId: booking.specialistId ?? '',
           title: title,
           body: body,
-          type: app_notification.NotificationType.booking,
-          channel: app_notification.NotificationChannel.push,
+          type: template.NotificationType.booking,
+          channel: template.NotificationChannel.push,
         );
 
         // Отправляем push-уведомление специалисту
@@ -476,14 +478,14 @@ class FirestoreService {
     String specialistId,
   ) async {
     try {
-      NotificationType notificationType;
+      template.NotificationType notificationType;
 
       switch (status) {
         case 'completed':
-          notificationType = app_notification.NotificationType.payment;
+          notificationType = template.NotificationType.payment;
           break;
         case 'failed':
-          notificationType = app_notification.NotificationType.payment;
+          notificationType = template.NotificationType.payment;
           break;
         default:
           return; // Не отправляем уведомления для других статусов
@@ -496,8 +498,8 @@ class FirestoreService {
         body: status == 'completed'
             ? 'Ваш платеж успешно обработан'
             : 'Произошла ошибка при обработке платежа',
-        type: app_notification.NotificationType.payment,
-        channel: app_notification.NotificationChannel.push,
+        type: template.NotificationType.payment,
+        channel: template.NotificationChannel.push,
       );
 
       // Отправляем уведомление специалисту
@@ -507,8 +509,8 @@ class FirestoreService {
         body: status == 'completed'
             ? 'Платеж от клиента успешно обработан'
             : 'Произошла ошибка при обработке платежа',
-        type: app_notification.NotificationType.payment,
-        channel: app_notification.NotificationChannel.push,
+        type: template.NotificationType.payment,
+        channel: template.NotificationChannel.push,
       );
     } catch (e) {
       print('Ошибка отправки уведомлений о платеже: $e');
@@ -528,8 +530,8 @@ class FirestoreService {
         userId: userId,
         title: title,
         body: body,
-        bookingId: data?['bookingId'] ?? '',
-        type: data?['type'] ?? 'booking_update',
+        bookingId: (data?['bookingId'] as String?) ?? '',
+        type: (data?['type'] as String?) ?? 'booking_update',
       );
     } catch (e) {
       SafeLog.error('Ошибка отправки push-уведомления', e);
@@ -548,7 +550,7 @@ class FirestoreService {
     bool descending = false,
   }) async {
     try {
-      Query query = _db.collection('bookings');
+      Query<Map<String, dynamic>> query = _db.collection('bookings');
 
       // Добавляем фильтры
       if (customerId != null) {
@@ -603,7 +605,7 @@ class FirestoreService {
       debounceTimer?.cancel();
       debounceTimer = Timer(debounceDelay, () async {
         try {
-          Query query = _db.collection('bookings');
+          Query<Map<String, dynamic>> query = _db.collection('bookings');
 
           if (customerId != null) {
             query = query.where('customerId', isEqualTo: customerId);
@@ -693,7 +695,7 @@ class FirestoreService {
       debounceTimer?.cancel();
       debounceTimer = Timer(debounceDelay, () async {
         try {
-          Query query = _db.collection('specialists');
+          Query<Map<String, dynamic>> query = _db.collection('specialists');
 
           if (category != null && category.isNotEmpty) {
             query = query.where('category', isEqualTo: category);

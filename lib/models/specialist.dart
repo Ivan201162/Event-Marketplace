@@ -10,6 +10,8 @@ enum SpecialistCategory {
   decorator, // Декоратор
   musician, // Музыкант
   caterer, // Кейтеринг
+  waiter, // Официант
+  chef, // Повар
   security, // Охрана
   technician, // Техник
 
@@ -66,6 +68,10 @@ extension SpecialistCategoryExtension on SpecialistCategory {
         return 'Музыкант';
       case SpecialistCategory.caterer:
         return 'Кейтеринг';
+      case SpecialistCategory.waiter:
+        return 'Официант';
+      case SpecialistCategory.chef:
+        return 'Повар';
       case SpecialistCategory.security:
         return 'Охрана';
       case SpecialistCategory.technician:
@@ -137,6 +143,10 @@ extension SpecialistCategoryExtension on SpecialistCategory {
         return '🎵';
       case SpecialistCategory.caterer:
         return '🍽️';
+      case SpecialistCategory.waiter:
+        return '🍷';
+      case SpecialistCategory.chef:
+        return '👨‍🍳';
       case SpecialistCategory.security:
         return '🛡️';
       case SpecialistCategory.technician:
@@ -540,6 +550,16 @@ class Specialist {
         avgPriceByService: avgPriceByService ?? this.avgPriceByService,
       );
 
+  /// Получить диапазон цен
+  String get priceRange {
+    if (minBookingHours != null && maxBookingHours != null) {
+      final minPrice = price * minBookingHours!;
+      final maxPrice = price * maxBookingHours!;
+      return '${minPrice.toInt()}-${maxPrice.toInt()} ₽';
+    }
+    return '${price.toInt()} ₽';
+  }
+
   /// Получить отображаемое название категории
   String get categoryDisplayName {
     switch (category) {
@@ -557,6 +577,10 @@ class Specialist {
         return 'Музыкант';
       case SpecialistCategory.caterer:
         return 'Кейтеринг';
+      case SpecialistCategory.waiter:
+        return 'Официант';
+      case SpecialistCategory.chef:
+        return 'Повар';
       case SpecialistCategory.security:
         return 'Охрана';
       case SpecialistCategory.technician:
@@ -626,15 +650,6 @@ class Specialist {
     }
   }
 
-  /// Получить диапазон цен
-  String get priceRange {
-    if (minBookingHours != null && maxBookingHours != null) {
-      final minPrice = hourlyRate * minBookingHours!;
-      final maxPrice = hourlyRate * maxBookingHours!;
-      return '${minPrice.toStringAsFixed(0)} - ${maxPrice.toStringAsFixed(0)} ₽';
-    }
-    return '${hourlyRate.toStringAsFixed(0)} ₽/час';
-  }
 
   /// Проверить, доступен ли специалист в указанную дату
   bool isAvailableOnDate(DateTime date) {
@@ -667,6 +682,10 @@ class Specialist {
         return '🎵';
       case SpecialistCategory.caterer:
         return '🍽️';
+      case SpecialistCategory.waiter:
+        return '🍷';
+      case SpecialistCategory.chef:
+        return '👨‍🍳';
       case SpecialistCategory.security:
         return '🛡️';
       case SpecialistCategory.technician:
@@ -846,4 +865,80 @@ class SpecialistFilters {
 
   /// Сбросить все фильтры
   SpecialistFilters clear() => const SpecialistFilters();
+}
+
+/// Получить иконку категории специалиста
+String getCategoryIcon(SpecialistCategory category) {
+  switch (category) {
+    case SpecialistCategory.photographer:
+      return '📸';
+    case SpecialistCategory.videographer:
+      return '🎥';
+    case SpecialistCategory.dj:
+      return '🎧';
+    case SpecialistCategory.host:
+      return '🎤';
+    case SpecialistCategory.decorator:
+      return '🎨';
+    case SpecialistCategory.musician:
+      return '🎵';
+    case SpecialistCategory.caterer:
+      return '🍽️';
+    case SpecialistCategory.security:
+      return '🛡️';
+    case SpecialistCategory.technician:
+      return '🔧';
+    case SpecialistCategory.animator:
+      return '🎭';
+    case SpecialistCategory.florist:
+      return '🌸';
+    case SpecialistCategory.lighting:
+      return '💡';
+    case SpecialistCategory.sound:
+      return '🔊';
+    case SpecialistCategory.costume:
+      return '👗';
+    case SpecialistCategory.fireShow:
+      return '🔥';
+    case SpecialistCategory.fireworks:
+      return '🎆';
+    case SpecialistCategory.lightShow:
+      return '✨';
+    case SpecialistCategory.coverBand:
+      return '🎸';
+    case SpecialistCategory.teamBuilding:
+      return '🤝';
+    case SpecialistCategory.cleaning:
+      return '🧹';
+    case SpecialistCategory.rental:
+      return '📦';
+    case SpecialistCategory.makeup:
+      return '💄';
+    case SpecialistCategory.hairstylist:
+      return '💇';
+    case SpecialistCategory.stylist:
+      return '👔';
+    case SpecialistCategory.waiter:
+      return '🍷';
+    case SpecialistCategory.chef:
+      return '👨‍🍳';
+    case SpecialistCategory.choreographer:
+      return '💃';
+    case SpecialistCategory.dance:
+      return '💃';
+    case SpecialistCategory.magic:
+      return '🎩';
+    case SpecialistCategory.clown:
+      return '🤡';
+    case SpecialistCategory.balloon:
+      return '🎈';
+    case SpecialistCategory.cake:
+      return '🎂';
+    case SpecialistCategory.transport:
+      return '🚗';
+    case SpecialistCategory.venue:
+      return '🏢';
+    case SpecialistCategory.other:
+      return '⭐';
+  }
 }

@@ -45,6 +45,7 @@ class AppRoutes {
   static const String privacy = '/privacy';
   static const String terms = '/terms';
   static const String contact = '/contact';
+  static const String workingHoursSettings = '/working-hours-settings';
 
   // API маршруты (для веб-версии)
   static const String apiHealth = '/api/health';

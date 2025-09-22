@@ -508,7 +508,7 @@ export const sendAnniversaryReminders = functions.pubsub
     try {
       const today = new Date();
       const todayString = `${today.getMonth() + 1}-${today.getDate()}`;
-      
+
       // Находим пользователей с годовщинами сегодня
       const usersSnapshot = await db
         .collection('users')
@@ -520,10 +520,10 @@ export const sendAnniversaryReminders = functions.pubsub
         const user = doc.data();
         const weddingDate = user.weddingDate.toDate();
         const weddingString = `${weddingDate.getMonth() + 1}-${weddingDate.getDate()}`;
-        
+
         if (weddingString === todayString && user.fcmToken) {
           const years = today.getFullYear() - weddingDate.getFullYear();
-          
+
           await messaging.send({
             token: user.fcmToken,
             notification: {
@@ -553,16 +553,16 @@ export const calculateAveragePrices = functions.pubsub
   .onRun(async (context) => {
     try {
       console.log('Starting average prices calculation...');
-      
+
       // Получаем всех специалистов
       const specialistsSnapshot = await db.collection('specialists').get();
-      
+
       const batch = db.batch();
       let updatedCount = 0;
 
       for (const specialistDoc of specialistsSnapshot.docs) {
         const specialistId = specialistDoc.id;
-        
+
         // Получаем завершенные бронирования специалиста
         const bookingsSnapshot = await db
           .collection('bookings')
@@ -574,11 +574,11 @@ export const calculateAveragePrices = functions.pubsub
 
         // Группируем по категориям услуг
         const pricesByCategory: { [key: string]: number[] } = {};
-        
+
         for (const bookingDoc of bookingsSnapshot.docs) {
           const booking = bookingDoc.data();
           const category = booking.eventType || 'other';
-          
+
           if (!pricesByCategory[category]) {
             pricesByCategory[category] = [];
           }
@@ -641,11 +641,11 @@ export const updateSpecialistAveragePrice = functions.firestore
 
         // Группируем по категориям услуг
         const pricesByCategory: { [key: string]: number[] } = {};
-        
+
         for (const bookingDoc of bookingsSnapshot.docs) {
           const booking = bookingDoc.data();
           const category = booking.eventType || 'other';
-          
+
           if (!pricesByCategory[category]) {
             pricesByCategory[category] = [];
           }
