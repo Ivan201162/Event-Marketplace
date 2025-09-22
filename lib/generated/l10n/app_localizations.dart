@@ -279,6 +279,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Error creating story'**
   String get errorCreatingStory;
+
+  /// Language selection label
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// Close button text
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
 }
 
 class _AppLocalizationsDelegate

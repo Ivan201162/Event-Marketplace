@@ -97,4 +97,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get errorCreatingStory => 'Error creating story';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get close => 'Close';
 }

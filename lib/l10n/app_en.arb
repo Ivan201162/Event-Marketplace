@@ -119,5 +119,13 @@
   "errorCreatingStory": "Error creating story",
   "@errorCreatingStory": {
     "description": "Error creating story message"
+  },
+  "language": "Language",
+  "@language": {
+    "description": "Language selection label"
+  },
+  "close": "Close",
+  "@close": {
+    "description": "Close button text"
   }
 }

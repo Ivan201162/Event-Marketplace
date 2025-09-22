@@ -97,4 +97,10 @@ class AppLocalizationsKk extends AppLocalizations {
 
   @override
   String get errorCreatingStory => 'Error creating story';
+
+  @override
+  String get language => 'Тіл';
+
+  @override
+  String get close => 'Жабу';
 }
