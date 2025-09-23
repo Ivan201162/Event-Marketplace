@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:typed_data';
 
 import '../models/chat.dart';
 import '../models/chat_message.dart' as chat_message;
+import '../models/chat_attachment.dart';
+import '../models/chat_bot.dart';
 import '../providers/auth_providers.dart';
 import '../providers/chat_providers.dart';
+import '../services/attachment_service.dart';
+import '../services/chat_bot_service.dart';
+import '../widgets/chat_attachment_widget.dart';
+import '../widgets/chat_bot_message_widget.dart';
 
 /// Экран чата
 class ChatScreen extends ConsumerStatefulWidget {
@@ -21,6 +29,10 @@ class ChatScreen extends ConsumerStatefulWidget {
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
+  
+  bool _isUploadingFile = false;
+  final AttachmentService _attachmentService = AttachmentService();
+  final ChatBotService _chatBotService = ChatBotService();
 
   @override
   void dispose() {
@@ -43,6 +55,20 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         ),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         actions: [
+          IconButton(
+            icon: _isUploadingFile
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.attach_file),
+            onPressed: _isUploadingFile ? null : _attachFile,
+          ),
+          IconButton(
+            icon: const Icon(Icons.smart_toy),
+            onPressed: _showBotHelp,
+          ),
           IconButton(
             icon: const Icon(Icons.info_outline),
             onPressed: _showChatInfo,
@@ -253,6 +279,125 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         );
       }
     });
+  }
+
+  Future<void> _attachFile() async {
+    if (_isUploadingFile) return;
+
+    try {
+      setState(() => _isUploadingFile = true);
+
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.any,
+        allowMultiple: false,
+      );
+
+      if (result != null && result.files.isNotEmpty) {
+        final file = result.files.first;
+        final fileData = file.bytes;
+        final fileName = file.name;
+
+        if (fileData == null) {
+          _showErrorSnackBar('Не удалось загрузить файл');
+          return;
+        }
+
+        // Проверяем поддержку типа файла
+        if (!_attachmentService.isFileTypeSupported(fileName)) {
+          _showErrorSnackBar('Неподдерживаемый тип файла');
+          return;
+        }
+
+        // Загружаем файл
+        final currentUserId = ref.read(currentUserProvider).value?.id ?? '';
+        final attachment = await _attachmentService.uploadFile(
+          messageId: 'msg_${DateTime.now().millisecondsSinceEpoch}',
+          userId: currentUserId,
+          filePath: file.path ?? '',
+          originalFileName: fileName,
+          fileData: fileData,
+        );
+
+        if (attachment != null) {
+          // Отправляем сообщение с вложением
+          ref.read(chatStateProvider.notifier).sendMessage(
+            widget.chatId,
+            '📎 ${attachment.originalFileName}',
+            attachment: attachment,
+          );
+
+          _showSuccessSnackBar('Файл загружен успешно');
+        } else {
+          _showErrorSnackBar('Ошибка загрузки файла');
+        }
+      }
+    } catch (e) {
+      _showErrorSnackBar('Ошибка прикрепления файла');
+    } finally {
+      setState(() => _isUploadingFile = false);
+    }
+  }
+
+  void _showBotHelp() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Row(
+          children: [
+            Icon(Icons.smart_toy, color: Colors.blue),
+            SizedBox(width: 8),
+            Text('Бот-помощник'),
+          ],
+        ),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Я могу помочь вам с:'),
+            SizedBox(height: 8),
+            Text('• Часто задаваемыми вопросами'),
+            Text('• Техническими проблемами'),
+            Text('• Бронированием услуг'),
+            Text('• Оплатой'),
+            Text('• Связью с оператором'),
+            SizedBox(height: 16),
+            Text('Просто напишите мне сообщение!'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Закрыть'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+              _messageController.text = 'Помощь';
+              _sendMessage();
+            },
+            child: const Text('Написать боту'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
+  void _showSuccessSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
+      ),
+    );
   }
 
   void _showChatInfo() {

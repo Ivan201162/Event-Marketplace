@@ -7,6 +7,7 @@ enum MessageType {
   video,
   audio,
   file,
+  attachment,
   location,
   system,
 }
@@ -34,6 +35,7 @@ class ChatMessage {
     this.fileName,
     this.fileSize,
     this.thumbnailUrl,
+    this.attachmentId,
     this.metadata,
     required this.status,
     required this.timestamp,
@@ -62,6 +64,7 @@ class ChatMessage {
       fileName: data['fileName'] as String?,
       fileSize: data['fileSize'] as int?,
       thumbnailUrl: data['thumbnailUrl'] as String?,
+      attachmentId: data['attachmentId'] as String?,
       metadata: data['metadata'] as Map<String, dynamic>?,
       status: MessageStatus.values.firstWhere(
         (e) => e.name == data['status'],
@@ -87,6 +90,7 @@ class ChatMessage {
   final String? fileName;
   final int? fileSize;
   final String? thumbnailUrl;
+  final String? attachmentId;
   final Map<String, dynamic>? metadata;
   final MessageStatus status;
   final DateTime timestamp;
@@ -107,6 +111,7 @@ class ChatMessage {
         'fileName': fileName,
         'fileSize': fileSize,
         'thumbnailUrl': thumbnailUrl,
+        'attachmentId': attachmentId,
         'metadata': metadata,
         'status': status.name,
         'timestamp': Timestamp.fromDate(timestamp),
@@ -129,6 +134,7 @@ class ChatMessage {
     String? fileName,
     int? fileSize,
     String? thumbnailUrl,
+    String? attachmentId,
     Map<String, dynamic>? metadata,
     MessageStatus? status,
     DateTime? timestamp,
@@ -149,6 +155,7 @@ class ChatMessage {
         fileName: fileName ?? this.fileName,
         fileSize: fileSize ?? this.fileSize,
         thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+        attachmentId: attachmentId ?? this.attachmentId,
         metadata: metadata ?? this.metadata,
         status: status ?? this.status,
         timestamp: timestamp ?? this.timestamp,
@@ -197,6 +204,8 @@ class ChatMessage {
         return '🎵';
       case MessageType.file:
         return '📎';
+      case MessageType.attachment:
+        return '📎';
       case MessageType.location:
         return '📍';
       case MessageType.system:
@@ -217,6 +226,8 @@ class ChatMessage {
         return 'Аудио';
       case MessageType.file:
         return 'Файл';
+      case MessageType.attachment:
+        return 'Вложение';
       case MessageType.location:
         return 'Местоположение';
       case MessageType.system:

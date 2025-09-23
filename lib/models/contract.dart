@@ -19,6 +19,98 @@ enum ContractStatus {
   expired, // Истек
 }
 
+/// Информация о стороне договора
+class PartyInfo {
+  const PartyInfo({
+    required this.id,
+    required this.name,
+    required this.type,
+    this.inn,
+    this.ogrn,
+    this.address,
+    this.phone,
+    this.email,
+    this.bankDetails,
+  });
+
+  final String id;
+  final String name; // ФИО или название организации
+  final String type; // физлицо/ИП/самозанятый/госучреждение
+  final String? inn;
+  final String? ogrn;
+  final String? address;
+  final String? phone;
+  final String? email;
+  final Map<String, dynamic>? bankDetails;
+
+  factory PartyInfo.fromMap(Map<String, dynamic> map) => PartyInfo(
+        id: map['id'] ?? '',
+        name: map['name'] ?? '',
+        type: map['type'] ?? '',
+        inn: map['inn'],
+        ogrn: map['ogrn'],
+        address: map['address'],
+        phone: map['phone'],
+        email: map['email'],
+        bankDetails: map['bankDetails'] != null 
+            ? Map<String, dynamic>.from(map['bankDetails']) 
+            : null,
+      );
+
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'name': name,
+        'type': type,
+        'inn': inn,
+        'ogrn': ogrn,
+        'address': address,
+        'phone': phone,
+        'email': email,
+        'bankDetails': bankDetails,
+      };
+}
+
+/// Информация об услуге в договоре
+class ServiceInfo {
+  const ServiceInfo({
+    required this.id,
+    required this.name,
+    required this.description,
+    required this.quantity,
+    required this.price,
+    required this.total,
+    this.unit,
+  });
+
+  final String id;
+  final String name;
+  final String description;
+  final double quantity;
+  final double price;
+  final double total;
+  final String? unit; // единица измерения
+
+  factory ServiceInfo.fromMap(Map<String, dynamic> map) => ServiceInfo(
+        id: map['id'] ?? '',
+        name: map['name'] ?? '',
+        description: map['description'] ?? '',
+        quantity: (map['quantity'] as num?)?.toDouble() ?? 0.0,
+        price: (map['price'] as num?)?.toDouble() ?? 0.0,
+        total: (map['total'] as num?)?.toDouble() ?? 0.0,
+        unit: map['unit'],
+      );
+
+  Map<String, dynamic> toMap() => {
+        'id': id,
+        'name': name,
+        'description': description,
+        'quantity': quantity,
+        'price': price,
+        'total': total,
+        'unit': unit,
+      };
+}
+
 /// Модель договора
 class Contract {
   const Contract({
@@ -42,6 +134,8 @@ class Contract {
     this.endDate,
     this.totalAmount,
     this.currency,
+    this.partiesInfo,
+    this.servicesList,
   });
 
   /// Создать из документа Firestore
@@ -80,6 +174,15 @@ class Contract {
           : null,
       totalAmount: data['totalAmount'] as double?,
       currency: data['currency'] as String?,
+      partiesInfo: data['partiesInfo'] != null 
+          ? (data['partiesInfo'] as Map<String, dynamic>).map(
+              (key, value) => MapEntry(key, PartyInfo.fromMap(value as Map<String, dynamic>)))
+          : null,
+      servicesList: data['servicesList'] != null
+          ? (data['servicesList'] as List<dynamic>)
+              .map((item) => ServiceInfo.fromMap(item as Map<String, dynamic>))
+              .toList()
+          : null,
     );
   }
   final String id;
@@ -102,6 +205,8 @@ class Contract {
   final DateTime? endDate;
   final double? totalAmount;
   final String? currency;
+  final Map<String, PartyInfo>? partiesInfo;
+  final List<ServiceInfo>? servicesList;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -124,6 +229,8 @@ class Contract {
         'endDate': endDate != null ? Timestamp.fromDate(endDate!) : null,
         'totalAmount': totalAmount,
         'currency': currency,
+        'partiesInfo': partiesInfo?.map((key, value) => MapEntry(key, value.toMap())),
+        'servicesList': servicesList?.map((service) => service.toMap()).toList(),
       };
 
   /// Создать копию с изменениями
@@ -143,6 +250,8 @@ class Contract {
     DateTime? signedAt,
     DateTime? expiresAt,
     Map<String, dynamic>? metadata,
+    Map<String, PartyInfo>? partiesInfo,
+    List<ServiceInfo>? servicesList,
   }) =>
       Contract(
         id: id ?? this.id,
@@ -165,6 +274,8 @@ class Contract {
         endDate: endDate ?? this.endDate,
         totalAmount: totalAmount ?? this.totalAmount,
         currency: currency ?? this.currency,
+        partiesInfo: partiesInfo ?? this.partiesInfo,
+        servicesList: servicesList ?? this.servicesList,
       );
 }
 

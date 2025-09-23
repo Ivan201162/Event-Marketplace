@@ -38,6 +38,7 @@ import 'screens/user_management_screen.dart';
 import 'screens/my_bookings_screen.dart';
 import 'screens/calendar_screen.dart';
 import 'screens/recommendations_screen.dart';
+import 'screens/guest_chat_screen.dart';
 import 'services/ab_test_service.dart';
 import 'services/analytics_service.dart';
 import 'services/auth_service.dart';
@@ -242,6 +243,14 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final chatId = state.pathParameters['chatId'];
           return ChatScreen(chatId: chatId ?? '');
+        },
+      ),
+      GoRoute(
+        path: '/guest/:accessCode',
+        name: 'guest-chat',
+        builder: (context, state) {
+          final accessCode = state.pathParameters['accessCode']!;
+          return GuestChatScreen(accessCode: accessCode);
         },
       ),
 

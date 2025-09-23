@@ -153,6 +153,35 @@ service cloud.firestore {
         get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
     }
     
+    // Правила для договоров
+    match /contracts/{contractId} {
+      // Участники договора могут читать данные
+      allow read: if request.auth != null && 
+        (request.auth.uid == resource.data.customerId || 
+         request.auth.uid == resource.data.specialistId);
+      
+      // Система может создавать договоры
+      allow create: if request.auth != null && 
+        request.resource.data.keys().hasAll(['customerId', 'specialistId', 'bookingId', 'type', 'status', 'title', 'content', 'createdAt', 'updatedAt', 'expiresAt']);
+      
+      // Участники договора могут подписывать договор
+      allow update: if request.auth != null && 
+        (request.auth.uid == resource.data.customerId || 
+         request.auth.uid == resource.data.specialistId) &&
+        request.resource.data.keys().hasAll(['status', 'signedAt', 'signatures', 'updatedAt']) &&
+        request.resource.data.status == 'signed';
+      
+      // Система может обновлять статус договора
+      allow update: if request.auth != null && 
+        request.resource.data.keys().hasAll(['status', 'updatedAt']) &&
+        request.resource.data.status in ['draft', 'pending', 'signed', 'active', 'completed', 'cancelled', 'expired'];
+      
+      // Администраторы могут читать все договоры
+      allow read: if request.auth != null && 
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/admins/$(request.auth.uid)).data.role in ['admin', 'superAdmin'];
+    }
+    
     // Правила для уведомлений
     match /notifications/{notificationId} {
       // Пользователи могут читать свои уведомления

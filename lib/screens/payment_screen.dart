@@ -1,308 +1,209 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../core/feature_flags.dart';
-import '../core/safe_log.dart';
+import '../models/payment.dart';
 import '../models/booking.dart';
-import '../payments/payment_gateway.dart';
-import '../providers/payment_providers.dart';
+import '../services/payment_service.dart';
+import '../widgets/payment_method_widget.dart';
+import '../widgets/payment_summary_widget.dart';
 
-/// Экран оплаты
-class PaymentScreen extends ConsumerStatefulWidget {
-  const PaymentScreen({
-    super.key,
-    required this.booking,
-  });
+class PaymentScreen extends StatefulWidget {
   final Booking booking;
+  final PaymentType paymentType;
+  final OrganizationType organizationType;
+
+  const PaymentScreen({
+    Key? key,
+    required this.booking,
+    required this.paymentType,
+    required this.organizationType,
+  }) : super(key: key);
 
   @override
-  ConsumerState<PaymentScreen> createState() => _PaymentScreenState();
+  State<PaymentScreen> createState() => _PaymentScreenState();
 }
 
-class _PaymentScreenState extends ConsumerState<PaymentScreen> {
-  PaymentMethod _selectedMethod = PaymentMethod.card;
+class _PaymentScreenState extends State<PaymentScreen> {
+  final PaymentService _paymentService = PaymentService();
+  final TextEditingController _amountController = TextEditingController();
+  
+  PaymentMethod _selectedPaymentMethod = PaymentMethod.bankCard;
   bool _isProcessing = false;
-  List<PaymentInfo> _paymentHistory = [];
+  double _totalAmount = 0.0;
+  double _prepaymentAmount = 0.0;
+  double _taxAmount = 0.0;
+  double _taxRate = 0.0;
+  TaxType _taxType = TaxType.none;
+  String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-    _loadPaymentHistory();
+    _calculateAmounts();
   }
 
-  Future<void> _loadPaymentHistory() async {
-    try {
-      final history =
-          await ref.read(paymentHistoryProvider(widget.booking.id).future);
-      setState(() {
-        _paymentHistory = history;
-      });
-    } catch (e, stackTrace) {
-      SafeLog.error(
-        'PaymentScreen: Error loading payment history',
-        e,
-        stackTrace,
-      );
+  void _calculateAmounts() {
+    final config = PaymentConfiguration.getDefault(widget.organizationType);
+    _totalAmount = widget.booking.totalPrice;
+    _prepaymentAmount = config.calculateAdvanceAmount(_totalAmount);
+    
+    // Определяем тип налога в зависимости от типа организации
+    switch (widget.organizationType) {
+      case OrganizationType.selfEmployed:
+        _taxType = TaxType.professionalIncome;
+        _taxRate = 4.0; // 4% для самозанятых с физлиц
+        break;
+      case OrganizationType.entrepreneur:
+        _taxType = TaxType.simplifiedTax;
+        _taxRate = 6.0; // 6% УСН для ИП
+        break;
+      case OrganizationType.commercial:
+        _taxType = TaxType.vat;
+        _taxRate = 20.0; // 20% НДС для коммерческих организаций
+        break;
+      default:
+        _taxType = TaxType.none;
+        _taxRate = 0.0;
+    }
+
+    _taxAmount = TaxCalculator.calculateTax(_totalAmount, _taxType);
+    
+    // Устанавливаем сумму для оплаты
+    if (widget.paymentType == PaymentType.advance) {
+      _amountController.text = _prepaymentAmount.toStringAsFixed(2);
+    } else {
+      _amountController.text = (_totalAmount - _prepaymentAmount).toStringAsFixed(2);
     }
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Оплата'),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(_getScreenTitle()),
+        backgroundColor: Theme.of(context).primaryColor,
+        foregroundColor: Colors.white,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Информация о бронировании
+            _buildBookingInfo(),
+            const SizedBox(height: 24),
+            
+            // Сводка по платежу
+            PaymentSummaryWidget(
+              totalAmount: _totalAmount,
+              prepaymentAmount: _prepaymentAmount,
+              taxAmount: _taxAmount,
+              taxRate: _taxRate,
+              taxType: _taxType,
+              paymentType: widget.paymentType,
+              organizationType: widget.organizationType,
+            ),
+            const SizedBox(height: 24),
+            
+            // Выбор метода оплаты
+            PaymentMethodWidget(
+              selectedMethod: _selectedPaymentMethod,
+              onMethodChanged: (method) {
+                setState(() {
+                  _selectedPaymentMethod = method;
+                });
+              },
+            ),
+            const SizedBox(height: 24),
+            
+            // Сумма к оплате
+            _buildAmountInput(),
+            const SizedBox(height: 24),
+            
+            // Ошибка
+            if (_errorMessage != null)
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: Colors.red.shade50,
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.red.shade200),
+                ),
+                child: Row(
+                  children: [
+                    Icon(Icons.error_outline, color: Colors.red.shade600),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        _errorMessage!,
+                        style: TextStyle(color: Colors.red.shade600),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            const SizedBox(height: 24),
+            
+            // Кнопка оплаты
+            _buildPayButton(),
+          ],
         ),
-        body: _buildBody(),
-      );
-
-  Widget _buildBody() {
-    if (!FeatureFlags.paymentsEnabled) {
-      return _buildPaymentsDisabledState();
-    }
-
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          _buildBookingInfo(),
-          const SizedBox(height: 24),
-          _buildPaymentMethods(),
-          const SizedBox(height: 24),
-          _buildPaymentButtons(),
-          const SizedBox(height: 24),
-          _buildPaymentHistory(),
-        ],
       ),
     );
   }
 
-  Widget _buildPaymentsDisabledState() => Container(
-        padding: const EdgeInsets.all(24),
+  Widget _buildBookingInfo() {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(
-              Icons.payment_outlined,
-              size: 120,
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-            ),
-            const SizedBox(height: 32),
             Text(
-              'Платежи временно недоступны',
-              style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-              textAlign: TextAlign.center,
+              'Информация о бронировании',
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 16),
-            Text(
-              'Функция платежей отключена в настройках приложения. В демо-режиме вы можете просматривать информацию о платежах.',
+            const SizedBox(height: 12),
+            _buildInfoRow('Мероприятие', widget.booking.eventTitle),
+            _buildInfoRow('Дата', _formatDate(widget.booking.eventDate)),
+            _buildInfoRow('Участники', '${widget.booking.participantsCount} чел.'),
+            if (widget.booking.eventLocation != null)
+              _buildInfoRow('Место', widget.booking.eventLocation!),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            width: 100,
+            child: Text(
+              '$label:',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context)
-                        .colorScheme
-                        .onSurface
-                        .withOpacity(0.7),
-                  ),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 32),
-            ElevatedButton.icon(
-              onPressed: () => Navigator.of(context).pop(),
-              icon: const Icon(Icons.arrow_back),
-              label: const Text('Назад'),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildBookingInfo() => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Информация о бронировании',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                color: Colors.grey.shade600,
               ),
-              const SizedBox(height: 12),
-              _buildInfoRow('Событие', widget.booking.eventTitle),
-              _buildInfoRow(
-                'Дата',
-                '${widget.booking.eventDate.day}.${widget.booking.eventDate.month}.${widget.booking.eventDate.year}',
-              ),
-              _buildInfoRow(
-                'Участников',
-                '${widget.booking.participantsCount}',
-              ),
-              _buildInfoRow('Общая сумма', '${widget.booking.totalPrice} ₽'),
-              _buildInfoRow('Статус', widget.booking.statusText),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildInfoRow(String label, String value) => Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: 100,
-              child: Text(
-                label,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.7),
-                    ),
-              ),
-            ),
-            Expanded(
-              child: Text(
-                value,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w500,
-                    ),
-              ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildPaymentMethods() {
-    final availableMethods = ref.watch(availablePaymentMethodsProvider);
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Способ оплаты',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 12),
-            ...availableMethods.map(_buildPaymentMethodTile),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPaymentMethodTile(PaymentMethod method) {
-    final isSelected = _selectedMethod == method;
-    final methodInfo = _getPaymentMethodInfo(method);
-
-    return ListTile(
-      leading: Icon(
-        methodInfo.icon,
-        color: isSelected ? Theme.of(context).colorScheme.primary : null,
-      ),
-      title: Text(methodInfo.name),
-      subtitle: Text(methodInfo.description),
-      trailing: Radio<PaymentMethod>(
-        value: method,
-        groupValue: _selectedMethod,
-        onChanged: (value) {
-          setState(() {
-            _selectedMethod = value!;
-          });
-        },
-      ),
-      onTap: () {
-        setState(() {
-          _selectedMethod = method;
-        });
-      },
-    );
-  }
-
-  Widget _buildPaymentButtons() => Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          ElevatedButton.icon(
-            onPressed: _isProcessing
-                ? null
-                : () => _processPayment(PaymentType.prepayment),
-            icon: _isProcessing
-                ? const SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : const Icon(Icons.payment),
-            label:
-                Text(_isProcessing ? 'Обработка...' : 'Оплатить аванс (30%)'),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              backgroundColor: Colors.blue,
-              foregroundColor: Colors.white,
             ),
           ),
-          const SizedBox(height: 12),
-          ElevatedButton.icon(
-            onPressed: _isProcessing
-                ? null
-                : () => _processPayment(PaymentType.finalPayment),
-            icon: const Icon(Icons.account_balance_wallet),
-            label: const Text('Оплатить остаток (70%)'),
-            style: ElevatedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              backgroundColor: Colors.green,
-              foregroundColor: Colors.white,
-            ),
-          ),
-          const SizedBox(height: 12),
-          OutlinedButton.icon(
-            onPressed: _isProcessing
-                ? null
-                : () => _processPayment(PaymentType.fullPayment),
-            icon: const Icon(Icons.payment),
-            label: const Text('Оплатить полностью'),
-            style: OutlinedButton.styleFrom(
-              padding: const EdgeInsets.symmetric(vertical: 16),
+          Expanded(
+            child: Text(
+              value,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
           ),
         ],
-      );
+      ),
+    );
+  }
 
-  Widget _buildPaymentHistory() {
-    if (_paymentHistory.isEmpty) {
-      return Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            children: [
-              Icon(
-                Icons.history,
-                size: 48,
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
-              ),
-              const SizedBox(height: 12),
-              Text(
-                'История платежей пуста',
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.7),
-                    ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
+  Widget _buildAmountInput() {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -310,447 +211,229 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'История платежей',
+              'Сумма к оплате',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 12),
-            ..._paymentHistory.map(_buildPaymentHistoryItem),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPaymentHistoryItem(PaymentInfo payment) => Container(
-        margin: const EdgeInsets.only(bottom: 8),
-        padding: const EdgeInsets.all(12),
-        decoration: BoxDecoration(
-          color: Theme.of(context)
-              .colorScheme
-              .surfaceContainerHighest
-              .withOpacity(0.3),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Row(
-          children: [
-            Icon(
-              _getPaymentStatusIcon(payment.status),
-              color: _getPaymentStatusColor(payment.status),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _getPaymentTypeName(payment.type),
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.w500,
-                        ),
-                  ),
-                  Text(
-                    '${payment.amount} ${payment.currency}',
-                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(0.7),
-                        ),
-                  ),
-                ],
+                fontWeight: FontWeight.bold,
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                Text(
-                  _getPaymentStatusName(payment.status),
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: _getPaymentStatusColor(payment.status),
-                        fontWeight: FontWeight.w500,
-                      ),
-                ),
-                Text(
-                  '${payment.createdAt.day}.${payment.createdAt.month}.${payment.createdAt.year}',
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Theme.of(context)
-                            .colorScheme
-                            .onSurface
-                            .withOpacity(0.5),
-                      ),
-                ),
-              ],
-            ),
-          ],
-        ),
-      );
-
-  Future<void> _processPayment(PaymentType type) async {
-    if (!FeatureFlags.paymentsEnabled) {
-      _showPaymentDisabledDialog(type);
-      return;
-    }
-
-    setState(() {
-      _isProcessing = true;
-    });
-
-    try {
-      final paymentGateway = ref.read(paymentGatewayProvider);
-      final amount = _calculatePaymentAmount(type);
-      final fee = await paymentGateway.getPaymentFee(
-        amount: amount,
-        method: _selectedMethod,
-      );
-
-      _showPaymentConfirmationDialog(type, amount, fee);
-    } catch (e, stackTrace) {
-      SafeLog.error('PaymentScreen: Error processing payment', e, stackTrace);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка обработки платежа: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } finally {
-      setState(() {
-        _isProcessing = false;
-      });
-    }
-  }
-
-  void _showPaymentDisabledDialog(PaymentType type) {
-    final amount = _calculatePaymentAmount(type);
-    final typeName = _getPaymentTypeName(type);
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Row(
-          children: [
-            Icon(
-              Icons.info_outline,
-              color: Theme.of(context).colorScheme.primary,
-            ),
-            const SizedBox(width: 8),
-            const Text('Демо-режим'),
-          ],
-        ),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('В демо-режиме платежи отключены.'),
             const SizedBox(height: 12),
-            Text(
-              'Информация о платеже:',
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+            TextField(
+              controller: _amountController,
+              keyboardType: TextInputType.number,
+              decoration: InputDecoration(
+                labelText: 'Сумма (₽)',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                suffixText: '₽',
+                prefixIcon: const Icon(Icons.attach_money),
+              ),
+              onChanged: (value) {
+                setState(() {
+                  _errorMessage = null;
+                });
+              },
             ),
             const SizedBox(height: 8),
-            _buildInfoRow('Тип', typeName),
-            _buildInfoRow('Сумма', '$amount ₽'),
-            _buildInfoRow(
-              'Способ',
-              _getPaymentMethodInfo(_selectedMethod).name,
-            ),
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.lightbulb_outline,
-                    color: Theme.of(context).colorScheme.onPrimaryContainer,
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'В реальном приложении здесь будет происходить обработка платежа через выбранный способ оплаты.',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onPrimaryContainer,
-                          ),
-                    ),
-                  ),
-                ],
+            Text(
+              _getAmountDescription(),
+              style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                color: Colors.grey.shade600,
               ),
             ),
           ],
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Понятно'),
-          ),
-        ],
       ),
     );
   }
 
-  void _showPaymentConfirmationDialog(
-    PaymentType type,
-    double amount,
-    double fee,
-  ) {
-    final typeName = _getPaymentTypeName(type);
-    final totalAmount = amount + fee;
-
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Подтверждение платежа'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Вы собираетесь произвести $typeName:'),
-            const SizedBox(height: 12),
-            _buildInfoRow('Сумма', '$amount ₽'),
-            _buildInfoRow('Комиссия', '$fee ₽'),
-            _buildInfoRow('Итого', '$totalAmount ₽'),
-            _buildInfoRow(
-              'Способ',
-              _getPaymentMethodInfo(_selectedMethod).name,
-            ),
-            const SizedBox(height: 12),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.orange.withOpacity(0.3)),
-              ),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.warning_outlined,
-                    color: Colors.orange[700],
-                  ),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(
-                      'Это демо-режим. Реальные деньги не будут списаны.',
-                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: Colors.orange[700],
-                          ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+  Widget _buildPayButton() {
+    return SizedBox(
+      width: double.infinity,
+      height: 56,
+      child: ElevatedButton(
+        onPressed: _isProcessing ? null : _processPayment,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).primaryColor,
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
         ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              _executePayment(type, amount);
-            },
-            child: const Text('Подтвердить'),
-          ),
-        ],
+        child: _isProcessing
+            ? const SizedBox(
+                height: 20,
+                width: 20,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : Text(
+                'Оплатить ${_amountController.text} ₽',
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
       ),
     );
   }
 
-  Future<void> _executePayment(PaymentType type, double amount) async {
-    setState(() {
-      _isProcessing = true;
-    });
-
-    try {
-      final paymentGateway = ref.read(paymentGatewayProvider);
-
-      final result = await paymentGateway.createPayment(
-        bookingId: widget.booking.id,
-        amount: amount,
-        currency: 'RUB',
-        type: type,
-        method: _selectedMethod,
-        description:
-            '${_getPaymentTypeName(type)} для ${widget.booking.eventTitle}',
-      );
-
-      if (result.isSuccess) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Платеж успешно обработан! ID: ${result.paymentId}'),
-            backgroundColor: Colors.green,
-          ),
-        );
-
-        // Обновляем историю платежей
-        await _loadPaymentHistory();
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка платежа: ${result.errorMessage}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    } catch (e, stackTrace) {
-      SafeLog.error('PaymentScreen: Error executing payment', e, stackTrace);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка выполнения платежа: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    } finally {
-      setState(() {
-        _isProcessing = false;
-      });
-    }
-  }
-
-  double _calculatePaymentAmount(PaymentType type) {
-    switch (type) {
-      case PaymentType.prepayment:
-        return widget.booking.totalPrice * 0.3;
-      case PaymentType.finalPayment:
-        return widget.booking.totalPrice * 0.7;
-      case PaymentType.fullPayment:
-        return widget.booking.totalPrice;
-      case PaymentType.refund:
-        return 0;
-    }
-  }
-
-  PaymentMethodInfo _getPaymentMethodInfo(PaymentMethod method) {
-    switch (method) {
-      case PaymentMethod.card:
-        return const PaymentMethodInfo(
-          name: 'Банковская карта',
-          description: 'Visa, MasterCard, МИР',
-          icon: Icons.credit_card,
-        );
-      case PaymentMethod.applePay:
-        return const PaymentMethodInfo(
-          name: 'Apple Pay',
-          description: 'Быстрая оплата через Apple Pay',
-          icon: Icons.apple,
-        );
-      case PaymentMethod.googlePay:
-        return const PaymentMethodInfo(
-          name: 'Google Pay',
-          description: 'Быстрая оплата через Google Pay',
-          icon: Icons.g_mobiledata,
-        );
-      case PaymentMethod.yooMoney:
-        return const PaymentMethodInfo(
-          name: 'ЮMoney',
-          description: 'Электронный кошелек ЮMoney',
-          icon: Icons.account_balance_wallet,
-        );
-      case PaymentMethod.qiwi:
-        return const PaymentMethodInfo(
-          name: 'QIWI',
-          description: 'Электронный кошелек QIWI',
-          icon: Icons.account_balance_wallet,
-        );
-      case PaymentMethod.webmoney:
-        return const PaymentMethodInfo(
-          name: 'WebMoney',
-          description: 'Электронный кошелек WebMoney',
-          icon: Icons.account_balance_wallet,
-        );
-      case PaymentMethod.bankTransfer:
-        return const PaymentMethodInfo(
-          name: 'Банковский перевод',
-          description: 'Перевод на банковский счет',
-          icon: Icons.account_balance,
-        );
-    }
-  }
-
-  String _getPaymentTypeName(PaymentType type) {
-    switch (type) {
-      case PaymentType.prepayment:
-        return 'Предоплата';
+  String _getScreenTitle() {
+    switch (widget.paymentType) {
+      case PaymentType.advance:
+        return 'Оплата аванса';
       case PaymentType.finalPayment:
         return 'Финальный платеж';
       case PaymentType.fullPayment:
         return 'Полная оплата';
       case PaymentType.refund:
-        return 'Возврат';
+        return 'Возврат средств';
     }
   }
 
-  String _getPaymentStatusName(PaymentStatus status) {
-    switch (status) {
-      case PaymentStatus.pending:
-        return 'Ожидает';
-      case PaymentStatus.processing:
-        return 'Обрабатывается';
-      case PaymentStatus.completed:
-        return 'Завершен';
-      case PaymentStatus.failed:
-        return 'Неудачный';
-      case PaymentStatus.cancelled:
-        return 'Отменен';
-      case PaymentStatus.refunded:
-        return 'Возвращен';
+  String _getAmountDescription() {
+    switch (widget.paymentType) {
+      case PaymentType.advance:
+        return 'Авансовый платеж (${(_prepaymentAmount / _totalAmount * 100).toStringAsFixed(0)}% от общей суммы)';
+      case PaymentType.finalPayment:
+        return 'Остаток к доплате после выполнения услуг';
+      case PaymentType.fullPayment:
+        return 'Полная стоимость услуг';
+      case PaymentType.refund:
+        return 'Сумма к возврату';
     }
   }
 
-  IconData _getPaymentStatusIcon(PaymentStatus status) {
-    switch (status) {
-      case PaymentStatus.pending:
-        return Icons.schedule;
-      case PaymentStatus.processing:
-        return Icons.hourglass_empty;
-      case PaymentStatus.completed:
-        return Icons.check_circle;
-      case PaymentStatus.failed:
-        return Icons.error;
-      case PaymentStatus.cancelled:
-        return Icons.cancel;
-      case PaymentStatus.refunded:
-        return Icons.undo;
+  String _formatDate(DateTime date) {
+    return '${date.day}.${date.month.toString().padLeft(2, '0')}.${date.year}';
+  }
+
+  Future<void> _processPayment() async {
+    if (_amountController.text.isEmpty) {
+      setState(() {
+        _errorMessage = 'Введите сумму для оплаты';
+      });
+      return;
+    }
+
+    final amount = double.tryParse(_amountController.text);
+    if (amount == null || amount <= 0) {
+      setState(() {
+        _errorMessage = 'Введите корректную сумму';
+      });
+      return;
+    }
+
+    setState(() {
+      _isProcessing = true;
+      _errorMessage = null;
+    });
+
+    try {
+      // Создаем платеж с автоматическим расчётом налогов
+      final payment = await _paymentService.createPaymentWithTaxes(
+        bookingId: widget.booking.id,
+        customerId: widget.booking.userId,
+        specialistId: widget.booking.specialistId ?? '',
+        type: widget.paymentType,
+        amount: amount,
+        organizationType: widget.organizationType,
+        taxType: _taxType,
+        description: _getPaymentDescription(),
+        paymentMethod: _selectedPaymentMethod.name,
+        metadata: {
+          'bookingId': widget.booking.id,
+          'eventTitle': widget.booking.eventTitle,
+          'eventDate': widget.booking.eventDate.toIso8601String(),
+        },
+      );
+
+      // Обрабатываем платеж
+      await _paymentService.processPayment(payment.id, _selectedPaymentMethod.name);
+
+      if (mounted) {
+        Navigator.of(context).pop(true);
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Платеж на сумму ${amount.toStringAsFixed(2)} ₽ успешно создан'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = 'Ошибка при создании платежа: $e';
+      });
+    } finally {
+      setState(() {
+        _isProcessing = false;
+      });
     }
   }
 
-  Color _getPaymentStatusColor(PaymentStatus status) {
-    switch (status) {
-      case PaymentStatus.pending:
-        return Colors.orange;
-      case PaymentStatus.processing:
-        return Colors.blue;
-      case PaymentStatus.completed:
-        return Colors.green;
-      case PaymentStatus.failed:
-        return Colors.red;
-      case PaymentStatus.cancelled:
-        return Colors.grey;
-      case PaymentStatus.refunded:
-        return Colors.purple;
+  String _getPaymentDescription() {
+    switch (widget.paymentType) {
+      case PaymentType.advance:
+        return 'Авансовый платеж за ${widget.booking.eventTitle}';
+      case PaymentType.finalPayment:
+        return 'Финальный платеж за ${widget.booking.eventTitle}';
+      case PaymentType.fullPayment:
+        return 'Полная оплата за ${widget.booking.eventTitle}';
+      case PaymentType.refund:
+        return 'Возврат средств за ${widget.booking.eventTitle}';
     }
+  }
+
+  @override
+  void dispose() {
+    _amountController.dispose();
+    super.dispose();
   }
 }
 
-class PaymentMethodInfo {
-  const PaymentMethodInfo({
-    required this.name,
-    required this.description,
-    required this.icon,
-  });
-  final String name;
-  final String description;
-  final IconData icon;
+enum PaymentMethod {
+  bankCard,
+  yooMoney,
+  qiwi,
+  webmoney,
+  sberbank,
+  tinkoff,
+}
+
+extension PaymentMethodExtension on PaymentMethod {
+  String get displayName {
+    switch (this) {
+      case PaymentMethod.bankCard:
+        return 'Банковская карта';
+      case PaymentMethod.yooMoney:
+        return 'ЮMoney';
+      case PaymentMethod.qiwi:
+        return 'QIWI';
+      case PaymentMethod.webmoney:
+        return 'WebMoney';
+      case PaymentMethod.sberbank:
+        return 'Сбербанк Онлайн';
+      case PaymentMethod.tinkoff:
+        return 'Тинькофф';
+    }
+  }
+
+  IconData get icon {
+    switch (this) {
+      case PaymentMethod.bankCard:
+        return Icons.credit_card;
+      case PaymentMethod.yooMoney:
+        return Icons.account_balance_wallet;
+      case PaymentMethod.qiwi:
+        return Icons.phone_android;
+      case PaymentMethod.webmoney:
+        return Icons.account_balance;
+      case PaymentMethod.sberbank:
+        return Icons.account_balance;
+      case PaymentMethod.tinkoff:
+        return Icons.account_balance;
+    }
+  }
 }

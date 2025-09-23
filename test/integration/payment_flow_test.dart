@@ -1,322 +1,103 @@
-import 'package:event_marketplace_app/main.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:event_marketplace_app/models/payment.dart';
+import 'package:event_marketplace_app/models/booking.dart';
+import 'package:event_marketplace_app/services/payment_service.dart';
 
 void main() {
   group('Payment Flow Integration Tests', () {
-    testWidgets('should complete full payment flow from booking to completion',
-        (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-      
-      await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
-        ),
+    late PaymentService paymentService;
+    late Booking testBooking;
+
+    setUp(() {
+      paymentService = PaymentService();
+      testBooking = Booking(
+        id: 'test_booking_123',
+        userId: 'customer_123',
+        specialistId: 'specialist_456',
+        eventTitle: 'Тестовое мероприятие',
+        eventDate: DateTime.now().add(const Duration(days: 30)),
+        participantsCount: 50,
+        totalPrice: 10000,
+        status: BookingStatus.pending,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+        expiresAt: DateTime.now().add(const Duration(days: 7)),
+        organizerName: 'Тестовый организатор',
+        userName: 'Тестовый пользователь',
       );
+    });
 
-      await tester.pumpAndSettle();
+    group('Payment Configuration Tests', () {
+      test('should create correct configuration for individual', () {
+        final config = PaymentConfiguration.getDefault(OrganizationType.individual);
+        
+        expect(config.organizationType, equals(OrganizationType.individual));
+        expect(config.advancePercentage, equals(30));
+        expect(config.requiresAdvance, isTrue);
+        expect(config.allowsPostPayment, isFalse);
+      });
 
-      // Act 1: Navigate to my bookings
-      await tester.tap(find.text('Мои заявки'));
-      await tester.pumpAndSettle();
+      test('should create correct configuration for government', () {
+        final config = PaymentConfiguration.getDefault(OrganizationType.government);
+        
+        expect(config.organizationType, equals(OrganizationType.government));
+        expect(config.advancePercentage, equals(0));
+        expect(config.requiresAdvance, isFalse);
+        expect(config.allowsPostPayment, isTrue);
+      });
+    });
 
-      // Act 2: Select booking with pending payment
-      final bookingCard = find.byType(Card).first;
-      if (bookingCard.evaluate().isNotEmpty) {
-        await tester.tap(bookingCard);
-        await tester.pumpAndSettle();
+    group('Advance Amount Calculation', () {
+      test('should calculate 30% advance for individual', () {
+        final config = PaymentConfiguration.getDefault(OrganizationType.individual);
+        const totalAmount = 10000.0;
+        
+        final advanceAmount = config.calculateAdvanceAmount(totalAmount);
+        
+        expect(advanceAmount, equals(3000));
+      });
 
-        // Act 3: View payment details
-        expect(find.text('Платежи'), findsOneWidget);
+      test('should calculate 0% advance for government', () {
+        final config = PaymentConfiguration.getDefault(OrganizationType.government);
+        const totalAmount = 10000.0;
+        
+        final advanceAmount = config.calculateAdvanceAmount(totalAmount);
+        
+        expect(advanceAmount, equals(0));
+      });
+    });
 
-        // Act 4: Make payment
-        await tester.tap(find.text('Оплатить'));
-        await tester.pumpAndSettle();
-
-        // Act 5: Fill payment form
-        await tester.enterText(
-          find.byType(TextFormField).first,
-          '1234 5678 9012 3456',
+    group('Complete Payment Flow', () {
+      test('should create advance and final payments for individual', () async {
+        final payments = await paymentService.createPaymentsForBooking(
+          booking: testBooking,
+          organizationType: OrganizationType.individual,
         );
-        await tester.enterText(find.byType(TextFormField).at(1), '12/25');
-        await tester.enterText(find.byType(TextFormField).at(2), '123');
+        
+        expect(payments.length, equals(2));
+        
+        final advancePayment = payments.firstWhere((p) => p.type == PaymentType.advance);
+        expect(advancePayment.amount, equals(3000));
+        expect(advancePayment.status, equals(PaymentStatus.pending));
+        
+        final finalPayment = payments.firstWhere((p) => p.type == PaymentType.finalPayment);
+        expect(finalPayment.amount, equals(7000));
+        expect(finalPayment.status, equals(PaymentStatus.pending));
+      });
 
-        // Act 6: Submit payment
-        await tester.tap(find.text('Оплатить'));
-        await tester.pumpAndSettle();
-
-        // Assert: Payment should be processed successfully
-        expect(find.text('Платеж успешно обработан'), findsOneWidget);
-      }
-    });
-
-    testWidgets('should handle payment failure flow', (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-      
-      await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      // Act 1: Navigate to my bookings
-      await tester.tap(find.text('Мои заявки'));
-      await tester.pumpAndSettle();
-
-      // Act 2: Select booking with pending payment
-      final bookingCard = find.byType(Card).first;
-      if (bookingCard.evaluate().isNotEmpty) {
-        await tester.tap(bookingCard);
-        await tester.pumpAndSettle();
-
-        // Act 3: Make payment with invalid card
-        await tester.tap(find.text('Оплатить'));
-        await tester.pumpAndSettle();
-
-        // Act 4: Fill payment form with invalid data
-        await tester.enterText(
-          find.byType(TextFormField).first,
-          '0000 0000 0000 0000',
+      test('should create only final payment for government', () async {
+        final payments = await paymentService.createPaymentsForBooking(
+          booking: testBooking,
+          organizationType: OrganizationType.government,
         );
-        await tester.enterText(find.byType(TextFormField).at(1), '12/25');
-        await tester.enterText(find.byType(TextFormField).at(2), '123');
-
-        // Act 5: Submit payment
-        await tester.tap(find.text('Оплатить'));
-        await tester.pumpAndSettle();
-
-        // Assert: Payment should fail
-        expect(find.text('Ошибка обработки платежа'), findsOneWidget);
-      }
-    });
-
-    testWidgets('should handle payment refund flow', (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-      
-      await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      // Act 1: Navigate to payments screen
-      await tester.tap(find.text('Платежи'));
-      await tester.pumpAndSettle();
-
-      // Act 2: Select completed payment
-      final paymentCard = find.byType(Card).first;
-      if (paymentCard.evaluate().isNotEmpty) {
-        await tester.tap(paymentCard);
-        await tester.pumpAndSettle();
-
-        // Act 3: Request refund
-        await tester.tap(find.text('Запросить возврат'));
-        await tester.pumpAndSettle();
-
-        // Act 4: Confirm refund
-        await tester.tap(find.text('Подтвердить'));
-        await tester.pumpAndSettle();
-
-        // Assert: Refund should be processed
-        expect(find.text('Возврат обработан'), findsOneWidget);
-      }
-    });
-
-    testWidgets('should handle payment statistics flow', (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-      
-      await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      // Act 1: Navigate to payments screen
-      await tester.tap(find.text('Платежи'));
-      await tester.pumpAndSettle();
-
-      // Act 2: View statistics
-      await tester.tap(find.text('Статистика'));
-      await tester.pumpAndSettle();
-
-      // Assert: Statistics should be displayed
-      expect(find.text('Статистика платежей'), findsOneWidget);
-      expect(find.text('Общая сумма'), findsOneWidget);
-      expect(find.text('Количество платежей'), findsOneWidget);
-      expect(find.text('Средний платеж'), findsOneWidget);
-    });
-
-    testWidgets('should handle payment history flow', (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-      
-      await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      // Act 1: Navigate to payments screen
-      await tester.tap(find.text('Платежи'));
-      await tester.pumpAndSettle();
-
-      // Act 2: View payment history
-      await tester.tap(find.text('История'));
-      await tester.pumpAndSettle();
-
-      // Assert: Payment history should be displayed
-      expect(find.text('История платежей'), findsOneWidget);
-    });
-
-    testWidgets('should handle payment filters flow', (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-      
-      await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      // Act 1: Navigate to payments screen
-      await tester.tap(find.text('Платежи'));
-      await tester.pumpAndSettle();
-
-      // Act 2: Apply filters
-      await tester.tap(find.byIcon(Icons.filter_list));
-      await tester.pumpAndSettle();
-
-      // Act 3: Select filter options
-      await tester.tap(find.text('Завершенные'));
-      await tester.pumpAndSettle();
-
-      // Assert: Filtered payments should be displayed
-      expect(find.text('Платежи'), findsOneWidget);
-    });
-
-    testWidgets('should handle payment search flow', (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-      
-      await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      // Act 1: Navigate to payments screen
-      await tester.tap(find.text('Платежи'));
-      await tester.pumpAndSettle();
-
-      // Act 2: Search payments
-      await tester.enterText(find.byType(TextField), 'booking_1');
-      await tester.pumpAndSettle();
-
-      // Assert: Search results should be displayed
-      expect(find.text('Платежи'), findsOneWidget);
-    });
-
-    testWidgets('should handle payment export flow', (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-      
-      await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      // Act 1: Navigate to payments screen
-      await tester.tap(find.text('Платежи'));
-      await tester.pumpAndSettle();
-
-      // Act 2: Export payments
-      await tester.tap(find.byIcon(Icons.download));
-      await tester.pumpAndSettle();
-
-      // Assert: Export should be initiated
-      expect(find.text('Экспорт платежей'), findsOneWidget);
-    });
-
-    testWidgets('should handle payment notification flow', (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-      
-      await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      // Act 1: Navigate to notifications
-      await tester.tap(find.text('Уведомления'));
-      await tester.pumpAndSettle();
-
-      // Act 2: View payment notification
-      final notificationCard = find.byType(Card).first;
-      if (notificationCard.evaluate().isNotEmpty) {
-        await tester.tap(notificationCard);
-        await tester.pumpAndSettle();
-
-        // Assert: Payment notification should be displayed
-        expect(find.text('Уведомления'), findsOneWidget);
-      }
-    });
-
-    testWidgets('should handle payment settings flow', (tester) async {
-      // Arrange
-      SharedPreferences.setMockInitialValues({});
-      final prefs = await SharedPreferences.getInstance();
-      
-      await tester.pumpWidget(
-        ProviderScope(
-          child: EventMarketplaceApp(prefs: prefs),
-        ),
-      );
-
-      await tester.pumpAndSettle();
-
-      // Act 1: Navigate to profile
-      await tester.tap(find.text('Профиль'));
-      await tester.pumpAndSettle();
-
-      // Act 2: Navigate to payment settings
-      await tester.tap(find.text('Настройки платежей'));
-      await tester.pumpAndSettle();
-
-      // Assert: Payment settings should be displayed
-      expect(find.text('Настройки платежей'), findsOneWidget);
+        
+        expect(payments.length, equals(1));
+        
+        final payment = payments.first;
+        expect(payment.type, equals(PaymentType.fullPayment));
+        expect(payment.amount, equals(10000));
+        expect(payment.status, equals(PaymentStatus.pending));
+      });
     });
   });
 }

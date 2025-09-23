@@ -1,702 +1,498 @@
-import 'dart:io';
-
-import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:file_picker/file_picker.dart';
+import 'dart:typed_data';
 
+import '../core/logger.dart';
+import '../models/guest_access.dart';
+import '../models/chat_attachment.dart';
+import '../services/guest_access_service.dart';
+import '../services/attachment_service.dart';
+import '../services/chat_bot_service.dart';
+import '../widgets/chat_attachment_widget.dart';
+import '../widgets/chat_bot_message_widget.dart';
+
+/// Экран чата для гостей
 class GuestChatScreen extends ConsumerStatefulWidget {
+  final String accessCode;
+
   const GuestChatScreen({
     super.key,
-    this.specialistId,
-    this.eventId,
+    required this.accessCode,
   });
-  final String? specialistId;
-  final String? eventId;
 
   @override
   ConsumerState<GuestChatScreen> createState() => _GuestChatScreenState();
 }
 
 class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
-  final TextEditingController _nameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _messageController = TextEditingController();
-  final FocusNode _messageFocusNode = FocusNode();
-
-  // Вложения
-  final List<File> _attachments = [];
-  bool _showAttachmentOptions = false;
-  bool _isGuestMode = true;
-  String? _guestId;
+  final ScrollController _scrollController = ScrollController();
+  
+  GuestAccess? _guestAccess;
+  bool _isLoading = true;
+  bool _isSendingMessage = false;
+  bool _isUploadingFile = false;
+  
+  final List<Map<String, dynamic>> _messages = [];
+  final GuestAccessService _guestAccessService = GuestAccessService();
+  final AttachmentService _attachmentService = AttachmentService();
+  final ChatBotService _chatBotService = ChatBotService();
 
   @override
-  void dispose() {
-    _nameController.dispose();
-    _emailController.dispose();
-    _phoneController.dispose();
-    _messageController.dispose();
-    _messageFocusNode.dispose();
-    super.dispose();
+  void initState() {
+    super.initState();
+    _loadGuestAccess();
   }
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Гостевой чат'),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          actions: [
-            if (_isGuestMode)
-              TextButton(
-                onPressed: _switchToSpecialistMode,
-                child: const Text('Я специалист'),
-              ),
-          ],
-        ),
-        body: _isGuestMode ? _buildGuestMode() : _buildSpecialistMode(),
+  void dispose() {
+    _messageController.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadGuestAccess() async {
+    try {
+      setState(() => _isLoading = true);
+      
+      final guestAccess = await _guestAccessService.getGuestAccessByCode(widget.accessCode);
+      
+      if (guestAccess == null) {
+        if (mounted) {
+          _showErrorDialog('Неверный или истекший код доступа');
+        }
+        return;
+      }
+
+      setState(() {
+        _guestAccess = guestAccess;
+        _isLoading = false;
+      });
+
+      // Добавляем приветственное сообщение от бота
+      _addBotWelcomeMessage();
+      
+      // Отмечаем использование доступа
+      await _guestAccessService.useGuestAccess(
+        widget.accessCode,
+        guestName: _guestAccess?.guestName,
+        guestEmail: _guestAccess?.guestEmail,
       );
+    } catch (e, stackTrace) {
+      AppLogger.logE('Ошибка загрузки гостевого доступа', 'guest_chat_screen', e, stackTrace);
+      if (mounted) {
+        _showErrorDialog('Ошибка загрузки чата');
+      }
+    }
+  }
 
-  Widget _buildGuestMode() => Column(
-        children: [
-          // Информация о госте
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              border: Border(
-                bottom: BorderSide(
-                  color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
-                ),
-              ),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Информация о госте',
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
-                ),
-                const SizedBox(height: 16),
-
-                // Поля ввода информации
-                TextField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(
-                    labelText: 'Имя *',
-                    hintText: 'Введите ваше имя',
-                    border: OutlineInputBorder(),
-                  ),
-                ),
-                const SizedBox(height: 12),
-
-                TextField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'Email',
-                    hintText: 'your@email.com',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.emailAddress,
-                ),
-                const SizedBox(height: 12),
-
-                TextField(
-                  controller: _phoneController,
-                  decoration: const InputDecoration(
-                    labelText: 'Телефон',
-                    hintText: '+7 (999) 123-45-67',
-                    border: OutlineInputBorder(),
-                  ),
-                  keyboardType: TextInputType.phone,
-                ),
-              ],
-            ),
-          ),
-
-          // Сообщения
-          Expanded(
-            child: _buildMessagesList(),
-          ),
-
-          // Поле ввода сообщения
-          _buildMessageInput(),
+  void _addBotWelcomeMessage() {
+    setState(() {
+      _messages.add({
+        'id': 'welcome_${DateTime.now().millisecondsSinceEpoch}',
+        'type': 'bot',
+        'message': 'Добро пожаловать! Я бот-помощник. Чем могу помочь?',
+        'timestamp': DateTime.now(),
+        'quickReplies': [
+          {'title': 'Задать вопрос', 'payload': 'question'},
+          {'title': 'Связаться с организатором', 'payload': 'organizer'},
         ],
+      });
+    });
+  }
+
+  Future<void> _sendMessage() async {
+    final messageText = _messageController.text.trim();
+    if (messageText.isEmpty || _isSendingMessage) return;
+
+    setState(() => _isSendingMessage = true);
+
+    try {
+      // Добавляем сообщение пользователя
+      final userMessage = {
+        'id': 'user_${DateTime.now().millisecondsSinceEpoch}',
+        'type': 'user',
+        'message': messageText,
+        'timestamp': DateTime.now(),
+        'senderName': _guestAccess?.guestName ?? 'Гость',
+      };
+
+      setState(() {
+        _messages.add(userMessage);
+        _messageController.clear();
+      });
+
+      _scrollToBottom();
+
+      // Обрабатываем сообщение ботом
+      final botResponse = await _chatBotService.processUserMessage(
+        chatId: 'guest_${widget.accessCode}',
+        userId: 'guest_${widget.accessCode}',
+        message: messageText,
       );
 
-  Widget _buildSpecialistMode() => Column(
-        children: [
-          // Информация о специалисте
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              border: Border(
-                bottom: BorderSide(
-                  color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
-                ),
-              ),
-            ),
-            child: Row(
-              children: [
-                const Icon(Icons.person, size: 24),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Режим специалиста',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                ),
-                      ),
-                      Text(
-                        'Просмотр сообщений от гостей',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey[600],
-                            ),
-                      ),
-                    ],
-                  ),
-                ),
-                TextButton(
-                  onPressed: _switchToGuestMode,
-                  child: const Text('Режим гостя'),
-                ),
-              ],
-            ),
-          ),
+      if (botResponse != null) {
+        setState(() {
+          _messages.add({
+            'id': botResponse.id,
+            'type': 'bot',
+            'message': botResponse.message,
+            'timestamp': botResponse.createdAt,
+            'quickReplies': botResponse.quickReplies?.map((reply) => {
+              'title': reply.title,
+              'payload': reply.payload,
+            }).toList(),
+            'cards': botResponse.cards?.map((card) => {
+              'title': card.title,
+              'subtitle': card.subtitle,
+              'imageUrl': card.imageUrl,
+            }).toList(),
+          });
+        });
 
-          // Сообщения
-          Expanded(
-            child: _buildMessagesList(),
-          ),
+        _scrollToBottom();
+      }
+    } catch (e, stackTrace) {
+      AppLogger.logE('Ошибка отправки сообщения', 'guest_chat_screen', e, stackTrace);
+      _showErrorSnackBar('Ошибка отправки сообщения');
+    } finally {
+      setState(() => _isSendingMessage = false);
+    }
+  }
 
-          // Поле ввода сообщения
-          _buildMessageInput(),
-        ],
+  Future<void> _attachFile() async {
+    if (_isUploadingFile) return;
+
+    try {
+      setState(() => _isUploadingFile = true);
+
+      final result = await FilePicker.platform.pickFiles(
+        type: FileType.any,
+        allowMultiple: false,
       );
 
-  Widget _buildMessagesList() {
-    // TODO: Реализовать получение сообщений из Firestore
-    return Container(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(
-            Icons.chat_bubble_outline,
-            size: 64,
-            color: Colors.grey.withOpacity(0.5),
-          ),
-          const SizedBox(height: 16),
-          Text(
-            'Гостевой чат',
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  color: Colors.grey.withOpacity(0.7),
-                ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Отправьте сообщение организатору мероприятия',
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Colors.grey.withOpacity(0.7),
-                ),
-            textAlign: TextAlign.center,
+      if (result != null && result.files.isNotEmpty) {
+        final file = result.files.first;
+        final fileData = file.bytes;
+        final fileName = file.name;
+
+        if (fileData == null) {
+          _showErrorSnackBar('Не удалось загрузить файл');
+          return;
+        }
+
+        // Проверяем поддержку типа файла
+        if (!_attachmentService.isFileTypeSupported(fileName)) {
+          _showErrorSnackBar('Неподдерживаемый тип файла');
+          return;
+        }
+
+        // Загружаем файл
+        final attachment = await _attachmentService.uploadFile(
+          messageId: 'guest_${DateTime.now().millisecondsSinceEpoch}',
+          userId: 'guest_${widget.accessCode}',
+          filePath: file.path ?? '',
+          originalFileName: fileName,
+          fileData: fileData,
+        );
+
+        if (attachment != null) {
+          setState(() {
+            _messages.add({
+              'id': 'attachment_${DateTime.now().millisecondsSinceEpoch}',
+              'type': 'attachment',
+              'attachment': attachment,
+              'timestamp': DateTime.now(),
+              'senderName': _guestAccess?.guestName ?? 'Гость',
+            });
+          });
+
+          _scrollToBottom();
+          _showSuccessSnackBar('Файл загружен успешно');
+        } else {
+          _showErrorSnackBar('Ошибка загрузки файла');
+        }
+      }
+    } catch (e, stackTrace) {
+      AppLogger.logE('Ошибка прикрепления файла', 'guest_chat_screen', e, stackTrace);
+      _showErrorSnackBar('Ошибка прикрепления файла');
+    } finally {
+      setState(() => _isUploadingFile = false);
+    }
+  }
+
+  void _scrollToBottom() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_scrollController.hasClients) {
+        _scrollController.animateTo(
+          _scrollController.position.maxScrollExtent,
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.easeOut,
+        );
+      }
+    });
+  }
+
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Ошибка'),
+        content: Text(message),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('OK'),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildMessageInput() => Column(
-        children: [
-          // Вложения
-          if (_attachments.isNotEmpty) _buildAttachmentsPreview(),
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
 
+  void _showSuccessSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (_isLoading) {
+      return const Scaffold(
+        body: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    }
+
+    if (_guestAccess == null) {
+      return Scaffold(
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Icon(Icons.error_outline, size: 64, color: Colors.red),
+              const SizedBox(height: 16),
+              const Text(
+                'Неверный код доступа',
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              const SizedBox(height: 8),
+              const Text('Проверьте ссылку и попробуйте снова'),
+              const SizedBox(height: 16),
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('Назад'),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Чат с организатором'),
+        backgroundColor: Colors.blue[600],
+        foregroundColor: Colors.white,
+        actions: [
+          IconButton(
+            onPressed: _attachFile,
+            icon: _isUploadingFile
+                ? const SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : const Icon(Icons.attach_file),
+          ),
+        ],
+      ),
+      body: Column(
+        children: [
+          // Информация о гостевом доступе
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            color: Colors.blue[50],
+            child: Row(
+              children: [
+                const Icon(Icons.info_outline, color: Colors.blue),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Гостевой доступ: ${_guestAccess!.accessCode}',
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                ),
+                if (_guestAccess!.guestName != null)
+                  Text(
+                    _guestAccess!.guestName!,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+              ],
+            ),
+          ),
+          // Список сообщений
+          Expanded(
+            child: ListView.builder(
+              controller: _scrollController,
+              padding: const EdgeInsets.all(16),
+              itemCount: _messages.length,
+              itemBuilder: (context, index) {
+                final message = _messages[index];
+                return _buildMessageWidget(message);
+              },
+            ),
+          ),
           // Поле ввода сообщения
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.surface,
-              border: Border(
-                top: BorderSide(
-                  color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.1),
+                  blurRadius: 4,
+                  offset: const Offset(0, -2),
                 ),
-              ),
+              ],
             ),
-            child: Column(
+            child: Row(
               children: [
-                // Опции вложений
-                if (_showAttachmentOptions) _buildAttachmentOptions(),
-
-                Row(
-                  children: [
-                    // Кнопка вложений
-                    IconButton(
-                      onPressed: () {
-                        setState(() {
-                          _showAttachmentOptions = !_showAttachmentOptions;
-                        });
-                      },
-                      icon: Icon(
-                        _showAttachmentOptions
-                            ? Icons.close
-                            : Icons.attach_file,
-                        color: _showAttachmentOptions ? Colors.red : null,
+                Expanded(
+                  child: TextField(
+                    controller: _messageController,
+                    decoration: const InputDecoration(
+                      hintText: 'Введите сообщение...',
+                      border: OutlineInputBorder(),
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
                       ),
                     ),
-
-                    // Поле ввода
-                    Expanded(
-                      child: TextField(
-                        controller: _messageController,
-                        focusNode: _messageFocusNode,
-                        decoration: InputDecoration(
-                          hintText: _isGuestMode
-                              ? 'Сообщение организатору...'
-                              : 'Ответ гостю...',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(24),
-                          ),
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16,
-                            vertical: 12,
-                          ),
-                        ),
-                        maxLines: null,
-                        onSubmitted: (value) {
-                          if (value.trim().isNotEmpty ||
-                              _attachments.isNotEmpty) {
-                            _sendMessage();
-                          }
-                        },
-                      ),
-                    ),
-
-                    const SizedBox(width: 8),
-
-                    // Кнопка отправки
-                    FloatingActionButton.small(
-                      onPressed: _canSendMessage() ? _sendMessage : null,
-                      child: const Icon(Icons.send),
-                    ),
-                  ],
+                    maxLines: null,
+                    onSubmitted: (_) => _sendMessage(),
+                  ),
+                ),
+                const SizedBox(width: 8),
+                IconButton(
+                  onPressed: _isSendingMessage ? null : _sendMessage,
+                  icon: _isSendingMessage
+                      ? const SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Icon(Icons.send),
+                  color: Colors.blue,
                 ),
               ],
             ),
           ),
         ],
-      );
-
-  bool _canSendMessage() {
-    if (_isGuestMode) {
-      return _nameController.text.trim().isNotEmpty &&
-          (_messageController.text.trim().isNotEmpty ||
-              _attachments.isNotEmpty);
-    } else {
-      return _messageController.text.trim().isNotEmpty ||
-          _attachments.isNotEmpty;
-    }
-  }
-
-  Future<void> _sendMessage() async {
-    if (!_canSendMessage()) return;
-
-    try {
-      // TODO: Реализовать отправку сообщения в Firestore
-      // Создать или получить chatId
-      // Отправить сообщение с вложениями
-
-      final message = _messageController.text.trim();
-      final attachments = _attachments.map((file) => file.path).toList();
-
-      // Показать уведомление об успешной отправке
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Сообщение отправлено'),
-          backgroundColor: Colors.green,
-        ),
-      );
-
-      // Очистить поля
-      _messageController.clear();
-      setState(() {
-        _attachments.clear();
-        _showAttachmentOptions = false;
-      });
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка отправки: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
-    }
-  }
-
-  void _switchToGuestMode() {
-    setState(() {
-      _isGuestMode = true;
-    });
-  }
-
-  void _switchToSpecialistMode() {
-    setState(() {
-      _isGuestMode = false;
-    });
-  }
-
-  /// Загрузка изображений
-  Future<void> _pickImages() async {
-    final picker = ImagePicker();
-    final images = await picker.pickMultiImage();
-
-    if (images.isNotEmpty) {
-      setState(() {
-        _attachments.addAll(images.map((image) => File(image.path)));
-      });
-    }
-  }
-
-  /// Загрузка видео
-  Future<void> _pickVideo() async {
-    final picker = ImagePicker();
-    final video = await picker.pickVideo(source: ImageSource.gallery);
-
-    if (video != null) {
-      setState(() {
-        _attachments.add(File(video.path));
-      });
-    }
-  }
-
-  /// Загрузка аудио
-  Future<void> _pickAudio() async {
-    final result = await FilePicker.platform.pickFiles(
-      type: FileType.audio,
-      allowMultiple: true,
+      ),
     );
-
-    if (result != null) {
-      setState(() {
-        _attachments.addAll(result.files.map((file) => File(file.path!)));
-      });
-    }
   }
 
-  /// Загрузка документов
-  Future<void> _pickDocuments() async {
-    final result = await FilePicker.platform.pickFiles(
-      allowMultiple: true,
-      type: FileType.custom,
-      allowedExtensions: ['pdf', 'doc', 'docx', 'txt', 'xls', 'xlsx'],
-    );
-
-    if (result != null) {
-      setState(() {
-        _attachments.addAll(result.files.map((file) => File(file.path!)));
-      });
-    }
-  }
-
-  /// Удаление вложения
-  void _removeAttachment(int index) {
-    setState(() {
-      _attachments.removeAt(index);
-    });
-  }
-
-  /// Отправка в WhatsApp
-  Future<void> _sendToWhatsApp() async {
-    if (_attachments.isEmpty) return;
-
-    final phoneNumber = widget
-        .specialistId; // Предполагаем, что specialistId - это номер телефона
-    if (phoneNumber == null) return;
-
-    final message = _messageController.text.isNotEmpty
-        ? _messageController.text
-        : 'Файлы для мероприятия';
-    final encodedMessage = Uri.encodeComponent(message);
-
-    final whatsappUrl = 'https://wa.me/$phoneNumber?text=$encodedMessage';
-
-    if (await canLaunchUrl(Uri.parse(whatsappUrl))) {
-      await launchUrl(Uri.parse(whatsappUrl));
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('WhatsApp не установлен')),
-        );
-      }
-    }
-  }
-
-  /// Отправка в Telegram
-  Future<void> _sendToTelegram() async {
-    if (_attachments.isEmpty) return;
-
-    final username =
-        widget.specialistId; // Предполагаем, что specialistId - это username
-    if (username == null) return;
-
-    final message = _messageController.text.isNotEmpty
-        ? _messageController.text
-        : 'Файлы для мероприятия';
-    final encodedMessage = Uri.encodeComponent(message);
-
-    final telegramUrl = 'https://t.me/$username?text=$encodedMessage';
-
-    if (await canLaunchUrl(Uri.parse(telegramUrl))) {
-      await launchUrl(Uri.parse(telegramUrl));
-    } else {
-      if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Telegram не установлен')),
-        );
-      }
-    }
-  }
-
-  /// Построение превью вложений
-  Widget _buildAttachmentsPreview() => Container(
-        height: 100,
-        padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          border: Border(
-            bottom: BorderSide(
-              color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
-            ),
-          ),
-        ),
-        child: ListView.builder(
-          scrollDirection: Axis.horizontal,
-          itemCount: _attachments.length,
-          itemBuilder: (context, index) {
-            final file = _attachments[index];
-            return Container(
-              width: 80,
-              margin: const EdgeInsets.only(right: 8),
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.grey.withOpacity(0.1),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Icon(
-                          _getFileIcon(file.path),
-                          size: 32,
-                          color: Colors.grey,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          file.path.split('/').last,
-                          style: const TextStyle(fontSize: 10),
-                          textAlign: TextAlign.center,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Positioned(
-                    top: 4,
-                    right: 4,
-                    child: GestureDetector(
-                      onTap: () => _removeAttachment(index),
-                      child: Container(
-                        padding: const EdgeInsets.all(2),
-                        decoration: const BoxDecoration(
-                          color: Colors.red,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.close,
-                          size: 12,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      );
-
-  /// Построение опций вложений
-  Widget _buildAttachmentOptions() => Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surface,
-          border: Border(
-            bottom: BorderSide(
-              color: Theme.of(context).colorScheme.outline.withOpacity(0.2),
-            ),
-          ),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Прикрепить файлы:',
-              style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-            ),
-            const SizedBox(height: 12),
-
-            // Кнопки типов файлов
-            Row(
-              children: [
-                _buildAttachmentButton(
-                  icon: Icons.photo,
-                  label: 'Фото',
-                  onTap: _pickImages,
-                ),
-                const SizedBox(width: 12),
-                _buildAttachmentButton(
-                  icon: Icons.videocam,
-                  label: 'Видео',
-                  onTap: _pickVideo,
-                ),
-                const SizedBox(width: 12),
-                _buildAttachmentButton(
-                  icon: Icons.audiotrack,
-                  label: 'Аудио',
-                  onTap: _pickAudio,
-                ),
-                const SizedBox(width: 12),
-                _buildAttachmentButton(
-                  icon: Icons.description,
-                  label: 'Документы',
-                  onTap: _pickDocuments,
-                ),
-              ],
-            ),
-
-            const SizedBox(height: 16),
-
-            // Кнопки мессенджеров
-            if (_attachments.isNotEmpty) ...[
-              Text(
-                'Отправить через мессенджер:',
-                style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
-              ),
-              const SizedBox(height: 8),
-              Row(
-                children: [
-                  _buildMessengerButton(
-                    icon: Icons.chat,
-                    label: 'WhatsApp',
-                    color: Colors.green,
-                    onTap: _sendToWhatsApp,
-                  ),
-                  const SizedBox(width: 12),
-                  _buildMessengerButton(
-                    icon: Icons.telegram,
-                    label: 'Telegram',
-                    color: Colors.blue,
-                    onTap: _sendToTelegram,
-                  ),
-                ],
-              ),
-            ],
-          ],
-        ),
-      );
-
-  /// Кнопка типа вложения
-  Widget _buildAttachmentButton({
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-  }) =>
-      Expanded(
-        child: InkWell(
-          onTap: onTap,
-          borderRadius: BorderRadius.circular(8),
-          child: Container(
-            padding: const EdgeInsets.symmetric(vertical: 12),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey.withOpacity(0.3)),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Column(
-              children: [
-                Icon(icon, size: 24),
-                const SizedBox(height: 4),
-                Text(
-                  label,
-                  style: const TextStyle(fontSize: 12),
-                  textAlign: TextAlign.center,
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-
-  /// Кнопка мессенджера
-  Widget _buildMessengerButton({
-    required IconData icon,
-    required String label,
-    required Color color,
-    required VoidCallback onTap,
-  }) =>
-      Expanded(
-        child: ElevatedButton.icon(
-          onPressed: onTap,
-          icon: Icon(icon, size: 16),
-          label: Text(label),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: color,
-            foregroundColor: Colors.white,
-          ),
-        ),
-      );
-
-  /// Получить иконку файла по расширению
-  IconData _getFileIcon(String filePath) {
-    final extension = filePath.split('.').last.toLowerCase();
-    switch (extension) {
-      case 'jpg':
-      case 'jpeg':
-      case 'png':
-      case 'gif':
-        return Icons.image;
-      case 'mp4':
-      case 'avi':
-      case 'mov':
-        return Icons.videocam;
-      case 'mp3':
-      case 'wav':
-      case 'aac':
-        return Icons.audiotrack;
-      case 'pdf':
-        return Icons.picture_as_pdf;
-      case 'doc':
-      case 'docx':
-        return Icons.description;
-      case 'xls':
-      case 'xlsx':
-        return Icons.table_chart;
+  Widget _buildMessageWidget(Map<String, dynamic> message) {
+    switch (message['type']) {
+      case 'user':
+        return _buildUserMessage(message);
+      case 'bot':
+        return _buildBotMessage(message);
+      case 'attachment':
+        return _buildAttachmentMessage(message);
       default:
-        return Icons.insert_drive_file;
+        return const SizedBox.shrink();
     }
+  }
+
+  Widget _buildUserMessage(Map<String, dynamic> message) {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.blue[600],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Text(
+                message['message'],
+                style: const TextStyle(color: Colors.white),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBotMessage(Map<String, dynamic> message) {
+    // Создаем временный объект ChatBotMessage для виджета
+    final botMessage = ChatBotMessage(
+      id: message['id'],
+      chatId: 'guest_${widget.accessCode}',
+      message: message['message'],
+      type: BotMessageType.text,
+      quickReplies: message['quickReplies'] != null
+          ? (message['quickReplies'] as List).map((reply) {
+              return BotQuickReply(
+                title: reply['title'],
+                payload: reply['payload'],
+                actionType: BotActionType.sendMessage,
+              );
+            }).toList()
+          : null,
+      createdAt: message['timestamp'],
+      isFromBot: true,
+    );
+
+    return ChatBotMessageWidget(
+      message: botMessage,
+      onQuickReplyTap: (payload) {
+        // Обрабатываем быстрый ответ
+        _messageController.text = payload;
+        _sendMessage();
+      },
+    );
+  }
+
+  Widget _buildAttachmentMessage(Map<String, dynamic> message) {
+    final attachment = message['attachment'] as ChatAttachment;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          Flexible(
+            child: ChatAttachmentWidget(
+              attachment: attachment,
+              isFromCurrentUser: true,
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }

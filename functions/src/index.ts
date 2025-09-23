@@ -357,11 +357,11 @@ export const vkCustomToken = functions.https.onCall(async (data, context) => {
 });
 
 /**
- * Cloud Function для расчета комиссий
+ * Cloud Function для расчета комиссий и налогов
  */
 export const calculateCommission = functions.https.onCall(async (data, context) => {
   try {
-    const { amount, organizationType = 'individual' } = data;
+    const { amount, organizationType = 'individual', taxType = 'none' } = data;
 
     if (!amount || amount <= 0) {
       throw new functions.https.HttpsError('invalid-argument', 'Valid amount is required');
@@ -370,30 +370,259 @@ export const calculateCommission = functions.https.onCall(async (data, context) 
     // Комиссия платформы (5% для всех)
     const platformCommission = amount * 0.05;
 
-    // НДС (20% для коммерческих организаций)
-    let vat = 0;
-    if (organizationType === 'commercial') {
-      vat = amount * 0.20;
+    // Расчет налогов в зависимости от типа
+    let taxAmount = 0;
+    let taxRate = 0;
+
+    switch (taxType) {
+      case 'professionalIncome':
+        // Налог на профессиональный доход: 4% с физлиц, 6% с юрлиц
+        taxRate = 4; // По умолчанию 4%
+        taxAmount = amount * (taxRate / 100);
+        break;
+      case 'simplifiedTax':
+        // УСН 6%
+        taxRate = 6;
+        taxAmount = amount * (taxRate / 100);
+        break;
+      case 'vat':
+        // НДС 20%
+        taxRate = 20;
+        taxAmount = amount * (taxRate / 100);
+        break;
+      default:
+        taxAmount = 0;
+        taxRate = 0;
     }
 
     // Итоговая сумма к выплате специалисту
-    const specialistAmount = amount - platformCommission - vat;
+    const specialistAmount = amount - platformCommission - taxAmount;
 
     return {
       totalAmount: amount,
       platformCommission,
-      vat,
+      taxAmount,
+      taxRate,
       specialistAmount,
       breakdown: {
         originalAmount: amount,
         platformFee: platformCommission,
-        vatFee: vat,
+        taxFee: taxAmount,
         netAmount: specialistAmount,
       }
     };
   } catch (error) {
     console.error('Commission Calculation Error:', error);
     throw new functions.https.HttpsError('internal', 'Failed to calculate commission');
+  }
+});
+
+/**
+ * Cloud Function для создания платежа через ЮKassa
+ */
+export const createYooKassaPayment = functions.https.onCall(async (data, context) => {
+  try {
+    const { amount, currency = 'RUB', description, returnUrl, paymentId } = data;
+
+    if (!amount || amount <= 0) {
+      throw new functions.https.HttpsError('invalid-argument', 'Valid amount is required');
+    }
+
+    if (!paymentId) {
+      throw new functions.https.HttpsError('invalid-argument', 'Payment ID is required');
+    }
+
+    // Получаем конфигурацию ЮKassa
+    const shopId = functions.config().yookassa?.shop_id;
+    const secretKey = functions.config().yookassa?.secret_key;
+
+    if (!shopId || !secretKey) {
+      throw new functions.https.HttpsError('failed-precondition', 'YooKassa configuration not found');
+    }
+
+    // Создаем платеж в ЮKassa
+    const yooKassaResponse = await fetch('https://api.yookassa.ru/v3/payments', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Basic ${Buffer.from(`${shopId}:${secretKey}`).toString('base64')}`,
+        'Content-Type': 'application/json',
+        'Idempotence-Key': paymentId,
+      },
+      body: JSON.stringify({
+        amount: {
+          value: amount.toFixed(2),
+          currency: currency,
+        },
+        confirmation: {
+          type: 'redirect',
+          return_url: returnUrl || 'https://your-app.com/payment/success',
+        },
+        description: description || `Платеж #${paymentId}`,
+        metadata: {
+          paymentId: paymentId,
+        },
+      }),
+    });
+
+    if (!yooKassaResponse.ok) {
+      const errorData = await yooKassaResponse.json();
+      throw new functions.https.HttpsError('internal', `YooKassa error: ${errorData.description}`);
+    }
+
+    const paymentData = await yooKassaResponse.json();
+
+    // Обновляем платеж в Firestore
+    await db.collection('payments').doc(paymentId).update({
+      yooKassaId: paymentData.id,
+      confirmationUrl: paymentData.confirmation?.confirmation_url,
+      status: 'pending',
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+
+    return {
+      paymentId: paymentData.id,
+      confirmationUrl: paymentData.confirmation?.confirmation_url,
+      status: paymentData.status,
+    };
+  } catch (error) {
+    console.error('YooKassa Payment Creation Error:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to create YooKassa payment');
+  }
+});
+
+/**
+ * Cloud Function для создания платежа через CloudPayments
+ */
+export const createCloudPaymentsPayment = functions.https.onCall(async (data, context) => {
+  try {
+    const { amount, currency = 'RUB', description, paymentId } = data;
+
+    if (!amount || amount <= 0) {
+      throw new functions.https.HttpsError('invalid-argument', 'Valid amount is required');
+    }
+
+    if (!paymentId) {
+      throw new functions.https.HttpsError('invalid-argument', 'Payment ID is required');
+    }
+
+    // Получаем конфигурацию CloudPayments
+    const publicId = functions.config().cloudpayments?.public_id;
+    const apiSecret = functions.config().cloudpayments?.api_secret;
+
+    if (!publicId || !apiSecret) {
+      throw new functions.https.HttpsError('failed-precondition', 'CloudPayments configuration not found');
+    }
+
+    // Создаем платеж в CloudPayments
+    const cloudPaymentsResponse = await fetch('https://api.cloudpayments.ru/payments/cards/charge', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Basic ${Buffer.from(`${publicId}:${apiSecret}`).toString('base64')}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        Amount: amount,
+        Currency: currency,
+        InvoiceId: paymentId,
+        Description: description || `Платеж #${paymentId}`,
+        AccountId: paymentId,
+        Email: 'customer@example.com', // Получить из контекста пользователя
+      }),
+    });
+
+    if (!cloudPaymentsResponse.ok) {
+      const errorData = await cloudPaymentsResponse.json();
+      throw new functions.https.HttpsError('internal', `CloudPayments error: ${errorData.Message}`);
+    }
+
+    const paymentData = await cloudPaymentsResponse.json();
+
+    // Обновляем платеж в Firestore
+    await db.collection('payments').doc(paymentId).update({
+      cloudPaymentsId: paymentData.Model?.TransactionId,
+      status: paymentData.Success ? 'completed' : 'failed',
+      transactionId: paymentData.Model?.TransactionId,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    });
+
+    return {
+      success: paymentData.Success,
+      transactionId: paymentData.Model?.TransactionId,
+      status: paymentData.Success ? 'completed' : 'failed',
+    };
+  } catch (error) {
+    console.error('CloudPayments Payment Creation Error:', error);
+    throw new functions.https.HttpsError('internal', 'Failed to create CloudPayments payment');
+  }
+});
+
+/**
+ * Cloud Function для обработки webhook от ЮKassa
+ */
+export const yooKassaWebhook = functions.https.onRequest(async (req, res) => {
+  try {
+    const { type, event } = req.body;
+
+    if (type !== 'notification') {
+      res.status(400).send('Invalid notification type');
+      return;
+    }
+
+    const payment = event.object;
+    const paymentId = payment.metadata?.paymentId;
+
+    if (!paymentId) {
+      res.status(400).send('Payment ID not found in metadata');
+      return;
+    }
+
+    // Обновляем статус платежа в Firestore
+    const updateData: any = {
+      yooKassaStatus: payment.status,
+      updatedAt: admin.firestore.FieldValue.serverTimestamp(),
+    };
+
+    if (payment.status === 'succeeded') {
+      updateData.status = 'completed';
+      updateData.completedAt = admin.firestore.FieldValue.serverTimestamp();
+      updateData.transactionId = payment.id;
+    } else if (payment.status === 'canceled') {
+      updateData.status = 'cancelled';
+      updateData.failedAt = admin.firestore.FieldValue.serverTimestamp();
+    }
+
+    await db.collection('payments').doc(paymentId).update(updateData);
+
+    // Отправляем уведомление пользователю
+    const paymentDoc = await db.collection('payments').doc(paymentId).get();
+    const paymentData = paymentDoc.data();
+
+    if (paymentData && paymentData.userId) {
+      const userDoc = await db.collection('users').doc(paymentData.userId).get();
+      const user = userDoc.data();
+
+      if (user && user.fcmToken) {
+        await messaging.send({
+          token: user.fcmToken,
+          notification: {
+            title: payment.status === 'succeeded' ? 'Платеж завершен' : 'Платеж отменен',
+            body: `Ваш платеж на сумму ${payment.amount.value} ${payment.amount.currency} ${payment.status === 'succeeded' ? 'успешно обработан' : 'был отменен'}`,
+          },
+          data: {
+            type: 'payment_status_changed',
+            paymentId: paymentId,
+            status: payment.status,
+            amount: payment.amount.value,
+            currency: payment.amount.currency,
+          },
+        });
+      }
+    }
+
+    res.status(200).send('OK');
+  } catch (error) {
+    console.error('YooKassa Webhook Error:', error);
+    res.status(500).send('Internal Server Error');
   }
 });
 

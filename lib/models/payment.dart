@@ -24,6 +24,16 @@ enum OrganizationType {
   commercial, // Коммерческая организация
   government, // Государственное учреждение
   nonProfit, // Некоммерческая организация
+  selfEmployed, // Самозанятый
+  entrepreneur, // ИП
+}
+
+/// Типы налогов
+enum TaxType {
+  none, // Без налога
+  professionalIncome, // Налог на профессиональный доход (самозанятые)
+  simplifiedTax, // Упрощенная система налогообложения (ИП)
+  vat, // НДС
 }
 
 /// Модель платежа
@@ -47,6 +57,10 @@ class Payment {
     this.description,
     this.metadata,
     this.organizationType = OrganizationType.individual,
+    this.prepaymentAmount = 0.0,
+    this.taxAmount = 0.0,
+    this.taxRate = 0.0,
+    this.taxType,
   });
 
   /// Создать из документа Firestore
@@ -80,6 +94,10 @@ class Payment {
       description: data['description'],
       metadata: data['metadata'],
       organizationType: _parseOrganizationType(data['organizationType']),
+      prepaymentAmount: (data['prepaymentAmount'] as num?)?.toDouble() ?? 0.0,
+      taxAmount: (data['taxAmount'] as num?)?.toDouble() ?? 0.0,
+      taxRate: (data['taxRate'] as num?)?.toDouble() ?? 0.0,
+      taxType: _parseTaxType(data['taxType']),
     );
   }
 
@@ -107,6 +125,10 @@ class Payment {
         createdAt: map['createdAt'] != null
             ? (map['createdAt'] as Timestamp).toDate()
             : DateTime.now(),
+        prepaymentAmount: (map['prepaymentAmount'] as num?)?.toDouble() ?? 0.0,
+        taxAmount: (map['taxAmount'] as num?)?.toDouble() ?? 0.0,
+        taxRate: (map['taxRate'] as num?)?.toDouble() ?? 0.0,
+        taxType: _parseTaxType(map['taxType']),
       );
   final String id;
   final String bookingId;
@@ -126,6 +148,10 @@ class Payment {
   final String? description;
   final Map<String, dynamic>? metadata;
   final OrganizationType organizationType;
+  final double prepaymentAmount;
+  final double taxAmount;
+  final double taxRate;
+  final TaxType? taxType;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -147,6 +173,10 @@ class Payment {
         'description': description,
         'metadata': metadata,
         'organizationType': organizationType.name,
+        'prepaymentAmount': prepaymentAmount,
+        'taxAmount': taxAmount,
+        'taxRate': taxRate,
+        'taxType': taxType?.name,
       };
 
   /// Копировать с изменениями
@@ -169,6 +199,10 @@ class Payment {
     String? description,
     Map<String, dynamic>? metadata,
     OrganizationType? organizationType,
+    double? prepaymentAmount,
+    double? taxAmount,
+    double? taxRate,
+    TaxType? taxType,
   }) =>
       Payment(
         id: id ?? this.id,
@@ -189,6 +223,10 @@ class Payment {
         description: description ?? this.description,
         metadata: metadata ?? this.metadata,
         organizationType: organizationType ?? this.organizationType,
+        prepaymentAmount: prepaymentAmount ?? this.prepaymentAmount,
+        taxAmount: taxAmount ?? this.taxAmount,
+        taxRate: taxRate ?? this.taxRate,
+        taxType: taxType ?? this.taxType,
       );
 
   /// Получить отображаемое название типа платежа
@@ -303,9 +341,34 @@ class Payment {
       case 'nonprofit':
       case 'non_profit':
         return OrganizationType.nonProfit;
+      case 'selfemployed':
+      case 'self_employed':
+        return OrganizationType.selfEmployed;
+      case 'entrepreneur':
+        return OrganizationType.entrepreneur;
       case 'individual':
       default:
         return OrganizationType.individual;
+    }
+  }
+
+  /// Парсинг типа налога
+  static TaxType? _parseTaxType(typeData) {
+    if (typeData == null) return null;
+
+    final typeString = typeData.toString().toLowerCase();
+    switch (typeString) {
+      case 'professionalincome':
+      case 'professional_income':
+        return TaxType.professionalIncome;
+      case 'simplifiedtax':
+      case 'simplified_tax':
+        return TaxType.simplifiedTax;
+      case 'vat':
+        return TaxType.vat;
+      case 'none':
+      default:
+        return TaxType.none;
     }
   }
 
@@ -382,6 +445,24 @@ class PaymentConfiguration {
           advanceDeadline: Duration(days: 5),
           finalPaymentDeadline: Duration(days: 7),
         );
+      case OrganizationType.selfEmployed:
+        return const PaymentConfiguration(
+          organizationType: OrganizationType.selfEmployed,
+          advancePercentage: 30,
+          requiresAdvance: true,
+          allowsPostPayment: false,
+          advanceDeadline: Duration(days: 3),
+          finalPaymentDeadline: Duration(days: 1),
+        );
+      case OrganizationType.entrepreneur:
+        return const PaymentConfiguration(
+          organizationType: OrganizationType.entrepreneur,
+          advancePercentage: 30,
+          requiresAdvance: true,
+          allowsPostPayment: false,
+          advanceDeadline: Duration(days: 5),
+          finalPaymentDeadline: Duration(days: 3),
+        );
     }
   }
 
@@ -401,4 +482,70 @@ class PaymentConfiguration {
   /// Рассчитать сумму финального платежа
   double calculateFinalAmount(double totalAmount, double advanceAmount) =>
       totalAmount - advanceAmount;
+}
+
+/// Класс для расчёта налогов
+class TaxCalculator {
+  /// Рассчитать налог для самозанятого (налог на профессиональный доход)
+  static double calculateProfessionalIncomeTax(double amount) {
+    // Налог на профессиональный доход: 4% с доходов от физлиц, 6% с доходов от ИП/юрлиц
+    return amount * 0.04; // По умолчанию 4% для физлиц
+  }
+
+  /// Рассчитать налог для ИП (УСН 6%)
+  static double calculateSimplifiedTax(double amount) {
+    // УСН "Доходы" - 6% с доходов
+    return amount * 0.06;
+  }
+
+  /// Рассчитать НДС
+  static double calculateVAT(double amount) {
+    // НДС 20%
+    return amount * 0.20;
+  }
+
+  /// Рассчитать налог в зависимости от типа
+  static double calculateTax(double amount, TaxType taxType, {bool isFromLegalEntity = false}) {
+    switch (taxType) {
+      case TaxType.professionalIncome:
+        return isFromLegalEntity ? amount * 0.06 : amount * 0.04;
+      case TaxType.simplifiedTax:
+        return calculateSimplifiedTax(amount);
+      case TaxType.vat:
+        return calculateVAT(amount);
+      case TaxType.none:
+      default:
+        return 0.0;
+    }
+  }
+
+  /// Получить ставку налога в процентах
+  static double getTaxRate(TaxType taxType, {bool isFromLegalEntity = false}) {
+    switch (taxType) {
+      case TaxType.professionalIncome:
+        return isFromLegalEntity ? 6.0 : 4.0;
+      case TaxType.simplifiedTax:
+        return 6.0;
+      case TaxType.vat:
+        return 20.0;
+      case TaxType.none:
+      default:
+        return 0.0;
+    }
+  }
+
+  /// Получить название налога
+  static String getTaxName(TaxType taxType) {
+    switch (taxType) {
+      case TaxType.professionalIncome:
+        return 'Налог на профессиональный доход';
+      case TaxType.simplifiedTax:
+        return 'УСН (6%)';
+      case TaxType.vat:
+        return 'НДС (20%)';
+      case TaxType.none:
+      default:
+        return 'Без налога';
+    }
+  }
 }

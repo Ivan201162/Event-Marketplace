@@ -20,11 +20,16 @@ class PaymentService {
     String? description,
     String? paymentMethod,
     Map<String, dynamic>? metadata,
+    double prepaymentAmount = 0.0,
+    double taxAmount = 0.0,
+    double taxRate = 0.0,
+    TaxType? taxType,
   }) async {
     try {
       final payment = Payment(
         id: _generatePaymentId(),
         bookingId: bookingId,
+        userId: customerId,
         customerId: customerId,
         specialistId: specialistId,
         type: type,
@@ -36,10 +41,10 @@ class PaymentService {
         paymentMethod: paymentMethod,
         metadata: metadata,
         organizationType: organizationType,
-        updatedAt: DateTime.now(),
-        dueDate: DateTime.now().add(const Duration(days: 7)),
-        isPrepayment: type == PaymentType.advance,
-        isFinalPayment: type == PaymentType.finalPayment,
+        prepaymentAmount: prepaymentAmount,
+        taxAmount: taxAmount,
+        taxRate: taxRate,
+        taxType: taxType,
       );
 
       await _db.collection('payments').doc(payment.id).set(payment.toMap());
@@ -536,6 +541,73 @@ class PaymentService {
     }
 
     return payments;
+  }
+
+  /// Рассчитать налоги для платежа
+  Future<Map<String, double>> calculateTaxes({
+    required double amount,
+    required OrganizationType organizationType,
+    required TaxType taxType,
+    bool isFromLegalEntity = false,
+  }) async {
+    final taxAmount = TaxCalculator.calculateTax(
+      amount,
+      taxType,
+      isFromLegalEntity: isFromLegalEntity,
+    );
+    final taxRate = TaxCalculator.getTaxRate(
+      taxType,
+      isFromLegalEntity: isFromLegalEntity,
+    );
+
+    return {
+      'taxAmount': taxAmount,
+      'taxRate': taxRate,
+      'netAmount': amount - taxAmount,
+    };
+  }
+
+  /// Создать платеж с автоматическим расчётом налогов
+  Future<Payment> createPaymentWithTaxes({
+    required String bookingId,
+    required String customerId,
+    required String specialistId,
+    required PaymentType type,
+    required double amount,
+    required OrganizationType organizationType,
+    required TaxType taxType,
+    String? description,
+    String? paymentMethod,
+    Map<String, dynamic>? metadata,
+    bool isFromLegalEntity = false,
+  }) async {
+    // Рассчитываем налоги
+    final taxCalculation = await calculateTaxes(
+      amount: amount,
+      organizationType: organizationType,
+      taxType: taxType,
+      isFromLegalEntity: isFromLegalEntity,
+    );
+
+    // Рассчитываем аванс
+    final config = PaymentConfiguration.getDefault(organizationType);
+    final prepaymentAmount = config.calculateAdvanceAmount(amount);
+
+    return createPayment(
+      bookingId: bookingId,
+      customerId: customerId,
+      specialistId: specialistId,
+      type: type,
+      amount: amount,
+      organizationType: organizationType,
+      description: description,
+      paymentMethod: paymentMethod,
+      metadata: metadata,
+      prepaymentAmount: prepaymentAmount,
+      taxAmount: taxCalculation['taxAmount']!,
+      taxRate: taxCalculation['taxRate']!,
+      taxType: taxType,
+    );
   }
 
   /// Генерировать ID платежа

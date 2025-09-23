@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/chat.dart';
 import '../models/chat_message.dart' as chat_message;
+import '../models/chat_attachment.dart';
 import '../services/chat_service.dart';
 
 /// Провайдер сервиса чата
@@ -160,7 +161,7 @@ class ChatStateNotifier extends Notifier<ChatState> {
     state = state.copyWith(error: error);
   }
 
-  Future<void> sendMessage(String chatId, String text) async {
+  Future<void> sendMessage(String chatId, String text, {ChatAttachment? attachment}) async {
     try {
       setLoading(true);
       final chatService = ref.read(chatServiceProvider);
@@ -168,11 +169,12 @@ class ChatStateNotifier extends Notifier<ChatState> {
         id: '',
         chatId: chatId,
         senderId: 'current_user_id',
-        type: chat_message.MessageType.text,
+        type: attachment != null ? chat_message.MessageType.attachment : chat_message.MessageType.text,
         content: text,
         status: chat_message.MessageStatus.sent,
         timestamp: DateTime.now(),
         senderName: 'Current User',
+        attachmentId: attachment?.id,
       ));
       setLoading(false);
     } catch (e) {
