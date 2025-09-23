@@ -80,7 +80,11 @@ class GuestAccessService {
 
       // Проверяем, не истек ли доступ
       if (guestAccess.isExpired) {
-        await _updateGuestAccessStatus(doc.id, GuestAccessStatus.expired);
+        // Обновляем статус на истекший
+        await _firestore
+            .collection('guest_access')
+            .doc(doc.id)
+            .update({'status': 'expired'});
         return null;
       }
 

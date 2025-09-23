@@ -1,16 +1,14 @@
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:file_picker/file_picker.dart';
-import 'dart:typed_data';
 
 import '../core/logger.dart';
-import '../models/guest_access.dart';
 import '../models/chat_attachment.dart';
-import '../services/guest_access_service.dart';
+import '../models/guest_access.dart';
 import '../services/attachment_service.dart';
 import '../services/chat_bot_service.dart';
+import '../services/guest_access_service.dart';
 import '../widgets/chat_attachment_widget.dart';
-import '../widgets/chat_bot_message_widget.dart';
 
 /// Экран чата для гостей
 class GuestChatScreen extends ConsumerStatefulWidget {
@@ -79,7 +77,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
         guestName: _guestAccess?.guestName,
         guestEmail: _guestAccess?.guestEmail,
       );
-    } catch (e, stackTrace) {
+    } on Exception catch (e, stackTrace) {
       AppLogger.logE('Ошибка загрузки гостевого доступа', 'guest_chat_screen', e, stackTrace);
       if (mounted) {
         _showErrorDialog('Ошибка загрузки чата');
@@ -153,7 +151,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
 
         _scrollToBottom();
       }
-    } catch (e, stackTrace) {
+    } on Exception catch (e, stackTrace) {
       AppLogger.logE('Ошибка отправки сообщения', 'guest_chat_screen', e, stackTrace);
       _showErrorSnackBar('Ошибка отправки сообщения');
     } finally {
@@ -438,7 +436,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                message['message'],
+                message['message'] as String,
                 style: const TextStyle(color: Colors.white),
               ),
             ),
@@ -449,32 +447,46 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
   }
 
   Widget _buildBotMessage(Map<String, dynamic> message) {
-    // Создаем временный объект ChatBotMessage для виджета
-    final botMessage = ChatBotMessage(
-      id: message['id'],
-      chatId: 'guest_${widget.accessCode}',
-      message: message['message'],
-      type: BotMessageType.text,
-      quickReplies: message['quickReplies'] != null
-          ? (message['quickReplies'] as List).map((reply) {
-              return BotQuickReply(
-                title: reply['title'],
-                payload: reply['payload'],
-                actionType: BotActionType.sendMessage,
-              );
-            }).toList()
-          : null,
-      createdAt: message['timestamp'],
-      isFromBot: true,
-    );
-
-    return ChatBotMessageWidget(
-      message: botMessage,
-      onQuickReplyTap: (payload) {
-        // Обрабатываем быстрый ответ
-        _messageController.text = payload;
-        _sendMessage();
-      },
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      Icon(Icons.smart_toy, size: 16, color: Colors.grey[600]),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Бот-помощник',
+                        style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    message['message'] as String,
+                    style: const TextStyle(color: Colors.black87),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 

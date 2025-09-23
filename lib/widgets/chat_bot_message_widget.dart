@@ -6,8 +6,8 @@ import '../models/chat_bot.dart';
 /// Виджет для отображения сообщений бота
 class ChatBotMessageWidget extends ConsumerWidget {
   final ChatBotMessage message;
-  final Function(String)? onQuickReplyTap;
-  final Function(BotButton)? onButtonTap;
+  final void Function(String)? onQuickReplyTap;
+  final void Function(BotButton)? onButtonTap;
 
   const ChatBotMessageWidget({
     super.key,
