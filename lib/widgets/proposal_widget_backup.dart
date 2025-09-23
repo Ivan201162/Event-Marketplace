@@ -14,3 +14,4 @@ class ProposalWidget extends StatelessWidget {
     );
   }
 }
+

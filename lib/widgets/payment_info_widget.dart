@@ -1,29 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-import '../models/booking.dart';
 import '../services/payment_service.dart';
 
-/// Виджет для отображения информации о платежах
+/// Виджет для отображения информации о платеже на экране бронирования
 class PaymentInfoWidget extends ConsumerWidget {
-  final Booking booking;
+  final String bookingId;
   final double totalAmount;
+  final double advanceAmount;
   final String currency;
-  final bool isGovernmentOrganization;
+  final String paymentStatus; // Статус платежа
+  final String? paymentConfirmationUrl; // URL для подтверждения платежа
 
   const PaymentInfoWidget({
     super.key,
-    required this.booking,
+    required this.bookingId,
     required this.totalAmount,
+    required this.advanceAmount,
     required this.currency,
-    this.isGovernmentOrganization = false,
+    required this.paymentStatus,
+    this.paymentConfirmationUrl,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final advancePercentage = isGovernmentOrganization ? 0.7 : 0.3;
-    final advanceAmount = totalAmount * advancePercentage;
-    final finalAmount = totalAmount - advanceAmount;
+    final remainingAmount = totalAmount - advanceAmount;
 
     return Card(
       margin: const EdgeInsets.all(16),
@@ -33,156 +35,41 @@ class PaymentInfoWidget extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             const Text(
-              'Информация о платежах',
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-              ),
+              'Информация о платеже',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 16),
-            _buildPaymentRow(
-              'Общая стоимость',
-              '${totalAmount.toStringAsFixed(2)} $currency',
-              Colors.black,
-            ),
-            const SizedBox(height: 8),
-            _buildPaymentRow(
-              'Аванс (${(advancePercentage * 100).round()}%)',
-              '${advanceAmount.toStringAsFixed(2)} $currency',
-              Colors.orange,
-            ),
-            const SizedBox(height: 8),
-            _buildPaymentRow(
-              'Окончательная оплата',
-              '${finalAmount.toStringAsFixed(2)} $currency',
-              Colors.green,
-            ),
-            const SizedBox(height: 16),
-            const Divider(),
-            const SizedBox(height: 16),
-            _buildPaymentSchedule(),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildPaymentRow(String label, String amount, Color color) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          label,
-          style: const TextStyle(fontSize: 14),
-        ),
-        Text(
-          amount,
-          style: TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w600,
-            color: color,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildPaymentSchedule() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          'График платежей',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 12),
-        _buildScheduleItem(
-          '1',
-          'Аванс',
-          'При подтверждении бронирования',
-          '${(totalAmount * (isGovernmentOrganization ? 0.7 : 0.3)).toStringAsFixed(2)} $currency',
-          Colors.orange,
-        ),
-        const SizedBox(height: 8),
-        _buildScheduleItem(
-          '2',
-          'Окончательная оплата',
-          'После завершения мероприятия',
-          '${(totalAmount * (isGovernmentOrganization ? 0.3 : 0.7)).toStringAsFixed(2)} $currency',
-          Colors.green,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildScheduleItem(
-    String step,
-    String title,
-    String description,
-    String amount,
-    Color color,
-  ) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        border: Border.all(color: color.withOpacity(0.3)),
-        borderRadius: BorderRadius.circular(8),
-        color: color.withOpacity(0.1),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 24,
-            height: 24,
-            decoration: BoxDecoration(
-              color: color,
-              shape: BoxShape.circle,
-            ),
-            child: Center(
-              child: Text(
-                step,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 12,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                Text(
-                  description,
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                ),
+                const Text('Общая сумма:'),
+                Text('$totalAmount $currency'),
               ],
             ),
-          ),
-          Text(
-            amount,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.bold,
-              color: color,
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Аванс:'),
+                Text('$advanceAmount $currency'),
+              ],
             ),
-          ),
-        ],
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Остаток к оплате:'),
+                Text('$remainingAmount $currency'),
+              ],
+            ),
+            const SizedBox(height: 16),
+            PaymentStatusWidget(
+              paymentId: bookingId, // Используем bookingId как paymentId для примера
+              status: paymentStatus,
+              confirmationUrl: paymentConfirmationUrl,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -203,51 +90,34 @@ class PaymentStatusWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: _getStatusColor(status).withOpacity(0.1),
-        border: Border.all(color: _getStatusColor(status)),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            _getStatusIcon(status),
-            color: _getStatusColor(status),
-            size: 24,
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  _getStatusText(status),
-                  style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: _getStatusColor(status),
-                  ),
-                ),
-                if (confirmationUrl != null)
-                  Text(
-                    'ID: $paymentId',
-                    style: const TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
-                    ),
-                  ),
-              ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Icon(
+              _getStatusIcon(status),
+              color: _getStatusColor(status),
             ),
-          ),
-          if (confirmationUrl != null && status == PaymentService.PaymentStatus.pending)
-            ElevatedButton(
+            const SizedBox(width: 8),
+            Text(
+              _getStatusText(status),
+              style: TextStyle(
+                color: _getStatusColor(status),
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
+        ),
+        if (confirmationUrl != null && status == PaymentService.paymentStatusPending)
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: ElevatedButton(
               onPressed: () => _openPaymentUrl(context, confirmationUrl!),
-              child: const Text('Оплатить'),
+              child: const Text('Перейти к оплате'),
             ),
-        ],
-      ),
+          ),
+      ],
     );
   }
 
@@ -265,6 +135,8 @@ class PaymentStatusWidget extends ConsumerWidget {
         return Colors.grey;
       case PaymentService.paymentStatusRefunded:
         return Colors.purple;
+      default:
+        return Colors.black;
     }
   }
 
@@ -282,6 +154,8 @@ class PaymentStatusWidget extends ConsumerWidget {
         return Icons.cancel;
       case PaymentService.paymentStatusRefunded:
         return Icons.refresh;
+      default:
+        return Icons.info_outline;
     }
   }
 
@@ -299,13 +173,16 @@ class PaymentStatusWidget extends ConsumerWidget {
         return 'Отменено';
       case PaymentService.paymentStatusRefunded:
         return 'Возвращено';
+      default:
+        return 'Неизвестный статус';
     }
   }
 
   void _openPaymentUrl(BuildContext context, String url) {
     // TODO: Реализовать открытие URL для оплаты
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Открытие ссылки для оплаты: $url')),
+      SnackBar(content: Text('Открытие URL для оплаты: $url')),
     );
+    // launchUrl(Uri.parse(url)); // Для реального открытия URL
   }
 }

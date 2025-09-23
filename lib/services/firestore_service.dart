@@ -653,7 +653,7 @@ class FirestoreService {
     DocumentSnapshot? startAfter,
   }) async {
     try {
-      Query query = _db
+      Query<Map<String, dynamic>> query = _db
           .collection('notifications')
           .where('userId', isEqualTo: userId)
           .orderBy('timestamp', descending: true)
