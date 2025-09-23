@@ -48,7 +48,7 @@ class ContractService {
         currency: currency,
         eventDate: booking.eventDate,
         eventLocation: booking.location,
-        status: ContractStatus.draft,
+        status: contract_model.ContractStatus.draft,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
@@ -98,7 +98,7 @@ class ContractService {
         eventLocation: contract.eventLocation,
         description: description,
         photos: photos,
-        status: WorkActStatus.draft,
+        status: work_act_model.WorkActStatus.draft,
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       );
@@ -143,7 +143,7 @@ class ContractService {
         if (customerSignature != null && specialistSignature != null) {
           // Договор полностью подписан
           await _firestore.collection('contracts').doc(contractId).update({
-            'status': ContractStatus.signed.name,
+            'status': contract_model.ContractStatus.signed.name,
             'signedAt': FieldValue.serverTimestamp(),
             'updatedAt': FieldValue.serverTimestamp(),
           });
@@ -187,7 +187,7 @@ class ContractService {
         if (customerSignature != null && specialistSignature != null) {
           // Акт полностью подписан
           await _firestore.collection('work_acts').doc(workActId).update({
-            'status': WorkActStatus.signed.name,
+            'status': work_act_model.WorkActStatus.signed.name,
             'signedAt': FieldValue.serverTimestamp(),
             'updatedAt': FieldValue.serverTimestamp(),
           });
@@ -212,7 +212,7 @@ class ContractService {
           .get();
 
       return querySnapshot.docs
-          .map((doc) => Contract.fromMap(doc.data(), doc.id))
+          .map((doc) => contract_model.Contract.fromMap(doc.data(), doc.id))
           .toList();
     } catch (e, stackTrace) {
       AppLogger.logE('Ошибка получения договоров пользователя', 'contract_service', e, stackTrace);
@@ -230,7 +230,7 @@ class ContractService {
           .get();
 
       return querySnapshot.docs
-          .map((doc) => WorkAct.fromMap(doc.data(), doc.id))
+          .map((doc) => work_act_model.WorkAct.fromMap(doc.data(), doc.id))
           .toList();
     } catch (e, stackTrace) {
       AppLogger.logE('Ошибка получения актов пользователя', 'contract_service', e, stackTrace);

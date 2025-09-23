@@ -276,7 +276,7 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen>
                   ),
                 ),
                 const SizedBox(width: 8),
-                if (workAct.status == WorkActStatus.pending)
+                if (workAct.status == work_act_model.WorkActStatus.pending)
                   Expanded(
                     child: ElevatedButton(
                       onPressed: () => _signWorkAct(workAct),

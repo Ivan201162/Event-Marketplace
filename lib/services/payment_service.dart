@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../core/logger.dart';
 import '../models/booking.dart';
-import '../models/user.dart';
+import '../models/app_user.dart';
 
 /// Сервис для работы с платежами через российские провайдеры
 class PaymentService {
