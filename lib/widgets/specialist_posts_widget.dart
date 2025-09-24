@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import '../models/specialist_post.dart';
 import '../services/specialist_content_service.dart';
+import '../providers/specialist_providers.dart';
 
 /// Виджет постов специалиста
 class SpecialistPostsWidget extends ConsumerStatefulWidget {

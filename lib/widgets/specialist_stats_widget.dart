@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../services/specialist_content_service.dart';
 import '../services/specialist_service.dart';
+import '../providers/specialist_providers.dart';
 
 /// Виджет статистики специалиста
 class SpecialistStatsWidget extends ConsumerWidget {

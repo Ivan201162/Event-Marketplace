@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import '../models/specialist.dart';
 import '../services/specialist_service.dart';
+import '../providers/specialist_providers.dart';
 
 /// Заголовок профиля специалиста
 class SpecialistProfileHeader extends ConsumerWidget {

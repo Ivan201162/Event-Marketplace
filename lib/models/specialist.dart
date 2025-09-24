@@ -546,9 +546,13 @@ class Specialist {
         'followingCount': followingCount,
         'recentPosts': recentPosts,
         'activeStories': activeStories,
-        'isVerified': isVerified,
         'verificationBadge': verificationBadge,
         'socialStats': socialStats,
+        'reviewsCount': reviewsCount,
+        'lastSeenAt': lastSeenAt != null ? Timestamp.fromDate(lastSeenAt!) : null,
+        'experienceYears': experienceYears,
+        'completedOrders': completedOrders,
+        'minPrice': minPrice,
       };
 
   /// Копировать с изменениями
@@ -591,6 +595,11 @@ class Specialist {
     bool? isVerified,
     String? verificationBadge,
     Map<String, dynamic>? socialStats,
+    int? reviewsCount,
+    DateTime? lastSeenAt,
+    int? experienceYears,
+    int? completedOrders,
+    double? minPrice,
   }) =>
       Specialist(
         id: id ?? this.id,
@@ -631,6 +640,11 @@ class Specialist {
         isVerified: isVerified ?? this.isVerified,
         verificationBadge: verificationBadge ?? this.verificationBadge,
         socialStats: socialStats ?? this.socialStats,
+        reviewsCount: reviewsCount ?? this.reviewsCount,
+        lastSeenAt: lastSeenAt ?? this.lastSeenAt,
+        experienceYears: experienceYears ?? this.experienceYears,
+        completedOrders: completedOrders ?? this.completedOrders,
+        minPrice: minPrice ?? this.minPrice,
       );
 
   /// Получить отображаемое название категории

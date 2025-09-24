@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/specialist.dart';
+import '../models/specialist_service.dart' as models;
 import '../services/specialist_service.dart';
+import '../providers/specialist_providers.dart';
 
 /// Виджет услуг специалиста
 class SpecialistServicesWidget extends ConsumerWidget {
@@ -123,7 +125,7 @@ class SpecialistServicesWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildServiceItem(BuildContext context, ThemeData theme, Service service) {
+  Widget _buildServiceItem(BuildContext context, ThemeData theme, models.SpecialistService service) {
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: Padding(
@@ -293,7 +295,7 @@ class SpecialistServicesWidget extends ConsumerWidget {
     );
   }
 
-  void _handleServiceAction(String action, Service service) {
+  void _handleServiceAction(String action, models.SpecialistService service) {
     switch (action) {
       case 'edit':
         onEditService?.call(service.id);
@@ -304,7 +306,7 @@ class SpecialistServicesWidget extends ConsumerWidget {
     }
   }
 
-  void _deleteService(Service service) {
+  void _deleteService(models.SpecialistService service) {
     // В реальном приложении здесь была бы логика удаления услуги
     // showDialog для подтверждения удаления
   }
