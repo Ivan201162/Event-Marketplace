@@ -30,10 +30,12 @@ class MonitoringMetric {
       category: data['category'] as String? ?? '',
       value: (data['value'] as num?)?.toDouble() ?? 0.0,
       unit: data['unit'] as String? ?? '',
-      tags: Map<String, dynamic>.from(data['tags'] as Map<dynamic, dynamic>? ?? {}),
+      tags: Map<String, dynamic>.from(
+          data['tags'] as Map<dynamic, dynamic>? ?? {}),
       timestamp: (data['timestamp'] as Timestamp).toDate(),
       source: data['source'] as String?,
-      metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+      metadata: Map<String, dynamic>.from(
+          data['metadata'] as Map<dynamic, dynamic>? ?? {}),
     );
   }
 

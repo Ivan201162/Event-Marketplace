@@ -34,8 +34,10 @@ class Backup {
         (e) => e.toString().split('.').last == data['status'],
         orElse: () => BackupStatus.pending,
       ),
-      collections: List<String>.from(data['collections'] as List<dynamic>? ?? []),
-      filters: Map<String, dynamic>.from(data['filters'] as Map<dynamic, dynamic>? ?? {}),
+      collections:
+          List<String>.from(data['collections'] as List<dynamic>? ?? []),
+      filters: Map<String, dynamic>.from(
+          data['filters'] as Map<dynamic, dynamic>? ?? {}),
       createdBy: data['createdBy'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       completedAt: data['completedAt'] != null
@@ -63,8 +65,10 @@ class Backup {
           (e) => e.toString().split('.').last == data['status'],
           orElse: () => BackupStatus.pending,
         ),
-        collections: List<String>.from(data['collections'] as List<dynamic>? ?? []),
-        filters: Map<String, dynamic>.from(data['filters'] as Map<dynamic, dynamic>? ?? {}),
+        collections:
+            List<String>.from(data['collections'] as List<dynamic>? ?? []),
+        filters: Map<String, dynamic>.from(
+            data['filters'] as Map<dynamic, dynamic>? ?? {}),
         createdBy: data['createdBy'] as String?,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         completedAt: data['completedAt'] != null
@@ -74,7 +78,8 @@ class Backup {
         fileSize: data['fileSize'] as int?,
         errorMessage: data['errorMessage'] as String?,
         metadata: data['metadata'] != null
-            ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
+            ? Map<String, dynamic>.from(
+                data['metadata'] as Map<dynamic, dynamic>)
             : null,
       );
   final String id;
@@ -268,8 +273,10 @@ class Restore {
         (e) => e.toString().split('.').last == data['status'],
         orElse: () => RestoreStatus.pending,
       ),
-      collections: List<String>.from(data['collections'] as List<dynamic>? ?? []),
-      options: Map<String, dynamic>.from(data['options'] as Map<dynamic, dynamic>? ?? {}),
+      collections:
+          List<String>.from(data['collections'] as List<dynamic>? ?? []),
+      options: Map<String, dynamic>.from(
+          data['options'] as Map<dynamic, dynamic>? ?? {}),
       createdBy: data['createdBy'] as String?,
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       completedAt: data['completedAt'] != null
@@ -296,8 +303,10 @@ class Restore {
           (e) => e.toString().split('.').last == data['status'],
           orElse: () => RestoreStatus.pending,
         ),
-        collections: List<String>.from(data['collections'] as List<dynamic>? ?? []),
-        options: Map<String, dynamic>.from(data['options'] as Map<dynamic, dynamic>? ?? {}),
+        collections:
+            List<String>.from(data['collections'] as List<dynamic>? ?? []),
+        options: Map<String, dynamic>.from(
+            data['options'] as Map<dynamic, dynamic>? ?? {}),
         createdBy: data['createdBy'] as String?,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         completedAt: data['completedAt'] != null
@@ -305,7 +314,8 @@ class Restore {
             : null,
         errorMessage: data['errorMessage'] as String?,
         metadata: data['metadata'] != null
-            ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
+            ? Map<String, dynamic>.from(
+                data['metadata'] as Map<dynamic, dynamic>)
             : null,
       );
   final String id;

@@ -9,11 +9,13 @@ class SignatureService {
   /// Создать подпись из виджета
   static Future<String> captureSignature(GlobalKey key) async {
     try {
-      final RenderRepaintBoundary boundary = key.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      final RenderRepaintBoundary boundary =
+          key.currentContext!.findRenderObject() as RenderRepaintBoundary;
       final ui.Image image = await boundary.toImage(pixelRatio: 3.0);
-      final ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      final ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
       final Uint8List pngBytes = byteData!.buffer.asUint8List();
-      
+
       return base64Encode(pngBytes);
     } catch (e) {
       throw Exception('Ошибка создания подписи: $e');
@@ -25,7 +27,8 @@ class SignatureService {
     required String userId,
     required String documentId,
     required String timestamp,
-    required String privateKey, // В реальном приложении это должен быть настоящий приватный ключ
+    required String
+        privateKey, // В реальном приложении это должен быть настоящий приватный ключ
   }) {
     // В реальном приложении здесь должна быть криптографическая подпись
     // Пока что создаем простую хеш-подпись
@@ -41,7 +44,8 @@ class SignatureService {
     required String userId,
     required String documentId,
     required String timestamp,
-    required String publicKey, // В реальном приложении это должен быть настоящий публичный ключ
+    required String
+        publicKey, // В реальном приложении это должен быть настоящий публичный ключ
   }) {
     try {
       // В реальном приложении здесь должна быть проверка криптографической подписи
@@ -49,9 +53,10 @@ class SignatureService {
         userId: userId,
         documentId: documentId,
         timestamp: timestamp,
-        privateKey: publicKey, // В реальном приложении это должно быть по-другому
+        privateKey:
+            publicKey, // В реальном приложении это должно быть по-другому
       );
-      
+
       return signature == expectedSignature;
     } catch (e) {
       return false;
@@ -80,7 +85,8 @@ class SignatureService {
         signature = digitalSignature;
         signatureType = 'digital';
       } else {
-        throw Exception('Необходимо предоставить либо подпись от руки, либо цифровую подпись');
+        throw Exception(
+            'Необходимо предоставить либо подпись от руки, либо цифровую подпись');
       }
 
       return {

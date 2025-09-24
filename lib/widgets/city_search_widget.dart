@@ -44,20 +44,20 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
   void _onTextChanged() {
     final query = widget.controller.text;
     setState(() => _isSearching = query.isNotEmpty);
-    
+
     if (query.isNotEmpty) {
       ref.read(citySearchProvider.notifier).searchCities(query);
     } else {
       ref.read(citySearchProvider.notifier).clearSearch();
     }
-    
+
     widget.onSearchChanged?.call(query);
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Column(
       children: [
         // Поисковая строка
@@ -85,10 +85,9 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
             setState(() {});
           },
         ),
-        
+
         // Результаты поиска или подсказки
-        if (widget.showSuggestions)
-          _buildSearchResults(),
+        if (widget.showSuggestions) _buildSearchResults(),
       ],
     );
   }
@@ -101,7 +100,7 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
     return Consumer(
       builder: (context, ref, child) {
         final searchState = ref.watch(citySearchProvider);
-        
+
         return searchState.when(
           data: (cities) => _buildSearchSuggestions(cities),
           loading: () => const Padding(
@@ -124,7 +123,7 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
     return Consumer(
       builder: (context, ref, child) {
         final popularCitiesState = ref.watch(popularCitiesProvider);
-        
+
         return popularCitiesState.when(
           data: (cities) => Container(
             constraints: const BoxConstraints(maxHeight: 200),
@@ -132,12 +131,13 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 16.0, vertical: 8.0),
                   child: Text(
                     'Популярные города',
                     style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.onSurfaceVariant,
-                    ),
+                          color: Theme.of(context).colorScheme.onSurfaceVariant,
+                        ),
                   ),
                 ),
                 Expanded(
@@ -166,7 +166,8 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
         padding: const EdgeInsets.all(16.0),
         child: Text(
           'Город не найден',
-          style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+          style:
+              TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
         ),
       );
     }
@@ -197,7 +198,7 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
 
   Widget _buildCityTile(CityRegion city) {
     final theme = Theme.of(context);
-    
+
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: theme.primaryColor.withOpacity(0.1),

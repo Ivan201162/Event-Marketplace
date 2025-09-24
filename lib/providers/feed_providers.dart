@@ -98,7 +98,8 @@ class FeedStateNotifier extends Notifier<FeedState> {
 }
 
 /// Провайдер для ленты специалиста
-final specialistFeedProvider = StreamProvider.family<List<FeedPost>, String>((ref, specialistId) {
+final specialistFeedProvider =
+    StreamProvider.family<List<FeedPost>, String>((ref, specialistId) {
   final feedService = ref.read(feedServiceProvider);
   return feedService.getSpecialistFeed(specialistId);
 });

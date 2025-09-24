@@ -11,7 +11,8 @@ class RecommendationsSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final recommendationsAsync = ref.watch(userRecommendationsProvider('current_user_id')); // TODO: Get actual user ID
+    final recommendationsAsync = ref.watch(userRecommendationsProvider(
+        'current_user_id')); // TODO: Get actual user ID
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

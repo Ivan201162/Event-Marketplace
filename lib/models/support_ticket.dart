@@ -296,7 +296,6 @@ extension SupportCategoryExtension on SupportCategory {
         return 'Другое';
     }
   }
-
 }
 
 /// Приоритеты поддержки

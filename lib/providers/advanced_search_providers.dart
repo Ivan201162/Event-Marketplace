@@ -4,27 +4,34 @@ import '../models/advanced_search_filters.dart';
 import '../services/advanced_specialist_search_service.dart';
 
 /// Провайдер сервиса расширенного поиска
-final advancedSearchServiceProvider = Provider<AdvancedSpecialistSearchService>((ref) {
+final advancedSearchServiceProvider =
+    Provider<AdvancedSpecialistSearchService>((ref) {
   return AdvancedSpecialistSearchService();
 });
 
 /// Провайдер состояния расширенного поиска
-final advancedSearchProvider = StateNotifierProvider<AdvancedSearchNotifier, AsyncValue<AdvancedSearchState>>((ref) {
+final advancedSearchProvider = StateNotifierProvider<AdvancedSearchNotifier,
+    AsyncValue<AdvancedSearchState>>((ref) {
   final service = ref.read(advancedSearchServiceProvider);
   return AdvancedSearchNotifier(service);
 });
 
 /// Провайдер для фильтров поиска
-final searchFiltersProvider = StateProvider<AdvancedSearchFilters>((ref) => const AdvancedSearchFilters());
+final searchFiltersProvider = StateProvider<AdvancedSearchFilters>(
+    (ref) => const AdvancedSearchFilters());
 
 /// Провайдер для статистики поиска
-final searchStatsProvider = FutureProvider.family<Map<String, dynamic>, AdvancedSearchFilters>((ref, filters) async {
+final searchStatsProvider =
+    FutureProvider.family<Map<String, dynamic>, AdvancedSearchFilters>(
+        (ref, filters) async {
   final service = ref.read(advancedSearchServiceProvider);
   return await service.getSearchStats(filters: filters);
 });
 
 /// Провайдер для популярных категорий в регионе
-final popularCategoriesProvider = FutureProvider.family<List<SpecialistCategory>, Map<String, dynamic>>((ref, params) async {
+final popularCategoriesProvider =
+    FutureProvider.family<List<SpecialistCategory>, Map<String, dynamic>>(
+        (ref, params) async {
   final service = ref.read(advancedSearchServiceProvider);
   return await service.getPopularCategoriesInRegion(
     regionName: params['regionName'] as String?,
@@ -34,7 +41,8 @@ final popularCategoriesProvider = FutureProvider.family<List<SpecialistCategory>
 });
 
 /// Нотификатор для расширенного поиска
-class AdvancedSearchNotifier extends StateNotifier<AsyncValue<AdvancedSearchState>> {
+class AdvancedSearchNotifier
+    extends StateNotifier<AsyncValue<AdvancedSearchState>> {
   AdvancedSearchNotifier(this._service) : super(const AsyncValue.loading()) {
     _initialize();
   }
@@ -158,7 +166,8 @@ class AdvancedSearchNotifier extends StateNotifier<AsyncValue<AdvancedSearchStat
   }
 
   /// Обновить сортировку
-  Future<void> updateSorting(AdvancedSearchSortBy sortBy, bool ascending) async {
+  Future<void> updateSorting(
+      AdvancedSearchSortBy sortBy, bool ascending) async {
     final newFilters = _currentFilters.copyWith(
       sortBy: sortBy,
       sortAscending: ascending,
@@ -251,19 +260,23 @@ class AdvancedSearchNotifier extends StateNotifier<AsyncValue<AdvancedSearchStat
 }
 
 /// Провайдер для потока поиска
-final searchStreamProvider = StreamProvider.family<List<AdvancedSearchResult>, AdvancedSearchFilters>((ref, filters) {
+final searchStreamProvider =
+    StreamProvider.family<List<AdvancedSearchResult>, AdvancedSearchFilters>(
+        (ref, filters) {
   final service = ref.read(advancedSearchServiceProvider);
   return service.searchSpecialistsStream(filters: filters);
 });
 
 /// Провайдер для быстрого поиска (без фильтров)
-final quickSearchProvider = StateNotifierProvider<QuickSearchNotifier, AsyncValue<List<AdvancedSearchResult>>>((ref) {
+final quickSearchProvider = StateNotifierProvider<QuickSearchNotifier,
+    AsyncValue<List<AdvancedSearchResult>>>((ref) {
   final service = ref.read(advancedSearchServiceProvider);
   return QuickSearchNotifier(service);
 });
 
 /// Нотификатор для быстрого поиска
-class QuickSearchNotifier extends StateNotifier<AsyncValue<List<AdvancedSearchResult>>> {
+class QuickSearchNotifier
+    extends StateNotifier<AsyncValue<List<AdvancedSearchResult>>> {
   QuickSearchNotifier(this._service) : super(const AsyncValue.data([]));
 
   final AdvancedSpecialistSearchService _service;
@@ -302,9 +315,11 @@ class QuickSearchNotifier extends StateNotifier<AsyncValue<List<AdvancedSearchRe
 }
 
 /// Провайдер для рекомендуемых специалистов
-final recommendedSpecialistsProvider = FutureProvider.family<List<AdvancedSearchResult>, Map<String, dynamic>>((ref, params) async {
+final recommendedSpecialistsProvider =
+    FutureProvider.family<List<AdvancedSearchResult>, Map<String, dynamic>>(
+        (ref, params) async {
   final service = ref.read(advancedSearchServiceProvider);
-  
+
   final filters = AdvancedSearchFilters(
     selectedCity: params['city'] as CityRegion?,
     selectedRegion: params['region'] as String?,
@@ -320,12 +335,14 @@ final recommendedSpecialistsProvider = FutureProvider.family<List<AdvancedSearch
 });
 
 /// Провайдер для похожих специалистов
-final similarSpecialistsProvider = FutureProvider.family<List<AdvancedSearchResult>, Map<String, dynamic>>((ref, params) async {
+final similarSpecialistsProvider =
+    FutureProvider.family<List<AdvancedSearchResult>, Map<String, dynamic>>(
+        (ref, params) async {
   final service = ref.read(advancedSearchServiceProvider);
-  
+
   final specialist = params['specialist'] as Specialist;
   final city = params['city'] as CityRegion?;
-  
+
   final filters = AdvancedSearchFilters(
     categories: specialist.categories,
     selectedCity: city,
@@ -340,17 +357,21 @@ final similarSpecialistsProvider = FutureProvider.family<List<AdvancedSearchResu
   );
 
   // Исключаем самого специалиста из результатов
-  return results.where((result) => result.specialist.id != specialist.id).toList();
+  return results
+      .where((result) => result.specialist.id != specialist.id)
+      .toList();
 });
 
 /// Провайдер для статистики по категориям
-final categoryStatsProvider = FutureProvider.family<Map<String, dynamic>, Map<String, dynamic>>((ref, params) async {
+final categoryStatsProvider =
+    FutureProvider.family<Map<String, dynamic>, Map<String, dynamic>>(
+        (ref, params) async {
   final service = ref.read(advancedSearchServiceProvider);
-  
+
   final category = params['category'] as SpecialistCategory;
   final city = params['city'] as CityRegion?;
   final region = params['region'] as String?;
-  
+
   final filters = AdvancedSearchFilters(
     categories: [category],
     selectedCity: city,

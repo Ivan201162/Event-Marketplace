@@ -19,7 +19,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   final _nameController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  
+
   bool _isLoading = false;
   String? _errorMessage;
   UserRole _selectedRole = UserRole.customer;
@@ -48,28 +48,31 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 40),
-                
+
                 // Заголовок
                 Text(
                   'Создать аккаунт',
                   style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Theme.of(context).colorScheme.primary,
-                  ),
+                        fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
                   textAlign: TextAlign.center,
                 ),
-                
+
                 const SizedBox(height: 8),
                 Text(
                   'Заполните форму для создания нового аккаунта',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                  ),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.7),
+                      ),
                   textAlign: TextAlign.center,
                 ),
-                
+
                 const SizedBox(height: 32),
-                
+
                 // Поле имени
                 TextFormField(
                   controller: _nameController,
@@ -90,14 +93,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   },
                   textInputAction: TextInputAction.next,
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Селектор роли
                 _buildRoleSelector(),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Поле email
                 TextFormField(
                   controller: _emailController,
@@ -112,16 +115,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     if (value == null || value.trim().isEmpty) {
                       return 'Введите email';
                     }
-                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$').hasMatch(value.trim())) {
+                    if (!RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$')
+                        .hasMatch(value.trim())) {
                       return 'Введите корректный email';
                     }
                     return null;
                   },
                   textInputAction: TextInputAction.next,
                 ),
-                
+
                 const SizedBox(height: 16),
-                
+
                 // Поле пароля
                 TextFormField(
                   controller: _passwordController,
@@ -143,9 +147,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   },
                   textInputAction: TextInputAction.done,
                 ),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Кнопка регистрации
                 ElevatedButton(
                   onPressed: _isLoading ? null : _handleRegister,
@@ -163,10 +167,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         )
                       : const Text(
                           'Зарегистрироваться',
-                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
                         ),
                 ),
-                
+
                 // Сообщение об ошибке
                 if (_errorMessage != null) ...[
                   const SizedBox(height: 16),
@@ -184,16 +189,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         Expanded(
                           child: Text(
                             _errorMessage!,
-                            style: const TextStyle(color: Colors.red, fontSize: 14),
+                            style: const TextStyle(
+                                color: Colors.red, fontSize: 14),
                           ),
                         ),
                       ],
                     ),
                   ),
                 ],
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Ссылка на вход
                 TextButton(
                   onPressed: () => context.go('/auth'),
@@ -266,7 +272,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     try {
       final authService = ref.read(authServiceProvider);
-      
+
       await authService.registerWithEmail(
         name: _nameController.text.trim(),
         email: _emailController.text.trim(),

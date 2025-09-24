@@ -57,9 +57,9 @@ class PaymentMethodSelector extends StatelessWidget {
                       size: 24,
                     ),
                   ),
-                  
+
                   const SizedBox(width: 16),
-                  
+
                   // Method info
                   Expanded(
                     child: Column(
@@ -84,7 +84,7 @@ class PaymentMethodSelector extends StatelessWidget {
                       ],
                     ),
                   ),
-                  
+
                   // Selection indicator
                   if (selectedMethod == method)
                     Icon(

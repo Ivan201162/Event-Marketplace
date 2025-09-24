@@ -932,7 +932,8 @@ class IntegrationService {
   }
 
   /// Получить адрес по координатам
-  Future<String> getAddressFromCoordinates(double latitude, double longitude) async {
+  Future<String> getAddressFromCoordinates(
+      double latitude, double longitude) async {
     try {
       // Заглушка для получения адреса по координатам
       // В реальном приложении здесь будет использоваться geocoding

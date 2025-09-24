@@ -434,7 +434,9 @@ class ThemeSettingsScreen extends ConsumerWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              ref.read(themeProvider.notifier).update((state) => ThemeMode.system);
+              ref
+                  .read(themeProvider.notifier)
+                  .update((state) => ThemeMode.system);
               ref
                   .read(themeSettingsProvider.notifier)
                   .setPrimaryColor(Colors.deepPurple);

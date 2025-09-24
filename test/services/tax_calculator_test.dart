@@ -64,13 +64,15 @@ void main() {
 
       test('should calculate correct tax for each type', () {
         final amount = 10000.0;
-        
-        final professionalTax = TaxCalculator.calculateTax(amount, TaxType.professionalIncome);
+
+        final professionalTax =
+            TaxCalculator.calculateTax(amount, TaxType.professionalIncome);
         expect(professionalTax, equals(400.0));
-        
-        final simplifiedTax = TaxCalculator.calculateTax(amount, TaxType.simplifiedTax);
+
+        final simplifiedTax =
+            TaxCalculator.calculateTax(amount, TaxType.simplifiedTax);
         expect(simplifiedTax, equals(600.0));
-        
+
         final vatTax = TaxCalculator.calculateTax(amount, TaxType.vat);
         expect(vatTax, equals(2000.0));
       });
@@ -79,8 +81,12 @@ void main() {
     group('Tax Rate', () {
       test('should return correct tax rates', () {
         expect(TaxCalculator.getTaxRate(TaxType.none), equals(0.0));
-        expect(TaxCalculator.getTaxRate(TaxType.professionalIncome), equals(4.0));
-        expect(TaxCalculator.getTaxRate(TaxType.professionalIncome, isFromLegalEntity: true), equals(6.0));
+        expect(
+            TaxCalculator.getTaxRate(TaxType.professionalIncome), equals(4.0));
+        expect(
+            TaxCalculator.getTaxRate(TaxType.professionalIncome,
+                isFromLegalEntity: true),
+            equals(6.0));
         expect(TaxCalculator.getTaxRate(TaxType.simplifiedTax), equals(6.0));
         expect(TaxCalculator.getTaxRate(TaxType.vat), equals(20.0));
       });
@@ -89,8 +95,10 @@ void main() {
     group('Tax Names', () {
       test('should return correct tax names', () {
         expect(TaxCalculator.getTaxName(TaxType.none), equals('Без налога'));
-        expect(TaxCalculator.getTaxName(TaxType.professionalIncome), equals('Налог на профессиональный доход'));
-        expect(TaxCalculator.getTaxName(TaxType.simplifiedTax), equals('УСН (6%)'));
+        expect(TaxCalculator.getTaxName(TaxType.professionalIncome),
+            equals('Налог на профессиональный доход'));
+        expect(TaxCalculator.getTaxName(TaxType.simplifiedTax),
+            equals('УСН (6%)'));
         expect(TaxCalculator.getTaxName(TaxType.vat), equals('НДС (20%)'));
       });
     });
@@ -98,13 +106,15 @@ void main() {
     group('Edge Cases', () {
       test('should handle very small amounts', () {
         const amount = 0.01;
-        final tax = TaxCalculator.calculateTax(amount, TaxType.professionalIncome);
+        final tax =
+            TaxCalculator.calculateTax(amount, TaxType.professionalIncome);
         expect(tax, closeTo(0.0, 0.001)); // Should be very close to 0
       });
 
       test('should handle negative amounts', () {
         final amount = -1000.0;
-        final tax = TaxCalculator.calculateTax(amount, TaxType.professionalIncome);
+        final tax =
+            TaxCalculator.calculateTax(amount, TaxType.professionalIncome);
         expect(tax, equals(-40.0)); // 4% of -1000
       });
 
@@ -118,27 +128,31 @@ void main() {
     group('Integration Tests', () {
       test('should calculate complete payment breakdown for self-employed', () {
         final totalAmount = 10000.0;
-        final taxAmount = TaxCalculator.calculateTax(totalAmount, TaxType.professionalIncome);
+        final taxAmount =
+            TaxCalculator.calculateTax(totalAmount, TaxType.professionalIncome);
         final netAmount = totalAmount - taxAmount;
-        
+
         expect(taxAmount, equals(400.0));
         expect(netAmount, equals(9600.0));
       });
 
       test('should calculate complete payment breakdown for entrepreneur', () {
         final totalAmount = 10000.0;
-        final taxAmount = TaxCalculator.calculateTax(totalAmount, TaxType.simplifiedTax);
+        final taxAmount =
+            TaxCalculator.calculateTax(totalAmount, TaxType.simplifiedTax);
         final netAmount = totalAmount - taxAmount;
-        
+
         expect(taxAmount, equals(600.0));
         expect(netAmount, equals(9400.0));
       });
 
-      test('should calculate complete payment breakdown for commercial organization', () {
+      test(
+          'should calculate complete payment breakdown for commercial organization',
+          () {
         final totalAmount = 10000.0;
         final taxAmount = TaxCalculator.calculateTax(totalAmount, TaxType.vat);
         final netAmount = totalAmount - taxAmount;
-        
+
         expect(taxAmount, equals(2000.0));
         expect(netAmount, equals(8000.0));
       });

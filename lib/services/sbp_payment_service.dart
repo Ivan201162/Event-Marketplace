@@ -6,7 +6,8 @@ import '../models/payment_models.dart';
 
 class SBPPaymentService {
   static const String _baseUrl = 'https://api.sbp.nspk.ru'; // SBP API base URL
-  static const String _merchantId = 'YOUR_MERCHANT_ID'; // Replace with actual merchant ID
+  static const String _merchantId =
+      'YOUR_MERCHANT_ID'; // Replace with actual merchant ID
   static const String _apiKey = 'YOUR_API_KEY'; // Replace with actual API key
 
   /// Creates a payment request for SBP
@@ -40,7 +41,8 @@ class SBPPaymentService {
         final responseData = jsonDecode(response.body);
         return SBPaymentResponse.fromJson(responseData);
       } else {
-        throw Exception('SBP API error: ${response.statusCode} - ${response.body}');
+        throw Exception(
+            'SBP API error: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
       debugPrint('SBP payment creation error: $e');
@@ -62,7 +64,8 @@ class SBPPaymentService {
         final responseData = jsonDecode(response.body);
         return SBPaymentStatus.fromJson(responseData);
       } else {
-        throw Exception('SBP API error: ${response.statusCode} - ${response.body}');
+        throw Exception(
+            'SBP API error: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
       debugPrint('SBP payment status error: $e');
@@ -77,7 +80,8 @@ class SBPPaymentService {
     required String description,
   }) {
     // SBP QR code format: sbp://payment?merchantId=...&paymentId=...&amount=...
-    final qrData = 'sbp://payment?merchantId=$_merchantId&paymentId=$paymentId&amount=${(amount * 100).toInt()}&description=${Uri.encodeComponent(description)}';
+    final qrData =
+        'sbp://payment?merchantId=$_merchantId&paymentId=$paymentId&amount=${(amount * 100).toInt()}&description=${Uri.encodeComponent(description)}';
     return qrData;
   }
 
@@ -87,8 +91,8 @@ class SBPPaymentService {
       // In real implementation, you would validate the signature
       // For now, we'll just check if required fields are present
       return callbackData.containsKey('paymentId') &&
-             callbackData.containsKey('status') &&
-             callbackData.containsKey('amount');
+          callbackData.containsKey('status') &&
+          callbackData.containsKey('amount');
     } catch (e) {
       debugPrint('SBP callback validation error: $e');
       return false;
@@ -157,7 +161,7 @@ class SBPaymentStatus {
       status: json['status'] as String,
       amount: (json['amount'] as int) / 100.0, // Convert from kopecks
       transactionId: json['transactionId'] as String?,
-      completedAt: json['completedAt'] != null 
+      completedAt: json['completedAt'] != null
           ? DateTime.fromMillisecondsSinceEpoch(json['completedAt'] as int)
           : null,
       errorMessage: json['errorMessage'] as String?,

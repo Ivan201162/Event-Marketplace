@@ -29,15 +29,19 @@ class Dependency {
         version: map['version'] as String? ?? '',
         latestVersion: map['latestVersion'] as String?,
         type: DependencyType.fromString(map['type'] as String? ?? 'package'),
-        status: DependencyStatus.fromString(map['status'] as String? ?? 'active'),
+        status:
+            DependencyStatus.fromString(map['status'] as String? ?? 'active'),
         description: map['description'] as String?,
         repositoryUrl: map['repositoryUrl'] as String?,
         documentationUrl: map['documentationUrl'] as String?,
         licenses: List<String>.from(map['licenses'] as List<dynamic>? ?? []),
         authors: List<String>.from(map['authors'] as List<dynamic>? ?? []),
-        metadata: Map<String, dynamic>.from(map['metadata'] as Map<dynamic, dynamic>? ?? {}),
-        dependencies: List<String>.from(map['dependencies'] as List<dynamic>? ?? []),
-        dependents: List<String>.from(map['dependents'] as List<dynamic>? ?? []),
+        metadata: Map<String, dynamic>.from(
+            map['metadata'] as Map<dynamic, dynamic>? ?? {}),
+        dependencies:
+            List<String>.from(map['dependencies'] as List<dynamic>? ?? []),
+        dependents:
+            List<String>.from(map['dependents'] as List<dynamic>? ?? []),
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),
         createdBy: map['createdBy'] as String? ?? '',
@@ -302,13 +306,18 @@ class DependencyUpdate {
         currentVersion: map['currentVersion'] as String? ?? '',
         newVersion: map['newVersion'] as String? ?? '',
         type: UpdateType.fromString(map['type'] as String? ?? 'minor'),
-        priority: UpdatePriority.fromString(map['priority'] as String? ?? 'medium'),
+        priority:
+            UpdatePriority.fromString(map['priority'] as String? ?? 'medium'),
         changelog: map['changelog'] as String?,
-        breakingChanges: List<String>.from(map['breakingChanges'] as List<dynamic>? ?? []),
-        securityFixes: List<String>.from(map['securityFixes'] as List<dynamic>? ?? []),
+        breakingChanges:
+            List<String>.from(map['breakingChanges'] as List<dynamic>? ?? []),
+        securityFixes:
+            List<String>.from(map['securityFixes'] as List<dynamic>? ?? []),
         bugFixes: List<String>.from(map['bugFixes'] as List<dynamic>? ?? []),
-        newFeatures: List<String>.from(map['newFeatures'] as List<dynamic>? ?? []),
-        metadata: Map<String, dynamic>.from(map['metadata'] as Map<dynamic, dynamic>? ?? {}),
+        newFeatures:
+            List<String>.from(map['newFeatures'] as List<dynamic>? ?? []),
+        metadata: Map<String, dynamic>.from(
+            map['metadata'] as Map<dynamic, dynamic>? ?? {}),
         releaseDate: (map['releaseDate'] as Timestamp).toDate(),
         createdAt: (map['createdAt'] as Timestamp).toDate(),
         updatedAt: (map['updatedAt'] as Timestamp).toDate(),

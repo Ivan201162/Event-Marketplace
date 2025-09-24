@@ -414,5 +414,4 @@ enum IdeaCategory {
         return 'Другое';
     }
   }
-
 }

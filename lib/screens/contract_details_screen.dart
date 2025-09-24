@@ -26,7 +26,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
     penColor: Colors.black,
     exportBackgroundColor: Colors.white,
   );
-  
+
   bool _isSigning = false;
   bool _isLoading = false;
   String? _errorMessage;
@@ -57,29 +57,27 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                   // Статус договора
                   _buildStatusCard(),
                   const SizedBox(height: 16),
-                  
+
                   // Информация о договоре
                   _buildContractInfo(),
                   const SizedBox(height: 16),
-                  
+
                   // Содержимое договора
                   ContractContentWidget(contract: widget.contract),
                   const SizedBox(height: 16),
-                  
+
                   // Информация о сторонах
-                  if (widget.contract.partiesInfo != null)
-                    _buildPartiesInfo(),
+                  if (widget.contract.partiesInfo != null) _buildPartiesInfo(),
                   const SizedBox(height: 16),
-                  
+
                   // Список услуг
                   if (widget.contract.servicesList != null)
                     _buildServicesList(),
                   const SizedBox(height: 16),
-                  
+
                   // Ошибка
-                  if (_errorMessage != null)
-                    _buildErrorMessage(),
-                  
+                  if (_errorMessage != null) _buildErrorMessage(),
+
                   // Кнопки действий
                   _buildActionButtons(),
                 ],
@@ -108,15 +106,15 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                   Text(
                     'Статус договора',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey.shade600,
-                    ),
+                          color: Colors.grey.shade600,
+                        ),
                   ),
                   Text(
                     widget.contract.status.statusText,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: widget.contract.status.statusColor,
-                      fontWeight: FontWeight.bold,
-                    ),
+                          color: widget.contract.status.statusColor,
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                 ],
               ),
@@ -128,14 +126,14 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                   Text(
                     'Подписан',
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                      color: Colors.grey.shade600,
-                    ),
+                          color: Colors.grey.shade600,
+                        ),
                   ),
                   Text(
                     _formatDate(widget.contract.signedAt!),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                 ],
               ),
@@ -155,16 +153,19 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
             Text(
               'Информация о договоре',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 12),
             _buildInfoRow('Номер договора', widget.contract.contractNumber),
             _buildInfoRow('Тип договора', _getContractTypeName()),
-            _buildInfoRow('Дата создания', _formatDate(widget.contract.createdAt)),
-            _buildInfoRow('Действует до', _formatDate(widget.contract.expiresAt)),
+            _buildInfoRow(
+                'Дата создания', _formatDate(widget.contract.createdAt)),
+            _buildInfoRow(
+                'Действует до', _formatDate(widget.contract.expiresAt)),
             if (widget.contract.totalAmount != null)
-              _buildInfoRow('Общая сумма', '${widget.contract.totalAmount!.toStringAsFixed(2)} ₽'),
+              _buildInfoRow('Общая сумма',
+                  '${widget.contract.totalAmount!.toStringAsFixed(2)} ₽'),
           ],
         ),
       ),
@@ -181,8 +182,8 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
             Text(
               'Стороны договора',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 12),
             ...widget.contract.partiesInfo!.entries.map((entry) {
@@ -200,15 +201,15 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                     Text(
                       party.name,
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       party.type,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: Colors.grey.shade600,
-                      ),
+                            color: Colors.grey.shade600,
+                          ),
                     ),
                     if (party.inn != null) ...[
                       const SizedBox(height: 4),
@@ -242,8 +243,8 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
             Text(
               'Перечень услуг',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 12),
             ...widget.contract.servicesList!.map((service) {
@@ -262,9 +263,12 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                         children: [
                           Text(
                             service.name,
-                            style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                              fontWeight: FontWeight.bold,
-                            ),
+                            style: Theme.of(context)
+                                .textTheme
+                                .titleSmall
+                                ?.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                ),
                           ),
                           if (service.description.isNotEmpty) ...[
                             const SizedBox(height: 4),
@@ -276,9 +280,10 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                           const SizedBox(height: 4),
                           Text(
                             '${service.quantity} ${service.unit ?? 'шт.'} × ${service.price.toStringAsFixed(2)} ₽',
-                            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: Colors.grey.shade600,
-                            ),
+                            style:
+                                Theme.of(context).textTheme.bodySmall?.copyWith(
+                                      color: Colors.grey.shade600,
+                                    ),
                           ),
                         ],
                       ),
@@ -286,8 +291,8 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
                     Text(
                       '${service.total.toStringAsFixed(2)} ₽',
                       style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                            fontWeight: FontWeight.bold,
+                          ),
                     ),
                   ],
                 ),
@@ -379,8 +384,8 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
             child: Text(
               '$label:',
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Colors.grey.shade600,
-              ),
+                    color: Colors.grey.shade600,
+                  ),
             ),
           ),
           Expanded(
@@ -458,7 +463,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
     try {
       // Конвертируем подпись в base64
       final signatureData = await _signatureController.toPngBytes();
-      final signatureBase64 = signatureData != null 
+      final signatureBase64 = signatureData != null
           ? 'data:image/png;base64,${signatureData.toString()}'
           : '';
 
@@ -472,14 +477,14 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
       if (mounted) {
         Navigator.of(context).pop();
         _signatureController.clear();
-        
+
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Договор успешно подписан'),
             backgroundColor: Colors.green,
           ),
         );
-        
+
         // Обновляем экран
         setState(() {});
       }
@@ -501,8 +506,9 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
     });
 
     try {
-      final pdfPath = await _contractService.generateContractPDF(widget.contract.id);
-      
+      final pdfPath =
+          await _contractService.generateContractPDF(widget.contract.id);
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

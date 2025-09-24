@@ -415,7 +415,7 @@ class _SecuritySettingsScreenState
       final currentUser = await ref.read(authServiceProvider).getCurrentUser();
       if (currentUser != null) {
         final settings = {
-          'userId': currentUser.uid,
+          'userId': currentUser.id,
           'biometricAuth': _biometricAuth,
           'pinAuth': _pinAuth,
           'twoFactorAuth': _twoFactorAuth,

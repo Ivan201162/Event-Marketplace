@@ -22,7 +22,8 @@ class ContractsScreen extends ConsumerStatefulWidget {
 }
 
 class _ContractsScreenState extends ConsumerState<ContractsScreen> {
-  final PaymentIntegrationService _paymentIntegrationService = PaymentIntegrationService();
+  final PaymentIntegrationService _paymentIntegrationService =
+      PaymentIntegrationService();
   ContractStatus? _selectedStatus;
   DateTime? _startDate;
   DateTime? _endDate;
@@ -47,7 +48,7 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
         children: [
           // Statistics Card
           _buildStatisticsCard(),
-          
+
           // Contracts List
           Expanded(
             child: _buildContractsList(),
@@ -155,7 +156,8 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
     );
   }
 
-  Widget _buildStatItem(ThemeData theme, String label, String value, IconData icon) {
+  Widget _buildStatItem(
+      ThemeData theme, String label, String value, IconData icon) {
     return Column(
       children: [
         Icon(
@@ -226,7 +228,8 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
                 Icon(
                   Icons.description,
                   size: 64,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -237,8 +240,11 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
                 Text(
                   'Здесь будут отображаться ваши контракты',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                  ),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.7),
+                      ),
                 ),
               ],
             ),
@@ -253,7 +259,8 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
             return ContractCard(
               contract: contract,
               onTap: () => _showContractDetails(contract),
-              onStatusUpdate: (status) => _updateContractStatus(contract.id, status),
+              onStatusUpdate: (status) =>
+                  _updateContractStatus(contract.id, status),
             );
           },
         );
@@ -331,7 +338,8 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
     );
   }
 
-  Future<void> _updateContractStatus(String contractId, ContractStatus status) async {
+  Future<void> _updateContractStatus(
+      String contractId, ContractStatus status) async {
     try {
       await _paymentIntegrationService.updateContractStatus(contractId, status);
       if (mounted) {
@@ -440,10 +448,10 @@ class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
                 () => setState(() => _selectedStatus = null),
               ),
               ...ContractStatus.values.map((status) => _buildFilterChip(
-                _getStatusDisplayName(status),
-                _selectedStatus == status,
-                () => setState(() => _selectedStatus = status),
-              )),
+                    _getStatusDisplayName(status),
+                    _selectedStatus == status,
+                    () => setState(() => _selectedStatus = status),
+                  )),
             ],
           ),
           const SizedBox(height: 24),
@@ -462,7 +470,7 @@ class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
                 child: OutlinedButton.icon(
                   onPressed: () => _selectDate(true),
                   icon: const Icon(Icons.calendar_today),
-                  label: Text(_startDate != null 
+                  label: Text(_startDate != null
                       ? DateFormat('dd.MM.yyyy').format(_startDate!)
                       : 'С даты'),
                 ),
@@ -472,7 +480,7 @@ class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
                 child: OutlinedButton.icon(
                   onPressed: () => _selectDate(false),
                   icon: const Icon(Icons.calendar_today),
-                  label: Text(_endDate != null 
+                  label: Text(_endDate != null
                       ? DateFormat('dd.MM.yyyy').format(_endDate!)
                       : 'По дату'),
                 ),
@@ -510,7 +518,7 @@ class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
 
   Widget _buildFilterChip(String label, bool isSelected, VoidCallback onTap) {
     final theme = Theme.of(context);
-    
+
     return FilterChip(
       label: Text(label),
       selected: isSelected,
@@ -523,7 +531,9 @@ class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
   Future<void> _selectDate(bool isStartDate) async {
     final date = await showDatePicker(
       context: context,
-      initialDate: isStartDate ? _startDate ?? DateTime.now() : _endDate ?? DateTime.now(),
+      initialDate: isStartDate
+          ? _startDate ?? DateTime.now()
+          : _endDate ?? DateTime.now(),
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
     );

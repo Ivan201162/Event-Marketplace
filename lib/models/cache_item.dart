@@ -28,7 +28,8 @@ class CacheItem<T> {
           (e) => e.toString().split('.').last == data['type'],
           orElse: () => CacheType.memory,
         ),
-        metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+        metadata: Map<String, dynamic>.from(
+            data['metadata'] as Map<dynamic, dynamic>? ?? {}),
         size: data['size'] as int?,
         etag: data['etag'] as String?,
         lastAccessed: data['lastAccessed'] != null
@@ -402,7 +403,8 @@ class CacheConfig {
         maxItems: data['maxItems'] as int? ?? 1000,
         enableCompression: data['enableCompression'] as bool? ?? false,
         enableEncryption: data['enableEncryption'] as bool? ?? false,
-        excludedKeys: List<String>.from(data['excludedKeys'] as List<dynamic>? ?? []),
+        excludedKeys:
+            List<String>.from(data['excludedKeys'] as List<dynamic>? ?? []),
         customTTL: Map<String, Duration>.from(
           (data['customTTL'] as Map<String, dynamic>?)?.map(
                 (key, value) => MapEntry(key, Duration(seconds: value as int)),

@@ -94,48 +94,50 @@ class EventIdea {
   final Map<String, dynamic> metadata;
 
   /// Создать из Map (Firestore)
-  factory EventIdea.fromMap(Map<String, dynamic> map) =>
-    EventIdea(
-      id: map['id'] as String,
-      title: map['title'] as String,
-      description: map['description'] as String,
-      imageUrl: map['imageUrl'] as String,
-      category: EventIdeaCategory.values.firstWhere(
-        (e) => e.name == map['category'],
-        orElse: () => EventIdeaCategory.other,
-      ),
-      type: EventIdeaType.values.firstWhere(
-        (e) => e.name == map['type'],
-        orElse: () => EventIdeaType.other,
-      ),
-      createdBy: map['createdBy'] as String,
-      createdAt: (map['createdAt'] as Timestamp).toDate(),
-      updatedAt: map['updatedAt'] != null 
-          ? (map['updatedAt'] as Timestamp).toDate() 
-          : null,
-      status: EventIdeaStatus.values.firstWhere(
-        (e) => e.name == map['status'],
-        orElse: () => EventIdeaStatus.published,
-      ),
-      likes: (map['likes'] ?? 0) as int,
-      commentsCount: (map['commentsCount'] ?? 0) as int,
-      views: (map['views'] ?? 0) as int,
-      tags: List<String>.from((map['tags'] ?? <String>[]) as List),
-      location: map['location'] as String?,
-      budget: (map['budget'] as num?)?.toDouble(),
-      duration: map['duration'] as int?,
-      guestCount: map['guestCount'] as int?,
-      season: map['season'] as String?,
-      style: map['style'] as String?,
-      colorScheme: map['colorScheme'] != null 
-          ? List<String>.from(map['colorScheme'] as List) 
-          : null,
-      inspiration: map['inspiration'] as String?,
-      similarIdeas: List<String>.from((map['similarIdeas'] ?? <String>[]) as List),
-      attachedBookings: List<String>.from((map['attachedBookings'] ?? <String>[]) as List),
-      isPublic: (map['isPublic'] ?? true) as bool,
-      metadata: Map<String, dynamic>.from((map['metadata'] ?? <String, dynamic>{}) as Map),
-    );
+  factory EventIdea.fromMap(Map<String, dynamic> map) => EventIdea(
+        id: map['id'] as String,
+        title: map['title'] as String,
+        description: map['description'] as String,
+        imageUrl: map['imageUrl'] as String,
+        category: EventIdeaCategory.values.firstWhere(
+          (e) => e.name == map['category'],
+          orElse: () => EventIdeaCategory.other,
+        ),
+        type: EventIdeaType.values.firstWhere(
+          (e) => e.name == map['type'],
+          orElse: () => EventIdeaType.other,
+        ),
+        createdBy: map['createdBy'] as String,
+        createdAt: (map['createdAt'] as Timestamp).toDate(),
+        updatedAt: map['updatedAt'] != null
+            ? (map['updatedAt'] as Timestamp).toDate()
+            : null,
+        status: EventIdeaStatus.values.firstWhere(
+          (e) => e.name == map['status'],
+          orElse: () => EventIdeaStatus.published,
+        ),
+        likes: (map['likes'] ?? 0) as int,
+        commentsCount: (map['commentsCount'] ?? 0) as int,
+        views: (map['views'] ?? 0) as int,
+        tags: List<String>.from((map['tags'] ?? <String>[]) as List),
+        location: map['location'] as String?,
+        budget: (map['budget'] as num?)?.toDouble(),
+        duration: map['duration'] as int?,
+        guestCount: map['guestCount'] as int?,
+        season: map['season'] as String?,
+        style: map['style'] as String?,
+        colorScheme: map['colorScheme'] != null
+            ? List<String>.from(map['colorScheme'] as List)
+            : null,
+        inspiration: map['inspiration'] as String?,
+        similarIdeas:
+            List<String>.from((map['similarIdeas'] ?? <String>[]) as List),
+        attachedBookings:
+            List<String>.from((map['attachedBookings'] ?? <String>[]) as List),
+        isPublic: (map['isPublic'] ?? true) as bool,
+        metadata: Map<String, dynamic>.from(
+            (map['metadata'] ?? <String, dynamic>{}) as Map),
+      );
 
   /// Создать из Firestore DocumentSnapshot
   factory EventIdea.fromDocument(DocumentSnapshot doc) {
@@ -145,33 +147,33 @@ class EventIdea {
 
   /// Преобразовать в Map (Firestore)
   Map<String, dynamic> toMap() => {
-      'id': id,
-      'title': title,
-      'description': description,
-      'imageUrl': imageUrl,
-      'category': category.name,
-      'type': type.name,
-      'createdBy': createdBy,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
-      'status': status.name,
-      'likes': likes,
-      'commentsCount': commentsCount,
-      'views': views,
-      'tags': tags,
-      'location': location,
-      'budget': budget,
-      'duration': duration,
-      'guestCount': guestCount,
-      'season': season,
-      'style': style,
-      'colorScheme': colorScheme,
-      'inspiration': inspiration,
-      'similarIdeas': similarIdeas,
-      'attachedBookings': attachedBookings,
-      'isPublic': isPublic,
-      'metadata': metadata,
-    };
+        'id': id,
+        'title': title,
+        'description': description,
+        'imageUrl': imageUrl,
+        'category': category.name,
+        'type': type.name,
+        'createdBy': createdBy,
+        'createdAt': Timestamp.fromDate(createdAt),
+        'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+        'status': status.name,
+        'likes': likes,
+        'commentsCount': commentsCount,
+        'views': views,
+        'tags': tags,
+        'location': location,
+        'budget': budget,
+        'duration': duration,
+        'guestCount': guestCount,
+        'season': season,
+        'style': style,
+        'colorScheme': colorScheme,
+        'inspiration': inspiration,
+        'similarIdeas': similarIdeas,
+        'attachedBookings': attachedBookings,
+        'isPublic': isPublic,
+        'metadata': metadata,
+      };
 
   /// Создать копию с изменениями
   EventIdea copyWith({
@@ -202,34 +204,34 @@ class EventIdea {
     bool? isPublic,
     Map<String, dynamic>? metadata,
   }) =>
-    EventIdea(
-      id: id ?? this.id,
-      title: title ?? this.title,
-      description: description ?? this.description,
-      imageUrl: imageUrl ?? this.imageUrl,
-      category: category ?? this.category,
-      type: type ?? this.type,
-      createdBy: createdBy ?? this.createdBy,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      status: status ?? this.status,
-      likes: likes ?? this.likes,
-      commentsCount: commentsCount ?? this.commentsCount,
-      views: views ?? this.views,
-      tags: tags ?? this.tags,
-      location: location ?? this.location,
-      budget: budget ?? this.budget,
-      duration: duration ?? this.duration,
-      guestCount: guestCount ?? this.guestCount,
-      season: season ?? this.season,
-      style: style ?? this.style,
-      colorScheme: colorScheme ?? this.colorScheme,
-      inspiration: inspiration ?? this.inspiration,
-      similarIdeas: similarIdeas ?? this.similarIdeas,
-      attachedBookings: attachedBookings ?? this.attachedBookings,
-      isPublic: isPublic ?? this.isPublic,
-      metadata: metadata ?? this.metadata,
-    );
+      EventIdea(
+        id: id ?? this.id,
+        title: title ?? this.title,
+        description: description ?? this.description,
+        imageUrl: imageUrl ?? this.imageUrl,
+        category: category ?? this.category,
+        type: type ?? this.type,
+        createdBy: createdBy ?? this.createdBy,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        status: status ?? this.status,
+        likes: likes ?? this.likes,
+        commentsCount: commentsCount ?? this.commentsCount,
+        views: views ?? this.views,
+        tags: tags ?? this.tags,
+        location: location ?? this.location,
+        budget: budget ?? this.budget,
+        duration: duration ?? this.duration,
+        guestCount: guestCount ?? this.guestCount,
+        season: season ?? this.season,
+        style: style ?? this.style,
+        colorScheme: colorScheme ?? this.colorScheme,
+        inspiration: inspiration ?? this.inspiration,
+        similarIdeas: similarIdeas ?? this.similarIdeas,
+        attachedBookings: attachedBookings ?? this.attachedBookings,
+        isPublic: isPublic ?? this.isPublic,
+        metadata: metadata ?? this.metadata,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -244,7 +246,7 @@ class EventIdea {
 
   @override
   String toString() =>
-    'EventIdea(id: $id, title: $title, category: $category, createdBy: $createdBy)';
+      'EventIdea(id: $id, title: $title, category: $category, createdBy: $createdBy)';
 }
 
 /// Расширения для enum'ов

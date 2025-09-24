@@ -97,17 +97,22 @@ class GuestWidget extends StatelessWidget {
                               vertical: 4,
                             ),
                             decoration: BoxDecoration(
-                              color: ColorUtils.getStatusColor(guest.statusColor).withValues(alpha: 0.1),
+                              color:
+                                  ColorUtils.getStatusColor(guest.statusColor)
+                                      .withValues(alpha: 0.1),
                               borderRadius: BorderRadius.circular(12),
                               border: Border.all(
-                                color: ColorUtils.getStatusColor(guest.statusColor).withValues(alpha: 0.3),
+                                color:
+                                    ColorUtils.getStatusColor(guest.statusColor)
+                                        .withValues(alpha: 0.3),
                               ),
                             ),
                             child: Text(
                               guest.statusText,
                               style: TextStyle(
                                 fontSize: 12,
-                                color: ColorUtils.getStatusColor(guest.statusColor),
+                                color: ColorUtils.getStatusColor(
+                                    guest.statusColor),
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
@@ -272,10 +277,12 @@ class GuestListTile extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: ColorUtils.getStatusColor(guest.statusColor).withValues(alpha: 0.1),
+                    color: ColorUtils.getStatusColor(guest.statusColor)
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: ColorUtils.getStatusColor(guest.statusColor).withValues(alpha: 0.3),
+                      color: ColorUtils.getStatusColor(guest.statusColor)
+                          .withValues(alpha: 0.3),
                     ),
                   ),
                   child: Text(
@@ -410,10 +417,12 @@ class GuestGridTile extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: ColorUtils.getStatusColor(guest.statusColor).withValues(alpha: 0.1),
+                    color: ColorUtils.getStatusColor(guest.statusColor)
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(10),
                     border: Border.all(
-                      color: ColorUtils.getStatusColor(guest.statusColor).withValues(alpha: 0.3),
+                      color: ColorUtils.getStatusColor(guest.statusColor)
+                          .withValues(alpha: 0.3),
                     ),
                   ),
                   child: Text(
@@ -543,5 +552,4 @@ class GuestStatsWidget extends StatelessWidget {
 
   String _formatDateTime(DateTime dateTime) =>
       '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
-
 }

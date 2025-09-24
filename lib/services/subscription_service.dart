@@ -284,7 +284,8 @@ class SubscriptionService {
   }
 
   /// Получить подписку пользователя на специалиста
-  Future<Subscription?> getUserSubscription(String userId, String specialistId) async {
+  Future<Subscription?> getUserSubscription(
+      String userId, String specialistId) async {
     try {
       final snapshot = await _firestore
           .collection('subscriptions')

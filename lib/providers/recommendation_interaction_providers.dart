@@ -38,8 +38,7 @@ class RecommendationInteractionState {
 /// Нотификатор для взаимодействий с рекомендациями
 class RecommendationInteractionNotifier
     extends Notifier<RecommendationInteractionState> {
-  RecommendationInteractionNotifier()
-      : super();
+  RecommendationInteractionNotifier() : super();
 
   void addInteraction(RecommendationInteraction interaction) {
     final updatedInteractions =

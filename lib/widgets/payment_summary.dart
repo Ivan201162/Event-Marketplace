@@ -61,9 +61,9 @@ class PaymentSummary extends StatelessWidget {
               ),
             ],
           ),
-          
+
           const SizedBox(height: 20),
-          
+
           // Amount breakdown
           _buildAmountRow(
             theme,
@@ -71,7 +71,7 @@ class PaymentSummary extends StatelessWidget {
             '${amount.toStringAsFixed(0)} ₽',
             isTotal: true,
           ),
-          
+
           if (taxAmount > 0) ...[
             const SizedBox(height: 12),
             _buildAmountRow(
@@ -80,7 +80,7 @@ class PaymentSummary extends StatelessWidget {
               '${taxAmount.toStringAsFixed(0)} ₽',
             ),
           ],
-          
+
           if (netAmount > 0) ...[
             const SizedBox(height: 12),
             _buildAmountRow(
@@ -89,9 +89,9 @@ class PaymentSummary extends StatelessWidget {
               '${netAmount.toStringAsFixed(0)} ₽',
             ),
           ],
-          
+
           const SizedBox(height: 16),
-          
+
           // Payment info
           Container(
             padding: const EdgeInsets.all(12),

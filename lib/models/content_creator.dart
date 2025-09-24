@@ -51,7 +51,8 @@ class ContentCreator {
         id: data['id'] as String? ?? '',
         name: data['name'] as String? ?? '',
         description: data['description'] as String? ?? '',
-        categories: List<String>.from(data['categories'] as List<dynamic>? ?? []),
+        categories:
+            List<String>.from(data['categories'] as List<dynamic>? ?? []),
         formats: (data['formats'] as List<dynamic>?)
                 ?.map((f) => ContentFormat.fromMap(f as Map<String, dynamic>))
                 .toList() ??
@@ -61,7 +62,8 @@ class ContentCreator {
                 .toList() ??
             [],
         pricing: data['pricing'] != null
-            ? Map<String, dynamic>.from(data['pricing'] as Map<dynamic, dynamic>)
+            ? Map<String, dynamic>.from(
+                data['pricing'] as Map<dynamic, dynamic>)
             : null,
         location: data['location'] as String?,
         rating: data['rating'] as double?,
@@ -209,7 +211,8 @@ class ContentFormat {
         description: data['description'] as String? ?? '',
         platforms: List<String>.from(data['platforms'] as List<dynamic>? ?? []),
         specifications: data['specifications'] != null
-            ? Map<String, dynamic>.from(data['specifications'] as Map<dynamic, dynamic>)
+            ? Map<String, dynamic>.from(
+                data['specifications'] as Map<dynamic, dynamic>)
             : null,
       );
   final String name;
@@ -267,7 +270,8 @@ class MediaShowcase {
         title: data['title'] as String?,
         description: data['description'] as String?,
         metadata: data['metadata'] != null
-            ? Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>)
+            ? Map<String, dynamic>.from(
+                data['metadata'] as Map<dynamic, dynamic>)
             : null,
         createdAt: (data['createdAt'] as Timestamp).toDate(),
       );

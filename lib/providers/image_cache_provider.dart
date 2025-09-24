@@ -9,7 +9,8 @@ final imageCacheProvider = Provider<ImageCacheManager>((ref) {
 
 /// Менеджер кэша изображений
 class ImageCacheManager {
-  static const int _maxCacheSize = 100; // Максимальное количество изображений в кэше
+  static const int _maxCacheSize =
+      100; // Максимальное количество изображений в кэше
   static const int _maxCacheBytes = 50 * 1024 * 1024; // 50MB
 
   /// Инициализация кэша изображений
@@ -17,7 +18,7 @@ class ImageCacheManager {
     // Настройка кэша изображений
     PaintingBinding.instance.imageCache.maximumSize = _maxCacheSize;
     PaintingBinding.instance.imageCache.maximumSizeBytes = _maxCacheBytes;
-    
+
     // Предварительная загрузка часто используемых изображений
     _preloadCommonImages();
   }
@@ -55,7 +56,8 @@ class ImageCacheManager {
 }
 
 /// Провайдер для предварительной загрузки изображений
-final imagePreloadProvider = FutureProvider.family<void, String>((ref, imageUrl) async {
+final imagePreloadProvider =
+    FutureProvider.family<void, String>((ref, imageUrl) async {
   try {
     await precacheImage(
       CachedNetworkImageProvider(imageUrl),
@@ -77,7 +79,7 @@ class MemoryManager {
   /// Проверка использования памяти и очистка при необходимости
   void checkMemoryUsage() {
     final imageCache = PaintingBinding.instance.imageCache;
-    
+
     // Если кэш изображений занимает больше 80% от максимального размера
     if (imageCache.currentSizeBytes > imageCache.maximumSizeBytes * 0.8) {
       // Очищаем старые изображения
@@ -91,6 +93,3 @@ class MemoryManager {
     PaintingBinding.instance.imageCache.clearLiveImages();
   }
 }
-
-
-

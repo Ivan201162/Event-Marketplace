@@ -113,7 +113,8 @@ class SpecialistCard extends StatelessWidget {
                     if (showLocation && specialist.location != null)
                       Row(
                         children: [
-                          Icon(Icons.location_on, color: Colors.grey[600], size: 14),
+                          Icon(Icons.location_on,
+                              color: Colors.grey[600], size: 14),
                           const SizedBox(width: 4),
                           Expanded(
                             child: Text(

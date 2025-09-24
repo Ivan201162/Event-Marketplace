@@ -10,7 +10,8 @@ class DemoAuthService {
   DemoAuthService._internal();
 
   User? _currentUser;
-  final StreamController<User?> _authStateController = StreamController<User?>.broadcast();
+  final StreamController<User?> _authStateController =
+      StreamController<User?>.broadcast();
 
   /// Текущий пользователь
   User? get currentUser => _currentUser;
@@ -28,14 +29,14 @@ class DemoAuthService {
       final demoUser = _createDemoUser(email);
       _currentUser = demoUser;
       _authStateController.add(demoUser);
-      
+
       return UserCredential._(
         user: demoUser,
         credential: null,
         additionalUserInfo: null,
       );
     }
-    
+
     throw UnsupportedError('Demo auth only available on web');
   }
 
@@ -49,14 +50,14 @@ class DemoAuthService {
       final demoUser = _createDemoUser(email);
       _currentUser = demoUser;
       _authStateController.add(demoUser);
-      
+
       return UserCredential._(
         user: demoUser,
         credential: null,
         additionalUserInfo: null,
       );
     }
-    
+
     throw UnsupportedError('Demo auth only available on web');
   }
 
@@ -64,17 +65,18 @@ class DemoAuthService {
   Future<UserCredential> signInWithGoogle() async {
     if (kIsWeb) {
       // Создаем демо-пользователя Google
-      final demoUser = _createDemoUser('demo@gmail.com', displayName: 'Demo User');
+      final demoUser =
+          _createDemoUser('demo@gmail.com', displayName: 'Demo User');
       _currentUser = demoUser;
       _authStateController.add(demoUser);
-      
+
       return UserCredential._(
         user: demoUser,
         credential: null,
         additionalUserInfo: null,
       );
     }
-    
+
     throw UnsupportedError('Demo auth only available on web');
   }
 
@@ -82,17 +84,18 @@ class DemoAuthService {
   Future<UserCredential> signInAnonymously() async {
     if (kIsWeb) {
       // Создаем демо-анонимного пользователя
-      final demoUser = _createDemoUser('anonymous@demo.com', displayName: 'Гость');
+      final demoUser =
+          _createDemoUser('anonymous@demo.com', displayName: 'Гость');
       _currentUser = demoUser;
       _authStateController.add(demoUser);
-      
+
       return UserCredential._(
         user: demoUser,
         credential: null,
         additionalUserInfo: null,
       );
     }
-    
+
     throw UnsupportedError('Demo auth only available on web');
   }
 

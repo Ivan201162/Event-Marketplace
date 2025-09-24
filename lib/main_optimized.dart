@@ -33,16 +33,16 @@ import 'widgets/performance_monitor.dart';
 /// Оптимизированная точка входа в приложение
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  
+
   // Инициализация оптимизаций
   await _initializeOptimizations();
-  
+
   // Инициализация Firebase
   await _initializeFirebase();
-  
+
   // Инициализация приложения
   await _initializeApp();
-  
+
   // Запуск приложения
   runApp(
     ProviderScope(
@@ -55,10 +55,10 @@ void main() async {
 Future<void> _initializeOptimizations() async {
   // Инициализация оптимизаций сборки
   BuildOptimizations.initializeReleaseOptimizations();
-  
+
   // Инициализация оптимизаций производительности
   PerformanceOptimizations.initialize();
-  
+
   // Инициализация оптимизаций для платформы
   BuildOptimizations.initializePlatformOptimizations();
 }
@@ -69,13 +69,13 @@ Future<void> _initializeFirebase() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    
+
     // Инициализация Crashlytics
     await FirebaseCrashlytics.instance.setCrashlyticsCollectionEnabled(true);
-    
+
     // Инициализация Performance Monitoring
     await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
-    
+
     Logger.info('Firebase initialized successfully');
   } catch (e) {
     Logger.error('Failed to initialize Firebase: $e');
@@ -87,10 +87,10 @@ Future<void> _initializeApp() async {
   try {
     // Инициализация SharedPreferences
     await SharedPreferences.getInstance();
-    
+
     // Инициализация локализации
     await AppLocalizations.initialize();
-    
+
     Logger.info('App initialized successfully');
   } catch (e) {
     Logger.error('Failed to initialize app: $e');
@@ -105,7 +105,7 @@ class OptimizedEventMarketplaceApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final themeMode = ref.watch(themeModeProvider);
     final performanceState = ref.watch(performanceProvider);
-    
+
     return MaterialApp.router(
       title: AppConstants.appName,
       theme: AppTheme.lightTheme,
@@ -188,7 +188,7 @@ class PerformanceTestScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final performanceState = ref.watch(performanceProvider);
     final recommendations = ref.watch(optimizationRecommendationsProvider);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Тест производительности'),
@@ -201,17 +201,17 @@ class PerformanceTestScreen extends ConsumerWidget {
             // Статистика производительности
             const PerformanceStats(),
             const SizedBox(height: 16),
-            
+
             // Рекомендации по оптимизации
             if (recommendations.isNotEmpty) ...[
               const OptimizationRecommendations(),
               const SizedBox(height: 16),
             ],
-            
+
             // Управление оптимизацией
             const OptimizationControls(),
             const SizedBox(height: 16),
-            
+
             // Кнопки для тестирования
             _buildTestButtons(ref),
           ],
@@ -285,6 +285,3 @@ class PerformanceTestScreen extends ConsumerWidget {
     // Здесь можно добавить логику для тестирования сетевых запросов
   }
 }
-
-
-

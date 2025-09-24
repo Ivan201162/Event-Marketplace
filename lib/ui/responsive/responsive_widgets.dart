@@ -9,7 +9,7 @@ class ResponsiveWidget extends StatelessWidget {
     this.tablet,
     this.desktop,
   });
-  
+
   final Widget mobile;
   final Widget? tablet;
   final Widget? desktop;
@@ -244,7 +244,7 @@ class ResponsiveList extends StatelessWidget {
     this.padding,
     this.spacing,
   });
-  
+
   final List<Widget> children;
   final EdgeInsetsGeometry? padding;
   final double? spacing;
@@ -257,7 +257,7 @@ class ResponsiveList extends StatelessWidget {
           const EdgeInsets.all(20),
           const EdgeInsets.all(24),
         );
-    
+
     final responsiveSpacing = spacing ?? context.responsive(8, 12, 16);
 
     return Padding(

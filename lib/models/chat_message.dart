@@ -290,11 +290,12 @@ class Chat {
       name: data['name'] as String? ?? '',
       description: data['description'] as String?,
       avatar: data['avatar'] as String?,
-      participants: List<String>.from(data['participants'] as List<dynamic>? ?? []),
-      participantNames:
-          Map<String, String>.from(data['participantNames'] as Map<dynamic, dynamic>? ?? {}),
-      participantAvatars:
-          Map<String, String>.from(data['participantAvatars'] as Map<dynamic, dynamic>? ?? {}),
+      participants:
+          List<String>.from(data['participants'] as List<dynamic>? ?? []),
+      participantNames: Map<String, String>.from(
+          data['participantNames'] as Map<dynamic, dynamic>? ?? {}),
+      participantAvatars: Map<String, String>.from(
+          data['participantAvatars'] as Map<dynamic, dynamic>? ?? {}),
       lastMessageId: data['lastMessageId'] as String?,
       lastMessageContent: data['lastMessageContent'] as String?,
       lastMessageType: data['lastMessageType'] != null

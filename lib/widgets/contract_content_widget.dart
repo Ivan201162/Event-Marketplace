@@ -24,8 +24,8 @@ class ContractContentWidget extends StatelessWidget {
                 Text(
                   'Содержимое договора',
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+                        fontWeight: FontWeight.bold,
+                      ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.fullscreen),
@@ -48,14 +48,13 @@ class ContractContentWidget extends StatelessWidget {
                 child: Text(
                   contract.content,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    height: 1.5,
-                  ),
+                        height: 1.5,
+                      ),
                 ),
               ),
             ),
             const SizedBox(height: 12),
-            if (contract.terms.isNotEmpty)
-              _buildTermsSection(context),
+            if (contract.terms.isNotEmpty) _buildTermsSection(context),
           ],
         ),
       ),
@@ -69,8 +68,8 @@ class ContractContentWidget extends StatelessWidget {
         Text(
           'Условия договора',
           style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+                fontWeight: FontWeight.bold,
+              ),
         ),
         const SizedBox(height: 8),
         ...contract.terms.entries.map((entry) {
@@ -88,16 +87,16 @@ class ContractContentWidget extends StatelessWidget {
                 Text(
                   _getTermTitle(entry.key),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue.shade700,
-                  ),
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue.shade700,
+                      ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   _formatTermValue(entry.value),
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Colors.blue.shade600,
-                  ),
+                        color: Colors.blue.shade600,
+                      ),
                 ),
               ],
             ),
@@ -150,8 +149,8 @@ class ContractContentWidget extends StatelessWidget {
                   Text(
                     'Договор ${contract.contractNumber}',
                     style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.close),
@@ -165,8 +164,8 @@ class ContractContentWidget extends StatelessWidget {
                   child: Text(
                     contract.content,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      height: 1.5,
-                    ),
+                          height: 1.5,
+                        ),
                   ),
                 ),
               ),

@@ -336,6 +336,3 @@ class OptimizedEmptyWidget extends StatelessWidget {
     );
   }
 }
-
-
-

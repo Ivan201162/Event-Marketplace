@@ -44,11 +44,11 @@ class GuestAccess {
         orElse: () => GuestAccessStatus.active,
       ),
       createdAt: (map['createdAt'] as Timestamp).toDate(),
-      expiresAt: map['expiresAt'] != null 
-          ? (map['expiresAt'] as Timestamp).toDate() 
+      expiresAt: map['expiresAt'] != null
+          ? (map['expiresAt'] as Timestamp).toDate()
           : null,
-      lastUsedAt: map['lastUsedAt'] != null 
-          ? (map['lastUsedAt'] as Timestamp).toDate() 
+      lastUsedAt: map['lastUsedAt'] != null
+          ? (map['lastUsedAt'] as Timestamp).toDate()
           : null,
       usageCount: map['usageCount'] as int,
       metadata: map['metadata'] as Map<String, dynamic>?,

@@ -57,10 +57,16 @@ class PaymentService {
       );
 
       // Save payment to Firestore
-      await _firestore.collection('payments').doc(paymentId).set(payment.toMap());
+      await _firestore
+          .collection('payments')
+          .doc(paymentId)
+          .set(payment.toMap());
 
       // Save tax calculation
-      await _firestore.collection('taxCalculations').doc(taxCalculation.id).set(taxCalculation.toMap());
+      await _firestore
+          .collection('taxCalculations')
+          .doc(taxCalculation.id)
+          .set(taxCalculation.toMap());
 
       debugPrint('Payment created: $paymentId');
       return paymentId;
@@ -76,7 +82,8 @@ class PaymentService {
     required String returnUrl,
   }) async {
     try {
-      final paymentDoc = await _firestore.collection('payments').doc(paymentId).get();
+      final paymentDoc =
+          await _firestore.collection('payments').doc(paymentId).get();
       if (!paymentDoc.exists) {
         throw Exception('Payment not found');
       }
@@ -139,7 +146,10 @@ class PaymentService {
         updatedAt: DateTime.now(),
       );
 
-      await _firestore.collection('payments').doc(paymentId).update(updatedPayment.toMap());
+      await _firestore
+          .collection('payments')
+          .doc(paymentId)
+          .update(updatedPayment.toMap());
 
       debugPrint('Payment processed: $paymentId');
       return updatedPayment;
@@ -152,7 +162,8 @@ class PaymentService {
   /// Check payment status
   Future<Payment> checkPaymentStatus(String paymentId) async {
     try {
-      final paymentDoc = await _firestore.collection('payments').doc(paymentId).get();
+      final paymentDoc =
+          await _firestore.collection('payments').doc(paymentId).get();
       if (!paymentDoc.exists) {
         throw Exception('Payment not found');
       }
@@ -169,21 +180,27 @@ class PaymentService {
 
       switch (payment.method) {
         case PaymentMethod.sbp:
-          final sbpStatus = await _bankService.getSbpPaymentStatus(payment.externalPaymentId!);
+          final sbpStatus = await _bankService
+              .getSbpPaymentStatus(payment.externalPaymentId!);
           isCompleted = sbpStatus.paid;
-          newStatus = isCompleted ? PaymentStatus.completed : PaymentStatus.processing;
+          newStatus =
+              isCompleted ? PaymentStatus.completed : PaymentStatus.processing;
           break;
 
         case PaymentMethod.yookassa:
-          final yookassaStatus = await _bankService.getYooKassaPaymentStatus(payment.externalPaymentId!);
+          final yookassaStatus = await _bankService
+              .getYooKassaPaymentStatus(payment.externalPaymentId!);
           isCompleted = yookassaStatus.paid;
-          newStatus = isCompleted ? PaymentStatus.completed : PaymentStatus.processing;
+          newStatus =
+              isCompleted ? PaymentStatus.completed : PaymentStatus.processing;
           break;
 
         case PaymentMethod.tinkoff:
-          final tinkoffStatus = await _bankService.getTinkoffPaymentStatus(payment.externalPaymentId!);
+          final tinkoffStatus = await _bankService
+              .getTinkoffPaymentStatus(payment.externalPaymentId!);
           isCompleted = tinkoffStatus.success;
-          newStatus = isCompleted ? PaymentStatus.completed : PaymentStatus.processing;
+          newStatus =
+              isCompleted ? PaymentStatus.completed : PaymentStatus.processing;
           break;
 
         default:
@@ -198,7 +215,10 @@ class PaymentService {
           updatedAt: DateTime.now(),
         );
 
-        await _firestore.collection('payments').doc(paymentId).update(updatedPayment.toMap());
+        await _firestore
+            .collection('payments')
+            .doc(paymentId)
+            .update(updatedPayment.toMap());
 
         // If payment is completed, trigger booking confirmation
         if (isCompleted) {
@@ -222,7 +242,8 @@ class PaymentService {
     required String reason,
   }) async {
     try {
-      final paymentDoc = await _firestore.collection('payments').doc(paymentId).get();
+      final paymentDoc =
+          await _firestore.collection('payments').doc(paymentId).get();
       if (!paymentDoc.exists) {
         throw Exception('Payment not found');
       }
@@ -253,7 +274,10 @@ class PaymentService {
         processedAt: DateTime.now(),
       );
 
-      await _firestore.collection('refundRequests').doc(refundRequest.id).set(refundRequest.toMap());
+      await _firestore
+          .collection('refundRequests')
+          .doc(refundRequest.id)
+          .set(refundRequest.toMap());
 
       // Update payment status
       final updatedPayment = payment.copyWith(
@@ -262,7 +286,10 @@ class PaymentService {
         updatedAt: DateTime.now(),
       );
 
-      await _firestore.collection('payments').doc(paymentId).update(updatedPayment.toMap());
+      await _firestore
+          .collection('payments')
+          .doc(paymentId)
+          .update(updatedPayment.toMap());
 
       debugPrint('Refund processed: ${refundRequest.id}');
       return refundRequest.id;
@@ -421,7 +448,8 @@ class PaymentService {
           'prepaymentCompleted': true,
           'updatedAt': FieldValue.serverTimestamp(),
         });
-      } else if (payment.type == PaymentType.postpayment || payment.type == PaymentType.full) {
+      } else if (payment.type == PaymentType.postpayment ||
+          payment.type == PaymentType.full) {
         // Mark booking as completed
         await _firestore.collection('bookings').doc(payment.bookingId).update({
           'status': 'completed',
@@ -453,18 +481,24 @@ class PaymentService {
         query = query.where('specialistId', isEqualTo: specialistId);
       }
       if (startDate != null) {
-        query = query.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where('createdAt',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
       if (endDate != null) {
-        query = query.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where('createdAt',
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       final snapshot = await query.get();
-      final payments = snapshot.docs.map((doc) => Payment.fromDocument(doc)).toList();
+      final payments =
+          snapshot.docs.map((doc) => Payment.fromDocument(doc)).toList();
 
-      final totalAmount = payments.fold(0.0, (sum, payment) => sum + payment.amount);
-      final totalTaxAmount = payments.fold(0.0, (sum, payment) => sum + payment.taxAmount);
-      final totalNetAmount = payments.fold(0.0, (sum, payment) => sum + payment.netAmount);
+      final totalAmount =
+          payments.fold(0.0, (sum, payment) => sum + payment.amount);
+      final totalTaxAmount =
+          payments.fold(0.0, (sum, payment) => sum + payment.taxAmount);
+      final totalNetAmount =
+          payments.fold(0.0, (sum, payment) => sum + payment.netAmount);
       final completedPayments = payments.where((p) => p.isCompleted).length;
       final failedPayments = payments.where((p) => p.isFailed).length;
 
@@ -475,7 +509,8 @@ class PaymentService {
         totalAmount: totalAmount,
         totalTaxAmount: totalTaxAmount,
         totalNetAmount: totalNetAmount,
-        averageAmount: payments.isNotEmpty ? totalAmount / payments.length : 0.0,
+        averageAmount:
+            payments.isNotEmpty ? totalAmount / payments.length : 0.0,
       );
     } catch (e) {
       debugPrint('Error getting payment statistics: $e');

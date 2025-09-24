@@ -41,7 +41,8 @@ class PerformanceMonitor extends ConsumerWidget {
               _buildDetailRow('FPS', '${state.fps.toInt()}'),
               _buildDetailRow('Memory', '${state.memoryUsage}%'),
               _buildDetailRow('Battery', '${state.batteryLevel}%'),
-              _buildDetailRow('Connection', _getConnectionSpeedText(state.connectionSpeed)),
+              _buildDetailRow(
+                  'Connection', _getConnectionSpeedText(state.connectionSpeed)),
               const SizedBox(height: 4),
             ],
             _buildStatusIndicator(needsOptimization),
@@ -270,10 +271,16 @@ class PerformanceStats extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 16),
-            _buildStatRow('FPS', '${state.fps.toInt()}', _getFPSColor(state.fps)),
-            _buildStatRow('Память', '${state.memoryUsage}%', _getMemoryColor(state.memoryUsage)),
-            _buildStatRow('Батарея', '${state.batteryLevel}%', _getBatteryColor(state.batteryLevel)),
-            _buildStatRow('Соединение', _getConnectionSpeedText(state.connectionSpeed), _getConnectionColor(state.connectionSpeed)),
+            _buildStatRow(
+                'FPS', '${state.fps.toInt()}', _getFPSColor(state.fps)),
+            _buildStatRow('Память', '${state.memoryUsage}%',
+                _getMemoryColor(state.memoryUsage)),
+            _buildStatRow('Батарея', '${state.batteryLevel}%',
+                _getBatteryColor(state.batteryLevel)),
+            _buildStatRow(
+                'Соединение',
+                _getConnectionSpeedText(state.connectionSpeed),
+                _getConnectionColor(state.connectionSpeed)),
           ],
         ),
       ),
@@ -346,6 +353,3 @@ class PerformanceStats extends ConsumerWidget {
     }
   }
 }
-
-
-

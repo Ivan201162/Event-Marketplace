@@ -602,7 +602,8 @@ class _SpecialistCalendarScreenState
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Аналитика календаря'),
-        content: const Text('Здесь будет отображаться аналитика календаря специалиста'),
+        content: const Text(
+            'Здесь будет отображаться аналитика календаря специалиста'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

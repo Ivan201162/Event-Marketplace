@@ -26,10 +26,11 @@ class ProposalService {
     Duration? expiresIn,
   }) async {
     try {
-      AppLogger.logI('Создание предложения с скидкой $discountPercent%', 'proposal_service');
-      
+      AppLogger.logI('Создание предложения с скидкой $discountPercent%',
+          'proposal_service');
+
       final finalPrice = originalPrice * (1 - discountPercent / 100);
-      final expiresAt = expiresIn != null 
+      final expiresAt = expiresIn != null
           ? DateTime.now().add(expiresIn)
           : DateTime.now().add(const Duration(days: 7)); // По умолчанию 7 дней
 
@@ -56,7 +57,8 @@ class ProposalService {
       AppLogger.logI('Предложение создано: ${proposal.id}', 'proposal_service');
       return proposal;
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка создания предложения', 'proposal_service', e, stackTrace);
+      AppLogger.logE(
+          'Ошибка создания предложения', 'proposal_service', e, stackTrace);
       rethrow;
     }
   }
@@ -70,11 +72,10 @@ class ProposalService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => Proposal.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map((doc) => Proposal.fromDocument(doc)).toList();
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка получения предложений', 'proposal_service', e, stackTrace);
+      AppLogger.logE(
+          'Ошибка получения предложений', 'proposal_service', e, stackTrace);
       return [];
     }
   }
@@ -88,11 +89,10 @@ class ProposalService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => Proposal.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map((doc) => Proposal.fromDocument(doc)).toList();
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка получения предложений специалиста', 'proposal_service', e, stackTrace);
+      AppLogger.logE('Ошибка получения предложений специалиста',
+          'proposal_service', e, stackTrace);
       return [];
     }
   }
@@ -106,11 +106,10 @@ class ProposalService {
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs
-          .map((doc) => Proposal.fromDocument(doc))
-          .toList();
+      return snapshot.docs.map((doc) => Proposal.fromDocument(doc)).toList();
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка получения предложений заказчика', 'proposal_service', e, stackTrace);
+      AppLogger.logE('Ошибка получения предложений заказчика',
+          'proposal_service', e, stackTrace);
       return [];
     }
   }
@@ -119,14 +118,15 @@ class ProposalService {
   Future<void> acceptProposal(String proposalId) async {
     try {
       AppLogger.logI('Принятие предложения: $proposalId', 'proposal_service');
-      
+
       await _firestore.collection('proposals').doc(proposalId).update({
         'status': ProposalStatus.accepted.name,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
       });
 
       // Обновляем бронирование с финальной ценой
-      final proposalDoc = await _firestore.collection('proposals').doc(proposalId).get();
+      final proposalDoc =
+          await _firestore.collection('proposals').doc(proposalId).get();
       if (proposalDoc.exists) {
         final proposal = Proposal.fromDocument(proposalDoc);
         await _firestore.collection('bookings').doc(proposal.bookingId).update({
@@ -138,7 +138,8 @@ class ProposalService {
 
       AppLogger.logI('Предложение принято: $proposalId', 'proposal_service');
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка принятия предложения', 'proposal_service', e, stackTrace);
+      AppLogger.logE(
+          'Ошибка принятия предложения', 'proposal_service', e, stackTrace);
       rethrow;
     }
   }
@@ -147,7 +148,7 @@ class ProposalService {
   Future<void> rejectProposal(String proposalId) async {
     try {
       AppLogger.logI('Отклонение предложения: $proposalId', 'proposal_service');
-      
+
       await _firestore.collection('proposals').doc(proposalId).update({
         'status': ProposalStatus.rejected.name,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
@@ -155,7 +156,8 @@ class ProposalService {
 
       AppLogger.logI('Предложение отклонено: $proposalId', 'proposal_service');
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка отклонения предложения', 'proposal_service', e, stackTrace);
+      AppLogger.logE(
+          'Ошибка отклонения предложения', 'proposal_service', e, stackTrace);
       rethrow;
     }
   }
@@ -172,12 +174,12 @@ class ProposalService {
 
       return snapshot.docs
           .map((doc) => Proposal.fromDocument(doc))
-          .where((proposal) => 
-              proposal.expiresAt == null || 
-              proposal.expiresAt!.isAfter(now))
+          .where((proposal) =>
+              proposal.expiresAt == null || proposal.expiresAt!.isAfter(now))
           .toList();
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка получения активных предложений', 'proposal_service', e, stackTrace);
+      AppLogger.logE('Ошибка получения активных предложений',
+          'proposal_service', e, stackTrace);
       return [];
     }
   }
@@ -192,7 +194,7 @@ class ProposalService {
           .get();
 
       final batch = _firestore.batch();
-      
+
       for (final doc in snapshot.docs) {
         final proposal = Proposal.fromDocument(doc);
         if (proposal.expiresAt != null && proposal.expiresAt!.isBefore(now)) {
@@ -206,30 +208,36 @@ class ProposalService {
       await batch.commit();
       AppLogger.logI('Истекшие предложения очищены', 'proposal_service');
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка очистки истекших предложений', 'proposal_service', e, stackTrace);
+      AppLogger.logE('Ошибка очистки истекших предложений', 'proposal_service',
+          e, stackTrace);
     }
   }
 
   /// Получить статистику предложений специалиста
-  Future<Map<String, dynamic>> getSpecialistProposalStats(String specialistId) async {
+  Future<Map<String, dynamic>> getSpecialistProposalStats(
+      String specialistId) async {
     try {
       final snapshot = await _firestore
           .collection('proposals')
           .where('specialistId', isEqualTo: specialistId)
           .get();
 
-      final proposals = snapshot.docs
-          .map((doc) => Proposal.fromDocument(doc))
-          .toList();
+      final proposals =
+          snapshot.docs.map((doc) => Proposal.fromDocument(doc)).toList();
 
       final totalProposals = proposals.length;
-      final acceptedProposals = proposals.where((p) => p.status == ProposalStatus.accepted).length;
-      final rejectedProposals = proposals.where((p) => p.status == ProposalStatus.rejected).length;
-      final pendingProposals = proposals.where((p) => p.status == ProposalStatus.pending).length;
-      final expiredProposals = proposals.where((p) => p.status == ProposalStatus.expired).length;
+      final acceptedProposals =
+          proposals.where((p) => p.status == ProposalStatus.accepted).length;
+      final rejectedProposals =
+          proposals.where((p) => p.status == ProposalStatus.rejected).length;
+      final pendingProposals =
+          proposals.where((p) => p.status == ProposalStatus.pending).length;
+      final expiredProposals =
+          proposals.where((p) => p.status == ProposalStatus.expired).length;
 
       final avgDiscount = proposals.isNotEmpty
-          ? proposals.map((p) => p.discountPercent).reduce((a, b) => a + b) / proposals.length
+          ? proposals.map((p) => p.discountPercent).reduce((a, b) => a + b) /
+              proposals.length
           : 0.0;
 
       return {
@@ -238,11 +246,14 @@ class ProposalService {
         'rejectedProposals': rejectedProposals,
         'pendingProposals': pendingProposals,
         'expiredProposals': expiredProposals,
-        'acceptanceRate': totalProposals > 0 ? (acceptedProposals / totalProposals) * 100 : 0.0,
+        'acceptanceRate': totalProposals > 0
+            ? (acceptedProposals / totalProposals) * 100
+            : 0.0,
         'avgDiscount': avgDiscount,
       };
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка получения статистики предложений', 'proposal_service', e, stackTrace);
+      AppLogger.logE('Ошибка получения статистики предложений',
+          'proposal_service', e, stackTrace);
       return {};
     }
   }

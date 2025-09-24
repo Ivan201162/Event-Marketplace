@@ -307,7 +307,8 @@ class _SearchScreenState extends State<SearchScreen> {
                               // TODO: Реализовать навигацию к форме бронирования
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
-                                  content: Text('Функция бронирования в разработке'),
+                                  content:
+                                      Text('Функция бронирования в разработке'),
                                 ),
                               );
                             },

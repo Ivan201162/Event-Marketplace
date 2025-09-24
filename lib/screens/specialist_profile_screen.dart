@@ -1058,8 +1058,9 @@ class _SpecialistProfileScreenState
   /// Навигация к чату
   void _navigateToChat() {
     // Создаем или находим чат с специалистом
-    final chatId = 'chat_${widget.specialistId}_${DateTime.now().millisecondsSinceEpoch}';
-    
+    final chatId =
+        'chat_${widget.specialistId}_${DateTime.now().millisecondsSinceEpoch}';
+
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ChatScreen(

@@ -46,10 +46,14 @@ class DisputeService {
       );
 
       // Save dispute to Firestore
-      await _firestore.collection('disputes').doc(disputeId).set(dispute.toMap());
+      await _firestore
+          .collection('disputes')
+          .doc(disputeId)
+          .set(dispute.toMap());
 
       // Update payment status to disputed
-      await _paymentService.updatePaymentStatus(paymentId, PaymentStatus.disputed);
+      await _paymentService.updatePaymentStatus(
+          paymentId, PaymentStatus.disputed);
 
       debugPrint('Dispute created: $disputeId');
       return dispute;
@@ -211,7 +215,9 @@ class DisputeService {
           .orderBy('createdAt', descending: false)
           .get();
 
-      return snapshot.docs.map((doc) => DisputeComment.fromMap(doc.data())).toList();
+      return snapshot.docs
+          .map((doc) => DisputeComment.fromMap(doc.data()))
+          .toList();
     } catch (e) {
       debugPrint('Error getting dispute comments: $e');
       return [];
@@ -243,7 +249,8 @@ class DisputeService {
     }
 
     // Check if payment is within dispute window (typically 60 days)
-    final daysSincePayment = DateTime.now().difference(payment.completedAt!).inDays;
+    final daysSincePayment =
+        DateTime.now().difference(payment.completedAt!).inDays;
     if (daysSincePayment > 60) {
       return false;
     }
@@ -260,15 +267,18 @@ class DisputeService {
       Query query = _firestore.collection('disputes');
 
       if (startDate != null) {
-        query = query.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where('createdAt',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
 
       if (endDate != null) {
-        query = query.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where('createdAt',
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       final snapshot = await query.get();
-      final disputes = snapshot.docs.map((doc) => Dispute.fromMap(doc.data())).toList();
+      final disputes =
+          snapshot.docs.map((doc) => Dispute.fromMap(doc.data())).toList();
 
       int openCount = 0;
       int resolvedCount = 0;
@@ -315,12 +325,16 @@ class DisputeService {
 
   /// Calculates average resolution time in days
   double _calculateAverageResolutionTime(List<Dispute> disputes) {
-    final resolvedDisputes = disputes.where((d) => d.status == DisputeStatus.resolved && d.resolvedAt != null).toList();
-    
+    final resolvedDisputes = disputes
+        .where(
+            (d) => d.status == DisputeStatus.resolved && d.resolvedAt != null)
+        .toList();
+
     if (resolvedDisputes.isEmpty) return 0.0;
 
     final totalDays = resolvedDisputes.fold(0.0, (sum, dispute) {
-      final resolutionTime = dispute.resolvedAt!.difference(dispute.createdAt).inDays;
+      final resolutionTime =
+          dispute.resolvedAt!.difference(dispute.createdAt).inDays;
       return sum + resolutionTime;
     });
 
@@ -380,7 +394,8 @@ class Dispute {
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
       'resolvedAt': resolvedAt != null ? Timestamp.fromDate(resolvedAt!) : null,
-      'escalatedAt': escalatedAt != null ? Timestamp.fromDate(escalatedAt!) : null,
+      'escalatedAt':
+          escalatedAt != null ? Timestamp.fromDate(escalatedAt!) : null,
     };
   }
 

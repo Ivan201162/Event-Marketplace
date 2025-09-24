@@ -9,7 +9,8 @@ class LoginRegisterScreen extends ConsumerStatefulWidget {
   const LoginRegisterScreen({super.key});
 
   @override
-  ConsumerState<LoginRegisterScreen> createState() => _LoginRegisterScreenState();
+  ConsumerState<LoginRegisterScreen> createState() =>
+      _LoginRegisterScreenState();
 }
 
 class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
@@ -17,7 +18,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _displayNameController = TextEditingController();
-  
+
   bool _isSignUpMode = false;
   bool _isLoading = false;
   String? _errorMessage;
@@ -103,7 +104,10 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
           Text(
             'Найдите идеального специалиста для вашего мероприятия',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.7),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
                 ),
             textAlign: TextAlign.center,
           ),
@@ -286,7 +290,8 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
               )
             : Text(
                 _isSignUpMode ? 'Зарегистрироваться' : 'Войти',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
       );
 
@@ -379,7 +384,10 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
             child: Text(
               'или',
               style: TextStyle(
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.6),
               ),
             ),
           ),
@@ -580,7 +588,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
 
     try {
       final authService = ref.read(authServiceProvider);
-      final user = await authService.signInWithGoogle();
+      final user = await authService.signInWithGoogleWeb();
 
       if (user != null && mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -672,7 +680,8 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
                   Navigator.of(context).pop();
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Письмо для сброса пароля отправлено на ${_emailController.text}'),
+                      content: Text(
+                          'Письмо для сброса пароля отправлено на ${_emailController.text}'),
                       backgroundColor: Colors.green,
                     ),
                   );

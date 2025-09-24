@@ -483,8 +483,7 @@ class _DeviceManagementScreenState
     try {
       final currentUser = await ref.read(authServiceProvider).getCurrentUser();
       if (currentUser != null) {
-        final success =
-            await _securityService.trustDevice(device.id);
+        final success = await _securityService.trustDevice(device.id);
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
@@ -538,8 +537,7 @@ class _DeviceManagementScreenState
         final currentUser =
             await ref.read(authServiceProvider).getCurrentUser();
         if (currentUser != null) {
-          final success =
-              await _securityService.blockDevice(device.id);
+          final success = await _securityService.blockDevice(device.id);
           if (success) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -571,8 +569,7 @@ class _DeviceManagementScreenState
     try {
       final currentUser = await ref.read(authServiceProvider).getCurrentUser();
       if (currentUser != null) {
-        final success =
-            await _securityService.unblockDevice(device.id);
+        final success = await _securityService.unblockDevice(device.id);
         if (success) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(

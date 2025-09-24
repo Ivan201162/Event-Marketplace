@@ -23,11 +23,13 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen> {
   }
 
   Future<void> _loadPendingBookings() async {
-    final bookingsStream = bookingService.getBookingsForSpecialist(widget.specialistId);
+    final bookingsStream =
+        bookingService.getBookingsForSpecialist(widget.specialistId);
     await for (final bookings in bookingsStream) {
       if (mounted) {
         setState(() {
-          pendingBookings = bookings.where((b) => b.status == BookingStatus.pending).toList();
+          pendingBookings =
+              bookings.where((b) => b.status == BookingStatus.pending).toList();
         });
       }
       break; // Получаем только первое значение
@@ -67,7 +69,8 @@ class _SpecialistRequestsScreenState extends State<SpecialistRequestsScreen> {
                       title: Text(
                         "Заказчик: ${booking.customerId} | Дата: ${booking.eventDate.toLocal().toString().split(' ')[0]}",
                       ),
-                      subtitle: Text('Аванс: ${booking.prepayment?.toInt() ?? 0} ₽'),
+                      subtitle:
+                          Text('Аванс: ${booking.prepayment?.toInt() ?? 0} ₽'),
                       trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [

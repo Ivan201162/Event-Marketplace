@@ -16,13 +16,17 @@ final citiesProvider = FutureProvider<List<CityRegion>>((ref) async {
 });
 
 /// Провайдер для получения городов с фильтрами
-final filteredCitiesProvider = StateNotifierProvider<FilteredCitiesNotifier, AsyncValue<List<CityRegion>>>((ref) {
+final filteredCitiesProvider =
+    StateNotifierProvider<FilteredCitiesNotifier, AsyncValue<List<CityRegion>>>(
+        (ref) {
   final service = ref.read(cityRegionServiceProvider);
   return FilteredCitiesNotifier(service);
 });
 
 /// Провайдер для поиска городов по названию
-final citySearchProvider = StateNotifierProvider<CitySearchNotifier, AsyncValue<List<CityRegion>>>((ref) {
+final citySearchProvider =
+    StateNotifierProvider<CitySearchNotifier, AsyncValue<List<CityRegion>>>(
+        (ref) {
   final service = ref.read(cityRegionServiceProvider);
   return CitySearchNotifier(service);
 });
@@ -46,7 +50,9 @@ final currentLocationProvider = FutureProvider<Position?>((ref) async {
 });
 
 /// Провайдер для получения ближайших городов
-final nearbyCitiesProvider = StateNotifierProvider<NearbyCitiesNotifier, AsyncValue<List<CityRegion>>>((ref) {
+final nearbyCitiesProvider =
+    StateNotifierProvider<NearbyCitiesNotifier, AsyncValue<List<CityRegion>>>(
+        (ref) {
   final service = ref.read(cityRegionServiceProvider);
   return NearbyCitiesNotifier(service);
 });
@@ -55,7 +61,8 @@ final nearbyCitiesProvider = StateNotifierProvider<NearbyCitiesNotifier, AsyncVa
 final selectedCityProvider = StateProvider<CityRegion?>((ref) => null);
 
 /// Провайдер для фильтров поиска городов
-final citySearchFiltersProvider = StateProvider<CitySearchFilters>((ref) => const CitySearchFilters());
+final citySearchFiltersProvider =
+    StateProvider<CitySearchFilters>((ref) => const CitySearchFilters());
 
 /// Провайдер для состояния инициализации городов
 final citiesInitializationProvider = FutureProvider<bool>((ref) async {
@@ -69,7 +76,8 @@ final citiesInitializationProvider = FutureProvider<bool>((ref) async {
 });
 
 /// Нотификатор для фильтрованных городов
-class FilteredCitiesNotifier extends StateNotifier<AsyncValue<List<CityRegion>>> {
+class FilteredCitiesNotifier
+    extends StateNotifier<AsyncValue<List<CityRegion>>> {
   FilteredCitiesNotifier(this._service) : super(const AsyncValue.loading()) {
     loadCities();
   }
@@ -197,7 +205,8 @@ class NearbyCitiesNotifier extends StateNotifier<AsyncValue<List<CityRegion>>> {
           longitude: position.longitude,
         );
       } else {
-        state = const AsyncValue.error('Не удалось получить местоположение', null);
+        state =
+            const AsyncValue.error('Не удалось получить местоположение', null);
       }
     } catch (error, stackTrace) {
       state = AsyncValue.error(error, stackTrace);
@@ -211,19 +220,23 @@ class NearbyCitiesNotifier extends StateNotifier<AsyncValue<List<CityRegion>>> {
 }
 
 /// Провайдер для получения городов по региону
-final citiesByRegionProvider = FutureProvider.family<List<CityRegion>, String>((ref, regionName) async {
+final citiesByRegionProvider =
+    FutureProvider.family<List<CityRegion>, String>((ref, regionName) async {
   final service = ref.read(cityRegionServiceProvider);
   return await service.getCitiesByRegion(regionName: regionName);
 });
 
 /// Провайдер для получения города по ID
-final cityByIdProvider = FutureProvider.family<CityRegion?, String>((ref, cityId) async {
+final cityByIdProvider =
+    FutureProvider.family<CityRegion?, String>((ref, cityId) async {
   final service = ref.read(cityRegionServiceProvider);
   return await service.getCityById(cityId);
 });
 
 /// Провайдер для получения города по координатам
-final cityByCoordinatesProvider = FutureProvider.family<CityRegion?, Map<String, double>>((ref, coordinates) async {
+final cityByCoordinatesProvider =
+    FutureProvider.family<CityRegion?, Map<String, double>>(
+        (ref, coordinates) async {
   final service = ref.read(cityRegionServiceProvider);
   return await service.getCityByCoordinates(
     latitude: coordinates['latitude']!,
@@ -232,10 +245,11 @@ final cityByCoordinatesProvider = FutureProvider.family<CityRegion?, Map<String,
 });
 
 /// Провайдер для статистики специалистов в городе
-final citySpecialistStatsProvider = FutureProvider.family<Map<String, dynamic>, String>((ref, cityId) async {
+final citySpecialistStatsProvider =
+    FutureProvider.family<Map<String, dynamic>, String>((ref, cityId) async {
   final service = ref.read(cityRegionServiceProvider);
   final city = await service.getCityById(cityId);
-  
+
   if (city != null) {
     return {
       'totalSpecialists': city.totalSpecialists,
@@ -243,7 +257,7 @@ final citySpecialistStatsProvider = FutureProvider.family<Map<String, dynamic>, 
       'categories': city.specialistCategories,
     };
   }
-  
+
   return {
     'totalSpecialists': 0,
     'avgRating': 0.0,
@@ -252,12 +266,14 @@ final citySpecialistStatsProvider = FutureProvider.family<Map<String, dynamic>, 
 });
 
 /// Провайдер для проверки доступности геолокации
-final locationPermissionProvider = FutureProvider<LocationPermission>((ref) async {
+final locationPermissionProvider =
+    FutureProvider<LocationPermission>((ref) async {
   return await Geolocator.checkPermission();
 });
 
 /// Провайдер для запроса разрешения на геолокацию
-final requestLocationPermissionProvider = FutureProvider<LocationPermission>((ref) async {
+final requestLocationPermissionProvider =
+    FutureProvider<LocationPermission>((ref) async {
   return await Geolocator.requestPermission();
 });
 
@@ -267,23 +283,26 @@ final locationServiceEnabledProvider = FutureProvider<bool>((ref) async {
 });
 
 /// Провайдер для потока городов с фильтрами
-final citiesStreamProvider = StreamProvider.family<List<CityRegion>, CitySearchFilters>((ref, filters) {
+final citiesStreamProvider =
+    StreamProvider.family<List<CityRegion>, CitySearchFilters>((ref, filters) {
   final service = ref.read(cityRegionServiceProvider);
   return service.getCitiesStream(filters: filters);
 });
 
 /// Провайдер для популярных городов в регионе
-final popularCitiesInRegionProvider = FutureProvider.family<List<CityRegion>, String>((ref, regionName) async {
+final popularCitiesInRegionProvider =
+    FutureProvider.family<List<CityRegion>, String>((ref, regionName) async {
   final service = ref.read(cityRegionServiceProvider);
   final cities = await service.getCitiesByRegion(regionName: regionName);
-  
+
   // Сортируем по приоритету и возвращаем топ-10
   cities.sort((a, b) => a.priority.compareTo(b.priority));
   return cities.take(10).toList();
 });
 
 /// Провайдер для городов с специалистами определенной категории
-final citiesWithSpecialistsProvider = FutureProvider.family<List<CityRegion>, String>((ref, category) async {
+final citiesWithSpecialistsProvider =
+    FutureProvider.family<List<CityRegion>, String>((ref, category) async {
   final service = ref.read(cityRegionServiceProvider);
   final filters = CitySearchFilters(
     hasSpecialists: true,

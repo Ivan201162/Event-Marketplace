@@ -512,7 +512,8 @@ class TaxCalculator {
   }
 
   /// Рассчитать налог в зависимости от типа
-  static double calculateTax(double amount, TaxType taxType, {bool isFromLegalEntity = false}) {
+  static double calculateTax(double amount, TaxType taxType,
+      {bool isFromLegalEntity = false}) {
     switch (taxType) {
       case TaxType.professionalIncome:
         return isFromLegalEntity ? amount * 0.06 : amount * 0.04;

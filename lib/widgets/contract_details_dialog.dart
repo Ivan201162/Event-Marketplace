@@ -19,7 +19,8 @@ class ContractDetailsDialog extends StatefulWidget {
 }
 
 class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
-  final PaymentIntegrationService _paymentIntegrationService = PaymentIntegrationService();
+  final PaymentIntegrationService _paymentIntegrationService =
+      PaymentIntegrationService();
   List<Payment> _payments = [];
   bool _isLoadingPayments = true;
 
@@ -31,7 +32,8 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
 
   Future<void> _loadPayments() async {
     try {
-      final payments = await _paymentIntegrationService.getBookingPayments(widget.contract.bookingId);
+      final payments = await _paymentIntegrationService
+          .getBookingPayments(widget.contract.bookingId);
       setState(() {
         _payments = payments;
         _isLoadingPayments = false;
@@ -72,9 +74,9 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
                 ),
               ],
             ),
-            
+
             const SizedBox(height: 16),
-            
+
             // Status badge
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
@@ -82,7 +84,8 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
                 color: _getStatusColor(widget.contract.status).withOpacity(0.1),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: _getStatusColor(widget.contract.status).withOpacity(0.3),
+                  color:
+                      _getStatusColor(widget.contract.status).withOpacity(0.3),
                 ),
               ),
               child: Text(
@@ -93,9 +96,9 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Contract details
             Expanded(
               child: SingleChildScrollView(
@@ -106,29 +109,40 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
                       theme,
                       'Основная информация',
                       [
-                        _buildDetailRow(theme, 'ID контракта', widget.contract.id),
-                        _buildDetailRow(theme, 'ID бронирования', widget.contract.bookingId),
-                        _buildDetailRow(theme, 'ID заказчика', widget.contract.customerId),
-                        _buildDetailRow(theme, 'ID специалиста', widget.contract.specialistId),
-                        _buildDetailRow(theme, 'Дата создания', DateFormat('dd.MM.yyyy HH:mm').format(widget.contract.createdAt)),
-                        _buildDetailRow(theme, 'Дата обновления', DateFormat('dd.MM.yyyy HH:mm').format(widget.contract.updatedAt)),
+                        _buildDetailRow(
+                            theme, 'ID контракта', widget.contract.id),
+                        _buildDetailRow(theme, 'ID бронирования',
+                            widget.contract.bookingId),
+                        _buildDetailRow(
+                            theme, 'ID заказчика', widget.contract.customerId),
+                        _buildDetailRow(theme, 'ID специалиста',
+                            widget.contract.specialistId),
+                        _buildDetailRow(
+                            theme,
+                            'Дата создания',
+                            DateFormat('dd.MM.yyyy HH:mm')
+                                .format(widget.contract.createdAt)),
+                        _buildDetailRow(
+                            theme,
+                            'Дата обновления',
+                            DateFormat('dd.MM.yyyy HH:mm')
+                                .format(widget.contract.updatedAt)),
                       ],
                     ),
-                    
                     const SizedBox(height: 24),
-                    
                     _buildDetailSection(
                       theme,
                       'Финансовая информация',
                       [
-                        _buildDetailRow(theme, 'Общая сумма', '${widget.contract.totalAmount.toStringAsFixed(0)} ₽'),
-                        _buildDetailRow(theme, 'Предоплата', '${widget.contract.prepaymentAmount.toStringAsFixed(0)} ₽'),
-                        _buildDetailRow(theme, 'Остаток к доплате', '${widget.contract.postpaymentAmount.toStringAsFixed(0)} ₽'),
+                        _buildDetailRow(theme, 'Общая сумма',
+                            '${widget.contract.totalAmount.toStringAsFixed(0)} ₽'),
+                        _buildDetailRow(theme, 'Предоплата',
+                            '${widget.contract.prepaymentAmount.toStringAsFixed(0)} ₽'),
+                        _buildDetailRow(theme, 'Остаток к доплате',
+                            '${widget.contract.postpaymentAmount.toStringAsFixed(0)} ₽'),
                       ],
                     ),
-                    
                     const SizedBox(height: 24),
-                    
                     _buildDetailSection(
                       theme,
                       'Платежи',
@@ -138,9 +152,9 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 24),
-            
+
             // Action buttons
             if (widget.contract.status == ContractStatus.draft) ...[
               Row(
@@ -187,7 +201,8 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
     );
   }
 
-  Widget _buildDetailSection(ThemeData theme, String title, List<Widget> children) {
+  Widget _buildDetailSection(
+      ThemeData theme, String title, List<Widget> children) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -269,7 +284,9 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
       ];
     }
 
-    return _payments.map((payment) => _buildPaymentItem(theme, payment)).toList();
+    return _payments
+        .map((payment) => _buildPaymentItem(theme, payment))
+        .toList();
   }
 
   Widget _buildPaymentItem(ThemeData theme, Payment payment) {

@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/scheduler.dart';
 
 /// Провайдер для управления производительностью приложения
-final performanceProvider = StateNotifierProvider<PerformanceNotifier, PerformanceState>((ref) {
+final performanceProvider =
+    StateNotifierProvider<PerformanceNotifier, PerformanceState>((ref) {
   return PerformanceNotifier();
 });
 
@@ -106,7 +107,7 @@ class PerformanceNotifier extends StateNotifier<PerformanceState> {
     // В реальном приложении здесь должна быть более сложная логика
     final memoryUsage = 50; // Заглушка в процентах
     final isLowMemory = memoryUsage > 80;
-    
+
     if (memoryUsage != state.memoryUsage || isLowMemory != state.isLowMemory) {
       state = state.copyWith(
         memoryUsage: memoryUsage,
@@ -121,8 +122,9 @@ class PerformanceNotifier extends StateNotifier<PerformanceState> {
     // В реальном приложении здесь должна быть более сложная логика
     final batteryLevel = 75; // Заглушка в процентах
     final isLowBattery = batteryLevel < 20;
-    
-    if (batteryLevel != state.batteryLevel || isLowBattery != state.isLowBattery) {
+
+    if (batteryLevel != state.batteryLevel ||
+        isLowBattery != state.isLowBattery) {
       state = state.copyWith(
         batteryLevel: batteryLevel,
         isLowBattery: isLowBattery,
@@ -136,8 +138,9 @@ class PerformanceNotifier extends StateNotifier<PerformanceState> {
     // В реальном приложении здесь должна быть более сложная логика
     final connectionSpeed = ConnectionSpeed.fast; // Заглушка
     final isSlowConnection = connectionSpeed == ConnectionSpeed.slow;
-    
-    if (connectionSpeed != state.connectionSpeed || isSlowConnection != state.isSlowConnection) {
+
+    if (connectionSpeed != state.connectionSpeed ||
+        isSlowConnection != state.isSlowConnection) {
       state = state.copyWith(
         connectionSpeed: connectionSpeed,
         isSlowConnection: isSlowConnection,
@@ -212,23 +215,26 @@ class PerformanceNotifier extends StateNotifier<PerformanceState> {
   /// Получение рекомендаций по оптимизации
   List<String> getOptimizationRecommendations() {
     final recommendations = <String>[];
-    
+
     if (state.isLowMemory) {
       recommendations.add('Низкая память: рекомендуется очистить кэш');
     }
-    
+
     if (state.isLowBattery) {
-      recommendations.add('Низкий заряд батареи: рекомендуется снизить качество изображений');
+      recommendations.add(
+          'Низкий заряд батареи: рекомендуется снизить качество изображений');
     }
-    
+
     if (state.isSlowConnection) {
-      recommendations.add('Медленное соединение: рекомендуется использовать сжатые изображения');
+      recommendations.add(
+          'Медленное соединение: рекомендуется использовать сжатые изображения');
     }
-    
+
     if (state.fps < 30) {
-      recommendations.add('Низкий FPS: рекомендуется снизить качество анимаций');
+      recommendations
+          .add('Низкий FPS: рекомендуется снизить качество анимаций');
     }
-    
+
     return recommendations;
   }
 }
@@ -243,11 +249,8 @@ final optimizationRecommendationsProvider = Provider<List<String>>((ref) {
 /// Провайдер для проверки необходимости оптимизации
 final needsOptimizationProvider = Provider<bool>((ref) {
   final state = ref.watch(performanceProvider);
-  return state.isLowMemory || 
-         state.isLowBattery || 
-         state.isSlowConnection || 
-         state.fps < 30;
+  return state.isLowMemory ||
+      state.isLowBattery ||
+      state.isSlowConnection ||
+      state.fps < 30;
 });
-
-
-

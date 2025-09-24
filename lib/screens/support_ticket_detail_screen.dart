@@ -13,10 +13,12 @@ class SupportTicketDetailScreen extends ConsumerStatefulWidget {
   final String ticketId;
 
   @override
-  ConsumerState<SupportTicketDetailScreen> createState() => _SupportTicketDetailScreenState();
+  ConsumerState<SupportTicketDetailScreen> createState() =>
+      _SupportTicketDetailScreenState();
 }
 
-class _SupportTicketDetailScreenState extends ConsumerState<SupportTicketDetailScreen> {
+class _SupportTicketDetailScreenState
+    extends ConsumerState<SupportTicketDetailScreen> {
   final TextEditingController _messageController = TextEditingController();
   bool _isLoading = false;
 
@@ -56,13 +58,13 @@ class _SupportTicketDetailScreenState extends ConsumerState<SupportTicketDetailS
                 Text(
                   'Статус: Открыт',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Colors.green,
-                  ),
+                        color: Colors.green,
+                      ),
                 ),
               ],
             ),
           ),
-          
+
           // Сообщения
           Expanded(
             child: ListView(
@@ -75,7 +77,7 @@ class _SupportTicketDetailScreenState extends ConsumerState<SupportTicketDetailS
                   DateTime.now().subtract(const Duration(hours: 2)),
                   isUser: true,
                 ),
-                
+
                 // Ответ поддержки
                 _buildMessageBubble(
                   'Поддержка',
@@ -86,7 +88,7 @@ class _SupportTicketDetailScreenState extends ConsumerState<SupportTicketDetailS
               ],
             ),
           ),
-          
+
           // Поле ввода сообщения
           Container(
             padding: const EdgeInsets.all(16),
@@ -129,16 +131,13 @@ class _SupportTicketDetailScreenState extends ConsumerState<SupportTicketDetailS
     );
   }
 
-  Widget _buildMessageBubble(
-    String sender,
-    String message,
-    DateTime timestamp,
-    {required bool isUser}
-  ) {
+  Widget _buildMessageBubble(String sender, String message, DateTime timestamp,
+      {required bool isUser}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       child: Row(
-        mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+        mainAxisAlignment:
+            isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!isUser) ...[
             CircleAvatar(
@@ -196,7 +195,10 @@ class _SupportTicketDetailScreenState extends ConsumerState<SupportTicketDetailS
                       fontSize: 12,
                       color: isUser
                           ? Colors.white70
-                          : Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.6),
+                          : Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withValues(alpha: 0.6),
                     ),
                   ),
                 ],
@@ -259,7 +261,7 @@ class _SupportTicketDetailScreenState extends ConsumerState<SupportTicketDetailS
     try {
       // TODO: Отправить сообщение через SupportService
       await Future.delayed(const Duration(seconds: 1));
-      
+
       _messageController.clear();
     } catch (e) {
       if (mounted) {

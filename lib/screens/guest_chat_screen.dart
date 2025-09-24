@@ -26,12 +26,12 @@ class GuestChatScreen extends ConsumerStatefulWidget {
 class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  
+
   GuestAccess? _guestAccess;
   bool _isLoading = true;
   bool _isSendingMessage = false;
   bool _isUploadingFile = false;
-  
+
   final List<Map<String, dynamic>> _messages = [];
   final GuestAccessService _guestAccessService = GuestAccessService();
   final AttachmentService _attachmentService = AttachmentService();
@@ -53,9 +53,10 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
   Future<void> _loadGuestAccess() async {
     try {
       setState(() => _isLoading = true);
-      
-      final guestAccess = await _guestAccessService.getGuestAccessByCode(widget.accessCode);
-      
+
+      final guestAccess =
+          await _guestAccessService.getGuestAccessByCode(widget.accessCode);
+
       if (guestAccess == null) {
         if (mounted) {
           _showErrorDialog('Неверный или истекший код доступа');
@@ -70,7 +71,7 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
 
       // Добавляем приветственное сообщение от бота
       _addBotWelcomeMessage();
-      
+
       // Отмечаем использование доступа
       await _guestAccessService.useGuestAccess(
         widget.accessCode,
@@ -78,7 +79,8 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
         guestEmail: _guestAccess?.guestEmail,
       );
     } on Exception catch (e, stackTrace) {
-      AppLogger.logE('Ошибка загрузки гостевого доступа', 'guest_chat_screen', e, stackTrace);
+      AppLogger.logE('Ошибка загрузки гостевого доступа', 'guest_chat_screen',
+          e, stackTrace);
       if (mounted) {
         _showErrorDialog('Ошибка загрузки чата');
       }
@@ -137,22 +139,27 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
             'type': 'bot',
             'message': botResponse.message,
             'timestamp': botResponse.createdAt,
-            'quickReplies': botResponse.quickReplies?.map((reply) => {
-              'title': reply.title,
-              'payload': reply.payload,
-            }).toList(),
-            'cards': botResponse.cards?.map((card) => {
-              'title': card.title,
-              'subtitle': card.subtitle,
-              'imageUrl': card.imageUrl,
-            }).toList(),
+            'quickReplies': botResponse.quickReplies
+                ?.map((reply) => {
+                      'title': reply.title,
+                      'payload': reply.payload,
+                    })
+                .toList(),
+            'cards': botResponse.cards
+                ?.map((card) => {
+                      'title': card.title,
+                      'subtitle': card.subtitle,
+                      'imageUrl': card.imageUrl,
+                    })
+                .toList(),
           });
         });
 
         _scrollToBottom();
       }
     } on Exception catch (e, stackTrace) {
-      AppLogger.logE('Ошибка отправки сообщения', 'guest_chat_screen', e, stackTrace);
+      AppLogger.logE(
+          'Ошибка отправки сообщения', 'guest_chat_screen', e, stackTrace);
       _showErrorSnackBar('Ошибка отправки сообщения');
     } finally {
       setState(() => _isSendingMessage = false);
@@ -213,7 +220,8 @@ class _GuestChatScreenState extends ConsumerState<GuestChatScreen> {
         }
       }
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка прикрепления файла', 'guest_chat_screen', e, stackTrace);
+      AppLogger.logE(
+          'Ошибка прикрепления файла', 'guest_chat_screen', e, stackTrace);
       _showErrorSnackBar('Ошибка прикрепления файла');
     } finally {
       setState(() => _isUploadingFile = false);

@@ -29,17 +29,26 @@ class EnvironmentConfig {
       EnvironmentConfig(
         id: map['id'] as String? ?? '',
         name: map['name'] as String? ?? '',
-        type: EnvironmentType.fromString(map['type'] as String? ?? 'development'),
-        config: Map<String, dynamic>.from(map['config'] as Map<dynamic, dynamic>? ?? {}),
-        secrets: Map<String, dynamic>.from(map['secrets'] as Map<dynamic, dynamic>? ?? {}),
-        featureFlags: Map<String, dynamic>.from(map['featureFlags'] as Map<dynamic, dynamic>? ?? {}),
-        apiEndpoints: Map<String, dynamic>.from(map['apiEndpoints'] as Map<dynamic, dynamic>? ?? {}),
-        databaseConfig: Map<String, dynamic>.from(map['databaseConfig'] as Map<dynamic, dynamic>? ?? {}),
-        cacheConfig: Map<String, dynamic>.from(map['cacheConfig'] as Map<dynamic, dynamic>? ?? {}),
-        loggingConfig: Map<String, dynamic>.from(map['loggingConfig'] as Map<dynamic, dynamic>? ?? {}),
-        monitoringConfig:
-            Map<String, dynamic>.from(map['monitoringConfig'] as Map<dynamic, dynamic>? ?? {}),
-        securityConfig: Map<String, dynamic>.from(map['securityConfig'] as Map<dynamic, dynamic>? ?? {}),
+        type:
+            EnvironmentType.fromString(map['type'] as String? ?? 'development'),
+        config: Map<String, dynamic>.from(
+            map['config'] as Map<dynamic, dynamic>? ?? {}),
+        secrets: Map<String, dynamic>.from(
+            map['secrets'] as Map<dynamic, dynamic>? ?? {}),
+        featureFlags: Map<String, dynamic>.from(
+            map['featureFlags'] as Map<dynamic, dynamic>? ?? {}),
+        apiEndpoints: Map<String, dynamic>.from(
+            map['apiEndpoints'] as Map<dynamic, dynamic>? ?? {}),
+        databaseConfig: Map<String, dynamic>.from(
+            map['databaseConfig'] as Map<dynamic, dynamic>? ?? {}),
+        cacheConfig: Map<String, dynamic>.from(
+            map['cacheConfig'] as Map<dynamic, dynamic>? ?? {}),
+        loggingConfig: Map<String, dynamic>.from(
+            map['loggingConfig'] as Map<dynamic, dynamic>? ?? {}),
+        monitoringConfig: Map<String, dynamic>.from(
+            map['monitoringConfig'] as Map<dynamic, dynamic>? ?? {}),
+        securityConfig: Map<String, dynamic>.from(
+            map['securityConfig'] as Map<dynamic, dynamic>? ?? {}),
         isActive: map['isActive'] as bool? ?? false,
         description: map['description'] as String?,
         tags: List<String>.from(map['tags'] ?? []),

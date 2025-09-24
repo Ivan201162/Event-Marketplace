@@ -38,7 +38,8 @@ class MediaContent {
       thumbnailUrl: data['thumbnailUrl'] as String?,
       fileSize: data['fileSize'] as int? ?? 0,
       mimeType: data['mimeType'] as String? ?? '',
-      metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+      metadata: Map<String, dynamic>.from(
+          data['metadata'] as Map<dynamic, dynamic>? ?? {}),
       uploadedBy: data['uploadedBy'] as String?,
       specialistId: data['specialistId'] as String?,
       eventId: data['eventId'] as String?,
@@ -54,7 +55,8 @@ class MediaContent {
           ? (data['publishedAt'] as Timestamp).toDate()
           : null,
       tags: List<String>.from(data['tags'] as List<dynamic>? ?? []),
-      processingInfo: Map<String, dynamic>.from(data['processingInfo'] as Map<dynamic, dynamic>? ?? {}),
+      processingInfo: Map<String, dynamic>.from(
+          data['processingInfo'] as Map<dynamic, dynamic>? ?? {}),
     );
   }
 
@@ -71,7 +73,8 @@ class MediaContent {
         thumbnailUrl: data['thumbnailUrl'] as String?,
         fileSize: data['fileSize'] as int? ?? 0,
         mimeType: data['mimeType'] as String? ?? '',
-        metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+        metadata: Map<String, dynamic>.from(
+            data['metadata'] as Map<dynamic, dynamic>? ?? {}),
         uploadedBy: data['uploadedBy'] as String?,
         specialistId: data['specialistId'] as String?,
         eventId: data['eventId'] as String?,
@@ -87,7 +90,8 @@ class MediaContent {
             ? (data['publishedAt'] as Timestamp).toDate()
             : null,
         tags: List<String>.from(data['tags'] as List<dynamic>? ?? []),
-        processingInfo: Map<String, dynamic>.from(data['processingInfo'] as Map<dynamic, dynamic>? ?? {}),
+        processingInfo: Map<String, dynamic>.from(
+            data['processingInfo'] as Map<dynamic, dynamic>? ?? {}),
       );
   final String id;
   final String title;
@@ -286,7 +290,8 @@ class ContentGallery {
       createdAt: (data['createdAt'] as Timestamp).toDate(),
       updatedAt: (data['updatedAt'] as Timestamp).toDate(),
       createdBy: data['createdBy'] as String?,
-      settings: Map<String, dynamic>.from(data['settings'] as Map<dynamic, dynamic>? ?? {}),
+      settings: Map<String, dynamic>.from(
+          data['settings'] as Map<dynamic, dynamic>? ?? {}),
     );
   }
 
@@ -306,7 +311,8 @@ class ContentGallery {
         createdAt: (data['createdAt'] as Timestamp).toDate(),
         updatedAt: (data['updatedAt'] as Timestamp).toDate(),
         createdBy: data['createdBy'] as String?,
-        settings: Map<String, dynamic>.from(data['settings'] as Map<dynamic, dynamic>? ?? {}),
+        settings: Map<String, dynamic>.from(
+            data['settings'] as Map<dynamic, dynamic>? ?? {}),
       );
   final String id;
   final String name;
@@ -440,14 +446,16 @@ class MediaProcessing {
         (e) => e.toString().split('.').last == data['status'],
         orElse: () => ProcessingStatus.pending,
       ),
-      parameters: Map<String, dynamic>.from(data['parameters'] as Map<dynamic, dynamic>? ?? {}),
+      parameters: Map<String, dynamic>.from(
+          data['parameters'] as Map<dynamic, dynamic>? ?? {}),
       resultUrl: data['resultUrl'] as String?,
       errorMessage: data['errorMessage'] as String?,
       startedAt: (data['startedAt'] as Timestamp).toDate(),
       completedAt: data['completedAt'] != null
           ? (data['completedAt'] as Timestamp).toDate()
           : null,
-      metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+      metadata: Map<String, dynamic>.from(
+          data['metadata'] as Map<dynamic, dynamic>? ?? {}),
     );
   }
 
@@ -463,14 +471,16 @@ class MediaProcessing {
           (e) => e.toString().split('.').last == data['status'],
           orElse: () => ProcessingStatus.pending,
         ),
-        parameters: Map<String, dynamic>.from(data['parameters'] as Map<dynamic, dynamic>? ?? {}),
+        parameters: Map<String, dynamic>.from(
+            data['parameters'] as Map<dynamic, dynamic>? ?? {}),
         resultUrl: data['resultUrl'] as String?,
         errorMessage: data['errorMessage'] as String?,
         startedAt: (data['startedAt'] as Timestamp).toDate(),
         completedAt: data['completedAt'] != null
             ? (data['completedAt'] as Timestamp).toDate()
             : null,
-        metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+        metadata: Map<String, dynamic>.from(
+            data['metadata'] as Map<dynamic, dynamic>? ?? {}),
       );
   final String id;
   final String mediaId;

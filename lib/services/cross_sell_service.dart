@@ -538,7 +538,8 @@ class CrossSellService {
             categoryId: categoryId,
             categoryName: categoryName,
             description: specialist.description,
-            estimatedPrice: specialist.hourlyRate ?? specialist.pricePerHour ?? 0.0,
+            estimatedPrice:
+                specialist.hourlyRate ?? specialist.pricePerHour ?? 0.0,
             imageUrl: specialist.avatarUrl,
           ),
         );

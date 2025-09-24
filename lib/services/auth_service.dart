@@ -40,13 +40,16 @@ class AuthService {
   bool get _isDemoMode => kIsWeb && _auth.currentUser == null;
 
   /// Текущий пользователь Firebase
-  User? get currentFirebaseUser => _isDemoMode ? _demoAuth?.currentUser : _auth.currentUser;
+  User? get currentFirebaseUser =>
+      _isDemoMode ? _demoAuth?.currentUser : _auth.currentUser;
 
   /// Текущий пользователь (алиас для совместимости)
-  User? get currentUser => _isDemoMode ? _demoAuth?.currentUser : _auth.currentUser;
+  User? get currentUser =>
+      _isDemoMode ? _demoAuth?.currentUser : _auth.currentUser;
 
   /// Поток изменений состояния аутентификации
-  Stream<User?> get authStateChanges => _isDemoMode ? _demoAuth?.authStateChanges : _auth.authStateChanges();
+  Stream<User?> get authStateChanges =>
+      _isDemoMode ? _demoAuth?.authStateChanges : _auth.authStateChanges();
 
   /// Получить текущего пользователя из Firestore
   Future<AppUser?> getCurrentUser() async {
@@ -143,8 +146,9 @@ class AuthService {
     required UserRole role,
   }) async {
     try {
-      AppLogger.logI('Начинаем регистрацию пользователя: $email', 'auth_service');
-      
+      AppLogger.logI(
+          'Начинаем регистрацию пользователя: $email', 'auth_service');
+
       // Создаем пользователя в Firebase Auth
       final credential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -153,11 +157,13 @@ class AuthService {
 
       final firebaseUser = credential.user;
       if (firebaseUser == null) {
-        AppLogger.logE('Firebase user is null after registration', 'auth_service');
+        AppLogger.logE(
+            'Firebase user is null after registration', 'auth_service');
         throw Exception('Ошибка создания пользователя');
       }
 
-      AppLogger.logI('Firebase user создан: ${firebaseUser.uid}', 'auth_service');
+      AppLogger.logI(
+          'Firebase user создан: ${firebaseUser.uid}', 'auth_service');
 
       // Обновляем профиль Firebase
       await firebaseUser.updateDisplayName(name);
@@ -175,9 +181,9 @@ class AuthService {
           .collection('users')
           .doc(firebaseUser.uid)
           .set(appUser.toMap());
-      
-      AppLogger.logI('Пользователь создан в Firestore: ${appUser.id}', 'auth_service');
 
+      AppLogger.logI(
+          'Пользователь создан в Firestore: ${appUser.id}', 'auth_service');
     } on FirebaseAuthException catch (e) {
       throw _handleAuthException(e);
     } catch (e) {
@@ -194,8 +200,9 @@ class AuthService {
     required UserRole role,
   }) async {
     try {
-      AppLogger.logI('Начинаем регистрацию пользователя: $email', 'auth_service');
-      
+      AppLogger.logI(
+          'Начинаем регистрацию пользователя: $email', 'auth_service');
+
       // Создаем пользователя в Firebase Auth
       final credential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -204,11 +211,13 @@ class AuthService {
 
       final firebaseUser = credential.user;
       if (firebaseUser == null) {
-        AppLogger.logE('Firebase user is null after registration', 'auth_service');
+        AppLogger.logE(
+            'Firebase user is null after registration', 'auth_service');
         return null;
       }
 
-      AppLogger.logI('Firebase user создан: ${firebaseUser.uid}', 'auth_service');
+      AppLogger.logI(
+          'Firebase user создан: ${firebaseUser.uid}', 'auth_service');
 
       // Обновляем профиль Firebase
       await firebaseUser.updateDisplayName(displayName);
@@ -226,8 +235,9 @@ class AuthService {
           .collection('users')
           .doc(firebaseUser.uid)
           .set(appUser.toMap());
-      
-      AppLogger.logI('Пользователь создан в Firestore: ${appUser.id}', 'auth_service');
+
+      AppLogger.logI(
+          'Пользователь создан в Firestore: ${appUser.id}', 'auth_service');
 
       return appUser;
     } on FirebaseAuthException catch (e) {
@@ -250,13 +260,13 @@ class AuthService {
           email: email,
           password: password,
         );
-        
+
         if (credential == null) return null;
-        
+
         // Создаем демо-пользователя AppUser
         final demoUser = credential.user;
         if (demoUser == null) return null;
-        
+
         return AppUser.fromFirebaseUser(
           demoUser.uid,
           demoUser.email ?? email,
@@ -289,16 +299,16 @@ class AuthService {
   Future<AppUser?> signInAsGuest() async {
     try {
       AppLogger.logI('Начало входа как гость...', 'auth_service');
-      
+
       // Используем демо-режим для веб-версии
       if (_isDemoMode) {
         final credential = await _demoAuth?.signInAnonymously();
         if (credential == null) return null;
-        
+
         final demoUser = credential.user;
-        
+
         if (demoUser == null) return null;
-        
+
         return AppUser.fromFirebaseUser(
           demoUser.uid,
           'guest@demo.com',
@@ -306,13 +316,14 @@ class AuthService {
           role: UserRole.guest,
         );
       }
-      
+
       // Создаем анонимного пользователя
       final credential = await _auth.signInAnonymously();
       final firebaseUser = credential.user;
 
       if (firebaseUser == null) {
-        AppLogger.logE('Firebase пользователь не создан для гостя', 'auth_service');
+        AppLogger.logE(
+            'Firebase пользователь не создан для гостя', 'auth_service');
         return null;
       }
 
@@ -343,16 +354,16 @@ class AuthService {
   Future<AppUser?> signInWithGoogle() async {
     try {
       AppLogger.logI('Начало входа через Google...', 'auth_service');
-      
+
       // Используем демо-режим для веб-версии
       if (_isDemoMode) {
         final credential = await _demoAuth?.signInWithGoogle();
         if (credential == null) return null;
-        
+
         final demoUser = credential.user;
-        
+
         if (demoUser == null) return null;
-        
+
         return AppUser.fromFirebaseUser(
           demoUser.uid,
           demoUser.email ?? 'demo@gmail.com',
@@ -360,35 +371,40 @@ class AuthService {
           role: UserRole.customer,
         );
       }
-      
+
       // Для web-версии используем Firebase Auth с Google провайдером
       final googleProvider = GoogleAuthProvider();
-      
+
       // Попробуем войти через popup
       UserCredential? userCredential;
       try {
         userCredential = await _auth.signInWithPopup(googleProvider);
       } catch (e) {
-        AppLogger.logI('Popup заблокирован, пробуем redirect...', 'auth_service');
+        AppLogger.logI(
+            'Popup заблокирован, пробуем redirect...', 'auth_service');
         // Если popup заблокирован, используем redirect
         await _auth.signInWithRedirect(googleProvider);
         return null; // Redirect не возвращает результат сразу
       }
-      
+
       final firebaseUser = userCredential?.user;
       if (firebaseUser == null) {
-        AppLogger.logE('Firebase пользователь не создан для Google', 'auth_service');
+        AppLogger.logE(
+            'Firebase пользователь не создан для Google', 'auth_service');
         return null;
       }
-      
-      AppLogger.logI('Google аутентификация успешна: ${firebaseUser.email}', 'auth_service');
-      
+
+      AppLogger.logI('Google аутентификация успешна: ${firebaseUser.email}',
+          'auth_service');
+
       // Проверяем, существует ли пользователь в Firestore
-      final userDoc = await _firestore.collection('users').doc(firebaseUser.uid).get();
-      
+      final userDoc =
+          await _firestore.collection('users').doc(firebaseUser.uid).get();
+
       if (!userDoc.exists) {
         // Создаем нового пользователя
-        AppLogger.logI('Создание нового Google пользователя в Firestore...', 'auth_service');
+        AppLogger.logI('Создание нового Google пользователя в Firestore...',
+            'auth_service');
         final appUser = AppUser.fromFirebaseUser(
           firebaseUser.uid,
           firebaseUser.email ?? '',
@@ -398,41 +414,59 @@ class AuthService {
           socialProvider: 'google',
           socialId: firebaseUser.uid,
         );
-        
+
         await _firestore
             .collection('users')
             .doc(firebaseUser.uid)
             .set(appUser.toMap());
-        
-        AppLogger.logI('Google пользователь создан: ${appUser.displayName}', 'auth_service');
+
+        AppLogger.logI('Google пользователь создан: ${appUser.displayName}',
+            'auth_service');
         return appUser;
       } else {
         // Обновляем время последнего входа
-        AppLogger.logI('Обновление времени последнего входа...', 'auth_service');
+        AppLogger.logI(
+            'Обновление времени последнего входа...', 'auth_service');
         await _updateLastLogin(firebaseUser.uid);
         final appUser = AppUser.fromDocument(userDoc);
-        AppLogger.logI('Google пользователь вошел: ${appUser.displayName}', 'auth_service');
+        AppLogger.logI('Google пользователь вошел: ${appUser.displayName}',
+            'auth_service');
         return appUser;
       }
-      
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка входа через Google', 'auth_service', e, stackTrace);
+      AppLogger.logE(
+          'Ошибка входа через Google', 'auth_service', e, stackTrace);
       throw Exception('Ошибка входа через Google: $e');
     }
+  }
+
+  /// Войти через Google Web (специальный метод для Web)
+  Future<AppUser?> signInWithGoogleWeb() async {
+    return await signInWithGoogle();
   }
 
   /// Войти через VK
   Future<AppUser?> signInWithVK({UserRole role = UserRole.customer}) async {
     try {
       AppLogger.logI('Начало входа через VK...', 'auth_service');
-      
+
       // Для тестирования используем заглушку
       // В production здесь должен быть реальный VK OAuth
       return await _vkAuthService.createVkUserForTesting();
-      
     } catch (e, stackTrace) {
       AppLogger.logE('Ошибка входа через VK', 'auth_service', e, stackTrace);
       throw Exception('Ошибка входа через VK: $e');
+    }
+  }
+
+  /// Обработать VK callback
+  Future<AppUser?> handleVkCallback(String code) async {
+    try {
+      AppLogger.logI('Обработка VK callback...', 'auth_service');
+      return await _vkAuthService.handleVkCallbackAndSignIn(code);
+    } catch (e, stackTrace) {
+      AppLogger.logE('Ошибка обработки VK callback', 'auth_service', e, stackTrace);
+      throw Exception('Ошибка обработки VK callback: $e');
     }
   }
 

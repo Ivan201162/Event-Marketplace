@@ -613,7 +613,8 @@ class BudgetSuggestionService {
         specialistId: specialist?.id,
         specialistName: specialist?.name,
         description: reason,
-        estimatedPrice: specialist?.hourlyRate ?? specialist?.pricePerHour ?? 0.0,
+        estimatedPrice:
+            specialist?.hourlyRate ?? specialist?.pricePerHour ?? 0.0,
         reason: reason,
       );
     } catch (e) {

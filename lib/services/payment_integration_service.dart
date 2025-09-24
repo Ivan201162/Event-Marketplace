@@ -125,7 +125,8 @@ class PaymentIntegrationService {
       await _paymentService.cancelPayment(paymentId);
 
       // Update booking status
-      await _updateBookingStatus(payment.bookingId, payment.type, isCancelled: true);
+      await _updateBookingStatus(payment.bookingId, payment.type,
+          isCancelled: true);
 
       debugPrint('Booking payment cancelled: $paymentId');
     } catch (e) {
@@ -151,7 +152,8 @@ class PaymentIntegrationService {
   }
 
   /// Gets payment summary for a booking
-  Future<BookingPaymentSummary> getBookingPaymentSummary(String bookingId) async {
+  Future<BookingPaymentSummary> getBookingPaymentSummary(
+      String bookingId) async {
     try {
       final payments = await getBookingPayments(bookingId);
       final booking = await _getBooking(bookingId);
@@ -228,7 +230,10 @@ class PaymentIntegrationService {
         updatedAt: DateTime.now(),
       );
 
-      await _firestore.collection('contracts').doc(contract.id).set(contract.toMap());
+      await _firestore
+          .collection('contracts')
+          .doc(contract.id)
+          .set(contract.toMap());
 
       debugPrint('Booking contract created: ${contract.id}');
       return contract;
@@ -239,7 +244,8 @@ class PaymentIntegrationService {
   }
 
   /// Updates contract status
-  Future<void> updateContractStatus(String contractId, ContractStatus status) async {
+  Future<void> updateContractStatus(
+      String contractId, ContractStatus status) async {
     try {
       await _firestore.collection('contracts').doc(contractId).update({
         'status': status.toString().split('.').last,
@@ -256,7 +262,8 @@ class PaymentIntegrationService {
   /// Gets contract by ID
   Future<Contract?> getContract(String contractId) async {
     try {
-      final doc = await _firestore.collection('contracts').doc(contractId).get();
+      final doc =
+          await _firestore.collection('contracts').doc(contractId).get();
       if (!doc.exists) return null;
       return Contract.fromMap(doc.data()!);
     } catch (e) {
@@ -307,14 +314,15 @@ class PaymentIntegrationService {
 
   Future<TaxStatus> _getSpecialistTaxStatus(String specialistId) async {
     try {
-      final doc = await _firestore.collection('specialists').doc(specialistId).get();
+      final doc =
+          await _firestore.collection('specialists').doc(specialistId).get();
       if (!doc.exists) {
         return TaxStatus.individual; // Default to individual
       }
 
       final data = doc.data()!;
       final taxStatusString = data['taxStatus'] as String?;
-      
+
       if (taxStatusString != null) {
         return TaxStatus.values.firstWhere(
           (e) => e.toString().split('.').last == taxStatusString,
@@ -329,7 +337,8 @@ class PaymentIntegrationService {
     }
   }
 
-  Future<void> _updateBookingPayment(String bookingId, String paymentId, PaymentType type) async {
+  Future<void> _updateBookingPayment(
+      String bookingId, String paymentId, PaymentType type) async {
     try {
       final updateData = <String, dynamic>{
         'updatedAt': Timestamp.fromDate(DateTime.now()),
@@ -353,7 +362,8 @@ class PaymentIntegrationService {
     }
   }
 
-  Future<void> _updateBookingStatus(String bookingId, PaymentType type, {bool isCancelled = false}) async {
+  Future<void> _updateBookingStatus(String bookingId, PaymentType type,
+      {bool isCancelled = false}) async {
     try {
       final updateData = <String, dynamic>{
         'updatedAt': Timestamp.fromDate(DateTime.now()),
@@ -388,7 +398,8 @@ class PaymentIntegrationService {
         'userId': payment.customerId,
         'type': 'payment_completed',
         'title': 'Платеж завершен',
-        'message': 'Ваш платеж на сумму ${payment.amount.toStringAsFixed(0)} ₽ успешно завершен',
+        'message':
+            'Ваш платеж на сумму ${payment.amount.toStringAsFixed(0)} ₽ успешно завершен',
         'data': {'paymentId': payment.id, 'bookingId': payment.bookingId},
         'createdAt': Timestamp.fromDate(DateTime.now()),
         'read': false,
@@ -399,7 +410,8 @@ class PaymentIntegrationService {
         'userId': payment.specialistId,
         'type': 'payment_received',
         'title': 'Получен платеж',
-        'message': 'Вы получили платеж на сумму ${payment.netAmount.toStringAsFixed(0)} ₽',
+        'message':
+            'Вы получили платеж на сумму ${payment.netAmount.toStringAsFixed(0)} ₽',
         'data': {'paymentId': payment.id, 'bookingId': payment.bookingId},
         'createdAt': Timestamp.fromDate(DateTime.now()),
         'read': false,

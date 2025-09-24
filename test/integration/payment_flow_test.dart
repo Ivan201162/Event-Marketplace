@@ -42,7 +42,7 @@ void main() {
           specialistId: testBooking.specialistId!,
           taxStatus: TaxStatus.none,
         );
-        
+
         expect(paymentId, isNotEmpty);
         expect(paymentId, isA<String>());
       });
@@ -57,7 +57,7 @@ void main() {
           specialistId: testBooking.specialistId!,
           taxStatus: TaxStatus.none,
         );
-        
+
         expect(paymentId, isNotEmpty);
         expect(paymentId, isA<String>());
       });

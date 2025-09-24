@@ -38,12 +38,15 @@ class AttachmentService {
     String? thumbnailPath,
   }) async {
     try {
-      AppLogger.logI('Начало загрузки файла: $originalFileName', 'attachment_service');
+      AppLogger.logI(
+          'Начало загрузки файла: $originalFileName', 'attachment_service');
 
       // Проверяем размер файла
       if (fileData.length > maxFileSize) {
-        AppLogger.logE('Файл слишком большой: ${fileData.length} байт', 'attachment_service');
-        throw Exception('Файл слишком большой. Максимальный размер: ${maxFileSize ~/ (1024 * 1024)} MB');
+        AppLogger.logE('Файл слишком большой: ${fileData.length} байт',
+            'attachment_service');
+        throw Exception(
+            'Файл слишком большой. Максимальный размер: ${maxFileSize ~/ (1024 * 1024)} MB');
       }
 
       // Определяем тип файла
@@ -52,7 +55,8 @@ class AttachmentService {
 
       // Генерируем уникальное имя файла
       final fileExtension = path.extension(originalFileName);
-      final fileName = '${DateTime.now().millisecondsSinceEpoch}_${userId}$fileExtension';
+      final fileName =
+          '${DateTime.now().millisecondsSinceEpoch}_${userId}$fileExtension';
 
       // Загружаем основной файл
       final fileRef = _storage.ref().child('chat_attachments/$fileName');
@@ -68,7 +72,8 @@ class AttachmentService {
       }
 
       // Создаем запись в Firestore
-      final attachmentId = 'attachment_${DateTime.now().millisecondsSinceEpoch}';
+      final attachmentId =
+          'attachment_${DateTime.now().millisecondsSinceEpoch}';
       final attachment = ChatAttachment(
         id: attachmentId,
         messageId: messageId,
@@ -82,9 +87,15 @@ class AttachmentService {
         uploadedAt: DateTime.now(),
         uploadedBy: userId,
         metadata: {
-          'width': fileType == AttachmentType.image ? _getImageWidth(fileData) : null,
-          'height': fileType == AttachmentType.image ? _getImageHeight(fileData) : null,
-          'duration': fileType == AttachmentType.video ? null : null, // TODO: Получить длительность видео
+          'width': fileType == AttachmentType.image
+              ? _getImageWidth(fileData)
+              : null,
+          'height': fileType == AttachmentType.image
+              ? _getImageHeight(fileData)
+              : null,
+          'duration': fileType == AttachmentType.video
+              ? null
+              : null, // TODO: Получить длительность видео
         },
       );
 
@@ -96,7 +107,8 @@ class AttachmentService {
       AppLogger.logI('Файл успешно загружен: $fileName', 'attachment_service');
       return attachment;
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка загрузки файла', 'attachment_service', e, stackTrace);
+      AppLogger.logE(
+          'Ошибка загрузки файла', 'attachment_service', e, stackTrace);
       return null;
     }
   }
@@ -110,11 +122,13 @@ class AttachmentService {
 
       // Создаем миниатюру (максимум 200x200)
       final thumbnail = img.copyResize(image, width: 200, height: 200);
-      final thumbnailData = Uint8List.fromList(img.encodeJpg(thumbnail, quality: 80));
+      final thumbnailData =
+          Uint8List.fromList(img.encodeJpg(thumbnail, quality: 80));
 
       // Загружаем миниатюру
       final thumbnailName = 'thumb_$fileName';
-      final thumbnailRef = _storage.ref().child('chat_attachments/thumbnails/$thumbnailName');
+      final thumbnailRef =
+          _storage.ref().child('chat_attachments/thumbnails/$thumbnailName');
       final uploadTask = thumbnailRef.putData(thumbnailData);
       final snapshot = await uploadTask;
       return await snapshot.ref.getDownloadURL();
@@ -137,7 +151,8 @@ class AttachmentService {
           .map((doc) => ChatAttachment.fromMap(doc.data(), doc.id))
           .toList();
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка получения вложений', 'attachment_service', e, stackTrace);
+      AppLogger.logE(
+          'Ошибка получения вложений', 'attachment_service', e, stackTrace);
       return [];
     }
   }
@@ -146,28 +161,38 @@ class AttachmentService {
   Future<bool> deleteAttachment(String attachmentId) async {
     try {
       // Получаем информацию о вложении
-      final doc = await _firestore.collection('chat_attachments').doc(attachmentId).get();
+      final doc = await _firestore
+          .collection('chat_attachments')
+          .doc(attachmentId)
+          .get();
       if (!doc.exists) return false;
 
       final attachment = ChatAttachment.fromMap(doc.data()!, doc.id);
 
       // Удаляем файл из Storage
-      final fileRef = _storage.ref().child('chat_attachments/${attachment.fileName}');
+      final fileRef =
+          _storage.ref().child('chat_attachments/${attachment.fileName}');
       await fileRef.delete();
 
       // Удаляем миниатюру, если есть
       if (attachment.thumbnailUrl != null) {
-        final thumbnailRef = _storage.ref().child('chat_attachments/thumbnails/thumb_${attachment.fileName}');
+        final thumbnailRef = _storage
+            .ref()
+            .child('chat_attachments/thumbnails/thumb_${attachment.fileName}');
         await thumbnailRef.delete();
       }
 
       // Удаляем запись из Firestore
-      await _firestore.collection('chat_attachments').doc(attachmentId).delete();
+      await _firestore
+          .collection('chat_attachments')
+          .doc(attachmentId)
+          .delete();
 
       AppLogger.logI('Вложение удалено: $attachmentId', 'attachment_service');
       return true;
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка удаления вложения', 'attachment_service', e, stackTrace);
+      AppLogger.logE(
+          'Ошибка удаления вложения', 'attachment_service', e, stackTrace);
       return false;
     }
   }
@@ -175,7 +200,7 @@ class AttachmentService {
   /// Определить тип файла по расширению
   AttachmentType _getFileType(String fileName) {
     final extension = path.extension(fileName).toLowerCase().substring(1);
-    
+
     if (supportedFileTypes['image']!.contains(extension)) {
       return AttachmentType.image;
     } else if (supportedFileTypes['video']!.contains(extension)) {
@@ -192,7 +217,7 @@ class AttachmentService {
   /// Получить MIME тип файла
   String _getMimeType(String fileName) {
     final extension = path.extension(fileName).toLowerCase();
-    
+
     switch (extension) {
       case '.jpg':
       case '.jpeg':

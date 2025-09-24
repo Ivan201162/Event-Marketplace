@@ -92,7 +92,7 @@ class ErrorLogger {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
-  
+
   String? _appVersion;
   String? _deviceInfoString;
 
@@ -101,10 +101,11 @@ class ErrorLogger {
     try {
       final packageInfo = await PackageInfo.fromPlatform();
       _appVersion = '${packageInfo.version}+${packageInfo.buildNumber}';
-      
+
       if (kIsWeb) {
         final webBrowserInfo = await _deviceInfo.webBrowserInfo;
-        _deviceInfoString = 'Web: ${webBrowserInfo.browserName.name} ${webBrowserInfo.appVersion}';
+        _deviceInfoString =
+            'Web: ${webBrowserInfo.browserName.name} ${webBrowserInfo.appVersion}';
       } else {
         _deviceInfoString = await _getDeviceInfo();
       }
@@ -167,7 +168,8 @@ class ErrorLogger {
 
       // Также логируем в консоль для разработки
       if (kDebugMode) {
-        debugPrint('Error logged: ${errorLog.level.name} - ${errorLog.message}');
+        debugPrint(
+            'Error logged: ${errorLog.level.name} - ${errorLog.message}');
       }
     } catch (e) {
       // Если не удалось записать в Firestore, логируем в консоль
@@ -311,11 +313,13 @@ class ErrorLogger {
       }
 
       if (startDate != null) {
-        query = query.where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+        query = query.where('timestamp',
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
       }
 
       if (endDate != null) {
-        query = query.where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+        query = query.where('timestamp',
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate));
       }
 
       query = query.orderBy('timestamp', descending: true).limit(limit);

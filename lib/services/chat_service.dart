@@ -22,11 +22,9 @@ class ChatService {
   }
 
   /// Получить чат по ID
-  Stream<chat_model.Chat?> getChat(String chatId) => _firestore
-      .collection('chats')
-      .doc(chatId)
-      .snapshots()
-      .map((snapshot) => snapshot.exists ? chat_model.Chat.fromDocument(snapshot) : null);
+  Stream<chat_model.Chat?> getChat(String chatId) =>
+      _firestore.collection('chats').doc(chatId).snapshots().map((snapshot) =>
+          snapshot.exists ? chat_model.Chat.fromDocument(snapshot) : null);
 
   /// Получить сообщения чата
   Stream<List<message_model.ChatMessage>> getChatMessages(String chatId) =>

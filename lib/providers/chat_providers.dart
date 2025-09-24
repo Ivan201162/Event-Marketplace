@@ -161,21 +161,26 @@ class ChatStateNotifier extends Notifier<ChatState> {
     state = state.copyWith(error: error);
   }
 
-  Future<void> sendMessage(String chatId, String text, {ChatAttachment? attachment}) async {
+  Future<void> sendMessage(String chatId, String text,
+      {ChatAttachment? attachment}) async {
     try {
       setLoading(true);
       final chatService = ref.read(chatServiceProvider);
-      await chatService.sendMessage(chatId, chat_message.ChatMessage(
-        id: '',
-        chatId: chatId,
-        senderId: 'current_user_id',
-        type: attachment != null ? chat_message.MessageType.attachment : chat_message.MessageType.text,
-        content: text,
-        status: chat_message.MessageStatus.sent,
-        timestamp: DateTime.now(),
-        senderName: 'Current User',
-        attachmentId: attachment?.id,
-      ));
+      await chatService.sendMessage(
+          chatId,
+          chat_message.ChatMessage(
+            id: '',
+            chatId: chatId,
+            senderId: 'current_user_id',
+            type: attachment != null
+                ? chat_message.MessageType.attachment
+                : chat_message.MessageType.text,
+            content: text,
+            status: chat_message.MessageStatus.sent,
+            timestamp: DateTime.now(),
+            senderName: 'Current User',
+            attachmentId: attachment?.id,
+          ));
       setLoading(false);
     } catch (e) {
       setError(e.toString());

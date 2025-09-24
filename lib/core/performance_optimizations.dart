@@ -47,11 +47,10 @@ class PerformanceOptimizations {
           width: width,
           height: height,
           color: Colors.grey[300],
-            child: const Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
-        },
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        ),
         errorBuilder: (context, error, stackTrace) => Container(
           width: width,
           height: height,

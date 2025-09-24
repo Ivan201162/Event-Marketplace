@@ -27,7 +27,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -50,7 +50,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
             ],
           ),
         ),
-        
+
         // Контент рекомендаций
         Expanded(
           child: SingleChildScrollView(
@@ -58,19 +58,19 @@ class SmartRecommendationsWidget extends ConsumerWidget {
               children: [
                 // Популярные специалисты в регионе
                 _buildPopularSpecialists(context, ref),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Популярные категории
                 _buildPopularCategories(context, ref),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Рекомендуемые города
                 _buildRecommendedCities(context, ref),
-                
+
                 const SizedBox(height: 24),
-                
+
                 // Тренды
                 _buildTrends(context, ref),
               ],
@@ -83,7 +83,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
 
   Widget _buildPopularSpecialists(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    
+
     return Consumer(
       builder: (context, ref, child) {
         final recommendedState = ref.watch(recommendedSpecialistsProvider({
@@ -91,7 +91,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
           'region': selectedRegion,
           'limit': 5,
         }));
-        
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -105,13 +105,13 @@ class SmartRecommendationsWidget extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 12),
-            
             recommendedState.when(
               data: (results) {
                 if (results.isEmpty) {
-                  return _buildEmptyRecommendations(context, 'Специалисты не найдены');
+                  return _buildEmptyRecommendations(
+                      context, 'Специалисты не найдены');
                 }
-                
+
                 return SizedBox(
                   height: 200,
                   child: ListView.builder(
@@ -120,13 +120,15 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                     itemCount: results.length,
                     itemBuilder: (context, index) {
                       final result = results[index];
-                      return _buildSpecialistRecommendationCard(context, result);
+                      return _buildSpecialistRecommendationCard(
+                          context, result);
                     },
                   ),
                 );
               },
               loading: () => _buildLoadingCard(context),
-              error: (error, stack) => _buildErrorCard(context, error.toString()),
+              error: (error, stack) =>
+                  _buildErrorCard(context, error.toString()),
             ),
           ],
         );
@@ -136,7 +138,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
 
   Widget _buildPopularCategories(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    
+
     return Consumer(
       builder: (context, ref, child) {
         final categoriesState = ref.watch(popularCategoriesProvider({
@@ -144,7 +146,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
           'region': selectedRegion,
           'limit': 8,
         }));
-        
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -158,26 +160,28 @@ class SmartRecommendationsWidget extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 12),
-            
             categoriesState.when(
               data: (categories) {
                 if (categories.isEmpty) {
-                  return _buildEmptyRecommendations(context, 'Категории не найдены');
+                  return _buildEmptyRecommendations(
+                      context, 'Категории не найдены');
                 }
-                
+
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Wrap(
                     spacing: 8,
                     runSpacing: 8,
                     children: categories.map<Widget>((category) {
-                      return _buildCategoryChip(context, category as SpecialistCategory);
+                      return _buildCategoryChip(
+                          context, category as SpecialistCategory);
                     }).toList(),
                   ),
                 );
               },
               loading: () => _buildLoadingCard(context),
-              error: (error, stack) => _buildErrorCard(context, error.toString()),
+              error: (error, stack) =>
+                  _buildErrorCard(context, error.toString()),
             ),
           ],
         );
@@ -187,11 +191,11 @@ class SmartRecommendationsWidget extends ConsumerWidget {
 
   Widget _buildRecommendedCities(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    
+
     return Consumer(
       builder: (context, ref, child) {
         final popularCitiesState = ref.watch(popularCitiesProvider);
-        
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -205,13 +209,13 @@ class SmartRecommendationsWidget extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 12),
-            
             popularCitiesState.when(
               data: (cities) {
                 if (cities.isEmpty) {
-                  return _buildEmptyRecommendations(context, 'Города не найдены');
+                  return _buildEmptyRecommendations(
+                      context, 'Города не найдены');
                 }
-                
+
                 return SizedBox(
                   height: 120,
                   child: ListView.builder(
@@ -226,7 +230,8 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                 );
               },
               loading: () => _buildLoadingCard(context),
-              error: (error, stack) => _buildErrorCard(context, error.toString()),
+              error: (error, stack) =>
+                  _buildErrorCard(context, error.toString()),
             ),
           ],
         );
@@ -236,11 +241,11 @@ class SmartRecommendationsWidget extends ConsumerWidget {
 
   Widget _buildTrends(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    
+
     return Consumer(
       builder: (context, ref, child) {
         final trendsState = ref.watch(searchTrendsProvider);
-        
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -254,22 +259,24 @@ class SmartRecommendationsWidget extends ConsumerWidget {
               ),
             ),
             const SizedBox(height: 12),
-            
             trendsState.when(
               data: (trends) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 16.0),
                   child: Column(
                     children: [
-                      _buildTrendSection(context, 'Популярные запросы', trends['popularQueries']),
+                      _buildTrendSection(context, 'Популярные запросы',
+                          trends['popularQueries'] as List<dynamic>),
                       const SizedBox(height: 16),
-                      _buildTrendSection(context, 'Трендовые услуги', trends['trendingServices']),
+                      _buildTrendSection(context, 'Трендовые услуги',
+                          trends['trendingServices'] as List<dynamic>),
                     ],
                   ),
                 );
               },
               loading: () => _buildLoadingCard(context),
-              error: (error, stack) => _buildErrorCard(context, error.toString()),
+              error: (error, stack) =>
+                  _buildErrorCard(context, error.toString()),
             ),
           ],
         );
@@ -277,10 +284,11 @@ class SmartRecommendationsWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildSpecialistRecommendationCard(BuildContext context, AdvancedSearchResult result) {
+  Widget _buildSpecialistRecommendationCard(
+      BuildContext context, AdvancedSearchResult result) {
     final specialist = result.specialist;
     final theme = Theme.of(context);
-    
+
     return Container(
       width: 160,
       margin: const EdgeInsets.only(right: 12),
@@ -302,7 +310,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                       : null,
                   child: specialist.avatarUrl == null
                       ? Text(
-                          specialist.name.isNotEmpty 
+                          specialist.name.isNotEmpty
                               ? specialist.name[0].toUpperCase()
                               : '?',
                           style: theme.textTheme.titleMedium?.copyWith(
@@ -311,9 +319,9 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                         )
                       : null,
                 ),
-                
+
                 const SizedBox(height: 8),
-                
+
                 // Имя
                 Text(
                   specialist.name,
@@ -323,9 +331,9 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                
+
                 const SizedBox(height: 4),
-                
+
                 // Категория
                 Text(
                   specialist.categoryDisplayName,
@@ -335,9 +343,9 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                
+
                 const Spacer(),
-                
+
                 // Рейтинг и цена
                 Row(
                   children: [
@@ -371,7 +379,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
 
   Widget _buildCategoryChip(BuildContext context, SpecialistCategory category) {
     final theme = Theme.of(context);
-    
+
     return InkWell(
       onTap: () => onCategorySelected?.call(category),
       borderRadius: BorderRadius.circular(20),
@@ -397,7 +405,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
 
   Widget _buildCityRecommendationCard(BuildContext context, CityRegion city) {
     final theme = Theme.of(context);
-    
+
     return Container(
       width: 120,
       margin: const EdgeInsets.only(right: 12),
@@ -425,9 +433,9 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                     ),
                   ),
                 ),
-                
+
                 const SizedBox(height: 8),
-                
+
                 // Название города
                 Text(
                   city.cityName,
@@ -437,9 +445,9 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
-                
+
                 const SizedBox(height: 4),
-                
+
                 // Население
                 Text(
                   '${_formatPopulation(city.population)} жителей',
@@ -447,9 +455,9 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
-                
+
                 const Spacer(),
-                
+
                 // Количество специалистов
                 if (city.totalSpecialists > 0)
                   Text(
@@ -467,9 +475,10 @@ class SmartRecommendationsWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildTrendSection(BuildContext context, String title, List<dynamic> items) {
+  Widget _buildTrendSection(
+      BuildContext context, String title, List<dynamic> items) {
     final theme = Theme.of(context);
-    
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

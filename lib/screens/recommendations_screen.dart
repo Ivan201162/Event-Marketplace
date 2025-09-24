@@ -19,9 +19,9 @@ class RecommendationsScreen extends StatefulWidget {
 class _RecommendationsScreenState extends State<RecommendationsScreen>
     with TickerProviderStateMixin {
   final RecommendationService _recommendationService = RecommendationService();
-  
+
   late TabController _tabController;
-  
+
   List<EventIdea> _ideas = [];
   List<EventIdea> _savedIdeas = [];
   List<Specialist> _crossSellRecommendations = [];
@@ -45,7 +45,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
 
   Future<void> _loadData() async {
     setState(() => _isLoading = true);
-    
+
     try {
       final futures = await Future.wait([
         _recommendationService.getEventIdeas(
@@ -53,7 +53,8 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
           category: _selectedCategory,
           searchQuery: _searchQuery.isNotEmpty ? _searchQuery : null,
         ),
-        _recommendationService.getSavedIdeas('current_user_id'), // TODO: Get from auth
+        _recommendationService
+            .getSavedIdeas('current_user_id'), // TODO: Get from auth
         _recommendationService.getCrossSellRecommendations(
           selectedSpecialistIds: [], // TODO: Get from current booking
           customerId: 'current_user_id', // TODO: Get from auth
@@ -308,9 +309,9 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
                     child: Text('Все типы'),
                   ),
                   ...EventIdeaType.values.map((type) => DropdownMenuItem(
-                    value: type,
-                    child: Text(type.displayName),
-                  )),
+                        value: type,
+                        child: Text(type.displayName),
+                      )),
                 ],
                 onChanged: (value) => setState(() => _selectedType = value),
               ),
@@ -326,10 +327,11 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
                     value: null,
                     child: Text('Все категории'),
                   ),
-                  ...EventIdeaCategory.values.map((category) => DropdownMenuItem(
-                    value: category,
-                    child: Text(category.displayName),
-                  )),
+                  ...EventIdeaCategory.values
+                      .map((category) => DropdownMenuItem(
+                            value: category,
+                            child: Text(category.displayName),
+                          )),
                 ],
                 onChanged: (value) => setState(() => _selectedCategory = value),
               ),
@@ -397,7 +399,8 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
                   errorBuilder: (context, error, stackTrace) => Container(
                     height: 200,
                     color: Colors.grey[300],
-                    child: const Icon(Icons.image, size: 64, color: Colors.grey),
+                    child:
+                        const Icon(Icons.image, size: 64, color: Colors.grey),
                   ),
                 ),
               ),
@@ -409,10 +412,13 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
               const SizedBox(height: 16),
               Wrap(
                 spacing: 8,
-                children: idea.tags.map((tag) => Chip(
-                  label: Text(tag),
-                  backgroundColor: Theme.of(context).primaryColor.withOpacity(0.1),
-                )).toList(),
+                children: idea.tags
+                    .map((tag) => Chip(
+                          label: Text(tag),
+                          backgroundColor:
+                              Theme.of(context).primaryColor.withOpacity(0.1),
+                        ))
+                    .toList(),
               ),
               const Spacer(),
               Row(

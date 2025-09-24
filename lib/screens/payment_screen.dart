@@ -81,10 +81,11 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
         }
 
         final payments = snapshot.data ?? [];
-        final pendingPayments = payments.where((p) => 
-          p.status == PaymentStatus.pending || 
-          p.status == PaymentStatus.processing
-        ).toList();
+        final pendingPayments = payments
+            .where((p) =>
+                p.status == PaymentStatus.pending ||
+                p.status == PaymentStatus.processing)
+            .toList();
 
         if (pendingPayments.isEmpty) {
           return const Center(
@@ -141,11 +142,12 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
         }
 
         final payments = snapshot.data ?? [];
-        final completedPayments = payments.where((p) => 
-          p.status == PaymentStatus.completed || 
-          p.status == PaymentStatus.failed ||
-          p.status == PaymentStatus.cancelled
-        ).toList();
+        final completedPayments = payments
+            .where((p) =>
+                p.status == PaymentStatus.completed ||
+                p.status == PaymentStatus.failed ||
+                p.status == PaymentStatus.cancelled)
+            .toList();
 
         if (completedPayments.isEmpty) {
           return const Center(
@@ -177,7 +179,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
 
   Widget _buildStatisticsTab() {
     return FutureBuilder<PaymentStatistics>(
-      future: _paymentService.getPaymentStatistics('current_user_id'), // TODO: Получить реальный ID пользователя
+      future: _paymentService.getPaymentStatistics(
+          'current_user_id'), // TODO: Получить реальный ID пользователя
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -201,15 +204,16 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
           );
         }
 
-        final stats = snapshot.data ?? const PaymentStatistics(
-          totalAmount: 0,
-          completedAmount: 0,
-          pendingAmount: 0,
-          completedCount: 0,
-          pendingCount: 0,
-          failedCount: 0,
-          totalCount: 0,
-        );
+        final stats = snapshot.data ??
+            const PaymentStatistics(
+              totalAmount: 0,
+              completedAmount: 0,
+              pendingAmount: 0,
+              completedCount: 0,
+              pendingCount: 0,
+              failedCount: 0,
+              totalCount: 0,
+            );
 
         return SingleChildScrollView(
           padding: const EdgeInsets.all(16),
@@ -322,7 +326,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
                   ),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                   decoration: BoxDecoration(
                     color: _getStatusColor(payment.status).withOpacity(0.1),
                     borderRadius: BorderRadius.circular(12),
@@ -509,8 +514,11 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
               value: progress,
               backgroundColor: Colors.grey[300],
               valueColor: AlwaysStoppedAnimation<Color>(
-                progress > 0.8 ? Colors.green : 
-                progress > 0.5 ? Colors.orange : Colors.red,
+                progress > 0.8
+                    ? Colors.green
+                    : progress > 0.5
+                        ? Colors.orange
+                        : Colors.red,
               ),
             ),
           ],
@@ -584,7 +592,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('Сумма: ${payment.amount.toStringAsFixed(2)} ${payment.currency}'),
+            Text(
+                'Сумма: ${payment.amount.toStringAsFixed(2)} ${payment.currency}'),
             const SizedBox(height: 16),
             const Text('Выберите способ оплаты:'),
             const SizedBox(height: 16),
@@ -601,7 +610,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
               title: const Text('CloudPayments'),
               onTap: () {
                 Navigator.of(context).pop();
-                _processPaymentWithProvider(payment, PaymentProvider.cloudPayments);
+                _processPaymentWithProvider(
+                    payment, PaymentProvider.cloudPayments);
               },
             ),
             ListTile(
@@ -624,7 +634,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
     );
   }
 
-  Future<void> _processPaymentWithProvider(Payment payment, PaymentProvider provider) async {
+  Future<void> _processPaymentWithProvider(
+      Payment payment, PaymentProvider provider) async {
     try {
       final result = await _paymentService.processPaymentWithProvider(
         paymentId: payment.id,
@@ -641,7 +652,8 @@ class _PaymentScreenState extends ConsumerState<PaymentScreen>
       if (result['success'] == true) {
         // В реальном приложении здесь должен быть переход к платежной странице
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Перенаправление на страницу оплаты...')),
+          const SnackBar(
+              content: Text('Перенаправление на страницу оплаты...')),
         );
       } else {
         ScaffoldMessenger.of(context).showSnackBar(

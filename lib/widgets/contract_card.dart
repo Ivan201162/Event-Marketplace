@@ -47,7 +47,7 @@ class ContractCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  
+
                   // Contract info
                   Expanded(
                     child: Column(
@@ -69,7 +69,7 @@ class ContractCard extends StatelessWidget {
                       ],
                     ),
                   ),
-                  
+
                   // Amount
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -91,20 +91,22 @@ class ContractCard extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Status and date row
               Row(
                 children: [
                   // Status badge
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: _getStatusColor(contract.status).withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: _getStatusColor(contract.status).withOpacity(0.3),
+                        color:
+                            _getStatusColor(contract.status).withOpacity(0.3),
                         width: 1,
                       ),
                     ),
@@ -116,9 +118,9 @@ class ContractCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  
+
                   const Spacer(),
-                  
+
                   // Date
                   Text(
                     DateFormat('dd.MM.yyyy').format(contract.createdAt),
@@ -128,9 +130,9 @@ class ContractCard extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Payment breakdown
               Container(
                 padding: const EdgeInsets.all(12),
@@ -164,7 +166,7 @@ class ContractCard extends StatelessWidget {
                   ],
                 ),
               ),
-              
+
               // Action buttons
               if (contract.status == ContractStatus.draft) ...[
                 const SizedBox(height: 12),
@@ -172,14 +174,16 @@ class ContractCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () => onStatusUpdate?.call(ContractStatus.active),
+                        onPressed: () =>
+                            onStatusUpdate?.call(ContractStatus.active),
                         child: const Text('Активировать'),
                       ),
                     ),
                     const SizedBox(width: 8),
                     Expanded(
                       child: OutlinedButton(
-                        onPressed: () => onStatusUpdate?.call(ContractStatus.cancelled),
+                        onPressed: () =>
+                            onStatusUpdate?.call(ContractStatus.cancelled),
                         style: OutlinedButton.styleFrom(
                           foregroundColor: theme.colorScheme.error,
                         ),
@@ -196,7 +200,8 @@ class ContractCard extends StatelessWidget {
     );
   }
 
-  Widget _buildPaymentInfo(ThemeData theme, String label, String value, IconData icon) {
+  Widget _buildPaymentInfo(
+      ThemeData theme, String label, String value, IconData icon) {
     return Column(
       children: [
         Icon(

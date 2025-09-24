@@ -29,7 +29,7 @@ class ChatScreen extends ConsumerStatefulWidget {
 class _ChatScreenState extends ConsumerState<ChatScreen> {
   final TextEditingController _messageController = TextEditingController();
   final ScrollController _scrollController = ScrollController();
-  
+
   bool _isUploadingFile = false;
   final AttachmentService _attachmentService = AttachmentService();
   final ChatBotService _chatBotService = ChatBotService();
@@ -252,10 +252,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     // Отправка сообщения через провайдер
     try {
       ref.read(chatStateProvider.notifier).sendMessage(
-        widget.chatId,
-        content,
-      );
-      
+            widget.chatId,
+            content,
+          );
+
       _messageController.clear();
       _scrollToBottom();
     } catch (e) {
@@ -321,10 +321,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         if (attachment != null) {
           // Отправляем сообщение с вложением
           ref.read(chatStateProvider.notifier).sendMessage(
-            widget.chatId,
-            '📎 ${attachment.originalFileName}',
-            attachment: attachment,
-          );
+                widget.chatId,
+                '📎 ${attachment.originalFileName}',
+                attachment: attachment,
+              );
 
           _showSuccessSnackBar('Файл загружен успешно');
         } else {

@@ -26,10 +26,12 @@ class CityRegionService {
 
       // Фильтр по населению
       if (filters.minPopulation > 0) {
-        query = query.where('population', isGreaterThanOrEqualTo: filters.minPopulation);
+        query = query.where('population',
+            isGreaterThanOrEqualTo: filters.minPopulation);
       }
       if (filters.maxPopulation < 10000000) {
-        query = query.where('population', isLessThanOrEqualTo: filters.maxPopulation);
+        query = query.where('population',
+            isLessThanOrEqualTo: filters.maxPopulation);
       }
 
       // Фильтр по столицам
@@ -50,19 +52,23 @@ class CityRegionService {
       // Сортировка
       switch (filters.sortBy) {
         case CitySortBy.population:
-          query = query.orderBy('population', descending: !filters.sortAscending);
+          query =
+              query.orderBy('population', descending: !filters.sortAscending);
           break;
         case CitySortBy.name:
           query = query.orderBy('cityName', descending: !filters.sortAscending);
           break;
         case CitySortBy.region:
-          query = query.orderBy('regionName', descending: !filters.sortAscending);
+          query =
+              query.orderBy('regionName', descending: !filters.sortAscending);
           break;
         case CitySortBy.specialistCount:
-          query = query.orderBy('totalSpecialists', descending: !filters.sortAscending);
+          query = query.orderBy('totalSpecialists',
+              descending: !filters.sortAscending);
           break;
         case CitySortBy.rating:
-          query = query.orderBy('avgSpecialistRating', descending: !filters.sortAscending);
+          query = query.orderBy('avgSpecialistRating',
+              descending: !filters.sortAscending);
           break;
         case CitySortBy.priority:
           // Приоритет вычисляется на клиенте
@@ -106,10 +112,12 @@ class CityRegionService {
     }
 
     if (filters.minPopulation > 0) {
-      query = query.where('population', isGreaterThanOrEqualTo: filters.minPopulation);
+      query = query.where('population',
+          isGreaterThanOrEqualTo: filters.minPopulation);
     }
     if (filters.maxPopulation < 10000000) {
-      query = query.where('population', isLessThanOrEqualTo: filters.maxPopulation);
+      query =
+          query.where('population', isLessThanOrEqualTo: filters.maxPopulation);
     }
 
     if (filters.isCapital != null) {
@@ -136,10 +144,12 @@ class CityRegionService {
         query = query.orderBy('regionName', descending: !filters.sortAscending);
         break;
       case CitySortBy.specialistCount:
-        query = query.orderBy('totalSpecialists', descending: !filters.sortAscending);
+        query = query.orderBy('totalSpecialists',
+            descending: !filters.sortAscending);
         break;
       case CitySortBy.rating:
-        query = query.orderBy('avgSpecialistRating', descending: !filters.sortAscending);
+        query = query.orderBy('avgSpecialistRating',
+            descending: !filters.sortAscending);
         break;
       default:
         query = query.orderBy('population', descending: true);
@@ -148,9 +158,8 @@ class CityRegionService {
     query = query.limit(limit);
 
     return query.snapshots().map((snapshot) {
-      var cities = snapshot.docs
-          .map((doc) => CityRegion.fromDocument(doc))
-          .toList();
+      var cities =
+          snapshot.docs.map((doc) => CityRegion.fromDocument(doc)).toList();
 
       // Дополнительная фильтрация на клиенте
       cities = _applyClientSideFilters(cities, filters);
@@ -174,9 +183,7 @@ class CityRegionService {
           .limit(limit)
           .get();
 
-      return cities.docs
-          .map((doc) => CityRegion.fromDocument(doc))
-          .toList();
+      return cities.docs.map((doc) => CityRegion.fromDocument(doc)).toList();
     } catch (e) {
       print('Ошибка поиска городов: $e');
       return [];
@@ -186,10 +193,7 @@ class CityRegionService {
   /// Получить город по ID
   Future<CityRegion?> getCityById(String id) async {
     try {
-      final doc = await _firestore
-          .collection(_collectionName)
-          .doc(id)
-          .get();
+      final doc = await _firestore.collection(_collectionName).doc(id).get();
 
       if (doc.exists) {
         return CityRegion.fromDocument(doc);
@@ -215,9 +219,7 @@ class CityRegionService {
           .limit(limit)
           .get();
 
-      return cities.docs
-          .map((doc) => CityRegion.fromDocument(doc))
-          .toList();
+      return cities.docs.map((doc) => CityRegion.fromDocument(doc)).toList();
     } catch (e) {
       print('Ошибка получения городов по региону: $e');
       return [];
@@ -256,9 +258,8 @@ class CityRegionService {
           .limit(limit)
           .get();
 
-      var popularCities = cities.docs
-          .map((doc) => CityRegion.fromDocument(doc))
-          .toList();
+      var popularCities =
+          cities.docs.map((doc) => CityRegion.fromDocument(doc)).toList();
 
       // Добавляем крупные города, если не хватает
       if (popularCities.length < limit) {
@@ -303,13 +304,11 @@ class CityRegionService {
         longitude: longitude,
       );
 
-      var nearbyCities = cities.docs
-          .map((doc) => CityRegion.fromDocument(doc))
-          .where((city) {
-            final distance = city.coordinates.distanceTo(userCoordinates);
-            return distance <= radiusKm;
-          })
-          .toList();
+      var nearbyCities =
+          cities.docs.map((doc) => CityRegion.fromDocument(doc)).where((city) {
+        final distance = city.coordinates.distanceTo(userCoordinates);
+        return distance <= radiusKm;
+      }).toList();
 
       // Сортируем по расстоянию
       nearbyCities.sort((a, b) {
@@ -367,11 +366,11 @@ class CityRegionService {
     try {
       // Используем геокодирование для получения адреса
       final placemarks = await placemarkFromCoordinates(latitude, longitude);
-      
+
       if (placemarks.isNotEmpty) {
         final placemark = placemarks.first;
         final cityName = placemark.locality ?? placemark.administrativeArea;
-        
+
         if (cityName != null) {
           // Ищем город в нашей базе
           final cities = await searchCitiesByName(query: cityName, limit: 1);
@@ -395,10 +394,7 @@ class CityRegionService {
     required double avgRating,
   }) async {
     try {
-      await _firestore
-          .collection(_collectionName)
-          .doc(cityId)
-          .update({
+      await _firestore.collection(_collectionName).doc(cityId).update({
         'totalSpecialists': specialistCount,
         'avgSpecialistRating': avgRating,
         'updatedAt': Timestamp.fromDate(DateTime.now()),
@@ -420,8 +416,8 @@ class CityRegionService {
       final query = filters.searchQuery.toLowerCase();
       filteredCities = filteredCities.where((city) {
         return city.cityName.toLowerCase().contains(query) ||
-               city.regionName.toLowerCase().contains(query) ||
-               city.searchName.contains(query);
+            city.regionName.toLowerCase().contains(query) ||
+            city.searchName.contains(query);
       }).toList();
     }
 
@@ -440,7 +436,8 @@ class CityRegionService {
     }
 
     // Фильтр по категории специалистов
-    if (filters.specialistCategory != null && filters.specialistCategory!.isNotEmpty) {
+    if (filters.specialistCategory != null &&
+        filters.specialistCategory!.isNotEmpty) {
       filteredCities = filteredCities.where((city) {
         return city.specialistCategories.contains(filters.specialistCategory);
       }).toList();
@@ -451,7 +448,7 @@ class CityRegionService {
       filteredCities.sort((a, b) {
         final priorityA = a.priority;
         final priorityB = b.priority;
-        return filters.sortAscending 
+        return filters.sortAscending
             ? priorityA.compareTo(priorityB)
             : priorityB.compareTo(priorityA);
       });
@@ -464,10 +461,8 @@ class CityRegionService {
   Future<void> initializeRussianCities() async {
     try {
       // Проверяем, есть ли уже данные
-      final existingCities = await _firestore
-          .collection(_collectionName)
-          .limit(1)
-          .get();
+      final existingCities =
+          await _firestore.collection(_collectionName).limit(1).get();
 
       if (existingCities.docs.isNotEmpty) {
         print('Данные городов уже инициализированы');
@@ -489,10 +484,32 @@ class CityRegionService {
           'density': 4925.0,
           'foundedYear': 1147,
           'description': 'Столица России, крупнейший город страны',
-          'attractions': ['Красная площадь', 'Кремль', 'Большой театр', 'Третьяковская галерея'],
-          'transportHubs': ['Шереметьево', 'Домодедово', 'Внуково', 'Жуковский'],
-          'economicSectors': ['финансы', 'IT', 'туризм', 'развлечения', 'образование'],
-          'specialistCategories': ['фотограф', 'видеограф', 'dj', 'ведущий', 'декоратор'],
+          'attractions': [
+            'Красная площадь',
+            'Кремль',
+            'Большой театр',
+            'Третьяковская галерея'
+          ],
+          'transportHubs': [
+            'Шереметьево',
+            'Домодедово',
+            'Внуково',
+            'Жуковский'
+          ],
+          'economicSectors': [
+            'финансы',
+            'IT',
+            'туризм',
+            'развлечения',
+            'образование'
+          ],
+          'specialistCategories': [
+            'фотограф',
+            'видеограф',
+            'dj',
+            'ведущий',
+            'декоратор'
+          ],
         },
         {
           'cityName': 'Санкт-Петербург',
@@ -506,10 +523,20 @@ class CityRegionService {
           'density': 3741.0,
           'foundedYear': 1703,
           'description': 'Культурная столица России',
-          'attractions': ['Эрмитаж', 'Петропавловская крепость', 'Исаакиевский собор', 'Мариинский театр'],
+          'attractions': [
+            'Эрмитаж',
+            'Петропавловская крепость',
+            'Исаакиевский собор',
+            'Мариинский театр'
+          ],
           'transportHubs': ['Пулково'],
           'economicSectors': ['туризм', 'культура', 'образование', 'IT'],
-          'specialistCategories': ['фотограф', 'видеограф', 'музыкант', 'декоратор'],
+          'specialistCategories': [
+            'фотограф',
+            'видеограф',
+            'музыкант',
+            'декоратор'
+          ],
         },
         {
           'cityName': 'Новосибирск',
@@ -523,7 +550,11 @@ class CityRegionService {
           'density': 3232.0,
           'foundedYear': 1893,
           'description': 'Столица Сибири',
-          'attractions': ['Новосибирский зоопарк', 'Оперный театр', 'Академгородок'],
+          'attractions': [
+            'Новосибирский зоопарк',
+            'Оперный театр',
+            'Академгородок'
+          ],
           'transportHubs': ['Толмачево'],
           'economicSectors': ['наука', 'образование', 'IT', 'промышленность'],
           'specialistCategories': ['фотограф', 'dj', 'ведущий', 'декоратор'],
@@ -540,7 +571,11 @@ class CityRegionService {
           'density': 3194.0,
           'foundedYear': 1723,
           'description': 'Столица Урала',
-          'attractions': ['Храм на Крови', 'Плотина городского пруда', 'Ельцин Центр'],
+          'attractions': [
+            'Храм на Крови',
+            'Плотина городского пруда',
+            'Ельцин Центр'
+          ],
           'transportHubs': ['Кольцово'],
           'economicSectors': ['промышленность', 'IT', 'туризм'],
           'specialistCategories': ['фотограф', 'видеограф', 'dj', 'ведущий'],
@@ -557,10 +592,19 @@ class CityRegionService {
           'density': 2955.0,
           'foundedYear': 1005,
           'description': 'Столица Татарстана',
-          'attractions': ['Казанский Кремль', 'Мечеть Кул-Шариф', 'Университет'],
+          'attractions': [
+            'Казанский Кремль',
+            'Мечеть Кул-Шариф',
+            'Университет'
+          ],
           'transportHubs': ['Казань'],
           'economicSectors': ['образование', 'туризм', 'IT', 'спорт'],
-          'specialistCategories': ['фотограф', 'ведущий', 'декоратор', 'музыкант'],
+          'specialistCategories': [
+            'фотограф',
+            'ведущий',
+            'декоратор',
+            'музыкант'
+          ],
         },
         // Добавляем еще несколько крупных городов
         {

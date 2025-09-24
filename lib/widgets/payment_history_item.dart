@@ -44,7 +44,7 @@ class PaymentHistoryItem extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  
+
                   // Payment info
                   Expanded(
                     child: Column(
@@ -66,7 +66,7 @@ class PaymentHistoryItem extends StatelessWidget {
                       ],
                     ),
                   ),
-                  
+
                   // Amount
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -89,15 +89,16 @@ class PaymentHistoryItem extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Status and date row
               Row(
                 children: [
                   // Status badge
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: _getStatusColor(payment.status).withOpacity(0.1),
                       borderRadius: BorderRadius.circular(12),
@@ -114,9 +115,9 @@ class PaymentHistoryItem extends StatelessWidget {
                       ),
                     ),
                   ),
-                  
+
                   const Spacer(),
-                  
+
                   // Date
                   Text(
                     DateFormat('dd.MM.yyyy HH:mm').format(payment.createdAt),
@@ -126,9 +127,10 @@ class PaymentHistoryItem extends StatelessWidget {
                   ),
                 ],
               ),
-              
+
               // Failure reason if failed
-              if (payment.status == PaymentStatus.failed && payment.failureReason != null) ...[
+              if (payment.status == PaymentStatus.failed &&
+                  payment.failureReason != null) ...[
                 const SizedBox(height: 8),
                 Container(
                   padding: const EdgeInsets.all(8),

@@ -97,11 +97,12 @@ class RussianBankService {
       // В реальном приложении здесь должна быть интеграция с СБП
       // Пока возвращаем заглушку
       await Future.delayed(const Duration(seconds: 1));
-      
+
       return SbpPaymentResponse(
         id: 'sbp_${paymentId}_${DateTime.now().millisecondsSinceEpoch}',
         confirmationUrl: 'https://sbp.example.com/pay/$paymentId',
-        qrCode: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+        qrCode:
+            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
       );
     } catch (e) {
       debugPrint('Error creating SBP payment: $e');
@@ -121,11 +122,12 @@ class RussianBankService {
       // В реальном приложении здесь должна быть интеграция с ЮKassa
       // Пока возвращаем заглушку
       await Future.delayed(const Duration(seconds: 1));
-      
+
       return YooKassaPaymentResponse(
         id: 'yk_${paymentId}_${DateTime.now().millisecondsSinceEpoch}',
         confirmationUrl: 'https://yookassa.ru/checkout/payments/$paymentId',
-        qrCode: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+        qrCode:
+            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
       );
     } catch (e) {
       debugPrint('Error creating YooKassa payment: $e');
@@ -144,11 +146,14 @@ class RussianBankService {
       // В реальном приложении здесь должна быть интеграция с Тинькофф
       // Пока возвращаем заглушку
       await Future.delayed(const Duration(seconds: 1));
-      
+
       return TinkoffPaymentResponse(
-        paymentId: 'tinkoff_${paymentId}_${DateTime.now().millisecondsSinceEpoch}',
-        paymentUrl: 'https://securepay.tinkoff.ru/v2/Checkout?OrderId=$paymentId',
-        qrCode: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
+        paymentId:
+            'tinkoff_${paymentId}_${DateTime.now().millisecondsSinceEpoch}',
+        paymentUrl:
+            'https://securepay.tinkoff.ru/v2/Checkout?OrderId=$paymentId',
+        qrCode:
+            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
       );
     } catch (e) {
       debugPrint('Error creating Tinkoff payment: $e');
@@ -162,7 +167,7 @@ class RussianBankService {
       // В реальном приложении здесь должна быть проверка статуса в СБП
       // Пока возвращаем заглушку
       await Future.delayed(const Duration(seconds: 1));
-      
+
       return const SbpPaymentStatus(
         paid: true,
         status: 'succeeded',
@@ -174,12 +179,13 @@ class RussianBankService {
   }
 
   /// Получить статус платежа ЮKassa
-  Future<YooKassaPaymentStatus> getYooKassaPaymentStatus(String externalPaymentId) async {
+  Future<YooKassaPaymentStatus> getYooKassaPaymentStatus(
+      String externalPaymentId) async {
     try {
       // В реальном приложении здесь должна быть проверка статуса в ЮKassa
       // Пока возвращаем заглушку
       await Future.delayed(const Duration(seconds: 1));
-      
+
       return const YooKassaPaymentStatus(
         paid: true,
         status: 'succeeded',
@@ -191,12 +197,13 @@ class RussianBankService {
   }
 
   /// Получить статус платежа Тинькофф
-  Future<TinkoffPaymentStatus> getTinkoffPaymentStatus(String externalPaymentId) async {
+  Future<TinkoffPaymentStatus> getTinkoffPaymentStatus(
+      String externalPaymentId) async {
     try {
       // В реальном приложении здесь должна быть проверка статуса в Тинькофф
       // Пока возвращаем заглушку
       await Future.delayed(const Duration(seconds: 1));
-      
+
       return const TinkoffPaymentStatus(
         success: true,
         status: 'CONFIRMED',
@@ -218,7 +225,7 @@ class RussianBankService {
       // В реальном приложении здесь должна быть обработка возврата
       // Пока возвращаем заглушку
       await Future.delayed(const Duration(seconds: 1));
-      
+
       return RefundResponse(
         id: 'refund_${externalPaymentId}_${DateTime.now().millisecondsSinceEpoch}',
         status: 'succeeded',

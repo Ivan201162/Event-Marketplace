@@ -23,15 +23,15 @@ class PaymentMethodWidget extends StatelessWidget {
             Text(
               'Способ оплаты',
               style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             const SizedBox(height: 16),
             ...PaymentMethod.values.map((method) => _buildPaymentMethodTile(
-              context,
-              method,
-              selectedMethod == method,
-            )),
+                  context,
+                  method,
+                  selectedMethod == method,
+                )),
           ],
         ),
       ),
@@ -47,30 +47,28 @@ class PaymentMethodWidget extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
         border: Border.all(
-          color: isSelected 
-              ? Theme.of(context).primaryColor 
+          color: isSelected
+              ? Theme.of(context).primaryColor
               : Colors.grey.shade300,
           width: isSelected ? 2 : 1,
         ),
         borderRadius: BorderRadius.circular(8),
-        color: isSelected 
+        color: isSelected
             ? Theme.of(context).primaryColor.withOpacity(0.1)
             : Colors.transparent,
       ),
       child: ListTile(
         leading: Icon(
           method.icon,
-          color: isSelected 
-              ? Theme.of(context).primaryColor 
+          color: isSelected
+              ? Theme.of(context).primaryColor
               : Colors.grey.shade600,
         ),
         title: Text(
           method.displayName,
           style: TextStyle(
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-            color: isSelected 
-                ? Theme.of(context).primaryColor 
-                : null,
+            color: isSelected ? Theme.of(context).primaryColor : null,
           ),
         ),
         trailing: isSelected

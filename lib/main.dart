@@ -168,11 +168,11 @@ final routerProvider = Provider<GoRouter>((ref) {
       final isLoggedIn = authService.currentFirebaseUser != null;
       final isAuthRoute = state.matchedLocation.startsWith('/auth');
       final isRegisterRoute = state.matchedLocation.startsWith('/register');
-      
+
       // Разрешенные маршруты для неавторизованных пользователей
       final publicRoutes = ['/search', '/specialist', '/event'];
-      final isPublicRoute = publicRoutes.any((route) => 
-          state.matchedLocation.startsWith(route));
+      final isPublicRoute =
+          publicRoutes.any((route) => state.matchedLocation.startsWith(route));
 
       // Если пользователь не авторизован и пытается попасть на защищенную страницу
       if (!isLoggedIn && !isAuthRoute && !isRegisterRoute && !isPublicRoute) {
@@ -265,7 +265,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         name: 'favorites',
         builder: (context, state) => const FavoritesPage(),
       ),
-      
+
       // Заявки и календарь
       GoRoute(
         path: AppRoutes.myBookings,

@@ -36,7 +36,7 @@ class CityListWidget extends StatelessWidget {
 
   Widget _buildEmptyState(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -60,7 +60,7 @@ class CityListWidget extends StatelessWidget {
 
   Widget _buildCityCard(BuildContext context, CityRegion city) {
     final theme = Theme.of(context);
-    
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
       child: ListTile(
@@ -151,9 +151,9 @@ class CityListWidget extends StatelessWidget {
 
   Widget _buildDistanceInfo(CityRegion city, ThemeData theme) {
     if (userLocation == null) return const SizedBox.shrink();
-    
+
     final distance = city.coordinates.distanceTo(userLocation!);
-    
+
     return Padding(
       padding: const EdgeInsets.only(top: 4.0),
       child: Row(
@@ -220,7 +220,7 @@ class CityListWidget extends StatelessWidget {
   Color _getCityColor(CityRegion city, ThemeData theme) {
     if (city.isCapital) return Colors.amber;
     if (city.isMajorCity) return theme.colorScheme.primary;
-    
+
     switch (city.citySize) {
       case CitySize.megapolis:
         return Colors.purple;

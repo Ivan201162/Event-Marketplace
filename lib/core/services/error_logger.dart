@@ -27,7 +27,7 @@ class ErrorLogger {
       };
 
       await _firestore.collection(_collectionName).add(errorData);
-      
+
       AppLogger.logE('Auth error logged: $message', source);
     } catch (e) {
       AppLogger.logE('Failed to log auth error', 'ErrorLogger', e);
@@ -83,5 +83,3 @@ class ErrorLogger {
     }
   }
 }
-
-

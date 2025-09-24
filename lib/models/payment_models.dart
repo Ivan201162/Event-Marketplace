@@ -184,7 +184,8 @@ class Payment {
       'metadata': metadata,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': Timestamp.fromDate(updatedAt),
-      'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+      'completedAt':
+          completedAt != null ? Timestamp.fromDate(completedAt!) : null,
       'failedAt': failedAt != null ? Timestamp.fromDate(failedAt!) : null,
       'refundedAt': refundedAt != null ? Timestamp.fromDate(refundedAt!) : null,
       'externalPaymentId': externalPaymentId,
@@ -334,7 +335,8 @@ class RefundRequest {
       'status': status.name,
       'externalRefundId': externalRefundId,
       'requestedAt': Timestamp.fromDate(requestedAt),
-      'processedAt': processedAt != null ? Timestamp.fromDate(processedAt!) : null,
+      'processedAt':
+          processedAt != null ? Timestamp.fromDate(processedAt!) : null,
     };
   }
 

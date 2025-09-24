@@ -580,7 +580,8 @@ class IdeaService {
         'updatedAt': FieldValue.serverTimestamp(),
       };
 
-      final docRef = await _firestore.collection('idea_collections').add(collectionData);
+      final docRef =
+          await _firestore.collection('idea_collections').add(collectionData);
       return docRef.id;
     } catch (e) {
       throw Exception('Ошибка создания коллекции идей: $e');

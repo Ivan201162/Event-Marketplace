@@ -480,7 +480,8 @@ class LoggingConfig {
         id: map['id'] as String? ?? '',
         enableAuditLogging: map['enableAuditLogging'] as bool? ?? true,
         enableSystemLogging: map['enableSystemLogging'] as bool? ?? true,
-        enablePerformanceLogging: map['enablePerformanceLogging'] as bool? ?? false,
+        enablePerformanceLogging:
+            map['enablePerformanceLogging'] as bool? ?? false,
         enableSecurityLogging: map['enableSecurityLogging'] as bool? ?? true,
         auditLogLevels: (map['auditLogLevels'] as List<dynamic>?)
                 ?.map((e) => AuditLogLevel.fromString(e as String))

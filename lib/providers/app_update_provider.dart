@@ -199,13 +199,15 @@ final versionDetailsProvider = Provider<VersionDetails?>((ref) {
   final updateState = ref.watch(appUpdateProvider);
 
   return currentVersion.when(
-    data: (packageInfo) => packageInfo != null ? VersionDetails(
-      currentVersion: packageInfo.version,
-      buildNumber: packageInfo.buildNumber,
-      packageName: packageInfo.packageName,
-      appName: packageInfo.appName,
-      updateInfo: updateState.updateInfo,
-    ) : null,
+    data: (packageInfo) => packageInfo != null
+        ? VersionDetails(
+            currentVersion: packageInfo.version,
+            buildNumber: packageInfo.buildNumber,
+            packageName: packageInfo.packageName,
+            appName: packageInfo.appName,
+            updateInfo: updateState.updateInfo,
+          )
+        : null,
     loading: () => null,
     error: (_, __) => null,
   );

@@ -25,7 +25,8 @@ class TestDataGeneratorScreen extends StatefulWidget {
   const TestDataGeneratorScreen({super.key});
 
   @override
-  State<TestDataGeneratorScreen> createState() => _TestDataGeneratorScreenState();
+  State<TestDataGeneratorScreen> createState() =>
+      _TestDataGeneratorScreenState();
 }
 
 class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
@@ -43,7 +44,7 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
     setState(() {
       _logs.add('[${DateTime.now().toString().substring(11, 19)}] $message');
     });
-    
+
     // Автоматическая прокрутка вниз
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (_scrollController.hasClients) {
@@ -75,7 +76,7 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
       final chatGenerator = ChatDataGenerator();
 
       _addLog('📊 ЭТАП 1: Генерация основных данных');
-      
+
       _addLog('👥 Генерация специалистов...');
       final specialists = await generator.generateSpecialists(count: 2000);
       _addLog('✅ Сгенерировано ${specialists.length} специалистов');
@@ -89,7 +90,8 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
       _addLog('✅ Сгенерировано ${bookings.length} бронирований');
 
       _addLog('⭐ Генерация отзывов...');
-      final reviews = await generator.generateReviews(bookings, customers, specialists);
+      final reviews =
+          await generator.generateReviews(bookings, customers, specialists);
       _addLog('✅ Сгенерировано ${reviews.length} отзывов');
 
       _addLog('💡 Генерация идей...');
@@ -97,7 +99,7 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
       _addLog('✅ Сгенерировано ${ideas.length} идей');
 
       _addLog('📤 ЭТАП 2: Загрузка данных в Firestore');
-      
+
       _addLog('📤 Загрузка специалистов...');
       await generator.uploadSpecialists(specialists);
       _addLog('✅ Специалисты загружены');
@@ -119,13 +121,14 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
       _addLog('✅ Идеи загружены');
 
       _addLog('💬 ЭТАП 3: Генерация чатов и уведомлений');
-      
+
       _addLog('💬 Создание чатов...');
       await chatGenerator.generateChats(customers, specialists, bookings);
       _addLog('✅ Чаты созданы');
 
       _addLog('🔔 Создание уведомлений...');
-      await chatGenerator.generateNotifications(customers, specialists, bookings);
+      await chatGenerator.generateNotifications(
+          customers, specialists, bookings);
       _addLog('✅ Уведомления созданы');
 
       _addLog('🔍 ЭТАП 4: Проверка данных');
@@ -133,11 +136,10 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
 
       _addLog('🎉 ГЕНЕРАЦИЯ ЗАВЕРШЕНА УСПЕШНО!');
       _addLog('📋 Данные готовы для использования в приложении');
-
     } catch (e, stackTrace) {
       _addLog('❌ ОШИБКА: $e');
       _addLog('📍 Stack trace: ${stackTrace.toString()}');
-      
+
       // Показываем диалог с ошибкой
       if (mounted) {
         showDialog(
@@ -188,10 +190,11 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
                         const SizedBox(width: 8),
                         Text(
                           'Генератор тестовых данных',
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: Colors.blue[700],
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    color: Colors.blue[700],
+                                    fontWeight: FontWeight.bold,
+                                  ),
                         ),
                       ],
                     ),
@@ -237,16 +240,16 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Кнопка запуска
             SizedBox(
               width: double.infinity,
               height: 50,
               child: ElevatedButton.icon(
                 onPressed: _isGenerating ? null : _generateTestData,
-                icon: _isGenerating 
+                icon: _isGenerating
                     ? const SizedBox(
                         width: 20,
                         height: 20,
@@ -254,18 +257,21 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
                       )
                     : const Icon(Icons.play_arrow),
                 label: Text(
-                  _isGenerating ? 'Генерация в процессе...' : 'Запустить генерацию данных',
+                  _isGenerating
+                      ? 'Генерация в процессе...'
+                      : 'Запустить генерацию данных',
                   style: const TextStyle(fontSize: 16),
                 ),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: _isGenerating ? Colors.grey : Colors.blue[600],
+                  backgroundColor:
+                      _isGenerating ? Colors.grey : Colors.blue[600],
                   foregroundColor: Colors.white,
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 20),
-            
+
             // Область логов
             Expanded(
               child: Card(
@@ -313,19 +319,20 @@ class _TestDataGeneratorScreenState extends State<TestDataGeneratorScreen> {
                                 itemBuilder: (context, index) {
                                   final log = _logs[index];
                                   return Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 2),
+                                    padding:
+                                        const EdgeInsets.symmetric(vertical: 2),
                                     child: Text(
                                       log,
                                       style: TextStyle(
                                         fontFamily: 'monospace',
                                         fontSize: 14,
-                                        color: log.contains('❌') 
-                                            ? Colors.red 
-                                            : log.contains('✅') 
-                                              ? Colors.green 
-                                              : log.contains('🎉')
-                                                ? Colors.purple
-                                                : Colors.black87,
+                                        color: log.contains('❌')
+                                            ? Colors.red
+                                            : log.contains('✅')
+                                                ? Colors.green
+                                                : log.contains('🎉')
+                                                    ? Colors.purple
+                                                    : Colors.black87,
                                       ),
                                     ),
                                   );
@@ -349,6 +356,3 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   runApp(const TestDataGeneratorApp());
 }
-
-
-

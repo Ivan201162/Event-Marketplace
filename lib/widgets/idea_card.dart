@@ -10,19 +10,17 @@ class IdeaCard extends StatelessWidget {
     required this.onTap,
     required this.onLike,
     required this.onFavorite,
-    this.onSave,
   });
 
   final EventIdea idea;
   final VoidCallback onTap;
   final VoidCallback onLike;
   final VoidCallback onFavorite;
-  final VoidCallback? onSave;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Card(
       clipBehavior: Clip.antiAlias,
       elevation: 2,
@@ -46,7 +44,7 @@ class IdeaCard extends StatelessWidget {
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
-                        color: theme.colorScheme.surfaceVariant,
+                        color: theme.colorScheme.surfaceContainerHighest,
                         child: Icon(
                           Icons.image_not_supported,
                           size: 32,
@@ -55,7 +53,7 @@ class IdeaCard extends StatelessWidget {
                       );
                     },
                   ),
-                  
+
                   // Категория
                   Positioned(
                     top: 8,
@@ -89,7 +87,7 @@ class IdeaCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  
+
                   // Кнопки действий
                   Positioned(
                     top: 8,
@@ -113,7 +111,7 @@ class IdeaCard extends StatelessWidget {
                 ],
               ),
             ),
-            
+
             // Контент
             Expanded(
               flex: 2,
@@ -131,9 +129,9 @@ class IdeaCard extends StatelessWidget {
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    
+
                     const SizedBox(height: 4),
-                    
+
                     // Описание
                     Expanded(
                       child: Text(
@@ -145,9 +143,9 @@ class IdeaCard extends StatelessWidget {
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
-                    
+
                     const SizedBox(height: 8),
-                    
+
                     // Статистика
                     Row(
                       children: [
@@ -211,31 +209,30 @@ class IdeaCard extends StatelessWidget {
     required IconData icon,
     required VoidCallback onPressed,
     required Color color,
-  }) {
-    return Container(
-      width: 32,
-      height: 32,
-      decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.9),
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withValues(alpha: 0.1),
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
-      ),
-      child: IconButton(
-        onPressed: onPressed,
-        icon: Icon(
-          icon,
-          size: 16,
-          color: color,
+  }) =>
+      Container(
+        width: 32,
+        height: 32,
+        decoration: BoxDecoration(
+          color: Colors.white.withValues(alpha: 0.9),
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.1),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
-        padding: EdgeInsets.zero,
-        constraints: const BoxConstraints(),
-      ),
-    );
-  }
+        child: IconButton(
+          onPressed: onPressed,
+          icon: Icon(
+            icon,
+            size: 16,
+            color: color,
+          ),
+          padding: EdgeInsets.zero,
+          constraints: const BoxConstraints(),
+        ),
+      );
 }

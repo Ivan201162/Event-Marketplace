@@ -22,7 +22,8 @@ void main() {
       when(mockUser.role).thenReturn(app_user.UserRole.customer);
     });
 
-    testWidgets('отображение главного экрана с навигацией', (WidgetTester tester) async {
+    testWidgets('отображение главного экрана с навигацией',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -44,7 +45,8 @@ void main() {
       expect(find.byType(NavigationBar), findsOneWidget);
     });
 
-    testWidgets('переключение между вкладками навигации', (WidgetTester tester) async {
+    testWidgets('переключение между вкладками навигации',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -89,7 +91,8 @@ void main() {
       expect(find.byIcon(Icons.person), findsOneWidget);
     });
 
-    testWidgets('отображение правильного контента для каждой вкладки', (WidgetTester tester) async {
+    testWidgets('отображение правильного контента для каждой вкладки',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -125,7 +128,8 @@ void main() {
       expect(find.text('Профиль'), findsOneWidget);
     });
 
-    testWidgets('отображение плавающей кнопки добавления для организатора', (WidgetTester tester) async {
+    testWidgets('отображение плавающей кнопки добавления для организатора',
+        (WidgetTester tester) async {
       // Arrange
       when(mockUser.role).thenReturn(app_user.UserRole.organizer);
 
@@ -147,7 +151,8 @@ void main() {
       expect(find.byIcon(Icons.add), findsOneWidget);
     });
 
-    testWidgets('скрытие плавающей кнопки для клиента', (WidgetTester tester) async {
+    testWidgets('скрытие плавающей кнопки для клиента',
+        (WidgetTester tester) async {
       // Arrange
       when(mockUser.role).thenReturn(app_user.UserRole.customer);
 
@@ -168,7 +173,8 @@ void main() {
       expect(find.byType(FloatingActionButton), findsNothing);
     });
 
-    testWidgets('обработка нажатия на плавающую кнопку', (WidgetTester tester) async {
+    testWidgets('обработка нажатия на плавающую кнопку',
+        (WidgetTester tester) async {
       // Arrange
       when(mockUser.role).thenReturn(app_user.UserRole.organizer);
 
@@ -195,7 +201,8 @@ void main() {
       expect(find.byType(FloatingActionButton), findsOneWidget);
     });
 
-    testWidgets('отображение индикатора загрузки при отсутствии пользователя', (WidgetTester tester) async {
+    testWidgets('отображение индикатора загрузки при отсутствии пользователя',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -214,7 +221,8 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('адаптивность для разных размеров экрана', (WidgetTester tester) async {
+    testWidgets('адаптивность для разных размеров экрана',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(
@@ -246,7 +254,8 @@ void main() {
       expect(find.byType(NavigationBar), findsOneWidget);
     });
 
-    testWidgets('сохранение состояния при переключении вкладок', (WidgetTester tester) async {
+    testWidgets('сохранение состояния при переключении вкладок',
+        (WidgetTester tester) async {
       // Arrange
       await tester.pumpWidget(
         ProviderScope(

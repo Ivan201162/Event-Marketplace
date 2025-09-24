@@ -575,35 +575,35 @@ class SelectedRoleNotifier extends Notifier<UserRole> {
   }
 }
 
-  /// Кнопка входа через Google
-  Widget _buildGoogleSignInButton(BuildContext context, WidgetRef ref) {
-    return SizedBox(
-      width: double.infinity,
-      child: ElevatedButton.icon(
-        onPressed: () async {
-          try {
-            await ref.read(authServiceProvider).signInWithGoogle();
-          } catch (e) {
-            if (context.mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Ошибка входа через Google: $e')),
-              );
-            }
+/// Кнопка входа через Google
+Widget _buildGoogleSignInButton(BuildContext context, WidgetRef ref) {
+  return SizedBox(
+    width: double.infinity,
+    child: ElevatedButton.icon(
+      onPressed: () async {
+        try {
+          await ref.read(authServiceProvider).signInWithGoogle();
+        } catch (e) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Ошибка входа через Google: $e')),
+            );
           }
-        },
-        icon: const Icon(Icons.login),
-        label: const Text('Войти через Google'),
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.symmetric(vertical: 12),
-        ),
+        }
+      },
+      icon: const Icon(Icons.login),
+      label: const Text('Войти через Google'),
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.symmetric(vertical: 12),
       ),
-    );
-  }
+    ),
+  );
+}
 
 /// Расширение для LoginFormNotifier
 extension LoginFormNotifierExtension on LoginFormNotifier {
   String get displayName => '';
-  
+
   void updateDisplayName(String displayName) {
     // Сохраняем имя в локальном состоянии для использования в _handleSignUp
   }

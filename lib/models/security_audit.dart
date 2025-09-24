@@ -33,7 +33,8 @@ class SecurityAudit {
       sessionId: data['sessionId'] as String?,
       ipAddress: data['ipAddress'] as String?,
       userAgent: data['userAgent'] as String?,
-      metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
+      metadata: Map<String, dynamic>.from(
+          data['metadata'] as Map<dynamic, dynamic>? ?? {}),
       timestamp: (data['timestamp'] as Timestamp).toDate(),
       resolvedBy: data['resolvedBy'] as String?,
       resolvedAt: data['resolvedAt'] != null

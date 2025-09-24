@@ -6,9 +6,12 @@ import 'package:crypto/crypto.dart';
 import '../models/payment_models.dart';
 
 class TinkoffPaymentService {
-  static const String _baseUrl = 'https://securepay.tinkoff.ru/v2'; // Tinkoff API base URL
-  static const String _terminalKey = 'YOUR_TERMINAL_KEY'; // Replace with actual terminal key
-  static const String _password = 'YOUR_PASSWORD'; // Replace with actual password
+  static const String _baseUrl =
+      'https://securepay.tinkoff.ru/v2'; // Tinkoff API base URL
+  static const String _terminalKey =
+      'YOUR_TERMINAL_KEY'; // Replace with actual terminal key
+  static const String _password =
+      'YOUR_PASSWORD'; // Replace with actual password
 
   /// Creates a payment request for Tinkoff
   Future<TinkoffPaymentResponse> createPayment({
@@ -26,7 +29,8 @@ class TinkoffPaymentService {
         'Description': description,
         'CustomerKey': customerId,
         'ReturnURL': returnUrl,
-        'NotificationURL': 'https://your-domain.com/tinkoff/notifications', // Replace with your webhook URL
+        'NotificationURL':
+            'https://your-domain.com/tinkoff/notifications', // Replace with your webhook URL
         'Receipt': {
           'EmailCompany': 'noreply@eventmarketplace.com',
           'Taxation': 'osn', // General taxation system
@@ -57,7 +61,8 @@ class TinkoffPaymentService {
         final responseData = jsonDecode(response.body);
         return TinkoffPaymentResponse.fromJson(responseData);
       } else {
-        throw Exception('Tinkoff API error: ${response.statusCode} - ${response.body}');
+        throw Exception(
+            'Tinkoff API error: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
       debugPrint('Tinkoff payment creation error: $e');
@@ -88,7 +93,8 @@ class TinkoffPaymentService {
         final responseData = jsonDecode(response.body);
         return TinkoffPaymentStatus.fromJson(responseData);
       } else {
-        throw Exception('Tinkoff API error: ${response.statusCode} - ${response.body}');
+        throw Exception(
+            'Tinkoff API error: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
       debugPrint('Tinkoff payment status error: $e');
@@ -117,7 +123,8 @@ class TinkoffPaymentService {
       );
 
       if (response.statusCode != 200) {
-        throw Exception('Tinkoff confirm error: ${response.statusCode} - ${response.body}');
+        throw Exception(
+            'Tinkoff confirm error: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
       debugPrint('Tinkoff payment confirm error: $e');
@@ -145,7 +152,8 @@ class TinkoffPaymentService {
       );
 
       if (response.statusCode != 200) {
-        throw Exception('Tinkoff cancel error: ${response.statusCode} - ${response.body}');
+        throw Exception(
+            'Tinkoff cancel error: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
       debugPrint('Tinkoff payment cancel error: $e');
@@ -182,7 +190,8 @@ class TinkoffPaymentService {
         final responseData = jsonDecode(response.body);
         return TinkoffRefundResponse.fromJson(responseData);
       } else {
-        throw Exception('Tinkoff refund error: ${response.statusCode} - ${response.body}');
+        throw Exception(
+            'Tinkoff refund error: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
       debugPrint('Tinkoff refund creation error: $e');
@@ -198,7 +207,7 @@ class TinkoffPaymentService {
 
     // Sort keys alphabetically
     final sortedKeys = cleanBody.keys.toList()..sort();
-    
+
     // Create string for hashing
     String dataString = '';
     for (String key in sortedKeys) {
@@ -209,13 +218,13 @@ class TinkoffPaymentService {
         dataString += cleanBody[key].toString();
       }
     }
-    
+
     dataString += _password;
-    
+
     // Generate SHA-256 hash
     final bytes = utf8.encode(dataString);
     final digest = sha256.convert(bytes);
-    
+
     return digest.toString();
   }
 
@@ -223,7 +232,7 @@ class TinkoffPaymentService {
   String _flattenMap(Map<String, dynamic> map) {
     final sortedKeys = map.keys.toList()..sort();
     String result = '';
-    
+
     for (String key in sortedKeys) {
       if (map[key] is List) {
         // Handle arrays
@@ -241,7 +250,7 @@ class TinkoffPaymentService {
         result += map[key].toString();
       }
     }
-    
+
     return result;
   }
 
@@ -251,8 +260,8 @@ class TinkoffPaymentService {
       // In real implementation, you would validate the signature
       // For now, we'll just check if required fields are present
       return webhookData.containsKey('TerminalKey') &&
-             webhookData.containsKey('Status') &&
-             webhookData.containsKey('PaymentId');
+          webhookData.containsKey('Status') &&
+          webhookData.containsKey('PaymentId');
     } catch (e) {
       debugPrint('Tinkoff webhook validation error: $e');
       return false;
@@ -354,7 +363,7 @@ class TinkoffPaymentStatus {
       paymentId: json['PaymentId'] as String?,
       orderId: json['OrderId'] as String?,
       amount: json['Amount'] != null ? (json['Amount'] as int) / 100.0 : 0.0,
-      created: json['Created'] != null 
+      created: json['Created'] != null
           ? DateTime.parse(json['Created'] as String)
           : null,
     );
@@ -377,7 +386,10 @@ class TinkoffPaymentStatus {
 
   bool get isCompleted => status == 'CONFIRMED';
   bool get isFailed => status == 'REJECTED' || status == 'CANCELED';
-  bool get isPending => status == 'NEW' || status == 'FORM_SHOWED' || status == 'DEADLINE_EXPIRED';
+  bool get isPending =>
+      status == 'NEW' ||
+      status == 'FORM_SHOWED' ||
+      status == 'DEADLINE_EXPIRED';
 }
 
 /// Tinkoff Refund Response

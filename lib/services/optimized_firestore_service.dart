@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// Оптимизированный сервис для работы с Firestore
 class OptimizedFirestoreService {
   static final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  
+
   // Кэш для часто используемых запросов
   static final Map<String, QuerySnapshot> _queryCache = {};
   static const Duration _cacheExpiration = Duration(minutes: 5);
@@ -17,10 +17,10 @@ class OptimizedFirestoreService {
     bool useCache = true,
   }) async {
     final cacheKey = '$collection/$documentId';
-    
+
     if (useCache && _queryCache.containsKey(cacheKey)) {
       final timestamp = _cacheTimestamps[cacheKey];
-      if (timestamp != null && 
+      if (timestamp != null &&
           DateTime.now().difference(timestamp) < _cacheExpiration) {
         // Возвращаем кэшированный результат
         return _queryCache[cacheKey]?.docs.first;
@@ -28,16 +28,13 @@ class OptimizedFirestoreService {
     }
 
     try {
-      final doc = await _firestore
-          .collection(collection)
-          .doc(documentId)
-          .get();
-      
+      final doc = await _firestore.collection(collection).doc(documentId).get();
+
       if (useCache) {
         _queryCache[cacheKey] = QuerySnapshot.fromDocuments([doc]);
         _cacheTimestamps[cacheKey] = DateTime.now();
       }
-      
+
       return doc;
     } catch (e) {
       print('Error getting document: $e');
@@ -54,11 +51,12 @@ class OptimizedFirestoreService {
     List<QueryFilter>? where,
     bool useCache = true,
   }) async {
-    final cacheKey = _generateCacheKey(collection, limit, startAfter, orderBy, where);
-    
+    final cacheKey =
+        _generateCacheKey(collection, limit, startAfter, orderBy, where);
+
     if (useCache && _queryCache.containsKey(cacheKey)) {
       final timestamp = _cacheTimestamps[cacheKey];
-      if (timestamp != null && 
+      if (timestamp != null &&
           DateTime.now().difference(timestamp) < _cacheExpiration) {
         return _queryCache[cacheKey]!;
       }
@@ -66,35 +64,35 @@ class OptimizedFirestoreService {
 
     try {
       Query query = _firestore.collection(collection);
-      
+
       // Применяем фильтры
       if (where != null) {
         for (final filter in where) {
           query = query.where(filter.field, isEqualTo: filter.value);
         }
       }
-      
+
       // Применяем сортировку
       if (orderBy != null) {
         for (final order in orderBy) {
           query = query.orderBy(order.field, descending: order.descending);
         }
       }
-      
+
       // Применяем пагинацию
       if (startAfter != null) {
         query = query.startAfterDocument(startAfter);
       }
-      
+
       query = query.limit(limit);
-      
+
       final snapshot = await query.get();
-      
+
       if (useCache) {
         _queryCache[cacheKey] = snapshot;
         _cacheTimestamps[cacheKey] = DateTime.now();
       }
-      
+
       return snapshot;
     } catch (e) {
       print('Error getting collection: $e');
@@ -110,23 +108,23 @@ class OptimizedFirestoreService {
     List<QueryFilter>? where,
   }) {
     Query query = _firestore.collection(collection);
-    
+
     // Применяем фильтры
     if (where != null) {
       for (final filter in where) {
         query = query.where(filter.field, isEqualTo: filter.value);
       }
     }
-    
+
     // Применяем сортировку
     if (orderBy != null) {
       for (final order in orderBy) {
         query = query.orderBy(order.field, descending: order.descending);
       }
     }
-    
+
     query = query.limit(limit);
-    
+
     return query.snapshots();
   }
 
@@ -137,10 +135,10 @@ class OptimizedFirestoreService {
   ) async {
     try {
       final docRef = await _firestore.collection(collection).add(data);
-      
+
       // Очищаем кэш для этой коллекции
       _clearCollectionCache(collection);
-      
+
       return docRef.id;
     } catch (e) {
       print('Error creating document: $e');
@@ -155,14 +153,11 @@ class OptimizedFirestoreService {
     Map<String, dynamic> data,
   ) async {
     try {
-      await _firestore
-          .collection(collection)
-          .doc(documentId)
-          .update(data);
-      
+      await _firestore.collection(collection).doc(documentId).update(data);
+
       // Очищаем кэш для этого документа
       _clearDocumentCache(collection, documentId);
-      
+
       return true;
     } catch (e) {
       print('Error updating document: $e');
@@ -176,14 +171,11 @@ class OptimizedFirestoreService {
     String documentId,
   ) async {
     try {
-      await _firestore
-          .collection(collection)
-          .doc(documentId)
-          .delete();
-      
+      await _firestore.collection(collection).doc(documentId).delete();
+
       // Очищаем кэш для этого документа
       _clearDocumentCache(collection, documentId);
-      
+
       return true;
     } catch (e) {
       print('Error deleting document: $e');
@@ -215,23 +207,23 @@ class OptimizedFirestoreService {
     final buffer = StringBuffer();
     buffer.write(collection);
     buffer.write('_limit_$limit');
-    
+
     if (startAfter != null) {
       buffer.write('_start_${startAfter.id}');
     }
-    
+
     if (orderBy != null) {
       for (final order in orderBy) {
         buffer.write('_order_${order.field}_${order.descending}');
       }
     }
-    
+
     if (where != null) {
       for (final filter in where) {
         buffer.write('_where_${filter.field}_${filter.value}');
       }
     }
-    
+
     return buffer.toString();
   }
 
@@ -273,9 +265,7 @@ class QueryOrder {
 }
 
 /// Провайдер для оптимизированного сервиса Firestore
-final optimizedFirestoreServiceProvider = Provider<OptimizedFirestoreService>((ref) {
+final optimizedFirestoreServiceProvider =
+    Provider<OptimizedFirestoreService>((ref) {
   return OptimizedFirestoreService();
 });
-
-
-

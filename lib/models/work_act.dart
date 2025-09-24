@@ -103,7 +103,8 @@ class WorkAct {
           ? Signature.fromMap(data['customerSignature'] as Map<String, dynamic>)
           : null,
       specialistSignature: data['specialistSignature'] != null
-          ? Signature.fromMap(data['specialistSignature'] as Map<String, dynamic>)
+          ? Signature.fromMap(
+              data['specialistSignature'] as Map<String, dynamic>)
           : null,
       attachments: data['attachments'] != null
           ? (data['attachments'] as List<dynamic>)

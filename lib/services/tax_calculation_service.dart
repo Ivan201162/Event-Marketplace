@@ -57,11 +57,11 @@ class TaxCalculationService {
     if (isIndividual && !isSelfEmployed && !isEntrepreneur) {
       return TaxStatus.none; // Физическое лицо без статуса
     }
-    
+
     if (isSelfEmployed) {
       return TaxStatus.professionalIncome; // Самозанятый
     }
-    
+
     if (isEntrepreneur) {
       if (amount < 100000) {
         return TaxStatus.simplifiedTax; // УСН для малых сумм
@@ -69,7 +69,7 @@ class TaxCalculationService {
         return TaxStatus.vat; // НДС для больших сумм
       }
     }
-    
+
     return TaxStatus.none;
   }
 
@@ -79,7 +79,7 @@ class TaxCalculationService {
   }) async {
     try {
       final calculations = <TaxCalculation>[];
-      
+
       for (final payment in payments) {
         final calculation = await calculateTax(
           paymentId: payment['paymentId'] as String,
@@ -91,7 +91,7 @@ class TaxCalculationService {
         );
         calculations.add(calculation);
       }
-      
+
       return calculations;
     } catch (e) {
       debugPrint('Error calculating taxes for payments: $e');
@@ -107,23 +107,25 @@ class TaxCalculationService {
       double totalGrossAmount = 0;
       double totalTaxAmount = 0;
       double totalNetAmount = 0;
-      
+
       final taxStatusCounts = <TaxStatus, int>{};
-      
+
       for (final calculation in calculations) {
         totalGrossAmount += calculation.grossAmount;
         totalTaxAmount += calculation.taxAmount;
         totalNetAmount += calculation.netAmount;
-        
-        taxStatusCounts[calculation.taxStatus] = 
+
+        taxStatusCounts[calculation.taxStatus] =
             (taxStatusCounts[calculation.taxStatus] ?? 0) + 1;
       }
-      
+
       return {
         'totalGrossAmount': totalGrossAmount,
         'totalTaxAmount': totalTaxAmount,
         'totalNetAmount': totalNetAmount,
-        'averageTaxRate': totalGrossAmount > 0 ? (totalTaxAmount / totalGrossAmount) * 100 : 0,
+        'averageTaxRate': totalGrossAmount > 0
+            ? (totalTaxAmount / totalGrossAmount) * 100
+            : 0,
         'taxStatusCounts': taxStatusCounts.map(
           (key, value) => MapEntry(key.name, value),
         ),

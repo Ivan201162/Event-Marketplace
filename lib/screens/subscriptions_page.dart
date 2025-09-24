@@ -594,7 +594,8 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                   ),
                 ],
               ),
-              if (subscription.createdAt.isBefore(DateTime.now().subtract(const Duration(days: 25)))) ...[
+              if (subscription.createdAt.isBefore(
+                  DateTime.now().subtract(const Duration(days: 25)))) ...[
                 const SizedBox(height: 16),
                 Container(
                   padding: const EdgeInsets.all(12),
@@ -646,7 +647,8 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
               ),
               _buildDetailRow(
                 'Дата окончания',
-                _formatDate(subscription.createdAt.add(const Duration(days: 30))),
+                _formatDate(
+                    subscription.createdAt.add(const Duration(days: 30))),
               ),
               _buildDetailRow(
                 'Автопродление',

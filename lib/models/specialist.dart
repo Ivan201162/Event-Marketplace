@@ -304,12 +304,15 @@ class Specialist {
         location: data['location'] as String?,
         isAvailable: data['isAvailable'] as bool? ?? true,
         isVerified: data['isVerified'] as bool? ?? false,
-        portfolioImages: List<String>.from(data['portfolioImages'] as List<dynamic>? ?? []),
-        portfolioVideos: List<String>.from(data['portfolioVideos'] as List<dynamic>? ?? []),
+        portfolioImages:
+            List<String>.from(data['portfolioImages'] as List<dynamic>? ?? []),
+        portfolioVideos:
+            List<String>.from(data['portfolioVideos'] as List<dynamic>? ?? []),
         services: List<String>.from(data['services'] as List<dynamic>? ?? []),
         equipment: List<String>.from(data['equipment'] as List<dynamic>? ?? []),
         languages: List<String>.from(data['languages'] as List<dynamic>? ?? []),
-        workingHours: Map<String, String>.from(data['workingHours'] as Map<dynamic, dynamic>? ?? {}),
+        workingHours: Map<String, String>.from(
+            data['workingHours'] as Map<dynamic, dynamic>? ?? {}),
         createdAt: data['createdAt'] != null
             ? (data['createdAt'] as Timestamp).toDate()
             : DateTime.now(),
@@ -340,7 +343,7 @@ class Specialist {
         metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
         avatar: data['avatar'],
         specialization: data['specialization'],
-        avgPriceByService: data['avgPriceByService'] != null 
+        avgPriceByService: data['avgPriceByService'] != null
             ? Map<String, double>.from(data['avgPriceByService'])
             : null,
       );
@@ -381,7 +384,7 @@ class Specialist {
       avatarUrl: data['avatarUrl'],
       avatar: data['avatar'],
       specialization: data['specialization'],
-      avgPriceByService: data['avgPriceByService'] != null 
+      avgPriceByService: data['avgPriceByService'] != null
           ? Map<String, double>.from(data['avgPriceByService'])
           : null,
     );

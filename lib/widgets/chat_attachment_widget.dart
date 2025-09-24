@@ -421,7 +421,9 @@ class ChatAttachmentWidget extends ConsumerWidget {
   void _openImage(BuildContext context) {
     // TODO: Открыть изображение в полноэкранном режиме
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Открытие изображения: ${attachment.originalFileName}')),
+      SnackBar(
+          content:
+              Text('Открытие изображения: ${attachment.originalFileName}')),
     );
   }
 

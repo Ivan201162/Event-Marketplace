@@ -39,7 +39,8 @@ class _PasswordStrengthWidgetState extends State<PasswordStrengthWidget> {
   }
 
   void _updateStrength() async {
-    final result = await _securityService.checkPasswordStrength(widget.password);
+    final result =
+        await _securityService.checkPasswordStrength(widget.password);
     setState(() {
       _strength = SecurityPasswordStrength.fromMap(result);
     });

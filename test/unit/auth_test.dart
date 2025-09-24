@@ -8,7 +8,14 @@ import 'package:event_marketplace_app/models/user.dart' as app_user;
 
 import 'auth_test.mocks.dart';
 
-@GenerateMocks([FirebaseAuth, User, UserCredential, FirebaseFirestore, DocumentReference, DocumentSnapshot])
+@GenerateMocks([
+  FirebaseAuth,
+  User,
+  UserCredential,
+  FirebaseFirestore,
+  DocumentReference,
+  DocumentSnapshot
+])
 void main() {
   group('AuthService Tests', () {
     late MockFirebaseAuth mockAuth;

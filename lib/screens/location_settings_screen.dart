@@ -451,10 +451,9 @@ class _LocationSettingsScreenState
                 const SizedBox(height: 8),
                 const Text(
                   'Полный адрес:',
-                    style: TextStyle(fontWeight: FontWeight.bold),
-                  ),
-                  Text(address),
-                ],
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                Text(address),
               ],
             ),
             actions: [

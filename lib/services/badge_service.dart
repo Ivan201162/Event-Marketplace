@@ -241,11 +241,15 @@ class BadgeService {
       return BadgeStats(
         totalBadges: badges.length,
         earnedBadges: badges.length,
-        availableBadges: 0, // await getAvailableBadges().then((available) => available.length),
+        availableBadges:
+            0, // await getAvailableBadges().then((available) => available.length),
         badgesByCategory: {
-          BadgeCategory.specialist: badges.byCategory(BadgeCategory.specialist).length,
-          BadgeCategory.customer: badges.byCategory(BadgeCategory.customer).length,
-          BadgeCategory.general: badges.byCategory(BadgeCategory.general).length,
+          BadgeCategory.specialist:
+              badges.byCategory(BadgeCategory.specialist).length,
+          BadgeCategory.customer:
+              badges.byCategory(BadgeCategory.customer).length,
+          BadgeCategory.general:
+              badges.byCategory(BadgeCategory.general).length,
         },
         specialistBadges: badges.byCategory(BadgeCategory.specialist).length,
         customerBadges: badges.byCategory(BadgeCategory.customer).length,

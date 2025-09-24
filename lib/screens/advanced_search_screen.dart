@@ -21,7 +21,8 @@ class AdvancedSearchScreen extends ConsumerStatefulWidget {
   final Function(Specialist)? onSpecialistSelected;
 
   @override
-  ConsumerState<AdvancedSearchScreen> createState() => _AdvancedSearchScreenState();
+  ConsumerState<AdvancedSearchScreen> createState() =>
+      _AdvancedSearchScreenState();
 }
 
 class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
@@ -49,7 +50,7 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Поиск специалистов'),
@@ -62,7 +63,8 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
         ),
         actions: [
           IconButton(
-            icon: Icon(_showFilters ? Icons.filter_list_off : Icons.filter_list),
+            icon:
+                Icon(_showFilters ? Icons.filter_list_off : Icons.filter_list),
             onPressed: () => setState(() => _showFilters = !_showFilters),
             tooltip: 'Показать/скрыть фильтры',
           ),
@@ -77,10 +79,10 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
         children: [
           // Поисковая строка
           _buildSearchBar(theme),
-          
+
           // Быстрые фильтры
           if (_showFilters) _buildQuickFilters(),
-          
+
           // Контент вкладок
           Expanded(
             child: TabBarView(
@@ -139,16 +141,16 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
               hintText: 'Выберите город',
             ),
           ),
-          
+
           const SizedBox(width: 8),
-          
+
           // Категории
           Expanded(
             child: _buildCategoryFilter(),
           ),
-          
+
           const SizedBox(width: 8),
-          
+
           // Цена
           Expanded(
             child: _buildPriceFilter(),
@@ -170,8 +172,8 @@ class _AdvancedSearchScreenState extends ConsumerState<AdvancedSearchScreen>
           value: null,
           child: Text('Все категории'),
         ),
-        ...SpecialistCategory.values.map((category) => 
-          DropdownMenuItem<SpecialistCategory>(
+        ...SpecialistCategory.values.map(
+          (category) => DropdownMenuItem<SpecialistCategory>(
             value: category,
             child: Text('${category.icon} ${category.displayName}'),
           ),
@@ -339,10 +341,10 @@ class CitySelectionWidget extends StatelessWidget {
               child: Text(
                 selectedCity?.cityName ?? hintText,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: selectedCity != null 
-                      ? Theme.of(context).colorScheme.onSurface
-                      : Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
+                      color: selectedCity != null
+                          ? Theme.of(context).colorScheme.onSurface
+                          : Theme.of(context).colorScheme.onSurfaceVariant,
+                    ),
                 overflow: TextOverflow.ellipsis,
               ),
             ),

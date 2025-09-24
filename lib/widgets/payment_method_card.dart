@@ -24,8 +24,8 @@ class PaymentMethodCard extends StatelessWidget {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: BorderSide(
-          color: isSelected 
-              ? theme.colorScheme.primary 
+          color: isSelected
+              ? theme.colorScheme.primary
               : theme.colorScheme.outline.withOpacity(0.2),
           width: isSelected ? 2 : 1,
         ),
@@ -42,14 +42,14 @@ class PaymentMethodCard extends StatelessWidget {
                 width: 48,
                 height: 48,
                 decoration: BoxDecoration(
-                  color: isSelected 
+                  color: isSelected
                       ? theme.colorScheme.primaryContainer
                       : theme.colorScheme.surfaceVariant,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(
                   _getMethodIcon(methodInfo.method),
-                  color: isSelected 
+                  color: isSelected
                       ? theme.colorScheme.primary
                       : theme.colorScheme.onSurfaceVariant,
                   size: 24,
@@ -66,7 +66,7 @@ class PaymentMethodCard extends StatelessWidget {
                       methodInfo.name,
                       style: theme.textTheme.titleMedium?.copyWith(
                         fontWeight: FontWeight.bold,
-                        color: methodInfo.isAvailable 
+                        color: methodInfo.isAvailable
                             ? theme.colorScheme.onSurface
                             : theme.colorScheme.onSurface.withOpacity(0.5),
                       ),
@@ -75,7 +75,7 @@ class PaymentMethodCard extends StatelessWidget {
                     Text(
                       methodInfo.description,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: methodInfo.isAvailable 
+                        color: methodInfo.isAvailable
                             ? theme.colorScheme.onSurface.withOpacity(0.7)
                             : theme.colorScheme.onSurface.withOpacity(0.3),
                       ),

@@ -16,7 +16,7 @@ class IdeaFilterChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return SizedBox(
       height: 40,
       child: ListView(
@@ -43,11 +43,11 @@ class IdeaFilterChip extends StatelessWidget {
               ),
             ),
           ),
-          
+
           // Категории
           ...EventIdeaCategory.values.map((category) {
             final isSelected = selectedCategory == category;
-            
+
             return Padding(
               padding: const EdgeInsets.only(right: 8),
               child: FilterChip(
@@ -72,9 +72,7 @@ class IdeaFilterChip extends StatelessWidget {
                   color: isSelected
                       ? theme.colorScheme.onPrimaryContainer
                       : theme.colorScheme.onSurface,
-                  fontWeight: isSelected
-                      ? FontWeight.w600
-                      : FontWeight.normal,
+                  fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
                 ),
               ),
             );

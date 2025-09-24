@@ -19,10 +19,12 @@ class SpecialistSearchResultsWidget extends ConsumerStatefulWidget {
   final Function(AdvancedSearchFilters)? onFiltersChanged;
 
   @override
-  ConsumerState<SpecialistSearchResultsWidget> createState() => _SpecialistSearchResultsWidgetState();
+  ConsumerState<SpecialistSearchResultsWidget> createState() =>
+      _SpecialistSearchResultsWidgetState();
 }
 
-class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearchResultsWidget> {
+class _SpecialistSearchResultsWidgetState
+    extends ConsumerState<SpecialistSearchResultsWidget> {
   final ScrollController _scrollController = ScrollController();
   bool _isLoadingMore = false;
 
@@ -30,10 +32,12 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
   void initState() {
     super.initState();
     _scrollController.addListener(_onScroll);
-    
+
     // Запускаем поиск при инициализации
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(advancedSearchProvider.notifier).searchSpecialists(widget.filters);
+      ref
+          .read(advancedSearchProvider.notifier)
+          .searchSpecialists(widget.filters);
     });
   }
 
@@ -46,15 +50,17 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
   @override
   void didUpdateWidget(SpecialistSearchResultsWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
+
     // Запускаем новый поиск при изменении фильтров
     if (oldWidget.filters != widget.filters) {
-      ref.read(advancedSearchProvider.notifier).searchSpecialists(widget.filters);
+      ref
+          .read(advancedSearchProvider.notifier)
+          .searchSpecialists(widget.filters);
     }
   }
 
   void _onScroll() {
-    if (_scrollController.position.pixels >= 
+    if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
       _loadMore();
     }
@@ -70,12 +76,12 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
   @override
   Widget build(BuildContext context) {
     final searchState = ref.watch(advancedSearchProvider);
-    
+
     return Column(
       children: [
         // Статистика поиска
         _buildSearchStats(searchState),
-        
+
         // Результаты поиска
         Expanded(
           child: searchState.when(
@@ -94,7 +100,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
         if (state.results.isEmpty && !state.isLoading) {
           return const SizedBox.shrink();
         }
-        
+
         return Container(
           padding: const EdgeInsets.all(16.0),
           child: Row(
@@ -108,16 +114,16 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
               Text(
                 'Найдено ${state.totalCount} специалистов',
                 style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
               ),
               const Spacer(),
               if (state.searchTime > 0)
                 Text(
                   'за ${state.searchTime}мс',
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
+                        color: Theme.of(context).colorScheme.onSurfaceVariant,
+                      ),
                 ),
             ],
           ),
@@ -135,7 +141,9 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
 
     return RefreshIndicator(
       onRefresh: () async {
-        ref.read(advancedSearchProvider.notifier).searchSpecialists(widget.filters);
+        ref
+            .read(advancedSearchProvider.notifier)
+            .searchSpecialists(widget.filters);
       },
       child: ListView.builder(
         controller: _scrollController,
@@ -144,7 +152,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
           if (index >= state.results.length) {
             return _buildLoadMoreIndicator();
           }
-          
+
           final result = state.results[index];
           return _buildSpecialistCard(result);
         },
@@ -155,7 +163,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
   Widget _buildSpecialistCard(AdvancedSearchResult result) {
     final specialist = result.specialist;
     final theme = Theme.of(context);
-    
+
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 4.0),
       child: InkWell(
@@ -178,7 +186,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
                         : null,
                     child: specialist.avatarUrl == null
                         ? Text(
-                            specialist.name.isNotEmpty 
+                            specialist.name.isNotEmpty
                                 ? specialist.name[0].toUpperCase()
                                 : '?',
                             style: theme.textTheme.titleLarge?.copyWith(
@@ -187,9 +195,9 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
                           )
                         : null,
                   ),
-                  
+
                   const SizedBox(width: 12),
-                  
+
                   // Информация о специалисте
                   Expanded(
                     child: Column(
@@ -233,7 +241,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
                       ],
                     ),
                   ),
-                  
+
                   // Рейтинг и статус
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,
@@ -274,11 +282,12 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 12),
-              
+
               // Описание
-              if (specialist.description != null && specialist.description!.isNotEmpty) ...[
+              if (specialist.description != null &&
+                  specialist.description!.isNotEmpty) ...[
                 Text(
                   specialist.description!,
                   style: theme.textTheme.bodyMedium,
@@ -287,7 +296,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
                 ),
                 const SizedBox(height: 12),
               ],
-              
+
               // Категории и услуги
               if (specialist.categories.isNotEmpty) ...[
                 Wrap(
@@ -306,7 +315,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
                 ),
                 const SizedBox(height: 12),
               ],
-              
+
               // Цена и опыт
               Row(
                 children: [
@@ -331,7 +340,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
                       ],
                     ),
                   ),
-                  
+
                   // Опыт
                   Expanded(
                     child: Column(
@@ -352,7 +361,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
                       ],
                     ),
                   ),
-                  
+
                   // Расстояние (если есть)
                   if (result.distance != null)
                     Expanded(
@@ -376,7 +385,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
                     ),
                 ],
               ),
-              
+
               // Балл релевантности (для отладки)
               if (result.relevanceScore > 0) ...[
                 const SizedBox(height: 8),
@@ -407,7 +416,7 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
         child: Center(child: CircularProgressIndicator()),
       );
     }
-    
+
     return const SizedBox.shrink();
   }
 
@@ -443,14 +452,16 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
           Text(
             error.toString(),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),
           ElevatedButton(
             onPressed: () {
-              ref.read(advancedSearchProvider.notifier).searchSpecialists(widget.filters);
+              ref
+                  .read(advancedSearchProvider.notifier)
+                  .searchSpecialists(widget.filters);
             },
             child: const Text('Повторить'),
           ),
@@ -478,8 +489,8 @@ class _SpecialistSearchResultsWidgetState extends ConsumerState<SpecialistSearch
           Text(
             'Попробуйте изменить параметры поиска',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
+                  color: Theme.of(context).colorScheme.onSurfaceVariant,
+                ),
             textAlign: TextAlign.center,
           ),
           const SizedBox(height: 16),

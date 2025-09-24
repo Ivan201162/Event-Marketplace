@@ -18,28 +18,30 @@ class ChatBotService {
     required String message,
   }) async {
     try {
-      AppLogger.logI('Обработка сообщения пользователя: $message', 'chat_bot_service');
+      AppLogger.logI(
+          'Обработка сообщения пользователя: $message', 'chat_bot_service');
 
       // Получаем или создаем контекст разговора
       final conversation = await _getOrCreateConversation(chatId, userId);
-      
+
       // Анализируем сообщение и определяем намерение
       final intent = _analyzeIntent(message);
-      
+
       // Генерируем ответ на основе намерения и контекста
       final response = await _generateResponse(intent, conversation, message);
-      
+
       if (response != null) {
         // Сохраняем ответ бота
         await _saveBotMessage(response);
-        
+
         // Обновляем контекст разговора
         await _updateConversationContext(conversation.id, intent, message);
       }
 
       return response;
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка обработки сообщения пользователя', 'chat_bot_service', e, stackTrace);
+      AppLogger.logE('Ошибка обработки сообщения пользователя',
+          'chat_bot_service', e, stackTrace);
       return null;
     }
   }
@@ -47,7 +49,7 @@ class ChatBotService {
   /// Получить приветственное сообщение
   Future<ChatBotMessage> getWelcomeMessage(String chatId) async {
     final messageId = 'bot_${DateTime.now().millisecondsSinceEpoch}';
-    
+
     return ChatBotMessage(
       id: messageId,
       chatId: chatId,
@@ -78,21 +80,29 @@ class ChatBotService {
   /// Анализировать намерение пользователя
   String _analyzeIntent(String message) {
     final lowerMessage = message.toLowerCase();
-    
+
     // Ключевые слова для определения намерений
     if (lowerMessage.contains('помощь') || lowerMessage.contains('help')) {
       return 'help';
-    } else if (lowerMessage.contains('вопрос') || lowerMessage.contains('faq')) {
+    } else if (lowerMessage.contains('вопрос') ||
+        lowerMessage.contains('faq')) {
       return 'faq';
-    } else if (lowerMessage.contains('проблема') || lowerMessage.contains('ошибка') || lowerMessage.contains('не работает')) {
+    } else if (lowerMessage.contains('проблема') ||
+        lowerMessage.contains('ошибка') ||
+        lowerMessage.contains('не работает')) {
       return 'problem';
-    } else if (lowerMessage.contains('оператор') || lowerMessage.contains('человек') || lowerMessage.contains('поддержка')) {
+    } else if (lowerMessage.contains('оператор') ||
+        lowerMessage.contains('человек') ||
+        lowerMessage.contains('поддержка')) {
       return 'human';
-    } else if (lowerMessage.contains('бронирование') || lowerMessage.contains('заказ')) {
+    } else if (lowerMessage.contains('бронирование') ||
+        lowerMessage.contains('заказ')) {
       return 'booking';
-    } else if (lowerMessage.contains('оплата') || lowerMessage.contains('платеж')) {
+    } else if (lowerMessage.contains('оплата') ||
+        lowerMessage.contains('платеж')) {
       return 'payment';
-    } else if (lowerMessage.contains('отмена') || lowerMessage.contains('возврат')) {
+    } else if (lowerMessage.contains('отмена') ||
+        lowerMessage.contains('возврат')) {
       return 'cancellation';
     } else {
       return 'general';
@@ -100,20 +110,31 @@ class ChatBotService {
   }
 
   /// Генерировать ответ на основе намерения
-  Future<ChatBotMessage?> _generateResponse(String intent, BotConversation conversation, String userMessage) async {
+  Future<ChatBotMessage?> _generateResponse(
+      String intent, BotConversation conversation, String userMessage) async {
     final messageId = 'bot_${DateTime.now().millisecondsSinceEpoch}';
-    
+
     switch (intent) {
       case 'help':
         return ChatBotMessage(
           id: messageId,
           chatId: conversation.chatId,
-          message: 'Я могу помочь вам с:\n\n• Часто задаваемыми вопросами\n• Техническими проблемами\n• Бронированием услуг\n• Оплатой\n• Связью с оператором',
+          message:
+              'Я могу помочь вам с:\n\n• Часто задаваемыми вопросами\n• Техническими проблемами\n• Бронированием услуг\n• Оплатой\n• Связью с оператором',
           type: BotMessageType.text,
           quickReplies: [
-            BotQuickReply(title: 'FAQ', payload: 'faq', actionType: BotActionType.sendMessage),
-            BotQuickReply(title: 'Проблема', payload: 'problem', actionType: BotActionType.sendMessage),
-            BotQuickReply(title: 'Оператор', payload: 'human', actionType: BotActionType.transferToHuman),
+            BotQuickReply(
+                title: 'FAQ',
+                payload: 'faq',
+                actionType: BotActionType.sendMessage),
+            BotQuickReply(
+                title: 'Проблема',
+                payload: 'problem',
+                actionType: BotActionType.sendMessage),
+            BotQuickReply(
+                title: 'Оператор',
+                payload: 'human',
+                actionType: BotActionType.transferToHuman),
           ],
           createdAt: DateTime.now(),
           isFromBot: true,
@@ -162,13 +183,26 @@ class ChatBotService {
         return ChatBotMessage(
           id: messageId,
           chatId: conversation.chatId,
-          message: 'Расскажите подробнее о проблеме. Это поможет мне лучше понять ситуацию.',
+          message:
+              'Расскажите подробнее о проблеме. Это поможет мне лучше понять ситуацию.',
           type: BotMessageType.text,
           quickReplies: [
-            BotQuickReply(title: 'Не загружается страница', payload: 'page_load', actionType: BotActionType.sendMessage),
-            BotQuickReply(title: 'Проблема с оплатой', payload: 'payment_issue', actionType: BotActionType.sendMessage),
-            BotQuickReply(title: 'Не приходят уведомления', payload: 'notifications', actionType: BotActionType.sendMessage),
-            BotQuickReply(title: 'Другая проблема', payload: 'other', actionType: BotActionType.sendMessage),
+            BotQuickReply(
+                title: 'Не загружается страница',
+                payload: 'page_load',
+                actionType: BotActionType.sendMessage),
+            BotQuickReply(
+                title: 'Проблема с оплатой',
+                payload: 'payment_issue',
+                actionType: BotActionType.sendMessage),
+            BotQuickReply(
+                title: 'Не приходят уведомления',
+                payload: 'notifications',
+                actionType: BotActionType.sendMessage),
+            BotQuickReply(
+                title: 'Другая проблема',
+                payload: 'other',
+                actionType: BotActionType.sendMessage),
           ],
           createdAt: DateTime.now(),
           isFromBot: true,
@@ -178,7 +212,8 @@ class ChatBotService {
         return ChatBotMessage(
           id: messageId,
           chatId: conversation.chatId,
-          message: 'Сейчас я передам вас оператору. Пожалуйста, опишите вашу проблему, и мы постараемся помочь как можно быстрее.',
+          message:
+              'Сейчас я передам вас оператору. Пожалуйста, опишите вашу проблему, и мы постараемся помочь как можно быстрее.',
           type: BotMessageType.text,
           metadata: {
             'transferToHuman': true,
@@ -192,12 +227,22 @@ class ChatBotService {
         return ChatBotMessage(
           id: messageId,
           chatId: conversation.chatId,
-          message: 'Извините, я не совсем понял ваш вопрос. Можете переформулировать или выбрать один из вариантов ниже?',
+          message:
+              'Извините, я не совсем понял ваш вопрос. Можете переформулировать или выбрать один из вариантов ниже?',
           type: BotMessageType.text,
           quickReplies: [
-            BotQuickReply(title: 'Помощь', payload: 'help', actionType: BotActionType.sendMessage),
-            BotQuickReply(title: 'FAQ', payload: 'faq', actionType: BotActionType.sendMessage),
-            BotQuickReply(title: 'Оператор', payload: 'human', actionType: BotActionType.transferToHuman),
+            BotQuickReply(
+                title: 'Помощь',
+                payload: 'help',
+                actionType: BotActionType.sendMessage),
+            BotQuickReply(
+                title: 'FAQ',
+                payload: 'faq',
+                actionType: BotActionType.sendMessage),
+            BotQuickReply(
+                title: 'Оператор',
+                payload: 'human',
+                actionType: BotActionType.transferToHuman),
           ],
           createdAt: DateTime.now(),
           isFromBot: true,
@@ -206,7 +251,8 @@ class ChatBotService {
   }
 
   /// Обработать быстрый ответ
-  Future<ChatBotMessage?> _handleQuickReply(String payload, BotConversation conversation) async {
+  Future<ChatBotMessage?> _handleQuickReply(
+      String payload, BotConversation conversation) async {
     // Обрабатываем различные типы быстрых ответов
     switch (payload) {
       case 'faq':
@@ -221,7 +267,8 @@ class ChatBotService {
   }
 
   /// Получить или создать контекст разговора
-  Future<BotConversation> _getOrCreateConversation(String chatId, String userId) async {
+  Future<BotConversation> _getOrCreateConversation(
+      String chatId, String userId) async {
     try {
       final querySnapshot = await _firestore
           .collection('bot_conversations')
@@ -256,7 +303,8 @@ class ChatBotService {
         return conversation;
       }
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка получения контекста разговора', 'chat_bot_service', e, stackTrace);
+      AppLogger.logE('Ошибка получения контекста разговора', 'chat_bot_service',
+          e, stackTrace);
       // Возвращаем базовый контекст в случае ошибки
       return BotConversation(
         id: 'conv_${DateTime.now().millisecondsSinceEpoch}',
@@ -279,21 +327,27 @@ class ChatBotService {
           .doc(message.id)
           .set(message.toMap());
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка сохранения сообщения бота', 'chat_bot_service', e, stackTrace);
+      AppLogger.logE('Ошибка сохранения сообщения бота', 'chat_bot_service', e,
+          stackTrace);
     }
   }
 
   /// Обновить контекст разговора
-  Future<void> _updateConversationContext(String conversationId, String intent, String userMessage) async {
+  Future<void> _updateConversationContext(
+      String conversationId, String intent, String userMessage) async {
     try {
-      await _firestore.collection('bot_conversations').doc(conversationId).update({
+      await _firestore
+          .collection('bot_conversations')
+          .doc(conversationId)
+          .update({
         'context.lastIntent': intent,
         'context.lastMessage': userMessage,
         'context.messageCount': FieldValue.increment(1),
         'updatedAt': FieldValue.serverTimestamp(),
       });
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка обновления контекста разговора', 'chat_bot_service', e, stackTrace);
+      AppLogger.logE('Ошибка обновления контекста разговора',
+          'chat_bot_service', e, stackTrace);
     }
   }
 
@@ -316,7 +370,8 @@ class ChatBotService {
 
       AppLogger.logI('Разговор с ботом завершен: $chatId', 'chat_bot_service');
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка завершения разговора с ботом', 'chat_bot_service', e, stackTrace);
+      AppLogger.logE('Ошибка завершения разговора с ботом', 'chat_bot_service',
+          e, stackTrace);
     }
   }
 }

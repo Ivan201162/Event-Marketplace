@@ -139,7 +139,7 @@ class PaymentSummaryWidget extends StatelessWidget {
 
   Widget _buildDetailRow(BuildContext context, String label, String value) {
     final theme = Theme.of(context);
-    
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -168,7 +168,7 @@ class PaymentSummaryWidget extends StatelessWidget {
     bool isNet = false,
   }) {
     final theme = Theme.of(context);
-    
+
     Color? amountColor;
     if (isTotal) {
       amountColor = theme.colorScheme.primary;
@@ -185,7 +185,7 @@ class PaymentSummaryWidget extends StatelessWidget {
           label,
           style: theme.textTheme.bodyMedium?.copyWith(
             fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
-            color: isTotal 
+            color: isTotal
                 ? theme.colorScheme.onSurface
                 : theme.colorScheme.onSurface.withOpacity(0.7),
           ),

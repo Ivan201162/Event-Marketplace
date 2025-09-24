@@ -72,9 +72,8 @@ class AdvancedSearchFilters {
                     ))
                 .toList() ??
             [],
-        subcategories: (json['subcategories'] as List<dynamic>?)
-                ?.cast<String>() ??
-            [],
+        subcategories:
+            (json['subcategories'] as List<dynamic>?)?.cast<String>() ?? [],
         selectedCity: json['selectedCity'] != null
             ? CityRegion.fromMap(json['selectedCity'] as Map<String, dynamic>)
             : null,
@@ -232,13 +231,13 @@ class AdvancedSearchFilters {
   /// Получить список городов для поиска
   List<String> get searchCities {
     if (selectedCity == null) return [];
-    
+
     final cities = [selectedCity!.cityName];
-    
+
     if (includeNearbyCities && selectedCity!.neighboringCities.isNotEmpty) {
       cities.addAll(selectedCity!.neighboringCities);
     }
-    
+
     return cities;
   }
 
@@ -261,16 +260,16 @@ class AdvancedSearchFilters {
 
 /// Варианты сортировки для расширенного поиска
 enum AdvancedSearchSortBy {
-  relevance,      // По релевантности
-  rating,         // По рейтингу
-  priceAsc,       // По цене (возрастание)
-  priceDesc,      // По цене (убывание)
-  experience,     // По опыту
-  distance,       // По расстоянию
-  availability,   // По доступности
-  reviewsCount,   // По количеству отзывов
-  popularity,     // По популярности
-  newest,         // По дате регистрации
+  relevance, // По релевантности
+  rating, // По рейтингу
+  priceAsc, // По цене (возрастание)
+  priceDesc, // По цене (убывание)
+  experience, // По опыту
+  distance, // По расстоянию
+  availability, // По доступности
+  reviewsCount, // По количеству отзывов
+  popularity, // По популярности
+  newest, // По дате регистрации
 }
 
 /// Расширение для получения названий сортировки
@@ -357,18 +356,19 @@ class AdvancedSearchResult {
   /// Создать из JSON
   factory AdvancedSearchResult.fromJson(Map<String, dynamic> json) =>
       AdvancedSearchResult(
-        specialist: Specialist.fromMap(json['specialist'] as Map<String, dynamic>),
+        specialist:
+            Specialist.fromMap(json['specialist'] as Map<String, dynamic>),
         relevanceScore: (json['relevanceScore'] as num).toDouble(),
         distance: (json['distance'] as num?)?.toDouble(),
         city: json['city'] as String?,
         region: json['region'] as String?,
-        matchingCategories: (json['matchingCategories'] as List<dynamic>?)
-                ?.cast<String>() ??
-            [],
-        matchingServices: (json['matchingServices'] as List<dynamic>?)
-                ?.cast<String>() ??
-            [],
-        availabilityScore: (json['availabilityScore'] as num?)?.toDouble() ?? 0.0,
+        matchingCategories:
+            (json['matchingCategories'] as List<dynamic>?)?.cast<String>() ??
+                [],
+        matchingServices:
+            (json['matchingServices'] as List<dynamic>?)?.cast<String>() ?? [],
+        availabilityScore:
+            (json['availabilityScore'] as num?)?.toDouble() ?? 0.0,
         priceScore: (json['priceScore'] as num?)?.toDouble() ?? 0.0,
         ratingScore: (json['ratingScore'] as num?)?.toDouble() ?? 0.0,
         experienceScore: (json['experienceScore'] as num?)?.toDouble() ?? 0.0,
@@ -392,16 +392,16 @@ class AdvancedSearchResult {
   /// Получить общий балл релевантности
   double get totalScore {
     return (relevanceScore * 0.4) +
-           (ratingScore * 0.2) +
-           (availabilityScore * 0.2) +
-           (priceScore * 0.1) +
-           (experienceScore * 0.1);
+        (ratingScore * 0.2) +
+        (availabilityScore * 0.2) +
+        (priceScore * 0.1) +
+        (experienceScore * 0.1);
   }
 
   /// Получить отображаемое расстояние
   String get distanceDisplay {
     if (distance == null) return '';
-    
+
     if (distance! < 1) {
       return '${(distance! * 1000).round()} м';
     } else if (distance! < 10) {

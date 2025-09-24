@@ -430,7 +430,8 @@ class PaymentExtendedService {
       final failedPayments =
           payments.where((p) => p.status == PaymentStatus.failed).length;
 
-      final totalAmount = payments.fold(0.0, (total, p) => total + p.totalAmount);
+      final totalAmount =
+          payments.fold(0.0, (total, p) => total + p.totalAmount);
       final paidAmount = payments.fold(0.0, (total, p) => total + p.paidAmount);
       final pendingAmount =
           payments.fold(0.0, (total, p) => total + p.remainingAmount);

@@ -23,29 +23,28 @@ class FavoriteIdea {
   final String? attachedBookingId;
 
   /// Создать из Map (Firestore)
-  factory FavoriteIdea.fromMap(Map<String, dynamic> map) =>
-    FavoriteIdea(
-      id: map['id'] as String,
-      userId: map['userId'] as String,
-      ideaId: map['ideaId'] as String,
-      addedAt: (map['addedAt'] as Timestamp).toDate(),
-      notes: map['notes'] as String?,
-      tags: List<String>.from((map['tags'] ?? <String>[]) as List),
-      isAttachedToBooking: (map['isAttachedToBooking'] ?? false) as bool,
-      attachedBookingId: map['attachedBookingId'] as String?,
-    );
+  factory FavoriteIdea.fromMap(Map<String, dynamic> map) => FavoriteIdea(
+        id: map['id'] as String,
+        userId: map['userId'] as String,
+        ideaId: map['ideaId'] as String,
+        addedAt: (map['addedAt'] as Timestamp).toDate(),
+        notes: map['notes'] as String?,
+        tags: List<String>.from((map['tags'] ?? <String>[]) as List),
+        isAttachedToBooking: (map['isAttachedToBooking'] ?? false) as bool,
+        attachedBookingId: map['attachedBookingId'] as String?,
+      );
 
   /// Преобразовать в Map (Firestore)
   Map<String, dynamic> toMap() => {
-      'id': id,
-      'userId': userId,
-      'ideaId': ideaId,
-      'addedAt': Timestamp.fromDate(addedAt),
-      'notes': notes,
-      'tags': tags,
-      'isAttachedToBooking': isAttachedToBooking,
-      'attachedBookingId': attachedBookingId,
-    };
+        'id': id,
+        'userId': userId,
+        'ideaId': ideaId,
+        'addedAt': Timestamp.fromDate(addedAt),
+        'notes': notes,
+        'tags': tags,
+        'isAttachedToBooking': isAttachedToBooking,
+        'attachedBookingId': attachedBookingId,
+      };
 
   /// Создать копию с изменениями
   FavoriteIdea copyWith({
@@ -58,16 +57,16 @@ class FavoriteIdea {
     bool? isAttachedToBooking,
     String? attachedBookingId,
   }) =>
-    FavoriteIdea(
-      id: id ?? this.id,
-      userId: userId ?? this.userId,
-      ideaId: ideaId ?? this.ideaId,
-      addedAt: addedAt ?? this.addedAt,
-      notes: notes ?? this.notes,
-      tags: tags ?? this.tags,
-      isAttachedToBooking: isAttachedToBooking ?? this.isAttachedToBooking,
-      attachedBookingId: attachedBookingId ?? this.attachedBookingId,
-    );
+      FavoriteIdea(
+        id: id ?? this.id,
+        userId: userId ?? this.userId,
+        ideaId: ideaId ?? this.ideaId,
+        addedAt: addedAt ?? this.addedAt,
+        notes: notes ?? this.notes,
+        tags: tags ?? this.tags,
+        isAttachedToBooking: isAttachedToBooking ?? this.isAttachedToBooking,
+        attachedBookingId: attachedBookingId ?? this.attachedBookingId,
+      );
 
   @override
   bool operator ==(Object other) {
@@ -82,5 +81,5 @@ class FavoriteIdea {
 
   @override
   String toString() =>
-    'FavoriteIdea(id: $id, userId: $userId, ideaId: $ideaId)';
+      'FavoriteIdea(id: $id, userId: $userId, ideaId: $ideaId)';
 }

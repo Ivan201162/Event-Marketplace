@@ -6,10 +6,12 @@ import '../services/tax_calculation_service.dart';
 
 // Services
 final paymentServiceProvider = Provider((ref) => PaymentService());
-final taxCalculationServiceProvider = Provider((ref) => TaxCalculationService());
+final taxCalculationServiceProvider =
+    Provider((ref) => TaxCalculationService());
 
 // Payment state
-final paymentStateProvider = StateNotifierProvider<PaymentStateNotifier, PaymentState>((ref) {
+final paymentStateProvider =
+    StateNotifierProvider<PaymentStateNotifier, PaymentState>((ref) {
   return PaymentStateNotifier(
     ref.read(paymentServiceProvider),
     ref.read(taxCalculationServiceProvider),
@@ -17,37 +19,43 @@ final paymentStateProvider = StateNotifierProvider<PaymentStateNotifier, Payment
 });
 
 // Payment statistics
-final paymentStatisticsProvider = FutureProvider.family<PaymentStatistics, PaymentStatisticsParams>((ref, params) {
+final paymentStatisticsProvider =
+    FutureProvider.family<PaymentStatistics, PaymentStatisticsParams>(
+        (ref, params) {
   return ref.read(paymentServiceProvider).getPaymentStatistics(
-    customerId: params.customerId,
-    specialistId: params.specialistId,
-    startDate: params.startDate,
-    endDate: params.endDate,
-  );
+        customerId: params.customerId,
+        specialistId: params.specialistId,
+        startDate: params.startDate,
+        endDate: params.endDate,
+      );
 });
 
 // Customer payments
-final customerPaymentsProvider = StreamProvider.family<List<Payment>, String>((ref, customerId) {
+final customerPaymentsProvider =
+    StreamProvider.family<List<Payment>, String>((ref, customerId) {
   return ref.read(paymentServiceProvider).getCustomerPayments(customerId);
 });
 
 // Specialist payments
-final specialistPaymentsProvider = StreamProvider.family<List<Payment>, String>((ref, specialistId) {
+final specialistPaymentsProvider =
+    StreamProvider.family<List<Payment>, String>((ref, specialistId) {
   return ref.read(paymentServiceProvider).getSpecialistPayments(specialistId);
 });
 
 // Payment by ID
-final paymentProvider = StreamProvider.family<Payment?, String>((ref, paymentId) {
+final paymentProvider =
+    StreamProvider.family<Payment?, String>((ref, paymentId) {
   return ref.read(paymentServiceProvider).getPayment(paymentId);
 });
 
 // Tax calculation
-final taxCalculationProvider = FutureProvider.family<TaxCalculation, TaxCalculationParams>((ref, params) {
+final taxCalculationProvider =
+    FutureProvider.family<TaxCalculation, TaxCalculationParams>((ref, params) {
   return ref.read(taxCalculationServiceProvider).calculateTax(
-    amount: params.amount,
-    legalStatus: params.legalStatus,
-    region: params.region,
-  );
+        amount: params.amount,
+        legalStatus: params.legalStatus,
+        region: params.region,
+      );
 });
 
 // Payment State Notifier
@@ -55,7 +63,8 @@ class PaymentStateNotifier extends StateNotifier<PaymentState> {
   final PaymentService _paymentService;
   final TaxCalculationService _taxCalculationService;
 
-  PaymentStateNotifier(this._paymentService, this._taxCalculationService) : super(PaymentState.initial());
+  PaymentStateNotifier(this._paymentService, this._taxCalculationService)
+      : super(PaymentState.initial());
 
   Future<void> createPayment({
     required String bookingId,
@@ -95,7 +104,7 @@ class PaymentStateNotifier extends StateNotifier<PaymentState> {
 
     try {
       await _paymentService.completePayment(paymentId);
-      
+
       // Update current payment if it's the same
       if (state.currentPayment?.id == paymentId) {
         final updatedPayment = state.currentPayment!.copyWith(
@@ -123,7 +132,7 @@ class PaymentStateNotifier extends StateNotifier<PaymentState> {
 
     try {
       await _paymentService.cancelPayment(paymentId);
-      
+
       // Update current payment if it's the same
       if (state.currentPayment?.id == paymentId) {
         final updatedPayment = state.currentPayment!.copyWith(
@@ -146,11 +155,13 @@ class PaymentStateNotifier extends StateNotifier<PaymentState> {
     }
   }
 
-  Future<void> refundPayment(String paymentId, {double? amount, String? reason}) async {
+  Future<void> refundPayment(String paymentId,
+      {double? amount, String? reason}) async {
     state = state.copyWith(isLoading: true, error: null);
 
     try {
-      await _paymentService.refundPayment(paymentId, amount: amount, reason: reason);
+      await _paymentService.refundPayment(paymentId,
+          amount: amount, reason: reason);
       state = state.copyWith(isLoading: false, error: null);
     } catch (e) {
       state = state.copyWith(

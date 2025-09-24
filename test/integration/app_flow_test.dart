@@ -7,7 +7,8 @@ void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('App Flow Integration Tests', () {
-    testWidgets('полный поток регистрации и входа пользователя', (WidgetTester tester) async {
+    testWidgets('полный поток регистрации и входа пользователя',
+        (WidgetTester tester) async {
       // Arrange
       app.main();
       await tester.pumpAndSettle();
@@ -26,7 +27,8 @@ void main() {
       expect(find.byType(TextFormField), findsAtLeastNWidgets(3));
 
       // Act - заполняем форму регистрации
-      await tester.enterText(find.byType(TextFormField).at(0), 'test@example.com');
+      await tester.enterText(
+          find.byType(TextFormField).at(0), 'test@example.com');
       await tester.enterText(find.byType(TextFormField).at(1), 'Test User');
       await tester.enterText(find.byType(TextFormField).at(2), 'password123');
       await tester.pumpAndSettle();
@@ -40,7 +42,8 @@ void main() {
       expect(find.text('Event Marketplace'), findsOneWidget);
     });
 
-    testWidgets('поток входа существующего пользователя', (WidgetTester tester) async {
+    testWidgets('поток входа существующего пользователя',
+        (WidgetTester tester) async {
       // Arrange
       app.main();
       await tester.pumpAndSettle();
@@ -54,7 +57,8 @@ void main() {
       expect(find.byType(TextFormField), findsAtLeastNWidgets(2));
 
       // Act - заполняем форму входа
-      await tester.enterText(find.byType(TextFormField).at(0), 'test@example.com');
+      await tester.enterText(
+          find.byType(TextFormField).at(0), 'test@example.com');
       await tester.enterText(find.byType(TextFormField).at(1), 'password123');
       await tester.pumpAndSettle();
 
@@ -132,8 +136,10 @@ void main() {
 
         // Act - заполняем форму создания события
         await tester.enterText(find.byType(TextFormField).at(0), 'Test Event');
-        await tester.enterText(find.byType(TextFormField).at(1), 'Test Description');
-        await tester.enterText(find.byType(TextFormField).at(2), 'Test Location');
+        await tester.enterText(
+            find.byType(TextFormField).at(1), 'Test Description');
+        await tester.enterText(
+            find.byType(TextFormField).at(2), 'Test Location');
         await tester.pumpAndSettle();
 
         // Act - нажимаем кнопку создания

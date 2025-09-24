@@ -18,47 +18,50 @@ class AdvancedSpecialistSearchService {
     DocumentSnapshot? lastDocument,
   }) async {
     final startTime = DateTime.now();
-    
+
     try {
       // Получаем города для поиска
       final searchCities = await _getSearchCities(filters);
-      
+
       // Строим базовый запрос
-      Query<Map<String, dynamic>> query = _firestore.collection(_collectionName);
-      
+      Query<Map<String, dynamic>> query =
+          _firestore.collection(_collectionName);
+
       // Применяем фильтры
       query = _applyFilters(query, filters, searchCities);
-      
+
       // Применяем сортировку
       query = _applySorting(query, filters);
-      
+
       // Ограничиваем количество результатов
       query = query.limit(limit);
-      
+
       // Выполняем запрос
       final querySnapshot = await query.get();
-      
+
       // Преобразуем результаты
       var results = <AdvancedSearchResult>[];
-      
+
       for (final doc in querySnapshot.docs) {
         final specialist = Specialist.fromDocument(doc);
-        final result = await _createSearchResult(specialist, filters, searchCities);
+        final result =
+            await _createSearchResult(specialist, filters, searchCities);
         if (result != null) {
           results.add(result);
         }
       }
-      
+
       // Дополнительная фильтрация и сортировка на клиенте
       results = _applyClientSideFilters(results, filters);
       results = _applyClientSideSorting(results, filters);
-      
+
       final endTime = DateTime.now();
       final searchTime = endTime.difference(startTime).inMilliseconds;
-      
+
       // Обновляем время поиска в результатах (для отладки)
-      print('Поиск завершен за ${searchTime}мс, найдено ${results.length} результатов');
-      
+      print(
+          'Поиск завершен за ${searchTime}мс, найдено ${results.length} результатов');
+
       return results;
     } catch (e) {
       print('Ошибка расширенного поиска специалистов: $e');
@@ -74,35 +77,37 @@ class AdvancedSpecialistSearchService {
     try {
       // Получаем города для поиска
       final searchCities = await _getSearchCities(filters);
-      
+
       // Строим базовый запрос
-      Query<Map<String, dynamic>> query = _firestore.collection(_collectionName);
-      
+      Query<Map<String, dynamic>> query =
+          _firestore.collection(_collectionName);
+
       // Применяем фильтры
       query = _applyFilters(query, filters, searchCities);
-      
+
       // Применяем сортировку
       query = _applySorting(query, filters);
-      
+
       // Ограничиваем количество результатов
       query = query.limit(limit);
-      
+
       // Слушаем изменения
       await for (final snapshot in query.snapshots()) {
         var results = <AdvancedSearchResult>[];
-        
+
         for (final doc in snapshot.docs) {
           final specialist = Specialist.fromDocument(doc);
-          final result = await _createSearchResult(specialist, filters, searchCities);
+          final result =
+              await _createSearchResult(specialist, filters, searchCities);
           if (result != null) {
             results.add(result);
           }
         }
-        
+
         // Дополнительная фильтрация и сортировка на клиенте
         results = _applyClientSideFilters(results, filters);
         results = _applyClientSideSorting(results, filters);
-        
+
         yield results;
       }
     } catch (e) {
@@ -112,10 +117,11 @@ class AdvancedSpecialistSearchService {
   }
 
   /// Получить города для поиска
-  Future<List<CityRegion>> _getSearchCities(AdvancedSearchFilters filters) async {
+  Future<List<CityRegion>> _getSearchCities(
+      AdvancedSearchFilters filters) async {
     if (filters.selectedCity != null) {
       final cities = [filters.selectedCity!];
-      
+
       // Добавляем соседние города, если включено
       if (filters.includeNearbyCities) {
         final nearbyCities = await _cityService.getNearbyCities(
@@ -125,10 +131,11 @@ class AdvancedSpecialistSearchService {
         );
         cities.addAll(nearbyCities);
       }
-      
+
       return cities;
     } else if (filters.selectedRegion != null) {
-      return await _cityService.getCitiesByRegion(regionName: filters.selectedRegion!);
+      return await _cityService.getCitiesByRegion(
+          regionName: filters.selectedRegion!);
     } else {
       // Поиск по всей России
       return await _cityService.getCities(limit: 1000);
@@ -143,24 +150,25 @@ class AdvancedSpecialistSearchService {
   ) {
     // Фильтр по доступности
     query = query.where('isAvailable', isEqualTo: true);
-    
+
     // Фильтр по категориям
     if (filters.categories.isNotEmpty) {
-      query = query.where('categories', arrayContainsAny: 
-          filters.categories.map((cat) => cat.name).toList());
+      query = query.where('categories',
+          arrayContainsAny: filters.categories.map((cat) => cat.name).toList());
     }
-    
+
     // Фильтр по подкатегориям
     if (filters.subcategories.isNotEmpty) {
-      query = query.where('subcategories', arrayContainsAny: filters.subcategories);
+      query =
+          query.where('subcategories', arrayContainsAny: filters.subcategories);
     }
-    
+
     // Фильтр по локации (города)
     if (searchCities.isNotEmpty) {
       final cityNames = searchCities.map((city) => city.cityName).toList();
       query = query.where('location', whereIn: cityNames);
     }
-    
+
     // Фильтр по рейтингу
     if (filters.minRating > 0) {
       query = query.where('rating', isGreaterThanOrEqualTo: filters.minRating);
@@ -168,7 +176,7 @@ class AdvancedSpecialistSearchService {
     if (filters.maxRating < 5.0) {
       query = query.where('rating', isLessThanOrEqualTo: filters.maxRating);
     }
-    
+
     // Фильтр по цене
     if (filters.minPrice > 0) {
       query = query.where('price', isGreaterThanOrEqualTo: filters.minPrice);
@@ -176,50 +184,53 @@ class AdvancedSpecialistSearchService {
     if (filters.maxPrice < 100000) {
       query = query.where('price', isLessThanOrEqualTo: filters.maxPrice);
     }
-    
+
     // Фильтр по опыту
     if (filters.minExperience > 0) {
-      query = query.where('yearsOfExperience', isGreaterThanOrEqualTo: filters.minExperience);
+      query = query.where('yearsOfExperience',
+          isGreaterThanOrEqualTo: filters.minExperience);
     }
     if (filters.maxExperience < 50) {
-      query = query.where('yearsOfExperience', isLessThanOrEqualTo: filters.maxExperience);
+      query = query.where('yearsOfExperience',
+          isLessThanOrEqualTo: filters.maxExperience);
     }
-    
+
     // Фильтр по уровню опыта
     if (filters.experienceLevel != null) {
-      query = query.where('experienceLevel', isEqualTo: filters.experienceLevel!.name);
+      query = query.where('experienceLevel',
+          isEqualTo: filters.experienceLevel!.name);
     }
-    
+
     // Фильтр по верификации
     if (filters.isVerified) {
       query = query.where('isVerified', isEqualTo: true);
     }
-    
+
     // Фильтр по наличию портфолио
     if (filters.hasPortfolio) {
       query = query.where('portfolioImages', isGreaterThan: []);
     }
-    
+
     // Фильтр по наличию отзывов
     if (filters.hasReviews) {
       query = query.where('reviewCount', isGreaterThan: 0);
     }
-    
+
     // Фильтр по языкам
     if (filters.languages.isNotEmpty) {
       query = query.where('languages', arrayContainsAny: filters.languages);
     }
-    
+
     // Фильтр по оборудованию
     if (filters.equipment.isNotEmpty) {
       query = query.where('equipment', arrayContainsAny: filters.equipment);
     }
-    
+
     // Фильтр по услугам
     if (filters.services.isNotEmpty) {
       query = query.where('services', arrayContainsAny: filters.services);
     }
-    
+
     return query;
   }
 
@@ -239,22 +250,25 @@ class AdvancedSpecialistSearchService {
         query = query.orderBy('price', descending: true);
         break;
       case AdvancedSearchSortBy.experience:
-        query = query.orderBy('yearsOfExperience', descending: !filters.sortAscending);
+        query = query.orderBy('yearsOfExperience',
+            descending: !filters.sortAscending);
         break;
       case AdvancedSearchSortBy.reviewsCount:
-        query = query.orderBy('reviewCount', descending: !filters.sortAscending);
+        query =
+            query.orderBy('reviewCount', descending: !filters.sortAscending);
         break;
       case AdvancedSearchSortBy.newest:
         query = query.orderBy('createdAt', descending: !filters.sortAscending);
         break;
       case AdvancedSearchSortBy.availability:
-        query = query.orderBy('lastActiveAt', descending: !filters.sortAscending);
+        query =
+            query.orderBy('lastActiveAt', descending: !filters.sortAscending);
         break;
       default:
         // По умолчанию сортируем по рейтингу
         query = query.orderBy('rating', descending: true);
     }
-    
+
     return query;
   }
 
@@ -267,7 +281,7 @@ class AdvancedSpecialistSearchService {
     try {
       // Вычисляем релевантность
       final relevanceScore = _calculateRelevanceScore(specialist, filters);
-      
+
       // Вычисляем расстояние
       double? distance;
       if (filters.selectedCity != null) {
@@ -276,25 +290,27 @@ class AdvancedSpecialistSearchService {
           (city) => city.cityName == specialist.location,
           orElse: () => filters.selectedCity!,
         );
-        distance = specialistCity.coordinates.distanceTo(filters.selectedCity!.coordinates);
+        distance = specialistCity.coordinates
+            .distanceTo(filters.selectedCity!.coordinates);
       }
-      
+
       // Вычисляем баллы
-      final availabilityScore = _calculateAvailabilityScore(specialist, filters);
+      final availabilityScore =
+          _calculateAvailabilityScore(specialist, filters);
       final priceScore = _calculatePriceScore(specialist, filters);
       final ratingScore = _calculateRatingScore(specialist, filters);
       final experienceScore = _calculateExperienceScore(specialist, filters);
-      
+
       // Находим совпадающие категории и услуги
       final matchingCategories = specialist.categories
           .where((cat) => filters.categories.contains(cat))
           .map((cat) => cat.name)
           .toList();
-      
+
       final matchingServices = specialist.services
           .where((service) => filters.services.contains(service))
           .toList();
-      
+
       return AdvancedSearchResult(
         specialist: specialist,
         relevanceScore: relevanceScore,
@@ -315,9 +331,10 @@ class AdvancedSpecialistSearchService {
   }
 
   /// Вычислить балл релевантности
-  double _calculateRelevanceScore(Specialist specialist, AdvancedSearchFilters filters) {
+  double _calculateRelevanceScore(
+      Specialist specialist, AdvancedSearchFilters filters) {
     double score = 0.0;
-    
+
     // Поиск по тексту
     if (filters.searchQuery.isNotEmpty) {
       final query = filters.searchQuery.toLowerCase();
@@ -327,16 +344,16 @@ class AdvancedSpecialistSearchService {
       if (specialist.description?.toLowerCase().contains(query) == true) {
         score += 0.2;
       }
-      if (specialist.categories.any((cat) => 
-          cat.displayName.toLowerCase().contains(query))) {
+      if (specialist.categories
+          .any((cat) => cat.displayName.toLowerCase().contains(query))) {
         score += 0.2;
       }
-      if (specialist.services.any((service) => 
-          service.toLowerCase().contains(query))) {
+      if (specialist.services
+          .any((service) => service.toLowerCase().contains(query))) {
         score += 0.1;
       }
     }
-    
+
     // Совпадение категорий
     if (filters.categories.isNotEmpty) {
       final matchingCategories = specialist.categories
@@ -344,7 +361,7 @@ class AdvancedSpecialistSearchService {
           .length;
       score += (matchingCategories / filters.categories.length) * 0.2;
     }
-    
+
     // Совпадение услуг
     if (filters.services.isNotEmpty) {
       final matchingServices = specialist.services
@@ -352,35 +369,37 @@ class AdvancedSpecialistSearchService {
           .length;
       score += (matchingServices / filters.services.length) * 0.1;
     }
-    
+
     return score.clamp(0.0, 1.0);
   }
 
   /// Вычислить балл доступности
-  double _calculateAvailabilityScore(Specialist specialist, AdvancedSearchFilters filters) {
+  double _calculateAvailabilityScore(
+      Specialist specialist, AdvancedSearchFilters filters) {
     double score = 0.0;
-    
+
     if (specialist.isAvailable) {
       score += 0.5;
     }
-    
+
     if (specialist.isOnline == true) {
       score += 0.3;
     }
-    
+
     if (filters.isAvailableNow && specialist.isAvailable) {
       score += 0.2;
     }
-    
+
     return score.clamp(0.0, 1.0);
   }
 
   /// Вычислить балл цены
-  double _calculatePriceScore(Specialist specialist, AdvancedSearchFilters filters) {
+  double _calculatePriceScore(
+      Specialist specialist, AdvancedSearchFilters filters) {
     if (filters.minPrice == 0 && filters.maxPrice == 100000) {
       return 1.0; // Нет фильтра по цене
     }
-    
+
     final price = specialist.price;
     if (price >= filters.minPrice && price <= filters.maxPrice) {
       return 1.0;
@@ -392,11 +411,12 @@ class AdvancedSpecialistSearchService {
   }
 
   /// Вычислить балл рейтинга
-  double _calculateRatingScore(Specialist specialist, AdvancedSearchFilters filters) {
+  double _calculateRatingScore(
+      Specialist specialist, AdvancedSearchFilters filters) {
     if (filters.minRating == 0.0 && filters.maxRating == 5.0) {
       return specialist.rating / 5.0; // Нормализуем к 0-1
     }
-    
+
     final rating = specialist.rating;
     if (rating >= filters.minRating && rating <= filters.maxRating) {
       return rating / 5.0;
@@ -406,13 +426,15 @@ class AdvancedSpecialistSearchService {
   }
 
   /// Вычислить балл опыта
-  double _calculateExperienceScore(Specialist specialist, AdvancedSearchFilters filters) {
+  double _calculateExperienceScore(
+      Specialist specialist, AdvancedSearchFilters filters) {
     if (filters.minExperience == 0 && filters.maxExperience == 50) {
       return (specialist.yearsOfExperience / 20.0).clamp(0.0, 1.0);
     }
-    
+
     final experience = specialist.yearsOfExperience;
-    if (experience >= filters.minExperience && experience <= filters.maxExperience) {
+    if (experience >= filters.minExperience &&
+        experience <= filters.maxExperience) {
       return (experience / 20.0).clamp(0.0, 1.0);
     } else {
       return 0.0;
@@ -422,12 +444,12 @@ class AdvancedSpecialistSearchService {
   /// Найти регион для города
   String? _findRegionForCity(String? cityName, List<CityRegion> searchCities) {
     if (cityName == null) return null;
-    
+
     final city = searchCities.firstWhere(
       (city) => city.cityName == cityName,
       orElse: () => searchCities.first,
     );
-    
+
     return city.regionName;
   }
 
@@ -438,25 +460,25 @@ class AdvancedSpecialistSearchService {
   ) {
     return results.where((result) {
       final specialist = result.specialist;
-      
+
       // Фильтр по расстоянию
       if (filters.selectedCity != null && result.distance != null) {
         if (result.distance! > filters.radiusKm) {
           return false;
         }
       }
-      
+
       // Фильтр по датам доступности
       if (filters.availableFrom != null || filters.availableTo != null) {
         // TODO: Реализовать проверку доступности по датам
         // Это требует интеграции с календарем специалиста
       }
-      
+
       // Фильтр по минимальному баллу релевантности
       if (result.relevanceScore < 0.1) {
         return false;
       }
-      
+
       return true;
     }).toList();
   }
@@ -480,17 +502,18 @@ class AdvancedSpecialistSearchService {
         }
         break;
       case AdvancedSearchSortBy.popularity:
-        results.sort((a, b) => b.specialist.reviewCount.compareTo(a.specialist.reviewCount));
+        results.sort((a, b) =>
+            b.specialist.reviewCount.compareTo(a.specialist.reviewCount));
         break;
       default:
         // Сортировка уже применена на сервере
         break;
     }
-    
+
     if (filters.sortAscending) {
       results = results.reversed.toList();
     }
-    
+
     return results;
   }
 
@@ -502,39 +525,37 @@ class AdvancedSpecialistSearchService {
   }) async {
     try {
       List<CityRegion> searchCities;
-      
+
       if (city != null) {
         searchCities = [city];
       } else if (regionName != null) {
-        searchCities = await _cityService.getCitiesByRegion(regionName: regionName);
+        searchCities =
+            await _cityService.getCitiesByRegion(regionName: regionName);
       } else {
         searchCities = await _cityService.getCities(limit: 100);
       }
-      
+
       final cityNames = searchCities.map((city) => city.cityName).toList();
-      
+
       final query = await _firestore
           .collection(_collectionName)
           .where('isAvailable', isEqualTo: true)
           .where('location', whereIn: cityNames)
           .get();
-      
+
       final categoryCounts = <SpecialistCategory, int>{};
-      
+
       for (final doc in query.docs) {
         final specialist = Specialist.fromDocument(doc);
         for (final category in specialist.categories) {
           categoryCounts[category] = (categoryCounts[category] ?? 0) + 1;
         }
       }
-      
+
       final sortedCategories = categoryCounts.entries.toList()
         ..sort((a, b) => b.value.compareTo(a.value));
-      
-      return sortedCategories
-          .take(limit)
-          .map((entry) => entry.key)
-          .toList();
+
+      return sortedCategories.take(limit).map((entry) => entry.key).toList();
     } catch (e) {
       print('Ошибка получения популярных категорий: $e');
       return [];
@@ -548,23 +569,24 @@ class AdvancedSpecialistSearchService {
     try {
       final searchCities = await _getSearchCities(filters);
       final cityNames = searchCities.map((city) => city.cityName).toList();
-      
+
       final query = await _firestore
           .collection(_collectionName)
           .where('isAvailable', isEqualTo: true)
           .where('location', whereIn: cityNames)
           .get();
-      
+
       final totalSpecialists = query.docs.length;
       final avgRating = query.docs
-          .map((doc) => Specialist.fromDocument(doc).rating)
-          .reduce((a, b) => a + b) / totalSpecialists;
-      
+              .map((doc) => Specialist.fromDocument(doc).rating)
+              .reduce((a, b) => a + b) /
+          totalSpecialists;
+
       final priceRange = query.docs
           .map((doc) => Specialist.fromDocument(doc).price)
           .toList()
         ..sort();
-      
+
       return {
         'totalSpecialists': totalSpecialists,
         'avgRating': avgRating,

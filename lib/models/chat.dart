@@ -55,7 +55,8 @@ class ChatMessage {
           : null,
       metadata: data['metadata'] as Map<String, dynamic>?,
       replyToMessageId: data['replyToMessageId'] as String?,
-      attachments: List<String>.from(data['attachments'] as List<dynamic>? ?? []),
+      attachments:
+          List<String>.from(data['attachments'] as List<dynamic>? ?? []),
       senderName: data['senderName'] as String?,
     );
   }

@@ -30,8 +30,7 @@ final userIntegrationEventsProvider =
 /// Провайдер статистики интеграций
 final integrationStatsProvider =
     FutureProvider.family<Map<String, dynamic>, String>(
-  (ref, userId) =>
-      ref.watch(integrationServiceProvider).getIntegrationStats(),
+  (ref, userId) => ref.watch(integrationServiceProvider).getIntegrationStats(),
 );
 
 /// Провайдер текущей геолокации

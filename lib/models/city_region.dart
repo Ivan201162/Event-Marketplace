@@ -51,8 +51,10 @@ class CityRegion {
       neighboringCities: List<String>.from(data['neighboringCities'] ?? []),
       transportHubs: List<String>.from(data['transportHubs'] ?? []),
       economicSectors: List<String>.from(data['economicSectors'] ?? []),
-      specialistCategories: List<String>.from(data['specialistCategories'] ?? []),
-      avgSpecialistRating: (data['avgSpecialistRating'] as num?)?.toDouble() ?? 0.0,
+      specialistCategories:
+          List<String>.from(data['specialistCategories'] ?? []),
+      avgSpecialistRating:
+          (data['avgSpecialistRating'] as num?)?.toDouble() ?? 0.0,
       totalSpecialists: data['totalSpecialists'] as int? ?? 0,
       isActive: data['isActive'] as bool? ?? true,
       createdAt: data['createdAt'] != null
@@ -85,8 +87,10 @@ class CityRegion {
         neighboringCities: List<String>.from(data['neighboringCities'] ?? []),
         transportHubs: List<String>.from(data['transportHubs'] ?? []),
         economicSectors: List<String>.from(data['economicSectors'] ?? []),
-        specialistCategories: List<String>.from(data['specialistCategories'] ?? []),
-        avgSpecialistRating: (data['avgSpecialistRating'] as num?)?.toDouble() ?? 0.0,
+        specialistCategories:
+            List<String>.from(data['specialistCategories'] ?? []),
+        avgSpecialistRating:
+            (data['avgSpecialistRating'] as num?)?.toDouble() ?? 0.0,
         totalSpecialists: data['totalSpecialists'] as int? ?? 0,
         isActive: data['isActive'] as bool? ?? true,
         createdAt: data['createdAt'] != null
@@ -226,12 +230,12 @@ class CityRegion {
 
   /// Проверить, является ли город популярным для событий
   bool get isPopularForEvents {
-    return isCapital || 
-           isMajorCity || 
-           population > 500000 ||
-           attractions.isNotEmpty ||
-           economicSectors.contains('туризм') ||
-           economicSectors.contains('развлечения');
+    return isCapital ||
+        isMajorCity ||
+        population > 500000 ||
+        attractions.isNotEmpty ||
+        economicSectors.contains('туризм') ||
+        economicSectors.contains('развлечения');
   }
 
   /// Получить расстояние до другого города (приблизительно)
@@ -242,15 +246,14 @@ class CityRegion {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is CityRegion &&
-          runtimeType == other.runtimeType &&
-          id == other.id;
+      other is CityRegion && runtimeType == other.runtimeType && id == other.id;
 
   @override
   int get hashCode => id.hashCode;
 
   @override
-  String toString() => 'CityRegion(id: $id, cityName: $cityName, regionName: $regionName)';
+  String toString() =>
+      'CityRegion(id: $id, cityName: $cityName, regionName: $regionName)';
 }
 
 /// Координаты города
@@ -280,15 +283,19 @@ class Coordinates {
   /// Вычислить расстояние до другой точки (в километрах)
   double distanceTo(Coordinates other) {
     const double earthRadius = 6371; // Радиус Земли в км
-    
+
     final double lat1Rad = latitude * (3.14159265359 / 180);
     final double lat2Rad = other.latitude * (3.14159265359 / 180);
-    final double deltaLatRad = (other.latitude - latitude) * (3.14159265359 / 180);
-    final double deltaLonRad = (other.longitude - longitude) * (3.14159265359 / 180);
+    final double deltaLatRad =
+        (other.latitude - latitude) * (3.14159265359 / 180);
+    final double deltaLonRad =
+        (other.longitude - longitude) * (3.14159265359 / 180);
 
     final double a = (deltaLatRad / 2).sin() * (deltaLatRad / 2).sin() +
-        lat1Rad.cos() * lat2Rad.cos() *
-        (deltaLonRad / 2).sin() * (deltaLonRad / 2).sin();
+        lat1Rad.cos() *
+            lat2Rad.cos() *
+            (deltaLonRad / 2).sin() *
+            (deltaLonRad / 2).sin();
     final double c = 2 * (a.sqrt()).asin();
 
     return earthRadius * c;
@@ -301,10 +308,10 @@ class Coordinates {
 /// Размер города
 enum CitySize {
   megapolis, // Мегаполис (>1M)
-  large,     // Крупный город (500K-1M)
-  medium,    // Средний город (100K-500K)
-  small,     // Малый город (50K-100K)
-  town,      // Городок (<50K)
+  large, // Крупный город (500K-1M)
+  medium, // Средний город (100K-500K)
+  small, // Малый город (50K-100K)
+  town, // Городок (<50K)
 }
 
 /// Расширение для получения названий размеров городов
@@ -419,13 +426,13 @@ class CitySearchFilters {
 
 /// Варианты сортировки городов
 enum CitySortBy {
-  population,      // По населению
-  name,           // По названию
-  region,         // По региону
+  population, // По населению
+  name, // По названию
+  region, // По региону
   specialistCount, // По количеству специалистов
-  rating,         // По рейтингу специалистов
-  distance,       // По расстоянию
-  priority,       // По приоритету
+  rating, // По рейтингу специалистов
+  distance, // По расстоянию
+  priority, // По приоритету
 }
 
 /// Расширение для получения названий сортировки

@@ -19,10 +19,12 @@ class AdvancedSearchFiltersWidget extends ConsumerStatefulWidget {
   final Function(AdvancedSearchFilters)? onFiltersChanged;
 
   @override
-  ConsumerState<AdvancedSearchFiltersWidget> createState() => _AdvancedSearchFiltersWidgetState();
+  ConsumerState<AdvancedSearchFiltersWidget> createState() =>
+      _AdvancedSearchFiltersWidgetState();
 }
 
-class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFiltersWidget> {
+class _AdvancedSearchFiltersWidgetState
+    extends ConsumerState<AdvancedSearchFiltersWidget> {
   late AdvancedSearchFilters _filters;
   final PageController _pageController = PageController();
 
@@ -61,7 +63,7 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
             },
           ),
         ),
-        
+
         // Контент фильтров
         Expanded(
           child: PageView(
@@ -74,7 +76,7 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
             ],
           ),
         ),
-        
+
         // Кнопки навигации
         _buildNavigationButtons(),
       ],
@@ -92,16 +94,17 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 16),
-          
+
           // Выбор города
           CitySelectionWidget(
             selectedCity: _filters.selectedCity,
-            onCitySelected: (city) => _updateFilters(_filters.copyWith(selectedCity: city)),
+            onCitySelected: (city) =>
+                _updateFilters(_filters.copyWith(selectedCity: city)),
             hintText: 'Выберите город',
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Радиус поиска
           Text(
             'Радиус поиска: ${_filters.radiusKm.round()} км',
@@ -117,9 +120,9 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
               _updateFilters(_filters.copyWith(radiusKm: value));
             },
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Включить соседние города
           SwitchListTile(
             title: const Text('Включить соседние города'),
@@ -129,9 +132,9 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
               _updateFilters(_filters.copyWith(includeNearbyCities: value));
             },
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Максимальное расстояние
           if (_filters.includeNearbyCities) ...[
             Text(
@@ -165,14 +168,14 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 16),
-          
+
           // Категории специалистов
           Text(
             'Категории',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
-          
+
           Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -182,7 +185,8 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
                 label: Text('${category.icon} ${category.displayName}'),
                 selected: isSelected,
                 onSelected: (selected) {
-                  final newCategories = List<SpecialistCategory>.from(_filters.categories);
+                  final newCategories =
+                      List<SpecialistCategory>.from(_filters.categories);
                   if (selected) {
                     newCategories.add(category);
                   } else {
@@ -193,16 +197,16 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
               );
             }).toList(),
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Подкатегории
           Text(
             'Подкатегории',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
-          
+
           TextField(
             decoration: const InputDecoration(
               hintText: 'Введите подкатегории через запятую',
@@ -217,16 +221,16 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
               _updateFilters(_filters.copyWith(subcategories: subcategories));
             },
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Услуги
           Text(
             'Услуги',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
-          
+
           TextField(
             decoration: const InputDecoration(
               hintText: 'Введите услуги через запятую',
@@ -257,16 +261,17 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 16),
-          
+
           // Ценовой диапазон
           Text(
             'Ценовой диапазон',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
-          
+
           RangeSlider(
-            values: RangeValues(_filters.minPrice.toDouble(), _filters.maxPrice.toDouble()),
+            values: RangeValues(
+                _filters.minPrice.toDouble(), _filters.maxPrice.toDouble()),
             min: 0,
             max: 100000,
             divisions: 100,
@@ -281,7 +286,7 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
               ));
             },
           ),
-          
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -289,18 +294,19 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
               Text('${_filters.maxPrice} ₽'),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Опыт работы
           Text(
             'Опыт работы',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
-          
+
           RangeSlider(
-            values: RangeValues(_filters.minExperience.toDouble(), _filters.maxExperience.toDouble()),
+            values: RangeValues(_filters.minExperience.toDouble(),
+                _filters.maxExperience.toDouble()),
             min: 0,
             max: 50,
             divisions: 50,
@@ -315,7 +321,7 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
               ));
             },
           ),
-          
+
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -323,16 +329,16 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
               Text('${_filters.maxExperience} лет'),
             ],
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Уровень опыта
           Text(
             'Уровень опыта',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
-          
+
           DropdownButtonFormField<ExperienceLevel>(
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
@@ -342,8 +348,8 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
                 value: null,
                 child: Text('Любой уровень'),
               ),
-              ...ExperienceLevel.values.map((level) => 
-                DropdownMenuItem<ExperienceLevel>(
+              ...ExperienceLevel.values.map(
+                (level) => DropdownMenuItem<ExperienceLevel>(
                   value: level,
                   child: Text(level.displayName),
                 ),
@@ -370,14 +376,14 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(height: 16),
-          
+
           // Рейтинг
           Text(
             'Рейтинг: ${_filters.minRating.toStringAsFixed(1)} - ${_filters.maxRating.toStringAsFixed(1)}',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
-          
+
           RangeSlider(
             values: RangeValues(_filters.minRating, _filters.maxRating),
             min: 0,
@@ -394,9 +400,9 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
               ));
             },
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Переключатели
           SwitchListTile(
             title: const Text('Доступен сейчас'),
@@ -406,7 +412,7 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
               _updateFilters(_filters.copyWith(isAvailableNow: value));
             },
           ),
-          
+
           SwitchListTile(
             title: const Text('Верифицирован'),
             subtitle: const Text('Проверенные специалисты'),
@@ -415,7 +421,7 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
               _updateFilters(_filters.copyWith(isVerified: value));
             },
           ),
-          
+
           SwitchListTile(
             title: const Text('Есть портфолио'),
             subtitle: const Text('С примерами работ'),
@@ -424,7 +430,7 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
               _updateFilters(_filters.copyWith(hasPortfolio: value));
             },
           ),
-          
+
           SwitchListTile(
             title: const Text('Есть отзывы'),
             subtitle: const Text('С отзывами клиентов'),
@@ -433,26 +439,28 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
               _updateFilters(_filters.copyWith(hasReviews: value));
             },
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Сортировка
           Text(
             'Сортировка',
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 8),
-          
+
           DropdownButtonFormField<AdvancedSearchSortBy>(
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
             ),
-            items: AdvancedSearchSortBy.values.map((sortBy) => 
-              DropdownMenuItem<AdvancedSearchSortBy>(
-                value: sortBy,
-                child: Text('${sortBy.icon} ${sortBy.displayName}'),
-              ),
-            ).toList(),
+            items: AdvancedSearchSortBy.values
+                .map(
+                  (sortBy) => DropdownMenuItem<AdvancedSearchSortBy>(
+                    value: sortBy,
+                    child: Text('${sortBy.icon} ${sortBy.displayName}'),
+                  ),
+                )
+                .toList(),
             value: _filters.sortBy,
             onChanged: (sortBy) {
               if (sortBy != null) {
@@ -460,9 +468,9 @@ class _AdvancedSearchFiltersWidgetState extends ConsumerState<AdvancedSearchFilt
               }
             },
           ),
-          
+
           const SizedBox(height: 16),
-          
+
           // Порядок сортировки
           SwitchListTile(
             title: const Text('По возрастанию'),

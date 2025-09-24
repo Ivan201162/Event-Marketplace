@@ -118,7 +118,8 @@ class ChatBotMessageWidget extends ConsumerWidget {
               return GestureDetector(
                 onTap: () => onQuickReplyTap?.call(reply.payload),
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   decoration: BoxDecoration(
                     color: Colors.blue[50],
                     borderRadius: BorderRadius.circular(20),
@@ -263,7 +264,8 @@ class ChatBotMessageWidget extends ConsumerWidget {
           // Изображение карточки
           if (card.imageUrl != null)
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(12)),
               child: Image.network(
                 card.imageUrl!,
                 height: 120,
@@ -304,7 +306,8 @@ class ChatBotMessageWidget extends ConsumerWidget {
                 // Кнопки карточки
                 if (card.buttons != null && card.buttons!.isNotEmpty) ...[
                   const SizedBox(height: 12),
-                  ...card.buttons!.map((button) => _buildButton(context, button)),
+                  ...card.buttons!
+                      .map((button) => _buildButton(context, button)),
                 ],
               ],
             ),
@@ -366,8 +369,7 @@ class ChatBotMessageWidget extends ConsumerWidget {
             ),
           ),
           // Кнопка элемента
-          if (item.button != null)
-            _buildButton(context, item.button!),
+          if (item.button != null) _buildButton(context, item.button!),
         ],
       ),
     );

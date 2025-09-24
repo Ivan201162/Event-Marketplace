@@ -37,7 +37,7 @@ class _IdeaSearchBarState extends State<IdeaSearchBar> {
     setState(() {
       _isSearching = value.isNotEmpty;
     });
-    
+
     // Добавляем задержку для оптимизации поиска
     Future.delayed(const Duration(milliseconds: 500), () {
       if (_controller.text == value) {
@@ -57,7 +57,7 @@ class _IdeaSearchBarState extends State<IdeaSearchBar> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Container(
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,

@@ -222,17 +222,17 @@ class Proposal {
 
   /// Список специалистов (для совместимости с UI)
   List<ProposalSpecialist> get specialists => [
-    ProposalSpecialist(
-      id: specialistId,
-      name: 'Специалист',
-      price: finalPrice,
-      specialistId: specialistId,
-      specialistName: 'Специалист',
-      categoryName: 'Услуга',
-      description: message ?? 'Предложение специалиста',
-      estimatedPrice: finalPrice,
-    ),
-  ];
+        ProposalSpecialist(
+          id: specialistId,
+          name: 'Специалист',
+          price: finalPrice,
+          specialistId: specialistId,
+          specialistName: 'Специалист',
+          categoryName: 'Услуга',
+          description: message ?? 'Предложение специалиста',
+          estimatedPrice: finalPrice,
+        ),
+      ];
 
   /// Можно ли ответить на предложение
   bool get canRespond => status == ProposalStatus.pending;
@@ -244,14 +244,13 @@ class Proposal {
   bool get canBeRejected => status == ProposalStatus.pending;
 
   /// Проверить, истекло ли предложение
-  bool get isExpired => 
-      expiresAt != null && DateTime.now().isAfter(expiresAt!);
+  bool get isExpired => expiresAt != null && DateTime.now().isAfter(expiresAt!);
 
   /// Получить экономию от скидки
   double get savings => originalPrice - finalPrice;
 
   /// Получить текст скидки
-  String get discountText => 
+  String get discountText =>
       discountPercent > 0 ? 'Скидка ${discountPercent.toInt()}%' : 'Без скидки';
 
   @override

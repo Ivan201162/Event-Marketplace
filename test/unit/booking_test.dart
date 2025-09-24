@@ -9,7 +9,14 @@ import 'package:event_marketplace_app/models/user.dart' as app_user;
 
 import 'booking_test.mocks.dart';
 
-@GenerateMocks([FirebaseFirestore, CollectionReference, DocumentReference, DocumentSnapshot, QuerySnapshot, QueryDocumentSnapshot])
+@GenerateMocks([
+  FirebaseFirestore,
+  CollectionReference,
+  DocumentReference,
+  DocumentSnapshot,
+  QuerySnapshot,
+  QueryDocumentSnapshot
+])
 void main() {
   group('BookingService Tests', () {
     late MockFirebaseFirestore mockFirestore;

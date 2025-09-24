@@ -17,7 +17,8 @@ class PaymentHistoryScreen extends ConsumerStatefulWidget {
   });
 
   @override
-  ConsumerState<PaymentHistoryScreen> createState() => _PaymentHistoryScreenState();
+  ConsumerState<PaymentHistoryScreen> createState() =>
+      _PaymentHistoryScreenState();
 }
 
 class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
@@ -47,7 +48,7 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
         children: [
           // Statistics Card
           _buildStatisticsCard(),
-          
+
           // Payment List
           Expanded(
             child: _buildPaymentList(),
@@ -160,7 +161,8 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
     );
   }
 
-  Widget _buildStatItem(ThemeData theme, String label, String value, IconData icon) {
+  Widget _buildStatItem(
+      ThemeData theme, String label, String value, IconData icon) {
     return Column(
       children: [
         Icon(
@@ -233,7 +235,8 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
                 Icon(
                   Icons.payment,
                   size: 64,
-                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                  color:
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -244,8 +247,11 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
                 Text(
                   'Здесь будут отображаться ваши платежи',
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-                  ),
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withOpacity(0.7),
+                      ),
                 ),
               ],
             ),
@@ -330,7 +336,8 @@ class PaymentFiltersSheet extends StatefulWidget {
   final PaymentMethod? selectedMethod;
   final DateTime? startDate;
   final DateTime? endDate;
-  final Function(PaymentStatus?, PaymentMethod?, DateTime?, DateTime?) onApplyFilters;
+  final Function(PaymentStatus?, PaymentMethod?, DateTime?, DateTime?)
+      onApplyFilters;
   final VoidCallback onClearFilters;
 
   const PaymentFiltersSheet({
@@ -414,10 +421,10 @@ class _PaymentFiltersSheetState extends State<PaymentFiltersSheet> {
                 () => setState(() => _selectedStatus = null),
               ),
               ...PaymentStatus.values.map((status) => _buildFilterChip(
-                _getStatusDisplayName(status),
-                _selectedStatus == status,
-                () => setState(() => _selectedStatus = status),
-              )),
+                    _getStatusDisplayName(status),
+                    _selectedStatus == status,
+                    () => setState(() => _selectedStatus = status),
+                  )),
             ],
           ),
           const SizedBox(height: 24),
@@ -439,10 +446,10 @@ class _PaymentFiltersSheetState extends State<PaymentFiltersSheet> {
                 () => setState(() => _selectedMethod = null),
               ),
               ...PaymentMethod.values.map((method) => _buildFilterChip(
-                _getMethodDisplayName(method),
-                _selectedMethod == method,
-                () => setState(() => _selectedMethod = method),
-              )),
+                    _getMethodDisplayName(method),
+                    _selectedMethod == method,
+                    () => setState(() => _selectedMethod = method),
+                  )),
             ],
           ),
           const SizedBox(height: 24),
@@ -461,7 +468,7 @@ class _PaymentFiltersSheetState extends State<PaymentFiltersSheet> {
                 child: OutlinedButton.icon(
                   onPressed: () => _selectDate(true),
                   icon: const Icon(Icons.calendar_today),
-                  label: Text(_startDate != null 
+                  label: Text(_startDate != null
                       ? DateFormat('dd.MM.yyyy').format(_startDate!)
                       : 'С даты'),
                 ),
@@ -471,7 +478,7 @@ class _PaymentFiltersSheetState extends State<PaymentFiltersSheet> {
                 child: OutlinedButton.icon(
                   onPressed: () => _selectDate(false),
                   icon: const Icon(Icons.calendar_today),
-                  label: Text(_endDate != null 
+                  label: Text(_endDate != null
                       ? DateFormat('dd.MM.yyyy').format(_endDate!)
                       : 'По дату'),
                 ),
@@ -510,7 +517,7 @@ class _PaymentFiltersSheetState extends State<PaymentFiltersSheet> {
 
   Widget _buildFilterChip(String label, bool isSelected, VoidCallback onTap) {
     final theme = Theme.of(context);
-    
+
     return FilterChip(
       label: Text(label),
       selected: isSelected,
@@ -523,7 +530,9 @@ class _PaymentFiltersSheetState extends State<PaymentFiltersSheet> {
   Future<void> _selectDate(bool isStartDate) async {
     final date = await showDatePicker(
       context: context,
-      initialDate: isStartDate ? _startDate ?? DateTime.now() : _endDate ?? DateTime.now(),
+      initialDate: isStartDate
+          ? _startDate ?? DateTime.now()
+          : _endDate ?? DateTime.now(),
       firstDate: DateTime(2020),
       lastDate: DateTime.now(),
     );
@@ -622,15 +631,21 @@ class PaymentDetailsSheet extends StatelessWidget {
           _buildDetailRow(context, 'ID', payment.id),
           _buildDetailRow(context, 'Тип', payment.typeDisplayName),
           _buildDetailRow(context, 'Способ', payment.methodDisplayName),
-          _buildDetailRow(context, 'Статус', _getStatusDisplayName(payment.status)),
-          _buildDetailRow(context, 'Сумма', '${payment.amount.toStringAsFixed(0)} ₽'),
+          _buildDetailRow(
+              context, 'Статус', _getStatusDisplayName(payment.status)),
+          _buildDetailRow(
+              context, 'Сумма', '${payment.amount.toStringAsFixed(0)} ₽'),
           if (payment.taxAmount > 0)
-            _buildDetailRow(context, 'Налог', '${payment.taxAmount.toStringAsFixed(0)} ₽'),
+            _buildDetailRow(
+                context, 'Налог', '${payment.taxAmount.toStringAsFixed(0)} ₽'),
           if (payment.netAmount > 0)
-            _buildDetailRow(context, 'К получению', '${payment.netAmount.toStringAsFixed(0)} ₽'),
-          _buildDetailRow(context, 'Создан', DateFormat('dd.MM.yyyy HH:mm').format(payment.createdAt)),
+            _buildDetailRow(context, 'К получению',
+                '${payment.netAmount.toStringAsFixed(0)} ₽'),
+          _buildDetailRow(context, 'Создан',
+              DateFormat('dd.MM.yyyy HH:mm').format(payment.createdAt)),
           if (payment.completedAt != null)
-            _buildDetailRow(context, 'Завершен', DateFormat('dd.MM.yyyy HH:mm').format(payment.completedAt!)),
+            _buildDetailRow(context, 'Завершен',
+                DateFormat('dd.MM.yyyy HH:mm').format(payment.completedAt!)),
           if (payment.failureReason != null)
             _buildDetailRow(context, 'Причина ошибки', payment.failureReason!),
 
@@ -650,7 +665,7 @@ class PaymentDetailsSheet extends StatelessWidget {
 
   Widget _buildDetailRow(BuildContext context, String label, String value) {
     final theme = Theme.of(context);
-    
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(

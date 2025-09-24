@@ -776,7 +776,8 @@ class CalendarService {
           'specialistId': specialistId,
           'title': 'Тестовое событие 1',
           'startDate': Timestamp.fromDate(now.add(const Duration(days: 1))),
-          'endDate': Timestamp.fromDate(now.add(const Duration(days: 1, hours: 2))),
+          'endDate':
+              Timestamp.fromDate(now.add(const Duration(days: 1, hours: 2))),
           'type': 'booking',
           'createdAt': FieldValue.serverTimestamp(),
         },
@@ -784,7 +785,8 @@ class CalendarService {
           'specialistId': specialistId,
           'title': 'Тестовое событие 2',
           'startDate': Timestamp.fromDate(now.add(const Duration(days: 2))),
-          'endDate': Timestamp.fromDate(now.add(const Duration(days: 2, hours: 1))),
+          'endDate':
+              Timestamp.fromDate(now.add(const Duration(days: 2, hours: 1))),
           'type': 'unavailable',
           'createdAt': FieldValue.serverTimestamp(),
         },

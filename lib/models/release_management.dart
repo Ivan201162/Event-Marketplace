@@ -41,9 +41,12 @@ class Release {
         commitHash: map['commitHash'] as String?,
         features: List<String>.from(map['features'] as List<dynamic>? ?? []),
         bugFixes: List<String>.from(map['bugFixes'] as List<dynamic>? ?? []),
-        breakingChanges: List<String>.from(map['breakingChanges'] as List<dynamic>? ?? []),
-        dependencies: List<String>.from(map['dependencies'] as List<dynamic>? ?? []),
-        metadata: Map<String, dynamic>.from(map['metadata'] as Map<dynamic, dynamic>? ?? {}),
+        breakingChanges:
+            List<String>.from(map['breakingChanges'] as List<dynamic>? ?? []),
+        dependencies:
+            List<String>.from(map['dependencies'] as List<dynamic>? ?? []),
+        metadata: Map<String, dynamic>.from(
+            map['metadata'] as Map<dynamic, dynamic>? ?? {}),
         tags: List<String>.from(map['tags'] as List<dynamic>? ?? []),
         isPreRelease: map['isPreRelease'] as bool? ?? false,
         isDraft: map['isDraft'] as bool? ?? true,

@@ -71,7 +71,8 @@ class WorkActService {
       );
 
       // Сохраняем в Firestore
-      final docRef = await _firestore.collection('workActs').add(workAct.toMap());
+      final docRef =
+          await _firestore.collection('workActs').add(workAct.toMap());
 
       return workAct.copyWith(id: docRef.id);
     } catch (e) {
@@ -124,8 +125,10 @@ class WorkActService {
       }
 
       // Проверяем, подписан ли акт обеими сторонами
-      final hasCustomerSignature = isCustomer || workAct.customerSignature != null;
-      final hasSpecialistSignature = isSpecialist || workAct.specialistSignature != null;
+      final hasCustomerSignature =
+          isCustomer || workAct.customerSignature != null;
+      final hasSpecialistSignature =
+          isSpecialist || workAct.specialistSignature != null;
 
       if (hasCustomerSignature && hasSpecialistSignature) {
         updateData['status'] = WorkActStatus.signed.name;
@@ -250,7 +253,8 @@ class WorkActService {
   Future<String> generateWorkActPDF(String workActId) async {
     try {
       // Получаем акт
-      final workActDoc = await _firestore.collection('workActs').doc(workActId).get();
+      final workActDoc =
+          await _firestore.collection('workActs').doc(workActId).get();
 
       if (!workActDoc.exists) {
         throw Exception('Акт выполненных работ не найден');
@@ -297,7 +301,8 @@ class WorkActService {
     final year = now.year;
     final month = now.month.toString().padLeft(2, '0');
     final day = now.day.toString().padLeft(2, '0');
-    final random = (now.millisecondsSinceEpoch % 1000).toString().padLeft(3, '0');
+    final random =
+        (now.millisecondsSinceEpoch % 1000).toString().padLeft(3, '0');
 
     return 'АВР-$year$month$day-$random';
   }

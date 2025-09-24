@@ -11,7 +11,7 @@ void main() {
       // Arrange
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
-      
+
       await tester.pumpWidget(
         ProviderScope(
           child: EventMarketplaceApp(prefs: prefs),
@@ -34,7 +34,7 @@ void main() {
       // Arrange
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
-      
+
       await tester.pumpWidget(
         ProviderScope(
           child: EventMarketplaceApp(prefs: prefs),
@@ -74,7 +74,7 @@ void main() {
       // Arrange
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
-      
+
       await tester.pumpWidget(
         ProviderScope(
           child: EventMarketplaceApp(prefs: prefs),
@@ -117,7 +117,7 @@ void main() {
       // Arrange
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
-      
+
       await tester.pumpWidget(
         ProviderScope(
           child: EventMarketplaceApp(prefs: prefs),
@@ -146,7 +146,7 @@ void main() {
       // Arrange
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
-      
+
       await tester.pumpWidget(
         ProviderScope(
           child: EventMarketplaceApp(prefs: prefs),
@@ -174,7 +174,7 @@ void main() {
       // Arrange
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
-      
+
       await tester.pumpWidget(
         ProviderScope(
           child: EventMarketplaceApp(prefs: prefs),
@@ -200,7 +200,7 @@ void main() {
       // Arrange
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
-      
+
       await tester.pumpWidget(
         ProviderScope(
           child: EventMarketplaceApp(prefs: prefs),
@@ -229,7 +229,7 @@ void main() {
       // Arrange
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
-      
+
       await tester.pumpWidget(
         ProviderScope(
           child: EventMarketplaceApp(prefs: prefs),
@@ -257,7 +257,7 @@ void main() {
       // Arrange
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
-      
+
       await tester.pumpWidget(
         ProviderScope(
           child: EventMarketplaceApp(prefs: prefs),
@@ -285,7 +285,7 @@ void main() {
       // Arrange
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
-      
+
       await tester.pumpWidget(
         ProviderScope(
           child: EventMarketplaceApp(prefs: prefs),
@@ -323,7 +323,7 @@ void main() {
       // Arrange
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
-      
+
       await tester.pumpWidget(
         ProviderScope(
           child: EventMarketplaceApp(prefs: prefs),

@@ -11,13 +11,13 @@ class BuildOptimizations {
   static void initializeReleaseOptimizations() {
     // Отключаем debug режим
     debugPrint = (String? message, {int? wrapWidth}) {};
-    
+
     // Оптимизируем рендеринг
     _optimizeRendering();
-    
+
     // Оптимизируем память
     _optimizeMemory();
-    
+
     // Оптимизируем анимации
     _optimizeAnimations();
   }
@@ -26,7 +26,7 @@ class BuildOptimizations {
   static void initializeDebugOptimizations() {
     // Включаем debug режим
     debugPrint = debugPrintThrottled;
-    
+
     // Оптимизируем рендеринг для debug
     _optimizeDebugRendering();
   }
@@ -34,7 +34,7 @@ class BuildOptimizations {
   /// Оптимизация рендеринга
   static void _optimizeRendering() {
     // Устанавливаем оптимальные настройки рендеринга
-    WidgetsBinding.instance.renderView.configuration = 
+    WidgetsBinding.instance.renderView.configuration =
         WidgetsBinding.instance.renderView.configuration.copyWith(
       devicePixelRatio: 1.0, // Оптимизация для производительности
     );
@@ -43,7 +43,7 @@ class BuildOptimizations {
   /// Оптимизация рендеринга для debug
   static void _optimizeDebugRendering() {
     // Настройки для debug режима
-    WidgetsBinding.instance.renderView.configuration = 
+    WidgetsBinding.instance.renderView.configuration =
         WidgetsBinding.instance.renderView.configuration.copyWith(
       devicePixelRatio: 1.0,
     );
@@ -53,8 +53,9 @@ class BuildOptimizations {
   static void _optimizeMemory() {
     // Настройка кэша изображений
     PaintingBinding.instance.imageCache.maximumSize = 50;
-    PaintingBinding.instance.imageCache.maximumSizeBytes = 25 * 1024 * 1024; // 25MB
-    
+    PaintingBinding.instance.imageCache.maximumSizeBytes =
+        25 * 1024 * 1024; // 25MB
+
     // Очистка кэша при нехватке памяти
     PaintingBinding.instance.imageCache.clearLiveImages();
   }
@@ -71,17 +72,23 @@ class BuildOptimizations {
   /// Оптимизация для разных платформ
   static void initializePlatformOptimizations() {
     // Оптимизации для Android
-    if (Theme.of(WidgetsBinding.instance.platformDispatcher.views.first).platform == TargetPlatform.android) {
+    if (Theme.of(WidgetsBinding.instance.platformDispatcher.views.first)
+            .platform ==
+        TargetPlatform.android) {
       _optimizeForAndroid();
     }
-    
+
     // Оптимизации для iOS
-    if (Theme.of(WidgetsBinding.instance.platformDispatcher.views.first).platform == TargetPlatform.iOS) {
+    if (Theme.of(WidgetsBinding.instance.platformDispatcher.views.first)
+            .platform ==
+        TargetPlatform.iOS) {
       _optimizeForIOS();
     }
-    
+
     // Оптимизации для Web
-    if (Theme.of(WidgetsBinding.instance.platformDispatcher.views.first).platform == TargetPlatform.web) {
+    if (Theme.of(WidgetsBinding.instance.platformDispatcher.views.first)
+            .platform ==
+        TargetPlatform.web) {
       _optimizeForWeb();
     }
   }
@@ -129,10 +136,15 @@ class BuildOptimizations {
   static Map<String, dynamic> getPerformanceInfo() {
     return {
       'imageCacheSize': PaintingBinding.instance.imageCache.currentSize,
-      'imageCacheSizeBytes': PaintingBinding.instance.imageCache.currentSizeBytes,
+      'imageCacheSizeBytes':
+          PaintingBinding.instance.imageCache.currentSizeBytes,
       'imageCacheMaxSize': PaintingBinding.instance.imageCache.maximumSize,
-      'imageCacheMaxSizeBytes': PaintingBinding.instance.imageCache.maximumSizeBytes,
-      'platform': Theme.of(WidgetsBinding.instance.platformDispatcher.views.first).platform.toString(),
+      'imageCacheMaxSizeBytes':
+          PaintingBinding.instance.imageCache.maximumSizeBytes,
+      'platform':
+          Theme.of(WidgetsBinding.instance.platformDispatcher.views.first)
+              .platform
+              .toString(),
     };
   }
 
@@ -201,7 +213,8 @@ class OptimizedListView extends StatelessWidget {
       padding: padding,
       cacheExtent: cacheExtent,
       itemCount: itemCount,
-      separatorBuilder: separatorBuilder ?? (context, index) => const SizedBox.shrink(),
+      separatorBuilder:
+          separatorBuilder ?? (context, index) => const SizedBox.shrink(),
       itemBuilder: itemBuilder,
     );
   }
@@ -252,6 +265,3 @@ class OptimizedGridView extends StatelessWidget {
     );
   }
 }
-
-
-

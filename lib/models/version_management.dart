@@ -37,7 +37,8 @@ class AppVersion {
       description: data['description'] as String?,
       features: List<String>.from(data['features'] as List<dynamic>? ?? []),
       bugFixes: List<String>.from(data['bugFixes'] as List<dynamic>? ?? []),
-      breakingChanges: List<String>.from(data['breakingChanges'] as List<dynamic>? ?? []),
+      breakingChanges:
+          List<String>.from(data['breakingChanges'] as List<dynamic>? ?? []),
       isForced: data['isForced'] as bool? ?? false,
       isAvailable: data['isAvailable'] as bool? ?? true,
       downloadUrl: data['downloadUrl'] as String?,

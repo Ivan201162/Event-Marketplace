@@ -65,7 +65,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
   @override
   void didUpdateWidget(CityMapWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-    
+
     if (widget.selectedCity != oldWidget.selectedCity ||
         widget.currentLocation != oldWidget.currentLocation) {
       _updateMapCenter();
@@ -91,7 +91,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    
+
     return Stack(
       children: [
         // Карта
@@ -113,12 +113,12 @@ class _CityMapWidgetState extends State<CityMapWidget> {
               userAgentPackageName: 'com.eventmarketplace.app',
               maxZoom: 18,
             ),
-            
+
             // Маркеры городов
             MarkerLayer(
               markers: _buildCityMarkers(),
             ),
-            
+
             // Маркер текущего местоположения
             if (widget.currentLocation != null)
               MarkerLayer(
@@ -154,10 +154,10 @@ class _CityMapWidgetState extends State<CityMapWidget> {
               ),
           ],
         ),
-        
+
         // Кнопки управления
         _buildMapControls(theme),
-        
+
         // Индикатор загрузки
         if (_isLoading)
           const Center(
@@ -169,7 +169,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
 
   List<Marker> _buildCityMarkers() {
     final markers = <Marker>[];
-    
+
     // Добавляем маркеры для ближайших городов
     for (final city in widget.nearbyCities) {
       markers.add(
@@ -187,7 +187,8 @@ class _CityMapWidgetState extends State<CityMapWidget> {
                 color: _getCityMarkerColor(city),
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: city == widget.selectedCity ? Colors.amber : Colors.white,
+                  color:
+                      city == widget.selectedCity ? Colors.amber : Colors.white,
                   width: city == widget.selectedCity ? 3 : 2,
                 ),
                 boxShadow: [
@@ -209,10 +210,11 @@ class _CityMapWidgetState extends State<CityMapWidget> {
         ),
       );
     }
-    
+
     // Добавляем маркер для выбранного города, если он не в списке ближайших
     if (widget.selectedCity != null &&
-        !widget.nearbyCities.any((city) => city.id == widget.selectedCity!.id)) {
+        !widget.nearbyCities
+            .any((city) => city.id == widget.selectedCity!.id)) {
       markers.add(
         Marker(
           point: LatLng(
@@ -245,7 +247,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
         ),
       );
     }
-    
+
     return markers;
   }
 
@@ -265,7 +267,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
             ),
           ),
           const SizedBox(height: 8),
-          
+
           // Кнопка "Центр России"
           FloatingActionButton.small(
             onPressed: _centerOnRussia,
@@ -284,9 +286,9 @@ class _CityMapWidgetState extends State<CityMapWidget> {
     setState(() {
       _isLoading = true;
     });
-    
+
     _mapController.move(const LatLng(64.6863, 97.7453), 4.0);
-    
+
     Future.delayed(const Duration(milliseconds: 500), () {
       if (mounted) {
         setState(() {
@@ -299,7 +301,7 @@ class _CityMapWidgetState extends State<CityMapWidget> {
   Color _getCityMarkerColor(CityRegion city) {
     if (city.isCapital) return Colors.amber;
     if (city.isMajorCity) return Colors.blue;
-    
+
     switch (city.citySize) {
       case CitySize.megapolis:
         return Colors.purple;

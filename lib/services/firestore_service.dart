@@ -378,14 +378,17 @@ class FirestoreService {
     String specialistId,
     DateTime date,
   ) async {
-    final calendarEvents = await _calendarService.getEventsForDate(specialistId, date);
-    return calendarEvents.map((event) => ScheduleEvent(
-      id: event.id,
-      title: event.title,
-      startTime: event.startTime,
-      endTime: event.endTime,
-      type: ScheduleEventType.booking,
-    )).toList();
+    final calendarEvents =
+        await _calendarService.getEventsForDate(specialistId, date);
+    return calendarEvents
+        .map((event) => ScheduleEvent(
+              id: event.id,
+              title: event.title,
+              startTime: event.startTime,
+              endTime: event.endTime,
+              type: ScheduleEventType.booking,
+            ))
+        .toList();
   }
 
   // Отправить уведомления о статусе заявки
@@ -662,8 +665,9 @@ class FirestoreService {
       }
 
       final snapshot = await query.get();
-      final notifications =
-          snapshot.docs.map((doc) => AppNotification.fromDocument(doc)).toList();
+      final notifications = snapshot.docs
+          .map((doc) => AppNotification.fromDocument(doc))
+          .toList();
 
       SafeLog.debug(
         'Получено ${notifications.length} уведомлений с пагинацией',

@@ -58,9 +58,7 @@ class ProfileScreen extends ConsumerWidget {
                     radius: 30,
                     backgroundColor: Theme.of(context).colorScheme.primary,
                     child: Text(
-                      user.displayNameOrEmail
-                          .substring(0, 1)
-                          .toUpperCase(),
+                      user.displayNameOrEmail.substring(0, 1).toUpperCase(),
                       style: TextStyle(
                         fontSize: 24,
                         color: Theme.of(context).colorScheme.onPrimary,
@@ -79,14 +77,16 @@ class ProfileScreen extends ConsumerWidget {
                         const SizedBox(height: 4),
                         Text(
                           user.email,
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                color: Colors.grey[600],
-                              ),
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                    color: Colors.grey[600],
+                                  ),
                         ),
                         const SizedBox(height: 8),
                         Chip(
                           label: Text(user.role.roleDisplayName),
-                          backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+                          backgroundColor:
+                              Theme.of(context).colorScheme.primaryContainer,
                         ),
                       ],
                     ),
