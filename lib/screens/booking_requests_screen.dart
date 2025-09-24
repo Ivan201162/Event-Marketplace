@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/booking.dart';
 import '../providers/auth_providers.dart';
 import '../providers/firestore_providers.dart';
+import 'reviews_screen.dart';
 
 class BookingRequestsScreen extends ConsumerStatefulWidget {
   const BookingRequestsScreen({super.key});
@@ -337,6 +338,33 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
                   ],
                 ),
               ],
+
+              // Действия для завершенных заказов
+              if (booking.status == 'completed') ...[
+                Row(
+                  children: [
+                    Expanded(
+                      child: OutlinedButton.icon(
+                        onPressed: () => _viewBookingDetails(booking),
+                        icon: const Icon(Icons.info, size: 16),
+                        label: const Text('Подробности'),
+                      ),
+                    ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () => _leaveReview(booking),
+                        icon: const Icon(Icons.rate_review, size: 16),
+                        label: const Text('Оставить отзыв'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.orange,
+                          foregroundColor: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
             ],
           ),
         ),
@@ -461,6 +489,26 @@ class _BookingRequestsScreenState extends ConsumerState<BookingRequestsScreen>
     // TODO: Реализовать переход в чат с заказчиком
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Переход в чат будет реализован позже')),
+    );
+  }
+
+  void _leaveReview(Booking booking) {
+    if (booking.specialistId == null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Ошибка: ID специалиста не найден')),
+      );
+      return;
+    }
+
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ReviewsScreen(
+          specialistId: booking.specialistId!,
+          canWriteReview: true,
+          bookingId: booking.id,
+        ),
+      ),
     );
   }
 
