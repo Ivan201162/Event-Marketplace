@@ -1,339 +1,456 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:uuid/uuid.dart';
 
-import '../core/feature_flags.dart';
-import '../models/booking.dart';
-import '../models/contract.dart';
-import '../models/specialist.dart';
-import '../models/user.dart';
+import '../core/logger.dart';
+import '../models/contract_models.dart';
+import '../models/payment_models.dart';
 
-/// Сервис для автоматического формирования договоров
+/// Сервис для управления контрактами
 class ContractService {
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  factory ContractService() => _instance;
+  ContractService._internal();
+  static final ContractService _instance = ContractService._internal();
 
-  /// Создать договор на оказание услуг
-  Future<Contract> createServiceContract({
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final Uuid _uuid = const Uuid();
+
+  /// Создать контракт
+  Future<Contract> createContract({
     required String bookingId,
     required String customerId,
     required String specialistId,
-    Map<String, dynamic>? customTerms,
+    required double amount,
+    required PaymentScheme paymentScheme,
+    String? terms,
+    Map<String, dynamic>? metadata,
   }) async {
-    if (!FeatureFlags.contractGenerationEnabled) {
-      throw Exception('Автоматическое формирование договоров отключено');
-    }
-
     try {
-      // Получаем данные бронирования
-      final booking = await _getBooking(bookingId);
-      if (booking == null) {
-        throw Exception('Бронирование не найдено');
+      final contractId = _uuid.v4();
+      final now = DateTime.now();
+
+      // Рассчитываем суммы в зависимости от схемы оплаты
+      double prepaymentAmount;
+      double finalAmount;
+      
+      switch (paymentScheme) {
+        case PaymentScheme.partialPrepayment:
+          prepaymentAmount = amount * 0.3; // 30%
+          finalAmount = amount * 0.7; // 70%
+          break;
+        case PaymentScheme.fullPrepayment:
+          prepaymentAmount = amount; // 100%
+          finalAmount = 0.0; // 0%
+          break;
+        case PaymentScheme.postPayment:
+          prepaymentAmount = 0.0; // 0%
+          finalAmount = amount; // 100%
+          break;
       }
 
-      // Получаем данные заказчика
-      final customer = await _getUser(customerId);
-      if (customer == null) {
-        throw Exception('Заказчик не найден');
-      }
-
-      // Получаем данные специалиста
-      final specialist = await _getSpecialist(specialistId);
-      if (specialist == null) {
-        throw Exception('Специалист не найден');
-      }
-
-      // Генерируем номер договора
-      final contractNumber = _generateContractNumber();
-
-      // Создаем договор
       final contract = Contract(
-        id: '',
-        contractNumber: contractNumber,
+        id: contractId,
         bookingId: bookingId,
         customerId: customerId,
         specialistId: specialistId,
-        type: ContractType.service,
         status: ContractStatus.draft,
-        title: 'Договор на оказание услуг',
-        content: _generateContractContent(
-          contractNumber: contractNumber,
-          booking: booking,
-          customer: customer,
-          specialist: specialist,
-          customTerms: customTerms,
-        ),
-        terms: _generateDefaultTerms(booking, customTerms),
-        createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
-        expiresAt: booking.eventDate.add(const Duration(days: 30)),
-        metadata: {
-          'eventTitle': booking.eventTitle,
-          'eventDate': booking.eventDate.toIso8601String(),
-          'totalAmount': booking.totalPrice,
-          'advanceAmount': booking.prepayment ?? 0.0,
-        },
+        createdAt: now,
+        terms: terms ?? _getDefaultTerms(paymentScheme),
+        amount: amount,
+        prepaymentAmount: prepaymentAmount,
+        finalAmount: finalAmount,
+        metadata: metadata,
       );
 
-      // Сохраняем в Firestore
-      final docRef =
-          await _firestore.collection('contracts').add(contract.toMap());
+      await _firestore
+          .collection('contracts')
+          .doc(contractId)
+          .set(contract.toMap());
 
-      return contract.copyWith(id: docRef.id);
+      AppLogger.logI('Контракт создан: $contractId', 'contract_service');
+      return contract;
     } catch (e) {
-      throw Exception('Ошибка создания договора: $e');
+      AppLogger.logE('Ошибка создания контракта: $e', 'contract_service');
+      rethrow;
     }
   }
 
-  /// Подписать договор
-  Future<void> signContract({
+  /// Обновить статус контракта
+  Future<void> updateContractStatus({
     required String contractId,
-    required String userId,
+    required ContractStatus status,
+    Map<String, dynamic>? metadata,
+  }) async {
+    try {
+      final updateData = <String, dynamic>{
+        'status': status.name,
+      };
+
+      final now = DateTime.now();
+      switch (status) {
+        case ContractStatus.completed:
+          updateData['completedAt'] = Timestamp.fromDate(now);
+          break;
+        case ContractStatus.cancelled:
+          updateData['cancelledAt'] = Timestamp.fromDate(now);
+          break;
+        default:
+          break;
+      }
+
+      if (metadata != null) {
+        updateData['metadata'] = metadata;
+      }
+
+      await _firestore
+          .collection('contracts')
+          .doc(contractId)
+          .update(updateData);
+
+      AppLogger.logI('Статус контракта обновлён: $contractId -> $status', 'contract_service');
+    } catch (e) {
+      AppLogger.logE('Ошибка обновления статуса контракта: $e', 'contract_service');
+      rethrow;
+    }
+  }
+
+  /// Подписать контракт клиентом
+  Future<void> signContractByCustomer({
+    required String contractId,
     required String signature,
   }) async {
     try {
-      final contract = await _getContract(contractId);
-      if (contract == null) {
-        throw Exception('Договор не найден');
-      }
-
-      // Проверяем, что пользователь имеет право подписывать договор
-      if (userId != contract.customerId && userId != contract.specialistId) {
-        throw Exception('Недостаточно прав для подписания договора');
-      }
-
-      // Обновляем статус договора
-      await _firestore.collection('contracts').doc(contractId).update({
-        'status': ContractStatus.signed.name,
-        'signedAt': Timestamp.fromDate(DateTime.now()),
-        'signatures': FieldValue.arrayUnion([
-          {
-            'userId': userId,
-            'signature': signature,
-            'signedAt': Timestamp.fromDate(DateTime.now()),
-          }
-        ]),
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      final now = DateTime.now();
+      
+      await _firestore
+          .collection('contracts')
+          .doc(contractId)
+          .update({
+        'signedByCustomer': Timestamp.fromDate(now),
+        'customerSignature': signature,
+        'status': ContractStatus.pending.name, // Ожидает подписания специалистом
       });
+
+      AppLogger.logI('Контракт подписан клиентом: $contractId', 'contract_service');
     } catch (e) {
-      throw Exception('Ошибка подписания договора: $e');
+      AppLogger.logE('Ошибка подписания контракта клиентом: $e', 'contract_service');
+      rethrow;
     }
   }
 
-  /// Получить договор по ID
-  Future<Contract?> getContract(String contractId) async =>
-      _getContract(contractId);
+  /// Подписать контракт специалистом
+  Future<void> signContractBySpecialist({
+    required String contractId,
+    required String signature,
+  }) async {
+    try {
+      final now = DateTime.now();
+      
+      await _firestore
+          .collection('contracts')
+          .doc(contractId)
+          .update({
+        'signedBySpecialist': Timestamp.fromDate(now),
+        'specialistSignature': signature,
+        'status': ContractStatus.signed.name, // Контракт подписан
+      });
 
-  /// Получить договоры по бронированию
-  Future<List<Contract>> getContractsByBooking(String bookingId) async {
+      AppLogger.logI('Контракт подписан специалистом: $contractId', 'contract_service');
+    } catch (e) {
+      AppLogger.logE('Ошибка подписания контракта специалистом: $e', 'contract_service');
+      rethrow;
+    }
+  }
+
+  /// Завершить контракт
+  Future<void> completeContract({
+    required String contractId,
+    String? actUrl,
+  }) async {
+    try {
+      final now = DateTime.now();
+      
+      await _firestore
+          .collection('contracts')
+          .doc(contractId)
+          .update({
+        'status': ContractStatus.completed.name,
+        'completedAt': Timestamp.fromDate(now),
+        if (actUrl != null) 'actUrl': actUrl,
+      });
+
+      AppLogger.logI('Контракт завершён: $contractId', 'contract_service');
+    } catch (e) {
+      AppLogger.logE('Ошибка завершения контракта: $e', 'contract_service');
+      rethrow;
+    }
+  }
+
+  /// Получить контракт по ID
+  Future<Contract?> getContractById(String contractId) async {
+    try {
+      final doc = await _firestore
+          .collection('contracts')
+          .doc(contractId)
+          .get();
+
+      if (!doc.exists) {
+        return null;
+      }
+
+      return Contract.fromMap(doc.data()!);
+    } catch (e) {
+      AppLogger.logE('Ошибка получения контракта: $e', 'contract_service');
+      rethrow;
+    }
+  }
+
+  /// Получить контракт по бронированию
+  Future<Contract?> getContractByBooking(String bookingId) async {
     try {
       final snapshot = await _firestore
           .collection('contracts')
           .where('bookingId', isEqualTo: bookingId)
-          .orderBy('createdAt', descending: true)
+          .limit(1)
           .get();
 
-      return snapshot.docs.map(Contract.fromDocument).toList();
-    } catch (e) {
-      throw Exception('Ошибка получения договоров: $e');
-    }
-  }
-
-  // Приватные методы
-
-  Future<Booking?> _getBooking(String bookingId) async {
-    try {
-      final doc = await _firestore.collection('bookings').doc(bookingId).get();
-      if (doc.exists) {
-        return Booking.fromDocument(doc);
+      if (snapshot.docs.isEmpty) {
+        return null;
       }
-      return null;
+
+      return Contract.fromMap(snapshot.docs.first.data());
     } catch (e) {
-      return null;
+      AppLogger.logE('Ошибка получения контракта по бронированию: $e', 'contract_service');
+      rethrow;
     }
   }
 
-  Future<User?> _getUser(String userId) async {
-    try {
-      final doc = await _firestore.collection('users').doc(userId).get();
-      if (doc.exists) {
-        return User.fromDocument(doc);
-      }
-      return null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  Future<Specialist?> _getSpecialist(String specialistId) async {
-    try {
-      final doc =
-          await _firestore.collection('specialists').doc(specialistId).get();
-      if (doc.exists) {
-        return Specialist.fromDocument(doc);
-      }
-      return null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  Future<Contract?> _getContract(String contractId) async {
-    try {
-      final doc =
-          await _firestore.collection('contracts').doc(contractId).get();
-      if (doc.exists) {
-        return Contract.fromDocument(doc);
-      }
-      return null;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  String _generateContractNumber() {
-    final now = DateTime.now();
-    final year = now.year;
-    final month = now.month.toString().padLeft(2, '0');
-    final day = now.day.toString().padLeft(2, '0');
-    final random =
-        (now.millisecondsSinceEpoch % 1000).toString().padLeft(3, '0');
-
-    return 'ДУ-$year$month$day-$random';
-  }
-
-  String _generateContractContent({
-    required String contractNumber,
-    required Booking booking,
-    required User customer,
-    required Specialist specialist,
-    Map<String, dynamic>? customTerms,
-  }) =>
-      '''
-ДОГОВОР НА ОКАЗАНИЕ УСЛУГ № $contractNumber
-
-г. Москва                                    ${DateTime.now().day}.${DateTime.now().month}.${DateTime.now().year} г.
-
-ИСПОЛНИТЕЛЬ: ${specialist.name}
-Адрес: ${specialist.location ?? 'Не указан'}
-Телефон: ${specialist.phone ?? 'Не указан'}
-Email: ${specialist.email ?? 'Не указан'}
-
-ЗАКАЗЧИК: ${customer.name}
-Адрес: ${customer.address ?? 'Не указан'}
-Телефон: ${customer.phone ?? 'Не указан'}
-Email: ${customer.email ?? 'Не указан'}
-
-ПРЕДМЕТ ДОГОВОРА
-
-1. Исполнитель обязуется оказать услуги по организации и проведению мероприятия:
-   - Наименование: ${booking.eventTitle}
-   - Дата проведения: ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year}
-   - Количество участников: ${booking.participantsCount}
-   - Место проведения: ${booking.eventLocation ?? 'Не указано'}
-
-2. Заказчик обязуется принять и оплатить оказанные услуги.
-
-СТОИМОСТЬ УСЛУГ И ПОРЯДОК РАСЧЕТОВ
-
-1. Общая стоимость услуг составляет: ${booking.totalPrice.toStringAsFixed(2)} рублей.
-
-2. Аванс составляет: ${(booking.prepayment ?? 0.0).toStringAsFixed(2)} рублей.
-
-3. Окончательный расчет производится после оказания услуг.
-
-ОТВЕТСТВЕННОСТЬ СТОРОН
-
-1. За неисполнение или ненадлежащее исполнение обязательств по настоящему договору стороны несут ответственность в соответствии с действующим законодательством РФ.
-
-2. Исполнитель несет ответственность за качество оказанных услуг.
-
-3. Заказчик несет ответственность за своевременную оплату услуг.
-
-ЗАКЛЮЧИТЕЛЬНЫЕ ПОЛОЖЕНИЯ
-
-1. Настоящий договор вступает в силу с момента подписания и действует до полного исполнения сторонами своих обязательств.
-
-2. Все споры решаются путем переговоров, а при недостижении согласия - в судебном порядке.
-
-3. Договор составлен в двух экземплярах, имеющих одинаковую юридическую силу.
-
-ПОДПИСИ СТОРОН:
-
-Исполнитель: _________________ ${specialist.name}
-
-Заказчик: _________________ ${customer.name}
-''';
-
-  Map<String, dynamic> _generateDefaultTerms(
-    Booking booking,
-    Map<String, dynamic>? customTerms,
-  ) {
-    final defaultTerms = {
-      'paymentTerms': {
-        'advanceRequired': true,
-        'advancePercentage': 30,
-        'finalPaymentDue': 'before_event',
-      },
-      'cancellationPolicy': {
-        'customerCanCancel': true,
-        'refundPercentage': {
-          'more_than_7_days': 100,
-          '3_to_7_days': 50,
-          'less_than_3_days': 0,
-        },
-      },
-      'liability': {
-        'specialistLiability': 'limited_to_service_cost',
-        'customerLiability': 'damage_to_equipment',
-      },
-      'forceMajeure': {
-        'includes': [
-          'natural_disasters',
-          'government_restrictions',
-          'pandemics',
-        ],
-        'resolution': 'reschedule_or_refund',
-      },
-    };
-
-    if (customTerms != null) {
-      defaultTerms.addAll(customTerms);
-    }
-
-    return defaultTerms;
-  }
-
-  /// Получить договоры пользователя
-  Future<List<Contract>> getUserContracts(String userId) async {
+  /// Получить контракты по специалисту
+  Future<List<Contract>> getContractsBySpecialist(String specialistId) async {
     try {
       final snapshot = await _firestore
           .collection('contracts')
-          .where('customerId', isEqualTo: userId)
+          .where('specialistId', isEqualTo: specialistId)
           .orderBy('createdAt', descending: true)
           .get();
 
-      return snapshot.docs.map((doc) => Contract.fromDocument(doc)).toList();
+      final contracts = snapshot.docs
+          .map((doc) => Contract.fromMap(doc.data()))
+          .toList();
+
+      AppLogger.logI('Получено контрактов для специалиста $specialistId: ${contracts.length}', 'contract_service');
+      return contracts;
     } catch (e) {
-      throw Exception('Ошибка получения договоров пользователя: $e');
+      AppLogger.logE('Ошибка получения контрактов специалиста: $e', 'contract_service');
+      rethrow;
     }
   }
 
-  /// Сгенерировать PDF договора
-  Future<String> generateContractPDF(String contractId) async {
+  /// Получить контракты по клиенту
+  Future<List<Contract>> getContractsByCustomer(String customerId) async {
     try {
-      // Получаем договор
-      final contractDoc =
-          await _firestore.collection('contracts').doc(contractId).get();
+      final snapshot = await _firestore
+          .collection('contracts')
+          .where('customerId', isEqualTo: customerId)
+          .orderBy('createdAt', descending: true)
+          .get();
 
-      if (!contractDoc.exists) {
-        throw Exception('Договор не найден');
-      }
+      final contracts = snapshot.docs
+          .map((doc) => Contract.fromMap(doc.data()))
+          .toList();
 
-      final contract = Contract.fromDocument(contractDoc);
-
-      // Здесь должна быть логика генерации PDF
-      // Пока возвращаем заглушку
-      return 'contract_${contractId}.pdf';
+      AppLogger.logI('Получено контрактов для клиента $customerId: ${contracts.length}', 'contract_service');
+      return contracts;
     } catch (e) {
-      throw Exception('Ошибка генерации PDF договора: $e');
+      AppLogger.logE('Ошибка получения контрактов клиента: $e', 'contract_service');
+      rethrow;
+    }
+  }
+
+  /// Создать документ
+  Future<Document> createDocument({
+    required String contractId,
+    required DocumentType type,
+    required String url,
+    required String fileName,
+    required int fileSize,
+    Map<String, dynamic>? metadata,
+  }) async {
+    try {
+      final documentId = _uuid.v4();
+      final now = DateTime.now();
+
+      final document = Document(
+        id: documentId,
+        contractId: contractId,
+        type: type,
+        url: url,
+        fileName: fileName,
+        fileSize: fileSize,
+        createdAt: now,
+        metadata: metadata,
+      );
+
+      await _firestore
+          .collection('documents')
+          .doc(documentId)
+          .set(document.toMap());
+
+      AppLogger.logI('Документ создан: $documentId', 'contract_service');
+      return document;
+    } catch (e) {
+      AppLogger.logE('Ошибка создания документа: $e', 'contract_service');
+      rethrow;
+    }
+  }
+
+  /// Получить документы по контракту
+  Future<List<Document>> getDocumentsByContract(String contractId) async {
+    try {
+      final snapshot = await _firestore
+          .collection('documents')
+          .where('contractId', isEqualTo: contractId)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      final documents = snapshot.docs
+          .map((doc) => Document.fromMap(doc.data()))
+          .toList();
+
+      AppLogger.logI('Получено документов для контракта $contractId: ${documents.length}', 'contract_service');
+      return documents;
+    } catch (e) {
+      AppLogger.logE('Ошибка получения документов: $e', 'contract_service');
+      rethrow;
+    }
+  }
+
+  /// Отметить документ как скачанный
+  Future<void> markDocumentAsDownloaded(String documentId) async {
+    try {
+      await _firestore
+          .collection('documents')
+          .doc(documentId)
+          .update({
+        'downloadedAt': Timestamp.fromDate(DateTime.now()),
+      });
+
+      AppLogger.logI('Документ отмечен как скачанный: $documentId', 'contract_service');
+    } catch (e) {
+      AppLogger.logE('Ошибка отметки документа как скачанного: $e', 'contract_service');
+      rethrow;
+    }
+  }
+
+  /// Получить стандартные условия договора
+  String _getDefaultTerms(PaymentScheme scheme) {
+    switch (scheme) {
+      case PaymentScheme.partialPrepayment:
+        return '''
+УСЛОВИЯ ДОГОВОРА:
+
+1. ОБЩИЕ ПОЛОЖЕНИЯ
+1.1. Исполнитель обязуется оказать услуги, а Заказчик принять и оплатить их на условиях настоящего договора.
+
+2. ПРЕДМЕТ ДОГОВОРА
+2.1. Предметом договора является оказание услуг в соответствии с техническим заданием.
+
+3. СТОИМОСТЬ И ПОРЯДОК РАСЧЕТОВ
+3.1. Общая стоимость услуг составляет сумму, указанную в заявке.
+3.2. Заказчик производит предоплату в размере 30% от общей стоимости услуг в течение 3 дней с момента подписания договора.
+3.3. Оставшиеся 70% оплачиваются в течение 5 дней после подписания акта выполненных работ.
+
+4. СРОКИ ВЫПОЛНЕНИЯ
+4.1. Услуги должны быть выполнены в сроки, указанные в техническом задании.
+
+5. ОТВЕТСТВЕННОСТЬ СТОРОН
+5.1. За неисполнение или ненадлежащее исполнение обязательств по договору стороны несут ответственность в соответствии с действующим законодательством РФ.
+        ''';
+      case PaymentScheme.fullPrepayment:
+        return '''
+УСЛОВИЯ ДОГОВОРА:
+
+1. ОБЩИЕ ПОЛОЖЕНИЯ
+1.1. Исполнитель обязуется оказать услуги, а Заказчик принять и оплатить их на условиях настоящего договора.
+
+2. ПРЕДМЕТ ДОГОВОРА
+2.1. Предметом договора является оказание услуг в соответствии с техническим заданием.
+
+3. СТОИМОСТЬ И ПОРЯДОК РАСЧЕТОВ
+3.1. Общая стоимость услуг составляет сумму, указанную в заявке.
+3.2. Заказчик производит полную предоплату в течение 3 дней с момента подписания договора.
+
+4. СРОКИ ВЫПОЛНЕНИЯ
+4.1. Услуги должны быть выполнены в сроки, указанные в техническом задании.
+
+5. ОТВЕТСТВЕННОСТЬ СТОРОН
+5.1. За неисполнение или ненадлежащее исполнение обязательств по договору стороны несут ответственность в соответствии с действующим законодательством РФ.
+        ''';
+      case PaymentScheme.postPayment:
+        return '''
+УСЛОВИЯ ДОГОВОРА:
+
+1. ОБЩИЕ ПОЛОЖЕНИЯ
+1.1. Исполнитель обязуется оказать услуги, а Заказчик принять и оплатить их на условиях настоящего договора.
+
+2. ПРЕДМЕТ ДОГОВОРА
+2.1. Предметом договора является оказание услуг в соответствии с техническим заданием.
+
+3. СТОИМОСТЬ И ПОРЯДОК РАСЧЕТОВ
+3.1. Общая стоимость услуг составляет сумму, указанную в заявке.
+3.2. Заказчик производит оплату в полном размере в течение 30 дней после подписания акта выполненных работ.
+
+4. СРОКИ ВЫПОЛНЕНИЯ
+4.1. Услуги должны быть выполнены в сроки, указанные в техническом задании.
+
+5. ОТВЕТСТВЕННОСТЬ СТОРОН
+5.1. За неисполнение или ненадлежащее исполнение обязательств по договору стороны несут ответственность в соответствии с действующим законодательством РФ.
+        ''';
+    }
+  }
+
+  /// Генерировать PDF договора
+  Future<String> generateContractPDF(Contract contract) async {
+    try {
+      // Здесь должна быть логика генерации PDF
+      // Для демонстрации возвращаем URL
+      final pdfUrl = 'https://storage.googleapis.com/contracts/${contract.id}.pdf';
+      
+      // Обновляем контракт с URL договора
+      await _firestore
+          .collection('contracts')
+          .doc(contract.id)
+          .update({
+        'contractUrl': pdfUrl,
+      });
+
+      AppLogger.logI('PDF договора сгенерирован: $pdfUrl', 'contract_service');
+      return pdfUrl;
+    } catch (e) {
+      AppLogger.logE('Ошибка генерации PDF договора: $e', 'contract_service');
+      rethrow;
+    }
+  }
+
+  /// Генерировать PDF акта выполненных работ
+  Future<String> generateActPDF(Contract contract) async {
+    try {
+      // Здесь должна быть логика генерации PDF акта
+      // Для демонстрации возвращаем URL
+      final actUrl = 'https://storage.googleapis.com/acts/${contract.id}_act.pdf';
+      
+      // Обновляем контракт с URL акта
+      await _firestore
+          .collection('contracts')
+          .doc(contract.id)
+          .update({
+        'actUrl': actUrl,
+      });
+
+      AppLogger.logI('PDF акта сгенерирован: $actUrl', 'contract_service');
+      return actUrl;
+    } catch (e) {
+      AppLogger.logE('Ошибка генерации PDF акта: $e', 'contract_service');
+      rethrow;
     }
   }
 }

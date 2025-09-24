@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
 
 import '../mixins/analytics_mixin.dart';
 import '../providers/app_statistics_providers.dart';
@@ -519,10 +518,10 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen>
     final statuses = bookingsData['statuses'] as Map<String, dynamic>;
     
     return [
-      ChartData(label: 'Завершено', value: (statuses['completed'] ?? 0).toDouble()),
-      ChartData(label: 'В процессе', value: (statuses['confirmed'] ?? 0).toDouble()),
-      ChartData(label: 'Ожидает', value: (statuses['pending'] ?? 0).toDouble()),
-      ChartData(label: 'Отменено', value: (statuses['cancelled'] ?? 0).toDouble()),
+      ChartData(label: 'Завершено', value: (statuses['completed'] as num? ?? 0).toDouble()),
+      ChartData(label: 'В процессе', value: (statuses['confirmed'] as num? ?? 0).toDouble()),
+      ChartData(label: 'Ожидает', value: (statuses['pending'] as num? ?? 0).toDouble()),
+      ChartData(label: 'Отменено', value: (statuses['cancelled'] as num? ?? 0).toDouble()),
     ];
   }
 
@@ -531,7 +530,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen>
     final services = bookingsData['services'] as Map<String, dynamic>;
     
     return services.entries
-        .map((entry) => ChartData(label: entry.key, value: entry.value.toDouble()))
+        .map((entry) => ChartData(label: entry.key, value: (entry.value as num).toDouble()))
         .toList();
   }
 
@@ -550,7 +549,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen>
     final types = usersData['types'] as Map<String, dynamic>;
     
     return types.entries
-        .map((entry) => ChartData(label: entry.key, value: entry.value.toDouble()))
+        .map((entry) => ChartData(label: entry.key, value: (entry.value as num).toDouble()))
         .toList();
   }
 
@@ -559,7 +558,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen>
     final statuses = bookingsData['statuses'] as Map<String, dynamic>;
     
     return statuses.entries
-        .map((entry) => ChartData(label: entry.key, value: entry.value.toDouble()))
+        .map((entry) => ChartData(label: entry.key, value: (entry.value as num).toDouble()))
         .toList();
   }
 
@@ -568,7 +567,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen>
     final services = bookingsData['services'] as Map<String, dynamic>;
     
     return services.entries
-        .map((entry) => ChartData(label: entry.key, value: entry.value.toDouble()))
+        .map((entry) => ChartData(label: entry.key, value: (entry.value as num).toDouble()))
         .toList();
   }
 
@@ -577,7 +576,7 @@ class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen>
     final monthlyRevenue = revenueData['monthly_revenue'] as Map<String, dynamic>;
     
     return monthlyRevenue.entries
-        .map((entry) => ChartData(label: entry.key, value: entry.value.toDouble()))
+        .map((entry) => ChartData(label: entry.key, value: (entry.value as num).toDouble()))
         .toList();
   }
 

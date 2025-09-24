@@ -12,6 +12,29 @@ enum EventIdeaType {
   other, // Другое
 }
 
+extension EventIdeaTypeExtension on EventIdeaType {
+  String get displayName {
+    switch (this) {
+      case EventIdeaType.wedding:
+        return 'Свадьба';
+      case EventIdeaType.birthday:
+        return 'День рождения';
+      case EventIdeaType.corporate:
+        return 'Корпоратив';
+      case EventIdeaType.anniversary:
+        return 'Годовщина';
+      case EventIdeaType.graduation:
+        return 'Выпускной';
+      case EventIdeaType.holiday:
+        return 'Праздник';
+      case EventIdeaType.private:
+        return 'Частное мероприятие';
+      case EventIdeaType.other:
+        return 'Другое';
+    }
+  }
+}
+
 /// Категория идеи
 enum EventIdeaCategory {
   decoration, // Оформление
@@ -22,6 +45,29 @@ enum EventIdeaCategory {
   venue, // Площадка
   planning, // Планирование
   other, // Другое
+}
+
+extension EventIdeaCategoryExtension on EventIdeaCategory {
+  String get displayName {
+    switch (this) {
+      case EventIdeaCategory.decoration:
+        return 'Оформление';
+      case EventIdeaCategory.entertainment:
+        return 'Развлечения';
+      case EventIdeaCategory.catering:
+        return 'Кейтеринг';
+      case EventIdeaCategory.photography:
+        return 'Фотография';
+      case EventIdeaCategory.music:
+        return 'Музыка';
+      case EventIdeaCategory.venue:
+        return 'Площадка';
+      case EventIdeaCategory.planning:
+        return 'Планирование';
+      case EventIdeaCategory.other:
+        return 'Другое';
+    }
+  }
 }
 
 extension EventIdeaCategoryExtension on EventIdeaCategory {

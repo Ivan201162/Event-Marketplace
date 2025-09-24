@@ -6,7 +6,6 @@ import '../models/specialist.dart';
 import '../models/user.dart';
 import '../models/review.dart';
 import '../models/payment.dart';
-import '../models/contract.dart';
 import 'firebase_analytics_service.dart';
 
 /// Сервис для сбора и анализа статистики приложения
@@ -86,7 +85,7 @@ class AppStatisticsService {
         .where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(end));
 
     final usersSnapshot = await usersQuery.get();
-    final users = usersSnapshot.docs.map((doc) => AppUser.fromDocument(doc.data())).toList();
+    final users = usersSnapshot.docs.map((doc) => AppUser.fromDocument(doc)).toList();
 
     final totalUsers = users.length;
     final newUsers = users.where((user) => user.createdAt.isAfter(start)).length;
@@ -334,7 +333,7 @@ class AppStatisticsService {
         .where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(end));
 
     final usersSnapshot = await usersQuery.get();
-    final users = usersSnapshot.docs.map((doc) => AppUser.fromDocument(doc.data())).toList();
+    final users = usersSnapshot.docs.map((doc) => AppUser.fromDocument(doc)).toList();
 
     final locationStats = <String, int>{};
     for (final user in users) {

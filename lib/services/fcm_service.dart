@@ -583,4 +583,43 @@ class FCMService {
       print('Error sending event status notification: $e');
     }
   }
+
+  /// Отправляет уведомление о новом отзыве
+  Future<void> sendReviewNotification({
+    required String specialistId,
+    required double rating,
+    required String comment,
+  }) async {
+    try {
+      final stars = '★' * rating.round();
+      final title = 'Новый отзыв $stars';
+      final body = comment.length > 50
+          ? '${comment.substring(0, 50)}...'
+          : comment;
+
+      await _localNotifications.show(
+        DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        title,
+        body,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'review_channel',
+            'Review Notifications',
+            channelDescription: 'Notifications for new reviews',
+            importance: Importance.high,
+            priority: Priority.high,
+            icon: '@mipmap/ic_launcher',
+          ),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          ),
+        ),
+        payload: 'specialist:$specialistId',
+      );
+    } catch (e) {
+      print('Error sending review notification: $e');
+    }
+  }
 }

@@ -72,8 +72,8 @@ class AdminChartWidget extends StatelessWidget {
       series: <ChartSeries<ChartData, String>>[
         LineSeries<ChartData, String>(
           dataSource: data,
-          xValueMapper: (ChartData data, _) => data.x,
-          yValueMapper: (ChartData data, _) => data.y,
+          xValueMapper: (ChartData data, _) => data.label,
+          yValueMapper: (ChartData data, _) => data.value,
           name: title,
           color: Colors.blue,
           width: 3,
@@ -92,8 +92,8 @@ class AdminChartWidget extends StatelessWidget {
       series: <ChartSeries<ChartData, String>>[
         BarSeries<ChartData, String>(
           dataSource: data,
-          xValueMapper: (ChartData data, _) => data.x,
-          yValueMapper: (ChartData data, _) => data.y,
+          xValueMapper: (ChartData data, _) => data.label,
+          yValueMapper: (ChartData data, _) => data.value,
           name: title,
           color: Colors.blue,
         ),
@@ -108,8 +108,8 @@ class AdminChartWidget extends StatelessWidget {
       series: <PieSeries<ChartData, String>>[
         PieSeries<ChartData, String>(
           dataSource: data,
-          xValueMapper: (ChartData data, _) => data.x,
-          yValueMapper: (ChartData data, _) => data.y,
+          xValueMapper: (ChartData data, _) => data.label,
+          yValueMapper: (ChartData data, _) => data.value,
           name: title,
           dataLabelSettings: const DataLabelSettings(isVisible: true),
           enableTooltip: true,
@@ -127,8 +127,8 @@ class AdminChartWidget extends StatelessWidget {
       series: <ChartSeries<ChartData, String>>[
         ColumnSeries<ChartData, String>(
           dataSource: data,
-          xValueMapper: (ChartData data, _) => data.x,
-          yValueMapper: (ChartData data, _) => data.y,
+          xValueMapper: (ChartData data, _) => data.label,
+          yValueMapper: (ChartData data, _) => data.value,
           name: title,
           color: Colors.blue,
         ),

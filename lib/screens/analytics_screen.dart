@@ -1,27 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/specialist_analytics_service.dart';
+import 'package:fl_chart/fl_chart.dart';
+import '../models/analytics.dart';
+import '../services/analytics_service.dart';
+import '../widgets/analytics_card.dart';
+import '../widgets/chart_widgets.dart';
 
-/// Экран аналитики для специалистов
 class AnalyticsScreen extends ConsumerStatefulWidget {
-  const AnalyticsScreen({super.key, this.userId});
-  final String? userId;
+  const AnalyticsScreen({
+    super.key,
+    required this.specialistId,
+  });
+
+  final String specialistId;
 
   @override
   ConsumerState<AnalyticsScreen> createState() => _AnalyticsScreenState();
 }
 
 class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
-    with TickerProviderStateMixin {
+    with SingleTickerProviderStateMixin {
+  
+  final AnalyticsService _analyticsService = AnalyticsService();
   late TabController _tabController;
-  final SpecialistAnalyticsService _analyticsService =
-      SpecialistAnalyticsService();
-  String? _currentSpecialistId;
+  
+  SpecialistAnalytics? _analytics;
+  List<MonthlyStat> _monthlyStats = [];
+  List<ServiceStat> _topServices = [];
+  Map<String, double> _comparison = {};
+  bool _isLoading = true;
+  String? _error;
 
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
+    _loadAnalytics();
   }
 
   @override
@@ -30,665 +44,453 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen>
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Аналитика'),
-          bottom: TabBar(
-            controller: _tabController,
-            tabs: const [
-              Tab(text: 'Доходы', icon: Icon(Icons.attach_money)),
-              Tab(text: 'Отзывы', icon: Icon(Icons.star)),
-              Tab(text: 'Сравнение', icon: Icon(Icons.compare)),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            _buildIncomeTab(),
-            _buildReviewsTab(),
-            _buildComparisonTab(),
-          ],
-        ),
-      );
+  Future<void> _loadAnalytics() async {
+    setState(() {
+      _isLoading = true;
+      _error = null;
+    });
 
-  Widget _buildIncomeTab() => FutureBuilder<SpecialistAnalytics?>(
-        future: _getAnalytics(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+    try {
+      final results = await Future.wait([
+        _analyticsService.getSpecialistAnalytics(widget.specialistId),
+        _analyticsService.getMonthlyStats(widget.specialistId),
+        _analyticsService.getTopServices(widget.specialistId),
+        _analyticsService.getComparisonWithPreviousPeriod(widget.specialistId),
+      ]);
 
-          if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text('Ошибка загрузки аналитики: ${snapshot.error}'),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => setState(() {}),
-                    child: const Text('Повторить'),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          final analytics = snapshot.data;
-          if (analytics == null) {
-            return const Center(
-              child: Text('Аналитика не найдена'),
-            );
-          }
-
-          final incomeStats = analytics.incomeStats;
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildIncomeOverview(incomeStats),
-                const SizedBox(height: 24),
-                _buildIncomeChart(incomeStats),
-                const SizedBox(height: 24),
-                _buildBookingsChart(incomeStats),
-              ],
-            ),
-          );
-        },
-      );
-
-  Widget _buildIncomeOverview(SpecialistIncomeStats stats) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Обзор доходов',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildStatCard(
-                      'Общий доход',
-                      '${stats.totalIncome.toStringAsFixed(0)} ₽',
-                      Icons.account_balance_wallet,
-                      Colors.green,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _buildStatCard(
-                      'За месяц',
-                      '${stats.monthlyIncome.toStringAsFixed(0)} ₽',
-                      Icons.calendar_month,
-                      Colors.blue,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildStatCard(
-                      'За неделю',
-                      '${stats.weeklyIncome.toStringAsFixed(0)} ₽',
-                      Icons.date_range,
-                      Colors.orange,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _buildStatCard(
-                      'Средний чек',
-                      '${stats.averageBookingValue.toStringAsFixed(0)} ₽',
-                      Icons.receipt,
-                      Colors.purple,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildStatCard(
-    String title,
-    String value,
-    IconData icon,
-    Color color,
-  ) =>
-      Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: color.withOpacity(0.1),
-          borderRadius: BorderRadius.circular(8),
-          border: Border.all(color: color.withOpacity(0.3)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(icon, color: color, size: 20),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    title,
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
-          ],
-        ),
-      );
-
-  Widget _buildIncomeChart(SpecialistIncomeStats stats) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Доходы по месяцам',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                height: 200,
-                child: _buildBarChart(stats.incomeByMonth, Colors.green),
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildBookingsChart(SpecialistIncomeStats stats) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Бронирования по месяцам',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                height: 200,
-                child: _buildBarChart(
-                  stats.bookingsByMonth
-                      .map((k, v) => MapEntry(k, v.toDouble())),
-                  Colors.blue,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  _buildStatItem('Всего', stats.totalBookings.toString()),
-                  _buildStatItem(
-                    'Завершено',
-                    stats.completedBookings.toString(),
-                  ),
-                  _buildStatItem(
-                    'Отменено',
-                    stats.cancelledBookings.toString(),
-                  ),
-                  _buildStatItem(
-                    'Успешность',
-                    '${(stats.completionRate * 100).toStringAsFixed(1)}%',
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildBarChart(Map<String, double> data, Color color) {
-    if (data.isEmpty) {
-      return const Center(
-        child: Text('Нет данных для отображения'),
-      );
+      setState(() {
+        _analytics = results[0] as SpecialistAnalytics?;
+        _monthlyStats = results[1] as List<MonthlyStat>;
+        _topServices = results[2] as List<ServiceStat>;
+        _comparison = results[3] as Map<String, double>;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _error = e.toString();
+        _isLoading = false;
+      });
     }
+  }
 
-    final maxValue = data.values.reduce((a, b) => a > b ? a : b);
-    final entries = data.entries.toList();
-
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: entries.map((entry) {
-        final height = maxValue > 0 ? (entry.value / maxValue) * 150 : 0.0;
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            Text(
-              entry.value.toStringAsFixed(0),
-              style: const TextStyle(fontSize: 10),
-            ),
-            const SizedBox(height: 4),
-            Container(
-              width: 30,
-              height: height,
-              decoration: BoxDecoration(
-                color: color,
-                borderRadius: BorderRadius.circular(4),
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              entry.key.split('-').last,
-              style: const TextStyle(fontSize: 10),
-            ),
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Аналитика'),
+        elevation: 0,
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: 'Обзор'),
+            Tab(text: 'Графики'),
+            Tab(text: 'Услуги'),
           ],
-        );
-      }).toList(),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh),
+            onPressed: _loadAnalytics,
+            tooltip: 'Обновить',
+          ),
+        ],
+      ),
+      body: _isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : _error != null
+              ? _buildErrorWidget()
+              : _analytics == null
+                  ? _buildNoDataWidget()
+                  : TabBarView(
+                      controller: _tabController,
+                      children: [
+                        _buildOverviewTab(),
+                        _buildChartsTab(),
+                        _buildServicesTab(),
+                      ],
+                    ),
     );
   }
 
-  Widget _buildStatItem(String label, String value) => Column(
+  Widget _buildErrorWidget() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+          Icon(
+            Icons.error_outline,
+            size: 64,
+            color: Colors.grey[400],
           ),
+          const SizedBox(height: 16),
           Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
+            'Ошибка загрузки аналитики',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
               color: Colors.grey[600],
             ),
           ),
-        ],
-      );
-
-  Widget _buildReviewsTab() => FutureBuilder<SpecialistAnalytics?>(
-        future: _getAnalytics(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (snapshot.hasError || snapshot.data == null) {
-            return const Center(
-              child: Text('Ошибка загрузки отзывов'),
-            );
-          }
-
-          final reviewStats = snapshot.data!.reviewStats;
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildRatingOverview(reviewStats),
-                const SizedBox(height: 24),
-                _buildRatingDistribution(reviewStats),
-                const SizedBox(height: 24),
-                _buildReviewsChart(reviewStats),
-                const SizedBox(height: 24),
-                _buildCommonTags(reviewStats),
-              ],
+          const SizedBox(height: 8),
+          Text(
+            _error!,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.grey[500],
             ),
-          );
-        },
-      );
-
-  Widget _buildRatingOverview(SpecialistReviewStats stats) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Обзор отзывов',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildStatCard(
-                      'Средний рейтинг',
-                      stats.averageRating.toStringAsFixed(1),
-                      Icons.star,
-                      Colors.amber,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _buildStatCard(
-                      'Всего отзывов',
-                      stats.totalReviews.toString(),
-                      Icons.rate_review,
-                      Colors.blue,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildStatCard(
-                      'Процент ответов',
-                      '${(stats.responseRate * 100).toStringAsFixed(1)}%',
-                      Icons.reply,
-                      Colors.green,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _buildStatCard(
-                      'Популярные теги',
-                      stats.commonTags.length.toString(),
-                      Icons.tag,
-                      Colors.purple,
-                    ),
-                  ),
-                ],
-              ),
-            ],
+            textAlign: TextAlign.center,
           ),
-        ),
-      );
-
-  Widget _buildRatingDistribution(SpecialistReviewStats stats) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Распределение оценок',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              _buildRatingBar(
-                5,
-                stats.fiveStarReviews,
-                stats.totalReviews,
-                Colors.green,
-              ),
-              _buildRatingBar(
-                4,
-                stats.fourStarReviews,
-                stats.totalReviews,
-                Colors.lightGreen,
-              ),
-              _buildRatingBar(
-                3,
-                stats.threeStarReviews,
-                stats.totalReviews,
-                Colors.yellow,
-              ),
-              _buildRatingBar(
-                2,
-                stats.twoStarReviews,
-                stats.totalReviews,
-                Colors.orange,
-              ),
-              _buildRatingBar(
-                1,
-                stats.oneStarReviews,
-                stats.totalReviews,
-                Colors.red,
-              ),
-            ],
+          const SizedBox(height: 16),
+          ElevatedButton(
+            onPressed: _loadAnalytics,
+            child: const Text('Повторить'),
           ),
-        ),
-      );
-
-  Widget _buildRatingBar(int stars, int count, int total, Color color) {
-    final percentage = total > 0 ? count / total : 0.0;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        children: [
-          SizedBox(
-            width: 20,
-            child: Text('$stars'),
-          ),
-          const SizedBox(width: 8),
-          const Icon(Icons.star, size: 16, color: Colors.amber),
-          const SizedBox(width: 8),
-          Expanded(
-            child: LinearProgressIndicator(
-              value: percentage,
-              backgroundColor: Colors.grey[300],
-              valueColor: AlwaysStoppedAnimation<Color>(color),
-            ),
-          ),
-          const SizedBox(width: 8),
-          Text('$count'),
         ],
       ),
     );
   }
 
-  Widget _buildReviewsChart(SpecialistReviewStats stats) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Отзывы по месяцам',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                height: 200,
-                child: _buildBarChart(
-                  stats.reviewsByMonth.map((k, v) => MapEntry(k, v.toDouble())),
-                  Colors.blue,
-                ),
-              ),
-            ],
+  Widget _buildNoDataWidget() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.analytics_outlined,
+            size: 64,
+            color: Colors.grey[400],
           ),
-        ),
-      );
-
-  Widget _buildCommonTags(SpecialistReviewStats stats) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Популярные теги',
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              if (stats.commonTags.isEmpty)
-                const Text('Нет тегов')
-              else
-                Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: stats.commonTags
-                      .map(
-                        (tag) => Chip(
-                          label: Text(tag),
-                          backgroundColor: Colors.blue.withOpacity(0.1),
-                        ),
-                      )
-                      .toList(),
-                ),
-            ],
-          ),
-        ),
-      );
-
-  Widget _buildComparisonTab() => FutureBuilder<Map<String, dynamic>>(
-        future: _getComparativeAnalytics(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          if (snapshot.hasError || snapshot.data == null) {
-            return const Center(
-              child: Text('Ошибка загрузки сравнения'),
-            );
-          }
-
-          final data = snapshot.data!;
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildComparisonOverview(data),
-                const SizedBox(height: 24),
-                _buildPercentileChart(data),
-              ],
+          const SizedBox(height: 16),
+          Text(
+            'Недостаточно данных',
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              color: Colors.grey[600],
             ),
-          );
-        },
-      );
-
-  Widget _buildComparisonOverview(Map<String, dynamic> data) => Card(
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Сравнение с другими специалистами',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildStatCard(
-                      'Процентиль по доходам',
-                      '${data['incomePercentile']?.toStringAsFixed(1) ?? '0'}%',
-                      Icons.trending_up,
-                      Colors.green,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _buildStatCard(
-                      'Процентиль по рейтингу',
-                      '${data['ratingPercentile']?.toStringAsFixed(1) ?? '0'}%',
-                      Icons.star,
-                      Colors.amber,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: _buildStatCard(
-                      'Средний доход',
-                      '${data['averageIncome']?.toStringAsFixed(0) ?? '0'} ₽',
-                      Icons.account_balance_wallet,
-                      Colors.blue,
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: _buildStatCard(
-                      'Средний рейтинг',
-                      '${data['averageRating']?.toStringAsFixed(1) ?? '0'}',
-                      Icons.star_half,
-                      Colors.purple,
-                    ),
-                  ),
-                ],
-              ),
-            ],
           ),
-        ),
-      );
+          const SizedBox(height: 8),
+          Text(
+            'Данные появятся после первых заказов',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Colors.grey[500],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-  Widget _buildPercentileChart(Map<String, dynamic> data) {
-    final incomePercentile = data['incomePercentile'] as double? ?? 0.0;
-    final ratingPercentile = data['ratingPercentile'] as double? ?? 0.0;
-
-    return Card(
-      child: Padding(
+  Widget _buildOverviewTab() {
+    final analytics = _analytics!;
+    
+    return RefreshIndicator(
+      onRefresh: _loadAnalytics,
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              'Ваше место среди специалистов',
-              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            // Основные метрики
+            Row(
+              children: [
+                Expanded(
+                  child: AnalyticsCard(
+                    title: 'Заказы',
+                    value: analytics.totalBookings.toString(),
+                    subtitle: 'Всего заказов',
+                    icon: Icons.event_note,
+                    color: Colors.blue,
+                    change: _comparison['bookingsChange'],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: AnalyticsCard(
+                    title: 'Рейтинг',
+                    value: analytics.averageRating.toStringAsFixed(1),
+                    subtitle: '${analytics.totalReviews} отзывов',
+                    icon: Icons.star,
+                    color: Colors.orange,
+                    change: _comparison['ratingChange'],
+                  ),
+                ),
+              ],
+            ),
+            
+            const SizedBox(height: 16),
+            
+            Row(
+              children: [
+                Expanded(
+                  child: AnalyticsCard(
+                    title: 'Доход',
+                    value: '${analytics.totalRevenue.toStringAsFixed(0)} ₽',
+                    subtitle: 'Общий доход',
+                    icon: Icons.attach_money,
+                    color: Colors.green,
+                    change: _comparison['revenueChange'],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Expanded(
+                  child: AnalyticsCard(
+                    title: 'Средний чек',
+                    value: '${analytics.averagePrice.toStringAsFixed(0)} ₽',
+                    subtitle: 'За заказ',
+                    icon: Icons.receipt_long,
+                    color: Colors.purple,
+                  ),
+                ),
+              ],
+            ),
+            
+            const SizedBox(height: 24),
+            
+            // Дополнительные метрики
+            Text(
+              'Детальная статистика',
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             const SizedBox(height: 16),
-            _buildPercentileBar('Доходы', incomePercentile, Colors.green),
-            const SizedBox(height: 16),
-            _buildPercentileBar('Рейтинг', ratingPercentile, Colors.amber),
+            
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  children: [
+                    _buildStatRow(
+                      'Завершенные заказы',
+                      '${analytics.completedBookings}',
+                      '${_calculateCompletionRate(analytics)}%',
+                      Icons.check_circle_outline,
+                      Colors.green,
+                    ),
+                    const Divider(),
+                    _buildStatRow(
+                      'Отмененные заказы',
+                      '${analytics.cancelledBookings}',
+                      '${_calculateCancellationRate(analytics)}%',
+                      Icons.cancel_outlined,
+                      Colors.red,
+                    ),
+                    const Divider(),
+                    _buildStatRow(
+                      'Конверсия',
+                      '${analytics.conversionRate.toStringAsFixed(1)}%',
+                      'Подтверждения',
+                      Icons.trending_up,
+                      Colors.blue,
+                    ),
+                    const Divider(),
+                    _buildStatRow(
+                      'Время ответа',
+                      '${analytics.responseTime} мин',
+                      'Среднее',
+                      Icons.access_time,
+                      Colors.orange,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildPercentileBar(String label, double percentile, Color color) =>
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(label),
-              Text('${percentile.toStringAsFixed(1)}%'),
-            ],
-          ),
-          const SizedBox(height: 8),
-          LinearProgressIndicator(
-            value: percentile / 100,
-            backgroundColor: Colors.grey[300],
-            valueColor: AlwaysStoppedAnimation<Color>(color),
-          ),
-        ],
-      );
-
-  Future<SpecialistAnalytics?> _getAnalytics() async {
-    _currentSpecialistId ??= 'demo_specialist_id';
-    return _analyticsService.getSpecialistAnalytics(_currentSpecialistId!);
+  Widget _buildChartsTab() {
+    return RefreshIndicator(
+      onRefresh: _loadAnalytics,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // График заказов по месяцам
+            Text(
+              'Заказы по месяцам',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 16),
+            
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: SizedBox(
+                  height: 300,
+                  child: MonthlyBookingsChart(monthlyStats: _monthlyStats),
+                ),
+              ),
+            ),
+            
+            const SizedBox(height: 24),
+            
+            // График доходов
+            Text(
+              'Доходы по месяцам',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 16),
+            
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: SizedBox(
+                  height: 300,
+                  child: MonthlyRevenueChart(monthlyStats: _monthlyStats),
+                ),
+              ),
+            ),
+            
+            const SizedBox(height: 24),
+            
+            // График рейтинга
+            Text(
+              'Рейтинг по месяцам',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 16),
+            
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: SizedBox(
+                  height: 300,
+                  child: MonthlyRatingChart(monthlyStats: _monthlyStats),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
-  Future<Map<String, dynamic>> _getComparativeAnalytics() async {
-    _currentSpecialistId ??= 'demo_specialist_id';
-    return _analyticsService.getComparativeAnalytics(_currentSpecialistId!);
+  Widget _buildServicesTab() {
+    return RefreshIndicator(
+      onRefresh: _loadAnalytics,
+      child: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Популярные услуги',
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
+            const SizedBox(height: 16),
+            
+            if (_topServices.isEmpty)
+              Card(
+                child: Padding(
+                  padding: const EdgeInsets.all(32),
+                  child: Center(
+                    child: Column(
+                      children: [
+                        Icon(
+                          Icons.work_outline,
+                          size: 48,
+                          color: Colors.grey[400],
+                        ),
+                        const SizedBox(height: 16),
+                        Text(
+                          'Нет данных об услугах',
+                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                            color: Colors.grey[600],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              )
+            else
+              ListView.builder(
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
+                itemCount: _topServices.length,
+                itemBuilder: (context, index) {
+                  final service = _topServices[index];
+                  return Card(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        backgroundColor: Theme.of(context).primaryColor,
+                        child: Text(
+                          '${index + 1}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      title: Text(service.serviceName),
+                      subtitle: Text(
+                        '${service.bookingCount} заказов • Рейтинг ${service.averageRating.toStringAsFixed(1)}',
+                      ),
+                      trailing: Text(
+                        '${service.revenue.toStringAsFixed(0)} ₽',
+                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildStatRow(
+    String title,
+    String value,
+    String subtitle,
+    IconData icon,
+    Color color,
+  ) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8),
+      child: Row(
+        children: [
+          Icon(icon, color: color, size: 24),
+          const SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                Text(
+                  subtitle,
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: Colors.grey[600],
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Text(
+            value,
+            style: Theme.of(context).textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  double _calculateCompletionRate(SpecialistAnalytics analytics) {
+    if (analytics.totalBookings == 0) return 0.0;
+    return (analytics.completedBookings / analytics.totalBookings) * 100;
+  }
+
+  double _calculateCancellationRate(SpecialistAnalytics analytics) {
+    if (analytics.totalBookings == 0) return 0.0;
+    return (analytics.cancelledBookings / analytics.totalBookings) * 100;
   }
 }

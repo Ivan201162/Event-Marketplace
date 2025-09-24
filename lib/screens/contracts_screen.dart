@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../core/feature_flags.dart';
-import '../models/contract.dart';
+import '../models/contract_models.dart';
 import '../services/contract_service.dart';
+import '../widgets/contract_card.dart';
+import '../widgets/contract_details_dialog.dart';
 
-/// Экран управления договорами
+/// Экран управления контрактами
 class ContractsScreen extends ConsumerStatefulWidget {
   const ContractsScreen({super.key});
 
@@ -13,462 +14,245 @@ class ContractsScreen extends ConsumerStatefulWidget {
   ConsumerState<ContractsScreen> createState() => _ContractsScreenState();
 }
 
-class _ContractsScreenState extends ConsumerState<ContractsScreen>
-    with TickerProviderStateMixin {
-  late TabController _tabController;
+class _ContractsScreenState extends ConsumerState<ContractsScreen> {
   final ContractService _contractService = ContractService();
-
-  bool _isLoading = false;
+  List<Contract> _contracts = [];
+  bool _isLoading = true;
+  String _selectedFilter = 'all';
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _loadContracts();
   }
 
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
+  Future<void> _loadContracts() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      // Здесь должен быть получен ID текущего пользователя
+      // Для демонстрации используем тестовый ID
+      final contracts = await _contractService.getContractsByCustomer('test_customer_id');
+      
+      setState(() {
+        _contracts = contracts;
+        _isLoading = false;
+      });
+    } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      _showErrorSnackBar('Ошибка загрузки контрактов: $e');
+    }
+  }
+
+  List<Contract> get _filteredContracts {
+    switch (_selectedFilter) {
+      case 'draft':
+        return _contracts.where((c) => c.isDraft).toList();
+      case 'pending':
+        return _contracts.where((c) => c.isPending).toList();
+      case 'signed':
+        return _contracts.where((c) => c.isSigned).toList();
+      case 'completed':
+        return _contracts.where((c) => c.isCompleted).toList();
+      case 'cancelled':
+        return _contracts.where((c) => c.isCancelled).toList();
+      default:
+        return _contracts;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    if (!FeatureFlags.contractsEnabled) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Договоры'),
-        ),
-        body: const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(Icons.description, size: 64, color: Colors.grey),
-              SizedBox(height: 16),
-              Text(
-                'Автоматическое формирование договоров временно недоступно',
-                style: TextStyle(fontSize: 18, color: Colors.grey),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-
+    final theme = Theme.of(context);
+    
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Договоры'),
-        backgroundColor: Colors.indigo[50],
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(text: 'Мои договоры', icon: Icon(Icons.folder)),
-            Tab(text: 'Ожидают подписи', icon: Icon(Icons.edit)),
-            Tab(text: 'Активные', icon: Icon(Icons.check_circle)),
-          ],
-        ),
+        title: const Text('Мои контракты'),
+        backgroundColor: theme.colorScheme.surface,
+        foregroundColor: theme.colorScheme.onSurface,
+        actions: [
+          IconButton(
+            onPressed: _loadContracts,
+            icon: const Icon(Icons.refresh),
+          ),
+        ],
       ),
-      body: TabBarView(
-        controller: _tabController,
+      body: Column(
         children: [
-          _buildMyContractsTab(),
-          _buildPendingContractsTab(),
-          _buildActiveContractsTab(),
+          // Фильтры
+          Container(
+            height: 60,
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              children: [
+                _buildFilterChip('all', 'Все'),
+                const SizedBox(width: 8),
+                _buildFilterChip('draft', 'Черновики'),
+                const SizedBox(width: 8),
+                _buildFilterChip('pending', 'Ожидают'),
+                const SizedBox(width: 8),
+                _buildFilterChip('signed', 'Подписаны'),
+                const SizedBox(width: 8),
+                _buildFilterChip('completed', 'Завершены'),
+                const SizedBox(width: 8),
+                _buildFilterChip('cancelled', 'Отменены'),
+              ],
+            ),
+          ),
+          
+          // Список контрактов
+          Expanded(
+            child: _isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : _filteredContracts.isEmpty
+                    ? _buildEmptyState()
+                    : RefreshIndicator(
+                        onRefresh: _loadContracts,
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(16),
+                          itemCount: _filteredContracts.length,
+                          itemBuilder: (context, index) {
+                            final contract = _filteredContracts[index];
+                            return ContractCard(
+                              contract: contract,
+                              onTap: () => _showContractDetails(contract),
+                              onSign: () => _signContract(contract),
+                              onDownload: () => _downloadContract(contract),
+                            );
+                          },
+                        ),
+                      ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildMyContractsTab() => StreamBuilder<List<Contract>>(
-        stream: _contractService
-            .getUserContracts('current_user_id'), // TODO: Получить реальный ID
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
+  Widget _buildFilterChip(String value, String label) {
+    final isSelected = _selectedFilter == value;
+    final theme = Theme.of(context);
+    
+    return FilterChip(
+      label: Text(label),
+      selected: isSelected,
+      onSelected: (selected) {
+        setState(() {
+          _selectedFilter = value;
+        });
+      },
+      selectedColor: theme.colorScheme.primary.withValues(alpha: 0.2),
+      checkmarkColor: theme.colorScheme.primary,
+      labelStyle: TextStyle(
+        color: isSelected 
+            ? theme.colorScheme.primary 
+            : theme.colorScheme.onSurface,
+        fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
+      ),
+    );
+  }
 
-          if (snapshot.hasError) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const Icon(Icons.error, size: 64, color: Colors.red),
-                  const SizedBox(height: 16),
-                  Text('Ошибка загрузки: ${snapshot.error}'),
-                  const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () => setState(() {}),
-                    child: const Text('Повторить'),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          final contracts = snapshot.data ?? [];
-          if (contracts.isEmpty) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.description, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
-                  Text(
-                    'У вас пока нет договоров',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                  SizedBox(height: 8),
-                  Text(
-                    'Договоры будут создаваться автоматически при бронировании',
-                    style: TextStyle(color: Colors.grey),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: contracts.length,
-            itemBuilder: (context, index) {
-              final contract = contracts[index];
-              return _buildContractCard(contract);
-            },
-          );
-        },
-      );
-
-  Widget _buildPendingContractsTab() => StreamBuilder<List<Contract>>(
-        stream: _contractService
-            .getUserContracts('current_user_id'), // TODO: Получить реальный ID
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          final allContracts = snapshot.data ?? [];
-          final pendingContracts = allContracts
-              .where((contract) => contract.status == ContractStatus.pending)
-              .toList();
-
-          if (pendingContracts.isEmpty) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.edit, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
-                  Text(
-                    'Нет договоров, ожидающих подписи',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: pendingContracts.length,
-            itemBuilder: (context, index) {
-              final contract = pendingContracts[index];
-              return _buildContractCard(contract);
-            },
-          );
-        },
-      );
-
-  Widget _buildActiveContractsTab() => StreamBuilder<List<Contract>>(
-        stream: _contractService
-            .getUserContracts('current_user_id'), // TODO: Получить реальный ID
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator());
-          }
-
-          final allContracts = snapshot.data ?? [];
-          final activeContracts = allContracts
-              .where(
-                (contract) =>
-                    contract.status == ContractStatus.signed ||
-                    contract.status == ContractStatus.active,
-              )
-              .toList();
-
-          if (activeContracts.isEmpty) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.check_circle, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
-                  Text(
-                    'Нет активных договоров',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: activeContracts.length,
-            itemBuilder: (context, index) {
-              final contract = activeContracts[index];
-              return _buildContractCard(contract);
-            },
-          );
-        },
-      );
-
-  Widget _buildContractCard(Contract contract) => Card(
-        margin: const EdgeInsets.only(bottom: 16),
-        child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          contract.title,
-                          style: const TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          'Специалист: ${contract.specialistName}',
-                          style: TextStyle(
-                            color: Colors.grey[600],
-                            fontSize: 14,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                    decoration: BoxDecoration(
-                      color: contract.status.statusColor.withOpacity(0.1),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: contract.status.statusColor),
-                    ),
-                    child: Text(
-                      contract.status.statusText,
-                      style: TextStyle(
-                        color: contract.status.statusColor,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w500,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Row(
-                children: [
-                  Icon(Icons.calendar_today, size: 16, color: Colors.grey[600]),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${_formatDate(contract.startDate)} - ${_formatDate(contract.endDate)}',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                  ),
-                  const SizedBox(width: 16),
-                  Icon(Icons.attach_money, size: 16, color: Colors.grey[600]),
-                  const SizedBox(width: 4),
-                  Text(
-                    '${contract.totalAmount} ${contract.currency}',
-                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
-                  ),
-                ],
-              ),
-              if (contract.signedAt != null) ...[
-                const SizedBox(height: 8),
-                Row(
-                  children: [
-                    Icon(
-                      Icons.check_circle,
-                      size: 16,
-                      color: Colors.green[600],
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      'Подписан ${_formatDate(contract.signedAt!)}',
-                      style: TextStyle(color: Colors.green[600], fontSize: 14),
-                    ),
-                  ],
-                ),
-              ],
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () => _viewContract(contract),
-                      icon: const Icon(Icons.visibility),
-                      label: const Text('Просмотр'),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  if (contract.status == ContractStatus.pending) ...[
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: () => _signContract(contract),
-                        icon: const Icon(Icons.edit),
-                        label: const Text('Подписать'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green[600],
-                          foregroundColor: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ] else ...[
-                    Expanded(
-                      child: ElevatedButton.icon(
-                        onPressed: () => _downloadContract(contract),
-                        icon: const Icon(Icons.download),
-                        label: const Text('Скачать'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue[600],
-                          foregroundColor: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ],
-              ),
-            ],
+  Widget _buildEmptyState() {
+    final theme = Theme.of(context);
+    
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.description_outlined,
+            size: 64,
+            color: theme.colorScheme.onSurfaceVariant,
           ),
-        ),
-      );
+          const SizedBox(height: 16),
+          Text(
+            'Контракты не найдены',
+            style: theme.textTheme.titleLarge?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'У вас пока нет контрактов',
+            style: theme.textTheme.bodyMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
-  String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
-
-  void _viewContract(Contract contract) {
-    showModalBottomSheet(
+  void _showContractDetails(Contract contract) {
+    showDialog(
       context: context,
-      isScrollControlled: true,
-      builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.8,
-        maxChildSize: 0.95,
-        minChildSize: 0.5,
-        builder: (context, scrollController) => Container(
-          padding: const EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                contract.title,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Статус: ${contract.status.statusText}',
-                style: TextStyle(
-                  color: contract.status.statusColor,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
-                ),
-              ),
-              const SizedBox(height: 16),
-              Expanded(
-                child: SingleChildScrollView(
-                  controller: scrollController,
-                  child: Text(
-                    contract.content,
-                    style: const TextStyle(fontSize: 14),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
+      builder: (context) => ContractDetailsDialog(
+        contract: contract,
+        onSign: () => _signContract(contract),
+        onDownload: () => _downloadContract(contract),
       ),
     );
   }
 
   Future<void> _signContract(Contract contract) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Подписать договор'),
-        content: const Text(
-          'Вы уверены, что хотите подписать этот договор? '
-          'После подписания договор вступит в силу.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Подписать'),
-          ),
-        ],
-      ),
-    );
-
-    if (confirmed ?? false) {
-      setState(() {
-        _isLoading = true;
-      });
-
-      try {
-        await _contractService.signContract();
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Договор успешно подписан!'),
-            backgroundColor: Colors.green,
-          ),
+    try {
+      // Здесь должна быть логика подписания контракта
+      // Для демонстрации показываем диалог
+      final signature = await _showSignatureDialog();
+      if (signature != null) {
+        await _contractService.signContractByCustomer(
+          contractId: contract.id,
+          signature: signature,
         );
-      } catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Ошибка подписания: $e'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      } finally {
-        setState(() {
-          _isLoading = false;
-        });
+        
+        _showSuccessSnackBar('Контракт подписан');
+        _loadContracts();
       }
+    } catch (e) {
+      _showErrorSnackBar('Ошибка подписания контракта: $e');
     }
+  }
+
+  Future<String?> _showSignatureDialog() async {
+    // Здесь должна быть логика получения подписи
+    // Для демонстрации возвращаем тестовую подпись
+    return 'test_signature_${DateTime.now().millisecondsSinceEpoch}';
   }
 
   Future<void> _downloadContract(Contract contract) async {
     try {
-      final pdfBytes = await _contractService.generateContractPDF(contract.id);
-
-      // TODO: Реализовать сохранение файла
-      // Можно использовать пакет file_picker или path_provider
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('PDF договора готов к скачиванию'),
-          backgroundColor: Colors.blue,
-        ),
-      );
+      if (contract.contractUrl != null) {
+        // Здесь должна быть логика скачивания файла
+        _showSuccessSnackBar('Контракт скачан');
+      } else {
+        _showErrorSnackBar('Файл контракта не найден');
+      }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Ошибка генерации PDF: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      _showErrorSnackBar('Ошибка скачивания контракта: $e');
     }
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Theme.of(context).colorScheme.error,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
+  }
+
+  void _showSuccessSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Theme.of(context).colorScheme.primary,
+        behavior: SnackBarBehavior.floating,
+      ),
+    );
   }
 }

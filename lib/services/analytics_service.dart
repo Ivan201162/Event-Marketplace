@@ -1,326 +1,322 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:device_info_plus/device_info_plus.dart';
-import 'package:flutter/foundation.dart';
-import '../core/platform/platform_utils.dart';
-import 'package:package_info_plus/package_info_plus.dart';
-import 'package:uuid/uuid.dart';
+import '../models/analytics.dart';
+import '../models/booking.dart';
+import '../models/review.dart';
 
-import '../models/analytics_event.dart';
-
-/// Сервис аналитики использования приложения
+/// Сервис для работы с аналитикой
 class AnalyticsService {
+  static final AnalyticsService _instance = AnalyticsService._internal();
   factory AnalyticsService() => _instance;
   AnalyticsService._internal();
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  final DeviceInfoPlugin _deviceInfo = DeviceInfoPlugin();
-  final Uuid _uuid = const Uuid();
 
-  static final AnalyticsService _instance = AnalyticsService._internal();
-
-  String? _currentSessionId;
-  String? _currentUserId;
-  String? _deviceId;
-  String? _appVersion;
-  String? _platform;
-  Timer? _sessionTimer;
-  final List<String> _currentScreens = [];
-  int _eventCount = 0;
-
-  /// Инициализация сервиса аналитики
-  Future<void> initialize() async {
+  /// Получает аналитику специалиста
+  Future<SpecialistAnalytics?> getSpecialistAnalytics(String specialistId) async {
     try {
-      _deviceId = await _getDeviceId();
-      _appVersion = await _getAppVersion();
-      _platform = _getPlatform();
-      await _startNewSession();
-      _sessionTimer = Timer.periodic(const Duration(minutes: 5), (_) {
-        _updateSession();
+      final doc = await _firestore
+          .collection('analytics')
+          .doc(specialistId)
+          .get();
+
+      if (!doc.exists) {
+        // Создаем аналитику если не существует
+        await _createInitialAnalytics(specialistId);
+        return await getSpecialistAnalytics(specialistId);
+      }
+
+      return SpecialistAnalytics.fromDocument(doc);
+    } catch (e) {
+      throw Exception('Ошибка получения аналитики: $e');
+    }
+  }
+
+  /// Обновляет аналитику после завершения бронирования
+  Future<void> updateAnalyticsAfterBooking(Booking booking) async {
+    try {
+      final specialistId = booking.specialistId;
+      if (specialistId == null) return;
+
+      await _updateBookingStats(specialistId, booking);
+      await _updateMonthlyStats(specialistId, booking);
+      await _updateServiceStats(specialistId, booking);
+      await _updateRevenueStats(specialistId, booking);
+      await _updateRatingStats(specialistId);
+      
+      // Обновляем время последнего обновления
+      await _firestore.collection('analytics').doc(specialistId).update({
+        'lastUpdated': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка инициализации аналитики: $e');
-      }
+      print('Ошибка обновления аналитики: $e');
     }
   }
 
-  /// Установить текущего пользователя
-  Future<void> setUserId(String? userId) async {
-    _currentUserId = userId;
-    if (_currentSessionId != null) {
-      await _updateSession();
-    }
-  }
-
-  /// Логировать событие
-  Future<void> logEvent({
-    required String eventName,
-    required String screen,
-    Map<String, dynamic>? parameters,
-  }) async {
+  /// Обновляет аналитику после создания отзыва
+  Future<void> updateAnalyticsAfterReview(String specialistId) async {
     try {
-      if (_currentSessionId == null) {
-        await _startNewSession();
-      }
-
-      final event = AnalyticsEvent(
-        id: _uuid.v4(),
-        userId: _currentUserId,
-        eventName: eventName,
-        screen: screen,
-        parameters: parameters ?? {},
-        timestamp: DateTime.now(),
-        sessionId: _currentSessionId!,
-        deviceId: _deviceId!,
-        appVersion: _appVersion!,
-        platform: _platform!,
-      );
-
-      await _firestore.collection('analyticsEvents').add(event.toMap());
-      _eventCount++;
-
-      if (!_currentScreens.contains(screen)) {
-        _currentScreens.add(screen);
-      }
-
-      await _updateSession();
-
-      if (kDebugMode) {
-        print('Analytics Event: $eventName on $screen');
-      }
+      await _updateRatingStats(specialistId);
+      
+      await _firestore.collection('analytics').doc(specialistId).update({
+        'lastUpdated': FieldValue.serverTimestamp(),
+      });
     } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка логирования события: $e');
-      }
+      print('Ошибка обновления аналитики после отзыва: $e');
     }
   }
 
-  /// Логировать просмотр экрана
-  Future<void> logScreenView(String screenName) async {
-    await logEvent(
-      eventName: 'screen_view',
-      screen: screenName,
-      parameters: {
-        'screen_name': screenName,
-        'timestamp': DateTime.now().millisecondsSinceEpoch,
-      },
-    );
-  }
-
-  /// Получить статистику аналитики
-  Future<AnalyticsStatistics> getAnalyticsStatistics({
-    DateTime? startDate,
-    DateTime? endDate,
-  }) async {
+  /// Получает статистику по месяцам
+  Future<List<MonthlyStat>> getMonthlyStats(String specialistId, {int months = 12}) async {
     try {
+      final analytics = await getSpecialistAnalytics(specialistId);
+      if (analytics == null) return [];
+
       final now = DateTime.now();
-      final start = startDate ?? now.subtract(const Duration(days: 30));
-      final end = endDate ?? now;
+      final filteredStats = analytics.monthlyStats.where((stat) {
+        final statDate = DateTime(stat.year, stat.month);
+        final cutoffDate = DateTime(now.year, now.month - months);
+        return statDate.isAfter(cutoffDate) || statDate.isAtSameMomentAs(cutoffDate);
+      }).toList();
 
-      final eventsSnapshot = await _firestore
-          .collection('analyticsEvents')
-          .where('timestamp', isGreaterThanOrEqualTo: Timestamp.fromDate(start))
-          .where('timestamp', isLessThanOrEqualTo: Timestamp.fromDate(end))
-          .get();
+      filteredStats.sort((a, b) => 
+        DateTime(a.year, a.month).compareTo(DateTime(b.year, b.month)));
 
-      final sessionsSnapshot = await _firestore
-          .collection('userSessions')
-          .where('startTime', isGreaterThanOrEqualTo: Timestamp.fromDate(start))
-          .where('startTime', isLessThanOrEqualTo: Timestamp.fromDate(end))
-          .get();
-
-      final events =
-          eventsSnapshot.docs.map(AnalyticsEvent.fromDocument).toList();
-
-      final sessions =
-          sessionsSnapshot.docs.map(UserSession.fromDocument).toList();
-
-      final totalEvents = events.length;
-      final uniqueUsers =
-          events.map((e) => e.userId).where((id) => id != null).toSet().length;
-      final activeSessions = sessions.length;
-
-      final eventsByCategory = <String, int>{};
-      final eventsByScreen = <String, int>{};
-      final eventsByPlatform = <String, int>{};
-      final eventsByVersion = <String, int>{};
-
-      for (final event in events) {
-        eventsByCategory[event.category.name] =
-            (eventsByCategory[event.category.name] ?? 0) + 1;
-        eventsByScreen[event.screen] = (eventsByScreen[event.screen] ?? 0) + 1;
-        eventsByPlatform[event.platform] =
-            (eventsByPlatform[event.platform] ?? 0) + 1;
-        eventsByVersion[event.appVersion] =
-            (eventsByVersion[event.appVersion] ?? 0) + 1;
-      }
-
-      return AnalyticsStatistics(
-        totalEvents: totalEvents,
-        uniqueUsers: uniqueUsers,
-        activeSessions: activeSessions,
-        eventsByCategory: eventsByCategory,
-        eventsByScreen: eventsByScreen,
-        eventsByPlatform: eventsByPlatform,
-        eventsByVersion: eventsByVersion,
-        periodStart: start,
-        periodEnd: end,
-      );
+      return filteredStats;
     } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка получения статистики аналитики: $e');
-      }
-      return AnalyticsStatistics(
-        totalEvents: 0,
-        uniqueUsers: 0,
-        activeSessions: 0,
-        eventsByCategory: {},
-        eventsByScreen: {},
-        eventsByPlatform: {},
-        eventsByVersion: {},
-        periodStart: DateTime.now().subtract(const Duration(days: 30)),
-        periodEnd: DateTime.now(),
-      );
+      throw Exception('Ошибка получения месячной статистики: $e');
     }
   }
 
-  /// Создать новую сессию
-  Future<void> _startNewSession() async {
+  /// Получает топ услуги
+  Future<List<ServiceStat>> getTopServices(String specialistId, {int limit = 5}) async {
     try {
-      _currentSessionId = _uuid.v4();
-      _currentScreens.clear();
-      _eventCount = 0;
+      final analytics = await getSpecialistAnalytics(specialistId);
+      if (analytics == null) return [];
 
-      final session = UserSession(
-        sessionId: _currentSessionId!,
-        userId: _currentUserId,
-        deviceId: _deviceId!,
-        startTime: DateTime.now(),
-        platform: _platform!,
-        appVersion: _appVersion!,
-        screens: [],
-        eventCount: 0,
-      );
+      final services = List<ServiceStat>.from(analytics.topServices);
+      services.sort((a, b) => b.bookingCount.compareTo(a.bookingCount));
 
-      await _firestore
-          .collection('userSessions')
-          .doc(_currentSessionId)
-          .set(session.toMap());
+      return services.take(limit).toList();
     } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка создания новой сессии: $e');
-      }
+      throw Exception('Ошибка получения топ услуг: $e');
     }
   }
 
-  /// Обновить текущую сессию
-  Future<void> _updateSession() async {
-    try {
-      if (_currentSessionId == null) return;
-
-      await _firestore
-          .collection('userSessions')
-          .doc(_currentSessionId)
-          .update({
-        'userId': _currentUserId,
-        'screens': _currentScreens,
-        'eventCount': _eventCount,
-        'lastActivity': Timestamp.fromDate(DateTime.now()),
-      });
-    } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка обновления сессии: $e');
-      }
-    }
-  }
-
-  /// Получить ID устройства
-  Future<String> _getDeviceId() async {
-    try {
-      if (defaultTargetPlatform == TargetPlatform.android) {
-        final androidInfo = await _deviceInfo.androidInfo;
-        return androidInfo.id;
-      } else if (defaultTargetPlatform == TargetPlatform.iOS) {
-        final iosInfo = await _deviceInfo.iosInfo;
-        return iosInfo.identifierForVendor ?? 'unknown';
-      } else {
-        return 'unknown';
-      }
-    } catch (e) {
-      return 'unknown';
-    }
-  }
-
-  /// Получить версию приложения
-  Future<String> _getAppVersion() async {
-    try {
-      final packageInfo = await PackageInfo.fromPlatform();
-      return '${packageInfo.version}+${packageInfo.buildNumber}';
-    } catch (e) {
-      return 'unknown';
-    }
-  }
-
-  /// Получить платформу
-  String _getPlatform() {
-    switch (defaultTargetPlatform) {
-      case TargetPlatform.android:
-        return 'android';
-      case TargetPlatform.iOS:
-        return 'ios';
-      case TargetPlatform.windows:
-        return 'windows';
-      case TargetPlatform.macOS:
-        return 'macos';
-      case TargetPlatform.linux:
-        return 'linux';
-      case TargetPlatform.linux:
-        return 'web';
-      default:
-        return 'unknown';
-    }
-  }
-
-  /// Получить топ события
-  Future<List<Map<String, dynamic>>> getTopEvents({
-    int limit = 10,
-    DateTime? fromDate,
-    DateTime? toDate,
+  /// Получает сравнение с предыдущим периодом
+  Future<Map<String, double>> getComparisonWithPreviousPeriod(
+    String specialistId, {
+    int currentMonths = 3,
   }) async {
     try {
-      var query = _firestore
-          .collection('events')
-          .orderBy('participantsCount', descending: true)
-          .limit(limit);
+      final analytics = await getSpecialistAnalytics(specialistId);
+      if (analytics == null) return {};
 
-      if (fromDate != null) {
-        query = query.where('date',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(fromDate));
-      }
+      final now = DateTime.now();
+      
+      // Текущий период
+      final currentPeriodStart = DateTime(now.year, now.month - currentMonths + 1);
+      final currentStats = analytics.monthlyStats.where((stat) {
+        final statDate = DateTime(stat.year, stat.month);
+        return statDate.isAfter(currentPeriodStart) || 
+               statDate.isAtSameMomentAs(currentPeriodStart);
+      }).toList();
 
-      if (toDate != null) {
-        query = query.where('date',
-            isLessThanOrEqualTo: Timestamp.fromDate(toDate));
-      }
+      // Предыдущий период
+      final previousPeriodStart = DateTime(now.year, now.month - currentMonths * 2 + 1);
+      final previousPeriodEnd = DateTime(now.year, now.month - currentMonths);
+      final previousStats = analytics.monthlyStats.where((stat) {
+        final statDate = DateTime(stat.year, stat.month);
+        return statDate.isAfter(previousPeriodStart) && 
+               statDate.isBefore(previousPeriodEnd);
+      }).toList();
 
-      final snapshot = await query.get();
-      return snapshot.docs
-          .map((doc) => {
-                'id': doc.id,
-                ...doc.data() as Map<String, dynamic>,
-              })
-          .toList();
+      // Вычисляем изменения
+      final currentBookings = currentStats.fold<int>(0, (sum, stat) => sum + stat.bookings);
+      final previousBookings = previousStats.fold<int>(0, (sum, stat) => sum + stat.bookings);
+      
+      final currentRevenue = currentStats.fold<double>(0, (sum, stat) => sum + stat.revenue);
+      final previousRevenue = previousStats.fold<double>(0, (sum, stat) => sum + stat.revenue);
+
+      final currentRating = currentStats.isNotEmpty 
+          ? currentStats.fold<double>(0, (sum, stat) => sum + stat.averageRating) / currentStats.length
+          : 0.0;
+      final previousRating = previousStats.isNotEmpty
+          ? previousStats.fold<double>(0, (sum, stat) => sum + stat.averageRating) / previousStats.length
+          : 0.0;
+
+      return {
+        'bookingsChange': _calculatePercentageChange(previousBookings.toDouble(), currentBookings.toDouble()),
+        'revenueChange': _calculatePercentageChange(previousRevenue, currentRevenue),
+        'ratingChange': _calculatePercentageChange(previousRating, currentRating),
+      };
     } catch (e) {
-      if (kDebugMode) {
-        print('Ошибка получения топ событий: $e');
-      }
-      return [];
+      throw Exception('Ошибка получения сравнения: $e');
     }
   }
 
-  /// Закрыть сервис
-  void dispose() {
-    _sessionTimer?.cancel();
+  /// Создает начальную аналитику для специалиста
+  Future<void> _createInitialAnalytics(String specialistId) async {
+    final analytics = SpecialistAnalytics(
+      id: specialistId,
+      specialistId: specialistId,
+      totalBookings: 0,
+      completedBookings: 0,
+      cancelledBookings: 0,
+      averageRating: 0.0,
+      totalReviews: 0,
+      totalRevenue: 0.0,
+      averagePrice: 0.0,
+      topServices: [],
+      monthlyStats: [],
+      lastUpdated: DateTime.now(),
+    );
+
+    await _firestore
+        .collection('analytics')
+        .doc(specialistId)
+        .set(analytics.toMap());
+  }
+
+  /// Обновляет статистику бронирований
+  Future<void> _updateBookingStats(String specialistId, Booking booking) async {
+    final increment = booking.status == 'completed' ? {'completedBookings': FieldValue.increment(1)}
+        : booking.status == 'cancelled' ? {'cancelledBookings': FieldValue.increment(1)}
+        : <String, dynamic>{};
+
+    await _firestore.collection('analytics').doc(specialistId).update({
+      'totalBookings': FieldValue.increment(1),
+      ...increment,
+    });
+  }
+
+  /// Обновляет месячную статистику
+  Future<void> _updateMonthlyStats(String specialistId, Booking booking) async {
+    final analytics = await getSpecialistAnalytics(specialistId);
+    if (analytics == null) return;
+
+    final bookingDate = booking.eventDate;
+    final existingStatIndex = analytics.monthlyStats.indexWhere(
+      (stat) => stat.year == bookingDate.year && stat.month == bookingDate.month,
+    );
+
+    List<MonthlyStat> updatedStats = List.from(analytics.monthlyStats);
+    
+    if (existingStatIndex >= 0) {
+      // Обновляем существующую статистику
+      final existingStat = updatedStats[existingStatIndex];
+      updatedStats[existingStatIndex] = MonthlyStat(
+        year: existingStat.year,
+        month: existingStat.month,
+        bookings: existingStat.bookings + 1,
+        revenue: existingStat.revenue + (booking.totalCost ?? 0.0),
+        averageRating: existingStat.averageRating, // Обновится в _updateRatingStats
+      );
+    } else {
+      // Создаем новую статистику
+      updatedStats.add(MonthlyStat(
+        year: bookingDate.year,
+        month: bookingDate.month,
+        bookings: 1,
+        revenue: booking.totalCost ?? 0.0,
+        averageRating: 0.0,
+      ));
+    }
+
+    await _firestore.collection('analytics').doc(specialistId).update({
+      'monthlyStats': updatedStats.map((s) => s.toMap()).toList(),
+    });
+  }
+
+  /// Обновляет статистику услуг
+  Future<void> _updateServiceStats(String specialistId, Booking booking) async {
+    final analytics = await getSpecialistAnalytics(specialistId);
+    if (analytics == null) return;
+
+    final serviceName = booking.eventTitle ?? 'Услуга';
+    final existingServiceIndex = analytics.topServices.indexWhere(
+      (service) => service.serviceName == serviceName,
+    );
+
+    List<ServiceStat> updatedServices = List.from(analytics.topServices);
+    
+    if (existingServiceIndex >= 0) {
+      // Обновляем существующую услугу
+      final existingService = updatedServices[existingServiceIndex];
+      updatedServices[existingServiceIndex] = ServiceStat(
+        serviceName: existingService.serviceName,
+        bookingCount: existingService.bookingCount + 1,
+        revenue: existingService.revenue + (booking.totalCost ?? 0.0),
+        averageRating: existingService.averageRating, // Обновится в _updateRatingStats
+      );
+    } else {
+      // Добавляем новую услугу
+      updatedServices.add(ServiceStat(
+        serviceName: serviceName,
+        bookingCount: 1,
+        revenue: booking.totalCost ?? 0.0,
+        averageRating: 0.0,
+      ));
+    }
+
+    await _firestore.collection('analytics').doc(specialistId).update({
+      'topServices': updatedServices.map((s) => s.toMap()).toList(),
+    });
+  }
+
+  /// Обновляет статистику доходов
+  Future<void> _updateRevenueStats(String specialistId, Booking booking) async {
+    if (booking.status != 'completed') return;
+
+    final revenue = booking.totalCost ?? 0.0;
+    
+    await _firestore.collection('analytics').doc(specialistId).update({
+      'totalRevenue': FieldValue.increment(revenue),
+    });
+
+    // Пересчитываем средний чек
+    final analytics = await getSpecialistAnalytics(specialistId);
+    if (analytics != null && analytics.completedBookings > 0) {
+      final averagePrice = analytics.totalRevenue / analytics.completedBookings;
+      await _firestore.collection('analytics').doc(specialistId).update({
+        'averagePrice': averagePrice,
+      });
+    }
+  }
+
+  /// Обновляет статистику рейтинга
+  Future<void> _updateRatingStats(String specialistId) async {
+    try {
+      // Получаем все отзывы специалиста
+      final reviewsSnapshot = await _firestore
+          .collection('reviews')
+          .where('specialistId', isEqualTo: specialistId)
+          .get();
+
+      if (reviewsSnapshot.docs.isEmpty) return;
+
+      double totalRating = 0.0;
+      int reviewCount = 0;
+
+      for (final doc in reviewsSnapshot.docs) {
+        final review = Review.fromDocument(doc);
+        totalRating += review.rating;
+        reviewCount++;
+      }
+
+      final averageRating = reviewCount > 0 ? totalRating / reviewCount : 0.0;
+
+      await _firestore.collection('analytics').doc(specialistId).update({
+        'averageRating': averageRating,
+        'totalReviews': reviewCount,
+      });
+    } catch (e) {
+      print('Ошибка обновления статистики рейтинга: $e');
+    }
+  }
+
+  /// Вычисляет процентное изменение
+  double _calculatePercentageChange(double oldValue, double newValue) {
+    if (oldValue == 0) return newValue > 0 ? 100.0 : 0.0;
+    return ((newValue - oldValue) / oldValue) * 100;
   }
 }

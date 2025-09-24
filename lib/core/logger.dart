@@ -1,53 +1,36 @@
-import 'package:flutter/foundation.dart';
+import 'dart:developer' as developer;
 
-/// Централизованный логгер для приложения
+/// Логгер для приложения
 class AppLogger {
-  static const bool _isDebugMode = kDebugMode;
-
-  /// Логирование отладочной информации
   static void logD(String message, [String? tag]) {
-    if (_isDebugMode) {
-      final tagStr = tag != null ? '[$tag] ' : '';
-      debugPrint('DEBUG: $tagStr$message');
-    }
+    developer.log(
+      message,
+      name: tag ?? 'AppLogger',
+      level: 500, // DEBUG
+    );
   }
 
-  /// Логирование информации
   static void logI(String message, [String? tag]) {
-    if (_isDebugMode) {
-      final tagStr = tag != null ? '[$tag] ' : '';
-      debugPrint('INFO: $tagStr$message');
-    }
+    developer.log(
+      message,
+      name: tag ?? 'AppLogger',
+      level: 800, // INFO
+    );
   }
 
-  /// Логирование предупреждений
   static void logW(String message, [String? tag]) {
-    if (_isDebugMode) {
-      final tagStr = tag != null ? '[$tag] ' : '';
-      debugPrint('WARNING: $tagStr$message');
-    }
+    developer.log(
+      message,
+      name: tag ?? 'AppLogger',
+      level: 900, // WARNING
+    );
   }
 
-  /// Логирование ошибок
-  static void logE(String message,
-      [String? tag, Object? error, StackTrace? stackTrace]) {
-    if (_isDebugMode) {
-      final tagStr = tag != null ? '[$tag] ' : '';
-      debugPrint('ERROR: $tagStr$message');
-      if (error != null) {
-        debugPrint('Error details: $error');
-      }
-      if (stackTrace != null) {
-        debugPrint('Stack trace: $stackTrace');
-      }
-    }
-  }
-
-  /// Логирование только в debug режиме
-  static void logDebug(String message, [String? tag]) {
-    if (_isDebugMode) {
-      final tagStr = tag != null ? '[$tag] ' : '';
-      debugPrint('DEBUG: $tagStr$message');
-    }
+  static void logE(String message, [String? tag]) {
+    developer.log(
+      message,
+      name: tag ?? 'AppLogger',
+      level: 1000, // ERROR
+    );
   }
 }
