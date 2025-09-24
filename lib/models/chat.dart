@@ -1,312 +1,117 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-/// Типы сообщений
-enum MessageType {
-  text, // Текстовое сообщение
-  image, // Изображение
-  file, // Файл
-  system, // Системное сообщение
-  bookingUpdate, // Обновление заявки
-  paymentUpdate, // Обновление платежа
-}
-
-/// Статусы сообщений
-enum MessageStatus {
-  sent, // Отправлено
-  delivered, // Доставлено
-  read, // Прочитано
-  failed, // Неудачно
-}
-
-/// Модель сообщения
-class ChatMessage {
-  const ChatMessage({
-    required this.id,
-    required this.chatId,
-    required this.senderId,
-    this.receiverId,
-    required this.type,
-    required this.content,
-    required this.status,
-    required this.createdAt,
-    this.readAt,
-    this.metadata,
-    this.replyToMessageId,
-    this.attachments = const [],
-    this.senderName,
-  });
-
-  /// Создать из документа Firestore
-  factory ChatMessage.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data()! as Map<String, dynamic>;
-    return ChatMessage(
-      id: doc.id,
-      chatId: data['chatId'] as String? ?? '',
-      senderId: data['senderId'] as String? ?? '',
-      receiverId: data['receiverId'] as String?,
-      type: _parseMessageType(data['type']),
-      content: data['content'] as String? ?? '',
-      status: _parseMessageStatus(data['status']),
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      readAt: data['readAt'] != null
-          ? (data['readAt'] as Timestamp).toDate()
-          : null,
-      metadata: data['metadata'] as Map<String, dynamic>?,
-      replyToMessageId: data['replyToMessageId'] as String?,
-      attachments: List<String>.from(data['attachments'] as List<dynamic>? ?? []),
-      senderName: data['senderName'] as String?,
-    );
-  }
-  final String id;
-  final String chatId;
-  final String senderId;
-  final String? receiverId;
-  final MessageType type;
-  final String content;
-  final MessageStatus status;
-  final DateTime createdAt;
-  final DateTime? readAt;
-  final Map<String, dynamic>? metadata;
-  final String? replyToMessageId;
-  final List<String> attachments;
-  final String? senderName;
-
-  /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() => {
-        'chatId': chatId,
-        'senderId': senderId,
-        'receiverId': receiverId,
-        'type': type.name,
-        'content': content,
-        'status': status.name,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'readAt': readAt != null ? Timestamp.fromDate(readAt!) : null,
-        'metadata': metadata,
-        'replyToMessageId': replyToMessageId,
-        'attachments': attachments,
-        'senderName': senderName,
-      };
-
-  /// Копировать с изменениями
-  ChatMessage copyWith({
-    String? id,
-    String? chatId,
-    String? senderId,
-    String? receiverId,
-    MessageType? type,
-    String? content,
-    MessageStatus? status,
-    DateTime? createdAt,
-    DateTime? readAt,
-    Map<String, dynamic>? metadata,
-    String? replyToMessageId,
-    List<String>? attachments,
-  }) =>
-      ChatMessage(
-        id: id ?? this.id,
-        chatId: chatId ?? this.chatId,
-        senderId: senderId ?? this.senderId,
-        receiverId: receiverId ?? this.receiverId,
-        type: type ?? this.type,
-        content: content ?? this.content,
-        status: status ?? this.status,
-        createdAt: createdAt ?? this.createdAt,
-        readAt: readAt ?? this.readAt,
-        metadata: metadata ?? this.metadata,
-        replyToMessageId: replyToMessageId ?? this.replyToMessageId,
-        attachments: attachments ?? this.attachments,
-      );
-
-  /// Проверить, прочитано ли сообщение
-  bool get isRead => status == MessageStatus.read;
-
-  /// Проверить, доставлено ли сообщение
-  bool get isDelivered => status == MessageStatus.delivered || isRead;
-
-  /// Проверить, отправлено ли сообщение
-  bool get isSent => status == MessageStatus.sent || isDelivered;
-
-  /// Проверить, неудачно ли сообщение
-  bool get isFailed => status == MessageStatus.failed;
-
-  /// Получить отображаемое название типа сообщения
-  String get typeDisplayName {
-    switch (type) {
-      case MessageType.text:
-        return 'Текст';
-      case MessageType.image:
-        return 'Изображение';
-      case MessageType.file:
-        return 'Файл';
-      case MessageType.system:
-        return 'Системное';
-      case MessageType.bookingUpdate:
-        return 'Обновление заявки';
-      case MessageType.paymentUpdate:
-        return 'Обновление платежа';
-    }
-  }
-
-  /// Парсинг типа сообщения
-  static MessageType _parseMessageType(typeData) {
-    if (typeData == null) return MessageType.text;
-
-    final typeString = typeData.toString().toLowerCase();
-    switch (typeString) {
-      case 'image':
-        return MessageType.image;
-      case 'file':
-        return MessageType.file;
-      case 'system':
-        return MessageType.system;
-      case 'bookingUpdate':
-        return MessageType.bookingUpdate;
-      case 'paymentUpdate':
-        return MessageType.paymentUpdate;
-      case 'text':
-      default:
-        return MessageType.text;
-    }
-  }
-
-  /// Парсинг статуса сообщения
-  static MessageStatus _parseMessageStatus(statusData) {
-    if (statusData == null) return MessageStatus.sent;
-
-    final statusString = statusData.toString().toLowerCase();
-    switch (statusString) {
-      case 'delivered':
-        return MessageStatus.delivered;
-      case 'read':
-        return MessageStatus.read;
-      case 'failed':
-        return MessageStatus.failed;
-      case 'sent':
-      default:
-        return MessageStatus.sent;
-    }
-  }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is ChatMessage && other.id == id;
-  }
-
-  @override
-  int get hashCode => id.hashCode;
-
-  @override
-  String toString() =>
-      'ChatMessage(id: $id, type: $type, content: $content, status: $status)';
-}
-
-/// Модель чата
 class Chat {
-  const Chat({
-    required this.id,
-    required this.customerId,
-    required this.specialistId,
-    this.bookingId,
-    required this.createdAt,
-    required this.updatedAt,
-    this.lastMessage,
-    this.unreadCount = 0,
-    this.isActive = true,
-    this.metadata,
-    this.title,
-  });
-
-  /// Создать из документа Firestore
-  factory Chat.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data()! as Map<String, dynamic>;
-    return Chat(
-      id: doc.id,
-      customerId: data['customerId'] as String? ?? '',
-      specialistId: data['specialistId'] as String? ?? '',
-      bookingId: data['bookingId'] as String?,
-      createdAt: data['createdAt'] != null
-          ? (data['createdAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      updatedAt: data['updatedAt'] != null
-          ? (data['updatedAt'] as Timestamp).toDate()
-          : DateTime.now(),
-      lastMessage: data['lastMessage'] != null
-          ? ChatMessage.fromDocument(data['lastMessage'] as DocumentSnapshot)
-          : null,
-      unreadCount: data['unreadCount'] as int? ?? 0,
-      isActive: data['isActive'] as bool? ?? true,
-      metadata: data['metadata'] as Map<String, dynamic>?,
-      title: data['title'] as String?,
-    );
-  }
   final String id;
-  final String customerId;
-  final String specialistId;
-  final String? bookingId;
+  final List<String> participants;
+  final String? lastMessageId;
+  final String? lastMessageText;
+  final DateTime? lastMessageAt;
+  final Map<String, bool> readStatus; // userId -> hasRead
+  final Map<String, DateTime> lastSeen; // userId -> lastSeenAt
+  final bool isActive;
+  final String? chatType; // 'customer_specialist', 'support', 'group'
+  final Map<String, dynamic> metadata; // Additional chat metadata
   final DateTime createdAt;
   final DateTime updatedAt;
-  final ChatMessage? lastMessage;
-  final int unreadCount;
-  final bool isActive;
-  final Map<String, dynamic>? metadata;
-  final String? title;
 
-  /// Преобразовать в Map для Firestore
-  Map<String, dynamic> toMap() => {
-        'customerId': customerId,
-        'specialistId': specialistId,
-        'bookingId': bookingId,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-        'lastMessage': lastMessage?.toMap(),
-        'unreadCount': unreadCount,
-        'isActive': isActive,
-        'metadata': metadata,
-        'title': title,
-      };
+  Chat({
+    required this.id,
+    required this.participants,
+    this.lastMessageId,
+    this.lastMessageText,
+    this.lastMessageAt,
+    this.readStatus = const {},
+    this.lastSeen = const {},
+    this.isActive = true,
+    this.chatType,
+    this.metadata = const {},
+    required this.createdAt,
+    required this.updatedAt,
+  });
 
-  /// Копировать с изменениями
-  Chat copyWith({
-    String? id,
-    String? customerId,
-    String? specialistId,
-    String? bookingId,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    ChatMessage? lastMessage,
-    int? unreadCount,
-    bool? isActive,
-    Map<String, dynamic>? metadata,
-  }) =>
-      Chat(
-        id: id ?? this.id,
-        customerId: customerId ?? this.customerId,
-        specialistId: specialistId ?? this.specialistId,
-        bookingId: bookingId ?? this.bookingId,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        lastMessage: lastMessage ?? this.lastMessage,
-        unreadCount: unreadCount ?? this.unreadCount,
-        isActive: isActive ?? this.isActive,
-        metadata: metadata ?? this.metadata,
-      );
-
-  /// Проверить, есть ли непрочитанные сообщения
-  bool get hasUnreadMessages => unreadCount > 0;
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-    return other is Chat && other.id == id;
+  Map<String, dynamic> toMap() {
+    return {
+      'id': id,
+      'participants': participants,
+      'lastMessageId': lastMessageId,
+      'lastMessageText': lastMessageText,
+      'lastMessageAt': lastMessageAt != null ? Timestamp.fromDate(lastMessageAt!) : null,
+      'readStatus': readStatus,
+      'lastSeen': lastSeen.map((key, value) => MapEntry(key, Timestamp.fromDate(value))),
+      'isActive': isActive,
+      'chatType': chatType,
+      'metadata': metadata,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+    };
   }
 
-  @override
-  int get hashCode => id.hashCode;
+  factory Chat.fromMap(Map<String, dynamic> map) {
+    return Chat(
+      id: map['id'] as String,
+      participants: List<String>.from(map['participants'] as List<dynamic>),
+      lastMessageId: map['lastMessageId'] as String?,
+      lastMessageText: map['lastMessageText'] as String?,
+      lastMessageAt: (map['lastMessageAt'] as Timestamp?)?.toDate(),
+      readStatus: Map<String, bool>.from(map['readStatus'] as Map<String, dynamic>? ?? {}),
+      lastSeen: (map['lastSeen'] as Map<String, dynamic>? ?? {}).map(
+        (key, value) => MapEntry(key, (value as Timestamp).toDate()),
+      ),
+      isActive: map['isActive'] as bool? ?? true,
+      chatType: map['chatType'] as String?,
+      metadata: Map<String, dynamic>.from(map['metadata'] as Map<String, dynamic>? ?? {}),
+      createdAt: (map['createdAt'] as Timestamp).toDate(),
+      updatedAt: (map['updatedAt'] as Timestamp).toDate(),
+    );
+  }
 
-  @override
-  String toString() =>
-      'Chat(id: $id, customerId: $customerId, specialistId: $specialistId, unreadCount: $unreadCount)';
+  factory Chat.fromDocument(DocumentSnapshot doc) {
+    return Chat.fromMap(doc.data() as Map<String, dynamic>);
+  }
+
+  Chat copyWith({
+    String? id,
+    List<String>? participants,
+    String? lastMessageId,
+    String? lastMessageText,
+    DateTime? lastMessageAt,
+    Map<String, bool>? readStatus,
+    Map<String, DateTime>? lastSeen,
+    bool? isActive,
+    String? chatType,
+    Map<String, dynamic>? metadata,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+  }) {
+    return Chat(
+      id: id ?? this.id,
+      participants: participants ?? this.participants,
+      lastMessageId: lastMessageId ?? this.lastMessageId,
+      lastMessageText: lastMessageText ?? this.lastMessageText,
+      lastMessageAt: lastMessageAt ?? this.lastMessageAt,
+      readStatus: readStatus ?? this.readStatus,
+      lastSeen: lastSeen ?? this.lastSeen,
+      isActive: isActive ?? this.isActive,
+      chatType: chatType ?? this.chatType,
+      metadata: metadata ?? this.metadata,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+    );
+  }
+
+  /// Get the other participant in a two-person chat
+  String? getOtherParticipant(String currentUserId) {
+    if (participants.length != 2) return null;
+    return participants.firstWhere((id) => id != currentUserId);
+  }
+
+  /// Check if user has read the last message
+  bool hasUserRead(String userId) {
+    return readStatus[userId] ?? false;
+  }
+
+  /// Get unread message count for user
+  int getUnreadCount(String userId) {
+    return hasUserRead(userId) ? 0 : 1; // Simplified - in real app, count actual unread messages
+  }
 }

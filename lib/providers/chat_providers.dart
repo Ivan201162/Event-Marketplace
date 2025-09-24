@@ -1,183 +1,119 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../models/chat.dart';
-import '../models/chat_message.dart' as chat_message;
+import '../models/message.dart';
 import '../services/chat_service.dart';
+import '../services/message_service.dart';
+import '../services/bot_service.dart';
+import '../services/file_upload_service.dart';
 
-/// Провайдер сервиса чата
+// Services
 final chatServiceProvider = Provider<ChatService>((ref) => ChatService());
+final messageServiceProvider = Provider<MessageService>((ref) => MessageService());
+final botServiceProvider = Provider<BotService>((ref) => BotService());
+final fileUploadServiceProvider = Provider<FileUploadService>((ref) => FileUploadService());
 
-/// Провайдер для списка чатов пользователя
-final userChatsProvider =
-    FutureProvider.family<List<Chat>, UserChatsParams>((ref, params) async {
-  final chatService = ref.read(chatServiceProvider);
-  return chatService.getUserChats(params.userId);
+// Chat providers
+final userChatsProvider = StreamProvider.family<List<Chat>, String>((ref, userId) {
+  final chatService = ref.watch(chatServiceProvider);
+  return chatService.getUserChats(userId);
 });
 
-/// Параметры для получения чатов пользователя
-class UserChatsParams {
-  const UserChatsParams({required this.userId});
-  final String userId;
-}
-
-/// Провайдер для сообщений чата
-final chatMessagesProvider =
-    StreamProvider.family<List<chat_message.ChatMessage>, String>(
-        (ref, chatId) {
-  final chatService = ref.read(chatServiceProvider);
-  return chatService.getChatMessages(chatId);
+final chatProvider = FutureProvider.family<Chat?, String>((ref, chatId) async {
+  final chatService = ref.watch(chatServiceProvider);
+  return await chatService.getChat(chatId);
 });
 
-/// Провайдер для чата
-final chatProvider = StreamProvider.family<Chat?, String>((ref, chatId) {
-  final chatService = ref.read(chatServiceProvider);
-  return chatService.getChat(chatId);
+// Message providers
+final chatMessagesProvider = StreamProvider.family<List<Message>, String>((ref, chatId) {
+  final messageService = ref.watch(messageServiceProvider);
+  return messageService.getChatMessages(chatId);
 });
 
-/// Провайдер для состояния формы сообщения
-final messageFormProvider =
-    NotifierProvider<MessageFormNotifier, MessageFormState>(
-  MessageFormNotifier.new,
-);
+final unreadMessagesCountProvider = FutureProvider.family<int, ({String chatId, String userId})>((ref, params) async {
+  final messageService = ref.watch(messageServiceProvider);
+  return await messageService.getUnreadMessagesCount(params.chatId, params.userId);
+});
 
-/// Состояние формы сообщения
-class MessageFormState {
-  const MessageFormState({
-    this.text = '',
-    this.attachments = const [],
-    this.isSending = false,
-    this.error,
-  });
-  final String text;
-  final List<String> attachments;
-  final bool isSending;
-  final String? error;
+// Chat state providers
+final selectedChatProvider = StateProvider<String?>((ref) => null);
+final chatSearchQueryProvider = StateProvider<String>((ref) => '');
+final messageSendingStateProvider = StateProvider<Map<String, bool>>((ref) => {});
+final fileUploadProgressProvider = StateProvider<Map<String, double>>((ref) => {});
 
-  MessageFormState copyWith({
-    String? text,
-    List<String>? attachments,
-    bool? isSending,
-    String? error,
-  }) =>
-      MessageFormState(
-        text: text ?? this.text,
-        attachments: attachments ?? this.attachments,
-        isSending: isSending ?? this.isSending,
-        error: error ?? this.error,
-      );
-}
+// Chat statistics
+final chatStatisticsProvider = FutureProvider.family<Map<String, dynamic>, String>((ref, userId) async {
+  final chatService = ref.watch(chatServiceProvider);
+  return await chatService.getChatStatistics(userId);
+});
 
-/// Нотификатор для формы сообщения
-class MessageFormNotifier extends Notifier<MessageFormState> {
-  @override
-  MessageFormState build() => const MessageFormState();
+// Unread chats count
+final unreadChatsCountProvider = FutureProvider.family<int, String>((ref, userId) async {
+  final chatService = ref.watch(chatServiceProvider);
+  return await chatService.getUnreadChatsCount(userId);
+});
 
-  void updateText(String text) {
-    state = state.copyWith(text: text);
-  }
+// Chat creation state
+final chatCreationStateProvider = StateProvider<AsyncValue<String>?>((ref) => null);
 
-  void addAttachment(String attachment) {
-    final updatedAttachments = [...state.attachments, attachment];
-    state = state.copyWith(attachments: updatedAttachments);
-  }
+// Message editing state
+final messageEditingStateProvider = StateProvider<Map<String, String>>((ref) => {});
 
-  void removeAttachment(String attachment) {
-    final updatedAttachments =
-        state.attachments.where((a) => a != attachment).toList();
-    state = state.copyWith(attachments: updatedAttachments);
-  }
+// Chat typing indicators
+final typingUsersProvider = StateProvider<Map<String, List<String>>>((ref) => {});
 
-  void setSending(bool isSending) {
-    state = state.copyWith(isSending: isSending);
-  }
+// Chat notifications state
+final chatNotificationsProvider = StateProvider<Map<String, bool>>((ref) => {});
 
-  void setError(String? error) {
-    state = state.copyWith(error: error);
-  }
+// Chat settings
+final chatSettingsProvider = StateProvider<Map<String, dynamic>>((ref) => {
+  'soundEnabled': true,
+  'vibrationEnabled': true,
+  'notificationsEnabled': true,
+  'autoDownloadMedia': true,
+  'showOnlineStatus': true,
+  'showReadReceipts': true,
+});
 
-  void clear() {
-    state = const MessageFormState();
-  }
-}
+// Message search
+final messageSearchQueryProvider = StateProvider<String>((ref) => '');
 
-/// Провайдер для состояния чата
-final chatStateProvider =
-    NotifierProvider<ChatStateNotifier, ChatState>(ChatStateNotifier.new);
+final searchedMessagesProvider = FutureProvider.family<List<Message>, ({String chatId, String query})>((ref, params) async {
+  final messageService = ref.watch(messageServiceProvider);
+  return await messageService.searchMessages(params.chatId, params.query);
+});
 
-/// Состояние чата
-class ChatState {
-  const ChatState({
-    this.chats = const [],
-    this.messages = const {},
-    this.isLoading = false,
-    this.error,
-  });
-  final List<Chat> chats;
-  final Map<String, List<chat_message.ChatMessage>> messages;
-  final bool isLoading;
-  final String? error;
+// Chat media
+final chatMediaProvider = FutureProvider.family<List<Message>, String>((ref, chatId) async {
+  final messageService = ref.watch(messageServiceProvider);
+  final messages = await messageService.getChatMessages(chatId).first;
+  return messages.where((message) => message.isMedia).toList();
+});
 
-  ChatState copyWith({
-    List<Chat>? chats,
-    Map<String, List<chat_message.ChatMessage>>? messages,
-    bool? isLoading,
-    String? error,
-  }) =>
-      ChatState(
-        chats: chats ?? this.chats,
-        messages: messages ?? this.messages,
-        isLoading: isLoading ?? this.isLoading,
-        error: error ?? this.error,
-      );
-}
+// Chat files
+final chatFilesProvider = FutureProvider.family<List<Message>, String>((ref, chatId) async {
+  final messageService = ref.watch(messageServiceProvider);
+  final messages = await messageService.getChatMessages(chatId).first;
+  return messages.where((message) => message.type == MessageType.file).toList();
+});
 
-/// Нотификатор для состояния чата
-class ChatStateNotifier extends Notifier<ChatState> {
-  @override
-  ChatState build() => const ChatState();
+// Chat draft messages
+final draftMessagesProvider = StateProvider<Map<String, String>>((ref) => {});
 
-  void setChats(List<Chat> chats) {
-    state = state.copyWith(chats: chats);
-  }
+// Chat security
+final chatSecurityProvider = StateProvider<Map<String, dynamic>>((ref) => {
+  'blockedUsers': <String>[],
+  'reportedUsers': <String>[],
+  'mutedUsers': <String>[],
+  'securityLevel': 'normal',
+});
 
-  void setMessages(String chatId, List<chat_message.ChatMessage> messages) {
-    final updatedMessages =
-        Map<String, List<chat_message.ChatMessage>>.from(state.messages);
-    updatedMessages[chatId] = messages;
-    state = state.copyWith(messages: updatedMessages);
-  }
-
-  void addMessage(String chatId, chat_message.ChatMessage message) {
-    final currentMessages = state.messages[chatId] ?? [];
-    final updatedMessages = [...currentMessages, message];
-    setMessages(chatId, updatedMessages);
-  }
-
-  void setLoading(bool isLoading) {
-    state = state.copyWith(isLoading: isLoading);
-  }
-
-  void setError(String? error) {
-    state = state.copyWith(error: error);
-  }
-
-  Future<void> sendMessage(String chatId, String text) async {
-    try {
-      setLoading(true);
-      final chatService = ref.read(chatServiceProvider);
-      await chatService.sendMessage(chatId, chat_message.ChatMessage(
-        id: '',
-        chatId: chatId,
-        senderId: 'current_user_id',
-        type: chat_message.MessageType.text,
-        content: text,
-        status: chat_message.MessageStatus.sent,
-        timestamp: DateTime.now(),
-        senderName: 'Current User',
-      ));
-      setLoading(false);
-    } catch (e) {
-      setError(e.toString());
-      setLoading(false);
-    }
-  }
-}
+// Chat privacy
+final chatPrivacyProvider = StateProvider<Map<String, dynamic>>((ref) => {
+  'showOnlineStatus': true,
+  'showLastSeen': true,
+  'showReadReceipts': true,
+  'allowMessageRequests': true,
+  'blockUnknownUsers': false,
+});

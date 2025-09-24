@@ -44,6 +44,40 @@ extension EventIdeaTypeExtension on EventIdeaType {
   }
 }
 
+/// Категория идеи
+enum EventIdeaCategory {
+  decoration, // Оформление
+  entertainment, // Развлечения
+  catering, // Кейтеринг
+  photography, // Фотография
+  music, // Музыка
+  venue, // Площадка
+  planning, // Планирование
+  other, // Другое
+}
+
+extension EventIdeaCategoryExtension on EventIdeaCategory {
+  String get displayName {
+    switch (this) {
+      case EventIdeaCategory.decoration:
+        return 'Оформление';
+      case EventIdeaCategory.entertainment:
+        return 'Развлечения';
+      case EventIdeaCategory.catering:
+        return 'Кейтеринг';
+      case EventIdeaCategory.photography:
+        return 'Фотография';
+      case EventIdeaCategory.music:
+        return 'Музыка';
+      case EventIdeaCategory.venue:
+        return 'Площадка';
+      case EventIdeaCategory.planning:
+        return 'Планирование';
+      case EventIdeaCategory.other:
+        return 'Другое';
+    }
+  }
+}
 
 /// Модель идеи мероприятия
 class EventIdea {
