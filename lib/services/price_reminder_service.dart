@@ -1,268 +1,207 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 
 import '../models/specialist.dart';
+import '../models/notification.dart';
 
 /// Сервис для напоминаний об обновлении цен
 class PriceReminderService {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFunctions _functions = FirebaseFunctions.instance;
+  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
 
-  /// Создать напоминание об обновлении цен
-  Future<PriceReminder> createPriceReminder({
-    required String specialistId,
-    required PriceReminderType type,
-    required DateTime scheduledDate,
-    String? message,
-    Map<String, dynamic>? metadata,
-  }) async {
-    try {
-      final reminder = PriceReminder(
-        id: _generateReminderId(),
-        specialistId: specialistId,
-        type: type,
-        status: PriceReminderStatus.scheduled,
-        scheduledDate: scheduledDate,
-        message: message ?? _getDefaultMessage(type),
-        metadata: metadata ?? {},
-        createdAt: DateTime.now(),
-      );
-
-      await _db.collection('price_reminders').doc(reminder.id).set(reminder.toMap());
-      return reminder;
-    } catch (e) {
-      debugPrint('Ошибка создания напоминания о ценах: $e');
-      throw Exception('Не удалось создать напоминание: $e');
-    }
-  }
-
-  /// Создать автоматические напоминания для специалиста
-  Future<List<PriceReminder>> createAutomaticReminders(String specialistId) async {
+  /// Отправить напоминание специалисту об обновлении цен
+  Future<void> sendPriceUpdateReminder(String specialistId) async {
     try {
       final specialist = await _getSpecialist(specialistId);
-      if (specialist == null) {
-        throw Exception('Специалист не найден');
+      if (specialist == null) return;
+
+      // Проверяем, когда последний раз обновлялись цены
+      final lastPriceUpdate = specialist.lastPriceUpdate;
+      final now = DateTime.now();
+      
+      if (lastPriceUpdate != null) {
+        final daysSinceUpdate = now.difference(lastPriceUpdate).inDays;
+        
+        // Отправляем напоминание, если цены не обновлялись более 30 дней
+        if (daysSinceUpdate < 30) {
+          debugPrint('Цены обновлялись недавно, напоминание не отправляется');
+          return;
+        }
       }
 
-      final reminders = <PriceReminder>[];
-
-      // Напоминание о сезонном обновлении цен
-      final seasonalReminder = await createPriceReminder(
-        specialistId: specialistId,
-        type: PriceReminderType.seasonal,
-        scheduledDate: _getNextSeasonalDate(),
-        metadata: {
-          'season': _getCurrentSeason(),
-          'autoCreated': true,
+      // Создаем уведомление
+      final notification = Notification(
+        id: _generateNotificationId(),
+        userId: specialistId,
+        type: NotificationType.priceReminder,
+        title: 'Обновите ваши цены',
+        message: 'Рекомендуем обновить цены на ваши услуги для привлечения большего количества клиентов',
+        data: {
+          'specialistId': specialistId,
+          'action': 'update_prices',
+          'lastUpdate': lastPriceUpdate?.toIso8601String(),
         },
+        createdAt: now,
+        isRead: false,
       );
-      reminders.add(seasonalReminder);
 
-      // Напоминание о ежемесячном обновлении
-      final monthlyReminder = await createPriceReminder(
-        specialistId: specialistId,
-        type: PriceReminderType.monthly,
-        scheduledDate: _getNextMonthlyDate(),
-        metadata: {
-          'autoCreated': true,
-        },
-      );
-      reminders.add(monthlyReminder);
+      // Сохраняем уведомление в базе данных
+      await _db.collection('notifications').doc(notification.id).set(notification.toMap());
 
-      // Напоминание о проверке конкурентов
-      final competitorReminder = await createPriceReminder(
-        specialistId: specialistId,
-        type: PriceReminderType.competitorAnalysis,
-        scheduledDate: _getNextCompetitorAnalysisDate(),
-        metadata: {
-          'autoCreated': true,
-        },
-      );
-      reminders.add(competitorReminder);
+      // Отправляем push-уведомление
+      await _sendPushNotification(specialistId, notification);
 
-      return reminders;
+      // Обновляем время последнего напоминания
+      await _updateLastReminderTime(specialistId);
+
+      debugPrint('Напоминание об обновлении цен отправлено специалисту: $specialistId');
     } catch (e) {
-      debugPrint('Ошибка создания автоматических напоминаний: $e');
+      debugPrint('Ошибка отправки напоминания об обновлении цен: $e');
+    }
+  }
+
+  /// Отправить массовые напоминания всем специалистам
+  Future<void> sendBulkPriceUpdateReminders() async {
+    try {
+      // Получаем всех специалистов, которые не обновляли цены более 30 дней
+      final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
+      
+      final specialistsQuery = await _db
+          .collection('specialists')
+          .where('lastPriceUpdate', isLessThan: Timestamp.fromDate(thirtyDaysAgo))
+          .limit(100) // Ограничиваем количество для избежания таймаутов
+          .get();
+
+      final specialists = specialistsQuery.docs
+          .map((doc) => Specialist.fromDocument(doc))
+          .toList();
+
+      debugPrint('Найдено ${specialists.length} специалистов для отправки напоминаний');
+
+      // Отправляем напоминания пакетами по 10
+      for (int i = 0; i < specialists.length; i += 10) {
+        final batch = specialists.skip(i).take(10);
+        
+        await Future.wait(
+          batch.map((specialist) => sendPriceUpdateReminder(specialist.id)),
+        );
+
+        // Небольшая пауза между пакетами
+        await Future.delayed(const Duration(seconds: 1));
+      }
+
+      debugPrint('Массовые напоминания об обновлении цен отправлены');
+    } catch (e) {
+      debugPrint('Ошибка отправки массовых напоминаний: $e');
+    }
+  }
+
+  /// Получить специалистов, которым нужно отправить напоминания
+  Future<List<Specialist>> getSpecialistsNeedingPriceReminders() async {
+    try {
+      final thirtyDaysAgo = DateTime.now().subtract(const Duration(days: 30));
+      
+      final query = await _db
+          .collection('specialists')
+          .where('lastPriceUpdate', isLessThan: Timestamp.fromDate(thirtyDaysAgo))
+          .where('isActive', isEqualTo: true)
+          .get();
+
+      return query.docs
+          .map((doc) => Specialist.fromDocument(doc))
+          .toList();
+    } catch (e) {
+      debugPrint('Ошибка получения специалистов для напоминаний: $e');
       return [];
     }
   }
 
-  /// Получить активные напоминания для специалиста
-  Future<List<PriceReminder>> getActiveReminders(String specialistId) async {
+  /// Отметить, что специалист обновил цены
+  Future<void> markPricesUpdated(String specialistId) async {
     try {
-      final query = await _db
-          .collection('price_reminders')
-          .where('specialistId', isEqualTo: specialistId)
-          .where('status', isEqualTo: PriceReminderStatus.scheduled.name)
-          .where('scheduledDate', isLessThanOrEqualTo: Timestamp.fromDate(DateTime.now().add(const Duration(days: 7))))
-          .orderBy('scheduledDate')
-          .get();
-
-      return query.docs.map((doc) => PriceReminder.fromDocument(doc)).toList();
-    } catch (e) {
-      debugPrint('Ошибка получения активных напоминаний: $e');
-      return [];
-    }
-  }
-
-  /// Отметить напоминание как выполненное
-  Future<void> markReminderAsCompleted({
-    required String reminderId,
-    required String specialistId,
-    String? notes,
-    Map<String, dynamic>? completionData,
-  }) async {
-    try {
-      await _db.collection('price_reminders').doc(reminderId).update({
-        'status': PriceReminderStatus.completed.name,
-        'completedAt': Timestamp.fromDate(DateTime.now()),
-        'notes': notes,
-        'completionData': completionData ?? {},
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      await _db.collection('specialists').doc(specialistId).update({
+        'lastPriceUpdate': Timestamp.fromDate(DateTime.now()),
+        'lastReminderSent': null, // Сбрасываем время последнего напоминания
       });
 
-      // Создаем следующее напоминание, если это повторяющееся
-      await _createNextReminderIfNeeded(reminderId, specialistId);
+      debugPrint('Цены специалиста отмечены как обновленные: $specialistId');
     } catch (e) {
-      debugPrint('Ошибка отметки напоминания как выполненного: $e');
+      debugPrint('Ошибка отметки обновления цен: $e');
     }
   }
 
-  /// Отложить напоминание
-  Future<void> postponeReminder({
-    required String reminderId,
-    required Duration postponeBy,
-    String? reason,
-  }) async {
+  /// Получить статистику напоминаний
+  Future<Map<String, dynamic>> getReminderStats() async {
     try {
-      final reminder = await _getReminder(reminderId);
-      if (reminder == null) return;
+      final now = DateTime.now();
+      final thirtyDaysAgo = now.subtract(const Duration(days: 30));
+      final sevenDaysAgo = now.subtract(const Duration(days: 7));
 
-      final newScheduledDate = reminder.scheduledDate.add(postponeBy);
-
-      await _db.collection('price_reminders').doc(reminderId).update({
-        'scheduledDate': Timestamp.fromDate(newScheduledDate),
-        'postponedAt': Timestamp.fromDate(DateTime.now()),
-        'postponeReason': reason,
-        'postponeCount': (reminder.metadata?['postponeCount'] as int? ?? 0) + 1,
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      });
-    } catch (e) {
-      debugPrint('Ошибка отложения напоминания: $e');
-    }
-  }
-
-  /// Получить статистику напоминаний для специалиста
-  Future<PriceReminderStatistics> getReminderStatistics(String specialistId) async {
-    try {
-      final query = await _db
-          .collection('price_reminders')
-          .where('specialistId', isEqualTo: specialistId)
+      // Специалисты, которым нужно отправить напоминания
+      final needRemindersQuery = await _db
+          .collection('specialists')
+          .where('lastPriceUpdate', isLessThan: Timestamp.fromDate(thirtyDaysAgo))
+          .where('isActive', isEqualTo: true)
           .get();
 
-      final reminders = query.docs.map((doc) => PriceReminder.fromDocument(doc)).toList();
+      // Специалисты, которые обновили цены за последние 7 дней
+      final recentUpdatesQuery = await _db
+          .collection('specialists')
+          .where('lastPriceUpdate', isGreaterThan: Timestamp.fromDate(sevenDaysAgo))
+          .get();
 
-      final totalReminders = reminders.length;
-      final completedReminders = reminders.where((r) => r.status == PriceReminderStatus.completed).length;
-      final pendingReminders = reminders.where((r) => r.status == PriceReminderStatus.scheduled).length;
-      final overdueReminders = reminders.where((r) => 
-          r.status == PriceReminderStatus.scheduled && 
-          r.scheduledDate.isBefore(DateTime.now())).length;
+      // Напоминания, отправленные за последние 7 дней
+      final recentRemindersQuery = await _db
+          .collection('notifications')
+          .where('type', isEqualTo: NotificationType.priceReminder.name)
+          .where('createdAt', isGreaterThan: Timestamp.fromDate(sevenDaysAgo))
+          .get();
 
-      final completionRate = totalReminders > 0 ? (completedReminders / totalReminders) * 100 : 0;
-
-      return PriceReminderStatistics(
-        specialistId: specialistId,
-        totalReminders: totalReminders,
-        completedReminders: completedReminders,
-        pendingReminders: pendingReminders,
-        overdueReminders: overdueReminders,
-        completionRate: completionRate,
-        lastReminderDate: reminders.isNotEmpty 
-            ? reminders.map((r) => r.createdAt).reduce((a, b) => a.isAfter(b) ? a : b)
-            : null,
-      );
+      return {
+        'specialistsNeedingReminders': needRemindersQuery.docs.length,
+        'recentPriceUpdates': recentUpdatesQuery.docs.length,
+        'remindersSentThisWeek': recentRemindersQuery.docs.length,
+        'lastBulkReminderSent': await _getLastBulkReminderTime(),
+      };
     } catch (e) {
       debugPrint('Ошибка получения статистики напоминаний: $e');
-      return PriceReminderStatistics.empty(specialistId);
+      return {};
     }
   }
 
-  /// Получить рекомендации по ценам
-  Future<PriceRecommendations> getPriceRecommendations(String specialistId) async {
+  /// Настроить автоматические напоминания
+  Future<void> setupAutomaticReminders() async {
     try {
-      final specialist = await _getSpecialist(specialistId);
-      if (specialist == null) {
-        throw Exception('Специалист не найден');
-      }
-
-      final recommendations = <PriceRecommendation>[];
-
-      // Анализ конкурентов
-      final competitorAnalysis = await _analyzeCompetitors(specialist);
-      if (competitorAnalysis != null) {
-        recommendations.add(competitorAnalysis);
-      }
-
-      // Анализ сезонности
-      final seasonalAnalysis = await _analyzeSeasonality(specialist);
-      if (seasonalAnalysis != null) {
-        recommendations.add(seasonalAnalysis);
-      }
-
-      // Анализ спроса
-      final demandAnalysis = await _analyzeDemand(specialist);
-      if (demandAnalysis != null) {
-        recommendations.add(demandAnalysis);
-      }
-
-      return PriceRecommendations(
-        specialistId: specialistId,
-        currentPrice: specialist.price,
-        recommendations: recommendations,
-        generatedAt: DateTime.now(),
-      );
-    } catch (e) {
-      debugPrint('Ошибка получения рекомендаций по ценам: $e');
-      return PriceRecommendations.empty(specialistId);
-    }
-  }
-
-  /// Создать следующее напоминание, если необходимо
-  Future<void> _createNextReminderIfNeeded(String completedReminderId, String specialistId) async {
-    try {
-      final completedReminder = await _getReminder(completedReminderId);
-      if (completedReminder == null) return;
-
-      // Создаем следующее напоминание для повторяющихся типов
-      DateTime? nextScheduledDate;
+      // Создаем Cloud Function для автоматических напоминаний
+      final callable = _functions.httpsCallable('setupPriceReminders');
       
-      switch (completedReminder.type) {
-        case PriceReminderType.monthly:
-          nextScheduledDate = DateTime.now().add(const Duration(days: 30));
-          break;
-        case PriceReminderType.seasonal:
-          nextScheduledDate = _getNextSeasonalDate();
-          break;
-        case PriceReminderType.competitorAnalysis:
-          nextScheduledDate = _getNextCompetitorAnalysisDate();
-          break;
-        default:
-          return; // Не создаем следующее напоминание для одноразовых
-      }
+      await callable.call({
+        'enabled': true,
+        'intervalDays': 30,
+        'maxRemindersPerDay': 50,
+      });
 
-      if (nextScheduledDate != null) {
-        await createPriceReminder(
-          specialistId: specialistId,
-          type: completedReminder.type,
-          scheduledDate: nextScheduledDate,
-          metadata: {
-            'autoCreated': true,
-            'previousReminderId': completedReminderId,
-          },
-        );
-      }
+      debugPrint('Автоматические напоминания настроены');
     } catch (e) {
-      debugPrint('Ошибка создания следующего напоминания: $e');
+      debugPrint('Ошибка настройки автоматических напоминаний: $e');
+    }
+  }
+
+  /// Отключить автоматические напоминания
+  Future<void> disableAutomaticReminders() async {
+    try {
+      final callable = _functions.httpsCallable('setupPriceReminders');
+      
+      await callable.call({
+        'enabled': false,
+      });
+
+      debugPrint('Автоматические напоминания отключены');
+    } catch (e) {
+      debugPrint('Ошибка отключения автоматических напоминаний: $e');
     }
   }
 
@@ -280,348 +219,61 @@ class PriceReminderService {
     }
   }
 
-  /// Получить напоминание
-  Future<PriceReminder?> _getReminder(String reminderId) async {
+  /// Отправить push-уведомление
+  Future<void> _sendPushNotification(String specialistId, Notification notification) async {
     try {
-      final doc = await _db.collection('price_reminders').doc(reminderId).get();
+      // Получаем FCM токен специалиста
+      final specialistDoc = await _db.collection('specialists').doc(specialistId).get();
+      if (!specialistDoc.exists) return;
+
+      final fcmToken = specialistDoc.data()?['fcmToken'] as String?;
+      if (fcmToken == null) return;
+
+      // Отправляем уведомление через Cloud Functions
+      final callable = _functions.httpsCallable('sendPushNotification');
+      
+      await callable.call({
+        'token': fcmToken,
+        'title': notification.title,
+        'body': notification.message,
+        'data': notification.data,
+      });
+
+      debugPrint('Push-уведомление отправлено: $specialistId');
+    } catch (e) {
+      debugPrint('Ошибка отправки push-уведомления: $e');
+    }
+  }
+
+  /// Обновить время последнего напоминания
+  Future<void> _updateLastReminderTime(String specialistId) async {
+    try {
+      await _db.collection('specialists').doc(specialistId).update({
+        'lastReminderSent': Timestamp.fromDate(DateTime.now()),
+      });
+    } catch (e) {
+      debugPrint('Ошибка обновления времени напоминания: $e');
+    }
+  }
+
+  /// Получить время последнего массового напоминания
+  Future<DateTime?> _getLastBulkReminderTime() async {
+    try {
+      final doc = await _db.collection('system_settings').doc('price_reminders').get();
       if (doc.exists) {
-        return PriceReminder.fromDocument(doc);
+        final data = doc.data()!;
+        final timestamp = data['lastBulkReminderSent'] as Timestamp?;
+        return timestamp?.toDate();
       }
       return null;
     } catch (e) {
-      debugPrint('Ошибка получения напоминания: $e');
+      debugPrint('Ошибка получения времени последнего массового напоминания: $e');
       return null;
     }
   }
 
-  /// Получить дату следующего сезонного напоминания
-  DateTime _getNextSeasonalDate() {
-    final now = DateTime.now();
-    final currentMonth = now.month;
-    
-    // Сезонные напоминания: март, июнь, сентябрь, декабрь
-    final seasonalMonths = [3, 6, 9, 12];
-    
-    for (final month in seasonalMonths) {
-      if (month > currentMonth) {
-        return DateTime(now.year, month, 1);
-      }
-    }
-    
-    // Если все сезоны прошли, берем следующий год
-    return DateTime(now.year + 1, 3, 1);
+  /// Сгенерировать ID уведомления
+  String _generateNotificationId() {
+    return 'price_reminder_${DateTime.now().millisecondsSinceEpoch}';
   }
-
-  /// Получить дату следующего ежемесячного напоминания
-  DateTime _getNextMonthlyDate() {
-    final now = DateTime.now();
-    return DateTime(now.year, now.month + 1, 1);
-  }
-
-  /// Получить дату следующего анализа конкурентов
-  DateTime _getNextCompetitorAnalysisDate() {
-    return DateTime.now().add(const Duration(days: 14));
-  }
-
-  /// Получить текущий сезон
-  String _getCurrentSeason() {
-    final month = DateTime.now().month;
-    if (month >= 3 && month <= 5) return 'весна';
-    if (month >= 6 && month <= 8) return 'лето';
-    if (month >= 9 && month <= 11) return 'осень';
-    return 'зима';
-  }
-
-  /// Получить сообщение по умолчанию
-  String _getDefaultMessage(PriceReminderType type) {
-    switch (type) {
-      case PriceReminderType.seasonal:
-        return 'Время обновить цены на новый сезон!';
-      case PriceReminderType.monthly:
-        return 'Ежемесячная проверка цен';
-      case PriceReminderType.competitorAnalysis:
-        return 'Проверьте цены конкурентов';
-      case PriceReminderType.demandBased:
-        return 'Анализ спроса и корректировка цен';
-      case PriceReminderType.custom:
-        return 'Напоминание об обновлении цен';
-    }
-  }
-
-  /// Анализ конкурентов
-  Future<PriceRecommendation?> _analyzeCompetitors(Specialist specialist) async {
-    try {
-      // В реальном приложении здесь был бы анализ цен конкурентов
-      // Для демонстрации возвращаем примерную рекомендацию
-      
-      final currentPrice = specialist.price;
-      final averageCompetitorPrice = currentPrice * 1.1; // +10% от текущей цены
-      
-      if (currentPrice < averageCompetitorPrice * 0.8) {
-        return PriceRecommendation(
-          type: PriceRecommendationType.increase,
-          title: 'Цена ниже рынка',
-          description: 'Ваша цена на ${(averageCompetitorPrice - currentPrice).toInt()} ₽ ниже среднерыночной',
-          suggestedPrice: averageCompetitorPrice * 0.9,
-          confidence: 0.8,
-          reason: 'Анализ конкурентов показывает, что вы можете повысить цену',
-        );
-      } else if (currentPrice > averageCompetitorPrice * 1.2) {
-        return PriceRecommendation(
-          type: PriceRecommendationType.decrease,
-          title: 'Цена выше рынка',
-          description: 'Ваша цена на ${(currentPrice - averageCompetitorPrice).toInt()} ₽ выше среднерыночной',
-          suggestedPrice: averageCompetitorPrice * 1.1,
-          confidence: 0.7,
-          reason: 'Рассмотрите возможность снижения цены для повышения конкурентоспособности',
-        );
-      }
-      
-      return null;
-    } catch (e) {
-      debugPrint('Ошибка анализа конкурентов: $e');
-      return null;
-    }
-  }
-
-  /// Анализ сезонности
-  Future<PriceRecommendation?> _analyzeSeasonality(Specialist specialist) async {
-    try {
-      final month = DateTime.now().month;
-      final currentPrice = specialist.price;
-      
-      // Примерные сезонные коэффициенты
-      double seasonalMultiplier = 1.0;
-      String season = '';
-      
-      if (month >= 5 && month <= 9) {
-        // Летний сезон - высокий спрос
-        seasonalMultiplier = 1.2;
-        season = 'летний';
-      } else if (month == 12 || month == 1) {
-        // Новогодний сезон - очень высокий спрос
-        seasonalMultiplier = 1.5;
-        season = 'новогодний';
-      } else if (month >= 2 && month <= 4) {
-        // Низкий сезон
-        seasonalMultiplier = 0.8;
-        season = 'низкий';
-      }
-      
-      if (seasonalMultiplier != 1.0) {
-        final suggestedPrice = currentPrice * seasonalMultiplier;
-        return PriceRecommendation(
-          type: seasonalMultiplier > 1.0 ? PriceRecommendationType.increase : PriceRecommendationType.decrease,
-          title: 'Сезонная корректировка',
-          description: 'В $season сезон рекомендуется ${seasonalMultiplier > 1.0 ? 'повысить' : 'снизить'} цену',
-          suggestedPrice: suggestedPrice,
-          confidence: 0.9,
-          reason: 'Сезонные колебания спроса',
-        );
-      }
-      
-      return null;
-    } catch (e) {
-      debugPrint('Ошибка анализа сезонности: $e');
-      return null;
-    }
-  }
-
-  /// Анализ спроса
-  Future<PriceRecommendation?> _analyzeDemand(Specialist specialist) async {
-    try {
-      // В реальном приложении здесь был бы анализ заказов и спроса
-      // Для демонстрации возвращаем примерную рекомендацию
-      
-      final currentPrice = specialist.price;
-      
-      // Имитируем высокий спрос
-      if (specialist.rating > 4.5 && specialist.reviewCount > 50) {
-        return PriceRecommendation(
-          type: PriceRecommendationType.increase,
-          title: 'Высокий спрос',
-          description: 'Ваши услуги пользуются высоким спросом',
-          suggestedPrice: currentPrice * 1.15,
-          confidence: 0.8,
-          reason: 'Высокий рейтинг и количество отзывов позволяют повысить цену',
-        );
-      }
-      
-      return null;
-    } catch (e) {
-      debugPrint('Ошибка анализа спроса: $e');
-      return null;
-    }
-  }
-
-  /// Генерировать ID для напоминания
-  String _generateReminderId() {
-    return 'reminder_${DateTime.now().millisecondsSinceEpoch}_${(DateTime.now().microsecond % 1000).toString().padLeft(3, '0')}';
-  }
-}
-
-/// Типы напоминаний о ценах
-enum PriceReminderType {
-  seasonal,           // Сезонное обновление
-  monthly,            // Ежемесячная проверка
-  competitorAnalysis, // Анализ конкурентов
-  demandBased,        // На основе спроса
-  custom,             // Пользовательское
-}
-
-/// Статусы напоминаний
-enum PriceReminderStatus {
-  scheduled,  // Запланировано
-  completed,  // Выполнено
-  cancelled,  // Отменено
-}
-
-/// Напоминание о ценах
-class PriceReminder {
-  const PriceReminder({
-    required this.id,
-    required this.specialistId,
-    required this.type,
-    required this.status,
-    required this.scheduledDate,
-    required this.message,
-    required this.metadata,
-    required this.createdAt,
-    this.completedAt,
-    this.notes,
-    this.completionData,
-  });
-
-  factory PriceReminder.fromDocument(DocumentSnapshot doc) {
-    final data = doc.data()! as Map<String, dynamic>;
-    return PriceReminder(
-      id: doc.id,
-      specialistId: data['specialistId'] as String,
-      type: PriceReminderType.values.firstWhere(
-        (e) => e.name == data['type'],
-        orElse: () => PriceReminderType.custom,
-      ),
-      status: PriceReminderStatus.values.firstWhere(
-        (e) => e.name == data['status'],
-        orElse: () => PriceReminderStatus.scheduled,
-      ),
-      scheduledDate: (data['scheduledDate'] as Timestamp).toDate(),
-      message: data['message'] as String,
-      metadata: Map<String, dynamic>.from(data['metadata'] ?? {}),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      completedAt: data['completedAt'] != null 
-          ? (data['completedAt'] as Timestamp).toDate() 
-          : null,
-      notes: data['notes'] as String?,
-      completionData: data['completionData'] != null 
-          ? Map<String, dynamic>.from(data['completionData']) 
-          : null,
-    );
-  }
-
-  final String id;
-  final String specialistId;
-  final PriceReminderType type;
-  final PriceReminderStatus status;
-  final DateTime scheduledDate;
-  final String message;
-  final Map<String, dynamic> metadata;
-  final DateTime createdAt;
-  final DateTime? completedAt;
-  final String? notes;
-  final Map<String, dynamic>? completionData;
-
-  Map<String, dynamic> toMap() => {
-    'specialistId': specialistId,
-    'type': type.name,
-    'status': status.name,
-    'scheduledDate': Timestamp.fromDate(scheduledDate),
-    'message': message,
-    'metadata': metadata,
-    'createdAt': Timestamp.fromDate(createdAt),
-    'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
-    'notes': notes,
-    'completionData': completionData,
-  };
-
-  /// Проверить, просрочено ли напоминание
-  bool get isOverdue => status == PriceReminderStatus.scheduled && scheduledDate.isBefore(DateTime.now());
-}
-
-/// Статистика напоминаний
-class PriceReminderStatistics {
-  const PriceReminderStatistics({
-    required this.specialistId,
-    required this.totalReminders,
-    required this.completedReminders,
-    required this.pendingReminders,
-    required this.overdueReminders,
-    required this.completionRate,
-    this.lastReminderDate,
-  });
-
-  final String specialistId;
-  final int totalReminders;
-  final int completedReminders;
-  final int pendingReminders;
-  final int overdueReminders;
-  final double completionRate;
-  final DateTime? lastReminderDate;
-
-  factory PriceReminderStatistics.empty(String specialistId) => PriceReminderStatistics(
-    specialistId: specialistId,
-    totalReminders: 0,
-    completedReminders: 0,
-    pendingReminders: 0,
-    overdueReminders: 0,
-    completionRate: 0,
-  );
-}
-
-/// Рекомендации по ценам
-class PriceRecommendations {
-  const PriceRecommendations({
-    required this.specialistId,
-    required this.currentPrice,
-    required this.recommendations,
-    required this.generatedAt,
-  });
-
-  final String specialistId;
-  final double currentPrice;
-  final List<PriceRecommendation> recommendations;
-  final DateTime generatedAt;
-
-  factory PriceRecommendations.empty(String specialistId) => PriceRecommendations(
-    specialistId: specialistId,
-    currentPrice: 0,
-    recommendations: [],
-    generatedAt: DateTime.now(),
-  );
-}
-
-/// Рекомендация по цене
-class PriceRecommendation {
-  const PriceRecommendation({
-    required this.type,
-    required this.title,
-    required this.description,
-    required this.suggestedPrice,
-    required this.confidence,
-    required this.reason,
-  });
-
-  final PriceRecommendationType type;
-  final String title;
-  final String description;
-  final double suggestedPrice;
-  final double confidence; // 0.0 - 1.0
-  final String reason;
-}
-
-/// Типы рекомендаций по ценам
-enum PriceRecommendationType {
-  increase,  // Повысить цену
-  decrease,  // Снизить цену
-  maintain,  // Оставить без изменений
 }

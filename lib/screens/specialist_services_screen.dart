@@ -1,632 +1,816 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-import '../core/responsive_utils.dart';
-import '../models/service_template.dart';
-import '../services/service_template_service.dart';
+import '../models/specialist_service.dart';
+import '../services/specialist_service_service.dart';
+import '../widgets/enhanced_page_transition.dart';
 import '../widgets/responsive_layout.dart';
+import 'add_service_screen.dart';
+import 'edit_service_screen.dart';
 
-/// Экран управления услугами и ценами специалиста
+/// Экран управления услугами специалиста
 class SpecialistServicesScreen extends ConsumerStatefulWidget {
   const SpecialistServicesScreen({
     super.key,
     required this.specialistId,
   });
+
   final String specialistId;
 
   @override
-  ConsumerState<SpecialistServicesScreen> createState() =>
-      _SpecialistServicesScreenState();
+  ConsumerState<SpecialistServicesScreen> createState() => _SpecialistServicesScreenState();
 }
 
-class _SpecialistServicesScreenState
-    extends ConsumerState<SpecialistServicesScreen> {
-  final ServiceTemplateService _templateService = ServiceTemplateService();
+class _SpecialistServicesScreenState extends ConsumerState<SpecialistServicesScreen>
+    with TickerProviderStateMixin {
+  late TabController _tabController;
   final SpecialistServiceService _serviceService = SpecialistServiceService();
+  String _searchQuery = '';
+  String? _selectedCategory;
+  ServicePriceType? _selectedPriceType;
+  bool _showOnlyActive = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) => ResponsiveLayout(
-        mobile: _buildMobileLayout(context),
-        tablet: _buildTabletLayout(context),
-        desktop: _buildDesktopLayout(context),
-        largeDesktop: _buildLargeDesktopLayout(context),
+        mobile: _buildMobileLayout(),
+        tablet: _buildTabletLayout(),
+        desktop: _buildDesktopLayout(),
+        largeDesktop: _buildLargeDesktopLayout(),
       );
 
-  Widget _buildMobileLayout(BuildContext context) => Scaffold(
+  Widget _buildMobileLayout() => Scaffold(
         appBar: AppBar(
-          title: const Text('Услуги и цены'),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: const Text('Мои услуги'),
           actions: [
             IconButton(
               icon: const Icon(Icons.add),
-              onPressed: () => _showAddServiceDialog(context),
+              onPressed: _addService,
+            ),
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFilters,
             ),
           ],
+          bottom: TabBar(
+            controller: _tabController,
+            tabs: const [
+              Tab(icon: Icon(Icons.list), text: 'Все'),
+              Tab(icon: Icon(Icons.star), text: 'Популярные'),
+              Tab(icon: Icon(Icons.analytics), text: 'Аналитика'),
+            ],
+          ),
         ),
-        body: _buildContent(),
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            _buildServicesList(),
+            _buildPopularServices(),
+            _buildAnalytics(),
+          ],
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: _addService,
+          child: const Icon(Icons.add),
+        ),
       );
 
-  Widget _buildTabletLayout(BuildContext context) => Scaffold(
+  Widget _buildTabletLayout() => Scaffold(
         appBar: AppBar(
-          title: const Text('Услуги и цены'),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: const Text('Мои услуги'),
           actions: [
-            ElevatedButton.icon(
-              onPressed: () => _showAddServiceDialog(context),
+            IconButton(
               icon: const Icon(Icons.add),
-              label: const Text('Добавить услугу'),
+              onPressed: _addService,
             ),
-            const SizedBox(width: 16),
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFilters,
+            ),
           ],
         ),
         body: ResponsiveContainer(
-          child: _buildContent(),
-        ),
-      );
-
-  Widget _buildDesktopLayout(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Услуги и цены'),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          actions: [
-            ElevatedButton.icon(
-              onPressed: () => _showAddServiceDialog(context),
-              icon: const Icon(Icons.add),
-              label: const Text('Добавить услугу'),
-            ),
-            const SizedBox(width: 16),
-          ],
-        ),
-        body: ResponsiveContainer(
-          child: _buildContent(),
-        ),
-      );
-
-  Widget _buildLargeDesktopLayout(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('Услуги и цены'),
-          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          actions: [
-            ElevatedButton.icon(
-              onPressed: () => _showAddServiceDialog(context),
-              icon: const Icon(Icons.add),
-              label: const Text('Добавить услугу'),
-            ),
-            const SizedBox(width: 16),
-          ],
-        ),
-        body: ResponsiveContainer(
-          child: _buildContent(),
-        ),
-      );
-
-  Widget _buildContent() => Column(
-        children: [
-          // Заголовок с информацией
-          ResponsiveCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Row(
+          child: Column(
+            children: [
+              // Фильтры
+              _buildFiltersBar(),
+              // Вкладки
+              TabBar(
+                controller: _tabController,
+                tabs: const [
+                  Tab(icon: Icon(Icons.list), text: 'Все услуги'),
+                  Tab(icon: Icon(Icons.star), text: 'Популярные'),
+                  Tab(icon: Icon(Icons.analytics), text: 'Аналитика'),
+                ],
+              ),
+              // Контент
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
                   children: [
-                    Icon(Icons.info_outline),
-                    SizedBox(width: 12),
+                    _buildServicesList(),
+                    _buildPopularServices(),
+                    _buildAnalytics(),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          onPressed: _addService,
+          icon: const Icon(Icons.add),
+          label: const Text('Добавить услугу'),
+        ),
+      );
+
+  Widget _buildDesktopLayout() => Scaffold(
+        appBar: AppBar(
+          title: const Text('Управление услугами'),
+          actions: [
+            ElevatedButton.icon(
+              onPressed: _addService,
+              icon: const Icon(Icons.add),
+              label: const Text('Добавить услугу'),
+            ),
+            const SizedBox(width: 16),
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFilters,
+            ),
+          ],
+        ),
+        body: ResponsiveContainer(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Левая панель с фильтрами
+              SizedBox(
+                width: 300,
+                child: _buildFiltersPanel(),
+              ),
+              const SizedBox(width: 24),
+              // Основной контент
+              Expanded(
+                child: Column(
+                  children: [
+                    // Вкладки
+                    TabBar(
+                      controller: _tabController,
+                      tabs: const [
+                        Tab(icon: Icon(Icons.list), text: 'Все услуги'),
+                        Tab(icon: Icon(Icons.star), text: 'Популярные'),
+                        Tab(icon: Icon(Icons.analytics), text: 'Аналитика'),
+                      ],
+                    ),
+                    // Контент
                     Expanded(
-                      child: ResponsiveText(
-                        'Управление услугами и ценами',
-                        isTitle: true,
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          _buildServicesList(),
+                          _buildPopularServices(),
+                          _buildAnalytics(),
+                        ],
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 16),
-                const Text(
-                  'Укажите цены для всех ваших услуг. Цены обязательны и не могут быть "по договорённости".',
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.orange.withValues(alpha: 0.1),
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.orange),
-                  ),
-                  child: const Row(
-                    children: [
-                      Icon(Icons.warning, color: Colors.orange),
-                      SizedBox(width: 8),
-                      Expanded(
-                        child: Text(
-                          'Обновляйте цены регулярно для привлечения клиентов',
-                          style: TextStyle(color: Colors.orange),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
-
-          const SizedBox(height: 16),
-
-          // Список услуг
-          Expanded(
-            child: FutureBuilder<List<SpecialistService>>(
-              future:
-                  _serviceService.getSpecialistServices(widget.specialistId),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                if (snapshot.hasError) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(Icons.error, size: 64, color: Colors.red),
-                        const SizedBox(height: 16),
-                        Text('Ошибка: ${snapshot.error}'),
-                        const SizedBox(height: 16),
-                        ElevatedButton(
-                          onPressed: () => setState(() {}),
-                          child: const Text('Повторить'),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-
-                final services = snapshot.data ?? [];
-
-                if (services.isEmpty) {
-                  return Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Icon(
-                          Icons.work_outline,
-                          size: 64,
-                          color: Colors.grey,
-                        ),
-                        const SizedBox(height: 16),
-                        const Text('У вас пока нет услуг'),
-                        const SizedBox(height: 8),
-                        const Text(
-                          'Добавьте услуги, чтобы клиенты могли их заказать',
-                        ),
-                        const SizedBox(height: 16),
-                        ElevatedButton.icon(
-                          onPressed: () => _showAddServiceDialog(context),
-                          icon: const Icon(Icons.add),
-                          label: const Text('Добавить услугу'),
-                        ),
-                      ],
-                    ),
-                  );
-                }
-
-                return ListView.builder(
-                  itemCount: services.length,
-                  itemBuilder: (context, index) {
-                    final service = services[index];
-                    return _buildServiceCard(service);
-                  },
-                );
-              },
-            ),
-          ),
-        ],
+        ),
       );
 
-  Widget _buildServiceCard(SpecialistService service) => ResponsiveCard(
+  Widget _buildLargeDesktopLayout() => Scaffold(
+        appBar: AppBar(
+          title: const Text('Управление услугами'),
+          actions: [
+            ElevatedButton.icon(
+              onPressed: _addService,
+              icon: const Icon(Icons.add),
+              label: const Text('Добавить услугу'),
+            ),
+            const SizedBox(width: 16),
+            IconButton(
+              icon: const Icon(Icons.filter_list),
+              onPressed: _showFilters,
+            ),
+          ],
+        ),
+        body: ResponsiveContainer(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Левая панель с фильтрами
+              SizedBox(
+                width: 350,
+                child: _buildFiltersPanel(),
+              ),
+              const SizedBox(width: 32),
+              // Основной контент
+              Expanded(
+                child: Column(
+                  children: [
+                    // Вкладки
+                    TabBar(
+                      controller: _tabController,
+                      tabs: const [
+                        Tab(icon: Icon(Icons.list), text: 'Все услуги'),
+                        Tab(icon: Icon(Icons.star), text: 'Популярные'),
+                        Tab(icon: Icon(Icons.analytics), text: 'Аналитика'),
+                      ],
+                    ),
+                    // Контент
+                    Expanded(
+                      child: TabBarView(
+                        controller: _tabController,
+                        children: [
+                          _buildServicesList(),
+                          _buildPopularServices(),
+                          _buildAnalytics(),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 32),
+              // Правая панель с аналитикой
+              SizedBox(
+                width: 300,
+                child: _buildAnalyticsPanel(),
+              ),
+            ],
+          ),
+        ),
+      );
+
+  Widget _buildFiltersBar() => Container(
+        padding: const EdgeInsets.all(16),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                decoration: const InputDecoration(
+                  hintText: 'Поиск услуг...',
+                  prefixIcon: Icon(Icons.search),
+                  border: OutlineInputBorder(),
+                ),
+                onChanged: (value) {
+                  setState(() {
+                    _searchQuery = value;
+                  });
+                },
+              ),
+            ),
+            const SizedBox(width: 16),
+            FilterChip(
+              label: const Text('Только активные'),
+              selected: _showOnlyActive,
+              onSelected: (selected) {
+                setState(() {
+                  _showOnlyActive = selected;
+                });
+              },
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildFiltersPanel() => ResponsiveCard(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ResponsiveText(
-                        service.serviceName,
-                        isTitle: true,
-                      ),
-                      const SizedBox(height: 4),
-                      ResponsiveText(
-                        service.description,
-                        isSubtitle: true,
-                      ),
-                    ],
-                  ),
-                ),
-                PopupMenuButton<String>(
-                  onSelected: (value) => _handleServiceAction(value, service),
-                  itemBuilder: (context) => [
-                    const PopupMenuItem(
-                      value: 'edit',
-                      child: Text('Редактировать'),
-                    ),
-                    const PopupMenuItem(
-                      value: 'delete',
-                      child: Text('Удалить'),
-                    ),
-                  ],
-                ),
-              ],
+            const ResponsiveText(
+              'Фильтры',
+              isTitle: true,
             ),
-
             const SizedBox(height: 16),
-
-            // Цены
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: Colors.green.withValues(alpha: 0.1),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.green),
+            // Поиск
+            TextField(
+              decoration: const InputDecoration(
+                hintText: 'Поиск услуг...',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(),
               ),
-              child: Row(
+              onChanged: (value) {
+                setState(() {
+                  _searchQuery = value;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+            // Категория
+            DropdownButtonFormField<String>(
+              decoration: const InputDecoration(
+                labelText: 'Категория',
+                border: OutlineInputBorder(),
+              ),
+              value: _selectedCategory,
+              items: const [
+                DropdownMenuItem(value: null, child: Text('Все категории')),
+                DropdownMenuItem(value: 'photography', child: Text('Фотография')),
+                DropdownMenuItem(value: 'videography', child: Text('Видеосъемка')),
+                DropdownMenuItem(value: 'music', child: Text('Музыка')),
+                DropdownMenuItem(value: 'decoration', child: Text('Оформление')),
+              ],
+              onChanged: (value) {
+                setState(() {
+                  _selectedCategory = value;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+            // Тип цены
+            DropdownButtonFormField<ServicePriceType>(
+              decoration: const InputDecoration(
+                labelText: 'Тип цены',
+                border: OutlineInputBorder(),
+              ),
+              value: _selectedPriceType,
+              items: ServicePriceType.values.map((type) {
+                return DropdownMenuItem(
+                  value: type,
+                  child: Text(type.displayName),
+                );
+              }).toList(),
+              onChanged: (value) {
+                setState(() {
+                  _selectedPriceType = value;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+            // Только активные
+            CheckboxListTile(
+              title: const Text('Только активные'),
+              value: _showOnlyActive,
+              onChanged: (value) {
+                setState(() {
+                  _showOnlyActive = value ?? true;
+                });
+              },
+            ),
+            const SizedBox(height: 16),
+            // Сбросить фильтры
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton(
+                onPressed: _resetFilters,
+                child: const Text('Сбросить фильтры'),
+              ),
+            ),
+          ],
+        ),
+      );
+
+  Widget _buildServicesList() => StreamBuilder<List<SpecialistService>>(
+        stream: _serviceService.getSpecialistServices(widget.specialistId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const Icon(Icons.attach_money, color: Colors.green),
-                  const SizedBox(width: 8),
+                  const Icon(Icons.error, size: 64, color: Colors.red),
+                  const SizedBox(height: 16),
+                  Text('Ошибка загрузки услуг: ${snapshot.error}'),
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () => setState(() {}),
+                    child: const Text('Повторить'),
+                  ),
+                ],
+              ),
+            );
+          }
+
+          final services = snapshot.data ?? [];
+          final filteredServices = _filterServices(services);
+
+          if (filteredServices.isEmpty) {
+            return _buildEmptyState();
+          }
+
+          return ResponsiveList(
+            children: filteredServices.map(_buildServiceCard).toList(),
+          );
+        },
+      );
+
+  Widget _buildPopularServices() => StreamBuilder<List<SpecialistService>>(
+        stream: _serviceService.getPopularServices(widget.specialistId),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.hasError) {
+            return Center(
+              child: Text('Ошибка загрузки популярных услуг: ${snapshot.error}'),
+            );
+          }
+
+          final services = snapshot.data ?? [];
+
+          if (services.isEmpty) {
+            return _buildEmptyState(
+              'Нет популярных услуг',
+              'Популярные услуги появятся после получения заказов',
+            );
+          }
+
+          return ResponsiveList(
+            children: services.map(_buildServiceCard).toList(),
+          );
+        },
+      );
+
+  Widget _buildAnalytics() => ResponsiveList(
+        children: [
+          _buildAnalyticsCard(),
+          _buildPriceAnalysisCard(),
+          _buildPerformanceCard(),
+        ],
+      );
+
+  Widget _buildAnalyticsPanel() => Column(
+        children: [
+          const SizedBox(height: 20),
+          _buildAnalyticsCard(),
+          const SizedBox(height: 24),
+          _buildPriceAnalysisCard(),
+          const SizedBox(height: 24),
+          _buildPerformanceCard(),
+        ],
+      );
+
+  Widget _buildServiceCard(SpecialistService service) => AnimatedContent(
+        delay: Duration(milliseconds: 100),
+        type: AnimationType.slideUp,
+        child: ResponsiveCard(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Заголовок
+              Row(
+                children: [
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         ResponsiveText(
-                          'Цена: ${service.priceRange}',
-                          style: const TextStyle(
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          service.name,
+                          isTitle: true,
                         ),
-                        if (service.priceMin != service.priceMax)
-                          ResponsiveText(
-                            'Средняя: ${service.averagePrice.toStringAsFixed(0)} ${service.currency}',
-                            isSubtitle: true,
-                          ),
+                        const SizedBox(height: 4),
+                        ResponsiveText(
+                          service.description,
+                          isSubtitle: true,
+                          maxLines: 2,
+                        ),
                       ],
+                    ),
+                  ),
+                  // Статус
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: _getStatusColor(service.statusColor),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Text(
+                      service.statusText,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ],
               ),
-            ),
-
-            const SizedBox(height: 8),
-
-            // Детали ценообразования
-            if (service.pricingDetails.isNotEmpty) ...[
-              const ResponsiveText(
-                'Детали ценообразования:',
+              const SizedBox(height: 16),
+              // Цена и тип
+              Row(
+                children: [
+                  ResponsiveText(
+                    service.formattedPrice,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.green,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  if (service.hasDiscount) ...[
+                    ResponsiveText(
+                      service.formattedOriginalPrice!,
+                      style: const TextStyle(
+                        decoration: TextDecoration.lineThrough,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Text(
+                        service.formattedDiscountPercentage!,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 12,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ],
+                ],
+              ),
+              const SizedBox(height: 8),
+              ResponsiveText(
+                service.priceTypeDisplayName,
                 isSubtitle: true,
               ),
-              const SizedBox(height: 4),
-              ...service.pricingDetails.entries.map(
-                (entry) => Padding(
-                  padding: const EdgeInsets.only(left: 16, bottom: 2),
-                  child: ResponsiveText(
-                    '${entry.key}: ${entry.value}',
-                    isSubtitle: true,
+              const SizedBox(height: 16),
+              // Статистика
+              Row(
+                children: [
+                  _buildStatChip(Icons.shopping_cart, '${service.bookingCount}'),
+                  const SizedBox(width: 8),
+                  _buildStatChip(Icons.star, service.rating.toStringAsFixed(1)),
+                  const SizedBox(width: 8),
+                  if (service.durationRange != null)
+                    _buildStatChip(Icons.access_time, service.durationRange!),
+                ],
+              ),
+              const SizedBox(height: 16),
+              // Действия
+              Row(
+                children: [
+                  Expanded(
+                    child: OutlinedButton.icon(
+                      onPressed: () => _editService(service),
+                      icon: const Icon(Icons.edit),
+                      label: const Text('Редактировать'),
+                    ),
                   ),
-                ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: ElevatedButton.icon(
+                      onPressed: () => _duplicateService(service),
+                      icon: const Icon(Icons.copy),
+                      label: const Text('Дублировать'),
+                    ),
+                  ),
+                ],
               ),
             ],
+          ),
+        ),
+      );
+
+  Widget _buildStatChip(IconData icon, String text) => Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Icon(icon, size: 16, color: Colors.grey[600]),
+            const SizedBox(width: 4),
+            Text(
+              text,
+              style: TextStyle(
+                fontSize: 12,
+                color: Colors.grey[600],
+                fontWeight: FontWeight.w500,
+              ),
+            ),
           ],
         ),
       );
 
-  void _handleServiceAction(String action, SpecialistService service) {
-    switch (action) {
-      case 'edit':
-        _showEditServiceDialog(context, service);
-        break;
-      case 'delete':
-        _showDeleteServiceDialog(context, service);
-        break;
-    }
-  }
-
-  void _showAddServiceDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => _ServiceDialog(
-        specialistId: widget.specialistId,
-        onServiceAdded: () => setState(() {}),
-      ),
-    );
-  }
-
-  void _showEditServiceDialog(BuildContext context, SpecialistService service) {
-    showDialog(
-      context: context,
-      builder: (context) => _ServiceDialog(
-        specialistId: widget.specialistId,
-        service: service,
-        onServiceUpdated: () => setState(() {}),
-      ),
-    );
-  }
-
-  void _showDeleteServiceDialog(
-    BuildContext context,
-    SpecialistService service,
-  ) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Удалить услугу'),
-        content: Text(
-          'Вы уверены, что хотите удалить услугу "${service.serviceName}"?',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              Navigator.pop(context);
-              try {
-                await _serviceService.deleteSpecialistService(
-                  widget.specialistId,
-                  service.id,
-                );
-                setState(() {});
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Услуга удалена')),
-                );
-              } catch (e) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Ошибка: $e')),
-                );
-              }
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
-              foregroundColor: Colors.white,
+  Widget _buildAnalyticsCard() => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const ResponsiveText(
+              'Общая статистика',
+              isTitle: true,
             ),
-            child: const Text('Удалить'),
-          ),
-        ],
-      ),
-    );
-  }
-}
+            const SizedBox(height: 16),
+            _buildStatRow('Всего услуг', '12'),
+            _buildStatRow('Активных услуг', '10'),
+            _buildStatRow('Популярных услуг', '3'),
+            _buildStatRow('Общий доход', '125,000 ₽'),
+            _buildStatRow('Средний рейтинг', '4.8 ⭐'),
+          ],
+        ),
+      );
 
-/// Диалог для добавления/редактирования услуги
-class _ServiceDialog extends StatefulWidget {
-  const _ServiceDialog({
-    required this.specialistId,
-    this.service,
-    this.onServiceAdded,
-    this.onServiceUpdated,
-  });
-  final String specialistId;
-  final SpecialistService? service;
-  final VoidCallback? onServiceAdded;
-  final VoidCallback? onServiceUpdated;
+  Widget _buildPriceAnalysisCard() => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const ResponsiveText(
+              'Анализ цен',
+              isTitle: true,
+            ),
+            const SizedBox(height: 16),
+            _buildStatRow('Средняя цена', '8,500 ₽'),
+            _buildStatRow('Минимальная цена', '3,000 ₽'),
+            _buildStatRow('Максимальная цена', '25,000 ₽'),
+            _buildStatRow('Цены обновлены', '2 дня назад'),
+          ],
+        ),
+      );
 
-  @override
-  State<_ServiceDialog> createState() => _ServiceDialogState();
-}
+  Widget _buildPerformanceCard() => ResponsiveCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const ResponsiveText(
+              'Производительность',
+              isTitle: true,
+            ),
+            const SizedBox(height: 16),
+            _buildStatRow('Заказов в месяц', '24'),
+            _buildStatRow('Конверсия', '12%'),
+            _buildStatRow('Повторные клиенты', '35%'),
+            _buildStatRow('Время ответа', '2 часа'),
+          ],
+        ),
+      );
 
-class _ServiceDialogState extends State<_ServiceDialog> {
-  final _formKey = GlobalKey<FormState>();
-  final _serviceNameController = TextEditingController();
-  final _descriptionController = TextEditingController();
-  final _priceMinController = TextEditingController();
-  final _priceMaxController = TextEditingController();
+  Widget _buildStatRow(String label, String value) => Padding(
+        padding: const EdgeInsets.only(bottom: 8),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            ResponsiveText(label, isSubtitle: true),
+            ResponsiveText(
+              value,
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      );
 
-  final SpecialistServiceService _serviceService = SpecialistServiceService();
-  bool _isLoading = false;
+  Widget _buildEmptyState([String? title, String? subtitle]) => Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Icon(
+              Icons.work_outline,
+              size: 64,
+              color: Colors.grey[400],
+            ),
+            const SizedBox(height: 16),
+            ResponsiveText(
+              title ?? 'Нет услуг',
+              isTitle: true,
+            ),
+            const SizedBox(height: 8),
+            ResponsiveText(
+              subtitle ?? 'Добавьте свои первые услуги, чтобы начать получать заказы',
+              isSubtitle: true,
+            ),
+            const SizedBox(height: 24),
+            ElevatedButton.icon(
+              onPressed: _addService,
+              icon: const Icon(Icons.add),
+              label: const Text('Добавить услугу'),
+            ),
+          ],
+        ),
+      );
 
-  @override
-  void initState() {
-    super.initState();
-    if (widget.service != null) {
-      _serviceNameController.text = widget.service!.serviceName;
-      _descriptionController.text = widget.service!.description;
-      _priceMinController.text = widget.service!.priceMin.toString();
-      _priceMaxController.text = widget.service!.priceMax.toString();
+  Color _getStatusColor(String statusColor) {
+    switch (statusColor) {
+      case 'red':
+        return Colors.red;
+      case 'green':
+        return Colors.green;
+      case 'blue':
+        return Colors.blue;
+      default:
+        return Colors.grey;
     }
   }
 
-  @override
-  void dispose() {
-    _serviceNameController.dispose();
-    _descriptionController.dispose();
-    _priceMinController.dispose();
-    _priceMaxController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) => AlertDialog(
-        title: Text(
-          widget.service == null ? 'Добавить услугу' : 'Редактировать услугу',
-        ),
-        content: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextFormField(
-                controller: _serviceNameController,
-                decoration: const InputDecoration(
-                  labelText: 'Название услуги *',
-                  border: OutlineInputBorder(),
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Введите название услуги';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              TextFormField(
-                controller: _descriptionController,
-                decoration: const InputDecoration(
-                  labelText: 'Описание услуги *',
-                  border: OutlineInputBorder(),
-                ),
-                maxLines: 3,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Введите описание услуги';
-                  }
-                  return null;
-                },
-              ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextFormField(
-                      controller: _priceMinController,
-                      decoration: const InputDecoration(
-                        labelText: 'Минимальная цена *',
-                        border: OutlineInputBorder(),
-                        suffixText: '₽',
-                      ),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Введите минимальную цену';
-                        }
-                        final price = double.tryParse(value);
-                        if (price == null || price <= 0) {
-                          return 'Цена должна быть больше 0';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: TextFormField(
-                      controller: _priceMaxController,
-                      decoration: const InputDecoration(
-                        labelText: 'Максимальная цена *',
-                        border: OutlineInputBorder(),
-                        suffixText: '₽',
-                      ),
-                      keyboardType: TextInputType.number,
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Введите максимальную цену';
-                        }
-                        final price = double.tryParse(value);
-                        if (price == null || price <= 0) {
-                          return 'Цена должна быть больше 0';
-                        }
-
-                        final minPrice =
-                            double.tryParse(_priceMinController.text);
-                        if (minPrice != null && price < minPrice) {
-                          return 'Максимальная цена не может быть меньше минимальной';
-                        }
-
-                        return null;
-                      },
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              Container(
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.blue.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.blue),
-                ),
-                child: const Row(
-                  children: [
-                    Icon(Icons.info, color: Colors.blue),
-                    SizedBox(width: 8),
-                    Expanded(
-                      child: Text(
-                        'Цены обязательны и не могут быть "по договорённости"',
-                        style: TextStyle(color: Colors.blue),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: _isLoading ? null : () => Navigator.pop(context),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: _isLoading ? null : _saveService,
-            child: _isLoading
-                ? const SizedBox(
-                    width: 16,
-                    height: 16,
-                    child: CircularProgressIndicator(strokeWidth: 2),
-                  )
-                : Text(widget.service == null ? 'Добавить' : 'Сохранить'),
-          ),
-        ],
-      );
-
-  Future<void> _saveService() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    setState(() {
-      _isLoading = true;
-    });
-
-    try {
-      final service = SpecialistService(
-        id: widget.service?.id ?? '',
-        specialistId: widget.specialistId,
-        serviceName: _serviceNameController.text.trim(),
-        description: _descriptionController.text.trim(),
-        priceMin: double.parse(_priceMinController.text),
-        priceMax: double.parse(_priceMaxController.text),
-        createdAt: widget.service?.createdAt ?? DateTime.now(),
-        updatedAt: DateTime.now(),
-      );
-
-      if (widget.service == null) {
-        await _serviceService.createSpecialistService(
-          widget.specialistId,
-          service,
-        );
-        widget.onServiceAdded?.call();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Услуга добавлена')),
-        );
-      } else {
-        await _serviceService.updateSpecialistService(
-          widget.specialistId,
-          widget.service!.id,
-          service,
-        );
-        widget.onServiceUpdated?.call();
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Услуга обновлена')),
-        );
+  List<SpecialistService> _filterServices(List<SpecialistService> services) {
+    return services.where((service) {
+      // Поиск
+      if (_searchQuery.isNotEmpty) {
+        final query = _searchQuery.toLowerCase();
+        if (!service.name.toLowerCase().contains(query) &&
+            !service.description.toLowerCase().contains(query)) {
+          return false;
+        }
       }
 
-      Navigator.pop(context);
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Ошибка: $e')),
-      );
-    } finally {
-      setState(() {
-        _isLoading = false;
-      });
-    }
+      // Категория
+      if (_selectedCategory != null && service.category != _selectedCategory) {
+        return false;
+      }
+
+      // Тип цены
+      if (_selectedPriceType != null && service.priceType != _selectedPriceType) {
+        return false;
+      }
+
+      // Только активные
+      if (_showOnlyActive && !service.isActive) {
+        return false;
+      }
+
+      return true;
+    }).toList();
+  }
+
+  void _resetFilters() {
+    setState(() {
+      _searchQuery = '';
+      _selectedCategory = null;
+      _selectedPriceType = null;
+      _showOnlyActive = true;
+    });
+  }
+
+  void _showFilters() {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Text(
+              'Фильтры',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 16),
+            // Здесь можно добавить дополнительные фильтры
+            const Text('Фильтры будут добавлены в следующей версии'),
+            const SizedBox(height: 16),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Закрыть'),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _addService() {
+    Navigator.of(context).push(
+      EnhancedPageTransition(
+        child: AddServiceScreen(specialistId: widget.specialistId),
+        type: PageTransitionType.slideUp,
+      ),
+    );
+  }
+
+  void _editService(SpecialistService service) {
+    Navigator.of(context).push(
+      EnhancedPageTransition(
+        child: EditServiceScreen(service: service),
+        type: PageTransitionType.slideUp,
+      ),
+    );
+  }
+
+  void _duplicateService(SpecialistService service) {
+    // TODO: Реализовать дублирование услуги
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Функция дублирования будет добавлена')),
+    );
   }
 }

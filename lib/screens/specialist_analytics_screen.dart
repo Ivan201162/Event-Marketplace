@@ -56,7 +56,7 @@ class _SpecialistAnalyticsScreenState extends State<SpecialistAnalyticsScreen>
         _analytics = analytics;
         _isLoading = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -394,4 +394,3 @@ class _SpecialistAnalyticsScreenState extends State<SpecialistAnalyticsScreen>
     );
   }
 }
-

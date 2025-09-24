@@ -194,9 +194,9 @@ class SpecialistAnalyticsService {
         final data = doc.data();
         return ReviewAnalytics(
           id: doc.id,
-          rating: data['rating']?.toDouble() ?? 0.0,
-          comment: data['comment'] ?? '',
-          customerName: data['customerName'] ?? '',
+          rating: (data['rating']?.toDouble() ?? 0.0) as double,
+          comment: (data['comment'] ?? '') as String,
+          customerName: (data['customerName'] ?? '') as String,
           createdAt: (data['createdAt'] as Timestamp).toDate(),
         );
       }).toList();
@@ -222,7 +222,7 @@ class SpecialistAnalyticsService {
 
       for (final doc in snapshot.docs) {
         final data = doc.data();
-        final amount = (data['amount'] ?? 0.0).toDouble();
+        final amount = ((data['amount'] ?? 0.0) as num).toDouble();
         final date = (data['createdAt'] as Timestamp).toDate();
         final monthKey = '${date.year}-${date.month.toString().padLeft(2, '0')}';
         
@@ -238,7 +238,7 @@ class SpecialistAnalyticsService {
       );
     } catch (e) {
       AppLogger.logE('Ошибка получения данных о доходах: $e', 'specialist_analytics_service');
-      return RevenueAnalytics(
+      return const RevenueAnalytics(
         totalRevenue: 0.0,
         averageCheck: 0.0,
         trend: 0.0,
@@ -249,19 +249,25 @@ class SpecialistAnalyticsService {
 
   /// Рассчитать тренд
   double _calculateTrend(List<int> values) {
-    if (values.length < 2) return 0.0;
+    if (values.length < 2) {
+      return 0.0;
+    }
     
     final firstHalf = values.take(values.length ~/ 2).reduce((a, b) => a + b);
     final secondHalf = values.skip(values.length ~/ 2).reduce((a, b) => a + b);
     
-    if (firstHalf == 0) return secondHalf > 0 ? 100.0 : 0.0;
+    if (firstHalf == 0) {
+      return secondHalf > 0 ? 100.0 : 0.0;
+    }
     
     return ((secondHalf - firstHalf) / firstHalf) * 100;
   }
 
   /// Рассчитать среднее время ответа
   double _calculateAverageResponseTime(List<Booking> bookings) {
-    if (bookings.isEmpty) return 0.0;
+    if (bookings.isEmpty) {
+      return 0.0;
+    }
     
     var totalResponseTime = 0.0;
     var validBookings = 0;

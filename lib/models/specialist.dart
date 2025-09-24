@@ -275,9 +275,13 @@ class Specialist {
     this.followingCount = 0,
     this.recentPosts = const [],
     this.activeStories = const [],
-    this.isVerified = false,
     this.verificationBadge,
     this.socialStats,
+    this.reviewsCount = 0,
+    this.lastSeenAt,
+    this.experienceYears = 0,
+    this.completedOrders = 0,
+    this.minPrice = 0.0,
   });
 
   /// Создать из Map
@@ -363,6 +367,13 @@ class Specialist {
         socialStats: data['socialStats'] != null 
             ? Map<String, dynamic>.from(data['socialStats'])
             : null,
+        reviewsCount: data['reviewsCount'] as int? ?? 0,
+        lastSeenAt: data['lastSeenAt'] != null 
+            ? (data['lastSeenAt'] as Timestamp).toDate()
+            : null,
+        experienceYears: data['experienceYears'] as int? ?? 0,
+        completedOrders: data['completedOrders'] as int? ?? 0,
+        minPrice: (data['minPrice'] as num?)?.toDouble() ?? 0.0,
       );
 
   /// Создать из документа Firestore
@@ -415,6 +426,13 @@ class Specialist {
         socialStats: data['socialStats'] != null 
             ? Map<String, dynamic>.from(data['socialStats'])
             : null,
+        reviewsCount: data['reviewsCount'] as int? ?? 0,
+        lastSeenAt: data['lastSeenAt'] != null 
+            ? (data['lastSeenAt'] as Timestamp).toDate()
+            : null,
+        experienceYears: data['experienceYears'] as int? ?? 0,
+        completedOrders: data['completedOrders'] as int? ?? 0,
+        minPrice: (data['minPrice'] as num?)?.toDouble() ?? 0.0,
     );
   }
   final String id;
@@ -482,9 +500,15 @@ class Specialist {
   final int followingCount;
   final List<String> recentPosts;
   final List<String> activeStories;
-  final bool isVerified;
   final String? verificationBadge;
   final Map<String, dynamic>? socialStats;
+  
+  // Дополнительные поля для совместимости
+  final int reviewsCount;
+  final DateTime? lastSeenAt;
+  final int experienceYears;
+  final int completedOrders;
+  final double minPrice;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {

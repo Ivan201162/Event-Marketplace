@@ -6,11 +6,11 @@ enum StoryMediaType {
   video,
 }
 
-/// Статус сторис
-enum StoryStatus {
-  active,
+/// Статус просмотра сторис
+enum StoryViewStatus {
+  notViewed,
+  viewed,
   expired,
-  archived,
 }
 
 /// Модель сторис специалиста
@@ -18,273 +18,193 @@ class SpecialistStory {
   const SpecialistStory({
     required this.id,
     required this.specialistId,
-    required this.mediaUrl,
     required this.mediaType,
-    required this.createdAt,
-    this.expiresAt,
+    required this.mediaUrl,
+    this.thumbnailUrl,
     this.caption,
+    this.hashtags = const [],
+    required this.createdAt,
+    required this.expiresAt,
+    this.viewersCount = 0,
+    this.isHighlighted = false,
+    this.highlightTitle,
     this.location,
     this.tags = const [],
-    this.viewers = const [],
-    this.views = 0,
-    this.likes = 0,
-    this.replies = 0,
-    this.isPublic = true,
-    this.status = StoryStatus.active,
-    this.duration = 15, // секунды
-    this.priceInfo,
-    this.serviceInfo,
   });
+
+  final String id;
+  final String specialistId;
+  final StoryMediaType mediaType;
+  final String mediaUrl;
+  final String? thumbnailUrl;
+  final String? caption;
+  final List<String> hashtags;
+  final DateTime createdAt;
+  final DateTime expiresAt;
+  final int viewersCount;
+  final bool isHighlighted;
+  final String? highlightTitle;
+  final String? location;
+  final List<String> tags;
 
   /// Создать из документа Firestore
   factory SpecialistStory.fromDocument(DocumentSnapshot doc) {
     final data = doc.data()! as Map<String, dynamic>;
     return SpecialistStory(
       id: doc.id,
-      specialistId: data['specialistId'] as String,
-      mediaUrl: data['mediaUrl'] as String,
+      specialistId: data['specialistId'] as String? ?? '',
       mediaType: StoryMediaType.values.firstWhere(
-        (e) => e.name == data['mediaType'],
+        (type) => type.name == data['mediaType'],
         orElse: () => StoryMediaType.image,
       ),
-      createdAt: (data['createdAt'] as Timestamp).toDate(),
-      expiresAt: data['expiresAt'] != null
-          ? (data['expiresAt'] as Timestamp).toDate()
-          : null,
+      mediaUrl: data['mediaUrl'] as String? ?? '',
+      thumbnailUrl: data['thumbnailUrl'] as String?,
       caption: data['caption'] as String?,
+      hashtags: List<String>.from(data['hashtags'] ?? []),
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      expiresAt: (data['expiresAt'] as Timestamp).toDate(),
+      viewersCount: data['viewersCount'] as int? ?? 0,
+      isHighlighted: data['isHighlighted'] as bool? ?? false,
+      highlightTitle: data['highlightTitle'] as String?,
       location: data['location'] as String?,
       tags: List<String>.from(data['tags'] ?? []),
-      viewers: List<String>.from(data['viewers'] ?? []),
-      views: data['views'] as int? ?? 0,
-      likes: data['likes'] as int? ?? 0,
-      replies: data['replies'] as int? ?? 0,
-      isPublic: data['isPublic'] as bool? ?? true,
-      status: StoryStatus.values.firstWhere(
-        (e) => e.name == data['status'],
-        orElse: () => StoryStatus.active,
-      ),
-      duration: data['duration'] as int? ?? 15,
-      priceInfo: data['priceInfo'] != null
-          ? StoryPriceInfo.fromMap(data['priceInfo'] as Map<String, dynamic>)
-          : null,
-      serviceInfo: data['serviceInfo'] != null
-          ? StoryServiceInfo.fromMap(data['serviceInfo'] as Map<String, dynamic>)
-          : null,
     );
   }
 
-  final String id;
-  final String specialistId;
-  final String mediaUrl;
-  final StoryMediaType mediaType;
-  final DateTime createdAt;
-  final DateTime? expiresAt;
-  final String? caption;
-  final String? location;
-  final List<String> tags;
-  final List<String> viewers;
-  final int views;
-  final int likes;
-  final int replies;
-  final bool isPublic;
-  final StoryStatus status;
-  final int duration;
-  final StoryPriceInfo? priceInfo;
-  final StoryServiceInfo? serviceInfo;
+  /// Создать из Map
+  factory SpecialistStory.fromMap(Map<String, dynamic> data) => SpecialistStory(
+    id: data['id'] as String? ?? '',
+    specialistId: data['specialistId'] as String? ?? '',
+    mediaType: StoryMediaType.values.firstWhere(
+      (type) => type.name == data['mediaType'],
+      orElse: () => StoryMediaType.image,
+    ),
+    mediaUrl: data['mediaUrl'] as String? ?? '',
+    thumbnailUrl: data['thumbnailUrl'] as String?,
+    caption: data['caption'] as String?,
+    hashtags: List<String>.from(data['hashtags'] ?? []),
+    createdAt: data['createdAt'] is Timestamp 
+        ? (data['createdAt'] as Timestamp).toDate()
+        : DateTime.parse(data['createdAt'] as String),
+    expiresAt: data['expiresAt'] is Timestamp 
+        ? (data['expiresAt'] as Timestamp).toDate()
+        : DateTime.parse(data['expiresAt'] as String),
+    viewersCount: data['viewersCount'] as int? ?? 0,
+    isHighlighted: data['isHighlighted'] as bool? ?? false,
+    highlightTitle: data['highlightTitle'] as String?,
+    location: data['location'] as String?,
+    tags: List<String>.from(data['tags'] ?? []),
+  );
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'specialistId': specialistId,
-        'mediaUrl': mediaUrl,
-        'mediaType': mediaType.name,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'expiresAt': expiresAt != null ? Timestamp.fromDate(expiresAt!) : null,
-        'caption': caption,
-        'location': location,
-        'tags': tags,
-        'viewers': viewers,
-        'views': views,
-        'likes': likes,
-        'replies': replies,
-        'isPublic': isPublic,
-        'status': status.name,
-        'duration': duration,
-        'priceInfo': priceInfo?.toMap(),
-        'serviceInfo': serviceInfo?.toMap(),
-      };
+    'specialistId': specialistId,
+    'mediaType': mediaType.name,
+    'mediaUrl': mediaUrl,
+    'thumbnailUrl': thumbnailUrl,
+    'caption': caption,
+    'hashtags': hashtags,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'expiresAt': Timestamp.fromDate(expiresAt),
+    'viewersCount': viewersCount,
+    'isHighlighted': isHighlighted,
+    'highlightTitle': highlightTitle,
+    'location': location,
+    'tags': tags,
+  };
 
   /// Копировать с изменениями
   SpecialistStory copyWith({
     String? id,
     String? specialistId,
-    String? mediaUrl,
     StoryMediaType? mediaType,
+    String? mediaUrl,
+    String? thumbnailUrl,
+    String? caption,
+    List<String>? hashtags,
     DateTime? createdAt,
     DateTime? expiresAt,
-    String? caption,
+    int? viewersCount,
+    bool? isHighlighted,
+    String? highlightTitle,
     String? location,
     List<String>? tags,
-    List<String>? viewers,
-    int? views,
-    int? likes,
-    int? replies,
-    bool? isPublic,
-    StoryStatus? status,
-    int? duration,
-    StoryPriceInfo? priceInfo,
-    StoryServiceInfo? serviceInfo,
   }) =>
       SpecialistStory(
         id: id ?? this.id,
         specialistId: specialistId ?? this.specialistId,
-        mediaUrl: mediaUrl ?? this.mediaUrl,
         mediaType: mediaType ?? this.mediaType,
+        mediaUrl: mediaUrl ?? this.mediaUrl,
+        thumbnailUrl: thumbnailUrl ?? this.thumbnailUrl,
+        caption: caption ?? this.caption,
+        hashtags: hashtags ?? this.hashtags,
         createdAt: createdAt ?? this.createdAt,
         expiresAt: expiresAt ?? this.expiresAt,
-        caption: caption ?? this.caption,
+        viewersCount: viewersCount ?? this.viewersCount,
+        isHighlighted: isHighlighted ?? this.isHighlighted,
+        highlightTitle: highlightTitle ?? this.highlightTitle,
         location: location ?? this.location,
         tags: tags ?? this.tags,
-        viewers: viewers ?? this.viewers,
-        views: views ?? this.views,
-        likes: likes ?? this.likes,
-        replies: replies ?? this.replies,
-        isPublic: isPublic ?? this.isPublic,
-        status: status ?? this.status,
-        duration: duration ?? this.duration,
-        priceInfo: priceInfo ?? this.priceInfo,
-        serviceInfo: serviceInfo ?? this.serviceInfo,
       );
-
-  /// Проверить, просмотрел ли пользователь сторис
-  bool isViewedBy(String userId) => viewers.contains(userId);
 
   /// Проверить, истекла ли сторис
-  bool get isExpired {
-    if (expiresAt == null) return false;
-    return DateTime.now().isAfter(expiresAt!);
+  bool get isExpired => DateTime.now().isAfter(expiresAt);
+
+  /// Получить оставшееся время до истечения
+  Duration get timeUntilExpiry => expiresAt.difference(DateTime.now());
+
+  /// Проверить, является ли сторис новой (менее 1 часа)
+  bool get isNew => DateTime.now().difference(createdAt).inHours < 1;
+
+  /// Получить прогресс просмотра (0.0 - 1.0)
+  double getViewProgress(DateTime viewStartTime) {
+    final totalDuration = expiresAt.difference(createdAt);
+    final elapsed = DateTime.now().difference(viewStartTime);
+    return (elapsed.inMilliseconds / totalDuration.inMilliseconds).clamp(0.0, 1.0);
   }
 
-  /// Получить время до истечения
-  Duration? get timeUntilExpiry {
-    if (expiresAt == null) return null;
-    final now = DateTime.now();
-    if (now.isAfter(expiresAt!)) return Duration.zero;
-    return expiresAt!.difference(now);
-  }
+  /// Проверить, является ли сторис видео
+  bool get isVideo => mediaType == StoryMediaType.video;
 
-  /// Получить отформатированное время создания
-  String get formattedTime {
-    final now = DateTime.now();
-    final difference = now.difference(createdAt);
-
-    if (difference.inHours > 0) {
-      return '${difference.inHours}ч';
-    } else if (difference.inMinutes > 0) {
-      return '${difference.inMinutes}м';
-    } else {
-      return 'сейчас';
-    }
-  }
-
-  /// Получить отформатированное количество просмотров
-  String get formattedViews {
-    if (views >= 1000000) {
-      return '${(views / 1000000).toStringAsFixed(1)}M';
-    } else if (views >= 1000) {
-      return '${(views / 1000).toStringAsFixed(1)}K';
-    }
-    return views.toString();
-  }
-
-  /// Получить отформатированное количество лайков
-  String get formattedLikes {
-    if (likes >= 1000000) {
-      return '${(likes / 1000000).toStringAsFixed(1)}M';
-    } else if (likes >= 1000) {
-      return '${(likes / 1000).toStringAsFixed(1)}K';
-    }
-    return likes.toString();
-  }
+  /// Проверить, является ли сторис изображением
+  bool get isImage => mediaType == StoryMediaType.image;
 }
 
-/// Информация о цене в сторис
-class StoryPriceInfo {
-  const StoryPriceInfo({
-    required this.serviceName,
-    required this.price,
-    this.originalPrice,
-    this.discount,
-    this.currency = '₽',
-    this.isLimitedTime = false,
+/// Модель просмотра сторис
+class StoryView {
+  const StoryView({
+    required this.id,
+    required this.storyId,
+    required this.viewerId,
+    required this.viewedAt,
+    this.viewDuration,
   });
 
-  factory StoryPriceInfo.fromMap(Map<String, dynamic> data) => StoryPriceInfo(
-        serviceName: data['serviceName'] as String,
-        price: (data['price'] as num).toDouble(),
-        originalPrice: data['originalPrice'] != null
-            ? (data['originalPrice'] as num).toDouble()
-            : null,
-        discount: data['discount'] as int?,
-        currency: data['currency'] as String? ?? '₽',
-        isLimitedTime: data['isLimitedTime'] as bool? ?? false,
-      );
+  final String id;
+  final String storyId;
+  final String viewerId;
+  final DateTime viewedAt;
+  final Duration? viewDuration;
 
-  final String serviceName;
-  final double price;
-  final double? originalPrice;
-  final int? discount;
-  final String currency;
-  final bool isLimitedTime;
+  /// Создать из документа Firestore
+  factory StoryView.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
+    return StoryView(
+      id: doc.id,
+      storyId: data['storyId'] as String? ?? '',
+      viewerId: data['viewerId'] as String? ?? '',
+      viewedAt: (data['viewedAt'] as Timestamp).toDate(),
+      viewDuration: data['viewDuration'] != null 
+          ? Duration(milliseconds: data['viewDuration'] as int)
+          : null,
+    );
+  }
 
+  /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'serviceName': serviceName,
-        'price': price,
-        'originalPrice': originalPrice,
-        'discount': discount,
-        'currency': currency,
-        'isLimitedTime': isLimitedTime,
-      };
-
-  /// Получить отформатированную цену
-  String get formattedPrice => '$price $currency';
-
-  /// Получить отформатированную оригинальную цену
-  String? get formattedOriginalPrice =>
-      originalPrice != null ? '$originalPrice $currency' : null;
-
-  /// Проверить, есть ли скидка
-  bool get hasDiscount => discount != null && discount! > 0;
-}
-
-/// Информация об услуге в сторис
-class StoryServiceInfo {
-  const StoryServiceInfo({
-    required this.serviceId,
-    required this.serviceName,
-    this.description,
-    this.category,
-    this.isAvailable = true,
-  });
-
-  factory StoryServiceInfo.fromMap(Map<String, dynamic> data) => StoryServiceInfo(
-        serviceId: data['serviceId'] as String,
-        serviceName: data['serviceName'] as String,
-        description: data['description'] as String?,
-        category: data['category'] as String?,
-        isAvailable: data['isAvailable'] as bool? ?? true,
-      );
-
-  final String serviceId;
-  final String serviceName;
-  final String? description;
-  final String? category;
-  final bool isAvailable;
-
-  Map<String, dynamic> toMap() => {
-        'serviceId': serviceId,
-        'serviceName': serviceName,
-        'description': description,
-        'category': category,
-        'isAvailable': isAvailable,
-      };
+    'storyId': storyId,
+    'viewerId': viewerId,
+    'viewedAt': Timestamp.fromDate(viewedAt),
+    'viewDuration': viewDuration?.inMilliseconds,
+  };
 }

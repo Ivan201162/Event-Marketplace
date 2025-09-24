@@ -1,7 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../models/specialist.dart';
+import '../models/specialist_post.dart';
+import '../models/specialist_story.dart';
 import '../services/specialist_service.dart';
+import '../services/specialist_social_service.dart';
+import '../services/specialist_service_service.dart';
 
 /// Провайдер сервиса специалистов
 final specialistServiceProvider =
@@ -401,3 +405,39 @@ Map<SpecialistCategory, int> _getCategoryDistribution(
 
   return distribution;
 }
+
+/// Провайдер сервиса социальных функций специалистов
+final specialistContentServiceProvider =
+    Provider<SpecialistSocialService>((ref) => SpecialistSocialService());
+
+/// Провайдер сервиса услуг специалистов
+final specialistServiceServiceProvider =
+    Provider<SpecialistServiceService>((ref) => SpecialistServiceService());
+
+/// Провайдер постов специалиста
+final specialistPostsProvider =
+    StreamProvider.family<List<SpecialistPost>, String>((ref, specialistId) {
+  final socialService = ref.watch(specialistContentServiceProvider);
+  return socialService.getSpecialistPosts(specialistId);
+});
+
+/// Провайдер сторис специалиста
+final specialistStoriesProvider =
+    StreamProvider.family<List<SpecialistStory>, String>((ref, specialistId) {
+  final socialService = ref.watch(specialistContentServiceProvider);
+  return socialService.getSpecialistStories(specialistId);
+});
+
+/// Провайдер услуг специалиста
+final specialistServicesProvider =
+    StreamProvider.family<List<SpecialistService>, String>((ref, specialistId) {
+  final serviceService = ref.watch(specialistServiceServiceProvider);
+  return serviceService.getSpecialistServices(specialistId);
+});
+
+/// Провайдер статистики специалиста
+final specialistStatsProvider =
+    FutureProvider.family<Map<String, dynamic>, String>((ref, specialistId) {
+  final socialService = ref.watch(specialistContentServiceProvider);
+  return socialService.getSpecialistStats(specialistId);
+});

@@ -48,6 +48,7 @@ dependencies:
   table_calendar: ^3.1.2
   pointycastle: ^4.0.0
   device_info_plus: ^12.1.0
+  syncfusion_flutter_charts: ^31.1.21
   signature: ^5.3.0
   google_sign_in: ^7.2.0
   firebase_messaging: ^16.0.1
