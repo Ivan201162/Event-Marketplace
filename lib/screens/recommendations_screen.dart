@@ -154,7 +154,6 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
           return IdeaCard(
             idea: idea,
             onTap: () => _showIdeaDetails(idea),
-            onSave: () => _saveIdea(idea),
             onLike: () => _likeIdea(idea),
             onFavorite: () => _saveIdea(idea),
           );
@@ -206,7 +205,6 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
           return IdeaCard(
             idea: idea,
             onTap: () => _showIdeaDetails(idea),
-            onSave: () => _unsaveIdea(idea),
             onLike: () => _likeIdea(idea),
             onFavorite: () => _unsaveIdea(idea),
           );

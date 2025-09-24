@@ -8,6 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../core/safe_log.dart';
 import '../core/logger.dart';
 import '../models/user.dart';
+import 'demo_auth_service.dart' as demo;
 import 'storage_service.dart';
 import 'vk_auth_service.dart';
 
@@ -28,7 +29,7 @@ class AuthService {
   dynamic get _demoAuth {
     if (kIsWeb) {
       try {
-        return WebAuthService.demoAuth;
+        return demo.DemoAuthService();
       } catch (e) {
         return null;
       }
@@ -126,8 +127,10 @@ class AuthService {
         if (firebaseUser == null) return null;
 
         try {
+          // Приводим к типу User, чтобы получить доступ к uid
+          final User user = firebaseUser as User;
           final doc =
-              await _firestore.collection('users').doc(firebaseUser.uid).get();
+              await _firestore.collection('users').doc(user.uid).get();
           if (doc.exists) {
             return AppUser.fromDocument(doc);
           }
