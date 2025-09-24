@@ -170,8 +170,8 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                   child: Wrap(
                     spacing: 8,
                     runSpacing: 8,
-                    children: categories.map((category) {
-                      return _buildCategoryChip(context, category);
+                    children: categories.map<Widget>((category) {
+                      return _buildCategoryChip(context, category as SpecialistCategory);
                     }).toList(),
                   ),
                 );

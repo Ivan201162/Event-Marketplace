@@ -1,6 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../models/event_idea.dart';
 import '../models/idea_comment.dart';
@@ -61,8 +61,8 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
     });
 
     try {
-      final futures = await Future.wait([
-        _ideasService.getPublishedIdeas(limit: 20),
+        final futures = await Future.wait([
+        _ideasService.getPublishedIdeas(),
         _ideasService.getRecommendedIdeas('current_user_id'), // TODO: Получить реальный ID
       ]);
 
@@ -71,12 +71,12 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
         _recommendedIdeas = futures[1];
         _isLoading = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _isLoading = false;
       });
       _showErrorSnackBar('Ошибка загрузки идей: $e');
-  }
+    }
 }
   Future<void> _loadMoreIdeas() async {
     if (_isLoadingMore) return;
@@ -97,12 +97,12 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
         _ideas.addAll(newIdeas);
         _isLoadingMore = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _isLoadingMore = false;
       });
       _showErrorSnackBar('Ошибка загрузки дополнительных идей: $e');
-  }
+    }
 }
   Future<void> _loadFavoriteIdeas() async {
     try {
@@ -110,9 +110,9 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
       setState(() {
         _favoriteIdeas = favorites;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       _showErrorSnackBar('Ошибка загрузки избранных идей: $e');
-  }
+    }
 }
   Future<void> _onSearch(String query) async {
     setState(() {
@@ -131,12 +131,12 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
         _ideas = ideas;
         _isLoading = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _isLoading = false;
       });
       _showErrorSnackBar('Ошибка поиска: $e');
-  }
+    }
 }
   Future<void> _onCategoryFilter(EventIdeaCategory? category) async {
     setState(() {
@@ -155,12 +155,12 @@ class _EventIdeasScreenState extends ConsumerState<EventIdeasScreen>
         _ideas = ideas;
         _isLoading = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _isLoading = false;
       });
       _showErrorSnackBar('Ошибка фильтрации: $e');
-  }
+    }
 }
   Future<void> _onRefresh() async {
     await _loadInitialData();
@@ -760,4 +760,5 @@ class _IdeaDetailScreenState extends State<IdeaDetailScreen> {
       return 'Только что';
   }
 }} 
+  
  

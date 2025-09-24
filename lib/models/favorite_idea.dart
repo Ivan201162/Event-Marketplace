@@ -57,8 +57,8 @@ class FavoriteIdea {
     List<String>? tags,
     bool? isAttachedToBooking,
     String? attachedBookingId,
-  }) {
-    return FavoriteIdea(
+  }) =>
+    FavoriteIdea(
       id: id ?? this.id,
       userId: userId ?? this.userId,
       ideaId: ideaId ?? this.ideaId,
@@ -68,7 +68,6 @@ class FavoriteIdea {
       isAttachedToBooking: isAttachedToBooking ?? this.isAttachedToBooking,
       attachedBookingId: attachedBookingId ?? this.attachedBookingId,
     );
-  }
 
   @override
   bool operator ==(Object other) {

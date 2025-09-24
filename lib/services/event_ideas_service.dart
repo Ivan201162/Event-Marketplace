@@ -3,14 +3,15 @@ import 'package:uuid/uuid.dart';
 
 import '../core/logger.dart';
 import '../models/event_idea.dart';
-import '../models/idea_comment.dart';
 import '../models/favorite_idea.dart';
+import '../models/idea_comment.dart';
 
 /// Сервис для работы с идеями мероприятий
 class EventIdeasService {
+  EventIdeasService._internal();
+  
   static final EventIdeasService _instance = EventIdeasService._internal();
   factory EventIdeasService() => _instance;
-  EventIdeasService._internal();
 
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final Uuid _uuid = const Uuid();
@@ -41,7 +42,7 @@ class EventIdeasService {
 
       final snapshot = await query.get();
       final ideas = snapshot.docs
-          .map((doc) => EventIdea.fromMap(doc.data() as Map<String, dynamic>))
+          .map((doc) => EventIdea.fromMap(doc.data()! as Map<String, dynamic>))
           .toList();
 
       // Фильтрация по поисковому запросу
@@ -505,4 +506,5 @@ class EventIdeasService {
       return [];
   }
 }} 
+  
  

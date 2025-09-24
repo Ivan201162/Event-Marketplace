@@ -63,7 +63,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
       setState(() {
         _ideas = futures[0] as List<EventIdea>;
         _savedIdeas = futures[1] as List<EventIdea>;
-        _crossSellRecommendations = futures[2] as List<Specialist>;
+        _crossSellRecommendations = (futures[2] as List).cast<Specialist>();
         _isLoading = false;
       });
     } catch (e) {
@@ -155,6 +155,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
             onTap: () => _showIdeaDetails(idea),
             onSave: () => _saveIdea(idea),
             onLike: () => _likeIdea(idea),
+            onFavorite: () => _saveIdea(idea),
           );
         },
       ),
@@ -206,7 +207,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
             onTap: () => _showIdeaDetails(idea),
             onSave: () => _unsaveIdea(idea),
             onLike: () => _likeIdea(idea),
-            isSaved: true,
+            onFavorite: () => _unsaveIdea(idea),
           );
         },
       ),
@@ -249,7 +250,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
           final specialist = _crossSellRecommendations[index];
           return SpecialistCard(
             specialist: specialist,
-            onTap: () => context.push('${AppRoutes.specialist}/${specialist.id}'),
+            onTap: () => context.push('/specialist/${specialist.id}'),
             showPrice: true,
           );
         },

@@ -10,12 +10,14 @@ class IdeaCard extends StatelessWidget {
     required this.onTap,
     required this.onLike,
     required this.onFavorite,
+    this.onSave,
   });
 
   final EventIdea idea;
   final VoidCallback onTap;
   final VoidCallback onLike;
   final VoidCallback onFavorite;
+  final VoidCallback? onSave;
 
   @override
   Widget build(BuildContext context) {
@@ -236,5 +238,4 @@ class IdeaCard extends StatelessWidget {
       ),
     );
   }
-} 
- 
+}

@@ -2,3 +2,33 @@
 [33m2cfb87d[m feat: bookings streams + firestore service + test bookings button
 [33m70c2654[m Run Windows desktop version successful
 [33m41cf7bd[m Initial commit with Flutter + Firebase project
+[33mcommit b373b38b536620d37cca884ba7f343fa5f318e87[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mfeat/event-ideas[m[33m)[m
+Author: Ivan201162 <ivan.bliz279@gmail.com>
+Date:   Wed Sep 24 13:53:45 2025 +0700
+
+    feat: reviews & analytics system
+    
+    - Added comprehensive review system with ratings, comments, and tags
+    - Implemented specialist analytics with monthly stats and service tracking
+    - Created review screens for viewing and writing reviews
+    - Added analytics dashboard with charts and metrics
+    - Integrated reviews into specialist profile with new tab
+    - Added review functionality to completed bookings
+    - Implemented push notifications for new reviews
+    - Created review and analytics providers for state management
+    - Added chart widgets for data visualization
+    - Fixed compilation errors and improved code quality
+    
+    Features:
+    - Review creation with 1-5 star ratings
+    - Review replies from specialists
+    - Review helpfulness voting
+    - Review reporting system
+    - Monthly analytics with charts
+    - Service performance tracking
+    - Revenue and booking statistics
+    - Comparison with previous periods
+    - Push notifications for reviews
+    - Integration with booking flow
+
+lib/screens/booking_requests_screen.dart

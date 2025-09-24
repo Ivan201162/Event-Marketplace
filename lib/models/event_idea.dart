@@ -15,6 +15,18 @@ enum EventIdeaCategory {
   other, // Другое
 }
 
+/// Типы идей для мероприятий
+enum EventIdeaType {
+  decoration, // Оформление
+  entertainment, // Развлечения
+  catering, // Кейтеринг
+  photography, // Фотография
+  music, // Музыка
+  venue, // Площадка
+  planning, // Планирование
+  other, // Другое
+}
+
 /// Статус идеи
 enum EventIdeaStatus {
   draft, // Черновик
@@ -31,6 +43,7 @@ class EventIdea {
     required this.description,
     required this.imageUrl,
     required this.category,
+    required this.type,
     required this.createdBy,
     required this.createdAt,
     this.updatedAt,
@@ -58,6 +71,7 @@ class EventIdea {
   final String description;
   final String imageUrl;
   final EventIdeaCategory category;
+  final EventIdeaType type;
   final String createdBy; // ID пользователя
   final DateTime createdAt;
   final DateTime? updatedAt;
@@ -90,6 +104,10 @@ class EventIdea {
         (e) => e.name == map['category'],
         orElse: () => EventIdeaCategory.other,
       ),
+      type: EventIdeaType.values.firstWhere(
+        (e) => e.name == map['type'],
+        orElse: () => EventIdeaType.other,
+      ),
       createdBy: map['createdBy'] as String,
       createdAt: (map['createdAt'] as Timestamp).toDate(),
       updatedAt: map['updatedAt'] != null 
@@ -119,6 +137,12 @@ class EventIdea {
       metadata: Map<String, dynamic>.from((map['metadata'] ?? <String, dynamic>{}) as Map),
     );
 
+  /// Создать из Firestore DocumentSnapshot
+  factory EventIdea.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
+    return EventIdea.fromMap(data);
+  }
+
   /// Преобразовать в Map (Firestore)
   Map<String, dynamic> toMap() => {
       'id': id,
@@ -126,6 +150,7 @@ class EventIdea {
       'description': description,
       'imageUrl': imageUrl,
       'category': category.name,
+      'type': type.name,
       'createdBy': createdBy,
       'createdAt': Timestamp.fromDate(createdAt),
       'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
@@ -155,6 +180,7 @@ class EventIdea {
     String? description,
     String? imageUrl,
     EventIdeaCategory? category,
+    EventIdeaType? type,
     String? createdBy,
     DateTime? createdAt,
     DateTime? updatedAt,
@@ -182,6 +208,7 @@ class EventIdea {
       description: description ?? this.description,
       imageUrl: imageUrl ?? this.imageUrl,
       category: category ?? this.category,
+      type: type ?? this.type,
       createdBy: createdBy ?? this.createdBy,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -288,6 +315,29 @@ extension EventIdeaStatusExtension on EventIdeaStatus {
         return 'Архивирована';
       case EventIdeaStatus.reported:
         return 'На рассмотрении';
+    }
+  }
+}
+
+extension EventIdeaTypeExtension on EventIdeaType {
+  String get displayName {
+    switch (this) {
+      case EventIdeaType.decoration:
+        return 'Оформление';
+      case EventIdeaType.entertainment:
+        return 'Развлечения';
+      case EventIdeaType.catering:
+        return 'Кейтеринг';
+      case EventIdeaType.photography:
+        return 'Фотография';
+      case EventIdeaType.music:
+        return 'Музыка';
+      case EventIdeaType.venue:
+        return 'Площадка';
+      case EventIdeaType.planning:
+        return 'Планирование';
+      case EventIdeaType.other:
+        return 'Другое';
     }
   }
 }
