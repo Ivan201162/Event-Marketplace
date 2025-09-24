@@ -1,39 +1,89 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+/// Типы платежей
 enum PaymentType {
-  prepayment, // Предоплата 30%
-  postpayment, // Остаток после мероприятия
+  prepayment, // Предоплата
+  postpayment, // Постоплата
   full, // Полная оплата
   refund, // Возврат
-  dispute, // Спор
 }
 
-enum PaymentMethod {
-  sbp, // Система быстрых платежей
-  yookassa, // ЮKassa
-  tinkoff, // Tinkoff Pay
-  card, // Банковская карта
-  cash, // Наличные
-  bankTransfer, // Банковский перевод
-}
-
+/// Статусы платежей
 enum PaymentStatus {
   pending, // Ожидает оплаты
   processing, // Обрабатывается
-  completed, // Завершена
-  failed, // Неудачная
-  cancelled, // Отменена
-  refunded, // Возвращена
-  disputed, // Спор
+  completed, // Завершен
+  failed, // Неудачный
+  cancelled, // Отменен
+  refunded, // Возвращен
 }
 
+/// Методы платежей
+enum PaymentMethod {
+  sbp, // Система быстрых платежей
+  yookassa, // ЮKassa
+  tinkoff, // Тинькофф
+  card, // Банковская карта
+  cash, // Наличные
+}
+
+/// Статус налогообложения
 enum TaxStatus {
-  individual, // Физическое лицо
-  individualEntrepreneur, // ИП
-  selfEmployed, // Самозанятый
-  legalEntity, // Юридическое лицо
+  none, // Без налога
+  professionalIncome, // НПД (самозанятые)
+  simplifiedTax, // УСН (ИП)
+  vat, // НДС
 }
 
+/// Статус возврата
+enum RefundStatus {
+  pending, // Ожидает обработки
+  processed, // Обработан
+  failed, // Неудачный
+  cancelled, // Отменен
+}
+
+/// Информация о методе платежа
+class PaymentMethodInfo {
+  final PaymentMethod method;
+  final String name;
+  final String description;
+  final bool isAvailable;
+  final String? iconUrl;
+
+  const PaymentMethodInfo({
+    required this.method,
+    required this.name,
+    required this.description,
+    required this.isAvailable,
+    this.iconUrl,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'method': method.name,
+      'name': name,
+      'description': description,
+      'isAvailable': isAvailable,
+      'iconUrl': iconUrl,
+    };
+  }
+
+  factory PaymentMethodInfo.fromMap(Map<String, dynamic> map) {
+    return PaymentMethodInfo(
+      method: PaymentMethod.values.firstWhere(
+        (e) => e.name == map['method'],
+        orElse: () => PaymentMethod.card,
+      ),
+      name: map['name'] as String,
+      description: map['description'] as String,
+      isAvailable: map['isAvailable'] as bool,
+      iconUrl: map['iconUrl'] as String?,
+    );
+  }
+}
+
+/// Модель платежа
 class Payment {
   final String id;
   final String bookingId;
@@ -46,102 +96,104 @@ class Payment {
   final PaymentMethod method;
   final PaymentStatus status;
   final TaxStatus taxStatus;
-  final String? externalPaymentId; // ID в внешней системе
-  final String? paymentUrl; // Ссылка для оплаты
-  final String? qrCode; // QR-код для оплаты
-  final Map<String, dynamic> metadata; // Дополнительные данные
-  final String? failureReason; // Причина неудачи
-  final DateTime? completedAt;
-  final DateTime? refundedAt;
+  final Map<String, dynamic> metadata;
   final DateTime createdAt;
   final DateTime updatedAt;
+  final DateTime? completedAt;
+  final DateTime? failedAt;
+  final DateTime? refundedAt;
+  final String? externalPaymentId;
+  final String? paymentUrl;
+  final String? qrCode;
 
-  Payment({
+  const Payment({
     required this.id,
     required this.bookingId,
     required this.customerId,
     required this.specialistId,
     required this.amount,
-    this.taxAmount = 0.0,
-    this.netAmount = 0.0,
+    required this.taxAmount,
+    required this.netAmount,
     required this.type,
     required this.method,
-    this.status = PaymentStatus.pending,
+    required this.status,
     required this.taxStatus,
+    required this.metadata,
+    required this.createdAt,
+    required this.updatedAt,
+    this.completedAt,
+    this.failedAt,
+    this.refundedAt,
     this.externalPaymentId,
     this.paymentUrl,
     this.qrCode,
-    this.metadata = const {},
-    this.failureReason,
-    this.completedAt,
-    this.refundedAt,
-    required this.createdAt,
-    required this.updatedAt,
   });
 
+  /// Создать из документа Firestore
+  factory Payment.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
+    return Payment(
+      id: doc.id,
+      bookingId: data['bookingId'] as String? ?? '',
+      customerId: data['customerId'] as String? ?? '',
+      specialistId: data['specialistId'] as String? ?? '',
+      amount: (data['amount'] as num?)?.toDouble() ?? 0.0,
+      taxAmount: (data['taxAmount'] as num?)?.toDouble() ?? 0.0,
+      netAmount: (data['netAmount'] as num?)?.toDouble() ?? 0.0,
+      type: PaymentType.values.firstWhere(
+        (e) => e.name == data['type'],
+        orElse: () => PaymentType.full,
+      ),
+      method: PaymentMethod.values.firstWhere(
+        (e) => e.name == data['method'],
+        orElse: () => PaymentMethod.card,
+      ),
+      status: PaymentStatus.values.firstWhere(
+        (e) => e.name == data['status'],
+        orElse: () => PaymentStatus.pending,
+      ),
+      taxStatus: TaxStatus.values.firstWhere(
+        (e) => e.name == data['taxStatus'],
+        orElse: () => TaxStatus.none,
+      ),
+      metadata: Map<String, dynamic>.from(data['metadata'] as Map? ?? {}),
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      updatedAt: (data['updatedAt'] as Timestamp).toDate(),
+      completedAt: (data['completedAt'] as Timestamp?)?.toDate(),
+      failedAt: (data['failedAt'] as Timestamp?)?.toDate(),
+      refundedAt: (data['refundedAt'] as Timestamp?)?.toDate(),
+      externalPaymentId: data['externalPaymentId'] as String?,
+      paymentUrl: data['paymentUrl'] as String?,
+      qrCode: data['qrCode'] as String?,
+    );
+  }
+
+  /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'bookingId': bookingId,
       'customerId': customerId,
       'specialistId': specialistId,
       'amount': amount,
       'taxAmount': taxAmount,
       'netAmount': netAmount,
-      'type': type.toString().split('.').last,
-      'method': method.toString().split('.').last,
-      'status': status.toString().split('.').last,
-      'taxStatus': taxStatus.toString().split('.').last,
+      'type': type.name,
+      'method': method.name,
+      'status': status.name,
+      'taxStatus': taxStatus.name,
+      'metadata': metadata,
+      'createdAt': Timestamp.fromDate(createdAt),
+      'updatedAt': Timestamp.fromDate(updatedAt),
+      'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
+      'failedAt': failedAt != null ? Timestamp.fromDate(failedAt!) : null,
+      'refundedAt': refundedAt != null ? Timestamp.fromDate(refundedAt!) : null,
       'externalPaymentId': externalPaymentId,
       'paymentUrl': paymentUrl,
       'qrCode': qrCode,
-      'metadata': metadata,
-      'failureReason': failureReason,
-      'completedAt': completedAt != null ? Timestamp.fromDate(completedAt!) : null,
-      'refundedAt': refundedAt != null ? Timestamp.fromDate(refundedAt!) : null,
-      'createdAt': Timestamp.fromDate(createdAt),
-      'updatedAt': Timestamp.fromDate(updatedAt),
     };
   }
 
-  factory Payment.fromMap(Map<String, dynamic> map) {
-    return Payment(
-      id: map['id'] as String,
-      bookingId: map['bookingId'] as String,
-      customerId: map['customerId'] as String,
-      specialistId: map['specialistId'] as String,
-      amount: (map['amount'] as num).toDouble(),
-      taxAmount: (map['taxAmount'] as num?)?.toDouble() ?? 0.0,
-      netAmount: (map['netAmount'] as num?)?.toDouble() ?? 0.0,
-      type: PaymentType.values.firstWhere(
-        (e) => e.toString().split('.').last == map['type'] as String,
-      ),
-      method: PaymentMethod.values.firstWhere(
-        (e) => e.toString().split('.').last == map['method'] as String,
-      ),
-      status: PaymentStatus.values.firstWhere(
-        (e) => e.toString().split('.').last == map['status'] as String,
-        orElse: () => PaymentStatus.pending,
-      ),
-      taxStatus: TaxStatus.values.firstWhere(
-        (e) => e.toString().split('.').last == map['taxStatus'] as String,
-      ),
-      externalPaymentId: map['externalPaymentId'] as String?,
-      paymentUrl: map['paymentUrl'] as String?,
-      qrCode: map['qrCode'] as String?,
-      metadata: Map<String, dynamic>.from(map['metadata'] as Map<String, dynamic>? ?? {}),
-      failureReason: map['failureReason'] as String?,
-      completedAt: (map['completedAt'] as Timestamp?)?.toDate(),
-      refundedAt: (map['refundedAt'] as Timestamp?)?.toDate(),
-      createdAt: (map['createdAt'] as Timestamp).toDate(),
-      updatedAt: (map['updatedAt'] as Timestamp).toDate(),
-    );
-  }
-
-  factory Payment.fromDocument(DocumentSnapshot doc) {
-    return Payment.fromMap(doc.data() as Map<String, dynamic>);
-  }
-
+  /// Создать копию с изменениями
   Payment copyWith({
     String? id,
     String? bookingId,
@@ -154,15 +206,15 @@ class Payment {
     PaymentMethod? method,
     PaymentStatus? status,
     TaxStatus? taxStatus,
+    Map<String, dynamic>? metadata,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    DateTime? completedAt,
+    DateTime? failedAt,
+    DateTime? refundedAt,
     String? externalPaymentId,
     String? paymentUrl,
     String? qrCode,
-    Map<String, dynamic>? metadata,
-    String? failureReason,
-    DateTime? completedAt,
-    DateTime? refundedAt,
-    DateTime? createdAt,
-    DateTime? updatedAt,
   }) {
     return Payment(
       id: id ?? this.id,
@@ -176,112 +228,61 @@ class Payment {
       method: method ?? this.method,
       status: status ?? this.status,
       taxStatus: taxStatus ?? this.taxStatus,
+      metadata: metadata ?? this.metadata,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      completedAt: completedAt ?? this.completedAt,
+      failedAt: failedAt ?? this.failedAt,
+      refundedAt: refundedAt ?? this.refundedAt,
       externalPaymentId: externalPaymentId ?? this.externalPaymentId,
       paymentUrl: paymentUrl ?? this.paymentUrl,
       qrCode: qrCode ?? this.qrCode,
-      metadata: metadata ?? this.metadata,
-      failureReason: failureReason ?? this.failureReason,
-      completedAt: completedAt ?? this.completedAt,
-      refundedAt: refundedAt ?? this.refundedAt,
-      createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
     );
   }
 
-  /// Check if payment is completed
+  /// Проверить, завершен ли платеж
   bool get isCompleted => status == PaymentStatus.completed;
 
-  /// Check if payment is pending
-  bool get isPending => status == PaymentStatus.pending;
-
-  /// Check if payment is failed
+  /// Проверить, неудачен ли платеж
   bool get isFailed => status == PaymentStatus.failed;
 
-  /// Check if payment is refunded
-  bool get isRefunded => status == PaymentStatus.refunded;
+  /// Проверить, обрабатывается ли платеж
+  bool get isProcessing => status == PaymentStatus.processing;
 
-  /// Get payment method display name
-  String get methodDisplayName {
-    switch (method) {
-      case PaymentMethod.sbp:
-        return 'СБП';
-      case PaymentMethod.yookassa:
-        return 'ЮKassa';
-      case PaymentMethod.tinkoff:
-        return 'Tinkoff Pay';
-      case PaymentMethod.card:
-        return 'Банковская карта';
-      case PaymentMethod.cash:
-        return 'Наличные';
-      case PaymentMethod.bankTransfer:
-        return 'Банковский перевод';
-    }
-  }
-
-  /// Get payment type display name
-  String get typeDisplayName {
-    switch (type) {
-      case PaymentType.prepayment:
-        return 'Предоплата';
-      case PaymentType.postpayment:
-        return 'Остаток';
-      case PaymentType.full:
-        return 'Полная оплата';
-      case PaymentType.refund:
-        return 'Возврат';
-      case PaymentType.dispute:
-        return 'Спор';
-    }
-  }
-
-  /// Get tax status display name
-  String get taxStatusDisplayName {
-    switch (taxStatus) {
-      case TaxStatus.individual:
-        return 'Физическое лицо';
-      case TaxStatus.individualEntrepreneur:
-        return 'ИП';
-      case TaxStatus.selfEmployed:
-        return 'Самозанятый';
-      case TaxStatus.legalEntity:
-        return 'Юридическое лицо';
-    }
-  }
+  /// Проверить, ожидает ли платеж
+  bool get isPending => status == PaymentStatus.pending;
 }
 
+/// Модель расчета налогов
 class TaxCalculation {
   final String id;
   final String paymentId;
-  final TaxStatus taxStatus;
   final double grossAmount;
-  final double taxRate;
   final double taxAmount;
   final double netAmount;
-  final Map<String, dynamic> calculationDetails;
+  final double taxRate;
+  final TaxStatus taxStatus;
   final DateTime calculatedAt;
 
-  TaxCalculation({
+  const TaxCalculation({
     required this.id,
     required this.paymentId,
-    required this.taxStatus,
     required this.grossAmount,
-    required this.taxRate,
     required this.taxAmount,
     required this.netAmount,
-    this.calculationDetails = const {},
+    required this.taxRate,
+    required this.taxStatus,
     required this.calculatedAt,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'paymentId': paymentId,
-      'taxStatus': taxStatus.toString().split('.').last,
       'grossAmount': grossAmount,
-      'taxRate': taxRate,
       'taxAmount': taxAmount,
       'netAmount': netAmount,
-      'calculationDetails': calculationDetails,
+      'taxRate': taxRate,
+      'taxStatus': taxStatus.name,
       'calculatedAt': Timestamp.fromDate(calculatedAt),
     };
   }
@@ -290,19 +291,20 @@ class TaxCalculation {
     return TaxCalculation(
       id: map['id'] as String,
       paymentId: map['paymentId'] as String,
-      taxStatus: TaxStatus.values.firstWhere(
-        (e) => e.toString().split('.').last == map['taxStatus'] as String,
-      ),
       grossAmount: (map['grossAmount'] as num).toDouble(),
-      taxRate: (map['taxRate'] as num).toDouble(),
       taxAmount: (map['taxAmount'] as num).toDouble(),
       netAmount: (map['netAmount'] as num).toDouble(),
-      calculationDetails: Map<String, dynamic>.from(map['calculationDetails'] as Map<String, dynamic>? ?? {}),
+      taxRate: (map['taxRate'] as num).toDouble(),
+      taxStatus: TaxStatus.values.firstWhere(
+        (e) => e.name == map['taxStatus'],
+        orElse: () => TaxStatus.none,
+      ),
       calculatedAt: (map['calculatedAt'] as Timestamp).toDate(),
     );
   }
 }
 
+/// Модель запроса на возврат
 class RefundRequest {
   final String id;
   final String paymentId;
@@ -310,31 +312,27 @@ class RefundRequest {
   final double amount;
   final RefundStatus status;
   final String? externalRefundId;
-  final String? rejectionReason;
   final DateTime requestedAt;
   final DateTime? processedAt;
 
-  RefundRequest({
+  const RefundRequest({
     required this.id,
     required this.paymentId,
     required this.reason,
     required this.amount,
-    this.status = RefundStatus.pending,
+    required this.status,
     this.externalRefundId,
-    this.rejectionReason,
     required this.requestedAt,
     this.processedAt,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'id': id,
       'paymentId': paymentId,
       'reason': reason,
       'amount': amount,
-      'status': status.toString().split('.').last,
+      'status': status.name,
       'externalRefundId': externalRefundId,
-      'rejectionReason': rejectionReason,
       'requestedAt': Timestamp.fromDate(requestedAt),
       'processedAt': processedAt != null ? Timestamp.fromDate(processedAt!) : null,
     };
@@ -347,66 +345,57 @@ class RefundRequest {
       reason: map['reason'] as String,
       amount: (map['amount'] as num).toDouble(),
       status: RefundStatus.values.firstWhere(
-        (e) => e.toString().split('.').last == map['status'] as String,
+        (e) => e.name == map['status'],
         orElse: () => RefundStatus.pending,
       ),
       externalRefundId: map['externalRefundId'] as String?,
-      rejectionReason: map['rejectionReason'] as String?,
       requestedAt: (map['requestedAt'] as Timestamp).toDate(),
       processedAt: (map['processedAt'] as Timestamp?)?.toDate(),
     );
   }
 }
 
-enum RefundStatus {
-  pending,
-  approved,
-  rejected,
-  processed,
-}
+/// Статистика платежей
+class PaymentStatistics {
+  final int totalPayments;
+  final int completedPayments;
+  final int failedPayments;
+  final double totalAmount;
+  final double totalTaxAmount;
+  final double totalNetAmount;
+  final double averageAmount;
 
-class PaymentMethodInfo {
-  final PaymentMethod method;
-  final String name;
-  final String description;
-  final String iconUrl;
-  final bool isAvailable;
-  final double? fee;
-  final Map<String, dynamic> configuration;
-
-  PaymentMethodInfo({
-    required this.method,
-    required this.name,
-    required this.description,
-    this.iconUrl = '',
-    this.isAvailable = true,
-    this.fee,
-    this.configuration = const {},
+  const PaymentStatistics({
+    required this.totalPayments,
+    required this.completedPayments,
+    required this.failedPayments,
+    required this.totalAmount,
+    required this.totalTaxAmount,
+    required this.totalNetAmount,
+    required this.averageAmount,
   });
 
   Map<String, dynamic> toMap() {
     return {
-      'method': method.toString().split('.').last,
-      'name': name,
-      'description': description,
-      'iconUrl': iconUrl,
-      'isAvailable': isAvailable,
-      'fee': fee,
-      'configuration': configuration,
+      'totalPayments': totalPayments,
+      'completedPayments': completedPayments,
+      'failedPayments': failedPayments,
+      'totalAmount': totalAmount,
+      'totalTaxAmount': totalTaxAmount,
+      'totalNetAmount': totalNetAmount,
+      'averageAmount': averageAmount,
     };
   }
 
-  factory PaymentMethodInfo.fromMap(Map<String, dynamic> map) {
-    return PaymentMethodInfo(
-      method: PaymentMethod.values.firstWhere(
-        (e) => e.toString().split('.').last == map['method'] as String,
-      ),
-      name: map['name'] as String,
-      description: map['description'] as String,
-      iconUrl: map['iconUrl'] as String? ?? '',
-      isAvailable: map['isAvailable'] as bool? ?? true,
-      fee: (map['fee'] as num?)?.toDouble(),
-      configuration: Map<String, dynamic>.from(map['configuration'] as Map<String, dynamic>? ?? {}),
+  factory PaymentStatistics.fromMap(Map<String, dynamic> map) {
+    return PaymentStatistics(
+      totalPayments: map['totalPayments'] as int,
+      completedPayments: map['completedPayments'] as int,
+      failedPayments: map['failedPayments'] as int,
+      totalAmount: (map['totalAmount'] as num).toDouble(),
+      totalTaxAmount: (map['totalTaxAmount'] as num).toDouble(),
+      totalNetAmount: (map['totalNetAmount'] as num).toDouble(),
+      averageAmount: (map['averageAmount'] as num).toDouble(),
     );
   }
 }

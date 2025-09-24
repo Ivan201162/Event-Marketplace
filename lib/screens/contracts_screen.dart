@@ -1,64 +1,189 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
-import '../models/contract.dart';
-import '../models/work_act.dart';
-import '../services/contract_service.dart';
-import '../services/work_act_service.dart';
-import '../services/signature_service.dart';
+import '../models/payment_models.dart';
+import '../services/payment_integration_service.dart';
+import '../widgets/contract_card.dart';
+import '../widgets/contract_details_dialog.dart';
 
-/// Экран управления договорами и актами
 class ContractsScreen extends ConsumerStatefulWidget {
-  const ContractsScreen({super.key});
+  final String userId;
+  final bool isSpecialist;
+
+  const ContractsScreen({
+    super.key,
+    required this.userId,
+    this.isSpecialist = false,
+  });
 
   @override
   ConsumerState<ContractsScreen> createState() => _ContractsScreenState();
 }
 
-class _ContractsScreenState extends ConsumerState<ContractsScreen>
-    with SingleTickerProviderStateMixin {
-  late TabController _tabController;
-  final ContractService _contractService = ContractService();
-  final WorkActService _workActService = WorkActService();
-
-  @override
-  void initState() {
-    super.initState();
-    _tabController = TabController(length: 2, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    _tabController.dispose();
-    super.dispose();
-  }
+class _ContractsScreenState extends ConsumerState<ContractsScreen> {
+  final PaymentIntegrationService _paymentIntegrationService = PaymentIntegrationService();
+  ContractStatus? _selectedStatus;
+  DateTime? _startDate;
+  DateTime? _endDate;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Договоры и акты'),
-        bottom: TabBar(
-          controller: _tabController,
-          tabs: const [
-            Tab(icon: Icon(Icons.description), text: 'Договоры'),
-            Tab(icon: Icon(Icons.assignment_turned_in), text: 'Акты'),
-          ],
-        ),
+        title: Text(widget.isSpecialist ? 'Мои контракты' : 'Контракты'),
+        backgroundColor: theme.colorScheme.primary,
+        foregroundColor: theme.colorScheme.onPrimary,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.filter_list),
+            onPressed: _showFilters,
+          ),
+        ],
       ),
-      body: TabBarView(
-        controller: _tabController,
+      body: Column(
         children: [
-          _buildContractsTab(),
-          _buildWorkActsTab(),
+          // Statistics Card
+          _buildStatisticsCard(),
+          
+          // Contracts List
+          Expanded(
+            child: _buildContractsList(),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildContractsTab() {
-    return FutureBuilder<List<Contract>>(
-      future: _contractService.getUserContracts('current_user_id'), // TODO: Получить реальный ID пользователя
+  Widget _buildStatisticsCard() {
+    final theme = Theme.of(context);
+
+    return FutureBuilder<ContractStatistics>(
+      future: _getContractStatistics(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Container(
+            height: 120,
+            margin: const EdgeInsets.all(16),
+            child: const Center(child: CircularProgressIndicator()),
+          );
+        }
+
+        if (snapshot.hasError) {
+          return Container(
+            height: 120,
+            margin: const EdgeInsets.all(16),
+            child: Center(
+              child: Text(
+                'Ошибка загрузки статистики',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.error,
+                ),
+              ),
+            ),
+          );
+        }
+
+        final stats = snapshot.data!;
+
+        return Container(
+          margin: const EdgeInsets.all(16),
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                theme.colorScheme.primary,
+                theme.colorScheme.primary.withOpacity(0.8),
+              ],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: theme.colorScheme.primary.withOpacity(0.3),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'Статистика контрактов',
+                style: theme.textTheme.titleMedium?.copyWith(
+                  color: theme.colorScheme.onPrimary,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: _buildStatItem(
+                      theme,
+                      'Всего',
+                      '${stats.totalContracts}',
+                      Icons.description,
+                    ),
+                  ),
+                  Expanded(
+                    child: _buildStatItem(
+                      theme,
+                      'Активных',
+                      '${stats.activeContracts}',
+                      Icons.check_circle,
+                    ),
+                  ),
+                  Expanded(
+                    child: _buildStatItem(
+                      theme,
+                      'Завершенных',
+                      '${stats.completedContracts}',
+                      Icons.done_all,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildStatItem(ThemeData theme, String label, String value, IconData icon) {
+    return Column(
+      children: [
+        Icon(
+          icon,
+          color: theme.colorScheme.onPrimary.withOpacity(0.8),
+          size: 20,
+        ),
+        const SizedBox(height: 4),
+        Text(
+          value,
+          style: theme.textTheme.titleMedium?.copyWith(
+            color: theme.colorScheme.onPrimary,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        Text(
+          label,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onPrimary.withOpacity(0.8),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildContractsList() {
+    return StreamBuilder<List<Contract>>(
+      stream: _getContractsStream(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Center(child: CircularProgressIndicator());
@@ -69,13 +194,21 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.error, size: 64, color: Colors.red),
+                Icon(
+                  Icons.error_outline,
+                  size: 64,
+                  color: Theme.of(context).colorScheme.error,
+                ),
                 const SizedBox(height: 16),
-                Text('Ошибка: ${snapshot.error}'),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () => setState(() {}),
-                  child: const Text('Повторить'),
+                Text(
+                  'Ошибка загрузки контрактов',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  snapshot.error.toString(),
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  textAlign: TextAlign.center,
                 ),
               ],
             ),
@@ -83,73 +216,29 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen>
         }
 
         final contracts = snapshot.data ?? [];
+        final filteredContracts = _filterContracts(contracts);
 
-        if (contracts.isEmpty) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.description_outlined, size: 64, color: Colors.grey),
-                SizedBox(height: 16),
-                Text(
-                  'У вас пока нет договоров',
-                  style: TextStyle(fontSize: 18, color: Colors.grey),
-                ),
-              ],
-            ),
-          );
-        }
-
-        return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: contracts.length,
-          itemBuilder: (context, index) {
-            final contract = contracts[index];
-            return _buildContractCard(contract);
-          },
-        );
-      },
-    );
-  }
-
-  Widget _buildWorkActsTab() {
-    return FutureBuilder<List<WorkAct>>(
-      future: _workActService.getUserWorkActs('current_user_id'), // TODO: Получить реальный ID пользователя
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (snapshot.hasError) {
+        if (filteredContracts.isEmpty) {
           return Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Icons.error, size: 64, color: Colors.red),
-                const SizedBox(height: 16),
-                Text('Ошибка: ${snapshot.error}'),
-                const SizedBox(height: 16),
-                ElevatedButton(
-                  onPressed: () => setState(() {}),
-                  child: const Text('Повторить'),
+                Icon(
+                  Icons.description,
+                  size: 64,
+                  color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
                 ),
-              ],
-            ),
-          );
-        }
-
-        final workActs = snapshot.data ?? [];
-
-        if (workActs.isEmpty) {
-          return const Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.assignment_turned_in_outlined, size: 64, color: Colors.grey),
-                SizedBox(height: 16),
+                const SizedBox(height: 16),
                 Text(
-                  'У вас пока нет актов выполненных работ',
-                  style: TextStyle(fontSize: 18, color: Colors.grey),
+                  'Нет контрактов',
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Здесь будут отображаться ваши контракты',
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                    color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  ),
                 ),
               ],
             ),
@@ -157,385 +246,323 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen>
         }
 
         return ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: workActs.length,
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          itemCount: filteredContracts.length,
           itemBuilder: (context, index) {
-            final workAct = workActs[index];
-            return _buildWorkActCard(workAct);
+            final contract = filteredContracts[index];
+            return ContractCard(
+              contract: contract,
+              onTap: () => _showContractDetails(contract),
+              onStatusUpdate: (status) => _updateContractStatus(contract.id, status),
+            );
           },
         );
       },
     );
   }
 
-  Widget _buildContractCard(Contract contract) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        contract.title,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '№ ${contract.contractNumber}',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: contract.status.statusColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: contract.status.statusColor),
-                  ),
-                  child: Text(
-                    contract.status.statusText,
-                    style: TextStyle(
-                      color: contract.status.statusColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            if (contract.totalAmount != null) ...[
-              Text(
-                'Сумма: ${contract.totalAmount!.toStringAsFixed(2)} ${contract.currency ?? 'RUB'}',
-                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-              ),
-              const SizedBox(height: 8),
-            ],
-            Text(
-              'Создан: ${_formatDate(contract.createdAt)}',
-              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-            ),
-            if (contract.expiresAt != null) ...[
-              const SizedBox(height: 4),
-              Text(
-                'Действует до: ${_formatDate(contract.expiresAt!)}',
-                style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-              ),
-            ],
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () => _viewContract(contract),
-                    icon: const Icon(Icons.visibility, size: 16),
-                    label: const Text('Просмотр'),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                if (contract.status == ContractStatus.pending) ...[
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () => _signContract(contract),
-                      icon: const Icon(Icons.edit, size: 16),
-                      label: const Text('Подписать'),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ],
-        ),
-      ),
+  Stream<List<Contract>> _getContractsStream() {
+    // This would typically stream from Firestore
+    // For now, return an empty stream
+    return Stream.value([]);
+  }
+
+  Future<ContractStatistics> _getContractStatistics() async {
+    // This would typically fetch from Firestore
+    // For now, return mock data
+    return ContractStatistics(
+      totalContracts: 0,
+      activeContracts: 0,
+      completedContracts: 0,
+      cancelledContracts: 0,
     );
   }
 
-  Widget _buildWorkActCard(WorkAct workAct) {
-    return Card(
-      margin: const EdgeInsets.only(bottom: 16),
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        workAct.title,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '№ ${workAct.actNumber}',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                  decoration: BoxDecoration(
-                    color: workAct.status.statusColor.withOpacity(0.1),
-                    borderRadius: BorderRadius.circular(12),
-                    border: Border.all(color: workAct.status.statusColor),
-                  ),
-                  child: Text(
-                    workAct.status.statusText,
-                    style: TextStyle(
-                      color: workAct.status.statusColor,
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              'Сумма: ${workAct.totalAmount.toStringAsFixed(2)} ${workAct.currency}',
-              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              'Период работ: ${_formatDate(workAct.workStartDate)} - ${_formatDate(workAct.workEndDate)}',
-              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              'Создан: ${_formatDate(workAct.createdAt)}',
-              style: TextStyle(fontSize: 14, color: Colors.grey[600]),
-            ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton.icon(
-                    onPressed: () => _viewWorkAct(workAct),
-                    icon: const Icon(Icons.visibility, size: 16),
-                    label: const Text('Просмотр'),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                if (workAct.status == WorkActStatus.pending) ...[
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () => _signWorkAct(workAct),
-                      icon: const Icon(Icons.edit, size: 16),
-                      label: const Text('Подписать'),
-                    ),
-                  ),
-                ],
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
+  List<Contract> _filterContracts(List<Contract> contracts) {
+    return contracts.where((contract) {
+      if (_selectedStatus != null && contract.status != _selectedStatus) {
+        return false;
+      }
+      if (_startDate != null && contract.createdAt.isBefore(_startDate!)) {
+        return false;
+      }
+      if (_endDate != null && contract.createdAt.isAfter(_endDate!)) {
+        return false;
+      }
+      return true;
+    }).toList();
   }
 
-  String _formatDate(DateTime date) {
-    return '${date.day.toString().padLeft(2, '0')}.${date.month.toString().padLeft(2, '0')}.${date.year}';
-  }
-
-  void _viewContract(Contract contract) {
-    // TODO: Открыть экран просмотра договора
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Просмотр договора ${contract.contractNumber}')),
-    );
-  }
-
-  void _signContract(Contract contract) {
-    showDialog(
+  void _showFilters() {
+    showModalBottomSheet(
       context: context,
-      builder: (context) => SignatureDialog(
-        title: 'Подписание договора',
-        documentId: contract.id,
-        documentType: 'contract',
-        onSigned: (signature) async {
-          try {
-            await _contractService.signContract(
-              contractId: contract.id,
-              userId: 'current_user_id', // TODO: Получить реальный ID пользователя
-              signature: signature,
-            );
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Договор успешно подписан')),
-              );
-              setState(() {});
-            }
-          } catch (e) {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Ошибка подписания: $e')),
-              );
-            }
-          }
+      isScrollControlled: true,
+      builder: (context) => ContractFiltersSheet(
+        selectedStatus: _selectedStatus,
+        startDate: _startDate,
+        endDate: _endDate,
+        onApplyFilters: (status, startDate, endDate) {
+          setState(() {
+            _selectedStatus = status;
+            _startDate = startDate;
+            _endDate = endDate;
+          });
+          Navigator.pop(context);
+        },
+        onClearFilters: () {
+          setState(() {
+            _selectedStatus = null;
+            _startDate = null;
+            _endDate = null;
+          });
+          Navigator.pop(context);
         },
       ),
     );
   }
 
-  void _viewWorkAct(WorkAct workAct) {
-    // TODO: Открыть экран просмотра акта
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Просмотр акта ${workAct.actNumber}')),
+  void _showContractDetails(Contract contract) {
+    showDialog(
+      context: context,
+      builder: (context) => ContractDetailsDialog(
+        contract: contract,
+        onStatusUpdate: (status) => _updateContractStatus(contract.id, status),
+      ),
     );
   }
 
-  void _signWorkAct(WorkAct workAct) {
-    showDialog(
-      context: context,
-      builder: (context) => SignatureDialog(
-        title: 'Подписание акта выполненных работ',
-        documentId: workAct.id,
-        documentType: 'work_act',
-        onSigned: (signature) async {
-          try {
-            await _workActService.signWorkAct(
-              workActId: workAct.id,
-              userId: 'current_user_id', // TODO: Получить реальный ID пользователя
-              userName: 'Current User', // TODO: Получить реальное имя пользователя
-              signature: signature,
-            );
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Акт успешно подписан')),
-              );
-              setState(() {});
-            }
-          } catch (e) {
-            if (mounted) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Ошибка подписания: $e')),
-              );
-            }
-          }
-        },
-      ),
-    );
+  Future<void> _updateContractStatus(String contractId, ContractStatus status) async {
+    try {
+      await _paymentIntegrationService.updateContractStatus(contractId, status);
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Статус контракта обновлен'),
+            backgroundColor: Colors.green,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Ошибка обновления статуса: $e'),
+            backgroundColor: Theme.of(context).colorScheme.error,
+          ),
+        );
+      }
+    }
   }
 }
 
-/// Диалог для подписания документов
-class SignatureDialog extends StatefulWidget {
-  const SignatureDialog({
+class ContractFiltersSheet extends StatefulWidget {
+  final ContractStatus? selectedStatus;
+  final DateTime? startDate;
+  final DateTime? endDate;
+  final Function(ContractStatus?, DateTime?, DateTime?) onApplyFilters;
+  final VoidCallback onClearFilters;
+
+  const ContractFiltersSheet({
     super.key,
-    required this.title,
-    required this.documentId,
-    required this.documentType,
-    required this.onSigned,
+    required this.selectedStatus,
+    required this.startDate,
+    required this.endDate,
+    required this.onApplyFilters,
+    required this.onClearFilters,
   });
 
-  final String title;
-  final String documentId;
-  final String documentType;
-  final Function(String) onSigned;
-
   @override
-  State<SignatureDialog> createState() => _SignatureDialogState();
+  State<ContractFiltersSheet> createState() => _ContractFiltersSheetState();
 }
 
-class _SignatureDialogState extends State<SignatureDialog> {
-  final GlobalKey _signaturePadKey = GlobalKey();
+class _ContractFiltersSheetState extends State<ContractFiltersSheet> {
+  ContractStatus? _selectedStatus;
+  DateTime? _startDate;
+  DateTime? _endDate;
+
+  @override
+  void initState() {
+    super.initState();
+    _selectedStatus = widget.selectedStatus;
+    _startDate = widget.startDate;
+    _endDate = widget.endDate;
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Dialog(
-      child: Container(
-        width: MediaQuery.of(context).size.width * 0.9,
-        padding: const EdgeInsets.all(24),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(
-              widget.title,
-              style: const TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+    final theme = Theme.of(context);
+
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surface,
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Handle bar
+          Center(
+            child: Container(
+              width: 40,
+              height: 4,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.outline,
+                borderRadius: BorderRadius.circular(2),
               ),
             ),
-            const SizedBox(height: 24),
-            const Text(
-              'Поставьте подпись в поле ниже:',
-              style: TextStyle(fontSize: 16),
+          ),
+          const SizedBox(height: 24),
+
+          Text(
+            'Фильтры контрактов',
+            style: theme.textTheme.titleLarge?.copyWith(
+              fontWeight: FontWeight.bold,
             ),
-            const SizedBox(height: 16),
-            SignaturePad(
-              key: _signaturePadKey,
-              width: double.infinity,
-              height: 200,
+          ),
+          const SizedBox(height: 24),
+
+          // Status filter
+          Text(
+            'Статус',
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w500,
             ),
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Expanded(
-                  child: OutlinedButton(
-                    onPressed: () {
-                      _signaturePadKey.currentState?.clear();
-                    },
-                    child: const Text('Очистить'),
-                  ),
+          ),
+          const SizedBox(height: 12),
+          Wrap(
+            spacing: 8,
+            children: [
+              _buildFilterChip(
+                'Все',
+                _selectedStatus == null,
+                () => setState(() => _selectedStatus = null),
+              ),
+              ...ContractStatus.values.map((status) => _buildFilterChip(
+                _getStatusDisplayName(status),
+                _selectedStatus == status,
+                () => setState(() => _selectedStatus = status),
+              )),
+            ],
+          ),
+          const SizedBox(height: 24),
+
+          // Date range
+          Text(
+            'Период',
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () => _selectDate(true),
+                  icon: const Icon(Icons.calendar_today),
+                  label: Text(_startDate != null 
+                      ? DateFormat('dd.MM.yyyy').format(_startDate!)
+                      : 'С даты'),
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (_signaturePadKey.currentState?.hasSignature == true) {
-                        try {
-                          final signature = await SignatureService.captureSignature(
-                            _signaturePadKey.currentState!.signatureKey,
-                          );
-                          widget.onSigned(signature);
-                          if (mounted) {
-                            Navigator.of(context).pop();
-                          }
-                        } catch (e) {
-                          if (mounted) {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(content: Text('Ошибка создания подписи: $e')),
-                            );
-                          }
-                        }
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Пожалуйста, поставьте подпись')),
-                        );
-                      }
-                    },
-                    child: const Text('Подписать'),
-                  ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: OutlinedButton.icon(
+                  onPressed: () => _selectDate(false),
+                  icon: const Icon(Icons.calendar_today),
+                  label: Text(_endDate != null 
+                      ? DateFormat('dd.MM.yyyy').format(_endDate!)
+                      : 'По дату'),
                 ),
-              ],
-            ),
-          ],
-        ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 32),
+
+          // Action buttons
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: widget.onClearFilters,
+                  child: const Text('Сбросить'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () => widget.onApplyFilters(
+                    _selectedStatus,
+                    _startDate,
+                    _endDate,
+                  ),
+                  child: const Text('Применить'),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
+
+  Widget _buildFilterChip(String label, bool isSelected, VoidCallback onTap) {
+    final theme = Theme.of(context);
+    
+    return FilterChip(
+      label: Text(label),
+      selected: isSelected,
+      onSelected: (_) => onTap(),
+      selectedColor: theme.colorScheme.primaryContainer,
+      checkmarkColor: theme.colorScheme.primary,
+    );
+  }
+
+  Future<void> _selectDate(bool isStartDate) async {
+    final date = await showDatePicker(
+      context: context,
+      initialDate: isStartDate ? _startDate ?? DateTime.now() : _endDate ?? DateTime.now(),
+      firstDate: DateTime(2020),
+      lastDate: DateTime.now(),
+    );
+
+    if (date != null) {
+      setState(() {
+        if (isStartDate) {
+          _startDate = date;
+        } else {
+          _endDate = date;
+        }
+      });
+    }
+  }
+
+  String _getStatusDisplayName(ContractStatus status) {
+    switch (status) {
+      case ContractStatus.draft:
+        return 'Черновик';
+      case ContractStatus.active:
+        return 'Активный';
+      case ContractStatus.completed:
+        return 'Завершен';
+      case ContractStatus.cancelled:
+        return 'Отменен';
+    }
+  }
+}
+
+class ContractStatistics {
+  final int totalContracts;
+  final int activeContracts;
+  final int completedContracts;
+  final int cancelledContracts;
+
+  ContractStatistics({
+    required this.totalContracts,
+    required this.activeContracts,
+    required this.completedContracts,
+    required this.cancelledContracts,
+  });
 }

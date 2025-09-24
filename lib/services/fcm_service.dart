@@ -326,7 +326,7 @@ class FCMService {
       title,
       body,
       tz.TZDateTime.from(scheduledDate, tz.local),
-      NotificationDetails(
+      const NotificationDetails(
         android: AndroidNotificationDetails(
           'scheduled_channel',
           'Scheduled Notifications',

@@ -80,8 +80,8 @@ class EventIdea {
   final Map<String, dynamic> metadata;
 
   /// Создать из Map (Firestore)
-  factory EventIdea.fromMap(Map<String, dynamic> map) {
-    return EventIdea(
+  factory EventIdea.fromMap(Map<String, dynamic> map) =>
+    EventIdea(
       id: map['id'] as String,
       title: map['title'] as String,
       description: map['description'] as String,
@@ -118,11 +118,9 @@ class EventIdea {
       isPublic: (map['isPublic'] ?? true) as bool,
       metadata: Map<String, dynamic>.from((map['metadata'] ?? <String, dynamic>{}) as Map),
     );
-  }
 
   /// Преобразовать в Map (Firestore)
-  Map<String, dynamic> toMap() {
-    return {
+  Map<String, dynamic> toMap() => {
       'id': id,
       'title': title,
       'description': description,
@@ -149,7 +147,6 @@ class EventIdea {
       'isPublic': isPublic,
       'metadata': metadata,
     };
-  }
 
   /// Создать копию с изменениями
   EventIdea copyWith({
@@ -178,8 +175,8 @@ class EventIdea {
     List<String>? attachedBookings,
     bool? isPublic,
     Map<String, dynamic>? metadata,
-  }) {
-    return EventIdea(
+  }) =>
+    EventIdea(
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
@@ -206,11 +203,12 @@ class EventIdea {
       isPublic: isPublic ?? this.isPublic,
       metadata: metadata ?? this.metadata,
     );
-  }
 
   @override
   bool operator ==(Object other) {
-    if (identical(this, other)) return true;
+    if (identical(this, other)) {
+      return true;
+    }
     return other is EventIdea && other.id == id;
   }
 
@@ -218,9 +216,8 @@ class EventIdea {
   int get hashCode => id.hashCode;
 
   @override
-  String toString() {
-    return 'EventIdea(id: $id, title: $title, category: $category, createdBy: $createdBy)';
-  }
+  String toString() =>
+    'EventIdea(id: $id, title: $title, category: $category, createdBy: $createdBy)';
 }
 
 /// Расширения для enum'ов

@@ -45,6 +45,7 @@ class PaymentService {
         netAmount: taxCalculation.netAmount,
         type: type,
         method: method,
+        status: PaymentStatus.pending,
         taxStatus: taxStatus,
         metadata: {
           'description': description ?? 'Оплата за услуги',
