@@ -188,16 +188,16 @@ class FCMService {
     if (data.containsKey('type')) {
       switch (data['type']) {
         case 'booking_confirmed':
-          _navigateToBooking(data['bookingId']);
+          _navigateToBooking(data['bookingId'] as String?);
           break;
         case 'booking_rejected':
-          _navigateToBooking(data['bookingId']);
+          _navigateToBooking(data['bookingId'] as String?);
           break;
         case 'payment_completed':
-          _navigateToPayment(data['paymentId']);
+          _navigateToPayment(data['paymentId'] as String?);
           break;
         case 'chat_message':
-          _navigateToChat(data['chatId']);
+          _navigateToChat(data['chatId'] as String?);
           break;
         default:
           _navigateToHome();
@@ -434,6 +434,153 @@ class FCMService {
       await unsubscribeFromTopic('bookings_all');
     } catch (e) {
       print('Error unsubscribing from booking notifications: $e');
+    }
+  }
+
+  /// Отправить уведомление о новом сообщении
+  Future<void> sendMessageNotification({
+    required String chatId,
+    required String senderName,
+    required String messageText,
+    required String recipientToken,
+  }) async {
+    try {
+      final title = 'Новое сообщение от $senderName';
+      final body = messageText.length > 50 
+          ? '${messageText.substring(0, 50)}...' 
+          : messageText;
+
+      await _localNotifications.show(
+        DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        title,
+        body,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'message_channel',
+            'Message Notifications',
+            channelDescription: 'Notifications for new messages',
+            importance: Importance.high,
+            priority: Priority.high,
+            icon: '@mipmap/ic_launcher',
+          ),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          ),
+        ),
+        payload: 'chat:$chatId',
+      );
+    } catch (e) {
+      print('Error sending message notification: $e');
+    }
+  }
+
+  /// Отправить уведомление о статусе заявки
+  Future<void> sendBookingStatusNotification({
+    required String bookingId,
+    required String status,
+    required String specialistName,
+    required String recipientToken,
+  }) async {
+    try {
+      String title;
+      String body;
+
+      switch (status) {
+        case 'confirmed':
+          title = 'Заявка подтверждена!';
+          body = 'Ваша заявка к $specialistName подтверждена';
+          break;
+        case 'rejected':
+          title = 'Заявка отклонена';
+          body = 'К сожалению, ваша заявка к $specialistName отклонена';
+          break;
+        case 'cancelled':
+          title = 'Заявка отменена';
+          body = 'Заявка к $specialistName была отменена';
+          break;
+        default:
+          return;
+      }
+
+      await _localNotifications.show(
+        DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        title,
+        body,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'booking_channel',
+            'Booking Notifications',
+            channelDescription: 'Notifications for booking status',
+            importance: Importance.high,
+            priority: Priority.high,
+            icon: '@mipmap/ic_launcher',
+          ),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          ),
+        ),
+        payload: 'booking:$bookingId',
+      );
+    } catch (e) {
+      print('Error sending booking status notification: $e');
+    }
+  }
+
+  /// Отправить уведомление об изменении статуса мероприятия
+  Future<void> sendEventStatusNotification({
+    required String eventId,
+    required String status,
+    required String eventName,
+    required String recipientToken,
+  }) async {
+    try {
+      String title;
+      String body;
+
+      switch (status) {
+        case 'started':
+          title = 'Мероприятие началось';
+          body = 'Мероприятие "$eventName" началось';
+          break;
+        case 'completed':
+          title = 'Мероприятие завершено';
+          body = 'Мероприятие "$eventName" успешно завершено';
+          break;
+        case 'cancelled':
+          title = 'Мероприятие отменено';
+          body = 'Мероприятие "$eventName" было отменено';
+          break;
+        default:
+          return;
+      }
+
+      await _localNotifications.show(
+        DateTime.now().millisecondsSinceEpoch ~/ 1000,
+        title,
+        body,
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'event_channel',
+            'Event Notifications',
+            channelDescription: 'Notifications for event status',
+            importance: Importance.high,
+            priority: Priority.high,
+            icon: '@mipmap/ic_launcher',
+          ),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          ),
+        ),
+        payload: 'event:$eventId',
+      );
+    } catch (e) {
+      print('Error sending event status notification: $e');
     }
   }
 }

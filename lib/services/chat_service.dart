@@ -163,4 +163,70 @@ class ChatService {
       );
     }
   }
+
+  /// Редактировать сообщение
+  Future<void> editMessage(
+    String chatId,
+    String messageId,
+    String newContent,
+  ) async {
+    try {
+      final messageRef = _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .doc(messageId);
+
+      // Проверяем, что сообщение существует
+      final messageDoc = await messageRef.get();
+      if (!messageDoc.exists) {
+        throw Exception('Сообщение не найдено');
+      }
+
+      // Сохраняем оригинальный контент, если его еще нет
+      final messageData = messageDoc.data()!;
+      final originalContent = messageData['originalContent'] ?? messageData['content'];
+
+      await messageRef.update({
+        'content': newContent,
+        'originalContent': originalContent,
+        'editedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка редактирования сообщения: $e');
+    }
+  }
+
+  /// Удалить сообщение
+  Future<void> deleteMessageById(
+    String chatId,
+    String messageId,
+  ) async {
+    try {
+      final messageRef = _firestore
+          .collection('chats')
+          .doc(chatId)
+          .collection('messages')
+          .doc(messageId);
+
+      // Проверяем, что сообщение существует
+      final messageDoc = await messageRef.get();
+      if (!messageDoc.exists) {
+        throw Exception('Сообщение не найдено');
+      }
+
+      // Сохраняем оригинальный контент перед удалением
+      final messageData = messageDoc.data()!;
+      final originalContent = messageData['originalContent'] ?? messageData['content'];
+
+      await messageRef.update({
+        'content': 'Сообщение удалено',
+        'originalContent': originalContent,
+        'isDeleted': true,
+        'deletedAt': FieldValue.serverTimestamp(),
+      });
+    } catch (e) {
+      throw Exception('Ошибка удаления сообщения: $e');
+    }
+  }
 }

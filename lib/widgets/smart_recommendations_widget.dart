@@ -20,9 +20,9 @@ class SmartRecommendationsWidget extends ConsumerWidget {
 
   final CityRegion? selectedCity;
   final String? selectedRegion;
-  final Function(Specialist)? onSpecialistSelected;
-  final Function(SpecialistCategory)? onCategorySelected;
-  final Function(CityRegion)? onCitySelected;
+  final void Function(Specialist)? onSpecialistSelected;
+  final void Function(SpecialistCategory)? onCategorySelected;
+  final void Function(CityRegion)? onCitySelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -33,7 +33,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
       children: [
         // Заголовок
         Padding(
-          padding: const EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16),
           child: Row(
             children: [
               Icon(
@@ -96,7 +96,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 'Популярные специалисты',
                 style: theme.textTheme.titleMedium?.copyWith(
@@ -116,7 +116,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                   height: 200,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     itemCount: results.length,
                     itemBuilder: (context, index) {
                       final result = results[index];
@@ -149,7 +149,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 'Популярные категории',
                 style: theme.textTheme.titleMedium?.copyWith(
@@ -166,7 +166,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                 }
                 
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Wrap(
                     spacing: 8,
                     runSpacing: 8,
@@ -196,7 +196,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 'Популярные города',
                 style: theme.textTheme.titleMedium?.copyWith(
@@ -216,7 +216,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                   height: 120,
                   child: ListView.builder(
                     scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
                     itemCount: cities.length,
                     itemBuilder: (context, index) {
                       final city = cities[index];
@@ -245,7 +245,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
                 'Тренды поиска',
                 style: theme.textTheme.titleMedium?.copyWith(
@@ -258,7 +258,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
             trendsState.when(
               data: (trends) {
                 return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
                   child: Column(
                     children: [
                       _buildTrendSection(context, 'Популярные запросы', trends['popularQueries']),
@@ -504,7 +504,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
   Widget _buildLoadingCard(BuildContext context) {
     return Container(
       height: 100,
-      margin: const EdgeInsets.symmetric(horizontal: 16.0),
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       child: const Center(child: CircularProgressIndicator()),
     );
   }
@@ -512,7 +512,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
   Widget _buildErrorCard(BuildContext context, String error) {
     return Container(
       height: 100,
-      margin: const EdgeInsets.symmetric(horizontal: 16.0),
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       child: Center(
         child: Text(
           'Ошибка: $error',
@@ -525,7 +525,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
   Widget _buildEmptyRecommendations(BuildContext context, String message) {
     return Container(
       height: 100,
-      margin: const EdgeInsets.symmetric(horizontal: 16.0),
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       child: Center(
         child: Text(
           message,

@@ -1,557 +1,311 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
+
+import '../core/logger.dart';
 import '../models/booking.dart';
-import '../models/payment.dart';
-import '../models/review.dart';
-
-/// Статистика доходов специалиста
-class SpecialistIncomeStats {
-  const SpecialistIncomeStats({
-    required this.totalIncome,
-    required this.monthlyIncome,
-    required this.weeklyIncome,
-    required this.averageBookingValue,
-    required this.totalBookings,
-    required this.completedBookings,
-    required this.cancelledBookings,
-    required this.completionRate,
-    required this.incomeByMonth,
-    required this.bookingsByMonth,
-  });
-
-  /// Создать из Map
-  factory SpecialistIncomeStats.fromMap(Map<String, dynamic> data) =>
-      SpecialistIncomeStats(
-        totalIncome: (data['totalIncome'] as num?)?.toDouble() ?? 0.0,
-        monthlyIncome: (data['monthlyIncome'] as num?)?.toDouble() ?? 0.0,
-        weeklyIncome: (data['weeklyIncome'] as num?)?.toDouble() ?? 0.0,
-        averageBookingValue:
-            (data['averageBookingValue'] as num?)?.toDouble() ?? 0.0,
-        totalBookings: (data['totalBookings'] as int?) ?? 0,
-        completedBookings: (data['completedBookings'] as int?) ?? 0,
-        cancelledBookings: (data['cancelledBookings'] as int?) ?? 0,
-        completionRate: (data['completionRate'] as num?)?.toDouble() ?? 0.0,
-        incomeByMonth: Map<String, double>.from(
-          data['incomeByMonth'] as Map<String, dynamic>? ?? {},
-        ),
-        bookingsByMonth: Map<String, int>.from(
-          data['bookingsByMonth'] as Map<String, dynamic>? ?? {},
-        ),
-      );
-  final double totalIncome;
-  final double monthlyIncome;
-  final double weeklyIncome;
-  final double averageBookingValue;
-  final int totalBookings;
-  final int completedBookings;
-  final int cancelledBookings;
-  final double completionRate;
-  final Map<String, double> incomeByMonth;
-  final Map<String, int> bookingsByMonth;
-
-  /// Преобразовать в Map
-  Map<String, dynamic> toMap() => {
-        'totalIncome': totalIncome,
-        'monthlyIncome': monthlyIncome,
-        'weeklyIncome': weeklyIncome,
-        'averageBookingValue': averageBookingValue,
-        'totalBookings': totalBookings,
-        'completedBookings': completedBookings,
-        'cancelledBookings': cancelledBookings,
-        'completionRate': completionRate,
-        'incomeByMonth': incomeByMonth,
-        'bookingsByMonth': bookingsByMonth,
-      };
-}
-
-/// Статистика отзывов специалиста
-class SpecialistReviewStats {
-  const SpecialistReviewStats({
-    required this.averageRating,
-    required this.totalReviews,
-    required this.fiveStarReviews,
-    required this.fourStarReviews,
-    required this.threeStarReviews,
-    required this.twoStarReviews,
-    required this.oneStarReviews,
-    required this.reviewsByMonth,
-    required this.commonTags,
-    required this.responseRate,
-  });
-
-  /// Создать из Map
-  factory SpecialistReviewStats.fromMap(Map<String, dynamic> data) =>
-      SpecialistReviewStats(
-        averageRating: (data['averageRating'] as num?)?.toDouble() ?? 0.0,
-        totalReviews: (data['totalReviews'] as int?) ?? 0,
-        fiveStarReviews: (data['fiveStarReviews'] as int?) ?? 0,
-        fourStarReviews: (data['fourStarReviews'] as int?) ?? 0,
-        threeStarReviews: (data['threeStarReviews'] as int?) ?? 0,
-        twoStarReviews: (data['twoStarReviews'] as int?) ?? 0,
-        oneStarReviews: (data['oneStarReviews'] as int?) ?? 0,
-        reviewsByMonth: Map<String, int>.from(
-          data['reviewsByMonth'] as Map<String, dynamic>? ?? {},
-        ),
-        commonTags:
-            List<String>.from(data['commonTags'] as List<dynamic>? ?? []),
-        responseRate: (data['responseRate'] as num?)?.toDouble() ?? 0.0,
-      );
-  final double averageRating;
-  final int totalReviews;
-  final int fiveStarReviews;
-  final int fourStarReviews;
-  final int threeStarReviews;
-  final int twoStarReviews;
-  final int oneStarReviews;
-  final Map<String, int> reviewsByMonth;
-  final List<String> commonTags;
-  final double responseRate;
-
-  /// Преобразовать в Map
-  Map<String, dynamic> toMap() => {
-        'averageRating': averageRating,
-        'totalReviews': totalReviews,
-        'fiveStarReviews': fiveStarReviews,
-        'fourStarReviews': fourStarReviews,
-        'threeStarReviews': threeStarReviews,
-        'twoStarReviews': twoStarReviews,
-        'oneStarReviews': oneStarReviews,
-        'reviewsByMonth': reviewsByMonth,
-        'commonTags': commonTags,
-        'responseRate': responseRate,
-      };
-}
-
-/// Общая аналитика специалиста
-class SpecialistAnalytics {
-  const SpecialistAnalytics({
-    required this.specialistId,
-    required this.incomeStats,
-    required this.reviewStats,
-    required this.lastUpdated,
-    this.additionalMetrics = const {},
-  });
-
-  /// Создать из Map
-  factory SpecialistAnalytics.fromMap(Map<String, dynamic> data) =>
-      SpecialistAnalytics(
-        specialistId: (data['specialistId'] as String?) ?? '',
-        incomeStats: SpecialistIncomeStats.fromMap(
-          data['incomeStats'] as Map<String, dynamic>? ?? {},
-        ),
-        reviewStats: SpecialistReviewStats.fromMap(
-          data['reviewStats'] as Map<String, dynamic>? ?? {},
-        ),
-        lastUpdated:
-            (data['lastUpdated'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        additionalMetrics: Map<String, dynamic>.from(
-          data['additionalMetrics'] as Map<String, dynamic>? ?? {},
-        ),
-      );
-  final String specialistId;
-  final SpecialistIncomeStats incomeStats;
-  final SpecialistReviewStats reviewStats;
-  final DateTime lastUpdated;
-  final Map<String, dynamic> additionalMetrics;
-
-  /// Преобразовать в Map
-  Map<String, dynamic> toMap() => {
-        'specialistId': specialistId,
-        'incomeStats': incomeStats.toMap(),
-        'reviewStats': reviewStats.toMap(),
-        'lastUpdated': Timestamp.fromDate(lastUpdated),
-        'additionalMetrics': additionalMetrics,
-      };
-}
+import '../models/specialist_analytics.dart';
 
 /// Сервис аналитики для специалистов
 class SpecialistAnalyticsService {
+  factory SpecialistAnalyticsService() => _instance;
+  SpecialistAnalyticsService._internal();
+  static final SpecialistAnalyticsService _instance = SpecialistAnalyticsService._internal();
+
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Получить аналитику специалиста
-  Future<SpecialistAnalytics?> getSpecialistAnalytics(
-    String specialistId,
-  ) async {
-    try {
-      final doc = await _firestore
-          .collection('specialist_analytics')
-          .doc(specialistId)
-          .get();
-
-      if (!doc.exists) {
-        // Создаем аналитику, если её нет
-        return await _generateAnalytics(specialistId);
-      }
-
-      return SpecialistAnalytics.fromMap({
-        'specialistId': doc.id,
-        ...doc.data()!,
-      });
-    } catch (e) {
-      debugPrint('Error getting specialist analytics: $e');
-      return null;
-    }
-  }
-
-  /// Сгенерировать аналитику для специалиста
-  Future<SpecialistAnalytics> _generateAnalytics(String specialistId) async {
-    try {
-      // Получаем все бронирования специалиста
-      final bookingsQuery = await _firestore
-          .collection('bookings')
-          .where('specialistId', isEqualTo: specialistId)
-          .get();
-
-      final bookings = bookingsQuery.docs
-          .map((doc) => Booking.fromMap(doc.data()))
-          .toList()
-          .cast<Booking>();
-
-      // Получаем все платежи специалиста
-      final paymentsQuery = await _firestore
-          .collection('payments')
-          .where('specialistId', isEqualTo: specialistId)
-          .get();
-
-      final payments = paymentsQuery.docs
-          .map((doc) => Payment.fromMap(doc.data()))
-          .toList()
-          .cast<Payment>();
-
-      // Получаем все отзывы специалиста
-      final reviewsQuery = await _firestore
-          .collection('reviews')
-          .where('targetId', isEqualTo: specialistId)
-          .where('type', isEqualTo: 'specialist')
-          .get();
-
-      final reviews = reviewsQuery.docs
-          .map((doc) => Review.fromMap(doc.data()))
-          .toList()
-          .cast<Review>();
-
-      // Генерируем статистику доходов
-      final incomeStats = _generateIncomeStats(bookings, payments);
-
-      // Генерируем статистику отзывов
-      final reviewStats = _generateReviewStats(reviews);
-
-      final analytics = SpecialistAnalytics(
-        specialistId: specialistId,
-        incomeStats: incomeStats,
-        reviewStats: reviewStats,
-        lastUpdated: DateTime.now(),
-      );
-
-      // Сохраняем аналитику
-      await _firestore
-          .collection('specialist_analytics')
-          .doc(specialistId)
-          .set(analytics.toMap());
-
-      return analytics;
-    } catch (e) {
-      debugPrint('Error generating analytics: $e');
-      throw Exception('Ошибка генерации аналитики: $e');
-    }
-  }
-
-  /// Генерировать статистику доходов
-  SpecialistIncomeStats _generateIncomeStats(
-    List<Booking> bookings,
-    List<Payment> payments,
-  ) {
-    final now = DateTime.now();
-    final thisMonth = DateTime(now.year, now.month);
-    final lastWeek = now.subtract(const Duration(days: 7));
-
-    // Общие показатели
-    final totalIncome = payments
-        .where((p) => p.status == PaymentStatus.completed)
-        .fold(0.0, (sum, p) => sum + p.amount);
-
-    final monthlyIncome = payments
-        .where(
-          (p) =>
-              p.status == PaymentStatus.completed &&
-              p.createdAt.isAfter(thisMonth),
-        )
-        .fold(0.0, (sum, p) => sum + p.amount);
-
-    final weeklyIncome = payments
-        .where(
-          (p) =>
-              p.status == PaymentStatus.completed &&
-              p.createdAt.isAfter(lastWeek),
-        )
-        .fold(0.0, (sum, p) => sum + p.amount);
-
-    final completedBookings =
-        bookings.where((b) => b.status == BookingStatus.completed).length;
-
-    final cancelledBookings =
-        bookings.where((b) => b.status == BookingStatus.cancelled).length;
-
-    final totalBookings = bookings.length;
-    final completionRate =
-        totalBookings > 0 ? completedBookings / totalBookings : 0.0;
-
-    final averageBookingValue =
-        completedBookings > 0 ? totalIncome / completedBookings : 0.0;
-
-    // Доходы по месяцам
-    final incomeByMonth = <String, double>{};
-    final bookingsByMonth = <String, int>{};
-
-    for (var i = 11; i >= 0; i--) {
-      final month = DateTime(now.year, now.month - i);
-      final monthKey =
-          '${month.year}-${month.month.toString().padLeft(2, '0')}';
-
-      final monthIncome = payments
-          .where(
-            (p) =>
-                p.status == PaymentStatus.completed &&
-                p.createdAt.year == month.year &&
-                p.createdAt.month == month.month,
-          )
-          .fold(0.0, (sum, p) => sum + p.amount);
-
-      final monthBookings = bookings
-          .where(
-            (b) =>
-                b.createdAt.year == month.year &&
-                b.createdAt.month == month.month,
-          )
-          .length;
-
-      incomeByMonth[monthKey] = monthIncome.toDouble();
-      bookingsByMonth[monthKey] = monthBookings;
-    }
-
-    return SpecialistIncomeStats(
-      totalIncome: totalIncome.toDouble(),
-      monthlyIncome: monthlyIncome.toDouble(),
-      weeklyIncome: weeklyIncome.toDouble(),
-      averageBookingValue: averageBookingValue,
-      totalBookings: totalBookings,
-      completedBookings: completedBookings,
-      cancelledBookings: cancelledBookings,
-      completionRate: completionRate,
-      incomeByMonth: incomeByMonth,
-      bookingsByMonth: bookingsByMonth,
-    );
-  }
-
-  /// Генерировать статистику отзывов
-  SpecialistReviewStats _generateReviewStats(List<Review> reviews) {
-    if (reviews.isEmpty) {
-      return const SpecialistReviewStats(
-        averageRating: 0,
-        totalReviews: 0,
-        fiveStarReviews: 0,
-        fourStarReviews: 0,
-        threeStarReviews: 0,
-        twoStarReviews: 0,
-        oneStarReviews: 0,
-        reviewsByMonth: {},
-        commonTags: [],
-        responseRate: 0,
-      );
-    }
-
-    final totalRating = reviews.fold(0, (sum, r) => sum + r.rating);
-    final averageRating = totalRating / reviews.length;
-
-    final fiveStar = reviews.where((r) => r.rating == 5).length;
-    final fourStar = reviews.where((r) => r.rating == 4).length;
-    final threeStar = reviews.where((r) => r.rating == 3).length;
-    final twoStar = reviews.where((r) => r.rating == 2).length;
-    final oneStar = reviews.where((r) => r.rating == 1).length;
-
-    // Отзывы по месяцам
-    final reviewsByMonth = <String, int>{};
-    final now = DateTime.now();
-
-    for (var i = 11; i >= 0; i--) {
-      final month = DateTime(now.year, now.month - i);
-      final monthKey =
-          '${month.year}-${month.month.toString().padLeft(2, '0')}';
-
-      final monthReviews = reviews
-          .where(
-            (r) =>
-                r.createdAt.year == month.year &&
-                r.createdAt.month == month.month,
-          )
-          .length;
-
-      reviewsByMonth[monthKey] = monthReviews;
-    }
-
-    // Популярные теги
-    final tagCounts = <String, int>{};
-    for (final review in reviews) {
-      for (final tag in review.tags) {
-        tagCounts[tag] = (tagCounts[tag] ?? 0) + 1;
-      }
-    }
-
-    final commonTags = tagCounts.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-
-    // Процент ответов (заглушка)
-    const responseRate = 0.85; // TODO: Реальная логика
-
-    return SpecialistReviewStats(
-      averageRating: averageRating,
-      totalReviews: reviews.length,
-      fiveStarReviews: fiveStar,
-      fourStarReviews: fourStar,
-      threeStarReviews: threeStar,
-      twoStarReviews: twoStar,
-      oneStarReviews: oneStar,
-      reviewsByMonth: reviewsByMonth,
-      commonTags: commonTags.take(5).map((e) => e.key).toList(),
-      responseRate: responseRate,
-    );
-  }
-
-  /// Обновить аналитику специалиста
-  Future<void> updateSpecialistAnalytics(String specialistId) async {
-    try {
-      final analytics = await _generateAnalytics(specialistId);
-      await _firestore
-          .collection('specialist_analytics')
-          .doc(specialistId)
-          .set(analytics.toMap());
-
-      debugPrint('Updated analytics for specialist $specialistId');
-    } catch (e) {
-      debugPrint('Error updating specialist analytics: $e');
-      throw Exception('Ошибка обновления аналитики: $e');
-    }
-  }
-
-  /// Получить топ специалистов по доходу
-  Future<List<Map<String, dynamic>>> getTopSpecialistsByIncome({
-    int limit = 10,
+  /// Получить аналитику для специалиста
+  Future<SpecialistAnalytics> getSpecialistAnalytics({
+    required String specialistId,
     DateTime? startDate,
     DateTime? endDate,
   }) async {
     try {
-      var query = _firestore
-          .collection('specialist_analytics')
-          .orderBy('incomeStats.totalIncome', descending: true)
-          .limit(limit);
+      AppLogger.logI('Получение аналитики для специалиста $specialistId', 'specialist_analytics_service');
+      
+      final now = DateTime.now();
+      final start = startDate ?? DateTime(now.year, now.month - 3); // Последние 3 месяца
+      final end = endDate ?? now;
 
-      if (startDate != null) {
-        query = query.where('lastUpdated', isGreaterThanOrEqualTo: startDate);
-      }
-      if (endDate != null) {
-        query = query.where('lastUpdated', isLessThanOrEqualTo: endDate);
-      }
+      // Получаем все данные параллельно
+      final futures = await Future.wait([
+        _getProfileViews(specialistId, start, end),
+        _getBookings(specialistId, start, end),
+        _getCompletedBookings(specialistId, start, end),
+        _getCancelledBookings(specialistId, start, end),
+        _getReviews(specialistId, start, end),
+        _getRevenue(specialistId, start, end),
+      ]);
 
-      final snapshot = await query.get();
-      return snapshot.docs
-          .map(
-            (doc) => {
-              'specialistId': doc.id,
-              ...doc.data(),
-            },
-          )
-          .toList();
+      final profileViews = futures[0] as List<ProfileView>;
+      final bookings = futures[1] as List<Booking>;
+      final completedBookings = futures[2] as List<Booking>;
+      final cancelledBookings = futures[3] as List<Booking>;
+      final reviews = futures[4] as List<ReviewAnalytics>;
+      final revenue = futures[5] as RevenueAnalytics;
+
+      // Рассчитываем метрики
+      final totalBookings = bookings.length;
+      final completedCount = completedBookings.length;
+      final cancelledCount = cancelledBookings.length;
+      final conversionRate = totalBookings > 0 ? (completedCount / totalBookings) * 100 : 0.0;
+      final averageCheck = completedCount > 0 ? revenue.totalRevenue / completedCount : 0.0;
+
+      // Рассчитываем тренды
+      final viewsTrend = _calculateTrend(profileViews.map((v) => v.count).toList());
+      final bookingsTrend = _calculateTrend(bookings.map((b) => 1).toList());
+      final revenueTrend = _calculateTrend(revenue.monthlyRevenue.values.map((v) => v.toInt()).toList());
+
+      return SpecialistAnalytics(
+        specialistId: specialistId,
+        period: AnalyticsPeriod(
+          startDate: start,
+          endDate: end,
+        ),
+        profileViews: ProfileViewsAnalytics(
+          total: profileViews.fold(0, (total, view) => total + view.count),
+          unique: profileViews.length,
+          trend: viewsTrend,
+          dailyViews: profileViews,
+        ),
+        bookings: BookingsAnalytics(
+          total: totalBookings,
+          completed: completedCount,
+          cancelled: cancelledCount,
+          conversionRate: conversionRate,
+          trend: bookingsTrend,
+        ),
+        revenue: RevenueAnalytics(
+          totalRevenue: revenue.totalRevenue,
+          averageCheck: averageCheck,
+          trend: revenueTrend,
+          monthlyRevenue: revenue.monthlyRevenue,
+        ),
+        reviews: ReviewsAnalytics(
+          total: reviews.length,
+          averageRating: reviews.isNotEmpty 
+              ? reviews.map((r) => r.rating).reduce((a, b) => a + b) / reviews.length 
+              : 0.0,
+          recentReviews: reviews.take(5).toList(),
+        ),
+        performance: PerformanceMetrics(
+          responseTime: _calculateAverageResponseTime(bookings),
+          customerSatisfaction: reviews.isNotEmpty 
+              ? reviews.map((r) => r.rating).reduce((a, b) => a + b) / reviews.length 
+              : 0.0,
+          repeatCustomers: _calculateRepeatCustomers(completedBookings),
+        ),
+      );
     } catch (e) {
-      debugPrint('Error getting top specialists: $e');
-      return [];
+      AppLogger.logE('Ошибка получения аналитики специалиста: $e', 'specialist_analytics_service');
+      rethrow;
     }
   }
 
-  /// Получить топ специалистов по рейтингу
-  Future<List<Map<String, dynamic>>> getTopSpecialistsByRating({
-    int limit = 10,
-    int minReviews = 5,
-  }) async {
+  /// Получить просмотры профиля
+  Future<List<ProfileView>> _getProfileViews(String specialistId, DateTime start, DateTime end) async {
     try {
       final snapshot = await _firestore
-          .collection('specialist_analytics')
-          .where('reviewStats.totalReviews', isGreaterThanOrEqualTo: minReviews)
-          .orderBy('reviewStats.totalReviews')
-          .orderBy('reviewStats.averageRating', descending: true)
-          .limit(limit)
+          .collection('analytics')
+          .doc('profile_views')
+          .collection(specialistId)
+          .where('date', isGreaterThanOrEqualTo: start)
+          .where('date', isLessThanOrEqualTo: end)
+          .orderBy('date')
           .get();
 
-      return snapshot.docs
-          .map(
-            (doc) => {
-              'specialistId': doc.id,
-              ...doc.data(),
-            },
-          )
-          .toList();
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return ProfileView(
+          date: (data['date'] as Timestamp).toDate(),
+          count: (data['count'] ?? 0) as int,
+          source: (data['source'] ?? 'unknown') as String,
+        );
+      }).toList();
     } catch (e) {
-      debugPrint('Error getting top specialists by rating: $e');
+      AppLogger.logE('Ошибка получения просмотров профиля: $e', 'specialist_analytics_service');
       return [];
     }
   }
 
-  /// Получить сравнительную аналитику
-  Future<Map<String, dynamic>> getComparativeAnalytics(
-    String specialistId,
-  ) async {
+  /// Получить заявки
+  Future<List<Booking>> _getBookings(String specialistId, DateTime start, DateTime end) async {
     try {
-      final specialistAnalytics = await getSpecialistAnalytics(specialistId);
-      if (specialistAnalytics == null) {
-        return {};
-      }
+      final snapshot = await _firestore
+          .collection('bookings')
+          .where('specialistId', isEqualTo: specialistId)
+          .where('createdAt', isGreaterThanOrEqualTo: start)
+          .where('createdAt', isLessThanOrEqualTo: end)
+          .get();
 
-      final topSpecialists = await getTopSpecialistsByIncome(limit: 100);
-      final topByRating = await getTopSpecialistsByRating(limit: 100);
-
-      // Вычисляем процентили
-      final incomes = topSpecialists
-          .map((s) => (s['incomeStats'] as Map)['totalIncome'] as double)
-          .toList()
-        ..sort();
-
-      final ratings = topByRating
-          .map((s) => (s['reviewStats'] as Map)['averageRating'] as double)
-          .toList()
-        ..sort();
-
-      final specialistIncome = specialistAnalytics.incomeStats.totalIncome;
-      final specialistRating = specialistAnalytics.reviewStats.averageRating;
-
-      final incomePercentile = _calculatePercentile(incomes, specialistIncome);
-      final ratingPercentile = _calculatePercentile(ratings, specialistRating);
-
-      return {
-        'incomePercentile': incomePercentile,
-        'ratingPercentile': ratingPercentile,
-        'totalSpecialists': topSpecialists.length,
-        'averageIncome': incomes.isNotEmpty
-            ? incomes.reduce((a, b) => a + b) / incomes.length
-            : 0.0,
-        'averageRating': ratings.isNotEmpty
-            ? ratings.reduce((a, b) => a + b) / ratings.length
-            : 0.0,
-      };
+      return snapshot.docs.map((doc) => Booking.fromDocument(doc)).toList();
     } catch (e) {
-      debugPrint('Error getting comparative analytics: $e');
-      return {};
+      AppLogger.logE('Ошибка получения заявок: $e', 'specialist_analytics_service');
+      return [];
     }
   }
 
-  /// Вычислить процентиль
-  double _calculatePercentile(List<double> values, double target) {
-    if (values.isEmpty) return 0;
+  /// Получить завершенные заявки
+  Future<List<Booking>> _getCompletedBookings(String specialistId, DateTime start, DateTime end) async {
+    try {
+      final snapshot = await _firestore
+          .collection('bookings')
+          .where('specialistId', isEqualTo: specialistId)
+          .where('status', isEqualTo: BookingStatus.completed.name)
+          .where('updatedAt', isGreaterThanOrEqualTo: start)
+          .where('updatedAt', isLessThanOrEqualTo: end)
+          .get();
 
-    final sortedValues = List<double>.from(values)..sort();
-    final index = sortedValues.indexWhere((v) => v >= target);
+      return snapshot.docs.map((doc) => Booking.fromDocument(doc)).toList();
+    } catch (e) {
+      AppLogger.logE('Ошибка получения завершенных заявок: $e', 'specialist_analytics_service');
+      return [];
+    }
+  }
 
-    if (index == -1) return 100;
-    if (index == 0) return 0;
+  /// Получить отмененные заявки
+  Future<List<Booking>> _getCancelledBookings(String specialistId, DateTime start, DateTime end) async {
+    try {
+      final snapshot = await _firestore
+          .collection('bookings')
+          .where('specialistId', isEqualTo: specialistId)
+          .where('status', isEqualTo: BookingStatus.cancelled.name)
+          .where('updatedAt', isGreaterThanOrEqualTo: start)
+          .where('updatedAt', isLessThanOrEqualTo: end)
+          .get();
 
-    return (index / sortedValues.length) * 100.0;
+      return snapshot.docs.map((doc) => Booking.fromDocument(doc)).toList();
+    } catch (e) {
+      AppLogger.logE('Ошибка получения отмененных заявок: $e', 'specialist_analytics_service');
+      return [];
+    }
+  }
+
+  /// Получить отзывы
+  Future<List<ReviewAnalytics>> _getReviews(String specialistId, DateTime start, DateTime end) async {
+    try {
+      final snapshot = await _firestore
+          .collection('reviews')
+          .where('specialistId', isEqualTo: specialistId)
+          .where('createdAt', isGreaterThanOrEqualTo: start)
+          .where('createdAt', isLessThanOrEqualTo: end)
+          .orderBy('createdAt', descending: true)
+          .get();
+
+      return snapshot.docs.map((doc) {
+        final data = doc.data();
+        return ReviewAnalytics(
+          id: doc.id,
+          rating: data['rating']?.toDouble() ?? 0.0,
+          comment: data['comment'] ?? '',
+          customerName: data['customerName'] ?? '',
+          createdAt: (data['createdAt'] as Timestamp).toDate(),
+        );
+      }).toList();
+    } catch (e) {
+      AppLogger.logE('Ошибка получения отзывов: $e', 'specialist_analytics_service');
+      return [];
+    }
+  }
+
+  /// Получить данные о доходах
+  Future<RevenueAnalytics> _getRevenue(String specialistId, DateTime start, DateTime end) async {
+    try {
+      final snapshot = await _firestore
+          .collection('payments')
+          .where('specialistId', isEqualTo: specialistId)
+          .where('status', isEqualTo: 'paid')
+          .where('createdAt', isGreaterThanOrEqualTo: start)
+          .where('createdAt', isLessThanOrEqualTo: end)
+          .get();
+
+      var totalRevenue = 0.0;
+      final monthlyRevenue = <String, double>{};
+
+      for (final doc in snapshot.docs) {
+        final data = doc.data();
+        final amount = (data['amount'] ?? 0.0).toDouble();
+        final date = (data['createdAt'] as Timestamp).toDate();
+        final monthKey = '${date.year}-${date.month.toString().padLeft(2, '0')}';
+        
+        totalRevenue += amount;
+        monthlyRevenue[monthKey] = (monthlyRevenue[monthKey] ?? 0.0) + amount;
+      }
+
+      return RevenueAnalytics(
+        totalRevenue: totalRevenue,
+        averageCheck: 0.0, // Будет рассчитано в основном методе
+        trend: 0.0, // Будет рассчитано в основном методе
+        monthlyRevenue: monthlyRevenue,
+      );
+    } catch (e) {
+      AppLogger.logE('Ошибка получения данных о доходах: $e', 'specialist_analytics_service');
+      return RevenueAnalytics(
+        totalRevenue: 0.0,
+        averageCheck: 0.0,
+        trend: 0.0,
+        monthlyRevenue: {},
+      );
+    }
+  }
+
+  /// Рассчитать тренд
+  double _calculateTrend(List<int> values) {
+    if (values.length < 2) return 0.0;
+    
+    final firstHalf = values.take(values.length ~/ 2).reduce((a, b) => a + b);
+    final secondHalf = values.skip(values.length ~/ 2).reduce((a, b) => a + b);
+    
+    if (firstHalf == 0) return secondHalf > 0 ? 100.0 : 0.0;
+    
+    return ((secondHalf - firstHalf) / firstHalf) * 100;
+  }
+
+  /// Рассчитать среднее время ответа
+  double _calculateAverageResponseTime(List<Booking> bookings) {
+    if (bookings.isEmpty) return 0.0;
+    
+    var totalResponseTime = 0.0;
+    var validBookings = 0;
+    
+    for (final booking in bookings) {
+      if (booking.updatedAt != null && booking.createdAt != null) {
+        final responseTime = booking.updatedAt!.difference(booking.createdAt!).inHours.toDouble();
+        totalResponseTime += responseTime;
+        validBookings++;
+      }
+    }
+    
+    return validBookings > 0 ? totalResponseTime / validBookings : 0.0;
+  }
+
+  /// Рассчитать количество постоянных клиентов
+  int _calculateRepeatCustomers(List<Booking> completedBookings) {
+    final customerIds = completedBookings.map((b) => b.customerId).toSet();
+    return customerIds.length;
+  }
+
+  /// Записать просмотр профиля
+  Future<void> recordProfileView({
+    required String specialistId,
+    required String source,
+  }) async {
+    try {
+      final today = DateTime.now();
+      final dateKey = '${today.year}-${today.month.toString().padLeft(2, '0')}-${today.day.toString().padLeft(2, '0')}';
+      
+      await _firestore
+          .collection('analytics')
+          .doc('profile_views')
+          .collection(specialistId)
+          .doc(dateKey)
+          .set({
+        'date': Timestamp.fromDate(today),
+        'count': FieldValue.increment(1),
+        'source': source,
+      }, SetOptions(merge: true));
+      
+      AppLogger.logI('Записан просмотр профиля для специалиста $specialistId', 'specialist_analytics_service');
+    } catch (e) {
+      AppLogger.logE('Ошибка записи просмотра профиля: $e', 'specialist_analytics_service');
+    }
   }
 }

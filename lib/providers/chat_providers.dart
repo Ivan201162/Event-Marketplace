@@ -182,4 +182,28 @@ class ChatStateNotifier extends Notifier<ChatState> {
       setLoading(false);
     }
   }
+
+  Future<void> editMessage(String chatId, String messageId, String newContent) async {
+    try {
+      setLoading(true);
+      final chatService = ref.read(chatServiceProvider);
+      await chatService.editMessage(chatId, messageId, newContent);
+      setLoading(false);
+    } catch (e) {
+      setError(e.toString());
+      setLoading(false);
+    }
+  }
+
+  Future<void> deleteMessage(String chatId, String messageId) async {
+    try {
+      setLoading(true);
+      final chatService = ref.read(chatServiceProvider);
+      await chatService.deleteMessageById(chatId, messageId);
+      setLoading(false);
+    } catch (e) {
+      setError(e.toString());
+      setLoading(false);
+    }
+  }
 }

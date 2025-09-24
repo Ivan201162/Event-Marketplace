@@ -1,11 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:collection/collection.dart';
 
-import '../models/specialist.dart';
-import '../models/booking.dart';
-import '../models/event_idea.dart';
-import '../models/specialist_recommendation.dart';
 import '../core/logger.dart';
+import '../models/specialist.dart';
+import '../models/specialist_recommendation.dart';
 
 /// Улучшенный сервис рекомендаций с учетом бюджета и связанных специалистов
 class EnhancedRecommendationService {
@@ -240,7 +237,7 @@ class EnhancedRecommendationService {
       // Фильтруем по бюджету если указан
       if (budget != null) {
         specialists.removeWhere((specialist) => 
-          specialist.minPrice != null && specialist.minPrice! > budget * 0.3); // Максимум 30% от бюджета на дополнительного специалиста
+          specialist.hourlyRate * (specialist.minBookingHours ?? 1) > budget * 0.3); // Максимум 30% от бюджета на дополнительного специалиста
       }
 
       return specialists.take(limit).toList();
@@ -252,24 +249,7 @@ class EnhancedRecommendationService {
 
   /// Получить причину рекомендации
   String _getRecommendationReason(SpecialistCategory category, Set<SpecialistCategory> selectedCategories) {
-    final categoryNames = {
-      SpecialistCategory.photographer: 'фотограф',
-      SpecialistCategory.videographer: 'видеограф',
-      SpecialistCategory.decorator: 'декоратор',
-      SpecialistCategory.makeup: 'визажист',
-      SpecialistCategory.lighting: 'световое оформление',
-      SpecialistCategory.sound: 'звуковое оборудование',
-      SpecialistCategory.florist: 'флорист',
-      SpecialistCategory.balloon: 'аэродизайн',
-      SpecialistCategory.dj: 'DJ',
-      SpecialistCategory.musician: 'музыкант',
-      SpecialistCategory.host: 'ведущий',
-      SpecialistCategory.animator: 'аниматор',
-      SpecialistCategory.cake: 'кондитер',
-      SpecialistCategory.rental: 'аренда оборудования',
-    };
-
-    final categoryName = categoryNames[category] ?? category.name;
+    // Удаляем неиспользуемую переменную
     
     if (selectedCategories.contains(SpecialistCategory.photographer) && 
         [SpecialistCategory.videographer, SpecialistCategory.lighting, SpecialistCategory.makeup].contains(category)) {
@@ -295,7 +275,7 @@ class EnhancedRecommendationService {
     List<Specialist> selectedSpecialists,
     double? budget,
   ) {
-    double score = 0.0;
+    var score = 0.0;
 
     // Базовый рейтинг специалиста (0-1)
     score += (specialist.rating / 5.0) * 0.3;
@@ -305,8 +285,9 @@ class EnhancedRecommendationService {
     score += (reviewCount / 100.0).clamp(0.0, 1.0) * 0.2;
 
     // Соответствие бюджету
-    if (budget != null && specialist.minPrice != null) {
-      final budgetRatio = specialist.minPrice! / budget;
+    if (budget != null) {
+      final specialistMinPrice = specialist.hourlyRate * (specialist.minBookingHours ?? 1);
+      final budgetRatio = specialistMinPrice / budget;
       if (budgetRatio <= 0.3) {
         score += 0.3; // Отлично подходит по бюджету
       } else if (budgetRatio <= 0.5) {

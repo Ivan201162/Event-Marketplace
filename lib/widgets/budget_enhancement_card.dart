@@ -14,11 +14,10 @@ class BudgetEnhancementCard extends StatelessWidget {
 
   final BudgetEnhancementRecommendation recommendation;
   final VoidCallback onTap;
-  final Function(Specialist) onAddSpecialist;
+  final void Function(Specialist) onAddSpecialist;
 
   @override
-  Widget build(BuildContext context) {
-    return Card(
+  Widget build(BuildContext context) => Card(
       margin: const EdgeInsets.only(bottom: 16),
       child: InkWell(
         onTap: onTap,
@@ -33,7 +32,7 @@ class BudgetEnhancementCard extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: _getCategoryColor().withOpacity(0.1),
+                      color: _getCategoryColor().withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
@@ -71,7 +70,7 @@ class BudgetEnhancementCard extends StatelessWidget {
                       vertical: 4,
                     ),
                     decoration: BoxDecoration(
-                      color: _getImpactColor().withOpacity(0.1),
+                      color: _getImpactColor().withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Text(
@@ -194,15 +193,14 @@ class BudgetEnhancementCard extends StatelessWidget {
                                     ],
                                   ),
                                   const SizedBox(height: 4),
-                                  if (specialist.minPrice != null)
-                                    Text(
-                                      'от ${specialist.minPrice!.toInt()} ₽',
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.green[600],
-                                        fontWeight: FontWeight.w500,
-                                      ),
+                                  Text(
+                                    'от ${(specialist.hourlyRate * (specialist.minBookingHours ?? 1)).toInt()} ₽',
+                                    style: TextStyle(
+                                      fontSize: 12,
+                                      color: Colors.green[600],
+                                      fontWeight: FontWeight.w500,
                                     ),
+                                  ),
                                 ],
                               ),
                             ),
@@ -241,13 +239,12 @@ class BudgetEnhancementCard extends StatelessWidget {
         ),
       ),
     );
-  }
 
   Widget _buildCostInfo(String label, double amount, Color color) {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
       ),
       child: Column(
@@ -274,58 +271,35 @@ class BudgetEnhancementCard extends StatelessWidget {
     );
   }
 
-  Color _getCategoryColor() {
+  Color _getCategoryColor() =>
     switch (recommendation.category) {
-      case SpecialistCategory.lighting:
-        return Colors.amber;
-      case SpecialistCategory.sound:
-        return Colors.blue;
-      case SpecialistCategory.decorator:
-        return Colors.purple;
-      case SpecialistCategory.host:
-        return Colors.green;
-      case SpecialistCategory.animator:
-        return Colors.orange;
-      case SpecialistCategory.makeup:
-        return Colors.pink;
-      case SpecialistCategory.florist:
-        return Colors.lightGreen;
-      default:
-        return Colors.grey;
-    }
-  }
+      SpecialistCategory.lighting => Colors.amber,
+      SpecialistCategory.sound => Colors.blue,
+      SpecialistCategory.decorator => Colors.purple,
+      SpecialistCategory.host => Colors.green,
+      SpecialistCategory.animator => Colors.orange,
+      SpecialistCategory.makeup => Colors.pink,
+      SpecialistCategory.florist => Colors.lightGreen,
+      _ => Colors.grey,
+    };
 
-  IconData _getCategoryIcon() {
+  IconData _getCategoryIcon() =>
     switch (recommendation.category) {
-      case SpecialistCategory.lighting:
-        return Icons.lightbulb;
-      case SpecialistCategory.sound:
-        return Icons.volume_up;
-      case SpecialistCategory.decorator:
-        return Icons.palette;
-      case SpecialistCategory.host:
-        return Icons.mic;
-      case SpecialistCategory.animator:
-        return Icons.celebration;
-      case SpecialistCategory.makeup:
-        return Icons.face;
-      case SpecialistCategory.florist:
-        return Icons.local_florist;
-      default:
-        return Icons.star;
-    }
-  }
+      SpecialistCategory.lighting => Icons.lightbulb,
+      SpecialistCategory.sound => Icons.volume_up,
+      SpecialistCategory.decorator => Icons.palette,
+      SpecialistCategory.host => Icons.mic,
+      SpecialistCategory.animator => Icons.celebration,
+      SpecialistCategory.makeup => Icons.face,
+      SpecialistCategory.florist => Icons.local_florist,
+      _ => Icons.star,
+    };
 
-  Color _getImpactColor() {
+  Color _getImpactColor() =>
     switch (recommendation.impact) {
-      case 'Высокий':
-        return Colors.red;
-      case 'Средний':
-        return Colors.orange;
-      case 'Низкий':
-        return Colors.green;
-      default:
-        return Colors.grey;
-    }
-  }
+      'Высокий' => Colors.red,
+      'Средний' => Colors.orange,
+      'Низкий' => Colors.green,
+      _ => Colors.grey,
+    };
 }

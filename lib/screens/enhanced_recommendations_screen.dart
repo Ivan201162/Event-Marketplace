@@ -4,9 +4,8 @@ import 'package:go_router/go_router.dart';
 import '../models/specialist.dart';
 import '../models/specialist_recommendation.dart';
 import '../services/enhanced_recommendation_service.dart';
-import '../widgets/specialist_card.dart';
 import '../widgets/budget_enhancement_card.dart';
-import '../core/constants/app_routes.dart';
+import '../widgets/specialist_card.dart';
 
 /// Экран улучшенных рекомендаций с связанными специалистами и предложениями по бюджету
 class EnhancedRecommendationsScreen extends StatefulWidget {
@@ -32,7 +31,7 @@ class _EnhancedRecommendationsScreenState extends State<EnhancedRecommendationsS
   List<SpecialistRecommendation> _relatedRecommendations = [];
   List<BudgetEnhancementRecommendation> _budgetRecommendations = [];
   bool _isLoading = true;
-  String _customerId = 'current_user_id'; // TODO: Get from auth
+  final String _customerId = 'current_user_id'; // TODO: Get from auth
 
   @override
   void initState() {
@@ -69,7 +68,7 @@ class _EnhancedRecommendationsScreenState extends State<EnhancedRecommendationsS
         _budgetRecommendations = futures[1] as List<BudgetEnhancementRecommendation>;
         _isLoading = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() => _isLoading = false);
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -83,8 +82,7 @@ class _EnhancedRecommendationsScreenState extends State<EnhancedRecommendationsS
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
+  Widget build(BuildContext context) => Scaffold(
       appBar: AppBar(
         title: const Text('Рекомендации'),
         bottom: TabBar(
@@ -111,7 +109,6 @@ class _EnhancedRecommendationsScreenState extends State<EnhancedRecommendationsS
               ],
             ),
     );
-  }
 
   Widget _buildRelatedSpecialistsTab() {
     if (_relatedRecommendations.isEmpty) {
@@ -167,7 +164,7 @@ class _EnhancedRecommendationsScreenState extends State<EnhancedRecommendationsS
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.blue.withOpacity(0.1),
+                          color: Colors.blue.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -186,7 +183,7 @@ class _EnhancedRecommendationsScreenState extends State<EnhancedRecommendationsS
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.green.withOpacity(0.1),
+                          color: Colors.green.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                         ),
                         child: Text(
@@ -210,12 +207,11 @@ class _EnhancedRecommendationsScreenState extends State<EnhancedRecommendationsS
                     ),
                   ),
                   const SizedBox(height: 12),
-                  SpecialistCard(
-                    specialist: recommendation.specialist,
-                    onTap: () => _onSpecialistTap(recommendation.specialist),
-                    showAddButton: true,
-                    onAddPressed: () => _onAddSpecialist(recommendation.specialist),
-                  ),
+                  if (recommendation.specialist != null)
+                    SpecialistCard(
+                      specialist: recommendation.specialist!,
+                      onTap: () => _onSpecialistTap(recommendation.specialist!),
+                    ),
                 ],
               ),
             ),
@@ -275,7 +271,7 @@ class _EnhancedRecommendationsScreenState extends State<EnhancedRecommendationsS
   }
 
   void _onSpecialistTap(Specialist specialist) {
-    context.push('${AppRoutes.specialistDetails}/${specialist.id}');
+    context.push('/specialist/${specialist.id}');
   }
 
   void _onAddSpecialist(Specialist specialist) {
@@ -294,7 +290,7 @@ class _EnhancedRecommendationsScreenState extends State<EnhancedRecommendationsS
   }
 
   void _onBudgetEnhancementTap(BudgetEnhancementRecommendation recommendation) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(recommendation.title),
@@ -339,8 +335,8 @@ class _EnhancedRecommendationsScreenState extends State<EnhancedRecommendationsS
                   ),
                   decoration: BoxDecoration(
                     color: recommendation.impact == 'Высокий' 
-                        ? Colors.red.withOpacity(0.1)
-                        : Colors.orange.withOpacity(0.1),
+                        ? Colors.red.withValues(alpha: 0.1)
+                        : Colors.orange.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Text(

@@ -43,6 +43,8 @@ class ChatMessage {
     this.replyToMessageId,
     this.readBy = const [],
     this.isDeleted = false,
+    this.deletedAt,
+    this.originalContent,
   });
 
   /// Создать сообщение из документа Firestore
@@ -77,6 +79,10 @@ class ChatMessage {
       replyToMessageId: data['replyToMessageId'] as String?,
       readBy: List<String>.from(data['readBy'] as List<dynamic>? ?? []),
       isDeleted: data['isDeleted'] as bool? ?? false,
+      deletedAt: data['deletedAt'] != null
+          ? (data['deletedAt'] as Timestamp).toDate()
+          : null,
+      originalContent: data['originalContent'] as String?,
     );
   }
   final String id;
@@ -98,6 +104,8 @@ class ChatMessage {
   final String? replyToMessageId;
   final List<String> readBy;
   final bool isDeleted;
+  final DateTime? deletedAt;
+  final String? originalContent;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -119,6 +127,8 @@ class ChatMessage {
         'replyToMessageId': replyToMessageId,
         'readBy': readBy,
         'isDeleted': isDeleted,
+        'deletedAt': deletedAt != null ? Timestamp.fromDate(deletedAt!) : null,
+        'originalContent': originalContent,
       };
 
   /// Создать копию с изменениями
@@ -142,6 +152,8 @@ class ChatMessage {
     String? replyToMessageId,
     List<String>? readBy,
     bool? isDeleted,
+    DateTime? deletedAt,
+    String? originalContent,
   }) =>
       ChatMessage(
         id: id ?? this.id,
@@ -163,6 +175,8 @@ class ChatMessage {
         replyToMessageId: replyToMessageId ?? this.replyToMessageId,
         readBy: readBy ?? this.readBy,
         isDeleted: isDeleted ?? this.isDeleted,
+        deletedAt: deletedAt ?? this.deletedAt,
+        originalContent: originalContent ?? this.originalContent,
       );
 
   /// Проверить, является ли сообщение вложением

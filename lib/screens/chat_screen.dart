@@ -284,11 +284,15 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   Future<void> _attachFile() async {
     if (_isUploadingFile) return;
 
+    // Показываем диалог выбора типа файла
+    final fileType = await _showFileTypeDialog();
+    if (fileType == null) return;
+
     try {
       setState(() => _isUploadingFile = true);
 
       final result = await FilePicker.platform.pickFiles(
-        type: FileType.any,
+        type: fileType,
         allowMultiple: false,
       );
 
@@ -299,6 +303,12 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
         if (fileData == null) {
           _showErrorSnackBar('Не удалось загрузить файл');
+          return;
+        }
+
+        // Проверяем размер файла (максимум 10MB)
+        if (fileData.length > 10 * 1024 * 1024) {
+          _showErrorSnackBar('Файл слишком большой (максимум 10MB)');
           return;
         }
 
@@ -336,6 +346,50 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     } finally {
       setState(() => _isUploadingFile = false);
     }
+  }
+
+  Future<FileType?> _showFileTypeDialog() async {
+    return showDialog<FileType>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Выберите тип файла'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.image),
+              title: const Text('Изображения'),
+              subtitle: const Text('JPG, PNG, GIF'),
+              onTap: () => Navigator.pop(context, FileType.image),
+            ),
+            ListTile(
+              leading: const Icon(Icons.video_file),
+              title: const Text('Видео'),
+              subtitle: const Text('MP4, MOV, AVI'),
+              onTap: () => Navigator.pop(context, FileType.video),
+            ),
+            ListTile(
+              leading: const Icon(Icons.picture_as_pdf),
+              title: const Text('PDF документы'),
+              subtitle: const Text('PDF файлы'),
+              onTap: () => Navigator.pop(context, FileType.custom),
+            ),
+            ListTile(
+              leading: const Icon(Icons.attach_file),
+              title: const Text('Другие файлы'),
+              subtitle: const Text('DOC, XLS, PPT, TXT'),
+              onTap: () => Navigator.pop(context, FileType.any),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _showBotHelp() {
@@ -410,6 +464,101 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('Закрыть'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showMessageOptions(chat_message.ChatMessage message) {
+    showModalBottomSheet(
+      context: context,
+      builder: (context) => Container(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: const Icon(Icons.edit),
+              title: const Text('Редактировать'),
+              onTap: () {
+                Navigator.pop(context);
+                _editMessage(message);
+              },
+            ),
+            ListTile(
+              leading: const Icon(Icons.delete, color: Colors.red),
+              title: const Text('Удалить', style: TextStyle(color: Colors.red)),
+              onTap: () {
+                Navigator.pop(context);
+                _deleteMessage(message);
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _editMessage(chat_message.ChatMessage message) {
+    final controller = TextEditingController(text: message.content);
+    
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Редактировать сообщение'),
+        content: TextField(
+          controller: controller,
+          maxLines: 3,
+          decoration: const InputDecoration(
+            hintText: 'Введите новый текст сообщения',
+          ),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () {
+              final newContent = controller.text.trim();
+              if (newContent.isNotEmpty && newContent != message.content) {
+                ref.read(chatStateProvider.notifier).editMessage(
+                  widget.chatId,
+                  message.id,
+                  newContent,
+                );
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Сохранить'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _deleteMessage(chat_message.ChatMessage message) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Удалить сообщение'),
+        content: const Text('Вы уверены, что хотите удалить это сообщение?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () {
+              ref.read(chatStateProvider.notifier).deleteMessage(
+                widget.chatId,
+                message.id,
+              );
+              Navigator.pop(context);
+            },
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Удалить'),
           ),
         ],
       ),

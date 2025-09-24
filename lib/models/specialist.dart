@@ -269,6 +269,15 @@ class Specialist {
     this.email,
     this.lastPriceUpdateAt,
     this.avgPriceByService, // Средняя цена по услугам
+    this.postsCount = 0,
+    this.storiesCount = 0,
+    this.followersCount = 0,
+    this.followingCount = 0,
+    this.recentPosts = const [],
+    this.activeStories = const [],
+    this.isVerified = false,
+    this.verificationBadge,
+    this.socialStats,
   });
 
   /// Создать из Map
@@ -343,6 +352,17 @@ class Specialist {
         avgPriceByService: data['avgPriceByService'] != null 
             ? Map<String, double>.from(data['avgPriceByService'])
             : null,
+        postsCount: data['postsCount'] as int? ?? 0,
+        storiesCount: data['storiesCount'] as int? ?? 0,
+        followersCount: data['followersCount'] as int? ?? 0,
+        followingCount: data['followingCount'] as int? ?? 0,
+        recentPosts: List<String>.from(data['recentPosts'] ?? []),
+        activeStories: List<String>.from(data['activeStories'] ?? []),
+        isVerified: data['isVerified'] as bool? ?? false,
+        verificationBadge: data['verificationBadge'] as String?,
+        socialStats: data['socialStats'] != null 
+            ? Map<String, dynamic>.from(data['socialStats'])
+            : null,
       );
 
   /// Создать из документа Firestore
@@ -381,9 +401,20 @@ class Specialist {
       avatarUrl: data['avatarUrl'],
       avatar: data['avatar'],
       specialization: data['specialization'],
-      avgPriceByService: data['avgPriceByService'] != null 
-          ? Map<String, double>.from(data['avgPriceByService'])
-          : null,
+        avgPriceByService: data['avgPriceByService'] != null 
+            ? Map<String, double>.from(data['avgPriceByService'])
+            : null,
+        postsCount: data['postsCount'] as int? ?? 0,
+        storiesCount: data['storiesCount'] as int? ?? 0,
+        followersCount: data['followersCount'] as int? ?? 0,
+        followingCount: data['followingCount'] as int? ?? 0,
+        recentPosts: List<String>.from(data['recentPosts'] ?? []),
+        activeStories: List<String>.from(data['activeStories'] ?? []),
+        isVerified: data['isVerified'] as bool? ?? false,
+        verificationBadge: data['verificationBadge'] as String?,
+        socialStats: data['socialStats'] != null 
+            ? Map<String, dynamic>.from(data['socialStats'])
+            : null,
     );
   }
   final String id;
@@ -443,6 +474,17 @@ class Specialist {
   final String? email;
   final DateTime? lastPriceUpdateAt;
   final Map<String, double>? avgPriceByService; // Средняя цена по услугам
+  
+  // Социальные функции
+  final int postsCount;
+  final int storiesCount;
+  final int followersCount;
+  final int followingCount;
+  final List<String> recentPosts;
+  final List<String> activeStories;
+  final bool isVerified;
+  final String? verificationBadge;
+  final Map<String, dynamic>? socialStats;
 
   /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
@@ -474,6 +516,15 @@ class Specialist {
         'avatar': avatar,
         'specialization': specialization,
         'avgPriceByService': avgPriceByService,
+        'postsCount': postsCount,
+        'storiesCount': storiesCount,
+        'followersCount': followersCount,
+        'followingCount': followingCount,
+        'recentPosts': recentPosts,
+        'activeStories': activeStories,
+        'isVerified': isVerified,
+        'verificationBadge': verificationBadge,
+        'socialStats': socialStats,
       };
 
   /// Копировать с изменениями
@@ -507,6 +558,15 @@ class Specialist {
     String? avatar,
     String? specialization,
     Map<String, double>? avgPriceByService,
+    int? postsCount,
+    int? storiesCount,
+    int? followersCount,
+    int? followingCount,
+    List<String>? recentPosts,
+    List<String>? activeStories,
+    bool? isVerified,
+    String? verificationBadge,
+    Map<String, dynamic>? socialStats,
   }) =>
       Specialist(
         id: id ?? this.id,
@@ -538,6 +598,15 @@ class Specialist {
         avatar: avatar ?? this.avatar,
         specialization: specialization ?? this.specialization,
         avgPriceByService: avgPriceByService ?? this.avgPriceByService,
+        postsCount: postsCount ?? this.postsCount,
+        storiesCount: storiesCount ?? this.storiesCount,
+        followersCount: followersCount ?? this.followersCount,
+        followingCount: followingCount ?? this.followingCount,
+        recentPosts: recentPosts ?? this.recentPosts,
+        activeStories: activeStories ?? this.activeStories,
+        isVerified: isVerified ?? this.isVerified,
+        verificationBadge: verificationBadge ?? this.verificationBadge,
+        socialStats: socialStats ?? this.socialStats,
       );
 
   /// Получить отображаемое название категории

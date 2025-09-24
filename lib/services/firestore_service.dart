@@ -426,8 +426,8 @@ class FirestoreService {
         userId: booking.customerId ?? '',
         title: title,
         body: body,
-        type: app_notification.NotificationType.booking,
-        channel: app_notification.NotificationChannel.push,
+        type: app_notification.NotificationType.booking.name,
+        channel: app_notification.NotificationChannel.push.name,
       );
 
       // Отправляем push-уведомление клиенту
@@ -480,10 +480,10 @@ class FirestoreService {
 
       switch (status) {
         case 'completed':
-          notificationType = app_notification.NotificationType.payment;
+          notificationType = app_notification.NotificationType.payment.name;
           break;
         case 'failed':
-          notificationType = app_notification.NotificationType.payment;
+          notificationType = app_notification.NotificationType.payment.name;
           break;
         default:
           return; // Не отправляем уведомления для других статусов
@@ -496,8 +496,8 @@ class FirestoreService {
         body: status == 'completed'
             ? 'Ваш платеж успешно обработан'
             : 'Произошла ошибка при обработке платежа',
-        type: app_notification.NotificationType.payment,
-        channel: app_notification.NotificationChannel.push,
+        type: app_notification.NotificationType.payment.name,
+        channel: app_notification.NotificationChannel.push.name,
       );
 
       // Отправляем уведомление специалисту
@@ -507,8 +507,8 @@ class FirestoreService {
         body: status == 'completed'
             ? 'Платеж от клиента успешно обработан'
             : 'Произошла ошибка при обработке платежа',
-        type: app_notification.NotificationType.payment,
-        channel: app_notification.NotificationChannel.push,
+        type: app_notification.NotificationType.payment.name,
+        channel: app_notification.NotificationChannel.push.name,
       );
     } catch (e) {
       print('Ошибка отправки уведомлений о платеже: $e');
