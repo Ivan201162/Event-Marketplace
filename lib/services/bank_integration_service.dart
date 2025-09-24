@@ -1,369 +1,446 @@
-import '../core/feature_flags.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:uuid/uuid.dart';
 
-/// Сервис интеграции с российскими банками
+import '../core/logger.dart';
+import '../models/payment_models.dart';
+
+/// Сервис для интеграции с банковскими системами
 class BankIntegrationService {
-  /// Поддерживаемые банки
-  static const List<BankInfo> supportedBanks = [
-    BankInfo(
-      id: 'sberbank',
-      name: 'Сбербанк',
-      logoUrl: 'https://www.sberbank.ru/static/img/logo.svg',
-      apiEndpoint: 'https://api.sberbank.ru',
-      supportedMethods: ['card', 'qr', 'sbp'],
-    ),
-    BankInfo(
-      id: 'tinkoff',
-      name: 'Тинькофф Банк',
-      logoUrl: 'https://www.tinkoff.ru/static/img/logo.svg',
-      apiEndpoint: 'https://api.tinkoff.ru',
-      supportedMethods: ['card', 'qr', 'sbp'],
-    ),
-    BankInfo(
-      id: 'vtb',
-      name: 'ВТБ',
-      logoUrl: 'https://www.vtb.ru/static/img/logo.svg',
-      apiEndpoint: 'https://api.vtb.ru',
-      supportedMethods: ['card', 'qr', 'sbp'],
-    ),
-    BankInfo(
-      id: 'alfa',
-      name: 'Альфа-Банк',
-      logoUrl: 'https://www.alfabank.ru/static/img/logo.svg',
-      apiEndpoint: 'https://api.alfabank.ru',
-      supportedMethods: ['card', 'qr', 'sbp'],
-    ),
-    BankInfo(
-      id: 'gazprombank',
-      name: 'Газпромбанк',
-      logoUrl: 'https://www.gazprombank.ru/static/img/logo.svg',
-      apiEndpoint: 'https://api.gazprombank.ru',
-      supportedMethods: ['card', 'qr', 'sbp'],
-    ),
-  ];
+  factory BankIntegrationService() => _instance;
+  BankIntegrationService._internal();
+  static final BankIntegrationService _instance = BankIntegrationService._internal();
 
-  /// Инициализация платежа через банк
-  Future<PaymentInitiationResult> initiatePayment({
-    required String bankId,
+  final Uuid _uuid = const Uuid();
+  
+  // Тестовые ключи для демонстрации
+  static const String _yookassaShopId = 'test_shop_id';
+  static const String _yookassaSecretKey = 'test_secret_key';
+  static const String _sbpSecretKey = 'test_secret_key';
+
+  /// Создать платёж через ЮKassa
+  Future<PaymentResult> createYooKassaPayment({
+    required String paymentId,
     required double amount,
-    required String currency,
-    required String orderId,
     required String description,
-    required String customerEmail,
-    required String customerPhone,
-    Map<String, dynamic>? metadata,
+    required String returnUrl,
+    String? customerEmail,
+    String? customerPhone,
   }) async {
-    if (!FeatureFlags.bankIntegrationEnabled) {
-      throw Exception('Интеграция с банками отключена');
-    }
-
-    final bank = _getBankById(bankId);
-    if (bank == null) {
-      throw Exception('Банк не поддерживается');
-    }
-
     try {
-      // TODO: Реализовать реальную интеграцию с API банка
-      // Пока возвращаем заглушку
-      return PaymentInitiationResult(
-        paymentId: 'payment_${DateTime.now().millisecondsSinceEpoch}',
-        status: PaymentStatus.pending,
-        redirectUrl: 'https://payment.example.com/pay/$orderId',
-        qrCode:
-            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
-        expiresAt: DateTime.now().add(const Duration(minutes: 15)),
-        bankInfo: bank,
+      final requestId = _uuid.v4();
+      
+      final requestBody = {
+        'amount': {
+          'value': amount.toStringAsFixed(2),
+          'currency': 'RUB',
+        },
+        'confirmation': {
+          'type': 'redirect',
+          'return_url': returnUrl,
+        },
+        'description': description,
+        'metadata': {
+          'payment_id': paymentId,
+          'request_id': requestId,
+        },
+        if (customerEmail != null) 'receipt': {
+          'customer': {
+            'email': customerEmail,
+          },
+          'items': [
+            {
+              'description': description,
+              'amount': {
+                'value': amount.toStringAsFixed(2),
+                'currency': 'RUB',
+              },
+              'vat_code': 1,
+              'quantity': '1',
+            },
+          ],
+        },
+      };
+
+      final response = await http.post(
+        Uri.parse('https://api.yookassa.ru/v3/payments'),
+        headers: {
+          'Authorization': 'Basic ${base64Encode(utf8.encode('$_yookassaShopId:$_yookassaSecretKey'))}',
+          'Idempotence-Key': requestId,
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(requestBody),
       );
-    } catch (e) {
-      throw Exception('Ошибка инициализации платежа: $e');
-    }
-  }
 
-  /// Проверить статус платежа
-  Future<PaymentStatusResult> checkPaymentStatus({
-    required String paymentId,
-    required String bankId,
-  }) async {
-    if (!FeatureFlags.bankIntegrationEnabled) {
-      throw Exception('Интеграция с банками отключена');
-    }
-
-    try {
-      // TODO: Реализовать проверку статуса через API банка
-      // Пока возвращаем заглушку
-      return PaymentStatusResult(
-        paymentId: paymentId,
-        status: PaymentStatus.completed,
-        amount: 1000,
-        currency: 'RUB',
-        transactionId: 'txn_${DateTime.now().millisecondsSinceEpoch}',
-        completedAt: DateTime.now(),
-        bankInfo: _getBankById(bankId),
-      );
-    } catch (e) {
-      throw Exception('Ошибка проверки статуса платежа: $e');
-    }
-  }
-
-  /// Отменить платеж
-  Future<PaymentCancellationResult> cancelPayment({
-    required String paymentId,
-    required String bankId,
-    String? reason,
-  }) async {
-    if (!FeatureFlags.bankIntegrationEnabled) {
-      throw Exception('Интеграция с банками отключена');
-    }
-
-    try {
-      // TODO: Реализовать отмену платежа через API банка
-      // Пока возвращаем заглушку
-      return PaymentCancellationResult(
-        paymentId: paymentId,
-        status: PaymentStatus.cancelled,
-        cancelledAt: DateTime.now(),
-        refundAmount: 0,
-        bankInfo: _getBankById(bankId),
-      );
-    } catch (e) {
-      throw Exception('Ошибка отмены платежа: $e');
-    }
-  }
-
-  /// Получить информацию о банке по ID
-  BankInfo? _getBankById(String bankId) {
-    try {
-      return supportedBanks.firstWhere((bank) => bank.id == bankId);
-    } catch (e) {
-      return null;
-    }
-  }
-
-  /// Получить список поддерживаемых банков
-  List<BankInfo> getSupportedBanks() => supportedBanks;
-
-  /// Получить банк по умолчанию
-  BankInfo getDefaultBank() {
-    return supportedBanks.first; // Сбербанк
-  }
-
-  /// Проверить доступность банка
-  Future<bool> isBankAvailable(String bankId) async {
-    if (!FeatureFlags.bankIntegrationEnabled) {
-      return false;
-    }
-
-    final bank = _getBankById(bankId);
-    if (bank == null) {
-      return false;
-    }
-
-    try {
-      // TODO: Реализовать проверку доступности API банка
-      // Пока возвращаем true для всех банков
-      return true;
-    } catch (e) {
-      return false;
-    }
-  }
-
-  /// Получить комиссию банка
-  Future<BankFee> getBankFee({
-    required String bankId,
-    required double amount,
-    required String paymentMethod,
-  }) async {
-    if (!FeatureFlags.bankIntegrationEnabled) {
-      throw Exception('Интеграция с банками отключена');
-    }
-
-    final bank = _getBankById(bankId);
-    if (bank == null) {
-      throw Exception('Банк не поддерживается');
-    }
-
-    try {
-      // TODO: Реализовать получение комиссии через API банка
-      // Пока возвращаем заглушку
-      var feePercentage = 0;
-      const fixedFee = 0;
-
-      switch (bankId) {
-        case 'sberbank':
-          feePercentage = 2.5;
-          break;
-        case 'tinkoff':
-          feePercentage = 2.9;
-          break;
-        case 'vtb':
-          feePercentage = 2.7;
-          break;
-        case 'alfa':
-          feePercentage = 3.0;
-          break;
-        case 'gazprombank':
-          feePercentage = 2.8;
-          break;
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        
+        return PaymentResult(
+          success: true,
+          paymentUrl: responseData['confirmation']['confirmation_url'] as String?,
+          transactionId: responseData['id'] as String?,
+          status: _mapYooKassaStatus(responseData['status'] as String),
+          metadata: responseData as Map<String, dynamic>?,
+        );
+      } else {
+        AppLogger.logE('Ошибка создания платежа ЮKassa: ${response.statusCode} - ${response.body}', 'bank_integration');
+        return PaymentResult(
+          success: false,
+          error: 'Ошибка создания платежа: ${response.statusCode}',
+        );
       }
-
-      final totalFee = (amount * feePercentage / 100) + fixedFee;
-
-      return BankFee(
-        bankId: bankId,
-        feePercentage: feePercentage,
-        fixedFee: fixedFee,
-        totalFee: totalFee,
-        paymentMethod: paymentMethod,
-        currency: 'RUB',
-      );
     } catch (e) {
-      throw Exception('Ошибка получения комиссии: $e');
+      AppLogger.logE('Ошибка создания платежа ЮKassa: $e', 'bank_integration');
+      return PaymentResult(
+        success: false,
+        error: 'Ошибка создания платежа: $e',
+      );
     }
   }
 
-  /// Создать QR-код для оплаты
-  Future<QRCodeResult> createQRCode({
-    required String bankId,
+  /// Создать платёж через СБП
+  Future<PaymentResult> createSBPPayment({
+    required String paymentId,
     required double amount,
-    required String currency,
-    required String orderId,
     required String description,
+    String? customerPhone,
   }) async {
-    if (!FeatureFlags.bankIntegrationEnabled) {
-      throw Exception('Интеграция с банками отключена');
-    }
-
-    final bank = _getBankById(bankId);
-    if (bank == null) {
-      throw Exception('Банк не поддерживается');
-    }
-
     try {
-      // TODO: Реализовать создание QR-кода через API банка
-      // Пока возвращаем заглушку
-      return QRCodeResult(
-        qrCode:
-            'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==',
-        qrData:
-            't=20240101T120000&s=1000.00&fn=1234567890&i=1&fp=1234567890&n=1',
-        expiresAt: DateTime.now().add(const Duration(minutes: 15)),
-        bankInfo: bank,
+      final requestId = _uuid.v4();
+      
+      final requestBody = {
+        'amount': amount.toStringAsFixed(2),
+        'currency': 'RUB',
+        'description': description,
+        'order_id': paymentId,
+        'customer_phone': customerPhone,
+        'metadata': {
+          'payment_id': paymentId,
+          'request_id': requestId,
+        },
+      };
+
+      // Для демонстрации используем тестовый URL
+      final response = await http.post(
+        Uri.parse('https://api.sbp.test/payment/create'),
+        headers: {
+          'Authorization': 'Bearer $_sbpSecretKey',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(requestBody),
       );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        
+        return PaymentResult(
+          success: true,
+          paymentUrl: responseData['payment_url'] as String?,
+          transactionId: responseData['transaction_id'] as String?,
+          status: PaymentStatus.pending,
+          metadata: responseData as Map<String, dynamic>?,
+        );
+      } else {
+        AppLogger.logE('Ошибка создания платежа СБП: ${response.statusCode} - ${response.body}', 'bank_integration');
+        return PaymentResult(
+          success: false,
+          error: 'Ошибка создания платежа: ${response.statusCode}',
+        );
+      }
     } catch (e) {
-      throw Exception('Ошибка создания QR-кода: $e');
+      AppLogger.logE('Ошибка создания платежа СБП: $e', 'bank_integration');
+      return PaymentResult(
+        success: false,
+        error: 'Ошибка создания платежа: $e',
+      );
+    }
+  }
+
+  /// Проверить статус платежа ЮKassa
+  Future<PaymentStatus> checkYooKassaPaymentStatus(String transactionId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://api.yookassa.ru/v3/payments/$transactionId'),
+        headers: {
+          'Authorization': 'Basic ${base64Encode(utf8.encode('$_yookassaShopId:$_yookassaSecretKey'))}',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        return _mapYooKassaStatus(responseData['status'] as String);
+      } else {
+        AppLogger.logE('Ошибка проверки статуса платежа ЮKassa: ${response.statusCode}', 'bank_integration');
+        return PaymentStatus.failed;
+      }
+    } catch (e) {
+      AppLogger.logE('Ошибка проверки статуса платежа ЮKassa: $e', 'bank_integration');
+      return PaymentStatus.failed;
+    }
+  }
+
+  /// Проверить статус платежа СБП
+  Future<PaymentStatus> checkSBPPaymentStatus(String transactionId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('https://api.sbp.test/payment/status/$transactionId'),
+        headers: {
+          'Authorization': 'Bearer $_sbpSecretKey',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        return _mapSBPStatus(responseData['status'] as String);
+      } else {
+        AppLogger.logE('Ошибка проверки статуса платежа СБП: ${response.statusCode}', 'bank_integration');
+        return PaymentStatus.failed;
+      }
+    } catch (e) {
+      AppLogger.logE('Ошибка проверки статуса платежа СБП: $e', 'bank_integration');
+      return PaymentStatus.failed;
+    }
+  }
+
+  /// Создать возврат через ЮKassa
+  Future<RefundResult> createYooKassaRefund({
+    required String paymentId,
+    required double amount,
+    required String reason,
+  }) async {
+    try {
+      final requestId = _uuid.v4();
+      
+      final requestBody = {
+        'amount': {
+          'value': amount.toStringAsFixed(2),
+          'currency': 'RUB',
+        },
+        'payment_id': paymentId,
+        'description': reason,
+      };
+
+      final response = await http.post(
+        Uri.parse('https://api.yookassa.ru/v3/refunds'),
+        headers: {
+          'Authorization': 'Basic ${base64Encode(utf8.encode('$_yookassaShopId:$_yookassaSecretKey'))}',
+          'Idempotence-Key': requestId,
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(requestBody),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        
+        return RefundResult(
+          success: true,
+          refundId: responseData['id'] as String?,
+          status: _mapYooKassaRefundStatus(responseData['status'] as String),
+          metadata: responseData as Map<String, dynamic>?,
+        );
+      } else {
+        AppLogger.logE('Ошибка создания возврата ЮKassa: ${response.statusCode} - ${response.body}', 'bank_integration');
+        return RefundResult(
+          success: false,
+          error: 'Ошибка создания возврата: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      AppLogger.logE('Ошибка создания возврата ЮKassa: $e', 'bank_integration');
+      return RefundResult(
+        success: false,
+        error: 'Ошибка создания возврата: $e',
+      );
+    }
+  }
+
+  /// Создать возврат через СБП
+  Future<RefundResult> createSBPRefund({
+    required String paymentId,
+    required double amount,
+    required String reason,
+  }) async {
+    try {
+      final requestId = _uuid.v4();
+      
+      final requestBody = {
+        'payment_id': paymentId,
+        'amount': amount.toStringAsFixed(2),
+        'reason': reason,
+        'request_id': requestId,
+      };
+
+      final response = await http.post(
+        Uri.parse('https://api.sbp.test/refund/create'),
+        headers: {
+          'Authorization': 'Bearer $_sbpSecretKey',
+          'Content-Type': 'application/json',
+        },
+        body: jsonEncode(requestBody),
+      );
+
+      if (response.statusCode == 200) {
+        final responseData = jsonDecode(response.body);
+        
+        return RefundResult(
+          success: true,
+          refundId: responseData['refund_id'] as String?,
+          status: 'pending',
+          metadata: responseData as Map<String, dynamic>?,
+        );
+      } else {
+        AppLogger.logE('Ошибка создания возврата СБП: ${response.statusCode} - ${response.body}', 'bank_integration');
+        return RefundResult(
+          success: false,
+          error: 'Ошибка создания возврата: ${response.statusCode}',
+        );
+      }
+    } catch (e) {
+      AppLogger.logE('Ошибка создания возврата СБП: $e', 'bank_integration');
+      return RefundResult(
+        success: false,
+        error: 'Ошибка создания возврата: $e',
+      );
+    }
+  }
+
+  /// Маппинг статуса ЮKassa в наш статус
+  PaymentStatus _mapYooKassaStatus(String yookassaStatus) {
+    switch (yookassaStatus) {
+      case 'pending':
+        return PaymentStatus.pending;
+      case 'waiting_for_capture':
+        return PaymentStatus.processing;
+      case 'succeeded':
+        return PaymentStatus.completed;
+      case 'canceled':
+        return PaymentStatus.cancelled;
+      default:
+        return PaymentStatus.failed;
+    }
+  }
+
+  /// Маппинг статуса СБП в наш статус
+  PaymentStatus _mapSBPStatus(String sbpStatus) {
+    switch (sbpStatus) {
+      case 'pending':
+        return PaymentStatus.pending;
+      case 'processing':
+        return PaymentStatus.processing;
+      case 'completed':
+        return PaymentStatus.completed;
+      case 'cancelled':
+        return PaymentStatus.cancelled;
+      default:
+        return PaymentStatus.failed;
+    }
+  }
+
+  /// Маппинг статуса возврата ЮKassa
+  String _mapYooKassaRefundStatus(String yookassaStatus) {
+    switch (yookassaStatus) {
+      case 'pending':
+        return 'pending';
+      case 'succeeded':
+        return 'completed';
+      case 'canceled':
+        return 'cancelled';
+      default:
+        return 'failed';
+    }
+  }
+
+  /// Получить доступные методы оплаты
+  List<PaymentMethod> getAvailablePaymentMethods() {
+    return [
+      PaymentMethod.card,
+      PaymentMethod.sbp,
+      PaymentMethod.yookassa,
+    ];
+  }
+
+  /// Проверить, поддерживается ли метод оплаты
+  bool isPaymentMethodSupported(PaymentMethod method) {
+    return getAvailablePaymentMethods().contains(method);
+  }
+
+  /// Получить комиссию за платёж
+  double getPaymentFee(PaymentMethod method, double amount) {
+    switch (method) {
+      case PaymentMethod.card:
+        return amount * 0.029; // 2.9%
+      case PaymentMethod.sbp:
+        return amount * 0.01; // 1%
+      case PaymentMethod.yookassa:
+        return amount * 0.029; // 2.9%
+      case PaymentMethod.bankTransfer:
+        return 0.0; // Без комиссии
+    }
+  }
+
+  /// Получить минимальную сумму платежа
+  double getMinimumPaymentAmount(PaymentMethod method) {
+    switch (method) {
+      case PaymentMethod.card:
+        return 1.0;
+      case PaymentMethod.sbp:
+        return 1.0;
+      case PaymentMethod.yookassa:
+        return 1.0;
+      case PaymentMethod.bankTransfer:
+        return 100.0;
+    }
+  }
+
+  /// Получить максимальную сумму платежа
+  double getMaximumPaymentAmount(PaymentMethod method) {
+    switch (method) {
+      case PaymentMethod.card:
+        return 1000000.0;
+      case PaymentMethod.sbp:
+        return 1000000.0;
+      case PaymentMethod.yookassa:
+        return 1000000.0;
+      case PaymentMethod.bankTransfer:
+        return 10000000.0;
     }
   }
 }
 
-/// Информация о банке
-class BankInfo {
-  const BankInfo({
-    required this.id,
-    required this.name,
-    required this.logoUrl,
-    required this.apiEndpoint,
-    required this.supportedMethods,
+/// Результат создания платежа
+class PaymentResult {
+  const PaymentResult({
+    required this.success,
+    this.paymentUrl,
+    this.transactionId,
+    this.status,
+    this.error,
+    this.metadata,
   });
-  final String id;
-  final String name;
-  final String logoUrl;
-  final String apiEndpoint;
-  final List<String> supportedMethods;
+
+  final bool success;
+  final String? paymentUrl;
+  final String? transactionId;
+  final PaymentStatus? status;
+  final String? error;
+  final Map<String, dynamic>? metadata;
 }
 
-/// Результат инициализации платежа
-class PaymentInitiationResult {
-  const PaymentInitiationResult({
-    required this.paymentId,
-    required this.status,
-    required this.redirectUrl,
-    required this.qrCode,
-    required this.expiresAt,
-    required this.bankInfo,
-  });
-  final String paymentId;
-  final PaymentStatus status;
-  final String redirectUrl;
-  final String qrCode;
-  final DateTime expiresAt;
-  final BankInfo bankInfo;
-}
-
-/// Результат проверки статуса платежа
-class PaymentStatusResult {
-  const PaymentStatusResult({
-    required this.paymentId,
-    required this.status,
-    required this.amount,
-    required this.currency,
-    required this.transactionId,
-    required this.completedAt,
-    this.bankInfo,
-  });
-  final String paymentId;
-  final PaymentStatus status;
-  final double amount;
-  final String currency;
-  final String transactionId;
-  final DateTime completedAt;
-  final BankInfo? bankInfo;
-}
-
-/// Результат отмены платежа
-class PaymentCancellationResult {
-  const PaymentCancellationResult({
-    required this.paymentId,
-    required this.status,
-    required this.cancelledAt,
-    required this.refundAmount,
+/// Результат создания возврата
+class RefundResult {
+  const RefundResult({
+    required this.success,
     this.refundId,
-    this.bankInfo,
+    this.status,
+    this.error,
+    this.metadata,
   });
-  final String paymentId;
-  final PaymentStatus status;
-  final DateTime cancelledAt;
-  final double refundAmount;
+
+  final bool success;
   final String? refundId;
-  final BankInfo? bankInfo;
-}
-
-/// Комиссия банка
-class BankFee {
-  const BankFee({
-    required this.bankId,
-    required this.feePercentage,
-    required this.fixedFee,
-    required this.totalFee,
-    required this.paymentMethod,
-    required this.currency,
-  });
-  final String bankId;
-  final double feePercentage;
-  final double fixedFee;
-  final double totalFee;
-  final String paymentMethod;
-  final String currency;
-}
-
-/// Результат создания QR-кода
-class QRCodeResult {
-  const QRCodeResult({
-    required this.qrCode,
-    required this.qrData,
-    required this.expiresAt,
-    required this.bankInfo,
-  });
-  final String qrCode;
-  final String qrData;
-  final DateTime expiresAt;
-  final BankInfo bankInfo;
-}
-
-/// Статусы платежа
-enum PaymentStatus {
-  pending,
-  processing,
-  completed,
-  failed,
-  cancelled,
-  refunded,
-}
+  final String? status;
+  final String? error;
+  final Map<String, dynamic>? metadata;
+} 
+ 

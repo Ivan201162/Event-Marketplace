@@ -1,436 +1,401 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+
+/// Статус календарного события
+enum CalendarEventStatus {
+  busy,      // Занят
+  free,      // Свободен
+  tentative, // Предварительно
+  blocked,   // Заблокирован
+  personal,  // Личное событие
+}
+
+/// Тип календарного события
+enum CalendarEventType {
+  booking,   // Бронирование
+  personal,  // Личное событие
+  blocked,   // Заблокированное время
+  reminder,  // Напоминание
+}
 
 /// Модель календарного события
 class CalendarEvent {
   const CalendarEvent({
     required this.id,
+    required this.userId,
     required this.title,
-    required this.description,
-    required this.startTime,
-    required this.endTime,
-    required this.location,
-    required this.specialistId,
-    required this.specialistName,
-    required this.customerId,
-    required this.customerName,
-    required this.bookingId,
+    required this.startDate,
+    required this.endDate,
     required this.status,
     required this.type,
-    this.attendees = const [],
-    this.metadata = const {},
-    this.isAllDay = false,
-    this.recurrenceRule,
-    this.reminderTime,
-    this.color,
     required this.createdAt,
-    required this.updatedAt,
+    this.bookingId,
+    this.description,
+    this.location,
+    this.color,
+    this.isAllDay = false,
+    this.reminderMinutes = const [60, 1440], // 1 час и 24 часа
+    this.isRecurring = false,
+    this.recurrenceRule,
+    this.updatedAt,
   });
 
+  final String id;
+  final String userId;
+  final String? bookingId;
+  final String title;
+  final String? description;
+  final String? location;
+  final DateTime startDate;
+  final DateTime endDate;
+  final CalendarEventStatus status;
+  final CalendarEventType type;
+  final String? color;
+  final bool isAllDay;
+  final List<int> reminderMinutes;
+  final bool isRecurring;
+  final String? recurrenceRule;
+  final DateTime createdAt;
+  final DateTime? updatedAt;
+
+  /// Создать из документа Firestore
   factory CalendarEvent.fromDocument(DocumentSnapshot doc) {
     final data = doc.data()! as Map<String, dynamic>;
-
     return CalendarEvent(
       id: doc.id,
-      title: data['title'] as String? ?? '',
-      description: data['description'] as String? ?? '',
-      startTime: (data['startTime'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      endTime: (data['endTime'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      location: data['location'] as String? ?? '',
-      specialistId: data['specialistId'] as String? ?? '',
-      specialistName: data['specialistName'] as String? ?? '',
-      customerId: data['customerId'] as String? ?? '',
-      customerName: data['customerName'] as String? ?? '',
-      bookingId: data['bookingId'] as String? ?? '',
-      status: EventStatus.values.firstWhere(
-        (s) => s.name == data['status'],
-        orElse: () => EventStatus.scheduled,
+      userId: data['userId'] as String,
+      bookingId: data['bookingId'] as String?,
+      title: data['title'] as String,
+      description: data['description'] as String?,
+      location: data['location'] as String?,
+      startDate: (data['startDate'] as Timestamp).toDate(),
+      endDate: (data['endDate'] as Timestamp).toDate(),
+      status: CalendarEventStatus.values.firstWhere(
+        (status) => status.name == data['status'],
+        orElse: () => CalendarEventStatus.busy,
       ),
-      type: EventType.values.firstWhere(
-        (t) => t.name == data['type'],
-        orElse: () => EventType.booking,
+      type: CalendarEventType.values.firstWhere(
+        (type) => type.name == data['type'],
+        orElse: () => CalendarEventType.personal,
       ),
-      attendees: List<String>.from(data['attendees'] as List<dynamic>? ?? []),
-      metadata: Map<String, dynamic>.from(data['metadata'] as Map<dynamic, dynamic>? ?? {}),
-      isAllDay: data['isAllDay'] as bool? ?? false,
-      recurrenceRule: data['recurrenceRule'] as String?,
-      reminderTime: data['reminderTime'] as String?,
       color: data['color'] as String?,
-      createdAt: (data['createdAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
-      updatedAt: (data['updatedAt'] as Timestamp?)?.toDate() ?? DateTime.now(),
+      isAllDay: data['isAllDay'] as bool? ?? false,
+      reminderMinutes: List<int>.from(data['reminderMinutes'] ?? [60, 1440]),
+      isRecurring: data['isRecurring'] as bool? ?? false,
+      recurrenceRule: data['recurrenceRule'] as String?,
+      createdAt: (data['createdAt'] as Timestamp).toDate(),
+      updatedAt: data['updatedAt'] != null
+          ? (data['updatedAt'] as Timestamp).toDate()
+          : null,
     );
   }
-  final String id;
-  final String title;
-  final String description;
-  final DateTime startTime;
-  final DateTime endTime;
-  final String location;
-  final String specialistId;
-  final String specialistName;
-  final String customerId;
-  final String customerName;
-  final String bookingId;
-  final EventStatus status;
-  final EventType type;
-  final List<String> attendees;
-  final Map<String, dynamic> metadata;
-  final bool isAllDay;
-  final String? recurrenceRule;
-  final String? reminderTime;
-  final String? color;
-  final DateTime createdAt;
-  final DateTime updatedAt;
 
+  /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'title': title,
-        'description': description,
-        'startTime': Timestamp.fromDate(startTime),
-        'endTime': Timestamp.fromDate(endTime),
-        'location': location,
-        'specialistId': specialistId,
-        'specialistName': specialistName,
-        'customerId': customerId,
-        'customerName': customerName,
-        'bookingId': bookingId,
-        'status': status.name,
-        'type': type.name,
-        'attendees': attendees,
-        'metadata': metadata,
-        'isAllDay': isAllDay,
-        'recurrenceRule': recurrenceRule,
-        'reminderTime': reminderTime,
-        'color': color,
-        'createdAt': Timestamp.fromDate(createdAt),
-        'updatedAt': Timestamp.fromDate(updatedAt),
-      };
+    'userId': userId,
+    'bookingId': bookingId,
+    'title': title,
+    'description': description,
+    'location': location,
+    'startDate': Timestamp.fromDate(startDate),
+    'endDate': Timestamp.fromDate(endDate),
+    'status': status.name,
+    'type': type.name,
+    'color': color,
+    'isAllDay': isAllDay,
+    'reminderMinutes': reminderMinutes,
+    'isRecurring': isRecurring,
+    'recurrenceRule': recurrenceRule,
+    'createdAt': Timestamp.fromDate(createdAt),
+    'updatedAt': updatedAt != null ? Timestamp.fromDate(updatedAt!) : null,
+  };
 
+  /// Создать копию с изменениями
   CalendarEvent copyWith({
     String? id,
+    String? userId,
+    String? bookingId,
     String? title,
     String? description,
-    DateTime? startTime,
-    DateTime? endTime,
     String? location,
-    String? specialistId,
-    String? specialistName,
-    String? customerId,
-    String? customerName,
-    String? bookingId,
-    EventStatus? status,
-    EventType? type,
-    List<String>? attendees,
-    Map<String, dynamic>? metadata,
-    bool? isAllDay,
-    String? recurrenceRule,
-    String? reminderTime,
+    DateTime? startDate,
+    DateTime? endDate,
+    CalendarEventStatus? status,
+    CalendarEventType? type,
     String? color,
+    bool? isAllDay,
+    List<int>? reminderMinutes,
+    bool? isRecurring,
+    String? recurrenceRule,
     DateTime? createdAt,
     DateTime? updatedAt,
   }) =>
       CalendarEvent(
         id: id ?? this.id,
+        userId: userId ?? this.userId,
+        bookingId: bookingId ?? this.bookingId,
         title: title ?? this.title,
         description: description ?? this.description,
-        startTime: startTime ?? this.startTime,
-        endTime: endTime ?? this.endTime,
         location: location ?? this.location,
-        specialistId: specialistId ?? this.specialistId,
-        specialistName: specialistName ?? this.specialistName,
-        customerId: customerId ?? this.customerId,
-        customerName: customerName ?? this.customerName,
-        bookingId: bookingId ?? this.bookingId,
+        startDate: startDate ?? this.startDate,
+        endDate: endDate ?? this.endDate,
         status: status ?? this.status,
         type: type ?? this.type,
-        attendees: attendees ?? this.attendees,
-        metadata: metadata ?? this.metadata,
-        isAllDay: isAllDay ?? this.isAllDay,
-        recurrenceRule: recurrenceRule ?? this.recurrenceRule,
-        reminderTime: reminderTime ?? this.reminderTime,
         color: color ?? this.color,
+        isAllDay: isAllDay ?? this.isAllDay,
+        reminderMinutes: reminderMinutes ?? this.reminderMinutes,
+        isRecurring: isRecurring ?? this.isRecurring,
+        recurrenceRule: recurrenceRule ?? this.recurrenceRule,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
       );
 
-  /// Получить длительность события
-  Duration get duration => endTime.difference(startTime);
-
-  /// Проверить, является ли событие сегодняшним
-  bool get isToday {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final eventDate = DateTime(startTime.year, startTime.month, startTime.day);
-    return today == eventDate;
+  /// Проверить, пересекается ли событие с указанным временным интервалом
+  bool overlapsWith(DateTime start, DateTime end) {
+    return startDate.isBefore(end) && endDate.isAfter(start);
   }
 
-  /// Проверить, является ли событие завтрашним
-  bool get isTomorrow {
-    final now = DateTime.now();
-    final tomorrow = DateTime(now.year, now.month, now.day + 1);
-    final eventDate = DateTime(startTime.year, startTime.month, startTime.day);
-    return tomorrow == eventDate;
+  /// Проверить, происходит ли событие в указанную дату
+  bool occursOnDate(DateTime date) {
+    final startOfDay = DateTime(date.year, date.month, date.day);
+    final endOfDay = startOfDay.add(const Duration(days: 1));
+    return overlapsWith(startOfDay, endOfDay);
   }
-
-  /// Проверить, является ли событие вчерашним
-  bool get isYesterday {
-    final now = DateTime.now();
-    final yesterday = DateTime(now.year, now.month, now.day - 1);
-    final eventDate = DateTime(startTime.year, startTime.month, startTime.day);
-    return yesterday == eventDate;
-  }
-
-  /// Проверить, является ли событие прошедшим
-  bool get isPast => endTime.isBefore(DateTime.now());
-
-  /// Проверить, является ли событие текущим
-  bool get isCurrent {
-    final now = DateTime.now();
-    return now.isAfter(startTime) && now.isBefore(endTime);
-  }
-
-  /// Проверить, является ли событие будущим
-  bool get isFuture => startTime.isAfter(DateTime.now());
 
   /// Получить цвет события
   Color get eventColor {
     if (color != null) {
       return Color(int.parse(color!.replaceFirst('#', '0xff')));
     }
-
+    
     switch (status) {
-      case EventStatus.scheduled:
-        return Colors.blue;
-      case EventStatus.confirmed:
-        return Colors.green;
-      case EventStatus.cancelled:
+      case CalendarEventStatus.busy:
         return Colors.red;
-      case EventStatus.completed:
-        return Colors.grey;
-      case EventStatus.postponed:
+      case CalendarEventStatus.free:
+        return Colors.green;
+      case CalendarEventStatus.tentative:
         return Colors.orange;
+      case CalendarEventStatus.blocked:
+        return Colors.grey;
+      case CalendarEventStatus.personal:
+        return Colors.blue;
     }
   }
 
-  /// Получить иконку события
+  /// Получить иконку для события
   IconData get eventIcon {
     switch (type) {
-      case EventType.booking:
+      case CalendarEventType.booking:
         return Icons.event;
-      case EventType.consultation:
-        return Icons.chat;
-      case EventType.meeting:
-        return Icons.people;
-      case EventType.reminder:
+      case CalendarEventType.personal:
+        return Icons.person;
+      case CalendarEventType.blocked:
+        return Icons.block;
+      case CalendarEventType.reminder:
         return Icons.notifications;
-      case EventType.deadline:
-        return Icons.schedule;
     }
+  }
+
+  /// Получить длительность события в минутах
+  int get durationInMinutes {
+    return endDate.difference(startDate).inMinutes;
+  }
+
+  /// Проверить, является ли событие активным
+  bool get isActive {
+    final now = DateTime.now();
+    return startDate.isBefore(now) && endDate.isAfter(now);
+  }
+
+  /// Проверить, является ли событие прошедшим
+  bool get isPast {
+    return endDate.isBefore(DateTime.now());
+  }
+
+  /// Проверить, является ли событие будущим
+  bool get isFuture {
+    return startDate.isAfter(DateTime.now());
   }
 }
 
-/// Статус события
-enum EventStatus {
-  scheduled,
-  confirmed,
-  cancelled,
-  completed,
-  postponed,
-}
-
-/// Тип события
-enum EventType {
-  booking,
-  consultation,
-  meeting,
-  reminder,
-  deadline,
-}
-
-/// Фильтр для календарных событий
-class CalendarFilter {
-  const CalendarFilter({
-    this.startDate,
-    this.endDate,
-    this.statuses,
-    this.types,
-    this.specialistId,
-    this.customerId,
-    this.isAllDay,
-    this.searchQuery,
+/// Правило повторения события
+class RecurrenceRule {
+  const RecurrenceRule({
+    required this.frequency,
+    required this.interval,
+    this.count,
+    this.until,
+    this.byDay,
+    this.byMonth,
+    this.byMonthDay,
   });
-  final DateTime? startDate;
-  final DateTime? endDate;
-  final List<EventStatus>? statuses;
-  final List<EventType>? types;
-  final String? specialistId;
-  final String? customerId;
-  final bool? isAllDay;
-  final String? searchQuery;
 
-  CalendarFilter copyWith({
-    DateTime? startDate,
-    DateTime? endDate,
-    List<EventStatus>? statuses,
-    List<EventType>? types,
-    String? specialistId,
-    String? customerId,
-    bool? isAllDay,
-    String? searchQuery,
-  }) =>
-      CalendarFilter(
-        startDate: startDate ?? this.startDate,
-        endDate: endDate ?? this.endDate,
-        statuses: statuses ?? this.statuses,
-        types: types ?? this.types,
-        specialistId: specialistId ?? this.specialistId,
-        customerId: customerId ?? this.customerId,
-        isAllDay: isAllDay ?? this.isAllDay,
-        searchQuery: searchQuery ?? this.searchQuery,
-      );
+  final RecurrenceFrequency frequency;
+  final int interval;
+  final int? count;
+  final DateTime? until;
+  final List<int>? byDay; // 0 = Sunday, 1 = Monday, etc.
+  final List<int>? byMonth;
+  final List<int>? byMonthDay;
+
+  /// Создать из строки RRULE
+  factory RecurrenceRule.fromString(String rrule) {
+    // Простая реализация парсинга RRULE
+    // В реальном приложении нужен более сложный парсер
+    final parts = rrule.split(';');
+    RecurrenceFrequency frequency = RecurrenceFrequency.daily;
+    int interval = 1;
+    int? count;
+    DateTime? until;
+    List<int>? byDay;
+    List<int>? byMonth;
+    List<int>? byMonthDay;
+
+    for (final part in parts) {
+      final keyValue = part.split('=');
+      if (keyValue.length != 2) continue;
+
+      final key = keyValue[0];
+      final value = keyValue[1];
+
+      switch (key) {
+        case 'FREQ':
+          frequency = RecurrenceFrequency.values.firstWhere(
+            (f) => f.name.toUpperCase() == value,
+            orElse: () => RecurrenceFrequency.daily,
+          );
+          break;
+        case 'INTERVAL':
+          interval = int.tryParse(value) ?? 1;
+          break;
+        case 'COUNT':
+          count = int.tryParse(value);
+          break;
+        case 'UNTIL':
+          until = DateTime.tryParse(value);
+          break;
+        case 'BYDAY':
+          byDay = value.split(',').map((day) {
+            switch (day) {
+              case 'SU': return 0;
+              case 'MO': return 1;
+              case 'TU': return 2;
+              case 'WE': return 3;
+              case 'TH': return 4;
+              case 'FR': return 5;
+              case 'SA': return 6;
+              default: return 0;
+            }
+          }).toList();
+          break;
+        case 'BYMONTH':
+          byMonth = value.split(',').map(int.parse).toList();
+          break;
+        case 'BYMONTHDAY':
+          byMonthDay = value.split(',').map(int.parse).toList();
+          break;
+      }
+    }
+
+    return RecurrenceRule(
+      frequency: frequency,
+      interval: interval,
+      count: count,
+      until: until,
+      byDay: byDay,
+      byMonth: byMonth,
+      byMonthDay: byMonthDay,
+    );
+  }
+
+  /// Преобразовать в строку RRULE
+  String toString() {
+    final parts = <String>[];
+    parts.add('FREQ=${frequency.name.toUpperCase()}');
+    parts.add('INTERVAL=$interval');
+    
+    if (count != null) parts.add('COUNT=$count');
+    if (until != null) parts.add('UNTIL=${until!.toIso8601String()}');
+    
+    if (byDay != null) {
+      final dayNames = byDay!.map((day) {
+        switch (day) {
+          case 0: return 'SU';
+          case 1: return 'MO';
+          case 2: return 'TU';
+          case 3: return 'WE';
+          case 4: return 'TH';
+          case 5: return 'FR';
+          case 6: return 'SA';
+          default: return 'SU';
+        }
+      }).toList();
+      parts.add('BYDAY=${dayNames.join(',')}');
+    }
+    
+    if (byMonth != null) parts.add('BYMONTH=${byMonth!.join(',')}');
+    if (byMonthDay != null) parts.add('BYMONTHDAY=${byMonthDay!.join(',')}');
+    
+    return parts.join(';');
+  }
 }
 
-/// Настройки календаря
-class CalendarSettings {
-  const CalendarSettings({
-    this.showWeekends = true,
-    this.showAllDayEvents = true,
-    this.showCompletedEvents = false,
-    this.showCancelledEvents = false,
-    this.defaultView = 'month',
-    this.weekStartDay = 1,
-    this.timeFormat = '24h',
-    this.enableNotifications = true,
-    this.defaultReminderTime = '15m',
-    this.eventColors = const {},
-  });
-  final bool showWeekends;
-  final bool showAllDayEvents;
-  final bool showCompletedEvents;
-  final bool showCancelledEvents;
-  final String defaultView;
-  final int weekStartDay;
-  final String timeFormat;
-  final bool enableNotifications;
-  final String defaultReminderTime;
-  final Map<String, String> eventColors;
-
-  CalendarSettings copyWith({
-    bool? showWeekends,
-    bool? showAllDayEvents,
-    bool? showCompletedEvents,
-    bool? showCancelledEvents,
-    String? defaultView,
-    int? weekStartDay,
-    String? timeFormat,
-    bool? enableNotifications,
-    String? defaultReminderTime,
-    Map<String, String>? eventColors,
-  }) =>
-      CalendarSettings(
-        showWeekends: showWeekends ?? this.showWeekends,
-        showAllDayEvents: showAllDayEvents ?? this.showAllDayEvents,
-        showCompletedEvents: showCompletedEvents ?? this.showCompletedEvents,
-        showCancelledEvents: showCancelledEvents ?? this.showCancelledEvents,
-        defaultView: defaultView ?? this.defaultView,
-        weekStartDay: weekStartDay ?? this.weekStartDay,
-        timeFormat: timeFormat ?? this.timeFormat,
-        enableNotifications: enableNotifications ?? this.enableNotifications,
-        defaultReminderTime: defaultReminderTime ?? this.defaultReminderTime,
-        eventColors: eventColors ?? this.eventColors,
-      );
+/// Частота повторения
+enum RecurrenceFrequency {
+  daily,
+  weekly,
+  monthly,
+  yearly,
 }
 
-/// Синхронизация с внешними календарями
-class CalendarSync {
-  const CalendarSync({
+/// Напоминание о событии
+class EventReminder {
+  const EventReminder({
     required this.id,
+    required this.eventId,
     required this.userId,
-    required this.provider,
-    required this.providerId,
-    required this.accessToken,
-    required this.refreshToken,
-    required this.tokenExpiry,
-    required this.isActive,
-    required this.lastSync,
-    this.settings = const {},
+    required this.reminderTime,
+    required this.message,
+    required this.isSent,
+    this.sentAt,
+    this.createdAt,
   });
 
-  factory CalendarSync.fromMap(Map<String, dynamic> map) => CalendarSync(
-        id: map['id'] as String? ?? '',
-        userId: map['userId'] as String? ?? '',
-        provider: map['provider'] as String? ?? '',
-        providerId: map['providerId'] as String? ?? '',
-        accessToken: map['accessToken'] as String? ?? '',
-        refreshToken: map['refreshToken'] as String? ?? '',
-        tokenExpiry:
-            (map['tokenExpiry'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        isActive: map['isActive'] as bool? ?? false,
-        lastSync: (map['lastSync'] as Timestamp?)?.toDate() ?? DateTime.now(),
-        settings: Map<String, dynamic>.from(map['settings'] as Map<dynamic, dynamic>? ?? {}),
-      );
   final String id;
+  final String eventId;
   final String userId;
-  final String provider;
-  final String providerId;
-  final String accessToken;
-  final String refreshToken;
-  final DateTime tokenExpiry;
-  final bool isActive;
-  final DateTime lastSync;
-  final Map<String, dynamic> settings;
+  final DateTime reminderTime;
+  final String message;
+  final bool isSent;
+  final DateTime? sentAt;
+  final DateTime? createdAt;
 
+  /// Создать из документа Firestore
+  factory EventReminder.fromDocument(DocumentSnapshot doc) {
+    final data = doc.data()! as Map<String, dynamic>;
+    return EventReminder(
+      id: doc.id,
+      eventId: data['eventId'] as String,
+      userId: data['userId'] as String,
+      reminderTime: (data['reminderTime'] as Timestamp).toDate(),
+      message: data['message'] as String,
+      isSent: data['isSent'] as bool? ?? false,
+      sentAt: data['sentAt'] != null
+          ? (data['sentAt'] as Timestamp).toDate()
+          : null,
+      createdAt: data['createdAt'] != null
+          ? (data['createdAt'] as Timestamp).toDate()
+          : null,
+    );
+  }
+
+  /// Преобразовать в Map для Firestore
   Map<String, dynamic> toMap() => {
-        'id': id,
-        'userId': userId,
-        'provider': provider,
-        'providerId': providerId,
-        'accessToken': accessToken,
-        'refreshToken': refreshToken,
-        'tokenExpiry': Timestamp.fromDate(tokenExpiry),
-        'isActive': isActive,
-        'lastSync': Timestamp.fromDate(lastSync),
-        'settings': settings,
-      };
-}
-
-/// Провайдеры календаря
-enum CalendarProvider {
-  google,
-  outlook,
-  apple,
-  local,
-}
-
-/// Статистика календаря
-class CalendarStats {
-  const CalendarStats({
-    required this.totalEvents,
-    required this.completedEvents,
-    required this.cancelledEvents,
-    required this.upcomingEvents,
-    required this.averageEventDuration,
-    required this.eventsByType,
-    required this.eventsByStatus,
-    required this.busiestDays,
-  });
-
-  factory CalendarStats.empty() => const CalendarStats(
-        totalEvents: 0,
-        completedEvents: 0,
-        cancelledEvents: 0,
-        upcomingEvents: 0,
-        averageEventDuration: 0,
-        eventsByType: {},
-        eventsByStatus: {},
-        busiestDays: [],
-      );
-  final int totalEvents;
-  final int completedEvents;
-  final int cancelledEvents;
-  final int upcomingEvents;
-  final double averageEventDuration;
-  final Map<EventType, int> eventsByType;
-  final Map<EventStatus, int> eventsByStatus;
-  final List<DateTime> busiestDays;
+    'eventId': eventId,
+    'userId': userId,
+    'reminderTime': Timestamp.fromDate(reminderTime),
+    'message': message,
+    'isSent': isSent,
+    'sentAt': sentAt != null ? Timestamp.fromDate(sentAt!) : null,
+    'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
+  };
 }

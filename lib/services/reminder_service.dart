@@ -1,260 +1,398 @@
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
-import '../models/booking.dart';
-import 'fcm_service.dart';
+import '../models/calendar_event.dart';
 
-/// Сервис для управления напоминаниями
+/// Сервис для работы с напоминаниями
 class ReminderService {
-  factory ReminderService() => _instance;
-  ReminderService._internal();
-  static final ReminderService _instance = ReminderService._internal();
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseMessaging _messaging = FirebaseMessaging.instance;
+  final FlutterLocalNotificationsPlugin _localNotifications = FlutterLocalNotificationsPlugin();
 
-  final FCMService _fcmService = FCMService();
-  final String _reminderTimeKey = 'reminder_time';
-  final String _remindersEnabledKey = 'reminder_notifications_enabled';
+  /// Инициализация сервиса напоминаний
+  Future<void> initialize() async {
+    // Инициализация локальных уведомлений
+    await _initializeLocalNotifications();
+    
+    // Инициализация FCM
+    await _initializeFCM();
+    
+    // Запуск фоновой задачи для проверки напоминаний
+    _startReminderChecker();
+  }
 
-  /// Создать напоминание для заявки
-  Future<void> createBookingReminder(Booking booking) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final remindersEnabled = prefs.getBool(_remindersEnabledKey) ?? true;
+  /// Инициализация локальных уведомлений
+  Future<void> _initializeLocalNotifications() async {
+    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const iosSettings = DarwinInitializationSettings(
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+    );
+    
+    const initSettings = InitializationSettings(
+      android: androidSettings,
+      iOS: iosSettings,
+    );
 
-      if (!remindersEnabled) return;
+    await _localNotifications.initialize(
+      initSettings,
+      onDidReceiveNotificationResponse: _onNotificationTapped,
+    );
 
-      final reminderTime = prefs.getInt(_reminderTimeKey) ?? 30; // минуты
-      final reminderDate =
-          booking.eventDate.subtract(Duration(minutes: reminderTime));
+    // Запрос разрешений
+    await _requestPermissions();
+  }
 
-      // Проверяем, что напоминание в будущем
-      if (reminderDate.isAfter(DateTime.now())) {
-        await _fcmService.scheduleLocalNotification(
-          id: booking.hashCode,
-          title: 'Напоминание о мероприятии',
-          body: 'Ваше мероприятие начнется через $reminderTime минут',
-          scheduledDate: reminderDate,
-          payload: 'booking_reminder_${booking.id}',
-        );
+  /// Инициализация FCM
+  Future<void> _initializeFCM() async {
+    // Запрос разрешений
+    final settings = await _messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
 
-        print(
-          'Напоминание создано для заявки ${booking.id} на $reminderDate',
-        );
-      }
-    } catch (e) {
-      print('Ошибка создания напоминания: $e');
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      debugPrint('FCM разрешения получены');
+    } else {
+      debugPrint('FCM разрешения отклонены');
+    }
+
+    // Получение токена
+    final token = await _messaging.getToken();
+    debugPrint('FCM токен: $token');
+
+    // Обработка сообщений в фоне
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
+
+  /// Запрос разрешений на уведомления
+  Future<void> _requestPermissions() async {
+    final androidPlugin = _localNotifications.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
+    
+    if (androidPlugin != null) {
+      await androidPlugin.requestNotificationsPermission();
     }
   }
 
-  /// Обновить напоминание для заявки
-  Future<void> updateBookingReminder(Booking booking) async {
-    try {
-      // Удаляем старое напоминание
-      await cancelBookingReminder(booking);
-
-      // Создаем новое
-      await createBookingReminder(booking);
-    } catch (e) {
-      print('Ошибка обновления напоминания: $e');
-    }
-  }
-
-  /// Отменить напоминание для заявки
-  Future<void> cancelBookingReminder(Booking booking) async {
-    try {
-      await _fcmService.cancelScheduledNotification(booking.hashCode);
-      print('Напоминание отменено для заявки ${booking.id}');
-    } catch (e) {
-      print('Ошибка отмены напоминания: $e');
-    }
-  }
-
-  /// Создать напоминание о платеже
-  Future<void> createPaymentReminder({
-    required String paymentId,
-    required String title,
-    required String body,
-    required DateTime dueDate,
+  /// Создать напоминание для события
+  Future<void> createEventReminder({
+    required String eventId,
+    required String userId,
+    required DateTime reminderTime,
+    required String message,
   }) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final remindersEnabled = prefs.getBool(_remindersEnabledKey) ?? true;
-
-      if (!remindersEnabled) return;
-
-      // Напоминание за день до срока платежа
-      final reminderDate = dueDate.subtract(const Duration(days: 1));
-
-      if (reminderDate.isAfter(DateTime.now())) {
-        await _fcmService.scheduleLocalNotification(
-          id: paymentId.hashCode,
-          title: title,
-          body: body,
-          scheduledDate: reminderDate,
-          payload: 'payment_reminder_$paymentId',
-        );
-
-        print(
-          'Напоминание о платеже создано для $paymentId на $reminderDate',
-        );
-      }
-    } catch (e) {
-      print('Ошибка создания напоминания о платеже: $e');
-    }
-  }
-
-  /// Создать напоминание о встрече
-  Future<void> createMeetingReminder({
-    required String meetingId,
-    required String specialistName,
-    required DateTime meetingDate,
-  }) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final remindersEnabled = prefs.getBool(_remindersEnabledKey) ?? true;
-
-      if (!remindersEnabled) return;
-
-      final reminderTime = prefs.getInt(_reminderTimeKey) ?? 30; // минуты
-      final reminderDate =
-          meetingDate.subtract(Duration(minutes: reminderTime));
-
-      if (reminderDate.isAfter(DateTime.now())) {
-        await _fcmService.scheduleLocalNotification(
-          id: meetingId.hashCode,
-          title: 'Встреча с $specialistName',
-          body: 'Встреча начнется через $reminderTime минут',
-          scheduledDate: reminderDate,
-          payload: 'meeting_reminder_$meetingId',
-        );
-
-        print(
-          'Напоминание о встрече создано для $meetingId на $reminderDate',
-        );
-      }
-    } catch (e) {
-      print('Ошибка создания напоминания о встрече: $e');
-    }
-  }
-
-  /// Создать ежедневное напоминание
-  Future<void> createDailyReminder({
-    required String reminderId,
-    required String title,
-    required String body,
-    required TimeOfDay time,
-  }) async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      final remindersEnabled = prefs.getBool(_remindersEnabledKey) ?? true;
-
-      if (!remindersEnabled) return;
-
-      // Создаем напоминание на сегодня
-      final now = DateTime.now();
-      var reminderDate = DateTime(
-        now.year,
-        now.month,
-        now.day,
-        time.hour,
-        time.minute,
+      final reminder = EventReminder(
+        id: '', // Будет установлен при создании
+        eventId: eventId,
+        userId: userId,
+        reminderTime: reminderTime,
+        message: message,
+        isSent: false,
+        createdAt: DateTime.now(),
       );
 
-      // Если время уже прошло сегодня, планируем на завтра
-      if (reminderDate.isBefore(now)) {
-        reminderDate = reminderDate.add(const Duration(days: 1));
-      }
+      await _db.collection('eventReminders').add(reminder.toMap());
+      
+      // Создаем локальное уведомление
+      await _scheduleLocalNotification(reminder);
+      
+      debugPrint('Напоминание создано для события: $eventId');
+    } catch (e) {
+      debugPrint('Ошибка создания напоминания: $e');
+      throw Exception('Не удалось создать напоминание: $e');
+    }
+  }
 
-      await _fcmService.scheduleLocalNotification(
-        id: reminderId.hashCode,
+  /// Создать напоминания для события
+  Future<void> createEventReminders(CalendarEvent event) async {
+    try {
+      for (final minutes in event.reminderMinutes) {
+        final reminderTime = event.startDate.subtract(Duration(minutes: minutes));
+        
+        // Создаем напоминание только если оно в будущем
+        if (reminderTime.isAfter(DateTime.now())) {
+          await createEventReminder(
+            eventId: event.id,
+            userId: event.userId,
+            reminderTime: reminderTime,
+            message: 'Напоминание: ${event.title}',
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Ошибка создания напоминаний для события: $e');
+    }
+  }
+
+  /// Запланировать локальное уведомление
+  Future<void> _scheduleLocalNotification(EventReminder reminder) async {
+    try {
+      const androidDetails = AndroidNotificationDetails(
+        'event_reminders',
+        'Напоминания о событиях',
+        channelDescription: 'Уведомления о предстоящих событиях',
+        importance: Importance.high,
+        priority: Priority.high,
+      );
+
+      const iosDetails = DarwinNotificationDetails(
+        presentAlert: true,
+        presentBadge: true,
+        presentSound: true,
+      );
+
+      const notificationDetails = NotificationDetails(
+        android: androidDetails,
+        iOS: iosDetails,
+      );
+
+      await _localNotifications.zonedSchedule(
+        reminder.id.hashCode,
+        'Напоминание',
+        reminder.message,
+        TZDateTime.from(reminder.reminderTime, getLocation('Europe/Moscow')),
+        notificationDetails,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        matchDateTimeComponents: DateTimeComponents.time,
+      );
+    } catch (e) {
+      debugPrint('Ошибка планирования локального уведомления: $e');
+    }
+  }
+
+  /// Отправить push-уведомление
+  Future<void> sendPushNotification({
+    required String userId,
+    required String title,
+    required String body,
+    Map<String, dynamic>? data,
+  }) async {
+    try {
+      // Получаем FCM токен пользователя
+      final userDoc = await _db.collection('users').doc(userId).get();
+      if (!userDoc.exists) return;
+
+      final userData = userDoc.data()!;
+      final fcmToken = userData['fcmToken'] as String?;
+      
+      if (fcmToken == null) return;
+
+      // Отправляем уведомление через Cloud Functions
+      await _db.collection('notifications').add({
+        'userId': userId,
+        'fcmToken': fcmToken,
+        'title': title,
+        'body': body,
+        'data': data ?? {},
+        'createdAt': Timestamp.fromDate(DateTime.now()),
+        'sent': false,
+      });
+
+      debugPrint('Push-уведомление отправлено пользователю: $userId');
+    } catch (e) {
+      debugPrint('Ошибка отправки push-уведомления: $e');
+    }
+  }
+
+  /// Отправить напоминание о предстоящем событии
+  Future<void> sendEventReminder(CalendarEvent event, int minutesBefore) async {
+    try {
+      final title = 'Напоминание о событии';
+      final body = 'Через $minutesBefore мин: ${event.title}';
+      
+      await sendPushNotification(
+        userId: event.userId,
         title: title,
         body: body,
-        scheduledDate: reminderDate,
-        payload: 'daily_reminder_$reminderId',
-      );
-
-      print(
-        'Ежедневное напоминание создано для $reminderId на $reminderDate',
+        data: {
+          'eventId': event.id,
+          'type': 'event_reminder',
+          'minutesBefore': minutesBefore.toString(),
+        },
       );
     } catch (e) {
-      print('Ошибка создания ежедневного напоминания: $e');
+      debugPrint('Ошибка отправки напоминания о событии: $e');
     }
   }
 
-  /// Получить время напоминания
-  Future<int> getReminderTime() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getInt(_reminderTimeKey) ?? 30;
-  }
-
-  /// Установить время напоминания
-  Future<void> setReminderTime(int minutes) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_reminderTimeKey, minutes);
-  }
-
-  /// Проверить, включены ли напоминания
-  Future<bool> areRemindersEnabled() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_remindersEnabledKey) ?? true;
-  }
-
-  /// Включить/выключить напоминания
-  Future<void> setRemindersEnabled(bool enabled) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_remindersEnabledKey, enabled);
-
-    if (!enabled) {
-      // Отменяем все запланированные напоминания
-      await _fcmService.cancelAllScheduledNotifications();
+  /// Отправить напоминание об обновлении календаря
+  Future<void> sendCalendarUpdateReminder(String userId) async {
+    try {
+      const title = 'Обновите календарь';
+      const body = 'Не забудьте обновить свой календарь на следующую неделю';
+      
+      await sendPushNotification(
+        userId: userId,
+        title: title,
+        body: body,
+        data: {
+          'type': 'calendar_update_reminder',
+        },
+      );
+    } catch (e) {
+      debugPrint('Ошибка отправки напоминания об обновлении календаря: $e');
     }
   }
 
-  /// Создать напоминания для всех активных заявок
-  Future<void> createRemindersForActiveBookings(List<Booking> bookings) async {
+  /// Запустить проверку напоминаний
+  void _startReminderChecker() {
+    // Проверяем напоминания каждые 5 минут
+    Timer.periodic(const Duration(minutes: 5), (timer) {
+      _checkPendingReminders();
+    });
+  }
+
+  /// Проверить ожидающие напоминания
+  Future<void> _checkPendingReminders() async {
     try {
       final now = DateTime.now();
-      final activeBookings = bookings
-          .where(
-            (booking) =>
-                booking.status == 'confirmed' && booking.eventDate.isAfter(now),
-          )
-          .toList();
+      final query = await _db
+          .collection('eventReminders')
+          .where('isSent', isEqualTo: false)
+          .where('reminderTime', isLessThanOrEqualTo: Timestamp.fromDate(now))
+          .get();
 
-      for (final booking in activeBookings) {
-        await createBookingReminder(booking);
+      for (final doc in query.docs) {
+        final reminder = EventReminder.fromDocument(doc);
+        await _processReminder(reminder);
       }
-
-      print('Создано напоминаний для ${activeBookings.length} активных заявок');
     } catch (e) {
-      print('Ошибка создания напоминаний для активных заявок: $e');
+      debugPrint('Ошибка проверки напоминаний: $e');
     }
   }
 
-  /// Очистить все напоминания
-  Future<void> clearAllReminders() async {
+  /// Обработать напоминание
+  Future<void> _processReminder(EventReminder reminder) async {
     try {
-      await _fcmService.cancelAllScheduledNotifications();
-      print('Все напоминания очищены');
+      // Получаем информацию о событии
+      final eventDoc = await _db.collection('calendarEvents').doc(reminder.eventId).get();
+      if (!eventDoc.exists) return;
+
+      final event = CalendarEvent.fromDocument(eventDoc);
+      
+      // Отправляем уведомление
+      await sendEventReminder(event, _calculateMinutesBefore(event.startDate));
+      
+      // Отмечаем напоминание как отправленное
+      await _db.collection('eventReminders').doc(reminder.id).update({
+        'isSent': true,
+        'sentAt': Timestamp.fromDate(DateTime.now()),
+      });
+      
+      debugPrint('Напоминание обработано: ${reminder.id}');
     } catch (e) {
-      print('Ошибка очистки напоминаний: $e');
+      debugPrint('Ошибка обработки напоминания: $e');
     }
   }
 
-  /// Создать тестовое напоминание
-  Future<void> createTestReminder() async {
+  /// Рассчитать количество минут до события
+  int _calculateMinutesBefore(DateTime eventTime) {
+    final now = DateTime.now();
+    final difference = eventTime.difference(now);
+    return difference.inMinutes;
+  }
+
+  /// Обработчик нажатия на уведомление
+  void _onNotificationTapped(NotificationResponse response) {
+    // Обработка нажатия на уведомление
+    debugPrint('Уведомление нажато: ${response.payload}');
+  }
+
+  /// Получить предстоящие напоминания
+  Future<List<EventReminder>> getUpcomingReminders(String userId) async {
     try {
-      final testDate = DateTime.now().add(const Duration(seconds: 10));
+      final now = DateTime.now();
+      final query = await _db
+          .collection('eventReminders')
+          .where('userId', isEqualTo: userId)
+          .where('isSent', isEqualTo: false)
+          .where('reminderTime', isGreaterThan: Timestamp.fromDate(now))
+          .orderBy('reminderTime')
+          .limit(10)
+          .get();
 
-      await _fcmService.scheduleLocalNotification(
-        id: 999999,
-        title: 'Тестовое напоминание',
-        body: 'Это тестовое напоминание для проверки настроек',
-        scheduledDate: testDate,
-        payload: 'test_reminder',
-      );
-
-      print('Тестовое напоминание создано на $testDate');
+      return query.docs
+          .map((doc) => EventReminder.fromDocument(doc))
+          .toList();
     } catch (e) {
-      print('Ошибка создания тестового напоминания: $e');
+      debugPrint('Ошибка получения предстоящих напоминаний: $e');
+      return [];
     }
   }
+
+  /// Удалить напоминание
+  Future<void> deleteReminder(String reminderId) async {
+    try {
+      await _db.collection('eventReminders').doc(reminderId).delete();
+      
+      // Отменяем локальное уведомление
+      await _localNotifications.cancel(reminderId.hashCode);
+      
+      debugPrint('Напоминание удалено: $reminderId');
+    } catch (e) {
+      debugPrint('Ошибка удаления напоминания: $e');
+      throw Exception('Не удалось удалить напоминание: $e');
+    }
+  }
+
+  /// Обновить FCM токен пользователя
+  Future<void> updateUserFCMToken(String userId) async {
+    try {
+      final token = await _messaging.getToken();
+      if (token != null) {
+        await _db.collection('users').doc(userId).update({
+          'fcmToken': token,
+          'fcmTokenUpdatedAt': Timestamp.fromDate(DateTime.now()),
+        });
+        
+        debugPrint('FCM токен обновлен для пользователя: $userId');
+      }
+    } catch (e) {
+      debugPrint('Ошибка обновления FCM токена: $e');
+    }
+  }
+
+  /// Отправить еженедельное напоминание об обновлении календаря
+  Future<void> sendWeeklyCalendarReminders() async {
+    try {
+      // Получаем всех активных специалистов
+      final specialistsQuery = await _db
+          .collection('users')
+          .where('role', isEqualTo: 'specialist')
+          .where('isActive', isEqualTo: true)
+          .get();
+
+      for (final doc in specialistsQuery.docs) {
+        final userId = doc.id;
+        await sendCalendarUpdateReminder(userId);
+      }
+      
+      debugPrint('Еженедельные напоминания отправлены');
+    } catch (e) {
+      debugPrint('Ошибка отправки еженедельных напоминаний: $e');
+    }
+  }
+}
+
+/// Фоновый обработчик FCM сообщений
+@pragma('vm:entry-point')
+Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  debugPrint('Фоновое FCM сообщение: ${message.messageId}');
+  debugPrint('Данные: ${message.data}');
+}
+
+/// Импорт для работы с временными зонами
+import 'package:timezone/timezone.dart' as tz;
+import 'package:timezone/data/latest.dart' as tz;
+
+/// Инициализация временных зон
+void initializeTimeZones() {
+  tz.initializeTimeZones();
+  tz.setLocalLocation(tz.getLocation('Europe/Moscow'));
 }

@@ -1,800 +1,455 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:icalendar_parser/icalendar_parser.dart' as ical;
-import 'package:share_plus/share_plus.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/foundation.dart';
 
-import '../core/stubs/stubs.dart';
 import '../models/calendar_event.dart';
-import '../models/specialist_schedule.dart';
 
-/// Сервис для работы с календарем
+/// Сервис для работы с календарными событиями
 class CalendarService {
-  factory CalendarService() => _instance;
-  CalendarService._internal();
-  static final CalendarService _instance = CalendarService._internal();
+  final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  /// Создать календарное событие
-  Future<String?> createEvent(CalendarEvent event) async {
+  /// Получить события пользователя за период
+  Future<List<CalendarEvent>> getEventsForPeriod({
+    required String userId,
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
     try {
-      final eventRef = _firestore.collection('calendar_events').doc();
-      final eventWithId = event.copyWith(id: eventRef.id);
+      final query = await _db
+          .collection('calendarEvents')
+          .where('userId', isEqualTo: userId)
+          .where('startDate', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+          .where('startDate', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
+          .orderBy('startDate')
+          .get();
 
-      await eventRef.set(eventWithId.toMap());
-      return eventRef.id;
+      return query.docs
+          .map((doc) => CalendarEvent.fromDocument(doc))
+          .toList();
     } catch (e) {
-      print('Ошибка создания события: $e');
-      return null;
+      debugPrint('Ошибка получения событий календаря: $e');
+      return [];
     }
   }
 
-  /// Получить события пользователя
-  Stream<List<CalendarEvent>> getUserEvents(
-    String userId,
-    CalendarFilter filter,
-  ) {
-    Query<Map<String, dynamic>> query =
-        _firestore.collection('calendar_events');
-
-    // Фильтр по пользователю
-    query = query.where('customerId', isEqualTo: userId);
-
-    // Применяем фильтры
-    if (filter.startDate != null) {
-      query = query.where(
-        'startTime',
-        isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!),
-      );
-    }
-
-    if (filter.endDate != null) {
-      query = query.where(
-        'startTime',
-        isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!),
-      );
-    }
-
-    if (filter.statuses != null && filter.statuses!.isNotEmpty) {
-      query = query.where(
-        'status',
-        whereIn: filter.statuses!.map((s) => s.name).toList(),
-      );
-    }
-
-    if (filter.types != null && filter.types!.isNotEmpty) {
-      query = query.where(
-        'type',
-        whereIn: filter.types!.map((t) => t.name).toList(),
-      );
-    }
-
-    if (filter.specialistId != null) {
-      query = query.where('specialistId', isEqualTo: filter.specialistId);
-    }
-
-    if (filter.isAllDay != null) {
-      query = query.where('isAllDay', isEqualTo: filter.isAllDay);
-    }
-
-    // Сортировка по времени начала
-    query = query.orderBy('startTime', descending: false);
-
-    return query.snapshots().map((snapshot) {
-      var events = snapshot.docs.map(CalendarEvent.fromDocument).toList();
-
-      // Применяем фильтры, которые нельзя применить в Firestore
-      if (filter.searchQuery != null && filter.searchQuery!.isNotEmpty) {
-        final query = filter.searchQuery!.toLowerCase();
-        events = events
-            .where(
-              (event) =>
-                  event.title.toLowerCase().contains(query) ||
-                  event.description.toLowerCase().contains(query) ||
-                  event.location.toLowerCase().contains(query),
-            )
-            .toList();
-      }
-
-      return events;
-    });
+  /// Получить события пользователя (Stream)
+  Stream<List<CalendarEvent>> getEventsStream({
+    required String userId,
+    required DateTime startDate,
+    required DateTime endDate,
+  }) {
+    return _db
+        .collection('calendarEvents')
+        .where('userId', isEqualTo: userId)
+        .where('startDate', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate))
+        .where('startDate', isLessThanOrEqualTo: Timestamp.fromDate(endDate))
+        .orderBy('startDate')
+        .snapshots()
+        .map((snapshot) => snapshot.docs
+            .map((doc) => CalendarEvent.fromDocument(doc))
+            .toList());
   }
 
-  /// Получить события специалиста
-  Stream<List<CalendarEvent>> getSpecialistEvents(
-    String specialistId,
-    CalendarFilter filter,
-  ) {
-    Query<Map<String, dynamic>> query =
-        _firestore.collection('calendar_events');
-
-    // Фильтр по специалисту
-    query = query.where('specialistId', isEqualTo: specialistId);
-
-    // Применяем остальные фильтры аналогично getUserEvents
-    if (filter.startDate != null) {
-      query = query.where(
-        'startTime',
-        isGreaterThanOrEqualTo: Timestamp.fromDate(filter.startDate!),
-      );
+  /// Создать новое событие
+  Future<String> createEvent(CalendarEvent event) async {
+    try {
+      final docRef = await _db.collection('calendarEvents').add(event.toMap());
+      
+      // Создаем напоминания для события
+      await _createEventReminders(event.copyWith(id: docRef.id));
+      
+      debugPrint('Событие календаря создано: ${docRef.id}');
+      return docRef.id;
+    } catch (e) {
+      debugPrint('Ошибка создания события календаря: $e');
+      throw Exception('Не удалось создать событие: $e');
     }
-
-    if (filter.endDate != null) {
-      query = query.where(
-        'startTime',
-        isLessThanOrEqualTo: Timestamp.fromDate(filter.endDate!),
-      );
-    }
-
-    if (filter.statuses != null && filter.statuses!.isNotEmpty) {
-      query = query.where(
-        'status',
-        whereIn: filter.statuses!.map((s) => s.name).toList(),
-      );
-    }
-
-    if (filter.types != null && filter.types!.isNotEmpty) {
-      query = query.where(
-        'type',
-        whereIn: filter.types!.map((t) => t.name).toList(),
-      );
-    }
-
-    if (filter.customerId != null) {
-      query = query.where('customerId', isEqualTo: filter.customerId);
-    }
-
-    if (filter.isAllDay != null) {
-      query = query.where('isAllDay', isEqualTo: filter.isAllDay);
-    }
-
-    query = query.orderBy('startTime', descending: false);
-
-    return query.snapshots().map((snapshot) {
-      var events = snapshot.docs.map(CalendarEvent.fromDocument).toList();
-
-      if (filter.searchQuery != null && filter.searchQuery!.isNotEmpty) {
-        final query = filter.searchQuery!.toLowerCase();
-        events = events
-            .where(
-              (event) =>
-                  event.title.toLowerCase().contains(query) ||
-                  event.description.toLowerCase().contains(query) ||
-                  event.location.toLowerCase().contains(query),
-            )
-            .toList();
-      }
-
-      return events;
-    });
   }
 
   /// Обновить событие
-  Future<bool> updateEvent(CalendarEvent event) async {
+  Future<void> updateEvent(CalendarEvent event) async {
     try {
-      await _firestore
-          .collection('calendar_events')
-          .doc(event.id)
-          .update(event.toMap());
-      return true;
+      await _db.collection('calendarEvents').doc(event.id).update({
+        ...event.toMap(),
+        'updatedAt': Timestamp.fromDate(DateTime.now()),
+      });
+
+      // Обновляем напоминания
+      await _updateEventReminders(event);
+      
+      debugPrint('Событие календаря обновлено: ${event.id}');
     } catch (e) {
-      print('Ошибка обновления события: $e');
-      return false;
+      debugPrint('Ошибка обновления события календаря: $e');
+      throw Exception('Не удалось обновить событие: $e');
     }
   }
 
   /// Удалить событие
-  Future<bool> deleteEvent(String eventId) async {
+  Future<void> deleteEvent(String eventId) async {
     try {
-      await _firestore.collection('calendar_events').doc(eventId).delete();
-      return true;
+      // Удаляем напоминания
+      await _deleteEventReminders(eventId);
+      
+      // Удаляем событие
+      await _db.collection('calendarEvents').doc(eventId).delete();
+      
+      debugPrint('Событие календаря удалено: $eventId');
     } catch (e) {
-      print('Ошибка удаления события: $e');
-      return false;
-    }
-  }
-
-  /// Экспортировать события в ICS файл
-  Future<String?> exportToICS(List<CalendarEvent> events) async {
-    try {
-      // TODO: Implement proper calendar export
-      // final calendar = ical.ICalendar(
-      //   headData: ical.ICalendarHeadData(
-      //     prodId: 'Event Marketplace App',
-      //     version: '2.0',
-      //   ),
-      // );
-
-      // TODO: Implement event export
-      // for (final event in events) {
-      //   final icsEvent = ical.IEventData(
-      //     start: event.startTime,
-      //     end: event.endTime,
-      //     summary: event.title,
-      //     description: event.description,
-      //     location: event.location,
-      //   );
-      //   calendar.addEvent(icsEvent);
-      // }
-
-      // TODO: Return proper ICS content
-      return 'BEGIN:VCALENDAR\nVERSION:2.0\nEND:VCALENDAR';
-    } catch (e) {
-      print('Ошибка экспорта в ICS: $e');
-      return null;
-    }
-  }
-
-  /// Поделиться событиями
-  Future<void> shareEvents(List<CalendarEvent> events) async {
-    try {
-      final icsContent = await exportToICS(events);
-      if (icsContent != null) {
-        // Создаем временный файл
-        final tempDir = Directory.systemTemp;
-        final file = File('${tempDir.path}/events.ics');
-        await file.writeAsString(icsContent);
-
-        // Делимся файлом
-        await Share.shareXFiles(
-          [XFile(file.path)],
-          text: 'Календарные события',
-        );
-      }
-    } catch (e) {
-      print('Ошибка шаринга событий: $e');
-    }
-  }
-
-  /// Открыть в Google Calendar
-  Future<void> openInGoogleCalendar(CalendarEvent event) async {
-    try {
-      final startTime =
-          '${event.startTime.toUtc().toIso8601String().replaceAll(':', '').split('.')[0]}Z';
-      final endTime =
-          '${event.endTime.toUtc().toIso8601String().replaceAll(':', '').split('.')[0]}Z';
-
-      final url = Uri.parse(
-          'https://calendar.google.com/calendar/render?action=TEMPLATE'
-          '&text=${Uri.encodeComponent(event.title)}'
-          '&dates=$startTime/$endTime'
-          '&details=${Uri.encodeComponent(event.description)}'
-          '&location=${Uri.encodeComponent(event.location)}');
-
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url, mode: LaunchMode.externalApplication);
-      }
-    } catch (e) {
-      print('Ошибка открытия в Google Calendar: $e');
-    }
-  }
-
-  /// Открыть в Outlook Calendar
-  Future<void> openInOutlookCalendar(CalendarEvent event) async {
-    try {
-      final startTime = event.startTime.toUtc().toIso8601String();
-      final endTime = event.endTime.toUtc().toIso8601String();
-
-      final url =
-          Uri.parse('https://outlook.live.com/calendar/0/deeplink/compose?'
-              'subject=${Uri.encodeComponent(event.title)}'
-              '&startdt=$startTime'
-              '&enddt=$endTime'
-              '&body=${Uri.encodeComponent(event.description)}'
-              '&location=${Uri.encodeComponent(event.location)}');
-
-      if (await canLaunchUrl(url)) {
-        await launchUrl(url, mode: LaunchMode.externalApplication);
-      }
-    } catch (e) {
-      print('Ошибка открытия в Outlook Calendar: $e');
-    }
-  }
-
-  /// Синхронизировать с Google Calendar
-  Future<bool> syncWithGoogleCalendar(String userId, String accessToken) async {
-    try {
-      // TODO: Реализовать синхронизацию с Google Calendar API
-      print('Синхронизация с Google Calendar для пользователя: $userId');
-      return true;
-    } catch (e) {
-      print('Ошибка синхронизации с Google Calendar: $e');
-      return false;
-    }
-  }
-
-  /// Синхронизировать с Outlook Calendar
-  Future<bool> syncWithOutlookCalendar(
-    String userId,
-    String accessToken,
-  ) async {
-    try {
-      // TODO: Реализовать синхронизацию с Outlook Calendar API
-      print('Синхронизация с Outlook Calendar для пользователя: $userId');
-      return true;
-    } catch (e) {
-      print('Ошибка синхронизации с Outlook Calendar: $e');
-      return false;
-    }
-  }
-
-  /// Получить статистику календаря
-  Future<CalendarStats> getCalendarStats(String userId) async {
-    try {
-      final snapshot = await _firestore
-          .collection('calendar_events')
-          .where('customerId', isEqualTo: userId)
-          .get();
-
-      final events = snapshot.docs.map(CalendarEvent.fromDocument).toList();
-
-      return _calculateStats(events);
-    } catch (e) {
-      print('Ошибка получения статистики календаря: $e');
-      return CalendarStats.empty();
+      debugPrint('Ошибка удаления события календаря: $e');
+      throw Exception('Не удалось удалить событие: $e');
     }
   }
 
   /// Создать событие из бронирования
-  Future<String?> createEventFromBooking({
+  Future<String> createEventFromBooking({
+    required String userId,
     required String bookingId,
-    required String specialistId,
-    required String specialistName,
-    required String customerId,
-    required String customerName,
     required String title,
     required String description,
-    required DateTime startTime,
-    required DateTime endTime,
-    required String location,
+    required DateTime startDate,
+    required DateTime endDate,
+    String? location,
   }) async {
     try {
       final event = CalendarEvent(
-        id: '',
+        id: '', // Будет установлен при создании
+        userId: userId,
+        bookingId: bookingId,
         title: title,
         description: description,
-        startTime: startTime,
-        endTime: endTime,
         location: location,
-        specialistId: specialistId,
-        specialistName: specialistName,
-        customerId: customerId,
-        customerName: customerName,
-        bookingId: bookingId,
-        status: EventStatus.scheduled,
-        type: EventType.booking,
+        startDate: startDate,
+        endDate: endDate,
+        status: CalendarEventStatus.busy,
+        type: CalendarEventType.booking,
         createdAt: DateTime.now(),
-        updatedAt: DateTime.now(),
+        color: '#FF5722', // Оранжевый цвет для бронирований
       );
 
       return await createEvent(event);
     } catch (e) {
-      print('Ошибка создания события из бронирования: $e');
-      return null;
+      debugPrint('Ошибка создания события из бронирования: $e');
+      throw Exception('Не удалось создать событие из бронирования: $e');
     }
   }
 
-  /// Обновить статус события
-  Future<bool> updateEventStatus(String eventId, EventStatus status) async {
+  /// Заблокировать время
+  Future<String> blockTime({
+    required String userId,
+    required String title,
+    required DateTime startDate,
+    required DateTime endDate,
+    String? description,
+  }) async {
     try {
-      await _firestore.collection('calendar_events').doc(eventId).update({
-        'status': status.name,
-        'updatedAt': Timestamp.fromDate(DateTime.now()),
-      });
+      final event = CalendarEvent(
+        id: '', // Будет установлен при создании
+        userId: userId,
+        title: title,
+        description: description,
+        startDate: startDate,
+        endDate: endDate,
+        status: CalendarEventStatus.blocked,
+        type: CalendarEventType.blocked,
+        createdAt: DateTime.now(),
+        color: '#9E9E9E', // Серый цвет для заблокированного времени
+      );
+
+      return await createEvent(event);
+    } catch (e) {
+      debugPrint('Ошибка блокировки времени: $e');
+      throw Exception('Не удалось заблокировать время: $e');
+    }
+  }
+
+  /// Проверить доступность времени
+  Future<bool> isTimeAvailable({
+    required String userId,
+    required DateTime startDate,
+    required DateTime endDate,
+    String? excludeEventId,
+  }) async {
+    try {
+      Query<Map<String, dynamic>> query = _db
+          .collection('calendarEvents')
+          .where('userId', isEqualTo: userId)
+          .where('startDate', isLessThan: Timestamp.fromDate(endDate))
+          .where('endDate', isGreaterThan: Timestamp.fromDate(startDate));
+
+      final querySnapshot = await query.get();
+      
+      for (final doc in querySnapshot.docs) {
+        if (excludeEventId != null && doc.id == excludeEventId) continue;
+        
+        final event = CalendarEvent.fromDocument(doc);
+        if (event.status == CalendarEventStatus.busy || 
+            event.status == CalendarEventStatus.blocked) {
+          return false;
+        }
+      }
+      
       return true;
     } catch (e) {
-      print('Ошибка обновления статуса события: $e');
+      debugPrint('Ошибка проверки доступности времени: $e');
       return false;
+    }
+  }
+
+  /// Получить свободные слоты времени
+  Future<List<TimeSlot>> getAvailableTimeSlots({
+    required String userId,
+    required DateTime date,
+    required Duration slotDuration,
+    required Duration workingHoursStart,
+    required Duration workingHoursEnd,
+  }) async {
+    try {
+      final startOfDay = DateTime(date.year, date.month, date.day);
+      final endOfDay = startOfDay.add(const Duration(days: 1));
+      
+      final events = await getEventsForPeriod(
+        userId: userId,
+        startDate: startOfDay,
+        endDate: endOfDay,
+      );
+
+      final busySlots = <TimeSlot>[];
+      for (final event in events) {
+        if (event.status == CalendarEventStatus.busy || 
+            event.status == CalendarEventStatus.blocked) {
+          busySlots.add(TimeSlot(
+            startTime: event.startDate,
+            endTime: event.endDate,
+          ));
+        }
+      }
+
+      final availableSlots = <TimeSlot>[];
+      final workingStart = startOfDay.add(workingHoursStart);
+      final workingEnd = startOfDay.add(workingHoursEnd);
+      
+      var currentTime = workingStart;
+      while (currentTime.add(slotDuration).isBefore(workingEnd)) {
+        final slotEnd = currentTime.add(slotDuration);
+        final slot = TimeSlot(startTime: currentTime, endTime: slotEnd);
+        
+        // Проверяем, не пересекается ли слот с занятыми временами
+        bool isAvailable = true;
+        for (final busySlot in busySlots) {
+          if (slot.overlapsWith(busySlot)) {
+            isAvailable = false;
+            break;
+          }
+        }
+        
+        if (isAvailable) {
+          availableSlots.add(slot);
+        }
+        
+        currentTime = currentTime.add(slotDuration);
+      }
+      
+      return availableSlots;
+    } catch (e) {
+      debugPrint('Ошибка получения свободных слотов: $e');
+      return [];
+    }
+  }
+
+  /// Создать напоминания для события
+  Future<void> _createEventReminders(CalendarEvent event) async {
+    try {
+      for (final minutes in event.reminderMinutes) {
+        final reminderTime = event.startDate.subtract(Duration(minutes: minutes));
+        
+        // Создаем напоминание только если оно в будущем
+        if (reminderTime.isAfter(DateTime.now())) {
+          final reminder = EventReminder(
+            id: '', // Будет установлен при создании
+            eventId: event.id,
+            userId: event.userId,
+            reminderTime: reminderTime,
+            message: 'Напоминание: ${event.title}',
+            isSent: false,
+            createdAt: DateTime.now(),
+          );
+
+          await _db.collection('eventReminders').add(reminder.toMap());
+        }
+      }
+    } catch (e) {
+      debugPrint('Ошибка создания напоминаний: $e');
+    }
+  }
+
+  /// Обновить напоминания для события
+  Future<void> _updateEventReminders(CalendarEvent event) async {
+    try {
+      // Удаляем старые напоминания
+      await _deleteEventReminders(event.id);
+      
+      // Создаем новые напоминания
+      await _createEventReminders(event);
+    } catch (e) {
+      debugPrint('Ошибка обновления напоминаний: $e');
+    }
+  }
+
+  /// Удалить напоминания для события
+  Future<void> _deleteEventReminders(String eventId) async {
+    try {
+      final query = await _db
+          .collection('eventReminders')
+          .where('eventId', isEqualTo: eventId)
+          .get();
+
+      final batch = _db.batch();
+      for (final doc in query.docs) {
+        batch.delete(doc.reference);
+      }
+      await batch.commit();
+    } catch (e) {
+      debugPrint('Ошибка удаления напоминаний: $e');
+    }
+  }
+
+  /// Получить предстоящие события
+  Future<List<CalendarEvent>> getUpcomingEvents({
+    required String userId,
+    int limit = 10,
+  }) async {
+    try {
+      final now = DateTime.now();
+      final query = await _db
+          .collection('calendarEvents')
+          .where('userId', isEqualTo: userId)
+          .where('startDate', isGreaterThan: Timestamp.fromDate(now))
+          .orderBy('startDate')
+          .limit(limit)
+          .get();
+
+      return query.docs
+          .map((doc) => CalendarEvent.fromDocument(doc))
+          .toList();
+    } catch (e) {
+      debugPrint('Ошибка получения предстоящих событий: $e');
+      return [];
     }
   }
 
   /// Получить события на сегодня
-  Stream<List<CalendarEvent>> getTodayEvents(String userId) {
-    final now = DateTime.now();
-    final startOfDay = DateTime(now.year, now.month, now.day);
-    final endOfDay = DateTime(now.year, now.month, now.day, 23, 59, 59);
-
-    final filter = CalendarFilter(
-      startDate: startOfDay,
-      endDate: endOfDay,
-    );
-
-    return getUserEvents(userId, filter);
-  }
-
-  /// Получить события на завтра
-  Stream<List<CalendarEvent>> getTomorrowEvents(String userId) {
-    final tomorrow = DateTime.now().add(const Duration(days: 1));
-    final startOfDay = DateTime(tomorrow.year, tomorrow.month, tomorrow.day);
-    final endOfDay =
-        DateTime(tomorrow.year, tomorrow.month, tomorrow.day, 23, 59, 59);
-
-    final filter = CalendarFilter(
-      startDate: startOfDay,
-      endDate: endOfDay,
-    );
-
-    return getUserEvents(userId, filter);
-  }
-
-  /// Получить события на неделю
-  Stream<List<CalendarEvent>> getWeekEvents(String userId) {
-    final now = DateTime.now();
-    final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
-    final endOfWeek = startOfWeek.add(const Duration(days: 6));
-
-    final filter = CalendarFilter(
-      startDate: startOfWeek,
-      endDate: endOfWeek,
-    );
-
-    return getUserEvents(userId, filter);
-  }
-
-  /// Получить события на месяц
-  Stream<List<CalendarEvent>> getMonthEvents(String userId) {
-    final now = DateTime.now();
-    final startOfMonth = DateTime(now.year, now.month);
-    final endOfMonth = DateTime(now.year, now.month + 1, 0);
-
-    final filter = CalendarFilter(
-      startDate: startOfMonth,
-      endDate: endOfMonth,
-    );
-
-    return getUserEvents(userId, filter);
-  }
-
-  String _getICSStatus(EventStatus status) {
-    switch (status) {
-      case EventStatus.scheduled:
-        return 'TENTATIVE';
-      case EventStatus.confirmed:
-        return 'CONFIRMED';
-      case EventStatus.cancelled:
-        return 'CANCELLED';
-      case EventStatus.completed:
-        return 'CONFIRMED';
-      case EventStatus.postponed:
-        return 'TENTATIVE';
-    }
-  }
-
-  CalendarStats _calculateStats(List<CalendarEvent> events) {
-    final totalEvents = events.length;
-    final completedEvents =
-        events.where((e) => e.status == EventStatus.completed).length;
-    final cancelledEvents =
-        events.where((e) => e.status == EventStatus.cancelled).length;
-    final upcomingEvents = events.where((e) => e.isFuture).length;
-
-    double totalDuration = 0;
-    final eventsByType = <EventType, int>{};
-    final eventsByStatus = <EventStatus, int>{};
-    final dayEventCounts = <DateTime, int>{};
-
-    for (final event in events) {
-      totalDuration += event.duration.inMinutes;
-
-      eventsByType[event.type] = (eventsByType[event.type] ?? 0) + 1;
-      eventsByStatus[event.status] = (eventsByStatus[event.status] ?? 0) + 1;
-
-      final day = DateTime(
-        event.startTime.year,
-        event.startTime.month,
-        event.startTime.day,
-      );
-      dayEventCounts[day] = (dayEventCounts[day] ?? 0) + 1;
-    }
-
-    final averageEventDuration =
-        totalEvents > 0 ? totalDuration / totalEvents : 0.0;
-
-    final sortedDays = dayEventCounts.entries.toList()
-      ..sort((a, b) => b.value.compareTo(a.value));
-    final busiestDays = sortedDays.take(5).map((e) => e.key).toList();
-
-    return CalendarStats(
-      totalEvents: totalEvents,
-      completedEvents: completedEvents,
-      cancelledEvents: cancelledEvents,
-      upcomingEvents: upcomingEvents,
-      averageEventDuration: averageEventDuration,
-      eventsByType: eventsByType,
-      eventsByStatus: eventsByStatus,
-      busiestDays: busiestDays,
-    );
-  }
-
-  /// Проверить доступность даты
-  Future<bool> isDateAvailable(String specialistId, DateTime date) async {
+  Future<List<CalendarEvent>> getTodayEvents(String userId) async {
     try {
-      final startOfDay = DateTime(date.year, date.month, date.day);
-      final endOfDay = startOfDay.add(const Duration(days: 1));
-
-      final querySnapshot = await _firestore
-          .collection('calendar_events')
-          .where('specialistId', isEqualTo: specialistId)
-          .where(
-            'startTime',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
-          )
-          .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
-          .get();
-
-      return querySnapshot.docs.isEmpty;
-    } catch (e) {
-      print('Ошибка проверки доступности даты: $e');
-      return false;
-    }
-  }
-
-  /// Проверить доступность даты и времени
-  Future<bool> isDateTimeAvailable(
-    String specialistId,
-    DateTime dateTime,
-  ) async {
-    try {
-      final startOfDay = DateTime(dateTime.year, dateTime.month, dateTime.day);
-      final endOfDay = startOfDay.add(const Duration(days: 1));
-
-      final querySnapshot = await _firestore
-          .collection('calendar_events')
-          .where('specialistId', isEqualTo: specialistId)
-          .where(
-            'startTime',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
-          )
-          .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
-          .get();
-
-      final events =
-          querySnapshot.docs.map(CalendarEvent.fromDocument).toList();
-
-      // Проверяем, есть ли конфликтующие события
-      for (final event in events) {
-        if (dateTime.isAfter(event.startTime) &&
-            dateTime.isBefore(event.endTime)) {
-          return false;
-        }
-      }
-      return true;
-    } catch (e) {
-      print('Ошибка проверки доступности даты и времени: $e');
-      return false;
-    }
-  }
-
-  /// Получить доступные временные слоты
-  Future<List<DateTime>> getAvailableTimeSlots(
-    String specialistId,
-    DateTime date,
-    Duration slotDuration,
-  ) async {
-    try {
-      final startOfDay = DateTime(date.year, date.month, date.day);
-      final endOfDay = startOfDay.add(const Duration(days: 1));
-
-      final querySnapshot = await _firestore
-          .collection('calendar_events')
-          .where('specialistId', isEqualTo: specialistId)
-          .where(
-            'startTime',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
-          )
-          .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
-          .get();
-
-      final events =
-          querySnapshot.docs.map(CalendarEvent.fromDocument).toList();
-
-      final availableSlots = <DateTime>[];
-
-      // Генерируем слоты с 9:00 до 18:00
-      const startHour = 9;
-      const endHour = 18;
-
-      for (var hour = startHour; hour < endHour; hour++) {
-        for (var minute = 0; minute < 60; minute += slotDuration.inMinutes) {
-          final slotTime =
-              DateTime(date.year, date.month, date.day, hour, minute);
-
-          // Проверяем, не конфликтует ли слот с существующими событиями
-          var isAvailable = true;
-          for (final event in events) {
-            if (slotTime.isAfter(event.startTime) &&
-                slotTime.isBefore(event.endTime)) {
-              isAvailable = false;
-              break;
-            }
-          }
-
-          if (isAvailable) {
-            availableSlots.add(slotTime);
-          }
-        }
-      }
-
-      return availableSlots;
-    } catch (e) {
-      print('Ошибка получения доступных слотов: $e');
-      return [];
-    }
-  }
-
-  /// Получить доступные даты
-  Future<List<DateTime>> getAvailableDates(
-    String specialistId,
-    int daysAhead,
-  ) async {
-    try {
-      final availableDates = <DateTime>[];
-      final today = DateTime.now();
-
-      for (var i = 0; i < daysAhead; i++) {
-        final date = today.add(Duration(days: i));
-        final isAvailable = await isDateAvailable(specialistId, date);
-        if (isAvailable) {
-          availableDates.add(date);
-        }
-      }
-
-      return availableDates;
-    } catch (e) {
-      print('Ошибка получения доступных дат: $e');
-      return [];
-    }
-  }
-
-  /// Добавить событие
-  Future<void> addEvent(String specialistId, CalendarEvent event) async {
-    await createEvent(event);
-  }
-
-  /// Удалить событие
-  Future<void> removeEvent(String specialistId, String eventId) async {
-    await deleteEvent(eventId);
-  }
-
-  /// Получить события на дату
-  Future<List<CalendarEvent>> getEventsForDate(
-    String specialistId,
-    DateTime date,
-  ) async {
-    try {
-      final startOfDay = DateTime(date.year, date.month, date.day);
-      final endOfDay = startOfDay.add(const Duration(days: 1));
-
-      final events = await _firestore
-          .collection('calendar_events')
-          .where('specialistId', isEqualTo: specialistId)
-          .where(
-            'startTime',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startOfDay),
-          )
-          .where('startTime', isLessThan: Timestamp.fromDate(endOfDay))
-          .get();
-
-      return events.docs.map(CalendarEvent.fromDocument).toList();
-    } catch (e) {
-      print('Ошибка получения событий на дату: $e');
-      return [];
-    }
-  }
-
-  /// Создать событие бронирования
-  Future<String?> createBookingEvent(CalendarEvent event) async =>
-      createEvent(event);
-
-  /// Удалить событие бронирования
-  Future<void> removeBookingEvent(String eventId) async {
-    await deleteEvent(eventId);
-  }
-
-  /// Получить расписание специалиста
-  Stream<SpecialistSchedule?> getSpecialistSchedule(String specialistId) =>
-      _firestore
-          .collection('specialist_schedules')
-          .doc(specialistId)
-          .snapshots()
-          .map((doc) {
-        if (!doc.exists) return null;
-        return SpecialistSchedule.fromMap(doc.data()!);
-      });
-
-  /// Получить все расписания
-  Stream<List<SpecialistSchedule>> getAllSchedules() =>
-      _firestore.collection('specialist_schedules').snapshots().map(
-            (snapshot) => snapshot.docs
-                .map((doc) => SpecialistSchedule.fromMap(doc.data()))
-                .toList(),
-          );
-
-  /// Создать событие недоступности
-  Future<String?> createUnavailableEvent({
-    required String specialistId,
-    required DateTime startDate,
-    required DateTime endDate,
-    String? reason,
-  }) async {
-    try {
-      final eventRef = _firestore.collection('unavailable_events').doc();
-      final eventData = {
-        'id': eventRef.id,
-        'specialistId': specialistId,
-        'startDate': Timestamp.fromDate(startDate),
-        'endDate': Timestamp.fromDate(endDate),
-        'reason': reason ?? 'Недоступен',
-        'createdAt': FieldValue.serverTimestamp(),
-        'updatedAt': FieldValue.serverTimestamp(),
-      };
-
-      await eventRef.set(eventData);
-      return eventRef.id;
-    } catch (e) {
-      print('Ошибка создания события недоступности: $e');
-      return null;
-    }
-  }
-
-  /// Создать событие отпуска
-  Future<String?> createVacationEvent({
-    required String specialistId,
-    required DateTime startDate,
-    required DateTime endDate,
-    String? reason,
-  }) async {
-    try {
-      final eventRef = _firestore.collection('vacation_events').doc();
-      final eventData = {
-        'id': eventRef.id,
-        'specialistId': specialistId,
-        'startDate': Timestamp.fromDate(startDate),
-        'endDate': Timestamp.fromDate(endDate),
-        'reason': reason ?? 'Отпуск',
-        'createdAt': FieldValue.serverTimestamp(),
-        'updatedAt': FieldValue.serverTimestamp(),
-      };
-
-      await eventRef.set(eventData);
-      return eventRef.id;
-    } catch (e) {
-      print('Ошибка создания события отпуска: $e');
-      return null;
-    }
-  }
-
-  /// Добавить тестовые данные
-  Future<void> addTestData(String specialistId) async {
-    try {
-      // Добавляем тестовые события
       final now = DateTime.now();
-      final testEvents = [
-        {
-          'specialistId': specialistId,
-          'title': 'Тестовое событие 1',
-          'startDate': Timestamp.fromDate(now.add(const Duration(days: 1))),
-          'endDate': Timestamp.fromDate(now.add(const Duration(days: 1, hours: 2))),
-          'type': 'booking',
-          'createdAt': FieldValue.serverTimestamp(),
-        },
-        {
-          'specialistId': specialistId,
-          'title': 'Тестовое событие 2',
-          'startDate': Timestamp.fromDate(now.add(const Duration(days: 2))),
-          'endDate': Timestamp.fromDate(now.add(const Duration(days: 2, hours: 1))),
-          'type': 'unavailable',
-          'createdAt': FieldValue.serverTimestamp(),
-        },
-      ];
+      final startOfDay = DateTime(now.year, now.month, now.day);
+      final endOfDay = startOfDay.add(const Duration(days: 1));
 
-      for (final eventData in testEvents) {
-        await _firestore.collection('calendar_events').add(eventData);
-      }
+      return await getEventsForPeriod(
+        userId: userId,
+        startDate: startOfDay,
+        endDate: endOfDay,
+      );
     } catch (e) {
-      print('Ошибка добавления тестовых данных: $e');
+      debugPrint('Ошибка получения событий на сегодня: $e');
+      return [];
     }
   }
+
+  /// Получить статистику календаря
+  Future<CalendarStats> getCalendarStats({
+    required String userId,
+    required DateTime startDate,
+    required DateTime endDate,
+  }) async {
+    try {
+      final events = await getEventsForPeriod(
+        userId: userId,
+        startDate: startDate,
+        endDate: endDate,
+      );
+
+      int totalEvents = events.length;
+      int busyEvents = events.where((e) => e.status == CalendarEventStatus.busy).length;
+      int freeEvents = events.where((e) => e.status == CalendarEventStatus.free).length;
+      int personalEvents = events.where((e) => e.status == CalendarEventStatus.personal).length;
+      int blockedEvents = events.where((e) => e.status == CalendarEventStatus.blocked).length;
+
+      double totalHours = events.fold(0.0, (sum, event) => 
+          sum + event.durationInMinutes / 60.0);
+
+      return CalendarStats(
+        totalEvents: totalEvents,
+        busyEvents: busyEvents,
+        freeEvents: freeEvents,
+        personalEvents: personalEvents,
+        blockedEvents: blockedEvents,
+        totalHours: totalHours,
+        period: DatePeriod(startDate: startDate, endDate: endDate),
+      );
+    } catch (e) {
+      debugPrint('Ошибка получения статистики календаря: $e');
+      return CalendarStats(
+        totalEvents: 0,
+        busyEvents: 0,
+        freeEvents: 0,
+        personalEvents: 0,
+        blockedEvents: 0,
+        totalHours: 0.0,
+        period: DatePeriod(startDate: startDate, endDate: endDate),
+      );
+    }
+  }
+}
+
+/// Временной слот
+class TimeSlot {
+  const TimeSlot({
+    required this.startTime,
+    required this.endTime,
+  });
+
+  final DateTime startTime;
+  final DateTime endTime;
+
+  /// Проверить, пересекается ли слот с другим
+  bool overlapsWith(TimeSlot other) {
+    return startTime.isBefore(other.endTime) && endTime.isAfter(other.startTime);
+  }
+
+  /// Получить длительность слота
+  Duration get duration => endTime.difference(startTime);
+}
+
+/// Статистика календаря
+class CalendarStats {
+  const CalendarStats({
+    required this.totalEvents,
+    required this.busyEvents,
+    required this.freeEvents,
+    required this.personalEvents,
+    required this.blockedEvents,
+    required this.totalHours,
+    required this.period,
+  });
+
+  final int totalEvents;
+  final int busyEvents;
+  final int freeEvents;
+  final int personalEvents;
+  final int blockedEvents;
+  final double totalHours;
+  final DatePeriod period;
+}
+
+/// Период дат
+class DatePeriod {
+  const DatePeriod({
+    required this.startDate,
+    required this.endDate,
+  });
+
+  final DateTime startDate;
+  final DateTime endDate;
+
+  /// Получить количество дней в периоде
+  int get daysCount => endDate.difference(startDate).inDays + 1;
 }

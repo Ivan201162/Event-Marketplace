@@ -256,4 +256,5 @@ class ContractService {
     // Здесь можно добавить логику получения реквизитов
     return 'Email: ${specialist.email}';
   }
-}
+} 
+ 

@@ -1,241 +1,303 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:table_calendar/table_calendar.dart';
 
-import '../models/specialist_schedule.dart';
-import '../providers/auth_providers.dart';
-import '../providers/calendar_providers.dart';
-import '../widgets/calendar_widget.dart';
+import '../models/calendar_event.dart';
+import '../services/calendar_service.dart';
+import '../widgets/calendar_event_card.dart';
+import '../widgets/add_event_dialog.dart';
 
+/// Экран календаря для специалистов
 class SpecialistCalendarScreen extends ConsumerStatefulWidget {
   const SpecialistCalendarScreen({super.key});
 
   @override
-  ConsumerState<SpecialistCalendarScreen> createState() =>
-      _SpecialistCalendarScreenState();
+  ConsumerState<SpecialistCalendarScreen> createState() => _SpecialistCalendarScreenState();
 }
 
-class _SpecialistCalendarScreenState
-    extends ConsumerState<SpecialistCalendarScreen> {
+class _SpecialistCalendarScreenState extends ConsumerState<SpecialistCalendarScreen>
+    with TickerProviderStateMixin {
+  late TabController _tabController;
+  late CalendarFormat _calendarFormat;
+  late DateTime _focusedDay;
+  late DateTime _selectedDay;
+  
+  final CalendarService _calendarService = CalendarService();
+  List<CalendarEvent> _events = [];
+  bool _isLoading = false;
+
   @override
   void initState() {
     super.initState();
-    // Инициализируем календарь с текущим пользователем
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final currentUser = ref.read(currentUserProvider).value;
-      if (currentUser != null && currentUser.isSpecialist) {
-        ref
-            .read(calendarStateProvider.notifier)
-            .selectSpecialist(currentUser.id);
-      }
-    });
+    _tabController = TabController(length: 3, vsync: this);
+    _calendarFormat = CalendarFormat.month;
+    _focusedDay = DateTime.now();
+    _selectedDay = DateTime.now();
+    _loadEvents();
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final currentUser = ref.watch(currentUserProvider);
-    final calendarState = ref.watch(calendarStateProvider);
+    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Мое расписание'),
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        elevation: 0,
+        title: const Text('Мой календарь'),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: const [
+            Tab(text: 'Календарь', icon: Icon(Icons.calendar_month)),
+            Tab(text: 'События', icon: Icon(Icons.event)),
+            Tab(text: 'Статистика', icon: Icon(Icons.analytics)),
+          ],
+        ),
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () => _showAddEventDialog(context),
+            onPressed: _showAddEventDialog,
           ),
-          IconButton(
-            icon: const Icon(Icons.analytics),
-            onPressed: () => _showAnalyticsDialog(context),
-          ),
-          IconButton(
-            icon: const Icon(Icons.science),
-            onPressed: () => _showTestDataDialog(context),
+          PopupMenuButton<String>(
+            onSelected: _onMenuSelected,
+            itemBuilder: (context) => [
+              const PopupMenuItem(
+                value: 'block_time',
+                child: ListTile(
+                  leading: Icon(Icons.block),
+                  title: Text('Заблокировать время'),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'export',
+                child: ListTile(
+                  leading: Icon(Icons.download),
+                  title: Text('Экспорт календаря'),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+              const PopupMenuItem(
+                value: 'settings',
+                child: ListTile(
+                  leading: Icon(Icons.settings),
+                  title: Text('Настройки'),
+                  contentPadding: EdgeInsets.zero,
+                ),
+              ),
+            ],
           ),
         ],
       ),
-      body: currentUser.when(
-        data: (user) {
-          if (user == null || !user.isSpecialist) {
-            return const Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+      body: TabBarView(
+        controller: _tabController,
                 children: [
-                  Icon(Icons.person_off, size: 64, color: Colors.grey),
-                  SizedBox(height: 16),
-                  Text(
-                    'Доступно только для специалистов',
-                    style: TextStyle(fontSize: 18, color: Colors.grey),
-                  ),
-                ],
-              ),
-            );
-          }
-
-          return SingleChildScrollView(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Статистика
-                _buildStatsCard(context, user.id),
-
-                const SizedBox(height: 16),
-
-                // Календарь
-                CalendarWidget(
-                  specialistId: user.id,
-                  showTimeSlots: true,
-                  onDateSelected: (date) {
-                    // Обработка выбора даты
-                  },
-                ),
-
-                const SizedBox(height: 16),
-
-                // Быстрые действия
-                _buildQuickActionsCard(context, user.id),
-              ],
-            ),
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stack) => Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Icon(Icons.error_outline, size: 64, color: Colors.red),
-              const SizedBox(height: 16),
-              Text('Ошибка загрузки: $error'),
-            ],
-          ),
-        ),
+          _buildCalendarTab(),
+          _buildEventsTab(),
+          _buildStatsTab(),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: _showAddEventDialog,
+        child: const Icon(Icons.add),
       ),
     );
   }
 
-  /// Карточка статистики
-  Widget _buildStatsCard(BuildContext context, String specialistId) {
-    final scheduleAsync = ref.watch(specialistScheduleProvider(specialistId));
+  Widget _buildCalendarTab() {
+    return Column(
+              children: [
+                // Календарь
+        TableCalendar<CalendarEvent>(
+          firstDay: DateTime.utc(2020, 1, 1),
+          lastDay: DateTime.utc(2030, 12, 31),
+          focusedDay: _focusedDay,
+          calendarFormat: _calendarFormat,
+          eventLoader: _getEventsForDay,
+          startingDayOfWeek: StartingDayOfWeek.monday,
+          calendarStyle: CalendarStyle(
+            outsideDaysVisible: false,
+            markersMaxCount: 3,
+            markerDecoration: const BoxDecoration(
+              color: Colors.red,
+              shape: BoxShape.circle,
+            ),
+          ),
+          headerStyle: const HeaderStyle(
+            formatButtonVisible: true,
+            titleCentered: true,
+          ),
+          onDaySelected: _onDaySelected,
+          onFormatChanged: (format) {
+            setState(() {
+              _calendarFormat = format;
+            });
+          },
+          onPageChanged: (focusedDay) {
+            setState(() {
+              _focusedDay = focusedDay;
+            });
+          },
+          selectedDayPredicate: (day) {
+            return isSameDay(_selectedDay, day);
+          },
+        ),
+        
+        const SizedBox(height: 8),
+        
+        // События выбранного дня
+        Expanded(
+          child: _buildSelectedDayEvents(),
+        ),
+      ],
+    );
+  }
 
-    return Card(
-      elevation: 4,
-      child: Padding(
+  Widget _buildEventsTab() {
+    if (_isLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (_events.isEmpty) {
+      return _buildEmptyEventsState();
+    }
+
+    return RefreshIndicator(
+      onRefresh: _loadEvents,
+      child: ListView.builder(
         padding: const EdgeInsets.all(16),
+        itemCount: _events.length,
+        itemBuilder: (context, index) {
+          final event = _events[index];
+          return CalendarEventCard(
+            event: event,
+            onTap: () => _showEventDetails(event),
+            onEdit: () => _showEditEventDialog(event),
+            onDelete: () => _deleteEvent(event),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildStatsTab() {
+    return FutureBuilder<CalendarStats>(
+      future: _getCalendarStats(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        if (!snapshot.hasData) {
+          return const Center(child: Text('Ошибка загрузки статистики'));
+        }
+
+        final stats = snapshot.data!;
+        return _buildStatsContent(stats);
+      },
+    );
+  }
+
+  Widget _buildSelectedDayEvents() {
+    final dayEvents = _getEventsForDay(_selectedDay);
+    
+    if (dayEvents.isEmpty) {
+      return Center(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              'Статистика',
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+            Icon(
+              Icons.event_available,
+              size: 64,
+              color: Theme.of(context).colorScheme.outline,
             ),
             const SizedBox(height: 16),
-            scheduleAsync.when(
-              data: (schedule) {
-                final totalEvents = schedule?.events.length ?? 0;
-                final bookingEvents = schedule?.events
-                        .where((e) => e.type == ScheduleEventType.booking)
-                        .length ??
-                    0;
-                final unavailableEvents = schedule?.events
-                        .where((e) => e.type == ScheduleEventType.unavailable)
-                        .length ??
-                    0;
-                final vacationEvents = schedule?.events
-                        .where((e) => e.type == ScheduleEventType.vacation)
-                        .length ??
-                    0;
-
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _buildStatItem(
-                      context,
-                      'Всего событий',
-                      totalEvents,
-                      Colors.blue,
-                    ),
-                    _buildStatItem(
-                      context,
-                      'Бронирования',
-                      bookingEvents,
-                      Colors.green,
-                    ),
-                    _buildStatItem(
-                      context,
-                      'Недоступность',
-                      unavailableEvents,
-                      Colors.red,
-                    ),
-                    _buildStatItem(
-                      context,
-                      'Отпуск',
-                      vacationEvents,
-                      Colors.orange,
-                    ),
-                  ],
-                );
-              },
-              loading: () => const Center(child: CircularProgressIndicator()),
-              error: (error, stack) => Text('Ошибка: $error'),
+            Text(
+              'Нет событий на ${_formatDate(_selectedDay)}',
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Нажмите + чтобы добавить событие',
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: Theme.of(context).colorScheme.outline,
+              ),
             ),
           ],
         ),
+      );
+    }
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(16),
+      itemCount: dayEvents.length,
+      itemBuilder: (context, index) {
+        final event = dayEvents[index];
+        return CalendarEventCard(
+          event: event,
+          onTap: () => _showEventDetails(event),
+          onEdit: () => _showEditEventDialog(event),
+          onDelete: () => _deleteEvent(event),
+        );
+      },
+    );
+  }
+
+  Widget _buildEmptyEventsState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.calendar_today,
+            size: 64,
+            color: Theme.of(context).colorScheme.outline,
+          ),
+          const SizedBox(height: 16),
+          Text(
+            'Нет событий',
+            style: Theme.of(context).textTheme.headlineSmall,
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Добавьте события в свой календарь',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+              color: Theme.of(context).colorScheme.outline,
+            ),
+          ),
+          const SizedBox(height: 16),
+          ElevatedButton.icon(
+            onPressed: _showAddEventDialog,
+            icon: const Icon(Icons.add),
+            label: const Text('Добавить событие'),
+          ),
+        ],
       ),
     );
   }
 
-  /// Элемент статистики
-  Widget _buildStatItem(
-    BuildContext context,
-    String label,
-    int count,
-    Color color,
-  ) =>
-      Column(
+  Widget _buildStatsContent(CalendarStats stats) {
+    final theme = Theme.of(context);
+    
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: color.withOpacity(0.1),
-              shape: BoxShape.circle,
-            ),
-            child: Text(
-              count.toString(),
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: color,
-              ),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
-            ),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      );
-
-  /// Карточка быстрых действий
-  Widget _buildQuickActionsCard(BuildContext context, String specialistId) =>
+          // Общая статистика
       Card(
-        elevation: 4,
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Быстрые действия',
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    'Общая статистика',
+                    style: theme.textTheme.titleLarge?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
               ),
@@ -243,372 +305,350 @@ class _SpecialistCalendarScreenState
               Row(
                 children: [
                   Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () =>
-                          _showAddUnavailableDialog(context, specialistId),
-                      icon: const Icon(Icons.block),
-                      label: const Text('Недоступность'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                        foregroundColor: Colors.white,
+                        child: _buildStatCard(
+                          'Всего событий',
+                          stats.totalEvents.toString(),
+                          Icons.event,
+                          Colors.blue,
+                        ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: ElevatedButton.icon(
-                      onPressed: () =>
-                          _showAddVacationDialog(context, specialistId),
-                      icon: const Icon(Icons.beach_access),
-                      label: const Text('Отпуск'),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orange,
-                        foregroundColor: Colors.white,
+                      const SizedBox(width: 8),
+                      Expanded(
+                        child: _buildStatCard(
+                          'Часов занято',
+                          stats.totalHours.toStringAsFixed(1),
+                          Icons.access_time,
+                          Colors.green,
+                        ),
                       ),
-                    ),
+                    ],
                   ),
                 ],
               ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                child: OutlinedButton.icon(
-                  onPressed: () => _showTestDataDialog(context),
-                  icon: const Icon(Icons.science),
-                  label: const Text('Добавить тестовые данные'),
+            ),
+          ),
+          
+          const SizedBox(height: 16),
+          
+          // Статистика по типам событий
+          Card(
+            child: Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'По типам событий',
+                    style: theme.textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  _buildEventTypeStat('Занят', stats.busyEvents, Colors.red),
+                  _buildEventTypeStat('Свободен', stats.freeEvents, Colors.green),
+                  _buildEventTypeStat('Личные', stats.personalEvents, Colors.blue),
+                  _buildEventTypeStat('Заблокировано', stats.blockedEvents, Colors.grey),
+                ],
+              ),
                 ),
               ),
             ],
+      ),
+    );
+  }
+
+  Widget _buildStatCard(String title, String value, IconData icon, Color color) {
+    return Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: color.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: color.withOpacity(0.3)),
+      ),
+      child: Column(
+        children: [
+          Icon(icon, color: color, size: 32),
+          const SizedBox(height: 8),
+          Text(
+            value,
+            style: TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: color,
+            ),
           ),
-        ),
+          const SizedBox(height: 4),
+          Text(
+            title,
+            style: const TextStyle(fontSize: 12),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEventTypeStat(String title, int count, Color color) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4),
+      child: Row(
+              children: [
+          Container(
+            width: 12,
+            height: 12,
+            decoration: BoxDecoration(
+              color: color,
+              shape: BoxShape.circle,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Text(title),
+          const Spacer(),
+          Text(
+            count.toString(),
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+
+  List<CalendarEvent> _getEventsForDay(DateTime day) {
+    return _events.where((event) => event.occursOnDate(day)).toList();
+  }
+
+  void _onDaySelected(DateTime selectedDay, DateTime focusedDay) {
+    setState(() {
+      _selectedDay = selectedDay;
+      _focusedDay = focusedDay;
+    });
+  }
+
+  void _onMenuSelected(String value) {
+    switch (value) {
+      case 'block_time':
+        _showBlockTimeDialog();
+        break;
+      case 'export':
+        _exportCalendar();
+        break;
+      case 'settings':
+        _showCalendarSettings();
+        break;
+    }
+  }
+
+  Future<void> _loadEvents() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final now = DateTime.now();
+      final startOfMonth = DateTime(now.year, now.month, 1);
+      final endOfMonth = DateTime(now.year, now.month + 1, 0);
+
+      final events = await _calendarService.getEventsForPeriod(
+        userId: 'current_user_id', // В реальном приложении получать из AuthService
+        startDate: startOfMonth,
+        endDate: endOfMonth,
       );
 
-  /// Показать диалог добавления события
-  void _showAddEventDialog(BuildContext context) {
+      setState(() {
+        _events = events;
+        _isLoading = false;
+      });
+                } catch (e) {
+      setState(() {
+        _isLoading = false;
+      });
+      _showErrorSnackBar('Ошибка загрузки событий: $e');
+    }
+  }
+
+  Future<CalendarStats> _getCalendarStats() async {
+    final now = DateTime.now();
+    final startOfMonth = DateTime(now.year, now.month, 1);
+    final endOfMonth = DateTime(now.year, now.month + 1, 0);
+
+    return await _calendarService.getCalendarStats(
+      userId: 'current_user_id', // В реальном приложении получать из AuthService
+      startDate: startOfMonth,
+      endDate: endOfMonth,
+    );
+  }
+
+  void _showAddEventDialog() {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Добавить событие'),
-        content: const Text('Выберите тип события для добавления'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              Navigator.of(context).pop();
-              // TODO: Показать форму добавления события
-            },
-            child: const Text('Добавить'),
-          ),
-        ],
+      builder: (context) => AddEventDialog(
+        selectedDate: _selectedDay,
+        onEventCreated: (event) {
+          _loadEvents();
+          _showSuccessSnackBar('Событие добавлено');
+        },
       ),
     );
   }
 
-  /// Показать диалог добавления недоступности
-  void _showAddUnavailableDialog(BuildContext context, String specialistId) {
-    final titleController = TextEditingController();
-    final descriptionController = TextEditingController();
-    DateTime? startDate;
-    DateTime? endDate;
-
+  void _showEditEventDialog(CalendarEvent event) {
     showDialog(
       context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: const Text('Добавить недоступность'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: titleController,
-                  decoration: const InputDecoration(
-                    labelText: 'Название',
-                    hintText: 'Например: Техническое обслуживание',
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: descriptionController,
-                  decoration: const InputDecoration(
-                    labelText: 'Описание (необязательно)',
-                  ),
-                  maxLines: 3,
-                ),
-                const SizedBox(height: 16),
-                ListTile(
-                  title: Text(
-                    startDate == null
-                        ? 'Выберите дату начала'
-                        : 'Начало: ${_formatDate(startDate!)}',
-                  ),
-                  trailing: const Icon(Icons.calendar_today),
-                  onTap: () async {
-                    final date = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime.now().add(const Duration(days: 365)),
-                    );
-                    if (date != null) {
-                      setState(() => startDate = date);
-                    }
-                  },
-                ),
-                ListTile(
-                  title: Text(
-                    endDate == null
-                        ? 'Выберите дату окончания'
-                        : 'Окончание: ${_formatDate(endDate!)}',
-                  ),
-                  trailing: const Icon(Icons.calendar_today),
-                  onTap: () async {
-                    final date = await showDatePicker(
-                      context: context,
-                      initialDate: startDate ?? DateTime.now(),
-                      firstDate: startDate ?? DateTime.now(),
-                      lastDate: DateTime.now().add(const Duration(days: 365)),
-                    );
-                    if (date != null) {
-                      setState(() => endDate = date);
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                if (titleController.text.isEmpty ||
-                    startDate == null ||
-                    endDate == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Заполните все обязательные поля'),
-                    ),
-                  );
-                  return;
-                }
+      builder: (context) => AddEventDialog(
+        event: event,
+        onEventCreated: (updatedEvent) {
+          _loadEvents();
+          _showSuccessSnackBar('Событие обновлено');
+        },
+      ),
+    );
+  }
 
-                try {
-                  await ref
-                      .read(calendarServiceProvider)
-                      .createUnavailableEvent(
-                        specialistId: specialistId,
-                        startDate: startDate!,
-                        endDate: endDate!,
-                        reason: titleController.text.isEmpty
-                            ? null
-                            : titleController.text,
-                      );
-
-                  if (context.mounted) {
-                    Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Недоступность добавлена')),
-                    );
-                  }
-                } catch (e) {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Ошибка: $e')),
-                    );
-                  }
-                }
-              },
-              child: const Text('Добавить'),
-            ),
+  void _showEventDetails(CalendarEvent event) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(event.title),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (event.description != null) ...[
+              Text('Описание: ${event.description}'),
+              const SizedBox(height: 8),
+            ],
+            if (event.location != null) ...[
+              Text('Место: ${event.location}'),
+              const SizedBox(height: 8),
+            ],
+            Text('Начало: ${_formatDateTime(event.startDate)}'),
+            Text('Окончание: ${_formatDateTime(event.endDate)}'),
+            const SizedBox(height: 8),
+            Text('Статус: ${_getStatusText(event.status)}'),
+            Text('Тип: ${_getTypeText(event.type)}'),
           ],
         ),
-      ),
-    );
-  }
-
-  /// Показать диалог добавления отпуска
-  void _showAddVacationDialog(BuildContext context, String specialistId) {
-    final titleController = TextEditingController();
-    final descriptionController = TextEditingController();
-    DateTime? startDate;
-    DateTime? endDate;
-
-    showDialog(
-      context: context,
-      builder: (context) => StatefulBuilder(
-        builder: (context, setState) => AlertDialog(
-          title: const Text('Добавить отпуск'),
-          content: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                TextField(
-                  controller: titleController,
-                  decoration: const InputDecoration(
-                    labelText: 'Название',
-                    hintText: 'Например: Ежегодный отпуск',
-                  ),
-                ),
-                const SizedBox(height: 16),
-                TextField(
-                  controller: descriptionController,
-                  decoration: const InputDecoration(
-                    labelText: 'Описание (необязательно)',
-                  ),
-                  maxLines: 3,
-                ),
-                const SizedBox(height: 16),
-                ListTile(
-                  title: Text(
-                    startDate == null
-                        ? 'Выберите дату начала'
-                        : 'Начало: ${_formatDate(startDate!)}',
-                  ),
-                  trailing: const Icon(Icons.calendar_today),
-                  onTap: () async {
-                    final date = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(),
-                      firstDate: DateTime.now(),
-                      lastDate: DateTime.now().add(const Duration(days: 365)),
-                    );
-                    if (date != null) {
-                      setState(() => startDate = date);
-                    }
-                  },
-                ),
-                ListTile(
-                  title: Text(
-                    endDate == null
-                        ? 'Выберите дату окончания'
-                        : 'Окончание: ${_formatDate(endDate!)}',
-                  ),
-                  trailing: const Icon(Icons.calendar_today),
-                  onTap: () async {
-                    final date = await showDatePicker(
-                      context: context,
-                      initialDate: startDate ?? DateTime.now(),
-                      firstDate: startDate ?? DateTime.now(),
-                      lastDate: DateTime.now().add(const Duration(days: 365)),
-                    );
-                    if (date != null) {
-                      setState(() => endDate = date);
-                    }
-                  },
-                ),
-              ],
-            ),
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text('Отмена'),
-            ),
-            ElevatedButton(
-              onPressed: () async {
-                if (titleController.text.isEmpty ||
-                    startDate == null ||
-                    endDate == null) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Заполните все обязательные поля'),
-                    ),
-                  );
-                  return;
-                }
-
-                try {
-                  await ref.read(calendarServiceProvider).createVacationEvent(
-                        specialistId: specialistId,
-                        startDate: startDate!,
-                        endDate: endDate!,
-                        reason: titleController.text.isEmpty
-                            ? null
-                            : titleController.text,
-                      );
-
-                  if (context.mounted) {
-                    Navigator.of(context).pop();
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('Отпуск добавлен')),
-                    );
-                  }
-                } catch (e) {
-                  if (context.mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Ошибка: $e')),
-                    );
-                  }
-                }
-              },
-              child: const Text('Добавить'),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  /// Показать диалог тестовых данных
-  void _showTestDataDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Тестовые данные'),
-        content:
-            const Text('Добавить тестовые данные календаря для разработки?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Отмена'),
-          ),
-          ElevatedButton(
-            onPressed: () async {
-              try {
-                await ref.read(calendarServiceProvider).addTestData();
-                if (context.mounted) {
-                  Navigator.of(context).pop();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Тестовые данные добавлены')),
-                  );
-                }
-              } catch (e) {
-                if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Ошибка: $e')),
-                  );
-                }
-              }
-            },
-            child: const Text('Добавить'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  /// Форматировать дату
-  String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
-
-  /// Показать диалог аналитики
-  void _showAnalyticsDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Аналитика календаря'),
-        content: const Text('Здесь будет отображаться аналитика календаря специалиста'),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
             child: const Text('Закрыть'),
           ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+              _showEditEventDialog(event);
+            },
+            child: const Text('Редактировать'),
+          ),
         ],
+      ),
+    );
+  }
+
+  void _showBlockTimeDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AddEventDialog(
+        selectedDate: _selectedDay,
+        isBlockTime: true,
+        onEventCreated: (event) {
+          _loadEvents();
+          _showSuccessSnackBar('Время заблокировано');
+        },
+      ),
+    );
+  }
+
+  Future<void> _deleteEvent(CalendarEvent event) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Удалить событие'),
+        content: Text('Вы уверены, что хотите удалить "${event.title}"?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Отмена'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            child: const Text('Удалить'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      try {
+        await _calendarService.deleteEvent(event.id);
+        _loadEvents();
+        _showSuccessSnackBar('Событие удалено');
+      } catch (e) {
+        _showErrorSnackBar('Ошибка удаления события: $e');
+      }
+    }
+  }
+
+  void _exportCalendar() {
+    // Логика экспорта календаря
+    _showSuccessSnackBar('Календарь экспортирован');
+  }
+
+  void _showCalendarSettings() {
+    // Логика настроек календаря
+    _showSuccessSnackBar('Настройки календаря');
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day}.${date.month}.${date.year}';
+  }
+
+  String _formatDateTime(DateTime dateTime) {
+    return '${dateTime.day}.${dateTime.month}.${dateTime.year} ${dateTime.hour.toString().padLeft(2, '0')}:${dateTime.minute.toString().padLeft(2, '0')}';
+  }
+
+  String _getStatusText(CalendarEventStatus status) {
+    switch (status) {
+      case CalendarEventStatus.busy:
+        return 'Занят';
+      case CalendarEventStatus.free:
+        return 'Свободен';
+      case CalendarEventStatus.tentative:
+        return 'Предварительно';
+      case CalendarEventStatus.blocked:
+        return 'Заблокирован';
+      case CalendarEventStatus.personal:
+        return 'Личное';
+    }
+  }
+
+  String _getTypeText(CalendarEventType type) {
+    switch (type) {
+      case CalendarEventType.booking:
+        return 'Бронирование';
+      case CalendarEventType.personal:
+        return 'Личное событие';
+      case CalendarEventType.blocked:
+        return 'Заблокированное время';
+      case CalendarEventType.reminder:
+        return 'Напоминание';
+    }
+  }
+
+  void _showErrorSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+
+  void _showSuccessSnackBar(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: Colors.green,
       ),
     );
   }

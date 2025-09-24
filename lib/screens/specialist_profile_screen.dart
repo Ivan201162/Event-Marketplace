@@ -12,6 +12,7 @@ import '../widgets/enhanced_page_transition.dart';
 import '../widgets/responsive_layout.dart';
 import 'booking_form_screen.dart';
 import 'chat_screen.dart';
+import 'reviews_screen.dart';
 
 /// Экран профиля специалиста с функциями соцсети
 class SpecialistProfileScreen extends ConsumerStatefulWidget {
@@ -35,7 +36,7 @@ class _SpecialistProfileScreenState
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 4, vsync: this);
     _pageController = PageController();
   }
 
@@ -92,6 +93,7 @@ class _SpecialistProfileScreenState
                     Tab(icon: Icon(Icons.grid_on), text: 'Посты'),
                     Tab(icon: Icon(Icons.photo_library), text: 'Альбомы'),
                     Tab(icon: Icon(Icons.info), text: 'О себе'),
+                    Tab(icon: Icon(Icons.rate_review), text: 'Отзывы'),
                   ],
                 ),
               ),
@@ -107,6 +109,7 @@ class _SpecialistProfileScreenState
                   _buildPostsTab(),
                   _buildAlbumsTab(),
                   _buildAboutTab(),
+                  _buildReviewsTab(),
                 ],
               ),
             ),
@@ -134,6 +137,7 @@ class _SpecialistProfileScreenState
                   Tab(icon: Icon(Icons.grid_on), text: 'Посты'),
                   Tab(icon: Icon(Icons.photo_library), text: 'Альбомы'),
                   Tab(icon: Icon(Icons.info), text: 'О себе'),
+                  Tab(icon: Icon(Icons.rate_review), text: 'Отзывы'),
                 ],
               ),
               // Контент
@@ -147,6 +151,7 @@ class _SpecialistProfileScreenState
                     _buildPostsTab(),
                     _buildAlbumsTab(),
                     _buildAboutTab(),
+                    _buildReviewsTab(),
                   ],
                 ),
               ),
@@ -184,6 +189,7 @@ class _SpecialistProfileScreenState
                         Tab(icon: Icon(Icons.grid_on), text: 'Посты'),
                         Tab(icon: Icon(Icons.photo_library), text: 'Альбомы'),
                         Tab(icon: Icon(Icons.info), text: 'О себе'),
+                        Tab(icon: Icon(Icons.rate_review), text: 'Отзывы'),
                       ],
                     ),
                     // Контент
@@ -237,6 +243,7 @@ class _SpecialistProfileScreenState
                         Tab(icon: Icon(Icons.grid_on), text: 'Посты'),
                         Tab(icon: Icon(Icons.photo_library), text: 'Альбомы'),
                         Tab(icon: Icon(Icons.info), text: 'О себе'),
+                        Tab(icon: Icon(Icons.rate_review), text: 'Отзывы'),
                       ],
                     ),
                     // Контент
@@ -562,6 +569,11 @@ class _SpecialistProfileScreenState
           _buildPortfolioSection(),
           _buildReviewsSection(),
         ],
+      );
+
+  Widget _buildReviewsTab() => ReviewsScreen(
+        specialistId: widget.specialistId,
+        canWriteReview: false, // Только просмотр отзывов в профиле
       );
 
   Widget _buildPostCard(FeedPost post) => AnimatedContent(

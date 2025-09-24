@@ -1,29 +1,32 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../analytics/analytics_service.dart';
-import '../core/feature_flags.dart';
+import '../services/analytics_service.dart';
+import '../models/analytics.dart';
 
 /// Провайдер сервиса аналитики
-final analyticsServiceProvider =
-    Provider<AnalyticsService>((ref) => AnalyticsService());
-
-/// Провайдер для проверки доступности аналитики
-final analyticsAvailableProvider =
-    Provider<bool>((ref) => FeatureFlags.analyticsEnabled);
-
-/// Провайдер для инициализации аналитики
-final analyticsInitializationProvider = FutureProvider<void>((ref) async {
-  final analyticsService = ref.read(analyticsServiceProvider);
-  await analyticsService.initialize();
+final analyticsServiceProvider = Provider<AnalyticsService>((ref) {
+  return AnalyticsService();
 });
 
-/// Провайдер текущего ID пользователя в аналитике
-final analyticsUserIdProvider = Provider<String?>((ref) {
-  final analyticsService = ref.read(analyticsServiceProvider);
-  return analyticsService.currentUserId;
+/// Провайдер аналитики специалиста
+final specialistAnalyticsProvider = FutureProvider.family<SpecialistAnalytics?, String>((ref, specialistId) {
+  final analyticsService = ref.watch(analyticsServiceProvider);
+  return analyticsService.getSpecialistAnalytics(specialistId);
 });
 
-/// Провайдер текущего ID сессии в аналитике
-final analyticsSessionIdProvider = Provider<String?>((ref) {
-  final analyticsService = ref.read(analyticsServiceProvider);
-  return analyticsService.currentSessionId;
+/// Провайдер месячной статистики
+final monthlyStatsProvider = FutureProvider.family<List<MonthlyStat>, String>((ref, specialistId) {
+  final analyticsService = ref.watch(analyticsServiceProvider);
+  return analyticsService.getMonthlyStats(specialistId);
+});
+
+/// Провайдер топ услуг
+final topServicesProvider = FutureProvider.family<List<ServiceStat>, String>((ref, specialistId) {
+  final analyticsService = ref.watch(analyticsServiceProvider);
+  return analyticsService.getTopServices(specialistId);
+});
+
+/// Провайдер сравнения с предыдущим периодом
+final comparisonProvider = FutureProvider.family<Map<String, double>, String>((ref, specialistId) {
+  final analyticsService = ref.watch(analyticsServiceProvider);
+  return analyticsService.getComparisonWithPreviousPeriod(specialistId);
 });
