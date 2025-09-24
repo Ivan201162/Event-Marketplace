@@ -10,6 +10,23 @@ enum NotificationPriority {
   urgent,
 }
 
+/// Типы уведомлений
+enum NotificationType {
+  booking,
+  payment,
+  message,
+  system,
+  reminder,
+}
+
+/// Каналы уведомлений
+enum NotificationChannel {
+  push,
+  email,
+  sms,
+  inApp,
+}
+
 /// Модель уведомления
 class AppNotification {
   const AppNotification({

@@ -24,6 +24,29 @@ enum EventIdeaCategory {
   other, // Другое
 }
 
+extension EventIdeaCategoryExtension on EventIdeaCategory {
+  String get displayName {
+    switch (this) {
+      case EventIdeaCategory.decoration:
+        return 'Оформление';
+      case EventIdeaCategory.entertainment:
+        return 'Развлечения';
+      case EventIdeaCategory.catering:
+        return 'Кейтеринг';
+      case EventIdeaCategory.photography:
+        return 'Фотография';
+      case EventIdeaCategory.music:
+        return 'Музыка';
+      case EventIdeaCategory.venue:
+        return 'Площадка';
+      case EventIdeaCategory.planning:
+        return 'Планирование';
+      case EventIdeaCategory.other:
+        return 'Другое';
+    }
+  }
+}
+
 /// Модель идеи мероприятия
 class EventIdea {
   const EventIdea({

@@ -246,7 +246,7 @@ class FirestoreService {
 
       // Проверяем конфликты бронирования
       final hasConflict = await hasBookingConflict(
-        booking.specialistId,
+        booking.specialistId ?? '',
         booking.eventDate,
         endTime,
         excludeBookingId:
@@ -259,7 +259,7 @@ class FirestoreService {
 
       // Проверяем доступность через календарный сервис
       final isAvailable = await _calendarService.isDateTimeAvailable(
-        booking.specialistId,
+        booking.specialistId ?? '',
         booking.eventDate,
       );
 
@@ -384,7 +384,7 @@ class FirestoreService {
       title: event.title,
       startTime: event.startTime,
       endTime: event.endTime,
-      type: event.type.name,
+        type: event.type.toString().split('.').last,
     )).toList();
   }
 
@@ -400,19 +400,19 @@ class FirestoreService {
 
       switch (status) {
         case 'confirmed':
-          notificationType = app_notification.NotificationType.booking;
+          notificationType = app_notification.NotificationType.booking.name;
           title = 'Заявка подтверждена!';
           body =
               'Ваша заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} подтверждена';
           break;
         case 'rejected':
-          notificationType = app_notification.NotificationType.booking;
+          notificationType = app_notification.NotificationType.booking.name;
           title = 'Заявка отклонена';
           body =
               'К сожалению, ваша заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} отклонена';
           break;
         case 'cancelled':
-          notificationType = app_notification.NotificationType.booking;
+          notificationType = app_notification.NotificationType.booking.name;
           title = 'Заявка отменена';
           body =
               'Заявка на ${booking.eventDate.day}.${booking.eventDate.month}.${booking.eventDate.year} была отменена';
