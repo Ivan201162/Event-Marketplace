@@ -36,6 +36,13 @@ enum TaxType {
   vat, // НДС
 }
 
+/// Провайдеры платежей
+enum PaymentProvider {
+  yooKassa, // ЮKassa
+  cloudPayments, // CloudPayments
+  mock, // Имитация для тестирования
+}
+
 /// Модель платежа
 class Payment {
   const Payment({

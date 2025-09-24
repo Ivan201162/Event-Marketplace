@@ -1,709 +1,528 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
+import 'package:uuid/uuid.dart';
 
-import '../core/feature_flags.dart';
-import '../models/booking.dart';
-import '../models/payment.dart';
+import '../models/payment_models.dart';
+import 'russian_bank_service.dart';
+import 'tax_calculation_service.dart';
 
-/// Сервис для управления платежами
 class PaymentService {
-  final FirebaseFirestore _db = FirebaseFirestore.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final RussianBankService _bankService = RussianBankService();
+  final TaxCalculationService _taxService = TaxCalculationService();
+  final Uuid _uuid = const Uuid();
 
-  /// Создать платеж
-  Future<Payment> createPayment({
+  /// Create a new payment
+  Future<String> createPayment({
     required String bookingId,
     required String customerId,
     required String specialistId,
-    required PaymentType type,
     required double amount,
-    required OrganizationType organizationType,
+    required PaymentType type,
+    required PaymentMethod method,
+    required TaxStatus taxStatus,
     String? description,
-    String? paymentMethod,
     Map<String, dynamic>? metadata,
-    double prepaymentAmount = 0.0,
-    double taxAmount = 0.0,
-    double taxRate = 0.0,
-    TaxType? taxType,
   }) async {
     try {
+      final paymentId = _uuid.v4();
+      final now = DateTime.now();
+
+      // Calculate tax
+      final taxCalculation = await _taxService.calculateTax(
+        paymentId: paymentId,
+        grossAmount: amount,
+        taxStatus: taxStatus,
+      );
+
       final payment = Payment(
-        id: _generatePaymentId(),
+        id: paymentId,
         bookingId: bookingId,
-        userId: customerId,
         customerId: customerId,
         specialistId: specialistId,
-        type: type,
-        status: PaymentStatus.pending,
         amount: amount,
-        currency: 'RUB',
-        createdAt: DateTime.now(),
-        description: description,
-        paymentMethod: paymentMethod,
-        metadata: metadata,
-        organizationType: organizationType,
-        prepaymentAmount: prepaymentAmount,
-        taxAmount: taxAmount,
-        taxRate: taxRate,
-        taxType: taxType,
+        taxAmount: taxCalculation.taxAmount,
+        netAmount: taxCalculation.netAmount,
+        type: type,
+        method: method,
+        taxStatus: taxStatus,
+        metadata: {
+          'description': description ?? 'Оплата за услуги',
+          'taxCalculationId': taxCalculation.id,
+          ...metadata ?? {},
+        },
+        createdAt: now,
+        updatedAt: now,
       );
 
-      await _db.collection('payments').doc(payment.id).set(payment.toMap());
-      return payment;
+      // Save payment to Firestore
+      await _firestore.collection('payments').doc(paymentId).set(payment.toMap());
+
+      // Save tax calculation
+      await _firestore.collection('taxCalculations').doc(taxCalculation.id).set(taxCalculation.toMap());
+
+      debugPrint('Payment created: $paymentId');
+      return paymentId;
     } catch (e) {
-      print('Ошибка создания платежа: $e');
-      throw Exception('Не удалось создать платеж: $e');
+      debugPrint('Error creating payment: $e');
+      throw Exception('Ошибка создания платежа: $e');
     }
   }
 
-  /// Получить платеж по ID
-  Future<Payment?> getPayment(String paymentId) async {
-    try {
-      final doc = await _db.collection('payments').doc(paymentId).get();
-      if (doc.exists) {
-        return Payment.fromMap(doc.data()!);
-      }
-      return null;
-    } catch (e) {
-      print('Ошибка получения платежа: $e');
-      return null;
-    }
-  }
-
-  /// Получить платежи по заявке
-  Future<List<Payment>> getPaymentsByBooking(String bookingId) async {
-    try {
-      final querySnapshot = await _db
-          .collection('payments')
-          .where('bookingId', isEqualTo: bookingId)
-          .orderBy('createdAt', descending: false)
-          .get();
-
-      return querySnapshot.docs
-          .map((doc) => Payment.fromMap(doc.data()))
-          .toList();
-    } catch (e) {
-      print('Ошибка получения платежей по заявке: $e');
-      return [];
-    }
-  }
-
-  /// Поток платежей по заявке
-  Stream<List<Payment>> getPaymentsByBookingStream(String bookingId) => _db
-      .collection('payments')
-      .where('bookingId', isEqualTo: bookingId)
-      .orderBy('createdAt', descending: false)
-      .snapshots()
-      .map(
-        (snapshot) =>
-            snapshot.docs.map((doc) => Payment.fromMap(doc.data())).toList(),
-      );
-
-  /// Получить платежи по клиенту
-  Stream<List<Payment>> getPaymentsByCustomerStream(String customerId) => _db
-      .collection('payments')
-      .where('customerId', isEqualTo: customerId)
-      .orderBy('createdAt', descending: true)
-      .snapshots()
-      .map(
-        (snapshot) =>
-            snapshot.docs.map((doc) => Payment.fromMap(doc.data())).toList(),
-      );
-
-  /// Получить платежи по специалисту
-  Stream<List<Payment>> getPaymentsBySpecialistStream(String specialistId) =>
-      _db
-          .collection('payments')
-          .where('specialistId', isEqualTo: specialistId)
-          .orderBy('createdAt', descending: true)
-          .snapshots()
-          .map(
-            (snapshot) => snapshot.docs
-                .map((doc) => Payment.fromMap(doc.data()))
-                .toList(),
-          );
-
-  /// Обновить статус платежа
-  Future<void> updatePaymentStatus(
-    String paymentId,
-    PaymentStatus status, {
-    String? transactionId,
-    String? paymentMethod,
-    Map<String, dynamic>? metadata,
+  /// Process payment with external payment system
+  Future<Payment> processPayment({
+    required String paymentId,
+    required String returnUrl,
   }) async {
     try {
-      final updateData = <String, dynamic>{
-        'status': status.name,
-      };
-
-      if (transactionId != null) {
-        updateData['transactionId'] = transactionId;
+      final paymentDoc = await _firestore.collection('payments').doc(paymentId).get();
+      if (!paymentDoc.exists) {
+        throw Exception('Payment not found');
       }
 
-      if (paymentMethod != null) {
-        updateData['paymentMethod'] = paymentMethod;
-      }
+      final payment = Payment.fromDocument(paymentDoc);
 
-      if (metadata != null) {
-        updateData['metadata'] = metadata;
-      }
+      // Create payment in external system
+      String? externalPaymentId;
+      String? paymentUrl;
+      String? qrCode;
 
-      // Добавляем временные метки в зависимости от статуса
-      final now = DateTime.now();
-      switch (status) {
-        case PaymentStatus.completed:
-          updateData['completedAt'] = Timestamp.fromDate(now);
+      switch (payment.method) {
+        case PaymentMethod.sbp:
+          final sbpResponse = await _bankService.createSbpPayment(
+            paymentId: paymentId,
+            amount: payment.amount,
+            description: payment.metadata['description'] ?? 'Оплата за услуги',
+            returnUrl: returnUrl,
+          );
+          externalPaymentId = sbpResponse.id;
+          paymentUrl = sbpResponse.confirmationUrl;
+          qrCode = sbpResponse.qrCode;
           break;
-        case PaymentStatus.failed:
-          updateData['failedAt'] = Timestamp.fromDate(now);
+
+        case PaymentMethod.yookassa:
+          final yookassaResponse = await _bankService.createYooKassaPayment(
+            paymentId: paymentId,
+            amount: payment.amount,
+            description: payment.metadata['description'] ?? 'Оплата за услуги',
+            returnUrl: returnUrl,
+            method: payment.method,
+          );
+          externalPaymentId = yookassaResponse.id;
+          paymentUrl = yookassaResponse.confirmationUrl;
+          qrCode = yookassaResponse.qrCode;
           break;
+
+        case PaymentMethod.tinkoff:
+          final tinkoffResponse = await _bankService.createTinkoffPayment(
+            paymentId: paymentId,
+            amount: payment.amount,
+            description: payment.metadata['description'] ?? 'Оплата за услуги',
+            returnUrl: returnUrl,
+          );
+          externalPaymentId = tinkoffResponse.paymentId;
+          paymentUrl = tinkoffResponse.paymentUrl;
+          qrCode = tinkoffResponse.qrCode;
+          break;
+
+        default:
+          throw Exception('Unsupported payment method: ${payment.method}');
+      }
+
+      // Update payment with external system data
+      final updatedPayment = payment.copyWith(
+        externalPaymentId: externalPaymentId,
+        paymentUrl: paymentUrl,
+        qrCode: qrCode,
+        status: PaymentStatus.processing,
+        updatedAt: DateTime.now(),
+      );
+
+      await _firestore.collection('payments').doc(paymentId).update(updatedPayment.toMap());
+
+      debugPrint('Payment processed: $paymentId');
+      return updatedPayment;
+    } catch (e) {
+      debugPrint('Error processing payment: $e');
+      throw Exception('Ошибка обработки платежа: $e');
+    }
+  }
+
+  /// Check payment status
+  Future<Payment> checkPaymentStatus(String paymentId) async {
+    try {
+      final paymentDoc = await _firestore.collection('payments').doc(paymentId).get();
+      if (!paymentDoc.exists) {
+        throw Exception('Payment not found');
+      }
+
+      final payment = Payment.fromDocument(paymentDoc);
+
+      if (payment.externalPaymentId == null) {
+        return payment;
+      }
+
+      // Check status in external system
+      PaymentStatus newStatus = payment.status;
+      bool isCompleted = false;
+
+      switch (payment.method) {
+        case PaymentMethod.sbp:
+          final sbpStatus = await _bankService.getSbpPaymentStatus(payment.externalPaymentId!);
+          isCompleted = sbpStatus.paid;
+          newStatus = isCompleted ? PaymentStatus.completed : PaymentStatus.processing;
+          break;
+
+        case PaymentMethod.yookassa:
+          final yookassaStatus = await _bankService.getYooKassaPaymentStatus(payment.externalPaymentId!);
+          isCompleted = yookassaStatus.paid;
+          newStatus = isCompleted ? PaymentStatus.completed : PaymentStatus.processing;
+          break;
+
+        case PaymentMethod.tinkoff:
+          final tinkoffStatus = await _bankService.getTinkoffPaymentStatus(payment.externalPaymentId!);
+          isCompleted = tinkoffStatus.success;
+          newStatus = isCompleted ? PaymentStatus.completed : PaymentStatus.processing;
+          break;
+
         default:
           break;
       }
 
-      await _db.collection('payments').doc(paymentId).update(updateData);
-    } catch (e) {
-      print('Ошибка обновления статуса платежа: $e');
-      throw Exception('Не удалось обновить статус платежа: $e');
-    }
-  }
-
-  /// Создать платежи для заявки с расширенной логикой
-  Future<List<Payment>> createPaymentsForBooking({
-    required Booking booking,
-    required OrganizationType organizationType,
-  }) async {
-    if (!FeatureFlags.paymentsEnabled) {
-      return _createMockPayments(booking, organizationType);
-    }
-
-    try {
-      final config = PaymentConfiguration.getDefault(organizationType);
-      final payments = <Payment>[];
-
-      // Для государственных учреждений - только постоплата
-      if (organizationType == OrganizationType.government) {
-        final fullPayment = await createPayment(
-          bookingId: booking.id,
-          customerId: booking.userId,
-          specialistId: booking.specialistId ?? '',
-          type: PaymentType.fullPayment,
-          amount: booking.totalPrice,
-          organizationType: organizationType,
-          description: 'Полная постоплата (государственное учреждение)',
-          metadata: {
-            'paymentType': 'postpayment',
-            'totalAmount': booking.totalPrice,
-            'isGovernment': true,
-          },
+      // Update payment status if changed
+      if (newStatus != payment.status) {
+        final updatedPayment = payment.copyWith(
+          status: newStatus,
+          completedAt: isCompleted ? DateTime.now() : null,
+          updatedAt: DateTime.now(),
         );
-        payments.add(fullPayment);
-        return payments;
-      }
 
-      // Для коммерческих организаций - аванс + постоплата
-      if (config.requiresAdvance) {
-        final advanceAmount = config.calculateAdvanceAmount(booking.totalPrice);
-        if (advanceAmount > 0) {
-          final advancePayment = await createPayment(
-            bookingId: booking.id,
-            customerId: booking.userId,
-            specialistId: booking.specialistId ?? '',
-            type: PaymentType.advance,
-            amount: advanceAmount,
-            organizationType: organizationType,
-            description:
-                'Авансовый платеж (${config.advancePercentage.toInt()}%)',
-            metadata: {
-              'advancePercentage': config.advancePercentage,
-              'totalAmount': booking.totalPrice,
-              'paymentType': 'prepayment',
-            },
-          );
-          payments.add(advancePayment);
+        await _firestore.collection('payments').doc(paymentId).update(updatedPayment.toMap());
+
+        // If payment is completed, trigger booking confirmation
+        if (isCompleted) {
+          await _onPaymentCompleted(paymentId);
         }
+
+        return updatedPayment;
       }
 
-      // Создаем финальный платеж
-      final advanceAmount = config.calculateAdvanceAmount(booking.totalPrice);
-      final finalAmount =
-          config.calculateFinalAmount(booking.totalPrice, advanceAmount);
-
-      if (finalAmount > 0) {
-        final finalPayment = await createPayment(
-          bookingId: booking.id,
-          customerId: booking.userId,
-          specialistId: booking.specialistId ?? '',
-          type: PaymentType.finalPayment,
-          amount: finalAmount,
-          organizationType: organizationType,
-          description: 'Финальный платеж после выполнения услуг',
-          metadata: {
-            'advanceAmount': advanceAmount,
-            'totalAmount': booking.totalPrice,
-            'paymentType': 'postpayment',
-          },
-        );
-        payments.add(finalPayment);
-      }
-
-      return payments;
+      return payment;
     } catch (e) {
-      debugPrint('Ошибка создания платежей для заявки: $e');
-      throw Exception('Не удалось создать платежи: $e');
+      debugPrint('Error checking payment status: $e');
+      throw Exception('Ошибка проверки статуса платежа: $e');
     }
   }
 
-  /// Обработать платеж (имитация)
-  Future<void> processPayment(String paymentId, String paymentMethod) async {
-    try {
-      // Обновляем статус на "обрабатывается"
-      await updatePaymentStatus(
-        paymentId,
-        PaymentStatus.processing,
-        paymentMethod: paymentMethod,
-      );
-
-      // Имитируем обработку платежа
-      await Future.delayed(const Duration(seconds: 2));
-
-      // В реальном приложении здесь была бы интеграция с платежной системой
-      // Для демонстрации случайным образом определяем успех/неудачу
-      final isSuccess = DateTime.now().millisecond % 2 == 0;
-
-      if (isSuccess) {
-        await updatePaymentStatus(
-          paymentId,
-          PaymentStatus.completed,
-          transactionId: 'TXN_${DateTime.now().millisecondsSinceEpoch}',
-        );
-      } else {
-        await updatePaymentStatus(
-          paymentId,
-          PaymentStatus.failed,
-          metadata: {'error': 'Недостаточно средств'},
-        );
-      }
-    } catch (e) {
-      print('Ошибка обработки платежа: $e');
-      await updatePaymentStatus(
-        paymentId,
-        PaymentStatus.failed,
-        metadata: {'error': e.toString()},
-      );
-    }
-  }
-
-  /// Отменить платеж
-  Future<void> cancelPayment(String paymentId) async {
-    try {
-      await updatePaymentStatus(paymentId, PaymentStatus.cancelled);
-    } catch (e) {
-      print('Ошибка отмены платежа: $e');
-      throw Exception('Не удалось отменить платеж: $e');
-    }
-  }
-
-  /// Создать возврат
-  Future<Payment> createRefund({
-    required String originalPaymentId,
+  /// Process refund
+  Future<String> processRefund({
+    required String paymentId,
     required double amount,
     required String reason,
   }) async {
     try {
-      final originalPayment = await getPayment(originalPaymentId);
-      if (originalPayment == null) {
-        throw Exception('Оригинальный платеж не найден');
+      final paymentDoc = await _firestore.collection('payments').doc(paymentId).get();
+      if (!paymentDoc.exists) {
+        throw Exception('Payment not found');
       }
 
-      final refund = await createPayment(
-        bookingId: originalPayment.bookingId,
-        customerId: originalPayment.customerId,
-        specialistId: originalPayment.specialistId,
-        type: PaymentType.refund,
+      final payment = Payment.fromDocument(paymentDoc);
+
+      if (payment.externalPaymentId == null) {
+        throw Exception('Cannot refund payment without external ID');
+      }
+
+      // Process refund in external system
+      final refundResponse = await _bankService.processRefund(
+        externalPaymentId: payment.externalPaymentId!,
         amount: amount,
-        organizationType: originalPayment.organizationType,
-        description: 'Возврат: $reason',
-        metadata: {
-          'originalPaymentId': originalPaymentId,
-          'refundReason': reason,
-        },
+        method: payment.method,
+        reason: reason,
       );
 
-      return refund;
+      // Create refund request record
+      final refundRequest = RefundRequest(
+        id: _uuid.v4(),
+        paymentId: paymentId,
+        reason: reason,
+        amount: amount,
+        status: RefundStatus.processed,
+        externalRefundId: refundResponse.id,
+        requestedAt: DateTime.now(),
+        processedAt: DateTime.now(),
+      );
+
+      await _firestore.collection('refundRequests').doc(refundRequest.id).set(refundRequest.toMap());
+
+      // Update payment status
+      final updatedPayment = payment.copyWith(
+        status: PaymentStatus.refunded,
+        refundedAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      await _firestore.collection('payments').doc(paymentId).update(updatedPayment.toMap());
+
+      debugPrint('Refund processed: ${refundRequest.id}');
+      return refundRequest.id;
     } catch (e) {
-      print('Ошибка создания возврата: $e');
-      throw Exception('Не удалось создать возврат: $e');
+      debugPrint('Error processing refund: $e');
+      throw Exception('Ошибка обработки возврата: $e');
     }
   }
 
-  /// Получить статистику платежей
-  Future<PaymentStatistics> getPaymentStatistics(
-    String userId, {
-    bool isSpecialist = false,
-  }) async {
+  /// Get payment by ID
+  Future<Payment?> getPayment(String paymentId) async {
     try {
-      final query = isSpecialist
-          ? _db.collection('payments').where('specialistId', isEqualTo: userId)
-          : _db.collection('payments').where('customerId', isEqualTo: userId);
-
-      final snapshot = await query.get();
-      final payments = snapshot.docs.map(Payment.fromDocument).toList();
-
-      double totalAmount = 0;
-      double completedAmount = 0;
-      double pendingAmount = 0;
-      var completedCount = 0;
-      var pendingCount = 0;
-      var failedCount = 0;
-
-      for (final payment in payments) {
-        totalAmount += payment.amount;
-
-        switch (payment.status) {
-          case PaymentStatus.completed:
-            completedAmount += payment.amount;
-            completedCount++;
-            break;
-          case PaymentStatus.pending:
-          case PaymentStatus.processing:
-            pendingAmount += payment.amount;
-            pendingCount++;
-            break;
-          case PaymentStatus.failed:
-            failedCount++;
-            break;
-          default:
-            break;
-        }
-      }
-
-      return PaymentStatistics(
-        totalAmount: totalAmount,
-        completedAmount: completedAmount,
-        pendingAmount: pendingAmount,
-        completedCount: completedCount,
-        pendingCount: pendingCount,
-        failedCount: failedCount,
-        totalCount: payments.length,
-      );
+      final doc = await _firestore.collection('payments').doc(paymentId).get();
+      if (!doc.exists) return null;
+      return Payment.fromDocument(doc);
     } catch (e) {
-      print('Ошибка получения статистики платежей: $e');
-      return PaymentStatistics.empty();
+      debugPrint('Error getting payment: $e');
+      return null;
     }
   }
 
-  /// Получить платежную схему для организации
-  PaymentScheme getPaymentScheme(OrganizationType organizationType) {
-    switch (organizationType) {
-      case OrganizationType.individual:
-        return const PaymentScheme(
-          advancePercentage: 30,
-          requiresAdvance: true,
-          allowsPostpayment: true,
-          maxAdvanceAmount: 50000,
-          description: 'Физическое лицо: 30% аванс, 70% постоплата',
-        );
-      case OrganizationType.commercial:
-        return const PaymentScheme(
-          advancePercentage: 30,
-          requiresAdvance: true,
-          allowsPostpayment: true,
-          maxAdvanceAmount: 200000,
-          description: 'Коммерческая организация: 30% аванс, 70% постоплата',
-        );
-      case OrganizationType.government:
-        return const PaymentScheme(
-          advancePercentage: 0,
-          requiresAdvance: false,
-          allowsPostpayment: true,
-          maxAdvanceAmount: 0,
-          description: 'Государственное учреждение: 100% постоплата',
-        );
-      case OrganizationType.nonprofit:
-        return const PaymentScheme(
-          advancePercentage: 20,
-          requiresAdvance: true,
-          allowsPostpayment: true,
-          maxAdvanceAmount: 100000,
-          description: 'Некоммерческая организация: 20% аванс, 80% постоплата',
-        );
-    }
+  /// Get payments for booking
+  Stream<List<Payment>> getBookingPayments(String bookingId) {
+    return _firestore
+        .collection('payments')
+        .where('bookingId', isEqualTo: bookingId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => Payment.fromDocument(doc)).toList();
+    });
   }
 
-  /// Рассчитать платежи по схеме
-  PaymentCalculation calculatePayments({
-    required double totalAmount,
-    required OrganizationType organizationType,
-  }) {
-    final scheme = getPaymentScheme(organizationType);
-
-    var advanceAmount = 0;
-    var finalAmount = totalAmount;
-
-    if (scheme.requiresAdvance) {
-      advanceAmount = totalAmount * scheme.advancePercentage / 100;
-      finalAmount = totalAmount - advanceAmount;
-
-      // Ограничиваем максимальный аванс
-      if (scheme.maxAdvanceAmount > 0 &&
-          advanceAmount > scheme.maxAdvanceAmount) {
-        advanceAmount = scheme.maxAdvanceAmount;
-        finalAmount = totalAmount - advanceAmount;
-      }
-    }
-
-    return PaymentCalculation(
-      totalAmount: totalAmount,
-      advanceAmount: advanceAmount,
-      finalAmount: finalAmount,
-      advancePercentage: scheme.advancePercentage,
-      scheme: scheme,
-    );
+  /// Get payments for customer
+  Stream<List<Payment>> getCustomerPayments(String customerId) {
+    return _firestore
+        .collection('payments')
+        .where('customerId', isEqualTo: customerId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => Payment.fromDocument(doc)).toList();
+    });
   }
 
-  /// Проверить возможность постоплаты
-  bool canUsePostpayment(OrganizationType organizationType, double amount) {
-    final scheme = getPaymentScheme(organizationType);
-    return scheme.allowsPostpayment;
+  /// Get payments for specialist
+  Stream<List<Payment>> getSpecialistPayments(String specialistId) {
+    return _firestore
+        .collection('payments')
+        .where('specialistId', isEqualTo: specialistId)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => Payment.fromDocument(doc)).toList();
+    });
   }
 
-  /// Получить рекомендуемую схему оплаты
-  String getRecommendedPaymentScheme(OrganizationType organizationType) {
-    final scheme = getPaymentScheme(organizationType);
-    return scheme.description;
+  /// Get available payment methods
+  List<PaymentMethodInfo> getAvailablePaymentMethods() {
+    return _bankService.getAvailablePaymentMethods();
   }
 
-  /// Создать mock платежи для демонстрации
-  List<Payment> _createMockPayments(
-    Booking booking,
-    OrganizationType organizationType,
-  ) {
-    final calculation = calculatePayments(
-      totalAmount: booking.totalPrice,
-      organizationType: organizationType,
-    );
-
-    final payments = <Payment>[];
-
-    if (calculation.advanceAmount > 0) {
-      payments.add(
-        Payment(
-          id: 'mock_advance_${DateTime.now().millisecondsSinceEpoch}',
-          bookingId: booking.id,
-          customerId: booking.userId,
-          specialistId: booking.specialistId ?? '',
-          type: PaymentType.advance,
-          status: PaymentStatus.pending,
-          amount: calculation.advanceAmount,
-          currency: 'RUB',
-          createdAt: DateTime.now(),
-          description:
-              'Авансовый платеж (${calculation.advancePercentage.toInt()}%)',
-          organizationType: organizationType,
-          metadata: {
-            'isMock': true,
-            'advancePercentage': calculation.advancePercentage,
-            'totalAmount': calculation.totalAmount,
-          },
-          updatedAt: DateTime.now(),
-          dueDate: DateTime.now().add(const Duration(days: 7)),
-          isPrepayment: true,
-          isFinalPayment: false,
-        ),
-      );
-    }
-
-    if (calculation.finalAmount > 0) {
-      payments.add(
-        Payment(
-          id: 'mock_final_${DateTime.now().millisecondsSinceEpoch}',
-          bookingId: booking.id,
-          customerId: booking.userId,
-          specialistId: booking.specialistId ?? '',
-          type: PaymentType.finalPayment,
-          status: PaymentStatus.pending,
-          amount: calculation.finalAmount,
-          currency: 'RUB',
-          createdAt: DateTime.now(),
-          description: 'Финальный платеж после выполнения услуг',
-          organizationType: organizationType,
-          metadata: {
-            'isMock': true,
-            'advanceAmount': calculation.advanceAmount,
-            'totalAmount': calculation.totalAmount,
-          },
-          updatedAt: DateTime.now(),
-          dueDate: DateTime.now().add(const Duration(days: 30)),
-          isPrepayment: false,
-          isFinalPayment: true,
-        ),
-      );
-    }
-
-    return payments;
-  }
-
-  /// Рассчитать налоги для платежа
-  Future<Map<String, double>> calculateTaxes({
-    required double amount,
-    required OrganizationType organizationType,
-    required TaxType taxType,
-    bool isFromLegalEntity = false,
-  }) async {
-    final taxAmount = TaxCalculator.calculateTax(
-      amount,
-      taxType,
-      isFromLegalEntity: isFromLegalEntity,
-    );
-    final taxRate = TaxCalculator.getTaxRate(
-      taxType,
-      isFromLegalEntity: isFromLegalEntity,
-    );
-
-    return {
-      'taxAmount': taxAmount,
-      'taxRate': taxRate,
-      'netAmount': amount - taxAmount,
-    };
-  }
-
-  /// Создать платеж с автоматическим расчётом налогов
-  Future<Payment> createPaymentWithTaxes({
+  /// Create prepayment (30% of total amount)
+  Future<String> createPrepayment({
     required String bookingId,
     required String customerId,
     required String specialistId,
-    required PaymentType type,
-    required double amount,
-    required OrganizationType organizationType,
-    required TaxType taxType,
-    String? description,
-    String? paymentMethod,
-    Map<String, dynamic>? metadata,
-    bool isFromLegalEntity = false,
+    required double totalAmount,
+    required PaymentMethod method,
+    required TaxStatus taxStatus,
   }) async {
-    // Рассчитываем налоги
-    final taxCalculation = await calculateTaxes(
-      amount: amount,
-      organizationType: organizationType,
-      taxType: taxType,
-      isFromLegalEntity: isFromLegalEntity,
-    );
+    try {
+      final prepaymentAmount = totalAmount * 0.3; // 30% prepayment
 
-    // Рассчитываем аванс
-    final config = PaymentConfiguration.getDefault(organizationType);
-    final prepaymentAmount = config.calculateAdvanceAmount(amount);
-
-    return createPayment(
-      bookingId: bookingId,
-      customerId: customerId,
-      specialistId: specialistId,
-      type: type,
-      amount: amount,
-      organizationType: organizationType,
-      description: description,
-      paymentMethod: paymentMethod,
-      metadata: metadata,
-      prepaymentAmount: prepaymentAmount,
-      taxAmount: taxCalculation['taxAmount']!,
-      taxRate: taxCalculation['taxRate']!,
-      taxType: taxType,
-    );
-  }
-
-  /// Генерировать ID платежа
-  String _generatePaymentId() {
-    final timestamp = DateTime.now().millisecondsSinceEpoch;
-    final random = (timestamp % 10000).toString().padLeft(4, '0');
-    return 'PAY_${timestamp}_$random';
-  }
-}
-
-/// Статистика платежей
-class PaymentStatistics {
-  const PaymentStatistics({
-    required this.totalAmount,
-    required this.completedAmount,
-    required this.pendingAmount,
-    required this.completedCount,
-    required this.pendingCount,
-    required this.failedCount,
-    required this.totalCount,
-  });
-
-  factory PaymentStatistics.empty() => const PaymentStatistics(
-        totalAmount: 0,
-        completedAmount: 0,
-        pendingAmount: 0,
-        completedCount: 0,
-        pendingCount: 0,
-        failedCount: 0,
-        totalCount: 0,
+      return await createPayment(
+        bookingId: bookingId,
+        customerId: customerId,
+        specialistId: specialistId,
+        amount: prepaymentAmount,
+        type: PaymentType.prepayment,
+        method: method,
+        taxStatus: taxStatus,
+        description: 'Предоплата 30% за услуги',
       );
-  final double totalAmount;
-  final double completedAmount;
-  final double pendingAmount;
-  final int completedCount;
-  final int pendingCount;
-  final int failedCount;
-  final int totalCount;
-
-  /// Процент завершенных платежей
-  double get completionRate {
-    if (totalCount == 0) return 0;
-    return (completedCount / totalCount) * 100;
-  }
-
-  /// Процент завершенной суммы
-  double get amountCompletionRate {
-    if (totalAmount == 0) return 0;
-    return (completedAmount / totalAmount) * 100;
-  }
-}
-
-/// Платежная схема
-class PaymentScheme {
-  const PaymentScheme({
-    required this.advancePercentage,
-    required this.requiresAdvance,
-    required this.allowsPostpayment,
-    required this.maxAdvanceAmount,
-    required this.description,
-  });
-  final double advancePercentage;
-  final bool requiresAdvance;
-  final bool allowsPostpayment;
-  final double maxAdvanceAmount;
-  final String description;
-}
-
-/// Расчет платежей
-class PaymentCalculation {
-  const PaymentCalculation({
-    required this.totalAmount,
-    required this.advanceAmount,
-    required this.finalAmount,
-    required this.advancePercentage,
-    required this.scheme,
-  });
-  final double totalAmount;
-  final double advanceAmount;
-  final double finalAmount;
-  final double advancePercentage;
-  final PaymentScheme scheme;
-
-  /// Получить описание расчета
-  String get description {
-    if (advanceAmount == 0) {
-      return 'Полная постоплата: ${totalAmount.toStringAsFixed(0)} ${'RUB'}';
-    } else {
-      return 'Аванс: ${advanceAmount.toStringAsFixed(0)} ${'RUB'} (${advancePercentage.toInt()}%), '
-          'Остаток: ${finalAmount.toStringAsFixed(0)} ${'RUB'}';
+    } catch (e) {
+      debugPrint('Error creating prepayment: $e');
+      throw Exception('Ошибка создания предоплаты: $e');
     }
   }
 
-  /// Проверить, является ли схема постоплатой
-  bool get isPostpayment => advanceAmount == 0;
+  /// Create postpayment (remaining 70% of total amount)
+  Future<String> createPostpayment({
+    required String bookingId,
+    required String customerId,
+    required String specialistId,
+    required double totalAmount,
+    required PaymentMethod method,
+    required TaxStatus taxStatus,
+  }) async {
+    try {
+      final postpaymentAmount = totalAmount * 0.7; // 70% postpayment
 
-  /// Проверить, является ли схема авансовой
-  bool get isPrepayment => advanceAmount > 0;
+      return await createPayment(
+        bookingId: bookingId,
+        customerId: customerId,
+        specialistId: specialistId,
+        amount: postpaymentAmount,
+        type: PaymentType.postpayment,
+        method: method,
+        taxStatus: taxStatus,
+        description: 'Остаток 70% за услуги',
+      );
+    } catch (e) {
+      debugPrint('Error creating postpayment: $e');
+      throw Exception('Ошибка создания постоплаты: $e');
+    }
+  }
+
+  /// Create full payment (100% of total amount)
+  Future<String> createFullPayment({
+    required String bookingId,
+    required String customerId,
+    required String specialistId,
+    required double totalAmount,
+    required PaymentMethod method,
+    required TaxStatus taxStatus,
+  }) async {
+    try {
+      return await createPayment(
+        bookingId: bookingId,
+        customerId: customerId,
+        specialistId: specialistId,
+        amount: totalAmount,
+        type: PaymentType.full,
+        method: method,
+        taxStatus: taxStatus,
+        description: 'Полная оплата за услуги',
+      );
+    } catch (e) {
+      debugPrint('Error creating full payment: $e');
+      throw Exception('Ошибка создания полной оплаты: $e');
+    }
+  }
+
+  /// Handle payment completion
+  Future<void> _onPaymentCompleted(String paymentId) async {
+    try {
+      final payment = await getPayment(paymentId);
+      if (payment == null) return;
+
+      // Update booking status based on payment type
+      if (payment.type == PaymentType.prepayment) {
+        // Mark booking as confirmed
+        await _firestore.collection('bookings').doc(payment.bookingId).update({
+          'status': 'confirmed',
+          'prepaymentCompleted': true,
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+      } else if (payment.type == PaymentType.postpayment || payment.type == PaymentType.full) {
+        // Mark booking as completed
+        await _firestore.collection('bookings').doc(payment.bookingId).update({
+          'status': 'completed',
+          'paymentCompleted': true,
+          'updatedAt': FieldValue.serverTimestamp(),
+        });
+      }
+
+      debugPrint('Payment completion handled: $paymentId');
+    } catch (e) {
+      debugPrint('Error handling payment completion: $e');
+    }
+  }
+
+  /// Get payment statistics
+  Future<PaymentStatistics> getPaymentStatistics({
+    String? customerId,
+    String? specialistId,
+    DateTime? startDate,
+    DateTime? endDate,
+  }) async {
+    try {
+      Query query = _firestore.collection('payments');
+
+      if (customerId != null) {
+        query = query.where('customerId', isEqualTo: customerId);
+      }
+      if (specialistId != null) {
+        query = query.where('specialistId', isEqualTo: specialistId);
+      }
+      if (startDate != null) {
+        query = query.where('createdAt', isGreaterThanOrEqualTo: Timestamp.fromDate(startDate));
+      }
+      if (endDate != null) {
+        query = query.where('createdAt', isLessThanOrEqualTo: Timestamp.fromDate(endDate));
+      }
+
+      final snapshot = await query.get();
+      final payments = snapshot.docs.map((doc) => Payment.fromDocument(doc)).toList();
+
+      final totalAmount = payments.fold(0.0, (sum, payment) => sum + payment.amount);
+      final totalTaxAmount = payments.fold(0.0, (sum, payment) => sum + payment.taxAmount);
+      final totalNetAmount = payments.fold(0.0, (sum, payment) => sum + payment.netAmount);
+      final completedPayments = payments.where((p) => p.isCompleted).length;
+      final failedPayments = payments.where((p) => p.isFailed).length;
+
+      return PaymentStatistics(
+        totalPayments: payments.length,
+        completedPayments: completedPayments,
+        failedPayments: failedPayments,
+        totalAmount: totalAmount,
+        totalTaxAmount: totalTaxAmount,
+        totalNetAmount: totalNetAmount,
+        averageAmount: payments.isNotEmpty ? totalAmount / payments.length : 0.0,
+      );
+    } catch (e) {
+      debugPrint('Error getting payment statistics: $e');
+      throw Exception('Ошибка получения статистики платежей: $e');
+    }
+  }
+}
+
+class PaymentStatistics {
+  final int totalPayments;
+  final int completedPayments;
+  final int failedPayments;
+  final double totalAmount;
+  final double totalTaxAmount;
+  final double totalNetAmount;
+  final double averageAmount;
+
+  PaymentStatistics({
+    required this.totalPayments,
+    required this.completedPayments,
+    required this.failedPayments,
+    required this.totalAmount,
+    required this.totalTaxAmount,
+    required this.totalNetAmount,
+    required this.averageAmount,
+  });
+
+  Map<String, dynamic> toMap() {
+    return {
+      'totalPayments': totalPayments,
+      'completedPayments': completedPayments,
+      'failedPayments': failedPayments,
+      'totalAmount': totalAmount,
+      'totalTaxAmount': totalTaxAmount,
+      'totalNetAmount': totalNetAmount,
+      'averageAmount': averageAmount,
+    };
+  }
+
+  factory PaymentStatistics.fromMap(Map<String, dynamic> map) {
+    return PaymentStatistics(
+      totalPayments: map['totalPayments'] as int,
+      completedPayments: map['completedPayments'] as int,
+      failedPayments: map['failedPayments'] as int,
+      totalAmount: (map['totalAmount'] as num).toDouble(),
+      totalTaxAmount: (map['totalTaxAmount'] as num).toDouble(),
+      totalNetAmount: (map['totalNetAmount'] as num).toDouble(),
+      averageAmount: (map['averageAmount'] as num).toDouble(),
+    );
+  }
 }

@@ -2,126 +2,116 @@ import 'package:flutter/material.dart';
 
 import '../models/event_idea.dart';
 
-/// Карточка идеи мероприятия
+/// Карточка идеи для отображения в сетке
 class IdeaCard extends StatelessWidget {
   const IdeaCard({
     super.key,
     required this.idea,
     required this.onTap,
-    required this.onSave,
     required this.onLike,
-    this.isSaved = false,
+    required this.onFavorite,
   });
 
   final EventIdea idea;
   final VoidCallback onTap;
-  final VoidCallback onSave;
   final VoidCallback onLike;
-  final bool isSaved;
+  final VoidCallback onFavorite;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    
     return Card(
-      elevation: 4,
+      clipBehavior: Clip.antiAlias,
+      elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
       ),
       child: InkWell(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Изображение
             Expanded(
               flex: 3,
-              child: ClipRRect(
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
-                child: Stack(
-                  children: [
-                    Image.network(
-                      idea.imageUrl,
-                      width: double.infinity,
-                      height: double.infinity,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        color: Colors.grey[300],
-                        child: const Icon(Icons.image, size: 48, color: Colors.grey),
-                      ),
-                    ),
-                    // Бейдж категории
-                    Positioned(
-                      top: 8,
-                      left: 8,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: _getCategoryColor(idea.category).withOpacity(0.9),
-                          borderRadius: BorderRadius.circular(12),
+              child: Stack(
+                children: [
+                  Image.network(
+                    idea.imageUrl,
+                    width: double.infinity,
+                    height: double.infinity,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        color: theme.colorScheme.surfaceVariant,
+                        child: Icon(
+                          Icons.image_not_supported,
+                          size: 32,
+                          color: theme.colorScheme.onSurfaceVariant,
                         ),
-                        child: Text(
-                          idea.categoryDisplayName,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                      );
+                    },
+                  ),
+                  
+                  // Категория
+                  Positioned(
+                    top: 8,
+                    left: 8,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 4,
                       ),
-                    ),
-                    // Кнопки действий
-                    Positioned(
-                      top: 8,
-                      right: 8,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.9),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          _buildActionButton(
-                            icon: isSaved ? Icons.bookmark : Icons.bookmark_outline,
-                            onPressed: onSave,
-                            color: isSaved ? Colors.orange : Colors.white,
+                          Text(
+                            idea.category.emoji,
+                            style: const TextStyle(fontSize: 12),
                           ),
                           const SizedBox(width: 4),
-                          _buildActionButton(
-                            icon: Icons.favorite_outline,
-                            onPressed: onLike,
-                            color: Colors.white,
+                          Text(
+                            idea.category.displayName,
+                            style: TextStyle(
+                              color: theme.colorScheme.onPrimary,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    // Бейдж избранного
-                    if (idea.isFeatured)
-                      Positioned(
-                        bottom: 8,
-                        left: 8,
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: Colors.amber.withOpacity(0.9),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: const Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.star, size: 12, color: Colors.white),
-                              SizedBox(width: 4),
-                              Text(
-                                'Рекомендуем',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                              ),
-                            ],
-                          ),
+                  ),
+                  
+                  // Кнопки действий
+                  Positioned(
+                    top: 8,
+                    right: 8,
+                    child: Column(
+                      children: [
+                        _buildActionButton(
+                          icon: Icons.favorite_border,
+                          onPressed: onFavorite,
+                          color: theme.colorScheme.error,
                         ),
-                      ),
-                  ],
-                ),
+                        const SizedBox(height: 4),
+                        _buildActionButton(
+                          icon: Icons.thumb_up_outlined,
+                          onPressed: onLike,
+                          color: theme.colorScheme.primary,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
             ),
+            
             // Контент
             Expanded(
               flex: 2,
@@ -133,75 +123,76 @@ class IdeaCard extends StatelessWidget {
                     // Заголовок
                     Text(
                       idea.title,
-                      style: const TextStyle(
-                        fontSize: 14,
+                      style: theme.textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.w600,
                       ),
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                     ),
+                    
                     const SizedBox(height: 4),
+                    
                     // Описание
                     Expanded(
                       child: Text(
                         idea.description,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[600],
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
                         ),
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                       ),
                     ),
+                    
                     const SizedBox(height: 8),
-                    // Метаданные
+                    
+                    // Статистика
                     Row(
                       children: [
-                        // Тип мероприятия
                         Icon(
-                          _getTypeIcon(idea.type),
+                          Icons.thumb_up,
                           size: 14,
-                          color: Colors.grey[600],
+                          color: theme.colorScheme.onSurfaceVariant,
                         ),
                         const SizedBox(width: 4),
-                        Expanded(
-                          child: Text(
-                            idea.typeDisplayName,
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: Colors.grey[600],
-                            ),
-                            overflow: TextOverflow.ellipsis,
+                        Text(
+                          idea.likes.toString(),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
                           ),
                         ),
-                        // Стоимость
-                        if (idea.estimatedCost != null)
+                        const SizedBox(width: 12),
+                        Icon(
+                          Icons.comment,
+                          size: 14,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 4),
+                        Text(
+                          idea.commentsCount.toString(),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                        const Spacer(),
+                        if (idea.budget != null)
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
                             decoration: BoxDecoration(
-                              color: Colors.green.withOpacity(0.1),
+                              color: theme.colorScheme.primaryContainer,
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
-                              '${idea.estimatedCost!.toInt()} ₽',
-                              style: const TextStyle(
-                                fontSize: 10,
-                                color: Colors.green,
+                              '${idea.budget!.toStringAsFixed(0)} ₽',
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onPrimaryContainer,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
-                      ],
-                    ),
-                    const SizedBox(height: 4),
-                    // Статистика
-                    Row(
-                      children: [
-                        _buildStatIcon(Icons.favorite_outline, idea.likesCount),
-                        const SizedBox(width: 12),
-                        _buildStatIcon(Icons.bookmark_outline, idea.savesCount),
-                        const SizedBox(width: 12),
-                        _buildStatIcon(Icons.visibility_outlined, idea.viewsCount),
                       ],
                     ),
                   ],
@@ -220,84 +211,30 @@ class IdeaCard extends StatelessWidget {
     required Color color,
   }) {
     return Container(
+      width: 32,
+      height: 32,
       decoration: BoxDecoration(
-        color: Colors.black.withOpacity(0.3),
-        borderRadius: BorderRadius.circular(16),
+        color: Colors.white.withValues(alpha: 0.9),
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: IconButton(
         onPressed: onPressed,
-        icon: Icon(icon, size: 16, color: color),
-        padding: const EdgeInsets.all(6),
-        constraints: const BoxConstraints(
-          minWidth: 32,
-          minHeight: 32,
+        icon: Icon(
+          icon,
+          size: 16,
+          color: color,
         ),
+        padding: EdgeInsets.zero,
+        constraints: const BoxConstraints(),
       ),
     );
   }
-
-  Widget _buildStatIcon(IconData icon, int count) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(icon, size: 12, color: Colors.grey[600]),
-        const SizedBox(width: 2),
-        Text(
-          _formatCount(count),
-          style: TextStyle(
-            fontSize: 10,
-            color: Colors.grey[600],
-          ),
-        ),
-      ],
-    );
-  }
-
-  String _formatCount(int count) {
-    if (count < 1000) return count.toString();
-    if (count < 1000000) return '${(count / 1000).toStringAsFixed(1)}K';
-    return '${(count / 1000000).toStringAsFixed(1)}M';
-  }
-
-  Color _getCategoryColor(EventIdeaCategory category) {
-    switch (category) {
-      case EventIdeaCategory.decoration:
-        return Colors.pink;
-      case EventIdeaCategory.entertainment:
-        return Colors.purple;
-      case EventIdeaCategory.catering:
-        return Colors.orange;
-      case EventIdeaCategory.photography:
-        return Colors.blue;
-      case EventIdeaCategory.music:
-        return Colors.green;
-      case EventIdeaCategory.venue:
-        return Colors.brown;
-      case EventIdeaCategory.planning:
-        return Colors.teal;
-      case EventIdeaCategory.other:
-        return Colors.grey;
-    }
-  }
-
-  IconData _getTypeIcon(EventIdeaType type) {
-    switch (type) {
-      case EventIdeaType.wedding:
-        return Icons.favorite;
-      case EventIdeaType.birthday:
-        return Icons.cake;
-      case EventIdeaType.corporate:
-        return Icons.business;
-      case EventIdeaType.anniversary:
-        return Icons.celebration;
-      case EventIdeaType.graduation:
-        return Icons.school;
-      case EventIdeaType.holiday:
-        return Icons.celebration;
-      case EventIdeaType.private:
-        return Icons.home;
-      case EventIdeaType.other:
-        return Icons.star;
-    }
-  }
-}
+} 
+ 
