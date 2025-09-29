@@ -1,7 +1,10 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/auth/utils/auth_diagnostics.dart';
+import '../features/auth/utils/auth_error_mapper.dart';
 import '../models/user.dart';
 import '../providers/auth_providers.dart';
 
@@ -23,6 +26,10 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
   bool _isLoading = false;
   String? _errorMessage;
   UserRole _selectedRole = UserRole.customer;
+
+  // Dev-байпас флаг
+  static const bool _allowDevLogin =
+      bool.fromEnvironment('ALLOW_DEV_LOGIN', defaultValue: false);
 
   @override
   void dispose() {
@@ -48,6 +55,9 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
                 // Логотип и заголовок
                 _buildHeader(context),
 
+                // Диагностический баннер (только в dev-режиме)
+                const AuthDiagnosticsBanner(),
+
                 const SizedBox(height: 48),
 
                 // Форма входа/регистрации
@@ -63,6 +73,12 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
                 // Кнопка входа как гость
                 if (!_isSignUpMode) ...[
                   _buildGuestButton(context),
+                  const SizedBox(height: 16),
+                ],
+
+                // Dev-байпас кнопка (только в dev-режиме)
+                if (kDebugMode && _allowDevLogin && !_isSignUpMode) ...[
+                  _buildDevBypassButton(context),
                   const SizedBox(height: 16),
                 ],
 
@@ -535,7 +551,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       }
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = AuthErrorMapper.mapGeneralError(e);
       });
     } finally {
       if (mounted) {
@@ -568,7 +584,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       }
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = AuthErrorMapper.mapGeneralError(e);
       });
     } finally {
       if (mounted) {
@@ -601,7 +617,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       }
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = AuthErrorMapper.mapGeneralError(e);
       });
     } finally {
       if (mounted) {
@@ -634,7 +650,7 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
       }
     } catch (e) {
       setState(() {
-        _errorMessage = e.toString();
+        _errorMessage = AuthErrorMapper.mapGeneralError(e);
       });
     } finally {
       if (mounted) {
@@ -702,5 +718,60 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
         ],
       ),
     );
+  }
+
+  /// Кнопка dev-байпаса
+  Widget _buildDevBypassButton(BuildContext context) => Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.orange),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: OutlinedButton.icon(
+          onPressed: _isLoading ? null : _handleDevBypass,
+          icon: const Icon(Icons.developer_mode, color: Colors.orange),
+          label: const Text(
+            'Dev: войти без учётки (локально)',
+            style: TextStyle(color: Colors.orange),
+          ),
+          style: OutlinedButton.styleFrom(
+            side: const BorderSide(color: Colors.orange),
+            padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+          ),
+        ),
+      );
+
+  /// Обработка dev-байпаса
+  Future<void> _handleDevBypass() async {
+    setState(() {
+      _isLoading = true;
+      _errorMessage = null;
+    });
+
+    try {
+      final authService = ref.read(authServiceProvider);
+
+      // Создаем временного пользователя анонимно
+      final user = await authService.signInAsGuest();
+
+      if (user != null && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('DEV-режим: вход выполнен успешно'),
+            backgroundColor: Colors.orange,
+          ),
+        );
+        context.go('/home');
+      }
+    } catch (e) {
+      setState(() {
+        _errorMessage = AuthErrorMapper.mapGeneralError(e);
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 }
