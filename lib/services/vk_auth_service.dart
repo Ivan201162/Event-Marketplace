@@ -13,11 +13,20 @@ class VKAuthService {
   static const String _vkScope = 'friends,photos,wall,email';
   static const String _vkVersion = '5.199';
 
+  /// Проверить, настроен ли VK
+  bool get isVkConfigured {
+    return _vkClientId != 'YOUR_VK_APP_ID' && _vkClientId.isNotEmpty;
+  }
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   /// Начать процесс входа через VK для web
   Future<void> startVkLoginWeb() async {
+    if (!isVkConfigured) {
+      throw Exception('VK не настроен. Проверьте конфигурацию VK_APP_ID');
+    }
+
     try {
       AppLogger.logI('Начало VK OAuth для web...', 'vk_auth_service');
 

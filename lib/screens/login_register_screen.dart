@@ -7,6 +7,7 @@ import '../features/auth/utils/auth_diagnostics.dart';
 import '../features/auth/utils/auth_error_mapper.dart';
 import '../models/user.dart';
 import '../providers/auth_providers.dart';
+import '../services/vk_auth_service.dart';
 
 class LoginRegisterScreen extends ConsumerStatefulWidget {
   const LoginRegisterScreen({super.key});
@@ -30,6 +31,16 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
   // Dev-байпас флаг
   static const bool _allowDevLogin =
       bool.fromEnvironment('ALLOW_DEV_LOGIN', defaultValue: false);
+
+  /// Проверка конфигурации VK
+  bool get _isVkConfigured {
+    try {
+      final vkAuthService = VKAuthService();
+      return vkAuthService.isVkConfigured;
+    } catch (e) {
+      return false;
+    }
+  }
 
   @override
   void dispose() {
@@ -452,38 +463,40 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
 
           const SizedBox(height: 12),
 
-          // Кнопка ВКонтакте
-          SizedBox(
-            width: double.infinity,
-            child: OutlinedButton.icon(
-              onPressed: _isLoading ? null : _handleVKSignIn,
-              icon: Container(
-                width: 20,
-                height: 20,
-                decoration: const BoxDecoration(
-                  color: Color(0xFF0077FF),
-                  shape: BoxShape.circle,
-                ),
-                child: const Center(
-                  child: Text(
-                    'VK',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 10,
-                      fontWeight: FontWeight.bold,
+          // Кнопка ВКонтакте (только если VK настроен)
+          if (_isVkConfigured) ...[
+            SizedBox(
+              width: double.infinity,
+              child: OutlinedButton.icon(
+                onPressed: _isLoading ? null : _handleVKSignIn,
+                icon: Container(
+                  width: 20,
+                  height: 20,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFF0077FF),
+                    shape: BoxShape.circle,
+                  ),
+                  child: const Center(
+                    child: Text(
+                      'VK',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 10,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
                   ),
                 ),
-              ),
-              label: const Text('Войти через ВКонтакте'),
-              style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(vertical: 12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
+                label: const Text('Войти через ВКонтакте'),
+                style: OutlinedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
               ),
             ),
-          ),
+          ],
         ],
       );
 
@@ -630,6 +643,18 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
 
   /// Обработка входа через ВКонтакте
   Future<void> _handleVKSignIn() async {
+    // Проверяем конфигурацию VK
+    if (!_isVkConfigured) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content:
+              Text('VK временно недоступен. Проверьте конфигурацию VK_APP_ID.'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
     setState(() {
       _isLoading = true;
       _errorMessage = null;

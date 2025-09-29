@@ -531,6 +531,11 @@ class AuthService {
     try {
       AppLogger.logI('Начало входа через VK...', 'auth_service');
 
+      // Проверяем, настроен ли VK
+      if (!_vkAuthService.isVkConfigured) {
+        throw Exception('VK не настроен. Проверьте конфигурацию VK_APP_ID');
+      }
+
       // Для тестирования используем заглушку
       // В production здесь должен быть реальный VK OAuth
       return await _vkAuthService.createVkUserForTesting();
