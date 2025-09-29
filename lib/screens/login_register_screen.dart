@@ -138,6 +138,26 @@ class _LoginRegisterScreenState extends ConsumerState<LoginRegisterScreen> {
                 ),
             textAlign: TextAlign.center,
           ),
+
+          // DEV-режим подпись (только если dev-байпас активен)
+          if (kDebugMode && _allowDevLogin) ...[
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+              decoration: BoxDecoration(
+                color: Colors.orange.withValues(alpha: 0.1),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
+              ),
+              child: Text(
+                'DEV-режим, только локально',
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: Colors.orange.shade700,
+                      fontWeight: FontWeight.w500,
+                    ),
+              ),
+            ),
+          ],
         ],
       );
 
