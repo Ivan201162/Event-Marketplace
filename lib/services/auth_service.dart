@@ -382,12 +382,29 @@ class AuthService {
       UserCredential? userCredential;
       try {
         userCredential = await _auth.signInWithPopup(googleProvider);
+        AppLogger.logI('Google popup аутентификация успешна', 'auth_service');
       } catch (e) {
         AppLogger.logI(
             'Popup заблокирован, пробуем redirect...', 'auth_service');
+
+        // Проверяем тип ошибки
+        if (e.toString().contains('popup_blocked_by_browser') ||
+            e.toString().contains('popup_closed_by_user')) {
+          AppLogger.logI(
+              'Popup заблокирован браузером или закрыт пользователем',
+              'auth_service');
+        }
+
         // Если popup заблокирован, используем redirect
-        await _auth.signInWithRedirect(googleProvider);
-        return null; // Redirect не возвращает результат сразу
+        try {
+          await _auth.signInWithRedirect(googleProvider);
+          AppLogger.logI('Google redirect инициирован', 'auth_service');
+          return null; // Redirect не возвращает результат сразу
+        } catch (redirectError) {
+          AppLogger.logE(
+              'Ошибка Google redirect', 'auth_service', redirectError);
+          throw Exception('Ошибка Google аутентификации: $redirectError');
+        }
       }
 
       final firebaseUser = userCredential?.user;
@@ -446,6 +463,67 @@ class AuthService {
   /// Войти через Google Web (специальный метод для Web)
   Future<AppUser?> signInWithGoogleWeb() async {
     return await signInWithGoogle();
+  }
+
+  /// Обработать результат Google redirect аутентификации
+  Future<AppUser?> handleGoogleRedirectResult() async {
+    try {
+      AppLogger.logI('Обработка результата Google redirect...', 'auth_service');
+
+      final userCredential = await _auth.getRedirectResult();
+      final firebaseUser = userCredential?.user;
+
+      if (firebaseUser == null) {
+        AppLogger.logI(
+            'Google redirect не завершен или отменен', 'auth_service');
+        return null;
+      }
+
+      AppLogger.logI(
+          'Google redirect аутентификация успешна: ${firebaseUser.email}',
+          'auth_service');
+
+      // Проверяем, существует ли пользователь в Firestore
+      final userDoc =
+          await _firestore.collection('users').doc(firebaseUser.uid).get();
+
+      if (!userDoc.exists) {
+        // Создаем нового пользователя
+        AppLogger.logI('Создание нового Google пользователя в Firestore...',
+            'auth_service');
+        final appUser = AppUser.fromFirebaseUser(
+          firebaseUser.uid,
+          firebaseUser.email ?? '',
+          displayName: firebaseUser.displayName ?? 'Google Пользователь',
+          photoURL: firebaseUser.photoURL,
+          role: UserRole.customer,
+          socialProvider: 'google',
+          socialId: firebaseUser.uid,
+        );
+
+        await _firestore
+            .collection('users')
+            .doc(firebaseUser.uid)
+            .set(appUser.toMap());
+
+        AppLogger.logI('Google пользователь создан: ${appUser.displayName}',
+            'auth_service');
+        return appUser;
+      } else {
+        // Обновляем время последнего входа
+        AppLogger.logI(
+            'Обновление времени последнего входа...', 'auth_service');
+        await _updateLastLogin(firebaseUser.uid);
+        final appUser = AppUser.fromDocument(userDoc);
+        AppLogger.logI('Google пользователь вошел: ${appUser.displayName}',
+            'auth_service');
+        return appUser;
+      }
+    } catch (e, stackTrace) {
+      AppLogger.logE(
+          'Ошибка обработки Google redirect', 'auth_service', e, stackTrace);
+      throw Exception('Ошибка обработки Google redirect: $e');
+    }
   }
 
   /// Войти через VK

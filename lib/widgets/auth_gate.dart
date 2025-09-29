@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,6 +13,25 @@ class AuthGate extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentUser = ref.watch(currentUserProvider);
+
+    // Обработка Google redirect результата (только для веб)
+    if (kIsWeb) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        try {
+          final authService = ref.read(authServiceProvider);
+          final redirectUser = await authService.handleGoogleRedirectResult();
+          if (redirectUser != null && context.mounted) {
+            // Пользователь успешно вошел через Google redirect
+            context.go('/home');
+          }
+        } catch (e) {
+          // Ошибка обработки redirect - игнорируем, пользователь останется на экране входа
+          if (kDebugMode) {
+            print('Google redirect error: $e');
+          }
+        }
+      });
+    }
 
     return currentUser.when(
       data: (user) {
