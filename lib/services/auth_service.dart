@@ -8,6 +8,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../core/safe_log.dart';
 import '../core/logger.dart';
 import '../models/user.dart';
+import '../features/auth/utils/auth_error_mapper.dart';
 import 'demo_auth_service.dart' as demo;
 import 'storage_service.dart';
 import 'vk_auth_service.dart';
@@ -596,25 +597,8 @@ class AuthService {
 
   /// Обработка исключений Firebase Auth
   String _handleAuthException(FirebaseAuthException e) {
-    switch (e.code) {
-      case 'user-not-found':
-        return 'Пользователь с таким email не найден';
-      case 'wrong-password':
-        return 'Неверный пароль';
-      case 'email-already-in-use':
-        return 'Email уже используется';
-      case 'weak-password':
-        return 'Пароль слишком слабый';
-      case 'invalid-email':
-        return 'Неверный формат email';
-      case 'user-disabled':
-        return 'Аккаунт заблокирован';
-      case 'too-many-requests':
-        return 'Слишком много попыток. Попробуйте позже';
-      case 'operation-not-allowed':
-        return 'Операция не разрешена';
-      default:
-        return 'Ошибка аутентификации: ${e.message}';
-    }
+    AppLogger.logE(
+        'Firebase Auth Error: ${e.code} - ${e.message}', 'auth_service');
+    return AuthErrorMapper.mapFirebaseAuthException(e);
   }
 }
