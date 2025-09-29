@@ -41,12 +41,12 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyBvOkBwqBwqBwqBwqBwqBwqBwqBwqBwqBw',
-    appId: '1:123456789:web:abcdef123456789',
-    messagingSenderId: '123456789',
-    projectId: 'event-marketplace-app',
-    authDomain: 'event-marketplace-app.firebaseapp.com',
-    storageBucket: 'event-marketplace-app.appspot.com',
+    apiKey: 'AIzaSyBcNT54NuncA9Nck-5VQYdbnxwl5pdzsmA',
+    appId: '1:272201705683:web:057887a281175671f80c26',
+    messagingSenderId: '272201705683',
+    projectId: 'event-marketplace-mvp',
+    authDomain: 'event-marketplace-mvp.firebaseapp.com',
+    storageBucket: 'event-marketplace-mvp.firebasestorage.app',
     measurementId: 'G-XXXXXXXXXX',
   );
 

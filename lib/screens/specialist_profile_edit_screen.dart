@@ -237,7 +237,7 @@ class _SpecialistProfileEditScreenState
             CircleAvatar(
               radius: 60,
               backgroundColor:
-                  Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.1),
               child: const Icon(
                 Icons.person,
                 size: 60,
@@ -653,13 +653,13 @@ class _SpecialistProfileEditScreenState
               width: double.infinity,
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey.withOpacity(0.3)),
+                border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
                 'Нет файлов',
                 style: TextStyle(
-                  color: Colors.grey.withOpacity(0.7),
+                  color: Colors.grey.withValues(alpha: 0.7),
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -681,7 +681,7 @@ class _SpecialistProfileEditScreenState
                     Container(
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(8),
-                        color: Colors.grey.withOpacity(0.1),
+                        color: Colors.grey.withValues(alpha: 0.1),
                       ),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -815,7 +815,7 @@ class _SpecialistProfileEditScreenState
             shape: BoxShape.circle,
           ),
           weekendDecoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
         ),
@@ -851,7 +851,7 @@ class _SpecialistProfileEditScreenState
               return Container(
                 margin: const EdgeInsets.all(2),
                 decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.3),
+                  color: Colors.red.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(4),
                 ),
                 child: Center(
@@ -873,7 +873,7 @@ class _SpecialistProfileEditScreenState
   Widget _buildErrorMessage(String message) => Container(
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: Colors.red.withOpacity(0.1),
+          color: Colors.red.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(8),
           border: Border.all(color: Colors.red),
         ),

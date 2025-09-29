@@ -9,7 +9,7 @@ class VideoFilterWidget extends StatefulWidget {
     required this.onFiltersChanged,
   });
   final VideoFilters currentFilters;
-  final Function(VideoFilters) onFiltersChanged;
+  final void Function(VideoFilters) onFiltersChanged;
 
   @override
   State<VideoFilterWidget> createState() => _VideoFilterWidgetState();

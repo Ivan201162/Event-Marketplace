@@ -4,7 +4,7 @@ import '../models/payment_models.dart';
 
 class PaymentMethodSelector extends StatelessWidget {
   final PaymentMethod? selectedMethod;
-  final Function(PaymentMethod) onMethodSelected;
+  final void Function(PaymentMethod) onMethodSelected;
 
   const PaymentMethodSelector({
     super.key,
@@ -29,12 +29,12 @@ class PaymentMethodSelector extends StatelessWidget {
                 border: Border.all(
                   color: selectedMethod == method
                       ? theme.colorScheme.primary
-                      : theme.colorScheme.outline.withOpacity(0.3),
+                      : theme.colorScheme.outline.withValues(alpha: 0.3),
                   width: selectedMethod == method ? 2 : 1,
                 ),
                 borderRadius: BorderRadius.circular(12),
                 color: selectedMethod == method
-                    ? theme.colorScheme.primaryContainer.withOpacity(0.3)
+                    ? theme.colorScheme.primaryContainer.withValues(alpha: 0.3)
                     : null,
               ),
               child: Row(
@@ -46,7 +46,7 @@ class PaymentMethodSelector extends StatelessWidget {
                     decoration: BoxDecoration(
                       color: selectedMethod == method
                           ? theme.colorScheme.primary
-                          : theme.colorScheme.surfaceVariant,
+                          : theme.colorScheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -78,7 +78,8 @@ class PaymentMethodSelector extends StatelessWidget {
                         Text(
                           _getMethodDescription(method),
                           style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.onSurface.withOpacity(0.7),
+                            color: theme.colorScheme.onSurface
+                                .withValues(alpha: 0.7),
                           ),
                         ),
                       ],

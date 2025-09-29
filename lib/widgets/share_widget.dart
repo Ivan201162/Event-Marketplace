@@ -530,9 +530,11 @@ class ShareDialog extends StatelessWidget {
 
 /// Утилиты для шаринга
 class ShareUtils {
+  ShareUtils._();
+
   /// Показать диалог шаринга для события
   static void showShareDialog(BuildContext context, Event event) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => ShareDialog(event: event),
     );
@@ -540,7 +542,7 @@ class ShareUtils {
 
   /// Показать диалог шаринга для профиля
   static void showProfileShareDialog(BuildContext context, AppUser user) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => ShareDialog(user: user),
     );
@@ -548,7 +550,7 @@ class ShareUtils {
 
   /// Показать диалог шаринга для бронирования
   static void showBookingShareDialog(BuildContext context, Booking booking) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => ShareDialog(booking: booking),
     );
@@ -556,7 +558,7 @@ class ShareUtils {
 
   /// Показать диалог шаринга для текста
   static void showTextShareDialog(BuildContext context, String text) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => ShareDialog(text: text),
     );
@@ -569,7 +571,7 @@ class ShareUtils {
     String? title,
     String? description,
   }) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => ShareDialog(
         url: url,

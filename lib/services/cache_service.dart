@@ -4,7 +4,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../models/cache_item.dart';
 
@@ -18,7 +18,7 @@ class CacheService {
   final Map<String, int> _accessCount = {};
   final Map<String, DateTime> _lastAccess = {};
 
-  SharedPreferences? _prefs;
+  FlutterSecureStorage _prefs = const FlutterSecureStorage();
   Directory? _cacheDirectory;
   CacheConfig _config = const CacheConfig();
 
@@ -32,7 +32,7 @@ class CacheService {
 
     try {
       _config = config ?? _config;
-      _prefs = await SharedPreferences.getInstance();
+      _prefs = const FlutterSecureStorage();
       _cacheDirectory = await getApplicationCacheDirectory();
 
       // Создаем директорию кэша
@@ -475,8 +475,14 @@ class CacheService {
   /// Загрузить статистику
   Future<void> _loadStatistics() async {
     try {
-      _hitCount = _prefs?.getInt('cache_hit_count') ?? 0;
-      _missCount = _prefs?.getInt('cache_miss_count') ?? 0;
+      _hitCount =
+          int.tryParse(await _prefs.read(key: 'cache_hit_count') ?? "0") ??
+              0 ??
+              0;
+      _missCount =
+          int.tryParse(await _prefs.read(key: 'cache_miss_count') ?? "0") ??
+              0 ??
+              0;
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка загрузки статистики: $e');
@@ -487,8 +493,8 @@ class CacheService {
   /// Сохранить статистику
   Future<void> _saveStatistics() async {
     try {
-      await _prefs?.setInt('cache_hit_count', _hitCount);
-      await _prefs?.setInt('cache_miss_count', _missCount);
+      await _prefs.write(key: 'cache_hit_count', value: _hitCount.toString());
+      await _prefs.write(key: 'cache_miss_count', value: _missCount.toString());
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка сохранения статистики: $e');

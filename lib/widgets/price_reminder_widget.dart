@@ -214,7 +214,7 @@ class PriceReminderAdminWidget extends ConsumerWidget {
 
       // Обновляем данные
       ref.invalidate(priceReminderStatsProvider);
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ошибка: $e')),
       );
@@ -222,7 +222,7 @@ class PriceReminderAdminWidget extends ConsumerWidget {
   }
 
   void _showSpecialistsList(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Специалисты с устаревшими ценами'),
@@ -283,7 +283,7 @@ class PriceReminderAdminWidget extends ConsumerWidget {
 
       // Обновляем данные
       ref.invalidate(specialistsWithOutdatedPricesProvider);
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ошибка: $e')),
       );

@@ -88,7 +88,7 @@ class _ContractDetailsScreenState extends State<ContractDetailsScreen> {
 
   Widget _buildStatusCard() {
     return Card(
-      color: widget.contract.status.statusColor.withOpacity(0.1),
+      color: widget.contract.status.statusColor.withValues(alpha: 0.1),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Row(

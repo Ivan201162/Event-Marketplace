@@ -8,7 +8,7 @@ class SearchFiltersWidget extends StatefulWidget {
     required this.onFiltersChanged,
     this.initialFilters,
   });
-  final Function(SpecialistFilters) onFiltersChanged;
+  final void Function(SpecialistFilters) onFiltersChanged;
   final SpecialistFilters? initialFilters;
 
   @override

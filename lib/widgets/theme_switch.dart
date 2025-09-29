@@ -172,7 +172,7 @@ class ThemeSwitch extends ConsumerWidget {
   }
 
   void _showThemeDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Выберите тему'),
@@ -315,7 +315,7 @@ class CompactThemeSwitch extends ConsumerWidget {
   }
 
   void _showThemeDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (dialogContext) => AlertDialog(
         title: const Text('Выберите тему'),

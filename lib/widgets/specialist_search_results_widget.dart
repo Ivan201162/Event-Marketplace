@@ -15,8 +15,8 @@ class SpecialistSearchResultsWidget extends ConsumerStatefulWidget {
   });
 
   final AdvancedSearchFilters filters;
-  final Function(Specialist)? onSpecialistSelected;
-  final Function(AdvancedSearchFilters)? onFiltersChanged;
+  final void Function(Specialist)? onSpecialistSelected;
+  final void Function(AdvancedSearchFilters)? onFiltersChanged;
 
   @override
   ConsumerState<SpecialistSearchResultsWidget> createState() =>
@@ -180,7 +180,7 @@ class _SpecialistSearchResultsWidgetState
                   // Аватар
                   CircleAvatar(
                     radius: 30,
-                    backgroundColor: theme.primaryColor.withOpacity(0.1),
+                    backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
                     backgroundImage: specialist.avatarUrl != null
                         ? NetworkImage(specialist.avatarUrl!)
                         : null,
@@ -308,7 +308,8 @@ class _SpecialistSearchResultsWidgetState
                         '${category.icon} ${category.displayName}',
                         style: theme.textTheme.bodySmall,
                       ),
-                      backgroundColor: theme.primaryColor.withOpacity(0.1),
+                      backgroundColor:
+                          theme.primaryColor.withValues(alpha: 0.1),
                       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     );
                   }).toList(),
@@ -391,7 +392,7 @@ class _SpecialistSearchResultsWidgetState
                 const SizedBox(height: 8),
                 LinearProgressIndicator(
                   value: result.relevanceScore,
-                  backgroundColor: theme.colorScheme.surfaceVariant,
+                  backgroundColor: theme.colorScheme.surfaceContainerHighest,
                   valueColor: AlwaysStoppedAnimation<Color>(theme.primaryColor),
                 ),
                 const SizedBox(height: 4),

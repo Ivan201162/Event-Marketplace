@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 /// Типы платежей
 enum PaymentType {
   prepayment, // Предоплата
   postpayment, // Постоплата
   full, // Полная оплата
+  fullPayment, // Полная оплата (альтернативное название)
   refund, // Возврат
 }
 
@@ -16,6 +18,7 @@ enum PaymentStatus {
   failed, // Неудачный
   cancelled, // Отменен
   refunded, // Возвращен
+  disputed, // Оспорен
 }
 
 /// Методы платежей
@@ -24,12 +27,56 @@ enum PaymentMethod {
   yookassa, // ЮKassa
   tinkoff, // Тинькофф
   card, // Банковская карта
+  bankTransfer, // Банковский перевод
   cash, // Наличные
+}
+
+/// Расширение для PaymentMethod
+extension PaymentMethodExtension on PaymentMethod {
+  /// Получить иконку для метода платежа
+  IconData get icon {
+    switch (this) {
+      case PaymentMethod.sbp:
+        return Icons.payment;
+      case PaymentMethod.yookassa:
+        return Icons.account_balance;
+      case PaymentMethod.tinkoff:
+        return Icons.account_balance_wallet;
+      case PaymentMethod.card:
+        return Icons.credit_card;
+      case PaymentMethod.bankTransfer:
+        return Icons.account_balance;
+      case PaymentMethod.cash:
+        return Icons.money;
+    }
+  }
+
+  /// Получить отображаемое название метода платежа
+  String get displayName {
+    switch (this) {
+      case PaymentMethod.sbp:
+        return 'Система быстрых платежей';
+      case PaymentMethod.yookassa:
+        return 'ЮKassa';
+      case PaymentMethod.tinkoff:
+        return 'Тинькофф';
+      case PaymentMethod.card:
+        return 'Банковская карта';
+      case PaymentMethod.bankTransfer:
+        return 'Банковский перевод';
+      case PaymentMethod.cash:
+        return 'Наличные';
+    }
+  }
 }
 
 /// Статус налогообложения
 enum TaxStatus {
   none, // Без налога
+  individual, // Физическое лицо
+  individualEntrepreneur, // ИП
+  selfEmployed, // Самозанятый
+  legalEntity, // Юридическое лицо
   professionalIncome, // НПД (самозанятые)
   simplifiedTax, // УСН (ИП)
   vat, // НДС
@@ -50,6 +97,7 @@ class PaymentMethodInfo {
   final String description;
   final bool isAvailable;
   final String? iconUrl;
+  final double fee; // Комиссия за платеж
 
   const PaymentMethodInfo({
     required this.method,
@@ -57,6 +105,7 @@ class PaymentMethodInfo {
     required this.description,
     required this.isAvailable,
     this.iconUrl,
+    this.fee = 0.0,
   });
 
   Map<String, dynamic> toMap() {
@@ -66,6 +115,7 @@ class PaymentMethodInfo {
       'description': description,
       'isAvailable': isAvailable,
       'iconUrl': iconUrl,
+      'fee': fee,
     };
   }
 
@@ -79,6 +129,7 @@ class PaymentMethodInfo {
       description: map['description'] as String,
       isAvailable: map['isAvailable'] as bool,
       iconUrl: map['iconUrl'] as String?,
+      fee: (map['fee'] as num?)?.toDouble() ?? 0.0,
     );
   }
 }
@@ -252,6 +303,54 @@ class Payment {
 
   /// Проверить, ожидает ли платеж
   bool get isPending => status == PaymentStatus.pending;
+
+  /// Получить отображаемое название типа платежа
+  String get typeDisplayName {
+    switch (type) {
+      case PaymentType.prepayment:
+        return 'Предоплата';
+      case PaymentType.postpayment:
+        return 'Постоплата';
+      case PaymentType.full:
+      case PaymentType.fullPayment:
+        return 'Полная оплата';
+      case PaymentType.refund:
+        return 'Возврат';
+    }
+  }
+
+  /// Получить отображаемое название метода платежа
+  String get methodDisplayName {
+    return method.displayName;
+  }
+
+  /// Получить причину неудачи
+  String get failureReason {
+    if (status != PaymentStatus.failed) return '';
+    return metadata['failureReason'] ?? 'Неизвестная причина';
+  }
+
+  /// Получить отображаемое название налогового статуса
+  String get taxStatusDisplayName {
+    switch (taxStatus) {
+      case TaxStatus.none:
+        return 'Без налога';
+      case TaxStatus.individual:
+        return 'Физическое лицо';
+      case TaxStatus.individualEntrepreneur:
+        return 'ИП';
+      case TaxStatus.selfEmployed:
+        return 'Самозанятый';
+      case TaxStatus.legalEntity:
+        return 'Юридическое лицо';
+      case TaxStatus.professionalIncome:
+        return 'Налог на профессиональный доход';
+      case TaxStatus.simplifiedTax:
+        return 'УСН';
+      case TaxStatus.vat:
+        return 'НДС';
+    }
+  }
 }
 
 /// Модель расчета налогов

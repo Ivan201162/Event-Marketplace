@@ -248,7 +248,7 @@ class MonitoringControlWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final monitoringState = ref.watch(monitoringStateProvider);
+    // final monitoringState = ref.watch(monitoringStateProvider);
     final monitoringNotifier = ref.read(monitoringStateProvider.notifier);
 
     return Card(

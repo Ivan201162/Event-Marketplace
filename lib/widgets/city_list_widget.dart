@@ -97,10 +97,10 @@ class CityListWidget extends StatelessWidget {
       width: 48,
       height: 48,
       decoration: BoxDecoration(
-        color: _getCityColor(city, theme).withOpacity(0.1),
+        color: _getCityColor(city, theme).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: _getCityColor(city, theme).withOpacity(0.3),
+          color: _getCityColor(city, theme).withValues(alpha: 0.3),
           width: 2,
         ),
       ),

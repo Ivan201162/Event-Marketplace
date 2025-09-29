@@ -38,6 +38,8 @@ class TaxCalculationService {
     switch (taxStatus) {
       case TaxStatus.none:
         return 0.0;
+      case TaxStatus.individual:
+        return 13.0; // НДФЛ для физических лиц
       case TaxStatus.professionalIncome:
         return 4.0; // НПД для самозанятых
       case TaxStatus.simplifiedTax:

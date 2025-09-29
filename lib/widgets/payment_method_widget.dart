@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-import '../screens/payment_screen.dart';
+import '../models/payment_models.dart';
 
 class PaymentMethodWidget extends StatelessWidget {
   final PaymentMethod selectedMethod;
   final ValueChanged<PaymentMethod> onMethodChanged;
 
   const PaymentMethodWidget({
-    Key? key,
+    super.key,
     required this.selectedMethod,
     required this.onMethodChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +54,7 @@ class PaymentMethodWidget extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(8),
         color: isSelected
-            ? Theme.of(context).primaryColor.withOpacity(0.1)
+            ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
             : Colors.transparent,
       ),
       child: ListTile(

@@ -179,7 +179,7 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
         borderRadius: BorderRadius.circular(12.0),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 8.0,
             offset: const Offset(0, 2),
           ),
@@ -201,7 +201,7 @@ class _CitySearchWidgetState extends ConsumerState<CitySearchWidget> {
 
     return ListTile(
       leading: CircleAvatar(
-        backgroundColor: theme.primaryColor.withOpacity(0.1),
+        backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
         child: Text(
           city.citySize.icon,
           style: const TextStyle(fontSize: 16),

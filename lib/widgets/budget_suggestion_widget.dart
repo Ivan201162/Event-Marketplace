@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/budget_suggestion.dart';
 import '../services/budget_suggestion_service.dart';
 import 'responsive_layout.dart';
+import 'responsive_text.dart';
 
 /// Виджет для отображения предложения по увеличению бюджета
 class BudgetSuggestionWidget extends ConsumerWidget {
@@ -682,7 +683,8 @@ class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
     });
 
     try {
-      final service = ref.read(budgetSuggestionServiceProvider);
+      final service = ProviderScope.containerOf(context)
+          .read(budgetSuggestionServiceProvider);
       await service.rejectBudgetSuggestion(
         suggestionId: widget.suggestion.id,
         customerId: 'current_user_id', // TODO: Получить из контекста

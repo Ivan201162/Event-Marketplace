@@ -4,16 +4,10 @@ on:
   push:
     tags:
       - 'v*'
-  workflow_dispatch:
-    inputs:
-      version:
-        description: 'Version to release'
-        required: true
-        default: '1.0.0'
 
 jobs:
   release:
-    name: Release
+    name: Create Release
     runs-on: ubuntu-latest
     
     steps:
@@ -23,156 +17,30 @@ jobs:
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
-        flutter-version: '3.35.x'
+        flutter-version: '3.24.0'
         channel: 'stable'
         
-    - name: Get dependencies
+    - name: Install dependencies
       run: flutter pub get
-      
-    - name: Run tests
-      run: flutter test
-      
-    - name: Build Android APK
-      run: flutter build apk --release
-      
-    - name: Build Android App Bundle
-      run: flutter build appbundle --release
-      
-    - name: Build iOS
-      run: flutter build ios --release --no-codesign
       
     - name: Build Web
       run: flutter build web --release
       
+    - name: Build Android APK
+      run: flutter build apk --release
+      
     - name: Build Windows
       run: flutter build windows --release
       
-    - name: Build Linux
-      run: flutter build linux --release
-      
-    - name: Build macOS
-      run: flutter build macos --release
-      
-    - name: Create release notes
-      run: |
-        echo "# Release Notes" > release-notes.md
-        echo "## Version: ${{ github.ref_name }}" >> release-notes.md
-        echo "## Date: $(date)" >> release-notes.md
-        echo "## Changes:" >> release-notes.md
-        echo "- Automated release from CI/CD pipeline" >> release-notes.md
-        echo "- All tests passed" >> release-notes.md
-        echo "- All builds successful" >> release-notes.md
-        
-    - name: Create GitHub Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
       with:
-        tag_name: ${{ github.ref_name }}
-        release_name: Release ${{ github.ref_name }}
-        body_path: release-notes.md
+        files: |
+          build/web/
+          build/app/outputs/flutter-apk/app-release.apk
+          build/windows/x64/runner/Release/
+        generate_release_notes: true
         draft: false
         prerelease: false
-        
-    - name: Upload Android APK
-      uses: actions/upload-release-asset@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/app/outputs/flutter-apk/app-release.apk
-        asset_name: app-release.apk
-        asset_content_type: application/vnd.android.package-archive
-        
-    - name: Upload Android App Bundle
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/app/outputs/bundle/release/app-release.aab
-        asset_name: app-release.aab
-        asset_content_type: application/octet-stream
-        
-    - name: Upload iOS build
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/ios/iphoneos/Runner.app
-        asset_name: ios-build.zip
-        asset_content_type: application/zip
-        
-    - name: Upload Web build
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/web
-        asset_name: web-build.zip
-        asset_content_type: application/zip
-        
-    - name: Upload Windows build
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/windows/x64/runner/Release
-        asset_name: windows-build.zip
-        asset_content_type: application/zip
-        
-    - name: Upload Linux build
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/linux/x64/release/bundle
-        asset_name: linux-build.zip
-        asset_content_type: application/zip
-        
-    - name: Upload macOS build
-      uses: actions/upload-release-asset@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: build/macos/Build/Products/Release/Event Marketplace App.app
-        asset_name: macos-build.zip
-        asset_content_type: application/zip
-        
-    - name: Deploy to Firebase Hosting
-      uses: FirebaseExtended/action-hosting-deploy@v0
-      with:
-        repoToken: '${{ secrets.GITHUB_TOKEN }}'
-        firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
-        projectId: event-marketplace-app
-        
-    - name: Deploy to Google Play Console
-      uses: r0adkll/upload-google-play@v1
-      with:
-        serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT }}
-        packageName: com.eventmarketplace.app
-        releaseFiles: build/app/outputs/bundle/release/app-release.aab
-        track: production
-        status: completed
-        
-    - name: Deploy to App Store
-      uses: apple-actions/upload-app-store@v1
-      with:
-        app-path: build/ios/iphoneos/Runner.app
-        issuer-id: ${{ secrets.APPSTORE_ISSUER_ID }}
-        api-key-id: ${{ secrets.APPSTORE_API_KEY_ID }}
-        api-private-key: ${{ secrets.APPSTORE_API_PRIVATE_KEY }}
-        
-    - name: Notify team
-      uses: 8398a7/action-slack@v3
-      with:
-        status: success
-        channel: '#releases'
-        text: 'Release ${{ github.ref_name }} has been successfully deployed!'
-      env:
-        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

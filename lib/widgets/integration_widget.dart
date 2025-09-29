@@ -30,7 +30,7 @@ class IntegrationWidget extends StatelessWidget {
                       width: 48,
                       height: 48,
                       decoration: BoxDecoration(
-                        color: integration.typeColor.withOpacity(0.1),
+                        color: integration.typeColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(
@@ -75,10 +75,10 @@ class IntegrationWidget extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: integration.statusColor.withOpacity(0.1),
+                        color: integration.statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: integration.statusColor.withOpacity(0.3),
+                          color: integration.statusColor.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Text(
@@ -105,7 +105,7 @@ class IntegrationWidget extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: integration.typeColor.withOpacity(0.1),
+                        color: integration.typeColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
@@ -235,7 +235,7 @@ class IntegrationListTile extends StatelessWidget {
           width: 50,
           height: 50,
           decoration: BoxDecoration(
-            color: integration.typeColor.withOpacity(0.1),
+            color: integration.typeColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
@@ -263,7 +263,7 @@ class IntegrationListTile extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: integration.statusColor.withOpacity(0.1),
+                    color: integration.statusColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -280,7 +280,7 @@ class IntegrationListTile extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: integration.typeColor.withOpacity(0.1),
+                    color: integration.typeColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -359,7 +359,7 @@ class IntegrationGridTile extends StatelessWidget {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: integration.typeColor.withOpacity(0.1),
+                        color: integration.typeColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Icon(

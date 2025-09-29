@@ -71,7 +71,7 @@ class PaymentSummaryWidget extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceVariant,
+                color: theme.colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
@@ -109,7 +109,8 @@ class PaymentSummaryWidget extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: theme.colorScheme.primaryContainer.withOpacity(0.3),
+                  color:
+                      theme.colorScheme.primaryContainer.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Row(
@@ -146,7 +147,7 @@ class PaymentSummaryWidget extends StatelessWidget {
         Text(
           label,
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurface.withOpacity(0.7),
+            color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
           ),
         ),
         Text(
@@ -187,7 +188,7 @@ class PaymentSummaryWidget extends StatelessWidget {
             fontWeight: isTotal ? FontWeight.bold : FontWeight.normal,
             color: isTotal
                 ? theme.colorScheme.onSurface
-                : theme.colorScheme.onSurface.withOpacity(0.7),
+                : theme.colorScheme.onSurface.withValues(alpha: 0.7),
           ),
         ),
         Text(
@@ -203,6 +204,8 @@ class PaymentSummaryWidget extends StatelessWidget {
 
   String _getTaxInfoText() {
     switch (taxStatus) {
+      case TaxStatus.none:
+        return 'Без налогообложения';
       case TaxStatus.individual:
         return 'НДФЛ 13% удерживается с суммы к получению';
       case TaxStatus.individualEntrepreneur:
@@ -211,6 +214,12 @@ class PaymentSummaryWidget extends StatelessWidget {
         return 'Налог для самозанятого рассчитывается с суммы к получению';
       case TaxStatus.legalEntity:
         return 'НДС и налог на прибыль рассчитываются с суммы к получению';
+      case TaxStatus.professionalIncome:
+        return 'Налог на профессиональный доход рассчитывается с суммы к получению';
+      case TaxStatus.simplifiedTax:
+        return 'УСН рассчитывается с суммы к получению';
+      case TaxStatus.vat:
+        return 'НДС рассчитывается с суммы к получению';
     }
   }
 }

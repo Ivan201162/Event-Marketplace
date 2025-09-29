@@ -234,10 +234,10 @@ class EventDetailScreen extends ConsumerWidget {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
-                      color: event.statusColor.withOpacity(0.1),
+                      color: event.statusColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: event.statusColor.withOpacity(0.3),
+                        color: event.statusColor.withValues(alpha: 0.3),
                       ),
                     ),
                     child: Text(

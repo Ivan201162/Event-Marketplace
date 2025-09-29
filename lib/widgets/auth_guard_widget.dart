@@ -22,7 +22,6 @@ class AuthGuard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authStateProvider);
     final currentUser = ref.watch(currentUserProvider);
 
     // Если аутентификация не требуется, показываем дочерний виджет
@@ -92,7 +91,7 @@ class AuthGuard extends ConsumerWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.7),
+                            .withValues(alpha: 0.7),
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -144,7 +143,7 @@ class AuthGuard extends ConsumerWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.7),
+                            .withValues(alpha: 0.7),
                       ),
                   textAlign: TextAlign.center,
                 ),
@@ -190,7 +189,7 @@ class AuthGuard extends ConsumerWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.7),
+                            .withValues(alpha: 0.7),
                       ),
                   textAlign: TextAlign.center,
                 ),

@@ -4,6 +4,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+// Helper function to convert AppThemeMode to ThemeMode
+ThemeMode _convertToThemeMode(AppThemeMode appThemeMode) {
+  switch (appThemeMode) {
+    case AppThemeMode.light:
+      return ThemeMode.light;
+    case AppThemeMode.dark:
+      return ThemeMode.dark;
+    case AppThemeMode.system:
+      return ThemeMode.system;
+  }
+}
+
 void main() {
   group('Theme Tests', () {
     testWidgets('should display light theme by default', (tester) async {
@@ -24,9 +36,17 @@ void main() {
 
     testWidgets('should switch to dark theme when toggled', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: TestThemeWidget(),
+        ProviderScope(
+          child: Consumer(
+            builder: (context, ref, child) {
+              final themeMode = ref.watch(themeProvider);
+              return MaterialApp(
+                themeMode: _convertToThemeMode(themeMode),
+                theme: ThemeData.light(),
+                darkTheme: ThemeData.dark(),
+                home: const TestThemeWidget(),
+              );
+            },
           ),
         ),
       );
@@ -48,9 +68,17 @@ void main() {
 
     testWidgets('should maintain theme state across rebuilds', (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: TestThemeWidget(),
+        ProviderScope(
+          child: Consumer(
+            builder: (context, ref, child) {
+              final themeMode = ref.watch(themeProvider);
+              return MaterialApp(
+                themeMode: _convertToThemeMode(themeMode),
+                theme: ThemeData.light(),
+                darkTheme: ThemeData.dark(),
+                home: const TestThemeWidget(),
+              );
+            },
           ),
         ),
       );
@@ -64,9 +92,17 @@ void main() {
 
       // Перестраиваем виджет
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: TestThemeWidget(),
+        ProviderScope(
+          child: Consumer(
+            builder: (context, ref, child) {
+              final themeMode = ref.watch(themeProvider);
+              return MaterialApp(
+                themeMode: _convertToThemeMode(themeMode),
+                theme: ThemeData.light(),
+                darkTheme: ThemeData.dark(),
+                home: const TestThemeWidget(),
+              );
+            },
           ),
         ),
       );
@@ -104,9 +140,17 @@ void main() {
     testWidgets('should have correct color scheme in dark theme',
         (tester) async {
       await tester.pumpWidget(
-        const ProviderScope(
-          child: MaterialApp(
-            home: TestThemeWidget(),
+        ProviderScope(
+          child: Consumer(
+            builder: (context, ref, child) {
+              final themeMode = ref.watch(themeProvider);
+              return MaterialApp(
+                themeMode: _convertToThemeMode(themeMode),
+                theme: ThemeData.light(),
+                darkTheme: ThemeData.dark(),
+                home: const TestThemeWidget(),
+              );
+            },
           ),
         ),
       );
@@ -213,13 +257,14 @@ void main() {
   group('Responsive Tests', () {
     testWidgets('should detect mobile screen size', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: ResponsiveTestWidget(),
+        MaterialApp(
+          home: MediaQuery(
+            data: const MediaQueryData(size: Size(400, 800)),
+            child: const ResponsiveTestWidget(),
+          ),
         ),
       );
 
-      // Устанавливаем размер экрана для мобильного устройства
-      await tester.binding.setSurfaceSize(const Size(400, 800));
       await tester.pumpAndSettle();
 
       expect(find.text('Mobile'), findsOneWidget);
@@ -229,13 +274,14 @@ void main() {
 
     testWidgets('should detect tablet screen size', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: ResponsiveTestWidget(),
+        MaterialApp(
+          home: MediaQuery(
+            data: const MediaQueryData(size: Size(800, 600)),
+            child: const ResponsiveTestWidget(),
+          ),
         ),
       );
 
-      // Устанавливаем размер экрана для планшета
-      await tester.binding.setSurfaceSize(const Size(800, 600));
       await tester.pumpAndSettle();
 
       expect(find.text('Mobile'), findsNothing);
@@ -245,13 +291,14 @@ void main() {
 
     testWidgets('should detect desktop screen size', (tester) async {
       await tester.pumpWidget(
-        const MaterialApp(
-          home: ResponsiveTestWidget(),
+        MaterialApp(
+          home: MediaQuery(
+            data: const MediaQueryData(size: Size(1400, 900)),
+            child: const ResponsiveTestWidget(),
+          ),
         ),
       );
 
-      // Устанавливаем размер экрана для десктопа
-      await tester.binding.setSurfaceSize(const Size(1400, 900));
       await tester.pumpAndSettle();
 
       expect(find.text('Mobile'), findsNothing);

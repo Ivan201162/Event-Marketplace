@@ -29,26 +29,24 @@ class OptimizedImage extends StatelessWidget {
   final Duration fadeOutDuration;
 
   @override
-  Widget build(BuildContext context) {
-    return CachedNetworkImage(
-      imageUrl: imageUrl,
-      width: width,
-      height: height,
-      fit: fit,
-      memCacheWidth: memCacheWidth,
-      memCacheHeight: memCacheHeight,
-      fadeInDuration: fadeInDuration,
-      fadeOutDuration: fadeOutDuration,
-      placeholder: placeholder as Widget Function(BuildContext, String)? ??
-          (context, url) => _buildPlaceholder(),
-      errorWidget:
-          errorWidget as Widget Function(BuildContext, String, Object)? ??
-              (context, url, error) => _buildErrorWidget(),
-      // Оптимизации для производительности
-      maxWidthDiskCache: 1000,
-      maxHeightDiskCache: 1000,
-    );
-  }
+  Widget build(BuildContext context) => CachedNetworkImage(
+        imageUrl: imageUrl,
+        width: width,
+        height: height,
+        fit: fit,
+        memCacheWidth: memCacheWidth,
+        memCacheHeight: memCacheHeight,
+        fadeInDuration: fadeInDuration,
+        fadeOutDuration: fadeOutDuration,
+        placeholder: placeholder as Widget Function(BuildContext, String)? ??
+            (context, url) => _buildPlaceholder(),
+        errorWidget:
+            errorWidget as Widget Function(BuildContext, String, Object)? ??
+                (context, url, error) => _buildErrorWidget(),
+        // Оптимизации для производительности
+        maxWidthDiskCache: 1000,
+        maxHeightDiskCache: 1000,
+      );
 
   Widget _buildPlaceholder() {
     return Container(

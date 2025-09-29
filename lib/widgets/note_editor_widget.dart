@@ -303,7 +303,7 @@ class _NoteEditorWidgetState extends ConsumerState<NoteEditorWidget> {
           ),
         ),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ошибка сохранения: $e')),
       );

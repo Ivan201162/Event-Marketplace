@@ -70,7 +70,7 @@ class _SwipeableWidgetState extends State<SwipeableWidget>
                     if (widget.leftAction != null)
                       Expanded(
                         child: Container(
-                          color: Colors.red.withOpacity(0.1),
+                          color: Colors.red.withValues(alpha: 0.1),
                           child: widget.leftAction,
                         ),
                       ),
@@ -78,7 +78,7 @@ class _SwipeableWidgetState extends State<SwipeableWidget>
                     if (widget.rightAction != null)
                       Expanded(
                         child: Container(
-                          color: Colors.green.withOpacity(0.1),
+                          color: Colors.green.withValues(alpha: 0.1),
                           child: widget.rightAction,
                         ),
                       ),
@@ -282,8 +282,8 @@ class _PinchZoomWidgetState extends State<PinchZoomWidget> {
         onScaleEnd: _onScaleEnd,
         child: Transform(
           transform: Matrix4.identity()
-            ..translate(_offset.dx, _offset.dy)
-            ..scale(_scale),
+            ..translateByDouble(_offset.dx, _offset.dy, 0.0, 0.0)
+            ..scaleByDouble(_scale, _scale, 1.0, 0.0),
           child: widget.child,
         ),
       );
@@ -413,7 +413,7 @@ class _DraggableWidgetState extends State<DraggableWidget> {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         transform: _isDragging
-            ? (Matrix4.identity()..scale(1.05))
+            ? (Matrix4.identity()..scaleByDouble(1.05, 1.05, 1.0, 0.0))
             : Matrix4.identity(),
         child: widget.child,
       ),

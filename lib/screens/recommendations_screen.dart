@@ -361,7 +361,7 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
   }
 
   void _showIdeaDetails(EventIdea idea) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (context) => DraggableScrollableSheet(
@@ -413,8 +413,9 @@ class _RecommendationsScreenState extends State<RecommendationsScreen>
                 children: idea.tags
                     .map((tag) => Chip(
                           label: Text(tag),
-                          backgroundColor:
-                              Theme.of(context).primaryColor.withOpacity(0.1),
+                          backgroundColor: Theme.of(context)
+                              .primaryColor
+                              .withValues(alpha: 0.1),
                         ))
                     .toList(),
               ),

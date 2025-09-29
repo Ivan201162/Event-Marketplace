@@ -181,7 +181,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
                   Chip(
                     label: Text(greeting.type.displayName),
                     backgroundColor:
-                        _getTypeColor(greeting.type).withOpacity(0.1),
+                        _getTypeColor(greeting.type).withValues(alpha: 0.1),
                     labelStyle: TextStyle(
                       color: _getTypeColor(greeting.type),
                       fontSize: 12,
@@ -412,7 +412,7 @@ class _GuestGreetingsScreenState extends ConsumerState<GuestGreetingsScreen>
                         });
                       }
                     },
-                    selectedColor: Colors.blue.withOpacity(0.2),
+                    selectedColor: Colors.blue.withValues(alpha: 0.2),
                     checkmarkColor: Colors.blue,
                   );
                 }).toList(),

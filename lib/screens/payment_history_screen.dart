@@ -101,7 +101,7 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
             gradient: LinearGradient(
               colors: [
                 theme.colorScheme.primary,
-                theme.colorScheme.primary.withOpacity(0.8),
+                theme.colorScheme.primary.withValues(alpha: 0.8),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -109,7 +109,7 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: theme.colorScheme.primary.withOpacity(0.3),
+                color: theme.colorScheme.primary.withValues(alpha: 0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -167,7 +167,7 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
       children: [
         Icon(
           icon,
-          color: theme.colorScheme.onPrimary.withOpacity(0.8),
+          color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
           size: 20,
         ),
         const SizedBox(height: 4),
@@ -181,7 +181,7 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
         Text(
           label,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onPrimary.withOpacity(0.8),
+            color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
           ),
         ),
       ],
@@ -235,8 +235,10 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
                 Icon(
                   Icons.payment,
                   size: 64,
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.5),
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -250,7 +252,7 @@ class _PaymentHistoryScreenState extends ConsumerState<PaymentHistoryScreen> {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.7),
+                            .withValues(alpha: 0.7),
                       ),
                 ),
               ],
@@ -676,7 +678,7 @@ class PaymentDetailsSheet extends StatelessWidget {
             child: Text(
               label,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurface.withOpacity(0.7),
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),
             ),
           ),

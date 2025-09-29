@@ -246,7 +246,10 @@ class ReviewStatisticsWidget extends StatelessWidget {
             statistics.averageRatingDescription,
             style: TextStyle(
               fontSize: 12,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.7),
             ),
           ),
           const SizedBox(height: 4),
@@ -254,7 +257,10 @@ class ReviewStatisticsWidget extends StatelessWidget {
             '${statistics.totalReviews} отзывов',
             style: TextStyle(
               fontSize: 12,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -285,7 +291,7 @@ class ReviewStatisticsWidget extends StatelessWidget {
                 Expanded(
                   child: LinearProgressIndicator(
                     value: percentage / 100,
-                    backgroundColor: Colors.grey.withOpacity(0.3),
+                    backgroundColor: Colors.grey.withValues(alpha: 0.3),
                     valueColor: AlwaysStoppedAnimation<Color>(
                       Theme.of(context).colorScheme.primary,
                     ),
@@ -306,10 +312,11 @@ class ReviewStatisticsWidget extends StatelessWidget {
   Widget _buildTagChip(BuildContext context, String tag) => Container(
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
         decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary.withOpacity(0.1),
+          color: Theme.of(context).colorScheme.secondary.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
-            color: Theme.of(context).colorScheme.secondary.withOpacity(0.3),
+            color:
+                Theme.of(context).colorScheme.secondary.withValues(alpha: 0.3),
           ),
         ),
         child: Text(
@@ -366,7 +373,10 @@ class ReviewStatisticsWidget extends StatelessWidget {
             label,
             style: TextStyle(
               fontSize: 12,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -471,9 +481,9 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.red.withOpacity(0.1),
+                  color: Colors.red.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: Colors.red.withOpacity(0.3)),
+                  border: Border.all(color: Colors.red.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [
@@ -544,7 +554,10 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
             _getRatingDescription(formState.rating),
             style: TextStyle(
               fontSize: 14,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.7),
             ),
           ),
         ],
@@ -622,7 +635,7 @@ class _ReviewFormWidgetState extends ConsumerState<ReviewFormWidget> {
 
       ref.read(reviewFormProvider.notifier).finishSubmitting();
       widget.onSubmit?.call();
-    } catch (e) {
+    } on Exception catch (e) {
       ref.read(reviewFormProvider.notifier).setError(e.toString());
     }
   }

@@ -335,7 +335,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             color: isSelected
-                ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+                ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
                 : null,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
@@ -451,7 +451,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
                   padding:
                       const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: statusInfo.color.withOpacity(0.1),
+                    color: statusInfo.color.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                     border: Border.all(color: statusInfo.color),
                   ),
@@ -534,7 +534,7 @@ class _EnhancedBookingsScreenState extends ConsumerState<EnhancedBookingsScreen>
         child: Container(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
-            color: action.color.withOpacity(0.1),
+            color: action.color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(20),
             border: Border.all(color: action.color),
           ),

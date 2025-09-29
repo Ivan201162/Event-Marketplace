@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import 'core/app_theme.dart';
 import 'core/logger.dart';
@@ -66,18 +66,20 @@ void main() async {
     FlutterError.onError = FirebaseCrashlytics.instance.recordFlutterFatalError;
   }
 
-  // Инициализация Performance Monitoring
-  await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
+  // Инициализация Performance Monitoring (только для мобильных платформ)
+  if (!kIsWeb) {
+    await FirebasePerformance.instance.setPerformanceCollectionEnabled(true);
+  }
 
   // Инициализация SharedPreferences
-  final prefs = await SharedPreferences.getInstance();
+  final storage = const FlutterSecureStorage();
 
   // Инициализация сервисов
   await _initializeServices();
 
   runApp(
     ProviderScope(
-      child: EventMarketplaceApp(prefs: prefs),
+      child: EventMarketplaceApp(storage: storage),
     ),
   );
 }
@@ -108,16 +110,18 @@ Future<void> _initializeServices() async {
     AppLogger.logI('All services initialized successfully', 'main');
   } catch (e) {
     AppLogger.logE('Error initializing services', 'main', e);
-    FirebaseCrashlytics.instance.recordError(e, null);
+    if (!kIsWeb) {
+      FirebaseCrashlytics.instance.recordError(e, null);
+    }
   }
 }
 
 class EventMarketplaceApp extends ConsumerWidget {
   const EventMarketplaceApp({
     super.key,
-    required this.prefs,
+    required this.storage,
   });
-  final SharedPreferences prefs;
+  final FlutterSecureStorage storage;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

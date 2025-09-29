@@ -96,7 +96,7 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
             gradient: LinearGradient(
               colors: [
                 theme.colorScheme.primary,
-                theme.colorScheme.primary.withOpacity(0.8),
+                theme.colorScheme.primary.withValues(alpha: 0.8),
               ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
@@ -104,7 +104,7 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
             borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(
-                color: theme.colorScheme.primary.withOpacity(0.3),
+                color: theme.colorScheme.primary.withValues(alpha: 0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -162,7 +162,7 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
       children: [
         Icon(
           icon,
-          color: theme.colorScheme.onPrimary.withOpacity(0.8),
+          color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
           size: 20,
         ),
         const SizedBox(height: 4),
@@ -176,7 +176,7 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
         Text(
           label,
           style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onPrimary.withOpacity(0.8),
+            color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
           ),
         ),
       ],
@@ -228,8 +228,10 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
                 Icon(
                   Icons.description,
                   size: 64,
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.5),
                 ),
                 const SizedBox(height: 16),
                 Text(
@@ -243,7 +245,7 @@ class _ContractsScreenState extends ConsumerState<ContractsScreen> {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.7),
+                            .withValues(alpha: 0.7),
                       ),
                 ),
               ],

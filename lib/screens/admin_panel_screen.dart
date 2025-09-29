@@ -164,7 +164,8 @@ class _AdminPanelScreenState extends ConsumerState<AdminPanelScreen> {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8),
         ),
-        selectedTileColor: Theme.of(context).primaryColor.withOpacity(0.1),
+        selectedTileColor:
+            Theme.of(context).primaryColor.withValues(alpha: 0.1),
       ),
     );
   }
@@ -345,7 +346,7 @@ class _AdminPanelScreenState extends ConsumerState<AdminPanelScreen> {
                     padding:
                         const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
-                      color: Color(user.statusColor).withOpacity(0.1),
+                      color: Color(user.statusColor).withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(color: Color(user.statusColor)),
                     ),

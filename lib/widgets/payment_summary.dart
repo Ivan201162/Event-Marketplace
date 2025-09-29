@@ -26,7 +26,7 @@ class PaymentSummary extends StatelessWidget {
         gradient: LinearGradient(
           colors: [
             theme.colorScheme.primary,
-            theme.colorScheme.primary.withOpacity(0.8),
+            theme.colorScheme.primary.withValues(alpha: 0.8),
           ],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -34,7 +34,7 @@ class PaymentSummary extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: theme.colorScheme.primary.withOpacity(0.3),
+            color: theme.colorScheme.primary.withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),
@@ -96,14 +96,14 @@ class PaymentSummary extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: theme.colorScheme.onPrimary.withOpacity(0.1),
+              color: theme.colorScheme.onPrimary.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
               children: [
                 Icon(
                   Icons.info_outline,
-                  color: theme.colorScheme.onPrimary.withOpacity(0.8),
+                  color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
                   size: 16,
                 ),
                 const SizedBox(width: 8),
@@ -111,7 +111,7 @@ class PaymentSummary extends StatelessWidget {
                   child: Text(
                     _getPaymentInfo(),
                     style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onPrimary.withOpacity(0.8),
+                      color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
                     ),
                   ),
                 ),
@@ -135,7 +135,7 @@ class PaymentSummary extends StatelessWidget {
         Text(
           label,
           style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onPrimary.withOpacity(0.8),
+            color: theme.colorScheme.onPrimary.withValues(alpha: 0.8),
             fontWeight: isTotal ? FontWeight.w600 : FontWeight.normal,
           ),
         ),
@@ -157,8 +157,11 @@ class PaymentSummary extends StatelessWidget {
         return Icons.payment;
       case PaymentType.postpayment:
         return Icons.account_balance_wallet;
+      case PaymentType.full:
       case PaymentType.fullPayment:
         return Icons.check_circle;
+      case PaymentType.refund:
+        return Icons.undo;
     }
   }
 
@@ -168,8 +171,11 @@ class PaymentSummary extends StatelessWidget {
         return 'Предоплата';
       case PaymentType.postpayment:
         return 'Окончательный расчет';
+      case PaymentType.full:
       case PaymentType.fullPayment:
         return 'Полная оплата';
+      case PaymentType.refund:
+        return 'Возврат';
     }
   }
 
@@ -179,8 +185,11 @@ class PaymentSummary extends StatelessWidget {
         return 'Предоплата составляет 30% от общей стоимости услуги';
       case PaymentType.postpayment:
         return 'Окончательный расчет после завершения мероприятия';
+      case PaymentType.full:
       case PaymentType.fullPayment:
         return 'Полная оплата за услугу';
+      case PaymentType.refund:
+        return 'Возврат средств за отмененную услугу';
     }
   }
 }

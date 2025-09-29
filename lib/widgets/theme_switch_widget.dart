@@ -149,12 +149,15 @@ class ThemeSelectorWidget extends ConsumerWidget {
             border: Border.all(
               color: isSelected
                   ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.outline.withOpacity(0.3),
+                  : Theme.of(context)
+                      .colorScheme
+                      .outline
+                      .withValues(alpha: 0.3),
               width: isSelected ? 2 : 1,
             ),
             borderRadius: BorderRadius.circular(12),
             color: isSelected
-                ? Theme.of(context).colorScheme.primary.withOpacity(0.1)
+                ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.1)
                 : null,
           ),
           child: Row(
@@ -227,7 +230,6 @@ class QuickThemeToggle extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final currentTheme = ref.watch(themeProvider);
     final themeNotifier = ref.read(themeProvider.notifier);
     final isDark = ref.watch(isDarkModeProvider);
 
@@ -265,7 +267,7 @@ class ThemeInfoWidget extends ConsumerWidget {
         color: themeColors.surface,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: themeColors.primary.withOpacity(0.3),
+          color: themeColors.primary.withValues(alpha: 0.3),
         ),
       ),
       child: Column(
@@ -326,7 +328,7 @@ class ThemeInfoWidget extends ConsumerWidget {
             decoration: BoxDecoration(
               color: color,
               borderRadius: BorderRadius.circular(4),
-              border: Border.all(color: Colors.grey.withOpacity(0.3)),
+              border: Border.all(color: Colors.grey.withValues(alpha: 0.3)),
             ),
           ),
           const SizedBox(height: 4),

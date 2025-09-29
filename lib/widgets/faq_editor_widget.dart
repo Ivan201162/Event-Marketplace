@@ -250,7 +250,7 @@ class _FAQEditorWidgetState extends ConsumerState<FAQEditorWidget> {
           ),
         ),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ошибка сохранения: $e')),
       );

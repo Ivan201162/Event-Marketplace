@@ -512,7 +512,7 @@ class SpecialistProfilePriceStatsWidget extends ConsumerWidget {
       );
 
   void _showDetailedStats(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Статистика цен'),

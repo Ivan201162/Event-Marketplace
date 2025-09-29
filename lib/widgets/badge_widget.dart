@@ -32,7 +32,7 @@ class BadgeWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(size / 2),
             boxShadow: [
               BoxShadow(
-                color: _parseColor(badge.color).withOpacity(0.3),
+                color: _parseColor(badge.color).withValues(alpha: 0.3),
                 blurRadius: 8,
                 offset: const Offset(0, 4),
               ),
@@ -101,7 +101,7 @@ class BadgeInfoWidget extends StatelessWidget {
                           color: Theme.of(context)
                               .colorScheme
                               .onSurface
-                              .withOpacity(0.7),
+                              .withValues(alpha: 0.7),
                         ),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
@@ -135,7 +135,7 @@ class BadgeInfoWidget extends StatelessWidget {
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.7),
+                        .withValues(alpha: 0.7),
                   ),
               textAlign: TextAlign.center,
             ),
@@ -146,7 +146,7 @@ class BadgeInfoWidget extends StatelessWidget {
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.5),
+                        .withValues(alpha: 0.5),
                   ),
             ),
           ],
@@ -279,7 +279,10 @@ class BadgeCollectionWidget extends ConsumerWidget {
             Icon(
               Icons.emoji_events_outlined,
               size: 64,
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.3),
+              color: Theme.of(context)
+                  .colorScheme
+                  .onSurface
+                  .withValues(alpha: 0.3),
             ),
             const SizedBox(height: 16),
             Text(
@@ -288,7 +291,7 @@ class BadgeCollectionWidget extends ConsumerWidget {
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.5),
+                        .withValues(alpha: 0.5),
                   ),
             ),
             const SizedBox(height: 8),
@@ -298,7 +301,7 @@ class BadgeCollectionWidget extends ConsumerWidget {
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.5),
+                        .withValues(alpha: 0.5),
                   ),
               textAlign: TextAlign.center,
             ),
@@ -343,7 +346,7 @@ class BadgeCollectionWidget extends ConsumerWidget {
   }
 
   void _showBadgeDetails(BuildContext context, badge_model.Badge badge) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(badge.title),
@@ -446,8 +449,10 @@ class BadgeStatsWidget extends ConsumerWidget {
           Text(
             label,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
                 ),
           ),
         ],
@@ -564,7 +569,7 @@ class BadgeLeaderboardWidget extends ConsumerWidget {
                           color: Theme.of(context)
                               .colorScheme
                               .onSurface
-                              .withOpacity(0.7),
+                              .withValues(alpha: 0.7),
                         ),
                   ),
                 ],
@@ -578,7 +583,10 @@ class BadgeLeaderboardWidget extends ConsumerWidget {
         child: Text(
           'Таблица лидеров пуста',
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.5),
+                color: Theme.of(context)
+                    .colorScheme
+                    .onSurface
+                    .withValues(alpha: 0.5),
               ),
         ),
       );

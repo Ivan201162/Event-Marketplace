@@ -13,7 +13,7 @@ class VkPlaylistWidget extends ConsumerStatefulWidget {
     this.readOnly = false,
   });
   final String? playlistUrl;
-  final Function(String?)? onUrlChanged;
+  final void Function(String?)? onUrlChanged;
   final bool readOnly;
 
   @override
@@ -71,7 +71,7 @@ class _VkPlaylistWidgetState extends ConsumerState<VkPlaylistWidget> {
           _playlistInfo = null;
         });
       }
-    } catch (e) {
+    } on Exception {
       setState(() {
         _isValid = false;
         _playlistInfo = null;

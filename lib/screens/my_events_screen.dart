@@ -166,7 +166,8 @@ class MyEventsScreen extends ConsumerWidget {
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: event.statusColor.withOpacity(0.1),
+                                    color: event.statusColor
+                                        .withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(
@@ -332,7 +333,8 @@ class MyEventsScreen extends ConsumerWidget {
                                     vertical: 2,
                                   ),
                                   decoration: BoxDecoration(
-                                    color: event.statusColor.withOpacity(0.1),
+                                    color: event.statusColor
+                                        .withValues(alpha: 0.1),
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                   child: Text(

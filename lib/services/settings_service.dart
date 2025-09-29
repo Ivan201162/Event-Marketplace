@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:uuid/uuid.dart';
 
 import '../models/app_settings.dart';
@@ -19,12 +19,12 @@ class SettingsService {
 
   final Map<String, AppSettings> _settingsCache = {};
   final Map<String, AppConfiguration> _configurationsCache = {};
-  SharedPreferences? _prefs;
+  FlutterSecureStorage _prefs = const FlutterSecureStorage();
 
   /// Инициализация сервиса
   Future<void> initialize() async {
     try {
-      _prefs = await SharedPreferences.getInstance();
+      // _prefs already initialized
       await _loadSettingsCache();
       await _loadConfigurationsCache();
       await _loadLocalSettings();
@@ -500,20 +500,21 @@ class SettingsService {
   /// Сохранить настройку локально
   Future<void> _saveLocalSetting(String key, value) async {
     try {
-      if (_prefs == null) return;
+      // _prefs is always initialized
 
       if (value is String) {
-        await _prefs!.setString('setting_$key', value);
+        await _prefs.write(key: 'setting_$key', value: value);
       } else if (value is int) {
-        await _prefs!.setInt('setting_$key', value);
+        await _prefs.write(key: 'setting_$key', value: value.toString());
       } else if (value is double) {
-        await _prefs!.setDouble('setting_$key', value);
+        await _prefs.write(key: 'setting_$key', value: value.toString());
       } else if (value is bool) {
-        await _prefs!.setBool('setting_$key', value);
+        await _prefs.write(key: 'setting_$key', value: value.toString());
       } else if (value is List) {
-        await _prefs!.setStringList('setting_$key', value.cast<String>());
+        await _prefs.write(
+            key: 'setting_$key', value: json.encode(value.cast<String>()));
       } else {
-        await _prefs!.setString('setting_$key', json.encode(value));
+        await _prefs.write(key: 'setting_$key', value: json.encode(value));
       }
     } catch (e) {
       if (kDebugMode) {
@@ -525,8 +526,8 @@ class SettingsService {
   /// Удалить локальную настройку
   Future<void> _removeLocalSetting(String key) async {
     try {
-      if (_prefs == null) return;
-      await _prefs!.remove('setting_$key');
+      // _prefs is always initialized
+      await _prefs.delete(key: 'setting_$key');
     } catch (e) {
       if (kDebugMode) {
         print('Ошибка удаления локальной настройки: $e');
@@ -537,12 +538,13 @@ class SettingsService {
   /// Загрузить локальные настройки
   Future<void> _loadLocalSettings() async {
     try {
-      if (_prefs == null) return;
+      // _prefs is always initialized
 
-      final keys = _prefs!.getKeys().where((key) => key.startsWith('setting_'));
+      final allData = await _prefs.readAll();
+      final keys = allData.keys.where((key) => key.startsWith('setting_'));
       for (final key in keys) {
         final settingKey = key.substring(8); // Убираем префикс 'setting_'
-        final value = _prefs!.get(key);
+        final value = await _prefs.read(key: key);
 
         if (value != null && !_settingsCache.containsKey(settingKey)) {
           // Создаем временную настройку для локального значения

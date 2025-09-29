@@ -232,7 +232,7 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
           _selectedImage = File(image.path);
         });
       }
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ошибка выбора изображения: $e')),
       );
@@ -284,7 +284,7 @@ class _PhotoUploadWidgetState extends ConsumerState<PhotoUploadWidget> {
       } else {
         throw Exception('Не удалось загрузить фото');
       }
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ошибка загрузки: $e')),
       );

@@ -47,7 +47,7 @@ class VisibilityDetector extends StatefulWidget {
     required this.onVisibilityChanged,
   });
   final Widget child;
-  final Function(VisibilityInfo) onVisibilityChanged;
+  final void Function(VisibilityInfo) onVisibilityChanged;
 
   @override
   State<VisibilityDetector> createState() => _VisibilityDetectorState();
@@ -224,7 +224,7 @@ class _PaginatedListState extends State<PaginatedList> {
         _hasMore = newItems.length == widget.itemsPerPage;
         _isLoading = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _error = e.toString();
         _isLoading = false;
@@ -406,7 +406,7 @@ class _PreloadWidgetState extends State<PreloadWidget> {
           _isPreloading = false;
         });
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         setState(() {
           _error = e.toString();

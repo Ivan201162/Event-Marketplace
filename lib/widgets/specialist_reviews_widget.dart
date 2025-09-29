@@ -108,7 +108,8 @@ class SpecialistReviewsWidget extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: List.generate(5, (index) {
                       final rating = 5 - index;
-                      const count = 0; // TODO: Implement ratingCounts
+                      const count =
+                          0; // TODO(developer): Implement ratingCounts
                       final percentage = statistics.totalReviews > 0
                           ? (count / statistics.totalReviews * 100)
                           : 0.0;
@@ -307,7 +308,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
 
               // Теги
               if (review.tags.isNotEmpty) ...[
-                // TODO: Implement tags
+                // TODO(developer): Implement tags
                 Wrap(
                   spacing: 6,
                   runSpacing: 4,
@@ -376,7 +377,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
   Widget _buildErrorWidget(Object error) => Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: Colors.red.withOpacity(0.1),
+          color: Colors.red.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Row(
@@ -398,7 +399,7 @@ class SpecialistReviewsWidget extends ConsumerWidget {
 
   /// Показать все отзывы
   void _showAllReviews(List<Review> reviews) {
-    // TODO: Реализовать экран со всеми отзывами
+    // TODO(developer): Реализовать экран со всеми отзывами
   }
 
   /// Форматировать дату
@@ -449,7 +450,8 @@ class DetailedRatingWidget extends StatelessWidget {
             ),
             const SizedBox(height: 16),
 
-            _buildRatingItem('Качество', 0), // TODO: Implement detailed ratings
+            _buildRatingItem(
+                'Качество', 0), // TODO(developer): Implement detailed ratings
             _buildRatingItem('Общение', 0),
             _buildRatingItem('Пунктуальность', 0),
             _buildRatingItem('Соотношение цена/качество', 0),

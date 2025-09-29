@@ -111,7 +111,7 @@ class _SubscribeButtonState extends ConsumerState<SubscribeButton> {
           ),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -231,7 +231,7 @@ class SubscriptionsListWidget extends ConsumerWidget {
       );
 
       ref.invalidate(userSubscriptionsProvider(subscription.userId));
-    } catch (e) {
+    } on Exception {
       // Обработка ошибки
     }
   }
@@ -266,7 +266,7 @@ class SubscriptionTile extends StatelessWidget {
                 onUnsubscribe?.call();
                 break;
               case 'view_profile':
-                // TODO: Перейти к профилю специалиста
+                // TODO(developer): Перейти к профилю специалиста
                 break;
             }
           },
@@ -364,7 +364,7 @@ class SubscriptionNotificationsWidget extends ConsumerWidget {
       final service = ref.read(subscriptionServiceProvider);
       await service.markNotificationAsRead(notification.id);
 
-      // TODO: Перейти к соответствующему экрану
+      // TODO(developer): Перейти к соответствующему экрану
       switch (notification.type) {
         case NotificationType.system:
           // Перейти к системному уведомлению
@@ -397,7 +397,7 @@ class SubscriptionNotificationsWidget extends ConsumerWidget {
           // Показать общее уведомление
           break;
       }
-    } catch (e) {
+    } on Exception {
       // Обработка ошибки
     }
   }

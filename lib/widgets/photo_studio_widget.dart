@@ -58,7 +58,7 @@ class PhotoStudioCard extends ConsumerWidget {
 
               // Описание
               Text(
-                studio.description ?? 'Описание отсутствует',
+                studio.description,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
 
@@ -235,7 +235,7 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
                             ),
                             const SizedBox(height: 12),
                             Text(
-                              studio.description ?? 'Описание отсутствует',
+                              studio.description,
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             const SizedBox(height: 8),
@@ -447,7 +447,7 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
       );
 
   void _showPhotoPreview(BuildContext context, String photoUrl) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => Dialog(
         child: Container(
@@ -485,7 +485,7 @@ class PhotoStudioDetailWidget extends ConsumerWidget {
     WidgetRef ref,
     PhotoStudio studio,
   ) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _BookingDialog(
         studio: studio,
@@ -515,7 +515,7 @@ class PhotoStudioListWidget extends ConsumerWidget {
   final String? location;
   final double? minPrice;
   final double? maxPrice;
-  final Function(PhotoStudio)? onStudioSelected;
+  final void Function(PhotoStudio)? onStudioSelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Consumer(
@@ -759,7 +759,7 @@ class _BookingDialogState extends ConsumerState<_BookingDialog> {
 
       await service.createStudioBooking(
         studioId: widget.studio.id,
-        customerId: 'current_user_id', // TODO: Получить из контекста
+        customerId: 'current_user_id', // TODO(developer): Получить из контекста
         optionId: _selectedOption!.id,
         startTime: startDateTime,
         endTime: endDateTime,
@@ -769,7 +769,7 @@ class _BookingDialogState extends ConsumerState<_BookingDialog> {
       );
 
       widget.onBookingCreated();
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка: $e'),

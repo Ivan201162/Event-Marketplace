@@ -474,7 +474,7 @@ class _IdeasScreenState extends ConsumerState<IdeasScreen>
                       .map(
                         (tag) => Chip(
                           label: Text(tag),
-                          backgroundColor: Colors.blue.withOpacity(0.1),
+                          backgroundColor: Colors.blue.withValues(alpha: 0.1),
                         ),
                       )
                       .toList(),

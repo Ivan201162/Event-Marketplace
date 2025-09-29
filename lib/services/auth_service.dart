@@ -38,7 +38,7 @@ class AuthService {
   }
 
   /// Проверка, используется ли демо-режим
-  bool get _isDemoMode => kIsWeb && _auth.currentUser == null;
+  bool get _isDemoMode => false; // Отключаем демо-режим
 
   /// Текущий пользователь Firebase
   User? get currentFirebaseUser =>
@@ -129,8 +129,7 @@ class AuthService {
         try {
           // Приводим к типу User, чтобы получить доступ к uid
           final User user = firebaseUser as User;
-          final doc =
-              await _firestore.collection('users').doc(user.uid).get();
+          final doc = await _firestore.collection('users').doc(user.uid).get();
           if (doc.exists) {
             return AppUser.fromDocument(doc);
           }
@@ -468,7 +467,8 @@ class AuthService {
       AppLogger.logI('Обработка VK callback...', 'auth_service');
       return await _vkAuthService.handleVkCallbackAndSignIn(code);
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка обработки VK callback', 'auth_service', e, stackTrace);
+      AppLogger.logE(
+          'Ошибка обработки VK callback', 'auth_service', e, stackTrace);
       throw Exception('Ошибка обработки VK callback: $e');
     }
   }

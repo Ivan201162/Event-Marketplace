@@ -189,7 +189,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: request.statusColor.withOpacity(0.1),
+                          color: request.statusColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: request.statusColor),
                         ),
@@ -209,7 +209,7 @@ class _FeatureRequestScreenState extends ConsumerState<FeatureRequestScreen>
                           vertical: 4,
                         ),
                         decoration: BoxDecoration(
-                          color: request.priorityColor.withOpacity(0.1),
+                          color: request.priorityColor.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: request.priorityColor),
                         ),

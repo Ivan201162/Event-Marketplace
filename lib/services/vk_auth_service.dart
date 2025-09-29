@@ -41,39 +41,42 @@ class VKAuthService {
   /// Обработать VK callback и войти в систему
   Future<AppUser?> handleVkCallbackAndSignIn(String code) async {
     try {
-      AppLogger.logI('Обработка VK callback и вход в систему...', 'vk_auth_service');
-      
+      AppLogger.logI(
+          'Обработка VK callback и вход в систему...', 'vk_auth_service');
+
       // Получаем custom token через Cloud Function
       final customToken = await _exchangeCodeForCustomToken(code);
-      
+
       if (customToken == null) {
         AppLogger.logE('Не удалось получить custom token', 'vk_auth_service');
         return null;
       }
-      
+
       // Входим в Firebase с custom token
       final credential = await _auth.signInWithCustomToken(customToken);
       final firebaseUser = credential.user;
-      
+
       if (firebaseUser == null) {
         AppLogger.logE('Firebase пользователь не создан', 'vk_auth_service');
         return null;
       }
-      
+
       // Получаем данные пользователя из Firestore
-      final userDoc = await _firestore.collection('users').doc(firebaseUser.uid).get();
-      
+      final userDoc =
+          await _firestore.collection('users').doc(firebaseUser.uid).get();
+
       if (userDoc.exists) {
         final appUser = AppUser.fromDocument(userDoc);
-        AppLogger.logI('VK пользователь вошел: ${appUser.displayName}', 'vk_auth_service');
+        AppLogger.logI(
+            'VK пользователь вошел: ${appUser.displayName}', 'vk_auth_service');
         return appUser;
       } else {
         AppLogger.logE('Пользователь не найден в Firestore', 'vk_auth_service');
         return null;
       }
-      
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка обработки VK callback и входа', 'vk_auth_service', e, stackTrace);
+      AppLogger.logE('Ошибка обработки VK callback и входа', 'vk_auth_service',
+          e, stackTrace);
       throw Exception('Ошибка обработки VK callback и входа: $e');
     }
   }

@@ -107,7 +107,7 @@ class _LocalizationSettingsScreenState
                         width: 48,
                         height: 48,
                         decoration: BoxDecoration(
-                          color: Colors.blue.withOpacity(0.1),
+                          color: Colors.blue.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Icon(
@@ -191,8 +191,8 @@ class _LocalizationSettingsScreenState
                           height: 40,
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? Colors.blue.withOpacity(0.1)
-                                : Colors.grey.withOpacity(0.1),
+                                ? Colors.blue.withValues(alpha: 0.1)
+                                : Colors.grey.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Icon(

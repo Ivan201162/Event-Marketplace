@@ -107,7 +107,7 @@ class SpecialistPortfolioWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
+                color: Colors.grey.withValues(alpha: 0.2),
                 spreadRadius: 1,
                 blurRadius: 4,
                 offset: const Offset(0, 2),
@@ -145,7 +145,7 @@ class SpecialistPortfolioWidget extends StatelessWidget {
                       end: Alignment.bottomCenter,
                       colors: [
                         Colors.transparent,
-                        Colors.black.withOpacity(0.7),
+                        Colors.black.withValues(alpha: 0.7),
                       ],
                     ),
                   ),
@@ -170,7 +170,7 @@ class SpecialistPortfolioWidget extends StatelessWidget {
                       Text(
                         specialist.categoryDisplayName,
                         style: TextStyle(
-                          color: Colors.white.withOpacity(0.9),
+                          color: Colors.white.withValues(alpha: 0.9),
                           fontSize: 10,
                         ),
                       ),
@@ -185,7 +185,7 @@ class SpecialistPortfolioWidget extends StatelessWidget {
                   child: Container(
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.5),
+                      color: Colors.black.withValues(alpha: 0.5),
                       borderRadius: BorderRadius.circular(4),
                     ),
                     child: const Icon(
@@ -203,12 +203,12 @@ class SpecialistPortfolioWidget extends StatelessWidget {
 
   /// Показать элемент портфолио
   void _showPortfolioItem(String portfolioUrl, int index) {
-    // TODO: Реализовать полноэкранный просмотр портфолио
+    // TODO(developer): Реализовать полноэкранный просмотр портфолио
   }
 
   /// Показать все портфолио
   void _showAllPortfolio(BuildContext context) {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       isScrollControlled: true,
       builder: (context) => DraggableScrollableSheet(
@@ -290,7 +290,7 @@ class PortfolioItemWidget extends StatelessWidget {
             borderRadius: BorderRadius.circular(12),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.2),
+                color: Colors.grey.withValues(alpha: 0.2),
                 spreadRadius: 1,
                 blurRadius: 4,
                 offset: const Offset(0, 2),

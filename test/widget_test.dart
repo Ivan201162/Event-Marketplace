@@ -1,18 +1,17 @@
 import 'package:event_marketplace_app/main.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
   testWidgets('App loads correctly', (tester) async {
-    // Initialize SharedPreferences for testing
-    SharedPreferences.setMockInitialValues({});
-    final prefs = await SharedPreferences.getInstance();
+    // Initialize FlutterSecureStorage for testing
+    const storage = FlutterSecureStorage();
 
     // Build our app and trigger a frame.
     await tester.pumpWidget(
       ProviderScope(
-        child: EventMarketplaceApp(prefs: prefs),
+        child: EventMarketplaceApp(storage: storage),
       ),
     );
 

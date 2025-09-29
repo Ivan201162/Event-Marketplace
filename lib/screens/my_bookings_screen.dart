@@ -139,11 +139,12 @@ class MyBookingsScreen extends ConsumerWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: _getStatusColor(booking.status).withOpacity(0.1),
+                        color: _getStatusColor(booking.status)
+                            .withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color:
-                              _getStatusColor(booking.status).withOpacity(0.3),
+                          color: _getStatusColor(booking.status)
+                              .withValues(alpha: 0.3),
                         ),
                       ),
                       child: Text(

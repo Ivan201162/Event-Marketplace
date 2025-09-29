@@ -161,8 +161,10 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
           Text(
             'Получите доступ к расширенным возможностям и улучшите свой опыт работы с платформой',
             style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.7),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .onSurface
+                      .withValues(alpha: 0.7),
                 ),
           ),
         ],
@@ -222,7 +224,10 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                 'Экономия 17%',
                 style: TextStyle(
                   color: isSelected
-                      ? Theme.of(context).colorScheme.onPrimary.withOpacity(0.8)
+                      ? Theme.of(context)
+                          .colorScheme
+                          .onPrimary
+                          .withValues(alpha: 0.8)
                       : Theme.of(context).colorScheme.primary,
                   fontSize: 12,
                   fontWeight: FontWeight.bold,
@@ -313,7 +318,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                                   color: Theme.of(context)
                                       .colorScheme
                                       .onSurface
-                                      .withOpacity(0.7),
+                                      .withValues(alpha: 0.7),
                                 ),
                           ),
                         ],
@@ -339,7 +344,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                                     color: Theme.of(context)
                                         .colorScheme
                                         .onSurface
-                                        .withOpacity(0.7),
+                                        .withValues(alpha: 0.7),
                                   ),
                         ),
                         if (savings > 0) ...[
@@ -479,7 +484,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.7),
+                        .withValues(alpha: 0.7),
                   ),
             ),
           ),
@@ -569,7 +574,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                                     color: Theme.of(context)
                                         .colorScheme
                                         .onSurface
-                                        .withOpacity(0.7),
+                                        .withValues(alpha: 0.7),
                                   ),
                         ),
                       ],
@@ -600,7 +605,7 @@ class _SubscriptionsPageState extends ConsumerState<SubscriptionsPage>
                 Container(
                   padding: const EdgeInsets.all(12),
                   decoration: BoxDecoration(
-                    color: Colors.orange.withOpacity(0.1),
+                    color: Colors.orange.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(color: Colors.orange),
                   ),

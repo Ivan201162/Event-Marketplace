@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/cross_sell_suggestion.dart';
 import '../services/cross_sell_service.dart';
 import 'responsive_layout.dart';
+import 'responsive_text.dart';
 
 /// Виджет для отображения кросс-селл предложения
 class CrossSellSuggestionWidget extends ConsumerWidget {
@@ -31,7 +32,7 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
                 Expanded(
                   child: ResponsiveText(
                     'Рекомендуем дополнить заказ',
-                    isTitle: true,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                 ),
                 _buildStatusChip(),
@@ -56,7 +57,7 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
                     children: [
                       ResponsiveText(
                         'Дополнительных услуг:',
-                        isSubtitle: true,
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                       ResponsiveText(
                         '${suggestion.itemCount}',
@@ -73,7 +74,7 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
                     children: [
                       ResponsiveText(
                         'Общая стоимость:',
-                        isSubtitle: true,
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                       ResponsiveText(
                         '${suggestion.totalCost.toStringAsFixed(0)} ₽',
@@ -105,7 +106,7 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
                     Expanded(
                       child: ResponsiveText(
                         suggestion.message!,
-                        isSubtitle: true,
+                        style: Theme.of(context).textTheme.bodySmall,
                       ),
                     ),
                   ],
@@ -117,12 +118,13 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
             const SizedBox(height: 12),
             ResponsiveText(
               'Рекомендуемые специалисты:',
-              isTitle: true,
+              style: Theme.of(context).textTheme.titleMedium,
             ),
 
             const SizedBox(height: 8),
 
-            ...suggestion.suggestedItems.map(_buildSpecialistCard),
+            ...suggestion.suggestedItems
+                .map((item) => _buildSpecialistCard(item, context)),
 
             // Кнопки действий
             if (suggestion.canRespond) ...[
@@ -163,7 +165,7 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
                 const SizedBox(width: 4),
                 ResponsiveText(
                   'Создано: ${_formatDate(suggestion.createdAt)}',
-                  isSubtitle: true,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
             ),
@@ -188,7 +190,8 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
         ),
       );
 
-  Widget _buildSpecialistCard(CrossSellItem item) => Container(
+  Widget _buildSpecialistCard(CrossSellItem item, BuildContext context) =>
+      Container(
         margin: const EdgeInsets.only(bottom: 8),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
@@ -224,13 +227,13 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
                   ),
                   ResponsiveText(
                     item.categoryName,
-                    isSubtitle: true,
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                   if (item.description != null) ...[
                     const SizedBox(height: 4),
                     ResponsiveText(
                       item.description!,
-                      isSubtitle: true,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   ],
                 ],
@@ -303,7 +306,7 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
       );
 
       onSuggestionChanged?.call();
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка: $e'),
@@ -314,7 +317,7 @@ class CrossSellSuggestionWidget extends ConsumerWidget {
   }
 
   void _rejectSuggestion(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _RejectSuggestionDialog(
         suggestion: suggestion,
@@ -373,7 +376,7 @@ class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
                 const SizedBox(width: 8),
                 ResponsiveText(
                   'Рекомендовать дополнительные услуги',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ],
             ),
@@ -405,7 +408,7 @@ class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
               const SizedBox(height: 16),
               ResponsiveText(
                 'Выбранные специалисты:',
-                isTitle: true,
+                style: Theme.of(context).textTheme.titleMedium,
               ),
               const SizedBox(height: 8),
               ..._selectedItems.map(_buildSelectedSpecialistCard),
@@ -469,7 +472,7 @@ class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
                   ),
                   ResponsiveText(
                     item.categoryName,
-                    isSubtitle: true,
+                    style: Theme.of(context).textTheme.bodySmall,
                   ),
                   if (item.estimatedPrice != null) ...[
                     const SizedBox(height: 4),
@@ -512,7 +515,7 @@ class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
         _selectedItems.clear();
         _selectedItems.addAll(recommendations);
       });
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка загрузки рекомендаций: $e'),
@@ -557,7 +560,7 @@ class _CreateCrossSellWidgetState extends ConsumerState<CreateCrossSellWidget> {
       );
 
       widget.onSuggestionCreated?.call();
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка: $e'),
@@ -642,10 +645,11 @@ class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
     });
 
     try {
-      final service = ref.read(crossSellServiceProvider);
+      final service =
+          ProviderScope.containerOf(context).read(crossSellServiceProvider);
       await service.rejectCrossSellSuggestion(
         suggestionId: widget.suggestion.id,
-        customerId: 'current_user_id', // TODO: Получить из контекста
+        customerId: 'current_user_id', // TODO(developer): Получить из контекста
         reason: _reasonController.text.trim().isEmpty
             ? null
             : _reasonController.text.trim(),
@@ -660,7 +664,7 @@ class _RejectSuggestionDialogState extends State<_RejectSuggestionDialog> {
       );
 
       widget.onRejected();
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка: $e'),

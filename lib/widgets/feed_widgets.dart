@@ -4,7 +4,6 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import '../models/feed_post.dart';
 import '../providers/feed_providers.dart';
-import '../services/feed_service.dart';
 
 /// Виджет поста в ленте
 class FeedPostWidget extends ConsumerWidget {
@@ -122,7 +121,7 @@ class FeedPostWidget extends ConsumerWidget {
                         .map(
                           (tag) => Chip(
                             label: Text('#$tag'),
-                            backgroundColor: Colors.blue.withOpacity(0.1),
+                            backgroundColor: Colors.blue.withValues(alpha: 0.1),
                             labelStyle: const TextStyle(
                               color: Colors.blue,
                               fontSize: 12,
@@ -267,7 +266,7 @@ class FeedPostWidget extends ConsumerWidget {
       );
 
   void _showReportDialog(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Пожаловаться на пост'),
@@ -456,8 +455,10 @@ class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
       final comment = FeedComment(
         id: '', // Будет сгенерирован Firestore
         postId: widget.postId,
-        userId: 'current_user', // TODO: Получить реальный ID пользователя
-        userName: 'Пользователь', // TODO: Получить реальное имя пользователя
+        userId:
+            'current_user', // TODO(developer): Получить реальный ID пользователя
+        userName:
+            'Пользователь', // TODO(developer): Получить реальное имя пользователя
         content: _commentController.text.trim(),
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
@@ -466,7 +467,7 @@ class _PostCommentsWidgetState extends ConsumerState<PostCommentsWidget> {
 
       _commentController.clear();
       ref.invalidate(postCommentsProvider(widget.postId));
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
@@ -580,9 +581,9 @@ class CommentWidget extends ConsumerWidget {
       final service = ref.read(feedServiceProvider);
       await service.likeComment(
         comment.id,
-        'current_user', // TODO: Получить реальный ID пользователя
+        'current_user', // TODO(developer): Получить реальный ID пользователя
       );
-    } catch (e) {
+    } on Exception catch (e) {
       // Игнорируем ошибки
     }
   }

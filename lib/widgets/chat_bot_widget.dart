@@ -36,14 +36,15 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
     super.dispose();
   }
 
-  void _addWelcomeMessage() {
-    final welcomeResponse = _botService.getWelcomeMessage();
+  Future<void> _addWelcomeMessage() async {
+    final welcomeResponse = await _botService.getWelcomeMessage('user_id');
     _messages.add(
       BotMessage(
         id: DateTime.now().millisecondsSinceEpoch.toString(),
         isBot: true,
-        content: welcomeResponse.content,
-        suggestions: welcomeResponse.suggestions,
+        content: welcomeResponse.message,
+        suggestions:
+            welcomeResponse.quickReplies?.map((e) => e.title).toList() ?? [],
         type: BotMessageType.text,
       ),
     );
@@ -142,7 +143,7 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
                       ),
                     ),
                     maxLines: null,
-                    onSubmitted: _isLoading ? null : _sendMessage,
+                    onSubmitted: _isLoading ? null : (value) => _sendMessage(),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -220,12 +221,14 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
                                       decoration: BoxDecoration(
                                         color: message.isBot
                                             ? Colors.blue[50]
-                                            : Colors.white.withOpacity(0.2),
+                                            : Colors.white
+                                                .withValues(alpha: 0.2),
                                         borderRadius: BorderRadius.circular(16),
                                         border: Border.all(
                                           color: message.isBot
                                               ? Colors.blue[200]!
-                                              : Colors.white.withOpacity(0.3),
+                                              : Colors.white
+                                                  .withValues(alpha: 0.3),
                                         ),
                                       ),
                                       child: Text(
@@ -305,21 +308,26 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
       );
 
       // Добавляем ответ бота
-      _messages.add(
-        BotMessage(
-          id: DateTime.now().millisecondsSinceEpoch.toString(),
-          isBot: true,
-          content: response.content,
-          suggestions: response.suggestions,
-          type: _mapResponseType(response.type),
-        ),
-      );
+      if (response != null) {
+        _messages.add(
+          BotMessage(
+            id: DateTime.now().millisecondsSinceEpoch.toString(),
+            isBot: true,
+            content: response.message ?? '',
+            suggestions:
+                response.quickReplies?.map((e) => e.title).toList() ?? [],
+            type: _mapResponseType(
+                response.type?.toString().split('.').last ?? 'text'),
+          ),
+        );
 
-      // Если создан тикет, уведомляем
-      if (response.ticketId != null) {
-        widget.onTicketCreated?.call(response.ticketId!);
+        // Если создан тикет, уведомляем
+        if (response.metadata?['ticketId'] != null) {
+          widget.onTicketCreated
+              ?.call(response.metadata?['ticketId']?.toString() ?? '');
+        }
       }
-    } catch (e) {
+    } on Exception {
       _messages.add(
         BotMessage(
           id: DateTime.now().millisecondsSinceEpoch.toString(),
@@ -341,16 +349,18 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
     _sendMessage();
   }
 
-  BotMessageType _mapResponseType(BotResponseType responseType) {
+  BotMessageType _mapResponseType(String responseType) {
     switch (responseType) {
-      case BotResponseType.text:
+      case 'text':
         return BotMessageType.text;
-      case BotResponseType.faqSuggestions:
+      case 'quickReply':
         return BotMessageType.faqSuggestions;
-      case BotResponseType.escalateToHuman:
+      case 'card':
         return BotMessageType.escalateToHuman;
-      case BotResponseType.ticketCreated:
+      case 'list':
         return BotMessageType.ticketCreated;
+      default:
+        return BotMessageType.text;
     }
   }
 
@@ -372,7 +382,7 @@ class _ChatBotWidgetState extends ConsumerState<ChatBotWidget> {
 
 /// Модель сообщения бота
 class BotMessage {
-  const BotMessage({
+  BotMessage({
     required this.id,
     required this.isBot,
     required this.content,

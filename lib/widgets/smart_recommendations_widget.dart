@@ -20,9 +20,9 @@ class SmartRecommendationsWidget extends ConsumerWidget {
 
   final CityRegion? selectedCity;
   final String? selectedRegion;
-  final Function(Specialist)? onSpecialistSelected;
-  final Function(SpecialistCategory)? onCategorySelected;
-  final Function(CityRegion)? onCitySelected;
+  final void Function(Specialist)? onSpecialistSelected;
+  final void Function(SpecialistCategory)? onCategorySelected;
+  final void Function(CityRegion)? onCitySelected;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -304,7 +304,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                 // Аватар
                 CircleAvatar(
                   radius: 24,
-                  backgroundColor: theme.primaryColor.withOpacity(0.1),
+                  backgroundColor: theme.primaryColor.withValues(alpha: 0.1),
                   backgroundImage: specialist.avatarUrl != null
                       ? NetworkImage(specialist.avatarUrl!)
                       : null,
@@ -386,10 +386,10 @@ class SmartRecommendationsWidget extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: theme.primaryColor.withOpacity(0.1),
+          color: theme.primaryColor.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: theme.primaryColor.withOpacity(0.3),
+            color: theme.primaryColor.withValues(alpha: 0.3),
           ),
         ),
         child: Text(
@@ -423,7 +423,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
                   width: 40,
                   height: 40,
                   decoration: BoxDecoration(
-                    color: theme.primaryColor.withOpacity(0.1),
+                    color: theme.primaryColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Center(
@@ -496,7 +496,7 @@ class SmartRecommendationsWidget extends ConsumerWidget {
             return Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
               decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceVariant,
+                color: theme.colorScheme.surfaceContainerHighest,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(

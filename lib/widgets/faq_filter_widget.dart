@@ -9,7 +9,7 @@ class FAQFilterWidget extends StatefulWidget {
     required this.onFiltersChanged,
   });
   final FAQFilters currentFilters;
-  final Function(FAQFilters) onFiltersChanged;
+  final void Function(FAQFilters) onFiltersChanged;
 
   @override
   State<FAQFilterWidget> createState() => _FAQFilterWidgetState();

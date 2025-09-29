@@ -3,20 +3,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/content_creator.dart';
 import '../services/content_creator_service.dart';
 import 'responsive_layout.dart';
+import 'responsive_text.dart';
 
 /// Виджет для отображения карточки контент-мейкера
 class ContentCreatorCard extends ConsumerWidget {
   const ContentCreatorCard({
     super.key,
     required this.creator,
-    this.onTap,
   });
   final ContentCreator creator;
-  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => ResponsiveCard(
-        onTap: onTap,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -26,7 +24,9 @@ class ContentCreatorCard extends ConsumerWidget {
                 Expanded(
                   child: ResponsiveText(
                     creator.name,
-                    isTitle: true,
+                    style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                          fontWeight: FontWeight.bold,
+                        ),
                   ),
                 ),
                 if (creator.rating != null) ...[
@@ -58,7 +58,7 @@ class ContentCreatorCard extends ConsumerWidget {
             // Описание
             ResponsiveText(
               creator.description,
-              isSubtitle: true,
+              style: Theme.of(context).textTheme.bodyMedium,
             ),
 
             const SizedBox(height: 12),
@@ -177,7 +177,12 @@ class ContentCreatorDetailWidget extends ConsumerWidget {
                                 Expanded(
                                   child: ResponsiveText(
                                     creator.name,
-                                    isTitle: true,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .headlineSmall
+                                        ?.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                        ),
                                   ),
                                 ),
                                 if (creator.rating != null) ...[
@@ -207,7 +212,7 @@ class ContentCreatorDetailWidget extends ConsumerWidget {
                             const SizedBox(height: 12),
                             ResponsiveText(
                               creator.description,
-                              isSubtitle: true,
+                              style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             if (creator.location != null) ...[
                               const SizedBox(height: 8),
@@ -240,7 +245,12 @@ class ContentCreatorDetailWidget extends ConsumerWidget {
                           children: [
                             ResponsiveText(
                               'Поддерживаемые форматы',
-                              isTitle: true,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .titleMedium
+                                  ?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
                             const SizedBox(height: 12),
                             Wrap(
@@ -263,7 +273,12 @@ class ContentCreatorDetailWidget extends ConsumerWidget {
                               children: [
                                 ResponsiveText(
                                   'Портфолио',
-                                  isTitle: true,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleMedium
+                                      ?.copyWith(
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                 ),
                                 const Spacer(),
                                 Text(
@@ -295,13 +310,18 @@ class ContentCreatorDetailWidget extends ConsumerWidget {
                             children: [
                               ResponsiveText(
                                 'Цены',
-                                isTitle: true,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleMedium
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
                               const SizedBox(height: 12),
                               Container(
                                 padding: const EdgeInsets.all(16),
                                 decoration: BoxDecoration(
-                                  color: Colors.green.withValues(alpha: 0.1),
+                                  color: Colors.green.withOpacity(0.1),
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(color: Colors.green),
                                 ),
@@ -353,7 +373,7 @@ class ContentCreatorDetailWidget extends ConsumerWidget {
             const SizedBox(height: 4),
             ResponsiveText(
               format.description,
-              isSubtitle: true,
+              style: const TextStyle(fontSize: 14),
             ),
             if (format.platforms.isNotEmpty) ...[
               const SizedBox(height: 8),
@@ -513,7 +533,7 @@ class ContentCreatorDetailWidget extends ConsumerWidget {
       );
 
   void _showMediaPreview(MediaShowcase item) {
-    // TODO: Реализовать полноэкранный просмотр медиа
+    // TODO(developer): Реализовать полноэкранный просмотр медиа
     print('Просмотр медиа: ${item.title}');
   }
 }
@@ -536,11 +556,11 @@ class ContentCreatorListWidget extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => Consumer(
         builder: (context, ref, child) => ref
             .watch(
-              contentCreatorsProvider(
-                location: location,
-                categories: categories,
-                formats: formats,
-              ),
+              contentCreatorsProvider({
+                'location': location,
+                'categories': categories,
+                'formats': formats,
+              }),
             )
             .when(
               data: (creators) {
@@ -556,7 +576,6 @@ class ContentCreatorListWidget extends ConsumerWidget {
                     final creator = creators[index];
                     return ContentCreatorCard(
                       creator: creator,
-                      onTap: () => onCreatorSelected?.call(creator),
                     );
                   },
                 );
@@ -580,10 +599,10 @@ final contentCreatorsProvider =
         (ref, params) async {
   final service = ref.read(contentCreatorServiceProvider);
   return service.getContentCreators(
-    location: params['location'],
-    categories: params['categories'],
-    formats: params['formats'],
-    limit: params['limit'] ?? 20,
+    location: params['location'] as String?,
+    categories: params['categories'] as List<String>?,
+    formats: params['formats'] as List<String>?,
+    limit: params['limit'] as int? ?? 20,
   );
 });
 

@@ -147,7 +147,7 @@ class StudioRecommendationWidget extends ConsumerWidget {
   String _formatDate(DateTime date) => '${date.day}.${date.month}.${date.year}';
 
   void _openStudioUrl(String url) {
-    // TODO: Реализовать открытие URL
+    // TODO(developer): Реализовать открытие URL
     print('Открытие URL: $url');
   }
 }
@@ -334,7 +334,7 @@ class _CreateStudioRecommendationWidgetState
       );
 
       widget.onRecommendationCreated?.call();
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка: $e'),

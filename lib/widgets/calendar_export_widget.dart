@@ -359,7 +359,7 @@ class CalendarExportUtils {
   }
 
   /// Показать диалог экспорта для событий
-  static void showExportDialog(BuildContext context, List<Event> events) {
+  static void showEventExportDialog(BuildContext context, List<Event> events) {
     showDialog(
       context: context,
       builder: (context) => CalendarExportDialog(events: events),
@@ -367,7 +367,8 @@ class CalendarExportUtils {
   }
 
   /// Показать диалог экспорта для бронирований
-  static void showExportDialog(BuildContext context, List<Booking> bookings) {
+  static void showBookingExportDialog(
+      BuildContext context, List<Booking> bookings) {
     showDialog(
       context: context,
       builder: (context) => CalendarExportDialog(bookings: bookings),
@@ -375,18 +376,18 @@ class CalendarExportUtils {
   }
 
   /// Быстрый экспорт события
-  static Future<bool> quickExport(Event event) async =>
+  static Future<bool> quickExportEvent(Event event) async =>
       IcsExportService.exportAndShareEvent(event);
 
   /// Быстрый экспорт бронирования
-  static Future<bool> quickExport(Booking booking) async =>
+  static Future<bool> quickExportBooking(Booking booking) async =>
       IcsExportService.exportAndShareBooking(booking);
 
   /// Быстрый экспорт событий
-  static Future<bool> quickExport(List<Event> events) async =>
+  static Future<bool> quickExportEvents(List<Event> events) async =>
       IcsExportService.exportAndShareEvents(events);
 
   /// Быстрый экспорт бронирований
-  static Future<bool> quickExport(List<Booking> bookings) async =>
+  static Future<bool> quickExportBookings(List<Booking> bookings) async =>
       IcsExportService.exportAndShareBookings(bookings);
 }

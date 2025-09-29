@@ -134,7 +134,7 @@ class ContractContentWidget extends StatelessWidget {
   }
 
   void _showFullContent(BuildContext context) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => Dialog(
         child: Container(

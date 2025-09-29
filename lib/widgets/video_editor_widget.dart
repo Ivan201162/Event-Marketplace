@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/specialist_profile_extended.dart';
 // import '../services/specialist_profile_extended_service.dart';
-import '../providers/specialist_providers.dart';
+// import '../providers/specialist_providers.dart';
 
 /// Виджет редактора видео
 class VideoEditorWidget extends ConsumerStatefulWidget {
@@ -345,8 +345,8 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
     final title = _titleController.text.trim();
     final description = _descriptionController.text.trim();
     final url = _urlController.text.trim();
-    final thumbnailUrl = _thumbnailUrlController.text.trim();
-    final duration = _durationController.text.trim();
+    // final thumbnailUrl = _thumbnailUrlController.text.trim();
+    // final duration = _durationController.text.trim();
 
     if (title.isEmpty || description.isEmpty || url.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -360,26 +360,26 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
     });
 
     try {
-      final service = ref.read(specialistServiceProvider);
+      // final service = ref.read(specialistServiceProvider);
 
       if (widget.existingVideo != null) {
         // Обновляем существующее видео
-        final updatedVideo = widget.existingVideo!.copyWith(
-          title: title,
-          description: description,
-          url: url,
-          thumbnailUrl: thumbnailUrl,
-          platform: _selectedPlatform,
-          duration: duration,
-          tags: _tags,
-          isPublic: _isPublic,
-        );
+        // final updatedVideo = widget.existingVideo!.copyWith(
+        //   title: title,
+        //   description: description,
+        //   url: url,
+        //   thumbnailUrl: thumbnailUrl,
+        //   platform: _selectedPlatform,
+        //   duration: duration,
+        //   tags: _tags,
+        //   isPublic: _isPublic,
+        // );
 
-        // TODO: Implement updatePortfolioVideo method
+        // TODO(developer): Implement updatePortfolioVideo method
         // await service.updatePortfolioVideo(widget.specialistId, updatedVideo);
       } else {
         // Создаём новое видео
-        // TODO: Implement addPortfolioVideo method
+        // TODO(developer): Implement addPortfolioVideo method
         // await service.addPortfolioVideo(
         //   specialistId: widget.specialistId,
         //   title: title,
@@ -405,7 +405,7 @@ class _VideoEditorWidgetState extends ConsumerState<VideoEditorWidget> {
           ),
         ),
       );
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ошибка сохранения: $e')),
       );

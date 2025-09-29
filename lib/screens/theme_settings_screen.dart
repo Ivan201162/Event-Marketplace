@@ -231,7 +231,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
                         boxShadow: isSelected
                             ? [
                                 BoxShadow(
-                                  color: color.withOpacity(0.5),
+                                  color: color.withValues(alpha: 0.5),
                                   blurRadius: 8,
                                   spreadRadius: 2,
                                 ),
@@ -256,9 +256,10 @@ class ThemeSettingsScreen extends ConsumerWidget {
               Container(
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: currentColor.withOpacity(0.1),
+                  color: currentColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: currentColor.withOpacity(0.3)),
+                  border:
+                      Border.all(color: currentColor.withValues(alpha: 0.3)),
                 ),
                 child: Row(
                   children: [
@@ -345,8 +346,10 @@ class ThemeSettingsScreen extends ConsumerWidget {
                   color: Theme.of(context).colorScheme.surface,
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
-                    color:
-                        Theme.of(context).colorScheme.outline.withOpacity(0.2),
+                    color: Theme.of(context)
+                        .colorScheme
+                        .outline
+                        .withValues(alpha: 0.2),
                   ),
                 ),
                 child: Column(
@@ -366,7 +369,7 @@ class ThemeSettingsScreen extends ConsumerWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .onSurface
-                            .withOpacity(0.7),
+                            .withValues(alpha: 0.7),
                       ),
                     ),
                   ],

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/proposal.dart';
 import '../models/specialist.dart';
 import '../services/proposal_service.dart';
+import '../services/specialist_service.dart';
 import 'responsive_layout.dart';
 
 /// Виджет для отображения предложения специалистов
@@ -280,10 +281,7 @@ class ProposalWidget extends ConsumerWidget {
   Future<void> _acceptProposal(BuildContext context, WidgetRef ref) async {
     try {
       final service = ref.read(proposalServiceProvider);
-      await service.acceptProposal(
-        proposalId: proposal.id,
-        customerId: 'current_user_id', // TODO: Получить из контекста
-      );
+      await service.acceptProposal(proposal.id);
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -293,7 +291,7 @@ class ProposalWidget extends ConsumerWidget {
       );
 
       onProposalChanged?.call();
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка: $e'),
@@ -304,7 +302,7 @@ class ProposalWidget extends ConsumerWidget {
   }
 
   void _rejectProposal(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _RejectProposalDialog(
         proposal: proposal,
@@ -344,6 +342,14 @@ class _CreateProposalWidgetState extends ConsumerState<CreateProposalWidget> {
   void dispose() {
     _messageController.dispose();
     super.dispose();
+  }
+
+  double _calculateTotalPrice() {
+    double total = 0.0;
+    for (final specialist in _selectedSpecialists) {
+      total += specialist.price;
+    }
+    return total;
   }
 
   @override
@@ -472,7 +478,7 @@ class _CreateProposalWidgetState extends ConsumerState<CreateProposalWidget> {
   bool _canCreateProposal() => _selectedSpecialists.isNotEmpty && !_isLoading;
 
   void _selectSpecialists() {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _SelectSpecialistsDialog(
         onSpecialistsSelected: (specialists) {
@@ -499,10 +505,13 @@ class _CreateProposalWidgetState extends ConsumerState<CreateProposalWidget> {
     try {
       final service = ref.read(proposalServiceProvider);
       await service.createProposal(
-        chatId: widget.chatId,
-        organizerId: widget.organizerId,
+        bookingId: '',
+        specialistId: _selectedSpecialists.isNotEmpty
+            ? _selectedSpecialists.first.id
+            : '',
         customerId: widget.customerId,
-        specialists: _selectedSpecialists,
+        originalPrice: _calculateTotalPrice(),
+        discountPercent: 0.0,
         message: _messageController.text.trim().isEmpty
             ? null
             : _messageController.text.trim(),
@@ -516,7 +525,7 @@ class _CreateProposalWidgetState extends ConsumerState<CreateProposalWidget> {
       );
 
       widget.onProposalCreated?.call();
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка: $e'),
@@ -602,13 +611,7 @@ class _RejectProposalDialogState extends ConsumerState<_RejectProposalDialog> {
 
     try {
       final service = ref.read(proposalServiceProvider);
-      await service.rejectProposal(
-        proposalId: widget.proposal.id,
-        customerId: 'current_user_id', // TODO: Получить из контекста
-        reason: _reasonController.text.trim().isEmpty
-            ? null
-            : _reasonController.text.trim(),
-      );
+      await service.rejectProposal(widget.proposal.id);
 
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(
@@ -619,7 +622,7 @@ class _RejectProposalDialogState extends ConsumerState<_RejectProposalDialog> {
       );
 
       widget.onRejected();
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Ошибка: $e'),
@@ -639,7 +642,7 @@ class _SelectSpecialistsDialog extends ConsumerStatefulWidget {
   const _SelectSpecialistsDialog({
     required this.onSpecialistsSelected,
   });
-  final Function(List<ProposalSpecialist>) onSpecialistsSelected;
+  final void Function(List<ProposalSpecialist>) onSpecialistsSelected;
 
   @override
   ConsumerState<_SelectSpecialistsDialog> createState() =>
@@ -653,7 +656,7 @@ class _SelectSpecialistsDialogState
     'photographer',
     'videographer',
     'host',
-  ]; // TODO: Получить из контекста
+  ]; // TODO(developer): Получить из контекста
 
   @override
   Widget build(BuildContext context) => AlertDialog(
@@ -720,12 +723,12 @@ class _SelectSpecialistsDialogState
           ProposalSpecialist(
             id: specialist.id,
             name: specialist.name,
-            price: specialist.min,
+            price: specialist.min ?? 0.0,
             specialistId: specialist.id,
             specialistName: specialist.name,
             categoryId: specialist.categories.first.name,
             categoryName: specialist.categories.first.name,
-            estimatedPrice: specialist.min,
+            estimatedPrice: specialist.min ?? 0.0,
           ),
         );
       }
@@ -737,10 +740,29 @@ class _SelectSpecialistsDialogState
 final proposalServiceProvider =
     Provider<ProposalService>((ref) => ProposalService());
 
+/// Провайдер для сервиса специалистов
+final specialistServiceProvider =
+    Provider<SpecialistService>((ref) => SpecialistService());
+
 /// Провайдер для специалистов для предложения
 final specialistsForProposalProvider =
     FutureProvider.family<List<Specialist>, List<String>>(
         (ref, categoryIds) async {
-  final service = ref.read(proposalServiceProvider);
-  return service.getSpecialistsForProposal(categoryIds: categoryIds);
+  final service = ref.read(specialistServiceProvider);
+  final specialists = <Specialist>[];
+  for (final categoryId in categoryIds) {
+    try {
+      final category = SpecialistCategory.values.firstWhere(
+        (c) => c.name == categoryId,
+        orElse: () => SpecialistCategory.host,
+      );
+      final categorySpecialists =
+          await service.getSpecialistsByCategory(category);
+      specialists.addAll(categorySpecialists);
+    } on Exception {
+      // Игнорируем ошибки для несуществующих категорий
+      continue;
+    }
+  }
+  return specialists;
 });

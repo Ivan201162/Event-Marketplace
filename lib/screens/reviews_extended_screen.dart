@@ -256,7 +256,7 @@ class _ReviewsExtendedScreenState extends ConsumerState<ReviewsExtendedScreen> {
                                 label: Text(tag),
                                 backgroundColor: Theme.of(context)
                                     .primaryColor
-                                    .withOpacity(0.1),
+                                    .withValues(alpha: 0.1),
                               ),
                             )
                             .toList(),

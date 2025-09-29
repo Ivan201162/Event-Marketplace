@@ -206,7 +206,7 @@ class AppReviewSettingsWidget extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
+                color: Colors.red.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.red),
               ),
@@ -274,7 +274,7 @@ class AppReviewSettingsWidget extends ConsumerWidget {
       );
 
   void _showResetDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Сбросить состояние отзывов'),
@@ -344,7 +344,7 @@ class ReviewStatsWidget extends ConsumerWidget {
                 _buildStatRow(
                   'Статус отзыва',
                   stats.isDismissed ? 'Отклонен' : 'Активен',
-                  Icons.status,
+                  Icons.info,
                   stats.isDismissed ? Colors.red : Colors.green,
                 ),
                 if (stats.lastReviewRequest != null)
@@ -446,8 +446,8 @@ class ReviewRecommendationsWidget extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color:
-                  Color(ref.watch(reviewTimingColorProvider)).withOpacity(0.1),
+              color: Color(ref.watch(reviewTimingColorProvider))
+                  .withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
               border: Border.all(
                 color: Color(ref.watch(reviewTimingColorProvider)),

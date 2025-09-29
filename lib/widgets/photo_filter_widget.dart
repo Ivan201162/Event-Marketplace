@@ -9,7 +9,7 @@ class PhotoFilterWidget extends StatefulWidget {
     required this.onFiltersChanged,
   });
   final PhotoFilters currentFilters;
-  final Function(PhotoFilters) onFiltersChanged;
+  final void Function(PhotoFilters) onFiltersChanged;
 
   @override
   State<PhotoFilterWidget> createState() => _PhotoFilterWidgetState();

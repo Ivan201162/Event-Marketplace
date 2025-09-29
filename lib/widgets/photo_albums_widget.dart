@@ -16,7 +16,7 @@ class PhotoAlbumsWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // TODO: Заменить на реальные данные из провайдера
+    // TODO(developer): Заменить на реальные данные из провайдера
     final albums = _getMockAlbums();
 
     return GridView.count(
@@ -104,7 +104,7 @@ class PhotoAlbumsWidget extends ConsumerWidget {
                             vertical: 4,
                           ),
                           decoration: BoxDecoration(
-                            color: Colors.black.withOpacity(0.7),
+                            color: Colors.black.withValues(alpha: 0.7),
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
@@ -136,7 +136,7 @@ class PhotoAlbumsWidget extends ConsumerWidget {
                           child: Container(
                             padding: const EdgeInsets.all(4),
                             decoration: BoxDecoration(
-                              color: Colors.black.withOpacity(0.7),
+                              color: Colors.black.withValues(alpha: 0.7),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: const Icon(
@@ -288,7 +288,7 @@ class PhotoAlbumsWidget extends ConsumerWidget {
 
   void _createNewAlbum(BuildContext context) {
     Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => const CreateAlbumScreen(),
       ),
     );
@@ -296,7 +296,7 @@ class PhotoAlbumsWidget extends ConsumerWidget {
 
   void _openAlbum(BuildContext context, PhotoAlbum album) {
     Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => AlbumDetailScreen(album: album),
       ),
     );
@@ -480,7 +480,7 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
       _titleController.text.isNotEmpty && _selectedImages.isNotEmpty;
 
   void _selectImages() {
-    // TODO: Реализовать выбор изображений
+    // TODO(developer): Реализовать выбор изображений
     setState(() {
       _selectedImages = [
         'https://via.placeholder.com/300x400?text=Фото+1',
@@ -492,7 +492,7 @@ class _CreateAlbumScreenState extends State<CreateAlbumScreen> {
 
   void _createAlbum() {
     if (_formKey.currentState!.validate()) {
-      // TODO: Реализовать создание альбома
+      // TODO(developer): Реализовать создание альбома
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Альбом создан')),
       );
@@ -588,7 +588,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
       );
 
   Widget _buildPhotoGrid() {
-    // TODO: Заменить на реальные данные
+    // TODO(developer): Заменить на реальные данные
     final photos = List.generate(
       widget.album.photoCount,
       (index) => 'https://via.placeholder.com/300x400?text=Фото+${index + 1}',
@@ -637,7 +637,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
   }
 
   void _showAlbumOptions() {
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       builder: (context) => Container(
         padding: const EdgeInsets.all(16),
@@ -672,7 +672,7 @@ class _AlbumDetailScreenState extends State<AlbumDetailScreen> {
 
   void _openPhotoViewer(List<String> photos, int initialIndex) {
     Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => PhotoViewerScreen(
           photos: photos,
           initialIndex: initialIndex,

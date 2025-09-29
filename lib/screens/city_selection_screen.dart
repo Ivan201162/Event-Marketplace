@@ -99,9 +99,10 @@ class _CitySelectionScreenState extends ConsumerState<CitySelectionScreen>
               margin: const EdgeInsets.symmetric(horizontal: 16.0),
               padding: const EdgeInsets.all(12.0),
               decoration: BoxDecoration(
-                color: theme.primaryColor.withOpacity(0.1),
+                color: theme.primaryColor.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8.0),
-                border: Border.all(color: theme.primaryColor.withOpacity(0.3)),
+                border: Border.all(
+                    color: theme.primaryColor.withValues(alpha: 0.3)),
               ),
               child: Row(
                 children: [

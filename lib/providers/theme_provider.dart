@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../core/app_theme.dart';
 
 /// Типы тем
@@ -93,8 +93,11 @@ class ThemeNotifier extends Notifier<AppThemeMode> {
   /// Загрузить сохраненную тему
   Future<void> _loadTheme() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      final themeIndex = prefs.getInt(_themeKey) ?? AppThemeMode.system.index;
+      final storage = const FlutterSecureStorage();
+      final themeIndexStr = await storage.read(key: _themeKey);
+      final themeIndex = themeIndexStr != null
+          ? int.parse(themeIndexStr)
+          : AppThemeMode.system.index;
       state = AppThemeMode.values[themeIndex];
     } catch (e) {
       // В случае ошибки используем системную тему
@@ -105,8 +108,8 @@ class ThemeNotifier extends Notifier<AppThemeMode> {
   /// Сохранить выбранную тему
   Future<void> _saveTheme(AppThemeMode theme) async {
     try {
-      final prefs = await SharedPreferences.getInstance();
-      await prefs.setInt(_themeKey, theme.index);
+      final storage = const FlutterSecureStorage();
+      await storage.write(key: _themeKey, value: theme.index.toString());
     } catch (e) {
       // Игнорируем ошибки сохранения
     }

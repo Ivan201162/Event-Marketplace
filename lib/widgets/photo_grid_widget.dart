@@ -13,9 +13,9 @@ class PhotoGridWidget extends StatelessWidget {
     required this.onPhotoDelete,
   });
   final List<InspirationPhoto> photos;
-  final Function(InspirationPhoto) onPhotoTap;
-  final Function(InspirationPhoto) onPhotoEdit;
-  final Function(InspirationPhoto) onPhotoDelete;
+  final void Function(InspirationPhoto) onPhotoTap;
+  final void Function(InspirationPhoto) onPhotoEdit;
+  final void Function(InspirationPhoto) onPhotoDelete;
 
   @override
   Widget build(BuildContext context) => GridView.builder(

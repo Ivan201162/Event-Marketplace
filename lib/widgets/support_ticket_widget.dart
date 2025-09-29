@@ -43,10 +43,10 @@ class SupportTicketWidget extends StatelessWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: ticket.statusColor.withOpacity(0.1),
+                        color: ticket.statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(12),
                         border: Border.all(
-                          color: ticket.statusColor.withOpacity(0.3),
+                          color: ticket.statusColor.withValues(alpha: 0.3),
                         ),
                       ),
                       child: Text(
@@ -187,8 +187,8 @@ class SupportTicketListTile extends StatelessWidget {
           height: 50,
           decoration: BoxDecoration(
             color: ticket.categoryIcon == Icons.help_outline
-                ? Colors.blue.withOpacity(0.1)
-                : Colors.green.withOpacity(0.1),
+                ? Colors.blue.withValues(alpha: 0.1)
+                : Colors.green.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(
@@ -220,7 +220,7 @@ class SupportTicketListTile extends StatelessWidget {
                   padding:
                       const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
                   decoration: BoxDecoration(
-                    color: ticket.statusColor.withOpacity(0.1),
+                    color: ticket.statusColor.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -336,7 +336,7 @@ class SupportTicketGridTile extends StatelessWidget {
                         vertical: 2,
                       ),
                       decoration: BoxDecoration(
-                        color: ticket.statusColor.withOpacity(0.1),
+                        color: ticket.statusColor.withValues(alpha: 0.1),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Text(

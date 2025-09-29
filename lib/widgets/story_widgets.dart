@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
 
-import '../generated/l10n/app_localizations.dart';
+// import '../generated/l10n/app_localizations.dart';
 import '../models/media_type.dart';
 import '../models/story.dart';
 import '../models/story_type.dart';
@@ -22,7 +22,7 @@ class StoryWidget extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
+    // final l10n = AppLocalizations.of(context)!;
     final timeLeft = story.expiresAt.difference(DateTime.now());
 
     return GestureDetector(
@@ -92,7 +92,7 @@ class StoryWidget extends ConsumerWidget {
                   right: 4,
                   child: LinearProgressIndicator(
                     value: 1.0 - (timeLeft.inMinutes / (24 * 60)),
-                    backgroundColor: Colors.white.withOpacity(0.3),
+                    backgroundColor: Colors.white.withValues(alpha: 0.3),
                     valueColor: const AlwaysStoppedAnimation<Color>(Colors.red),
                     minHeight: 2,
                   ),
@@ -141,7 +141,7 @@ class _CreateStoryWidgetState extends ConsumerState<CreateStoryWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
+    // final l10n = AppLocalizations.of(context)!;
 
     return FloatingActionButton(
       onPressed: _isUploading ? null : _showCreateStoryDialog,
@@ -152,9 +152,9 @@ class _CreateStoryWidgetState extends ConsumerState<CreateStoryWidget> {
   }
 
   void _showCreateStoryDialog() {
-    final l10n = AppLocalizations.of(context)!;
+    // final l10n = AppLocalizations.of(context)!;
 
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       builder: (context) => SafeArea(
         child: Column(
@@ -162,22 +162,22 @@ class _CreateStoryWidgetState extends ConsumerState<CreateStoryWidget> {
           children: [
             ListTile(
               leading: const Icon(Icons.camera_alt),
-              title: Text(l10n.takePhoto),
+              title: const Text('Сделать фото'),
               onTap: () => _createStory(StoryType.image, ImageSource.camera),
             ),
             ListTile(
               leading: const Icon(Icons.photo_library),
-              title: Text(l10n.chooseFromGallery),
+              title: const Text('Выбрать из галереи'),
               onTap: () => _createStory(StoryType.image, ImageSource.gallery),
             ),
             ListTile(
               leading: const Icon(Icons.videocam),
-              title: Text(l10n.takeVideo),
+              title: const Text('Снять видео'),
               onTap: () => _createStory(StoryType.video, ImageSource.camera),
             ),
             ListTile(
               leading: const Icon(Icons.video_library),
-              title: Text(l10n.chooseVideoFromGallery),
+              title: const Text('Выбрать видео из галереи'),
               onTap: () => _createStory(StoryType.video, ImageSource.gallery),
             ),
           ],
@@ -219,17 +219,17 @@ class _CreateStoryWidgetState extends ConsumerState<CreateStoryWidget> {
       widget.onStoryCreated?.call();
 
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
+        // final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(l10n.storyCreatedSuccessfully)),
+          const SnackBar(content: Text('Сторис успешно создана')),
         );
       }
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
-        final l10n = AppLocalizations.of(context)!;
+        // final l10n = AppLocalizations.of(context)!;
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-            content: Text('${l10n.errorCreatingStory}: $e'),
+            content: Text('Ошибка создания сторис: $e'),
             backgroundColor: Colors.red,
           ),
         );
@@ -252,7 +252,7 @@ class StoriesListWidget extends ConsumerWidget {
     this.onStoryTap,
   });
   final List<Story> stories;
-  final Function(Story)? onStoryTap;
+  final void Function(Story)? onStoryTap;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -307,9 +307,9 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
       final service = ref.read(storyServiceProvider);
       await service.markStoryAsViewed(
         widget.story.id,
-        'current_user', // TODO: Получить реальный ID пользователя
+        'current_user', // TODO(developer): Получить реальный ID пользователя
       );
-    } catch (e) {
+    } on Exception {
       // Игнорируем ошибки
     }
   }
@@ -406,7 +406,7 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
                 child: Container(
                   padding: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.5),
+                    color: Colors.black.withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -448,9 +448,9 @@ class _StoryViewerWidgetState extends ConsumerState<StoryViewerWidget> {
       final service = ref.read(storyServiceProvider);
       await service.likeStory(
         widget.story.id,
-        'current_user', // TODO: Получить реальный ID пользователя
+        'current_user', // TODO(developer): Получить реальный ID пользователя
       );
-    } catch (e) {
+    } on Exception catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('Ошибка лайка: $e')),

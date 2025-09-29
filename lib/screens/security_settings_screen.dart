@@ -36,8 +36,7 @@ class _SecuritySettingsScreenState
     try {
       final currentUser = await ref.read(authServiceProvider).getCurrentUser();
       if (currentUser != null) {
-        final settings =
-            await _securityService.getSecuritySettings();
+        final settings = await _securityService.getSecuritySettings();
         if (settings != null) {
           setState(() {
             _biometricAuth = settings['biometricAuth'] ?? false;
@@ -428,7 +427,7 @@ class _SecuritySettingsScreenState
           'lastSecurityUpdate': DateTime.now(),
           'createdAt': DateTime.now(),
           'updatedAt': DateTime.now(),
-        );
+        };
 
         await _securityService.updateSecuritySettings(settings);
 

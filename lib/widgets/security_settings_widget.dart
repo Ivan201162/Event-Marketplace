@@ -113,7 +113,7 @@ class SecuritySettingsWidget extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
+                color: Colors.red.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.red),
               ),
@@ -174,7 +174,7 @@ class SecuritySettingsWidget extends ConsumerWidget {
   void _showEncryptionDialog(BuildContext context, WidgetRef ref) {
     final securityState = ref.read(securityProvider);
 
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: Text(
@@ -216,7 +216,7 @@ class SecuritySettingsWidget extends ConsumerWidget {
   }
 
   void _showUpdateKeyDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('Обновить ключ шифрования'),
@@ -496,7 +496,7 @@ class SecurityRecommendationsWidget extends ConsumerWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: _getSecurityColor(securityLevel).withOpacity(0.1),
+              color: _getSecurityColor(securityLevel).withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(16),
               border: Border.all(color: _getSecurityColor(securityLevel)),
             ),

@@ -251,7 +251,8 @@ class _SecurityAuditScreenState extends ConsumerState<SecurityAuditScreen> {
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  color: _getEventTypeColor(event.eventType).withOpacity(0.1),
+                  color: _getEventTypeColor(event.eventType)
+                      .withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Icon(

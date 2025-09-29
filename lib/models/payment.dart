@@ -16,6 +16,7 @@ enum PaymentStatus {
   failed, // Неудачный
   cancelled, // Отменен
   refunded, // Возвращен
+  disputed, // Оспорен
 }
 
 /// Типы организаций для расчета платежей
@@ -41,6 +42,22 @@ enum PaymentProvider {
   yooKassa, // ЮKassa
   cloudPayments, // CloudPayments
   mock, // Имитация для тестирования
+}
+
+/// Методы платежей
+enum PaymentMethod {
+  card, // Банковская карта
+  bankTransfer, // Банковский перевод
+  wallet, // Электронный кошелек
+  cash, // Наличные
+}
+
+/// Статусы налогов
+enum TaxStatus {
+  individual, // Физическое лицо
+  individualEntrepreneur, // ИП
+  selfEmployed, // Самозанятый
+  legalEntity, // Юридическое лицо
 }
 
 /// Модель платежа
@@ -265,6 +282,47 @@ class Payment {
         return 'Отменен';
       case PaymentStatus.refunded:
         return 'Возвращен';
+      case PaymentStatus.disputed:
+        return 'Оспорен';
+    }
+  }
+
+  /// Получить отображаемое название метода платежа
+  String get methodDisplayName {
+    if (paymentMethod == null) return 'Не указан';
+    switch (paymentMethod!.toLowerCase()) {
+      case 'card':
+        return 'Банковская карта';
+      case 'banktransfer':
+      case 'bank_transfer':
+        return 'Банковский перевод';
+      case 'wallet':
+        return 'Электронный кошелек';
+      case 'cash':
+        return 'Наличные';
+      default:
+        return paymentMethod!;
+    }
+  }
+
+  /// Получить причину неудачи
+  String get failureReason {
+    if (status != PaymentStatus.failed) return '';
+    return metadata?['failureReason'] ?? 'Неизвестная причина';
+  }
+
+  /// Получить отображаемое название налогового статуса
+  String get taxStatusDisplayName {
+    if (taxType == null) return 'Без налога';
+    switch (taxType!) {
+      case TaxType.professionalIncome:
+        return 'Налог на профессиональный доход';
+      case TaxType.simplifiedTax:
+        return 'УСН (6%)';
+      case TaxType.vat:
+        return 'НДС (20%)';
+      case TaxType.none:
+        return 'Без налога';
     }
   }
 
@@ -283,6 +341,8 @@ class Payment {
         return 'grey';
       case PaymentStatus.refunded:
         return 'purple';
+      case PaymentStatus.disputed:
+        return 'amber';
     }
   }
 
@@ -329,6 +389,8 @@ class Payment {
         return PaymentStatus.cancelled;
       case 'refunded':
         return PaymentStatus.refunded;
+      case 'disputed':
+        return PaymentStatus.disputed;
       case 'pending':
       default:
         return PaymentStatus.pending;

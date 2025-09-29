@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/booking_discount.dart';
 import '../services/discount_service.dart';
 import 'responsive_layout.dart';
+import 'responsive_text.dart';
 
 /// Виджет для отображения скидки в карточке заявки
 class DiscountWidget extends ConsumerWidget {
@@ -38,7 +39,7 @@ class DiscountWidget extends ConsumerWidget {
               Expanded(
                 child: ResponsiveText(
                   'Предложение скидки',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ),
               _buildStatusChip(),
@@ -63,7 +64,7 @@ class DiscountWidget extends ConsumerWidget {
                   children: [
                     ResponsiveText(
                       'Старая цена:',
-                      isSubtitle: true,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                     ResponsiveText(
                       '${discount!.oldPrice?.toStringAsFixed(0)} ₽',
@@ -80,7 +81,7 @@ class DiscountWidget extends ConsumerWidget {
                   children: [
                     ResponsiveText(
                       'Новая цена:',
-                      isSubtitle: true,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                     ResponsiveText(
                       '${discount!.newPrice?.toStringAsFixed(0)} ₽',
@@ -98,7 +99,7 @@ class DiscountWidget extends ConsumerWidget {
                   children: [
                     ResponsiveText(
                       'Экономия:',
-                      isSubtitle: true,
+                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                     ResponsiveText(
                       '${discount!.savings?.toStringAsFixed(0)} ₽ (${discount!.discountPercent?.toStringAsFixed(0)}%)',
@@ -118,7 +119,7 @@ class DiscountWidget extends ConsumerWidget {
             const SizedBox(height: 8),
             ResponsiveText(
               'Причина: ${discount!.reason}',
-              isSubtitle: true,
+              style: Theme.of(context).textTheme.bodySmall,
             ),
           ],
 
@@ -131,7 +132,7 @@ class DiscountWidget extends ConsumerWidget {
                 const SizedBox(width: 4),
                 ResponsiveText(
                   _getTimeRemaining(),
-                  isSubtitle: true,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
             ),
@@ -262,7 +263,8 @@ class DiscountWidget extends ConsumerWidget {
 
   Future<void> _acceptDiscount(BuildContext context, WidgetRef ref) async {
     try {
-      final service = ref.read(discountServiceProvider);
+      final service =
+          ProviderScope.containerOf(context).read(discountServiceProvider);
       await service.acceptDiscount(
         bookingId: bookingId,
         customerId: 'current_user_id', // TODO: Получить из контекста
@@ -273,7 +275,7 @@ class DiscountWidget extends ConsumerWidget {
       );
 
       onDiscountChanged?.call();
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ошибка: $e')),
       );
@@ -281,7 +283,7 @@ class DiscountWidget extends ConsumerWidget {
   }
 
   void _rejectDiscount(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _RejectDiscountDialog(
         bookingId: bookingId,
@@ -362,7 +364,8 @@ class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
     });
 
     try {
-      final service = ref.read(discountServiceProvider);
+      final service =
+          ProviderScope.containerOf(context).read(discountServiceProvider);
       await service.rejectDiscount(
         bookingId: widget.bookingId,
         customerId: 'current_user_id', // TODO: Получить из контекста
@@ -377,7 +380,7 @@ class _RejectDiscountDialogState extends State<_RejectDiscountDialog> {
       );
 
       widget.onRejected();
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ошибка: $e')),
       );
@@ -412,7 +415,7 @@ class OfferDiscountWidget extends ConsumerWidget {
                 const SizedBox(width: 8),
                 ResponsiveText(
                   'Предложить скидку',
-                  isTitle: true,
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               ],
             ),
@@ -431,7 +434,7 @@ class OfferDiscountWidget extends ConsumerWidget {
       );
 
   void _showOfferDiscountDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
+    showDialog<void>(
       context: context,
       builder: (context) => _OfferDiscountDialog(
         bookingId: bookingId,
@@ -602,7 +605,8 @@ class _OfferDiscountDialogState extends State<_OfferDiscountDialog> {
     });
 
     try {
-      final service = ref.read(discountServiceProvider);
+      final service =
+          ProviderScope.containerOf(context).read(discountServiceProvider);
       await service.offerDiscount(
         bookingId: widget.bookingId,
         oldPrice: widget.currentPrice,
@@ -620,7 +624,7 @@ class _OfferDiscountDialogState extends State<_OfferDiscountDialog> {
       );
 
       widget.onOffered();
-    } catch (e) {
+    } on Exception catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Ошибка: $e')),
       );

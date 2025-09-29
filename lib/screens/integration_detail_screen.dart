@@ -78,7 +78,8 @@ class _IntegrationDetailScreenState
                     width: 64,
                     height: 64,
                     decoration: BoxDecoration(
-                      color: widget.integration.typeColor.withOpacity(0.1),
+                      color:
+                          widget.integration.typeColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Icon(
@@ -109,12 +110,12 @@ class _IntegrationDetailScreenState
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color:
-                                widget.integration.statusColor.withOpacity(0.1),
+                            color: widget.integration.statusColor
+                                .withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(16),
                             border: Border.all(
                               color: widget.integration.statusColor
-                                  .withOpacity(0.3),
+                                  .withValues(alpha: 0.3),
                             ),
                           ),
                           child: Text(

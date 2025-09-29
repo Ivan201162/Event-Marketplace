@@ -252,7 +252,7 @@ class OptimizedShadowContainer extends StatelessWidget {
         borderRadius: BorderRadius.circular(borderRadius),
         boxShadow: [
           BoxShadow(
-            color: shadowColor ?? Colors.black.withOpacity(0.1),
+            color: shadowColor ?? Colors.black.withValues(alpha: 0.1),
             blurRadius: elevation,
             offset: Offset(0, elevation / 2),
           ),

@@ -31,7 +31,7 @@ class AppUpdateNotificationWidget extends ConsumerWidget {
       margin: const EdgeInsets.all(16),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Color(updateInfo.updateTypeColor).withOpacity(0.1),
+        color: Color(updateInfo.updateTypeColor).withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: Color(updateInfo.updateTypeColor),
@@ -240,7 +240,7 @@ class AppUpdateSettingsWidget extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.red.withOpacity(0.1),
+                color: Colors.red.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(color: Colors.red),
               ),
@@ -292,7 +292,7 @@ class AppUpdateSettingsWidget extends ConsumerWidget {
         child: Row(
           children: [
             Icon(
-              Icons.status,
+              Icons.info,
               size: 20,
               color: color,
             ),

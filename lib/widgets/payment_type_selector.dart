@@ -11,7 +11,7 @@ class PaymentTypeSelector extends StatefulWidget {
   });
   final double totalAmount;
   final AdvancePaymentSettings settings;
-  final Function(PaymentType, double?, int?) onPaymentTypeSelected;
+  final void Function(PaymentType, double?, int?) onPaymentTypeSelected;
 
   @override
   State<PaymentTypeSelector> createState() => _PaymentTypeSelectorState();

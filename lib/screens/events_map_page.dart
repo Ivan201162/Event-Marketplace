@@ -116,7 +116,8 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
             Icon(
               Icons.map_outlined,
               size: 120,
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+              color:
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
             ),
             const SizedBox(height: 32),
             Text(
@@ -133,7 +134,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.7),
+                        .withValues(alpha: 0.7),
                   ),
               textAlign: TextAlign.center,
             ),
@@ -179,7 +180,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.7),
+                        .withValues(alpha: 0.7),
                   ),
               textAlign: TextAlign.center,
             ),
@@ -213,7 +214,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 8,
                   offset: const Offset(0, 2),
                 ),
@@ -273,7 +274,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 8,
               offset: const Offset(0, -2),
             ),
@@ -345,7 +346,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
           color: Theme.of(context)
               .colorScheme
               .surfaceContainerHighest
-              .withOpacity(0.3),
+              .withValues(alpha: 0.3),
           borderRadius: BorderRadius.circular(8),
         ),
         child: Column(
@@ -362,7 +363,7 @@ class _EventsMapPageState extends ConsumerState<EventsMapPage> {
                     color: Theme.of(context)
                         .colorScheme
                         .onSurface
-                        .withOpacity(0.7),
+                        .withValues(alpha: 0.7),
                   ),
               textAlign: TextAlign.center,
             ),

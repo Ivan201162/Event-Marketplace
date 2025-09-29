@@ -13,7 +13,7 @@ class LocalizedText extends StatelessWidget {
     this.textDirection,
     this.locale,
     this.softWrap,
-    this.textScaleFactor,
+    this.textScaler,
   });
   final String Function(AppLocalizations l10n) textBuilder;
   final TextStyle? style;
@@ -23,7 +23,7 @@ class LocalizedText extends StatelessWidget {
   final TextDirection? textDirection;
   final Locale? locale;
   final bool? softWrap;
-  final double? textScaleFactor;
+  final TextScaler? textScaler;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class LocalizedText extends StatelessWidget {
       textDirection: textDirection,
       locale: locale,
       softWrap: softWrap,
-      textScaleFactor: textScaleFactor,
+      textScaler: textScaler,
     );
   }
 }
@@ -54,7 +54,7 @@ class LocalizedTextWithParams extends StatelessWidget {
     this.textDirection,
     this.locale,
     this.softWrap,
-    this.textScaleFactor,
+    this.textScaler,
   });
   final String Function(AppLocalizations l10n) textBuilder;
   final TextStyle? style;
@@ -64,7 +64,7 @@ class LocalizedTextWithParams extends StatelessWidget {
   final TextDirection? textDirection;
   final Locale? locale;
   final bool? softWrap;
-  final double? textScaleFactor;
+  final TextScaler? textScaler;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +78,7 @@ class LocalizedTextWithParams extends StatelessWidget {
       textDirection: textDirection,
       locale: locale,
       softWrap: softWrap,
-      textScaleFactor: textScaleFactor,
+      textScaler: textScaler,
     );
   }
 }
@@ -92,7 +92,7 @@ class LocalizedRichText extends StatelessWidget {
     this.textDirection,
     this.softWrap,
     this.overflow,
-    this.textScaleFactor,
+    this.textScaler,
     this.maxLines,
     this.locale,
     this.strutStyle,
@@ -104,7 +104,7 @@ class LocalizedRichText extends StatelessWidget {
   final TextDirection? textDirection;
   final bool? softWrap;
   final TextOverflow? overflow;
-  final double? textScaleFactor;
+  final TextScaler? textScaler;
   final int? maxLines;
   final Locale? locale;
   final StrutStyle? strutStyle;
@@ -121,7 +121,7 @@ class LocalizedRichText extends StatelessWidget {
       softWrap: softWrap ?? true,
       overflow: overflow ?? TextOverflow.clip,
       maxLines: maxLines,
-      textScaler: TextScaler.linear(textScaleFactor ?? 1.0),
+      textScaler: textScaler ?? TextScaler.linear(1),
       locale: locale,
       strutStyle: strutStyle,
       textWidthBasis: textWidthBasis ?? TextWidthBasis.parent,
@@ -140,7 +140,7 @@ class LocalizedDirectionalText extends StatelessWidget {
     this.maxLines,
     this.overflow,
     this.softWrap,
-    this.textScaleFactor,
+    this.textScaler,
   });
   final String Function(AppLocalizations l10n) textBuilder;
   final TextStyle? style;
@@ -148,7 +148,7 @@ class LocalizedDirectionalText extends StatelessWidget {
   final int? maxLines;
   final TextOverflow? overflow;
   final bool? softWrap;
-  final double? textScaleFactor;
+  final TextScaler? textScaler;
 
   @override
   Widget build(BuildContext context) {
@@ -166,7 +166,7 @@ class LocalizedDirectionalText extends StatelessWidget {
       overflow: overflow,
       textDirection: textDirection,
       softWrap: softWrap,
-      textScaleFactor: textScaleFactor,
+      textScaler: textScaler,
     );
   }
 
@@ -196,7 +196,7 @@ class LocalizedPluralText extends StatelessWidget {
     this.textDirection,
     this.locale,
     this.softWrap,
-    this.textScaleFactor,
+    this.textScaler,
   });
   final String Function(AppLocalizations l10n, int count) textBuilder;
   final int count;
@@ -207,7 +207,7 @@ class LocalizedPluralText extends StatelessWidget {
   final TextDirection? textDirection;
   final Locale? locale;
   final bool? softWrap;
-  final double? textScaleFactor;
+  final TextScaler? textScaler;
 
   @override
   Widget build(BuildContext context) {
@@ -221,7 +221,7 @@ class LocalizedPluralText extends StatelessWidget {
       textDirection: textDirection,
       locale: locale,
       softWrap: softWrap,
-      textScaleFactor: textScaleFactor,
+      textScaler: textScaler,
     );
   }
 }
@@ -239,7 +239,7 @@ class LocalizedDateText extends StatelessWidget {
     this.textDirection,
     this.locale,
     this.softWrap,
-    this.textScaleFactor,
+    this.textScaler,
   });
   final String Function(AppLocalizations l10n, DateTime date) textBuilder;
   final DateTime date;
@@ -250,7 +250,7 @@ class LocalizedDateText extends StatelessWidget {
   final TextDirection? textDirection;
   final Locale? locale;
   final bool? softWrap;
-  final double? textScaleFactor;
+  final TextScaler? textScaler;
 
   @override
   Widget build(BuildContext context) {
@@ -264,7 +264,7 @@ class LocalizedDateText extends StatelessWidget {
       textDirection: textDirection,
       locale: locale,
       softWrap: softWrap,
-      textScaleFactor: textScaleFactor,
+      textScaler: textScaler,
     );
   }
 }
@@ -282,7 +282,7 @@ class LocalizedNumberText extends StatelessWidget {
     this.textDirection,
     this.locale,
     this.softWrap,
-    this.textScaleFactor,
+    this.textScaler,
   });
   final String Function(AppLocalizations l10n, num number) textBuilder;
   final num number;
@@ -293,7 +293,7 @@ class LocalizedNumberText extends StatelessWidget {
   final TextDirection? textDirection;
   final Locale? locale;
   final bool? softWrap;
-  final double? textScaleFactor;
+  final TextScaler? textScaler;
 
   @override
   Widget build(BuildContext context) {
@@ -307,7 +307,7 @@ class LocalizedNumberText extends StatelessWidget {
       textDirection: textDirection,
       locale: locale,
       softWrap: softWrap,
-      textScaleFactor: textScaleFactor,
+      textScaler: textScaler,
     );
   }
 }

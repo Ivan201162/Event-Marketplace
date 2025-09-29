@@ -68,7 +68,10 @@ class StoriesWidget extends ConsumerWidget {
                     color: Theme.of(context).colorScheme.primary,
                     width: 2,
                   ),
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.1),
                 ),
                 child: Icon(
                   Icons.add,
@@ -146,7 +149,7 @@ class StoriesWidget extends ConsumerWidget {
 
   void _openStory(BuildContext context, Story story) {
     Navigator.of(context).push(
-      MaterialPageRoute(
+      MaterialPageRoute<void>(
         builder: (context) => StoryViewScreen(story: story),
         fullscreenDialog: true,
       ),
@@ -263,7 +266,7 @@ class _StoryViewScreenState extends State<StoryViewScreen>
         animation: _progressAnimation,
         builder: (context, child) => LinearProgressIndicator(
           value: _progressAnimation.value,
-          backgroundColor: Colors.white.withOpacity(0.3),
+          backgroundColor: Colors.white.withValues(alpha: 0.3),
           valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
         ),
       );
@@ -313,7 +316,7 @@ class _StoryViewScreenState extends State<StoryViewScreen>
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                color: Colors.black.withOpacity(0.5),
+                color: Colors.black.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
@@ -406,7 +409,7 @@ class CreateStoryWidget extends StatefulWidget {
 class _CreateStoryWidgetState extends State<CreateStoryWidget> {
   final TextEditingController _textController = TextEditingController();
   String? _selectedImagePath;
-  bool _isVideo = false;
+  // bool _isVideo = false;
 
   @override
   void dispose() {
@@ -520,19 +523,19 @@ class _CreateStoryWidgetState extends State<CreateStoryWidget> {
   void _pickImage() {
     setState(() {
       _selectedImagePath = 'https://via.placeholder.com/400x600';
-      _isVideo = false;
+      // _isVideo = false;
     });
   }
 
   void _pickVideo() {
     setState(() {
       _selectedImagePath = 'https://via.placeholder.com/400x600';
-      _isVideo = true;
+      // _isVideo = true;
     });
   }
 
   void _publishStory() {
-    // TODO: Реализовать публикацию сторис
+    // TODO(developer): Реализовать публикацию сторис
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Сторис опубликована')),
     );

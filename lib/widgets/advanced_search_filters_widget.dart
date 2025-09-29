@@ -56,7 +56,7 @@ class _AdvancedSearchFiltersWidgetState
               return Container(
                 margin: const EdgeInsets.symmetric(horizontal: 2),
                 decoration: BoxDecoration(
-                  color: Theme.of(context).primaryColor.withOpacity(0.3),
+                  color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2),
                 ),
               );

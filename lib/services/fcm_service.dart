@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 /// Сервис для работы с Firebase Cloud Messaging
@@ -101,10 +101,10 @@ class FCMService {
       _fcmToken = await _firebaseMessaging.getToken();
       print('FCM Token: $_fcmToken');
 
-      // Сохранение токена в SharedPreferences
+      // Сохранение токена в FlutterSecureStorage
       if (_fcmToken != null) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('fcm_token', _fcmToken!);
+        final prefs = const FlutterSecureStorage();
+        await prefs.write(key: 'fcm_token', value: _fcmToken!);
       }
 
       return _fcmToken;
@@ -251,8 +251,8 @@ class FCMService {
     try {
       _fcmToken = await _firebaseMessaging.getToken();
       if (_fcmToken != null) {
-        final prefs = await SharedPreferences.getInstance();
-        await prefs.setString('fcm_token', _fcmToken!);
+        final prefs = const FlutterSecureStorage();
+        await prefs.write(key: 'fcm_token', value: _fcmToken!);
       }
       return _fcmToken;
     } catch (e) {
@@ -344,8 +344,7 @@ class FCMService {
       ),
       payload: payload,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation:
-          UILocalNotificationDateInterpretation.absoluteTime,
+      // uiLocalNotificationDateInterpretation removed in newer version
     );
   }
 

@@ -6,7 +6,7 @@ import '../services/payment_integration_service.dart';
 
 class ContractDetailsDialog extends StatefulWidget {
   final Contract contract;
-  final Function(ContractStatus)? onStatusUpdate;
+  final void Function(ContractStatus)? onStatusUpdate;
 
   const ContractDetailsDialog({
     super.key,
@@ -38,7 +38,7 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
         _payments = payments;
         _isLoadingPayments = false;
       });
-    } catch (e) {
+    } on Exception catch (e) {
       setState(() {
         _isLoadingPayments = false;
       });
@@ -81,11 +81,12 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: _getStatusColor(widget.contract.status).withOpacity(0.1),
+                color: _getStatusColor(widget.contract.status)
+                    .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color:
-                      _getStatusColor(widget.contract.status).withOpacity(0.3),
+                  color: _getStatusColor(widget.contract.status)
+                      .withValues(alpha: 0.3),
                 ),
               ),
               child: Text(
@@ -217,7 +218,7 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
         Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: theme.colorScheme.surfaceVariant.withOpacity(0.3),
+            color: theme.colorScheme.surfaceContainerHighest.withOpacity(0.3),
             borderRadius: BorderRadius.circular(12),
           ),
           child: Column(
@@ -414,6 +415,10 @@ class _ContractDetailsDialogState extends State<ContractDetailsDialog> {
         return 'Окончательный расчет';
       case PaymentType.fullPayment:
         return 'Полная оплата';
+      case PaymentType.full:
+        return 'Полная оплата';
+      case PaymentType.refund:
+        return 'Возврат';
     }
   }
 

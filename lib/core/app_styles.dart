@@ -262,7 +262,7 @@ class AppStyles {
   // Стили Chip
   static ChipThemeData chipTheme = ChipThemeData(
     backgroundColor: Colors.grey[100],
-    selectedColor: primaryColor.withOpacity(0.2),
+    selectedColor: primaryColor.withValues(alpha: 0.2),
     labelStyle: bodyText2,
     shape: RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(radiusSmall),
