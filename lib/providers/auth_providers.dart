@@ -16,7 +16,13 @@ final currentFirebaseUserProvider = StreamProvider<User?>((ref) {
 /// Провайдер текущего пользователя приложения
 final currentUserProvider = StreamProvider<AppUser?>((ref) {
   final authService = ref.watch(authServiceProvider);
-  return authService.currentUserStream;
+  return authService.authStateChanges.map((user) => user != null ? AppUser.fromFirebaseUser(
+    user.uid,
+    user.email ?? '',
+    displayName: user.displayName,
+    photoURL: user.photoURL,
+    phoneNumber: user.phoneNumber,
+  ) : null);
 });
 
 /// Провайдер состояния аутентификации
@@ -54,13 +60,20 @@ final isCustomerProvider = Provider<bool>((ref) {
 /// Провайдер для восстановления сессии
 final sessionRestoreProvider = FutureProvider<AppUser?>((ref) async {
   final authService = ref.watch(authServiceProvider);
-  return authService.restoreSession();
+  final user = authService.currentUser;
+  return user != null ? AppUser.fromFirebaseUser(
+    user.uid,
+    user.email ?? '',
+    displayName: user.displayName,
+    photoURL: user.photoURL,
+    phoneNumber: user.phoneNumber,
+  ) : null;
 });
 
 /// Провайдер для проверки валидности сессии
 final sessionValidProvider = FutureProvider<bool>((ref) async {
   final authService = ref.watch(authServiceProvider);
-  return authService.isSessionValid();
+  return authService.currentUser != null;
 });
 
 /// Провайдер для проверки, является ли пользователь гостем
@@ -167,7 +180,7 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      await _authService.signInWithEmailAndPassword(
+      await _authService.signInWithEmail(
         email: state.email,
         password: state.password,
       );
@@ -197,10 +210,10 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      await _authService.signUpWithEmailAndPassword(
+      await _authService.registerWithEmail(
+        name: displayName,
         email: state.email,
         password: state.password,
-        displayName: displayName,
         role: role,
       );
       // Сброс состояния после успешной регистрации
@@ -245,7 +258,7 @@ class LoginFormNotifier extends Notifier<LoginFormState> {
     state = state.copyWith(isLoading: true);
 
     try {
-      await _authService.resetPassword(state.email);
+      await _authService.sendPasswordResetEmail(state.email);
       state = state.copyWith(
         isLoading: false,
         errorMessage: 'Письмо для сброса пароля отправлено на ${state.email}',

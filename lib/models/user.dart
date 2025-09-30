@@ -175,6 +175,7 @@ class AppUser {
     required this.email,
     this.displayName,
     this.photoURL,
+    this.phoneNumber,
     required this.role,
     required this.createdAt,
     this.lastLoginAt,
@@ -196,6 +197,7 @@ class AppUser {
       email: data['email'] ?? '',
       displayName: data['displayName'],
       photoURL: data['photoURL'],
+      phoneNumber: data['phoneNumber'],
       role: _parseUserRole(data['role']),
       createdAt: data['createdAt'] != null
           ? (data['createdAt'] as Timestamp).toDate()
@@ -227,6 +229,7 @@ class AppUser {
     String email, {
     String? displayName,
     String? photoURL,
+    String? phoneNumber,
     UserRole role = UserRole.customer,
     String? socialProvider,
     String? socialId,
@@ -236,6 +239,7 @@ class AppUser {
         email: email,
         displayName: displayName,
         photoURL: photoURL,
+        phoneNumber: phoneNumber,
         role: role,
         createdAt: DateTime.now(),
         lastLoginAt: DateTime.now(),
@@ -246,6 +250,7 @@ class AppUser {
   final String email;
   final String? displayName;
   final String? photoURL;
+  final String? phoneNumber;
   final UserRole role;
   final DateTime createdAt;
   final DateTime? lastLoginAt;
@@ -266,6 +271,7 @@ class AppUser {
         'email': email,
         'displayName': displayName,
         'photoURL': photoURL,
+        'phoneNumber': phoneNumber,
         'role': role.name,
         'createdAt': Timestamp.fromDate(createdAt),
         'lastLoginAt':

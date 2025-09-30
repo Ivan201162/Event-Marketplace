@@ -71,6 +71,7 @@ void main() {
       expect(user.createdAt, now);
       expect(user.displayName, isNull);
       expect(user.photoURL, isNull);
+      expect(user.phoneNumber, isNull);
       expect(user.isActive, isTrue);
     });
 
@@ -98,12 +99,13 @@ void main() {
         email: 'test@example.com',
         displayName: 'Test User',
         photoURL: 'http://example.com/photo.jpg',
+        phoneNumber: '+7-123-456-7890',
         role: UserRole.customer,
         createdAt: DateTime.now(),
         lastLoginAt: DateTime.now(),
         isActive: true,
-        socialProvider: 'google',
-        socialId: 'google-123',
+        socialProvider: 'email',
+        socialId: 'email-123',
       );
 
       final userMap = user.toMap();
@@ -111,10 +113,11 @@ void main() {
       expect(userMap['id'], 'test-user-id');
       expect(userMap['email'], 'test@example.com');
       expect(userMap['displayName'], 'Test User');
+      expect(userMap['phoneNumber'], '+7-123-456-7890');
       expect(userMap['role'], 'customer');
       expect(userMap['isActive'], true);
-      expect(userMap['socialProvider'], 'google');
-      expect(userMap['socialId'], 'google-123');
+      expect(userMap['socialProvider'], 'email');
+      expect(userMap['socialId'], 'email-123');
     });
 
     test('should validate UserRole enum values', () {

@@ -17,11 +17,10 @@ import 'firebase_options.dart';
 import 'providers/auth_providers.dart';
 import 'providers/theme_provider.dart';
 import 'screens/admin_panel_screen.dart';
-import 'screens/auth_screen.dart';
 import 'screens/booking_form_screen.dart';
 import 'screens/booking_requests_screen.dart';
-import 'screens/register_screen.dart';
-import 'widgets/auth_gate.dart';
+import 'screens/auth/login_screen.dart';
+import 'screens/auth/register_screen.dart';
 import 'screens/chat_screen.dart';
 import 'screens/content_management_screen.dart';
 import 'screens/favorites_page.dart';
@@ -202,12 +201,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/auth',
         name: 'auth',
-        builder: (context, state) => const AuthGate(),
+        builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
         path: AppRoutes.login,
         name: 'login',
-        builder: (context, state) => const AuthScreen(),
+        builder: (context, state) => const LoginScreen(),
       ),
       GoRoute(
         path: AppRoutes.register,

@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 import '../core/safe_log.dart';
 import '../core/logger.dart';
@@ -11,7 +10,6 @@ import '../models/user.dart';
 import '../features/auth/utils/auth_error_mapper.dart';
 import 'demo_auth_service.dart' as demo;
 import 'storage_service.dart';
-import 'vk_auth_service.dart';
 
 // Условные импорты для веб и мобильных платформ
 import 'auth_service_web.dart' if (dart.library.io) 'auth_service_mobile.dart';
@@ -20,12 +18,8 @@ import 'auth_service_web.dart' if (dart.library.io) 'auth_service_mobile.dart';
 class AuthService {
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-  // GoogleSignIn не поддерживается для web в текущей версии
-  // final GoogleSignIn _googleSignIn = GoogleSignIn(
-  //   scopes: ['email', 'profile'],
-  // );
   final StorageService _storageService = StorageService();
-  final VKAuthService _vkAuthService = VKAuthService();
+  
   // Демо-сервис для веб-платформы
   dynamic get _demoAuth {
     if (kIsWeb) {
@@ -50,98 +44,48 @@ class AuthService {
       _isDemoMode ? _demoAuth?.currentUser : _auth.currentUser;
 
   /// Поток изменений состояния аутентификации
-  Stream<User?> get authStateChanges =>
-      _isDemoMode ? _demoAuth?.authStateChanges : _auth.authStateChanges();
+  Stream<User?> get authStateChanges => _auth.authStateChanges();
 
-  /// Получить текущего пользователя из Firestore
-  Future<AppUser?> getCurrentUser() async {
-    final firebaseUser = currentFirebaseUser;
-    if (firebaseUser == null) return null;
+  /// Поток изменений ID токена
+  Stream<User?> get idTokenChanges => _auth.idTokenChanges();
 
+  /// Поток изменений пользователя
+  Stream<User?> get userChanges => _auth.userChanges();
+
+  /// Проверка, авторизован ли пользователь
+  bool get isSignedIn => currentUser != null;
+
+  /// Получить текущего пользователя приложения
+  Future<AppUser?> getCurrentAppUser() async {
     try {
-      final doc =
-          await _firestore.collection('users').doc(firebaseUser.uid).get();
-      if (doc.exists) {
-        return AppUser.fromDocument(doc);
-      }
-      return null;
-    } catch (e, stackTrace) {
-      SafeLog.error('Ошибка получения пользователя', e, stackTrace);
-      return null;
-    }
-  }
-
-  /// Восстановить сессию пользователя
-  Future<AppUser?> restoreSession() async {
-    try {
-      SafeLog.info('Попытка восстановления сессии...');
-
-      // Проверяем, есть ли активная сессия Firebase
-      final firebaseUser = currentFirebaseUser;
+      final firebaseUser = currentUser;
       if (firebaseUser == null) {
-        SafeLog.info('Нет активной сессии Firebase');
+        AppLogger.logI('Пользователь не авторизован', 'auth_service');
         return null;
       }
 
-      // Проверяем, не истекла ли сессия
-      await firebaseUser.reload();
-      if (firebaseUser.uid.isEmpty) {
-        SafeLog.warning('Сессия Firebase истекла');
+      AppLogger.logI('Получение данных пользователя: ${firebaseUser.uid}', 'auth_service');
+
+      final userDoc = await _firestore
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .get();
+
+      if (!userDoc.exists) {
+        AppLogger.logW('Документ пользователя не найден в Firestore', 'auth_service');
         return null;
       }
 
-      // Получаем данные пользователя из Firestore
-      final appUser = await getCurrentUser();
-      if (appUser != null) {
-        SafeLog.info(
-          'Сессия успешно восстановлена для пользователя: ${appUser.displayName}',
-        );
-        return appUser;
-      } else {
-        SafeLog.warning('Пользователь не найден в Firestore');
-        return null;
-      }
+      final appUser = AppUser.fromDocument(userDoc);
+      AppLogger.logI('Пользователь получен: ${appUser.displayNameOrEmail}', 'auth_service');
+      return appUser;
     } catch (e, stackTrace) {
-      SafeLog.error('Ошибка восстановления сессии', e, stackTrace);
+      AppLogger.logE('Ошибка получения пользователя', 'auth_service', e, stackTrace);
       return null;
     }
   }
 
-  /// Проверить, валидна ли текущая сессия
-  Future<bool> isSessionValid() async {
-    try {
-      final firebaseUser = currentFirebaseUser;
-      if (firebaseUser == null) return false;
-
-      // Проверяем, не истекла ли сессия
-      await firebaseUser.reload();
-      return firebaseUser.uid.isNotEmpty;
-    } catch (e, stackTrace) {
-      SafeLog.error('Ошибка проверки валидности сессии', e, stackTrace);
-      return false;
-    }
-  }
-
-  /// Поток текущего пользователя
-  Stream<AppUser?> get currentUserStream =>
-      authStateChanges.asyncMap((firebaseUser) async {
-        if (firebaseUser == null) return null;
-
-        try {
-          // Приводим к типу User, чтобы получить доступ к uid
-          final User user = firebaseUser as User;
-          final doc = await _firestore.collection('users').doc(user.uid).get();
-          if (doc.exists) {
-            return AppUser.fromDocument(doc);
-          }
-          return null;
-        } catch (e) {
-          AppLogger.logE('Ошибка получения пользователя', 'auth_service', e);
-          return null;
-        }
-      });
-
-  /// Регистрация с email и паролем (новый метод)
+  /// Регистрация с email и паролем
   Future<void> registerWithEmail({
     required String name,
     required String email,
@@ -160,24 +104,23 @@ class AuthService {
 
       final firebaseUser = credential.user;
       if (firebaseUser == null) {
-        AppLogger.logE(
-            'Firebase user is null after registration', 'auth_service');
-        throw Exception('Ошибка создания пользователя');
+        throw Exception('Не удалось создать пользователя в Firebase Auth');
       }
 
-      AppLogger.logI(
-          'Firebase user создан: ${firebaseUser.uid}', 'auth_service');
+      AppLogger.logI('Пользователь создан в Firebase Auth: ${firebaseUser.uid}', 'auth_service');
 
-      // Обновляем профиль Firebase
+      // Обновляем отображаемое имя
       await firebaseUser.updateDisplayName(name);
-      AppLogger.logI('Display name обновлен: $name', 'auth_service');
+      await firebaseUser.reload();
 
-      // Создаем пользователя в Firestore
-      final appUser = AppUser.fromFirebaseUser(
-        firebaseUser.uid,
-        email,
+      // Создаем запись в Firestore
+      final appUser = AppUser(
+        id: firebaseUser.uid,
+        email: email,
         displayName: name,
         role: role,
+        createdAt: DateTime.now(),
+        isActive: true,
       );
 
       await _firestore
@@ -185,98 +128,23 @@ class AuthService {
           .doc(firebaseUser.uid)
           .set(appUser.toMap());
 
-      AppLogger.logI(
-          'Пользователь создан в Firestore: ${appUser.id}', 'auth_service');
-    } on FirebaseAuthException catch (e) {
-      throw _handleAuthException(e);
-    } catch (e) {
-      AppLogger.logE('Ошибка регистрации', 'auth_service', e);
-      throw Exception('Ошибка регистрации: $e');
-    }
-  }
-
-  /// Регистрация с email и паролем (старый метод для совместимости)
-  Future<AppUser?> signUpWithEmailAndPassword({
-    required String email,
-    required String password,
-    required String displayName,
-    required UserRole role,
-  }) async {
-    try {
-      AppLogger.logI(
-          'Начинаем регистрацию пользователя: $email', 'auth_service');
-
-      // Создаем пользователя в Firebase Auth
-      final credential = await _auth.createUserWithEmailAndPassword(
-        email: email,
-        password: password,
-      );
-
-      final firebaseUser = credential.user;
-      if (firebaseUser == null) {
-        AppLogger.logE(
-            'Firebase user is null after registration', 'auth_service');
-        return null;
+      AppLogger.logI('Пользователь создан в Firestore: ${appUser.displayName}', 'auth_service');
+    } catch (e, stackTrace) {
+      AppLogger.logE('Ошибка регистрации', 'auth_service', e, stackTrace);
+      if (e is FirebaseAuthException) {
+        throw Exception(_handleAuthException(e));
       }
-
-      AppLogger.logI(
-          'Firebase user создан: ${firebaseUser.uid}', 'auth_service');
-
-      // Обновляем профиль Firebase
-      await firebaseUser.updateDisplayName(displayName);
-      AppLogger.logI('Display name обновлен: $displayName', 'auth_service');
-
-      // Создаем пользователя в Firestore
-      final appUser = AppUser.fromFirebaseUser(
-        firebaseUser.uid,
-        email,
-        displayName: displayName,
-        role: role,
-      );
-
-      await _firestore
-          .collection('users')
-          .doc(firebaseUser.uid)
-          .set(appUser.toMap());
-
-      AppLogger.logI(
-          'Пользователь создан в Firestore: ${appUser.id}', 'auth_service');
-
-      return appUser;
-    } on FirebaseAuthException catch (e) {
-      throw _handleAuthException(e);
-    } catch (e) {
       throw Exception('Ошибка регистрации: $e');
     }
   }
 
   /// Вход с email и паролем
-  Future<AppUser?> signInWithEmailAndPassword({
+  Future<AppUser?> signInWithEmail({
     required String email,
     required String password,
   }) async {
     try {
-      // Используем демо-режим для веб-версии
-      if (_isDemoMode) {
-        AppLogger.logI('Начало входа как демо-пользователь...', 'auth_service');
-        final credential = await _demoAuth?.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
-
-        if (credential == null) return null;
-
-        // Создаем демо-пользователя AppUser
-        final demoUser = credential.user;
-        if (demoUser == null) return null;
-
-        return AppUser.fromFirebaseUser(
-          demoUser.uid,
-          demoUser.email ?? email,
-          displayName: demoUser.displayName ?? 'Demo User',
-          role: UserRole.customer,
-        );
-      }
+      AppLogger.logI('Начинаем вход пользователя: $email', 'auth_service');
 
       final credential = await _auth.signInWithEmailAndPassword(
         email: email,
@@ -284,404 +152,259 @@ class AuthService {
       );
 
       final firebaseUser = credential.user;
-      if (firebaseUser == null) return null;
+      if (firebaseUser == null) {
+        throw Exception('Не удалось войти в систему');
+      }
+
+      AppLogger.logI('Пользователь вошел: ${firebaseUser.uid}', 'auth_service');
 
       // Обновляем время последнего входа
       await _updateLastLogin(firebaseUser.uid);
 
-      // Получаем пользователя из Firestore
-      return await getCurrentUser();
-    } on FirebaseAuthException catch (e) {
-      throw _handleAuthException(e);
-    } catch (e) {
+      // Получаем данные пользователя из Firestore
+      final userDoc = await _firestore
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .get();
+
+      if (!userDoc.exists) {
+        AppLogger.logW('Документ пользователя не найден в Firestore', 'auth_service');
+        return null;
+      }
+
+      final appUser = AppUser.fromDocument(userDoc);
+      AppLogger.logI('Пользователь получен: ${appUser.displayNameOrEmail}', 'auth_service');
+      return appUser;
+    } catch (e, stackTrace) {
+      AppLogger.logE('Ошибка входа', 'auth_service', e, stackTrace);
+      if (e is FirebaseAuthException) {
+        throw Exception(_handleAuthException(e));
+      }
       throw Exception('Ошибка входа: $e');
     }
   }
 
-  /// Вход как гость
-  Future<AppUser?> signInAsGuest() async {
+  /// Вход с номером телефона (отправка SMS)
+  Future<void> signInWithPhone({
+    required String phoneNumber,
+    required Function(PhoneAuthCredential) verificationCompleted,
+    required Function(FirebaseAuthException) verificationFailed,
+    required Function(String, int?) codeSent,
+    required Function(String) codeAutoRetrievalTimeout,
+  }) async {
     try {
-      AppLogger.logI('Начало входа как гость...', 'auth_service');
+      AppLogger.logI('Начинаем вход по телефону: $phoneNumber', 'auth_service');
 
-      // Используем демо-режим для веб-версии
-      if (_isDemoMode) {
-        final credential = await _demoAuth?.signInAnonymously();
-        if (credential == null) return null;
+      await _auth.verifyPhoneNumber(
+        phoneNumber: phoneNumber,
+        verificationCompleted: verificationCompleted,
+        verificationFailed: verificationFailed,
+        codeSent: codeSent,
+        codeAutoRetrievalTimeout: codeAutoRetrievalTimeout,
+        timeout: const Duration(seconds: 60),
+      );
 
-        final demoUser = credential.user;
+      AppLogger.logI('SMS отправлена на номер: $phoneNumber', 'auth_service');
+    } catch (e, stackTrace) {
+      AppLogger.logE('Ошибка отправки SMS', 'auth_service', e, stackTrace);
+      if (e is FirebaseAuthException) {
+        throw Exception(_handleAuthException(e));
+      }
+      throw Exception('Ошибка отправки SMS: $e');
+    }
+  }
 
-        if (demoUser == null) return null;
+  /// Подтверждение SMS кода
+  Future<AppUser?> verifySmsCode({
+    required String verificationId,
+    required String smsCode,
+  }) async {
+    try {
+      AppLogger.logI('Подтверждение SMS кода', 'auth_service');
 
-        return AppUser.fromFirebaseUser(
-          demoUser.uid,
-          'guest@demo.com',
-          displayName: 'Гость',
-          role: UserRole.guest,
-        );
+      final credential = PhoneAuthProvider.credential(
+        verificationId: verificationId,
+        smsCode: smsCode,
+      );
+
+      final userCredential = await _auth.signInWithCredential(credential);
+      final firebaseUser = userCredential.user;
+
+      if (firebaseUser == null) {
+        throw Exception('Не удалось войти с SMS кодом');
       }
 
-      // Создаем анонимного пользователя
+      AppLogger.logI('Пользователь вошел по SMS: ${firebaseUser.uid}', 'auth_service');
+
+      // Проверяем, существует ли пользователь в Firestore
+      final userDoc = await _firestore
+          .collection('users')
+          .doc(firebaseUser.uid)
+          .get();
+
+      if (!userDoc.exists) {
+        // Создаем нового пользователя
+        AppLogger.logI('Создание нового пользователя по SMS...', 'auth_service');
+        final appUser = AppUser(
+          id: firebaseUser.uid,
+          email: firebaseUser.email ?? '',
+          displayName: firebaseUser.displayName ?? 'Пользователь',
+          phoneNumber: firebaseUser.phoneNumber,
+          role: UserRole.customer,
+          createdAt: DateTime.now(),
+          isActive: true,
+        );
+
+        await _firestore
+            .collection('users')
+            .doc(firebaseUser.uid)
+            .set(appUser.toMap());
+
+        AppLogger.logI('Пользователь создан: ${appUser.displayName}', 'auth_service');
+        return appUser;
+      } else {
+        // Обновляем время последнего входа
+        await _updateLastLogin(firebaseUser.uid);
+        final appUser = AppUser.fromDocument(userDoc);
+        AppLogger.logI('Пользователь вошел: ${appUser.displayNameOrEmail}', 'auth_service');
+        return appUser;
+      }
+    } catch (e, stackTrace) {
+      AppLogger.logE('Ошибка подтверждения SMS', 'auth_service', e, stackTrace);
+      if (e is FirebaseAuthException) {
+        throw Exception(_handleAuthException(e));
+      }
+      throw Exception('Ошибка подтверждения SMS: $e');
+    }
+  }
+
+  /// Вход как гость (анонимно)
+  Future<AppUser?> signInAsGuest() async {
+    try {
+      AppLogger.logI('Начинаем анонимный вход...', 'auth_service');
+
       final credential = await _auth.signInAnonymously();
       final firebaseUser = credential.user;
 
       if (firebaseUser == null) {
-        AppLogger.logE(
-            'Firebase пользователь не создан для гостя', 'auth_service');
-        return null;
+        throw Exception('Не удалось войти анонимно');
       }
 
-      AppLogger.logI('Гость вошел: ${firebaseUser.uid}', 'auth_service');
+      AppLogger.logI('Анонимный пользователь создан: ${firebaseUser.uid}', 'auth_service');
 
-      // Создаем гостевого пользователя в Firestore
-      final guestUser = AppUser.fromFirebaseUser(
-        firebaseUser.uid,
-        'guest@example.com',
+      // Создаем запись в Firestore
+      final appUser = AppUser(
+        id: firebaseUser.uid,
+        email: 'guest@example.com',
         displayName: 'Гость',
         role: UserRole.guest,
+        createdAt: DateTime.now(),
+        isActive: true,
       );
 
       await _firestore
           .collection('users')
           .doc(firebaseUser.uid)
-          .set(guestUser.toMap());
+          .set(appUser.toMap());
 
-      AppLogger.logI('Гость создан: ${guestUser.displayName}', 'auth_service');
-      return guestUser;
+      AppLogger.logI('Гость создан: ${appUser.displayName}', 'auth_service');
+      return appUser;
     } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка входа как гость', 'auth_service', e, stackTrace);
-      throw Exception('Ошибка входа как гость: $e');
+      AppLogger.logE('Ошибка анонимного входа', 'auth_service', e, stackTrace);
+      if (e is FirebaseAuthException) {
+        throw Exception(_handleAuthException(e));
+      }
+      throw Exception('Ошибка анонимного входа: $e');
     }
   }
 
-  /// Войти через Google
-  Future<AppUser?> signInWithGoogle() async {
+  /// Выход из системы
+  Future<void> signOut() async {
     try {
-      AppLogger.logI('Начало входа через Google...', 'auth_service');
-
-      // Используем демо-режим для веб-версии
-      if (_isDemoMode) {
-        final credential = await _demoAuth?.signInWithGoogle();
-        if (credential == null) return null;
-
-        final demoUser = credential.user;
-
-        if (demoUser == null) return null;
-
-        return AppUser.fromFirebaseUser(
-          demoUser.uid,
-          demoUser.email ?? 'demo@gmail.com',
-          displayName: demoUser.displayName ?? 'Demo User',
-          role: UserRole.customer,
-        );
-      }
-
-      // Для web-версии используем Firebase Auth с Google провайдером
-      final googleProvider = GoogleAuthProvider();
-
-      // Попробуем войти через popup
-      UserCredential? userCredential;
-      try {
-        userCredential = await _auth.signInWithPopup(googleProvider);
-        AppLogger.logI('Google popup аутентификация успешна', 'auth_service');
-      } catch (e) {
-        AppLogger.logI(
-            'Popup заблокирован, пробуем redirect...', 'auth_service');
-
-        // Проверяем тип ошибки
-        if (e.toString().contains('popup_blocked_by_browser') ||
-            e.toString().contains('popup_closed_by_user')) {
-          AppLogger.logI(
-              'Popup заблокирован браузером или закрыт пользователем',
-              'auth_service');
-        }
-
-        // Если popup заблокирован, используем redirect
-        try {
-          await _auth.signInWithRedirect(googleProvider);
-          AppLogger.logI('Google redirect инициирован', 'auth_service');
-          return null; // Redirect не возвращает результат сразу
-        } catch (redirectError) {
-          AppLogger.logE(
-              'Ошибка Google redirect', 'auth_service', redirectError);
-          throw Exception('Ошибка Google аутентификации: $redirectError');
-        }
-      }
-
-      final firebaseUser = userCredential?.user;
-      if (firebaseUser == null) {
-        AppLogger.logE(
-            'Firebase пользователь не создан для Google', 'auth_service');
-        return null;
-      }
-
-      AppLogger.logI('Google аутентификация успешна: ${firebaseUser.email}',
-          'auth_service');
-
-      // Проверяем, существует ли пользователь в Firestore
-      final userDoc =
-          await _firestore.collection('users').doc(firebaseUser.uid).get();
-
-      if (!userDoc.exists) {
-        // Создаем нового пользователя
-        AppLogger.logI('Создание нового Google пользователя в Firestore...',
-            'auth_service');
-        final appUser = AppUser.fromFirebaseUser(
-          firebaseUser.uid,
-          firebaseUser.email ?? '',
-          displayName: firebaseUser.displayName ?? 'Google Пользователь',
-          photoURL: firebaseUser.photoURL,
-          role: UserRole.customer,
-          socialProvider: 'google',
-          socialId: firebaseUser.uid,
-        );
-
-        await _firestore
-            .collection('users')
-            .doc(firebaseUser.uid)
-            .set(appUser.toMap());
-
-        AppLogger.logI('Google пользователь создан: ${appUser.displayName}',
-            'auth_service');
-        return appUser;
-      } else {
-        // Обновляем время последнего входа
-        AppLogger.logI(
-            'Обновление времени последнего входа...', 'auth_service');
-        await _updateLastLogin(firebaseUser.uid);
-        final appUser = AppUser.fromDocument(userDoc);
-        AppLogger.logI('Google пользователь вошел: ${appUser.displayName}',
-            'auth_service');
-        return appUser;
-      }
+      AppLogger.logI('Выход из системы...', 'auth_service');
+      await _auth.signOut();
+      AppLogger.logI('Выход выполнен успешно', 'auth_service');
     } catch (e, stackTrace) {
-      AppLogger.logE(
-          'Ошибка входа через Google', 'auth_service', e, stackTrace);
-      throw Exception('Ошибка входа через Google: $e');
+      AppLogger.logE('Ошибка выхода', 'auth_service', e, stackTrace);
+      throw Exception('Ошибка выхода: $e');
     }
   }
 
-  /// Войти через Google Web (специальный метод для Web)
-  Future<AppUser?> signInWithGoogleWeb() async {
-    return await signInWithGoogle();
-  }
-
-  /// Обработать результат Google redirect аутентификации
-  Future<AppUser?> handleGoogleRedirectResult() async {
+  /// Отправка письма для сброса пароля
+  Future<void> sendPasswordResetEmail(String email) async {
     try {
-      AppLogger.logI('Обработка результата Google redirect...', 'auth_service');
-
-      final userCredential = await _auth.getRedirectResult();
-      final firebaseUser = userCredential?.user;
-
-      if (firebaseUser == null) {
-        AppLogger.logI(
-            'Google redirect не завершен или отменен', 'auth_service');
-        return null;
-      }
-
-      AppLogger.logI(
-          'Google redirect аутентификация успешна: ${firebaseUser.email}',
-          'auth_service');
-
-      // Проверяем, существует ли пользователь в Firestore
-      final userDoc =
-          await _firestore.collection('users').doc(firebaseUser.uid).get();
-
-      if (!userDoc.exists) {
-        // Создаем нового пользователя
-        AppLogger.logI('Создание нового Google пользователя в Firestore...',
-            'auth_service');
-        final appUser = AppUser.fromFirebaseUser(
-          firebaseUser.uid,
-          firebaseUser.email ?? '',
-          displayName: firebaseUser.displayName ?? 'Google Пользователь',
-          photoURL: firebaseUser.photoURL,
-          role: UserRole.customer,
-          socialProvider: 'google',
-          socialId: firebaseUser.uid,
-        );
-
-        await _firestore
-            .collection('users')
-            .doc(firebaseUser.uid)
-            .set(appUser.toMap());
-
-        AppLogger.logI('Google пользователь создан: ${appUser.displayName}',
-            'auth_service');
-        return appUser;
-      } else {
-        // Обновляем время последнего входа
-        AppLogger.logI(
-            'Обновление времени последнего входа...', 'auth_service');
-        await _updateLastLogin(firebaseUser.uid);
-        final appUser = AppUser.fromDocument(userDoc);
-        AppLogger.logI('Google пользователь вошел: ${appUser.displayName}',
-            'auth_service');
-        return appUser;
-      }
-    } catch (e, stackTrace) {
-      AppLogger.logE(
-          'Ошибка обработки Google redirect', 'auth_service', e, stackTrace);
-      throw Exception('Ошибка обработки Google redirect: $e');
-    }
-  }
-
-  /// Войти через VK
-  Future<AppUser?> signInWithVK({UserRole role = UserRole.customer}) async {
-    try {
-      AppLogger.logI('Начало входа через VK...', 'auth_service');
-
-      // Проверяем, настроен ли VK
-      if (!_vkAuthService.isVkConfigured) {
-        throw Exception('VK не настроен. Проверьте конфигурацию VK_APP_ID');
-      }
-
-      // Для тестирования используем заглушку
-      // В production здесь должен быть реальный VK OAuth
-      return await _vkAuthService.createVkUserForTesting();
-    } catch (e, stackTrace) {
-      AppLogger.logE('Ошибка входа через VK', 'auth_service', e, stackTrace);
-      throw Exception('Ошибка входа через VK: $e');
-    }
-  }
-
-  /// Обработать VK callback
-  Future<AppUser?> handleVkCallback(String code) async {
-    try {
-      AppLogger.logI('Обработка VK callback...', 'auth_service');
-      return await _vkAuthService.handleVkCallbackAndSignIn(code);
-    } catch (e, stackTrace) {
-      AppLogger.logE(
-          'Ошибка обработки VK callback', 'auth_service', e, stackTrace);
-      throw Exception('Ошибка обработки VK callback: $e');
-    }
-  }
-
-  /// Сброс пароля
-  Future<void> resetPassword(String email) async {
-    try {
+      AppLogger.logI('Отправка письма для сброса пароля: $email', 'auth_service');
       await _auth.sendPasswordResetEmail(email: email);
-    } on FirebaseAuthException catch (e) {
-      throw _handleAuthException(e);
-    } catch (e) {
-      throw Exception('Ошибка сброса пароля: $e');
+      AppLogger.logI('Письмо для сброса пароля отправлено', 'auth_service');
+    } catch (e, stackTrace) {
+      AppLogger.logE('Ошибка отправки письма для сброса пароля', 'auth_service', e, stackTrace);
+      if (e is FirebaseAuthException) {
+        throw Exception(_handleAuthException(e));
+      }
+      throw Exception('Ошибка отправки письма: $e');
     }
   }
 
-  /// Обновить профиль пользователя
-  Future<void> updateUserProfile({
-    String? displayName,
-    String? photoURL,
-    UserRole? role,
-  }) async {
-    final firebaseUser = currentFirebaseUser;
-    if (firebaseUser == null) throw Exception('Пользователь не авторизован');
-
-    try {
-      // Обновляем Firebase Auth профиль
-      if (displayName != null) {
-        await firebaseUser.updateDisplayName(displayName);
-      }
-      if (photoURL != null) {
-        await firebaseUser.updatePhotoURL(photoURL);
-      }
-
-      // Обновляем данные в Firestore
-      final updateData = <String, dynamic>{};
-      if (displayName != null) updateData['displayName'] = displayName;
-      if (photoURL != null) updateData['photoURL'] = photoURL;
-      if (role != null) updateData['role'] = role.name;
-
-      if (updateData.isNotEmpty) {
-        updateData['updatedAt'] = FieldValue.serverTimestamp();
-        await _firestore
-            .collection('users')
-            .doc(firebaseUser.uid)
-            .update(updateData);
-      }
-    } catch (e) {
-      throw Exception('Ошибка обновления профиля: $e');
-    }
-  }
-
-  /// Обновить профиль с загрузкой изображения
-  Future<void> updateUserProfileWithImage({
-    String? displayName,
-    File? imageFile,
-    UserRole? role,
-  }) async {
-    final firebaseUser = currentFirebaseUser;
-    if (firebaseUser == null) throw Exception('Пользователь не авторизован');
-
-    try {
-      String? photoURL;
-
-      // Загружаем изображение, если оно выбрано
-      if (imageFile != null) {
-        photoURL = await _storageService.uploadProfileImage(imageFile);
-      }
-
-      // Обновляем профиль
-      await updateUserProfile(
-        displayName: displayName,
-        photoURL: photoURL,
-        role: role,
-      );
-    } catch (e) {
-      throw Exception('Ошибка обновления профиля с изображением: $e');
-    }
-  }
-
-  /// Удалить аккаунт
-  Future<void> deleteAccount() async {
-    final firebaseUser = currentFirebaseUser;
-    if (firebaseUser == null) throw Exception('Пользователь не авторизован');
-
-    try {
-      // Удаляем данные из Firestore
-      await _firestore.collection('users').doc(firebaseUser.uid).delete();
-
-      // Удаляем аккаунт Firebase Auth
-      await firebaseUser.delete();
-    } catch (e) {
-      throw Exception('Ошибка удаления аккаунта: $e');
-    }
-  }
-
-  /// Обновить время последнего входа
+  /// Обновление времени последнего входа
   Future<void> _updateLastLogin(String uid) async {
     try {
       await _firestore.collection('users').doc(uid).update({
-        'lastLoginAt': Timestamp.fromDate(DateTime.now()),
+        'lastLoginAt': FieldValue.serverTimestamp(),
       });
     } catch (e) {
-      print('Ошибка обновления времени входа: $e');
+      AppLogger.logE('Ошибка обновления времени входа', 'auth_service', e);
     }
   }
 
-  /// Выход из всех социальных сетей
-  Future<void> signOutFromAll() async {
-    try {
-      // await _googleSignIn.signOut();
-      await _auth.signOut();
-    } catch (e) {
-      throw Exception('Ошибка выхода: $e');
-    }
-  }
-
-  /// Выход из системы (обновленный метод)
-  Future<void> signOut() async {
-    try {
-      await signOutFromAll();
-    } catch (e) {
-      throw Exception('Ошибка выхода: $e');
-    }
-  }
-
-  /// Обработка исключений Firebase Auth
+  /// Обработка ошибок аутентификации
   String _handleAuthException(FirebaseAuthException e) {
-    AppLogger.logE(
-        'Firebase Auth Error: ${e.code} - ${e.message}', 'auth_service');
+    AppLogger.logE('Firebase Auth Error: ${e.code} - ${e.message}', 'auth_service');
     return AuthErrorMapper.mapFirebaseAuthException(e);
+  }
+
+  /// Проверка, поддерживается ли аутентификация по телефону
+  bool get isPhoneAuthSupported {
+    // Для веб-платформы проверяем поддержку
+    if (kIsWeb) {
+      return true; // Firebase Auth поддерживает телефон для веб
+    }
+    return true; // Для мобильных платформ всегда поддерживается
+  }
+
+  /// Получить маскированный номер телефона
+  String getMaskedPhoneNumber(String phoneNumber) {
+    if (phoneNumber.length < 4) return phoneNumber;
+    final lastFour = phoneNumber.substring(phoneNumber.length - 4);
+    return '***-***-$lastFour';
+  }
+
+  /// Проверить формат номера телефона
+  bool isValidPhoneNumber(String phoneNumber) {
+    // Простая проверка формата российского номера
+    final phoneRegex = RegExp(r'^\+7\d{10}$');
+    return phoneRegex.hasMatch(phoneNumber);
+  }
+
+  /// Форматировать номер телефона
+  String formatPhoneNumber(String phoneNumber) {
+    // Убираем все символы кроме цифр
+    final digits = phoneNumber.replaceAll(RegExp(r'[^\d]'), '');
+    
+    // Если номер начинается с 8, заменяем на +7
+    if (digits.startsWith('8') && digits.length == 11) {
+      return '+7${digits.substring(1)}';
+    }
+    
+    // Если номер начинается с 7, добавляем +
+    if (digits.startsWith('7') && digits.length == 11) {
+      return '+$digits';
+    }
+    
+    // Если номер уже в формате +7
+    if (phoneNumber.startsWith('+7') && digits.length == 11) {
+      return phoneNumber;
+    }
+    
+    return phoneNumber;
   }
 }
